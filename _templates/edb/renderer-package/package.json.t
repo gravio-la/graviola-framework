@@ -37,8 +37,7 @@ to: packages/form-renderer/<%= name.split("/")[1] %>/package.json
     "@jsonforms/material-renderers": "^3",
     "@jsonforms/core": "^3",
     "@jsonforms/react": "^3",
-    "react": "^18",
-    "@mui/lab": "^5"
+    "react": "^18"
   },
   "dependencies": {
     "@graviola/edb-core-utils": "workspace:*",

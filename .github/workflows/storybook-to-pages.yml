@@ -36,6 +36,8 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.bun }}-bun-${{ hashFiles('**/bun.lockb') }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.bun }}-bun-
+      - name: Set up GitHub Actions caching for Turborepo
+        uses: dtinth/setup-github-actions-caching-for-turbo@v1.3.0
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Install dependencies
@@ -45,7 +47,9 @@ jobs:
       - name: Static HTML export of storybook
         env:
           STORYBOOK_BASE_PATH: "/${{ github.event.repository.name }}"
-        run: STORYBOOK_BASE_PATH="/${{ github.event.repository.name }}" bun run build:pages
+        run: |
+          echo "STORYBOOK_BASE_PATH=${{ env.STORYBOOK_BASE_PATH }}" >> ./apps/exhibition-live/.env
+          bun run build:pages
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

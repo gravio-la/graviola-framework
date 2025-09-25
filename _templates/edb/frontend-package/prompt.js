@@ -6,6 +6,6 @@ module.exports = [
     type: "input",
     name: "name",
     message: "Name of the sub package",
-    initial: "@graviola/edb-",
+    initial: "@graviola/",
   },
 ];
