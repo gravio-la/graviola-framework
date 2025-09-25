@@ -112,6 +112,7 @@ export const schema = {
           title: "Schweißverfahren",
           enum: ["MIG/MAG", "WIG", "E-Hand", "Unterpulver", "Laser"],
         },
+        designer: { $ref: "#/definitions/Person", title: "Designer" },
         // List of derived WeldedComponents (instances)
         weldedComponents: {
           type: "array",

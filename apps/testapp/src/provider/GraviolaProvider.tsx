@@ -130,8 +130,6 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
     [schema, typeNameLabelMap, typeNameUiSchemaOptionsMap, definitionToTypeIRI],
   );
 
-  console.log(registry);
-
   const config = useMemo<GlobalSemanticConfig>(() => {
     const c = createSemanticConfig({ baseIRI });
     return {
