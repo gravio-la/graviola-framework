@@ -61,6 +61,7 @@ export const EdbSparnatural: React.FC<EdbSparnaturalProps> = ({
 
   return (
     <div id="ui-search" style={{ width: "auto" }}>
+      {/* @ts-ignore */}
       <spar-natural
         ref={sparnaturalRef}
         src={src}
