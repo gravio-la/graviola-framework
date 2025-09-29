@@ -185,8 +185,9 @@ export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
       typeIRI,
       entityIRI: entityIRI,
       readonly: true,
+      data,
     });
-  }, [typeIRI, entityIRI, EntityDetailModal]);
+  }, [typeIRI, entityIRI, EntityDetailModal, data]);
 
   const handleOnChange = useCallback(
     (data: any, reason: ChangeCause) => {
@@ -228,7 +229,11 @@ export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
           !hideToolbar && (
             <SemanticJsonFormToolbar
               editMode={editMode}
-              onEditModeToggle={handleToggleEditMode}
+              showLabels={true}
+              sticky={true}
+              onEditModeToggle={
+                !forceEditMode ? handleToggleEditMode : undefined
+              }
               onReset={handleReset}
               onSave={handleSave}
               onRemove={entityIRI ? handleRemove : undefined}
