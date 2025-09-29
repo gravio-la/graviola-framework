@@ -1,4 +1,8 @@
-import { AdbProvider, EdbGlobalContextProps, store } from "@graviola/edb-state-hooks";
+import {
+  AdbProvider,
+  EdbGlobalContextProps,
+  store,
+} from "@graviola/edb-state-hooks";
 import { Provider } from "react-redux";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/de";
@@ -11,7 +15,10 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { exhibitionConfig } from "../components/config/exhibitionAppConfig";
 import { kulinarikAppConfig } from "../components/config/kulinarikAppConfig";
 import { envToSparqlEndpoint } from "@graviola/edb-core-utils";
-import { EditEntityModal, EntityDetailModal } from "@graviola/edb-advanced-components";
+import {
+  EditEntityModal,
+  EntityDetailModal,
+} from "@graviola/edb-advanced-components";
 import { SimilarityFinder } from "../components/form/similarity-finder";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import NiceModal from "@ebay/nice-modal-react";
@@ -79,6 +86,9 @@ export const App = ({ children }: { children?: React.ReactNode }) => {
                   <SparqlStoreProvider
                     endpoint={sparqlEndpoint}
                     defaultLimit={100}
+                    walkerOptions={{
+                      maxRecursion: 2,
+                    }}
                   >
                     <NiceModal.Provider>{children}</NiceModal.Provider>
                   </SparqlStoreProvider>
