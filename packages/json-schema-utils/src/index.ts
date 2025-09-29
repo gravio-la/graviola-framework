@@ -6,3 +6,4 @@ export * from "./propertyExistsWithinSchema";
 export * from "./extendSchema";
 export * from "./getSubschemaByPath";
 export * from "./inversePropertyAnnotations";
+export * from "./extractTranslationKeysFromSchema";
