@@ -197,6 +197,7 @@ export const initPrismaStore: (
         typeNameToTypeIRI,
         typeIRItoTypeName,
         typeIsNotIRI,
+        debug,
       });
     },
     listDocuments: async (typeName: string, limit: number = 10, cb) => {
