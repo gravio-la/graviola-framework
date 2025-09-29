@@ -35,6 +35,11 @@ export const defaultWalkerOptions: Partial<WalkerOptions> = {
   doNotRecurseNamedNodes: true,
 };
 
+/**
+ * cleans a JSONLD property by removing empty objects and arrays and all reoccuring inner objects that have the same @id
+ * @param data - the data to clean
+ * @returns
+ */
 export const cleanProperty = (data: any) => {
   return Array.isArray(data)
     ? filterUndefOrNull(data).map(cleanProperty)
@@ -65,13 +70,59 @@ export const cleanProperty = (data: any) => {
       : data;
 };
 
+/**
+ * recurses through a json object/array and removes objects that match the tester function
+ *
+ * @param data
+ * @param tester
+ * @returns
+ */
+
+export const recursiveFilter = (
+  data: any,
+  tester: (data: any, level: number) => boolean,
+  level: number = 0,
+): any => {
+  if (data === null || data === undefined) {
+    return data;
+  }
+
+  if (Array.isArray(data)) {
+    return data
+      .filter((item) => !tester(item, level))
+      .map((item) => recursiveFilter(item, tester, level + 1));
+  }
+
+  if (typeof data === "object") {
+    if (tester(data, level)) {
+      return undefined;
+    }
+
+    const result: any = {};
+    for (const [key, value] of Object.entries(data)) {
+      const cleanedValue = recursiveFilter(value, tester, level + 1);
+      if (cleanedValue !== undefined) {
+        result[key] = cleanedValue;
+      }
+    }
+    return result;
+  }
+
+  return data;
+};
+
+/**
+ * removes all properties with an x-inverseOf annotation from a schema
+ * @param schema - the schema to remove inverse properties from
+ * @returns
+ */
 export const removeInversePropertiesFromSchema = (schema: JSONSchema7) => {
   if (schema.type === "object" && schema.properties) {
     return {
       ...schema,
       properties: Object.fromEntries(
         Object.entries(schema.properties)
-          .filter(([key, value]) => !value["x-inverseOf"])
+          .filter(([, value]) => !value["x-inverseOf"])
           .map(([key, value]) => [
             key,
             removeInversePropertiesFromSchema(value as JSONSchema7),
@@ -98,6 +149,19 @@ const prepareSchema = (
   return schema;
 };
 
+/**
+ *
+ * cleans a JSONLD document by removing empty objects and arrays and all reoccuring inner objects that have the same @id
+ * @param data - the data to clean
+ * @param schema
+ * @param options
+ *  - jsonldContext - the jsonld context to use
+ *  - defaultPrefix - the default prefix to use
+ *  - walkerOptions - the walker options to use
+ *  - keepContext - whether to keep the JSONLD context
+ *  - removeInverseProperties - whether to remove inverse properties
+ * @returns
+ */
 export const cleanJSONLD = async (
   data: NamedEntityData,
   schema: JSONSchema7,
@@ -122,8 +186,12 @@ export const cleanJSONLD = async (
         }
       : {};
 
+  // here we remove all empty objects and arrays and all reoccuring inner objects that have the same @id, otherwise we would save the same object multiple times and might end up getting the old version of the object
   const jsonldDoc = {
-    ...cleanProperty(data),
+    ...recursiveFilter(
+      cleanProperty(data),
+      (data, level) => level > 0 && data["@id"] === entityIRI,
+    ),
     ...(finalJsonldContext ? { "@context": finalJsonldContext } : {}),
   };
 
