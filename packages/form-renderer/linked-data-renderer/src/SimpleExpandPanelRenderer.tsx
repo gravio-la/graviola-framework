@@ -53,7 +53,7 @@ export const SimpleExpandPanelRenderer = (
 ) => {
   const { dispatch, config } = useJsonForms();
   const {
-    data,
+    data: initialData,
     entityIRI,
     onRemove,
     count,
@@ -80,19 +80,23 @@ export const SimpleExpandPanelRenderer = (
     i18n: { language: locale },
   } = useTranslation();
 
+  const { saveMutation, loadQuery } = useCRUDWithQueryClient({
+    entityIRI,
+    typeIRI,
+    queryOptions: {
+      enabled: true, //!data?.__draft && !data?.__label,
+      refetchOnWindowFocus: true,
+      initialData: initialData ? { document: initialData } : undefined,
+    },
+  });
+
+  const data = loadQuery.data?.document;
+
   const elementDetailItem = useMemo(
     () => (elementDetailItemPath ? get(data, elementDetailItemPath) : null),
     [elementDetailItemPath, data],
   );
 
-  const { saveMutation } = useCRUDWithQueryClient({
-    entityIRI,
-    typeIRI,
-    queryOptions: {
-      enabled: false, //!data?.__draft && !data?.__label,
-      refetchOnWindowFocus: true,
-    },
-  });
   const draft = data?.__draft && !saveMutation.isSuccess;
 
   // @ts-ignore
