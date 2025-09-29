@@ -1,3 +1,5 @@
+import { AuthConfig } from "@graviola/edb-core-types";
+import { isEmpty } from "lodash-es";
 /**
  * Cross-platform base64 encoding that works in both browser and Node.js
  * @param str - String to encode
@@ -56,4 +58,12 @@ export const createAuthHeaders = (
   }
 
   return headers;
+};
+
+export const hasAuth = (auth?: AuthConfig) => {
+  return (
+    !isEmpty(auth?.username) ||
+    !isEmpty(auth?.password) ||
+    !isEmpty(auth?.token)
+  );
 };

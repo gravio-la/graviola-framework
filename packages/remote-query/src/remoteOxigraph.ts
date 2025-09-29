@@ -1,5 +1,7 @@
 import {
+  AuthConfig,
   CRUDFunctions,
+  FetchConfig,
   RDFSelectResult,
   SelectFetchOptions,
   SelectFetchOverload,
@@ -7,15 +9,7 @@ import {
 } from "@graviola/edb-core-types";
 import datasetFactory from "@rdfjs/dataset";
 import N3 from "n3";
-import { createAuthHeaders } from "./authHelpers";
-
-type AuthConfig = { username?: string; password?: string; token?: string };
-
-interface FetchConfig {
-  accept: string;
-  contentType: string;
-  cache?: RequestCache;
-}
+import { createAuthHeaders, hasAuth } from "./authHelpers";
 
 const fetchConfigs = {
   ntriples: {
@@ -42,6 +36,7 @@ const createFetchFunction =
     auth?: AuthConfig,
     additionalHeaders?: Record<string, string>,
   ) => {
+    const requestMode = config.cors || "cors";
     return fetch(endpoint, {
       headers: createAuthHeaders(
         {
@@ -53,8 +48,10 @@ const createFetchFunction =
       ),
       body: query,
       method: "POST",
-      mode: "cors",
-      credentials: "include",
+      mode: requestMode,
+      ...(requestMode === "cors" && {
+        credentials: hasAuth(auth) ? "include" : "omit",
+      }),
       ...(config.cache && { cache: config.cache }),
     });
   };
