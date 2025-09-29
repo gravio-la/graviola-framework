@@ -226,6 +226,7 @@ export const useCRUDWithQueryClient: UseCRUDHook<
           const result = await dataStore.loadDocument(typeName, entityIRI);
           return processResult(result);
         },
+        staleTime: 0,
       });
     },
     [loadQueryKey, dataStore.loadDocument, queryClient],
