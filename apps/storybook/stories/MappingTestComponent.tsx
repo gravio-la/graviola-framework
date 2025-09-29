@@ -3,9 +3,11 @@ import { Grid, Paper } from "@mui/material";
 import React, { useCallback, useMemo, useState } from "react";
 import { JsonView } from "react-json-view-lite";
 
-import { exhibitionConfig } from "../../config/exhibitionAppConfig";
-import { SimilarityFinder } from "./SimilarityFinder";
-import { useKnowledgeBases } from "./useKnowledgeBases";
+import {
+  exhibitionConfig,
+  SimilarityFinder,
+  useKnowledgeBases,
+} from "@slub/exhibition-app";
 
 type MappingTestComponentProps = {
   typeName:

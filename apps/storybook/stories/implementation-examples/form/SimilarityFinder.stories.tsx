@@ -1,6 +1,6 @@
-import { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
 
-import { SimilarityFinder } from "./SimilarityFinder";
+import { SimilarityFinder } from "@slub/exhibition-app";
 
 export default {
   title: "ui/similarity-finder/SimilarityFinder",
@@ -23,6 +23,5 @@ export const Primary: Story = {
     jsonSchema: {},
     hideFooter: false,
     additionalKnowledgeSources: ["wikidata"],
-    searchOnDataPath: "path.to.search",
   },
 };
