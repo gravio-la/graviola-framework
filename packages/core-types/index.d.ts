@@ -6,6 +6,13 @@ export type Prefixes = {
   [k: string]: string;
 };
 
+export interface FetchConfig {
+  accept: string;
+  contentType: string;
+  cache?: RequestCache;
+  cors?: RequestMode;
+}
+
 export type AuthConfig = {
   username?: string;
   password?: string;
