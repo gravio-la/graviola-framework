@@ -1,5 +1,5 @@
 import { useModifiedRouter } from "@graviola/edb-state-hooks";
-import NextLink, { LinkProps } from "next/link";
+import { Link as MuiLink, LinkProps } from "@mui/material";
 import React, { useMemo } from "react";
 
 type ExtendedLinkProps = Omit<
@@ -30,5 +30,5 @@ export const Link = ({
     return href_;
   }, [rest.locale, rest.href, router, skipLocaleHandling]);
 
-  return <NextLink href={href} {...rest} />;
+  return <MuiLink href={href} {...rest} />;
 };

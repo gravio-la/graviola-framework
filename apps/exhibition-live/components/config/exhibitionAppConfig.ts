@@ -18,7 +18,6 @@ import {
 } from "./formConfigs";
 import { makeDefaultUiSchemaForAllDefinitions } from "./makeDefaultUiSchemaForAllDefinitions";
 import { BASE_IRI } from "./paths";
-import { primaryFieldsRegistry } from "./primaryFieldsRegistry";
 import { rendererRegistry } from "./rendererRegistry";
 import { uischemata } from "./uischemata";
 
