@@ -26,6 +26,9 @@ export const toJSONLD = (
   },
 ): any => {
   if (obj && typeof obj === "object") {
+    if (obj instanceof Date) {
+      return obj.getTime();
+    }
     if (visited.has(obj)) {
       return obj; // Avoid infinite recursion by returning already visited objects
     }
