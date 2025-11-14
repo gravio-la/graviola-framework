@@ -33,24 +33,26 @@
     "docs": "typedoc --out docs"
   },
   "devDependencies": {
-    "@jest/globals": "^29.3.1",
-    "@rdfjs/dataset": "^2.0.1",
-    "@rdfjs/data-model": "^2.0.2",
-    "@rdfjs/namespace": "^2.0.0",
-    "@rdfjs/parser-n3": "^2.0.1",
     "@graviola/edb-build-helper": "workspace:*",
+    "@graviola/edb-global-types": "workspace:*",
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
-    "@graviola/edb-global-types": "workspace:*",
-    "eslint-config-edb": "workspace:*",
-    "@types/rdf-dataset-ext": "^1.0.3",
+    "@jest/globals": "^29.3.1",
+    "@rdfjs/data-model": "^2.0.2",
+    "@rdfjs/dataset": "^2.0.1",
+    "@rdfjs/namespace": "^2.0.0",
+    "@rdfjs/parser-n3": "^2.0.1",
     "@rdfjs/types": "^2.0.1",
     "@types/jest": "^29.5.12",
+    "@types/rdf-dataset-ext": "^1.0.3",
+    "eslint-config-edb": "workspace:*",
     "jest": "^29.7.0",
+    "string-to-stream": "^3.0.1",
+    "tbbt-ld": "^1.1.0",
     "ts-jest": "^29.1.2",
     "ts-jest-mock-import-meta": "^1.2.0",
-    "typescript": "^5.8.2",
-    "tsup": "^8.0.0"
+    "tsup": "^8.0.0",
+    "typescript": "^5.8.2"
   },
   "peerDependencies": {
     "@rdfjs/data-model": "^2.0.2"
