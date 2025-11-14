@@ -1,4 +1,5 @@
 import { describe, expect, test } from "@jest/globals";
+import ds from "@rdfjs/data-model";
 import datasetFactory from "@rdfjs/dataset";
 import N3Parser from "@rdfjs/parser-n3";
 import type { Dataset } from "@rdfjs/types";
@@ -109,5 +110,100 @@ describe("can get data via json schema", () => {
     );
     //console.log(JSON.stringify(data, null, 2))
     expect(data).toStrictEqual(testResult01);
+  });
+
+  test("supports context parameter for prefixed property names", () => {
+    // Create a simple dataset with multiple namespaces
+    const dataset = datasetFactory.dataset();
+
+    const subject = ds.namedNode("http://example.com/photo1");
+    const dcTitle = ds.namedNode("http://purl.org/dc/elements/1.1/title");
+    const dcCreator = ds.namedNode("http://purl.org/dc/elements/1.1/creator");
+    const exifMake = ds.namedNode("http://www.w3.org/2003/12/exif/ns#make");
+    const exifModel = ds.namedNode("http://www.w3.org/2003/12/exif/ns#model");
+    const rdfType = ds.namedNode(
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    );
+
+    dataset.add(
+      ds.quad(subject, rdfType, ds.namedNode("http://example.com/Image")),
+    );
+    dataset.add(ds.quad(subject, dcTitle, ds.literal("Sunset Photo")));
+    dataset.add(ds.quad(subject, dcCreator, ds.literal("Jane Doe")));
+    dataset.add(ds.quad(subject, exifMake, ds.literal("Canon")));
+    dataset.add(ds.quad(subject, exifModel, ds.literal("EOS 5D")));
+
+    // Schema using prefixed property names
+    const schema: JSONSchema7 = {
+      type: "object",
+      properties: {
+        "dc:title": { type: "string" },
+        "dc:creator": { type: "string" },
+        "exif:make": { type: "string" },
+        "exif:model": { type: "string" },
+      },
+    };
+
+    // Context for expanding prefixes
+    const context = {
+      dc: "http://purl.org/dc/elements/1.1/",
+      exif: "http://www.w3.org/2003/12/exif/ns#",
+    };
+
+    const result = traverseGraphExtractBySchema(
+      "", // Empty baseIRI since we're using prefixes
+      "http://example.com/photo1",
+      dataset as Dataset,
+      schema,
+      { omitEmptyArrays: true, omitEmptyObjects: true },
+      context,
+    );
+
+    expect(result).toEqual({
+      "@id": "http://example.com/photo1",
+      "@type": "http://example.com/Image",
+      "dc:title": "Sunset Photo",
+      "dc:creator": "Jane Doe",
+      "exif:make": "Canon",
+      "exif:model": "EOS 5D",
+    });
+  });
+
+  test("context parameter is optional and backward compatible", () => {
+    // Create a simple dataset
+    const dataset = datasetFactory.dataset();
+
+    const subject = ds.namedNode("http://example.com/person1");
+    const namePred = ds.namedNode("http://schema.org/name");
+    const rdfType = ds.namedNode(
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    );
+
+    dataset.add(
+      ds.quad(subject, rdfType, ds.namedNode("http://schema.org/Person")),
+    );
+    dataset.add(ds.quad(subject, namePred, ds.literal("John Doe")));
+
+    const schema: JSONSchema7 = {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+      },
+    };
+
+    // Call without context parameter - should work as before
+    const result = traverseGraphExtractBySchema(
+      "http://schema.org/",
+      "http://example.com/person1",
+      dataset as Dataset,
+      schema,
+      { omitEmptyArrays: true, omitEmptyObjects: true },
+    );
+
+    expect(result).toEqual({
+      "@id": "http://example.com/person1",
+      "@type": "http://schema.org/Person",
+      name: "John Doe",
+    });
   });
 });

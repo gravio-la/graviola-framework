@@ -1,5 +1,5 @@
 import type { WalkerOptions } from "@graviola/edb-core-types";
-import { filterUndefOrNull } from "@graviola/edb-core-utils";
+import { filterUndefOrNull, isValidUrl } from "@graviola/edb-core-utils";
 import {
   isJSONSchema,
   isJSONSchemaDefinition,
@@ -20,6 +20,32 @@ type CircularCounter = {
   [ref: string]: number;
 };
 
+/**
+ * Expands a prefixed property name using the context
+ * e.g., "dc:title" with context {"dc": "http://purl.org/dc/elements/1.1/"}
+ * becomes "http://purl.org/dc/elements/1.1/title"
+ */
+const expandPropertyName = (
+  property: string,
+  baseIRI: string,
+  context?: Record<string, string>,
+): string => {
+  // If context is given, check if property starts with any known prefix followed by ':'
+  if (context && typeof property === "string") {
+    for (const prefix of Object.keys(context)) {
+      const prefixPattern = prefix + ":";
+      if (property.startsWith(prefixPattern)) {
+        const localName = property.substring(prefixPattern.length);
+        return context[prefix] + localName;
+      }
+    }
+  }
+  if (isValidUrl(property)) {
+    return property;
+  }
+  return baseIRI + property;
+};
+
 const propertyWalker = (
   baseIRI: string,
   node: clownface.GraphPointer,
@@ -29,6 +55,7 @@ const propertyWalker = (
   circularSet: CircularCounter,
   options: Partial<WalkerOptions>,
   skipProps: boolean,
+  context?: Record<string, string>,
 ) => {
   const base = namespace(baseIRI);
   const MAX_RECURSION = options?.maxRecursionEachRef || 5;
@@ -68,7 +95,9 @@ const propertyWalker = (
   const entries = Object.entries(subSchema.properties || {})
     .map(([property, schema]) => {
       let val: any;
-      const newNode = node.out(base[property]);
+      // Expand property name using context if available
+      const expandedProperty = expandPropertyName(property, baseIRI, context);
+      const newNode = node.out(ds.namedNode(expandedProperty));
       if (isJSONSchema(schema)) {
         if (schema.$ref) {
           const ref = schema.$ref;
@@ -92,6 +121,7 @@ const propertyWalker = (
                 { ...circularSet, [ref]: (circularSet[ref] || 0) + 1 },
                 options,
                 skipNextProps,
+                context,
               );
             }
           }
@@ -105,6 +135,7 @@ const propertyWalker = (
             circularSet,
             options,
             skipNextProps,
+            context,
           );
         } else if (schema.items) {
           val = filterUndefOrNull(
@@ -137,6 +168,7 @@ const propertyWalker = (
                         { ...circularSet, [ref]: (circularSet[ref] || 0) + 1 },
                         options,
                         skipNextProps,
+                        context,
                       );
                     }
                     return;
@@ -151,6 +183,7 @@ const propertyWalker = (
                     circularSet,
                     options,
                     skipNextProps,
+                    context,
                   );
                 }
                 if (schema.items.type) {
@@ -231,6 +264,7 @@ export const traverseGraphExtractBySchema = (
   dataset: Dataset | DatasetCore,
   rootSchema: JSONSchema7,
   options: Partial<WalkerOptions>,
+  context?: Record<string, string>,
 ) => {
   const tbbt = clownface({ dataset });
   const startNode: clownface.GraphPointer = tbbt.node(ds.namedNode(iri));
@@ -243,5 +277,6 @@ export const traverseGraphExtractBySchema = (
     {},
     options || {},
     false,
+    context,
   );
 };
