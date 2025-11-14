@@ -208,6 +208,61 @@ export type WalkerOptions = {
   doNotRecurseNamedNodes?: boolean;
 };
 
+/**
+ * Pagination options for limiting and offsetting relationship queries
+ */
+export type PaginationOptions = {
+  /** Maximum number of items to return */
+  take?: number;
+  /** Number of items to skip before returning results */
+  skip?: number;
+};
+
+/**
+ * Include pattern for relationships with support for nested includes and pagination
+ * - Set to `true` to include the relationship with default settings
+ * - Set to an object to configure pagination and nested includes
+ */
+export type IncludePattern<T = any> = {
+  [K in keyof T]?:
+    | boolean
+    | (PaginationOptions & { include?: IncludePattern<T[K]> });
+};
+
+/**
+ * Select pattern for explicitly choosing which fields to include in the result
+ * When specified, only the selected fields will be included
+ */
+export type SelectPattern<T = any> = {
+  [K in keyof T]?: boolean;
+};
+
+/**
+ * Omit pattern for excluding specific fields from the result
+ */
+export type OmitPattern<T = any> = Array<keyof T>;
+
+/**
+ * Filter options for graph traversal with Prisma-style field selection
+ * - `select`: Explicitly choose which fields to include
+ * - `include`: Specify which relationships to include (with optional pagination)
+ * - `omit`: Exclude specific fields from the result
+ * - `includeRelationsByDefault`: Whether to include relationships by default (default: true)
+ * - `defaultPaginationLimit`: Default limit for relationship pagination
+ */
+export type GraphTraversalFilterOptions = {
+  select?: SelectPattern;
+  include?: IncludePattern;
+  omit?: OmitPattern;
+  includeRelationsByDefault?: boolean;
+  defaultPaginationLimit?: number;
+};
+
+/**
+ * Extended walker options combining legacy options with new filter capabilities
+ */
+export type ExtendedWalkerOptions = WalkerOptions & GraphTraversalFilterOptions;
+
 export type Entity = {
   entityIRI: string;
   typeIRI: string;
