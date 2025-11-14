@@ -1,7 +1,10 @@
 {
+  "$schema": "https://typedoc.org/schema.json",
   "entryPoints": ["packages/*"],
   "name": "Graviola CRUD",
   "entryPointStrategy": "packages",
-  "includeVersion": false,
-  "logLevel": "Verbose"
+  "includeVersion": true,
+  "logLevel": "Verbose",
+  "out": "docs",
+  "exclude": ["**/*.(spec|test).ts", "dist", "**/*.stories.{js,ts,tsx}", "**/*.d.ts", "packages/core-types", "packages/global-types", "packages/semantic-jsonform-types", "packages/sparql-schema", "packages/simple-local-data-store", "packages/wikidata-utils"]
 }

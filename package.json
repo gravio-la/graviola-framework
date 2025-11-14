@@ -25,7 +25,6 @@
   "private": true,
   "scripts": {
     "start": "turbo run demo",
-    "storybook": "cd ./apps/exhibition-live && bun run storybook",
     "build": "turbo run build",
     "build:packages": "turbo run build --filter='./packages/**/*' --continue",
     "build:manifestations": "turbo run build --filter='./manifestation/*' --continue",
@@ -39,11 +38,14 @@
     "dev:form-renderer": "turbo run dev --parallel --filter='./packages/form-renderer/*'",
     "test": "turbo run test",
     "lint": "turbo run lint",
+    "docs": "bunx typedoc",
     "lint:fix": "turbo run lint:fix",
     "format": "prettier --write \"**/*.{js,ts,tsx,jsx,md}\"",
     "prepare": "[ \"$CI\" != \"true\" ] && husky install || echo \"Skipping husky install in CI environment\"",
     "precommit": "lint-staged",
     "changeset:init": "changeset init",
+
+    
     "changeset": "changeset",
     "publish": "turbo run publish-clean --continue --concurrency 1; bun run restore",
     "helper:deps": "bun ./packages/build-helper/get-dependencies.js",
