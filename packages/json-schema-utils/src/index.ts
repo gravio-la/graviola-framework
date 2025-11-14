@@ -7,3 +7,4 @@ export * from "./extendSchema";
 export * from "./getSubschemaByPath";
 export * from "./inversePropertyAnnotations";
 export * from "./extractTranslationKeysFromSchema";
+export * from "./walkJSONSchema";
