@@ -3,3 +3,5 @@ export * from "./jsonSchema2Select";
 export * from "./selectQuery";
 export * from "./primitives";
 export * from "./prefixes2sparqlPrefixDeclaration";
+export * from "./normalizedSchema2construct";
+export * from "./buildCompleteSPARQLQuery";

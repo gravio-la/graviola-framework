@@ -126,19 +126,19 @@ describe("makeSPARQLInverseSyncQuery", () => {
         "?oldTarget_1 :subscribers <http://example.com/person/123>",
       );
       expect(result).toContain(
-        "?oldTarget_2 :members <http://example.com/person/123>",
+        "?oldTarget_3 :members <http://example.com/person/123>",
       );
 
       // Check INSERT patterns
       expect(result).toContain(
-        "?newTarget_3 :subscribers <http://example.com/person/123>",
+        "?newTarget_2 :subscribers <http://example.com/person/123>",
       );
       expect(result).toContain(
         "?newTarget_4 :members <http://example.com/person/123>",
       );
 
       // Check VALUES clauses
-      expect(result).toContain("VALUES ?newTarget_3");
+      expect(result).toContain("VALUES ?newTarget_2");
       expect(result).toContain("VALUES ?newTarget_4");
       expect(result).toContain("<http://example.com/mailinglist/tech>");
       expect(result).toContain("<http://example.com/workingcircle/tech>");
@@ -177,17 +177,17 @@ describe("makeSPARQLInverseSyncQuery", () => {
         "?oldTarget_1 :subscribers <http://example.com/person/123>",
       );
       expect(result).toContain(
-        "?oldTarget_2 :members <http://example.com/person/123>",
+        "?oldTarget_3 :members <http://example.com/person/123>",
       );
 
       // Should have INSERT only for the non-empty one
       expect(result).toContain(
-        "?newTarget_3 :members <http://example.com/person/123>",
+        "?newTarget_4 :members <http://example.com/person/123>",
       );
-      expect(result).not.toContain("?newTarget_3 :subscribers");
+      expect(result).not.toContain("?newTarget_2 :subscribers");
 
       // Should have VALUES only for the non-empty one
-      expect(result).toContain("VALUES ?newTarget_3");
+      expect(result).toContain("VALUES ?newTarget_4");
       expect(result).toContain("<http://example.com/workingcircle/tech>");
     });
   });

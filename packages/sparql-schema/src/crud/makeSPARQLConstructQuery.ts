@@ -1,40 +1,37 @@
 import { SPARQLCRUDOptions } from "@graviola/edb-core-types";
-import df from "@rdfjs/data-model";
-import { CONSTRUCT } from "@tpluscode/sparql-builder";
-
-import {
-  makeSPARQLWherePart,
-  withDefaultPrefix,
-} from "@/crud/makeSPARQLWherePart";
-import { jsonSchema2construct } from "@/schema2sparql/jsonSchema2construct";
+import { normalizeSchema } from "@graviola/edb-graph-traversal";
 import { JSONSchemaWithInverseProperties } from "@graviola/json-schema-utils";
 
+import { normalizedSchema2construct } from "@/schema2sparql/normalizedSchema2construct";
+import { buildCompleteSPARQLQuery } from "@/schema2sparql/buildCompleteSPARQLQuery";
+
+/**
+ * Generates a SPARQL CONSTRUCT query from a JSON Schema
+ *
+ * @deprecated Consider using normalizedSchema2construct + buildCompleteSPARQLQuery directly for more control
+ */
 export const makeSPARQLConstructQuery = (
   entityIRI: string,
   typeIRI: string | undefined,
   schema: JSONSchemaWithInverseProperties,
   options: SPARQLCRUDOptions,
 ) => {
-  const { defaultPrefix, queryBuildOptions, maxRecursion } = options;
-  const subjectV = df.variable("subject");
-  const wherePart = makeSPARQLWherePart(entityIRI, typeIRI, subjectV, {
-    flavour: options.queryBuildOptions?.sparqlFlavour,
+  const { defaultPrefix } = options;
+
+  // Build prefix map from defaultPrefix
+  const prefixMap = defaultPrefix ? { "": defaultPrefix } : {};
+
+  // Normalize the schema first
+  // Note: maxRecursion is handled internally by the normalizer during ref resolution
+  const normalized = normalizeSchema(schema, {
+    includeRelationsByDefault: true,
   });
-  const { construct, whereRequired, whereOptionals } = jsonSchema2construct(
-    subjectV,
-    schema,
-    [],
-    ["@id", "@type"],
-    maxRecursion,
-  );
-  if (wherePart + whereRequired + whereOptionals === "") {
-    throw new Error("makeSPARQLConstructQuery:empty WHERE clause");
-  }
-  return withDefaultPrefix(
-    defaultPrefix,
-    CONSTRUCT` ${construct} `
-      .WHERE`${wherePart} ${whereRequired}\n${whereOptionals}`.build(
-      queryBuildOptions,
-    ),
-  );
+
+  // Generate SPARQL patterns using new implementation
+  const constructResult = normalizedSchema2construct(entityIRI, normalized, {
+    prefixMap,
+  });
+
+  // Build complete query
+  return buildCompleteSPARQLQuery(constructResult, prefixMap);
 };

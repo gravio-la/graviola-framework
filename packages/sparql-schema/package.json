@@ -39,10 +39,12 @@
     "@graviola/jsonld-utils": "workspace:*",
     "@tpluscode/rdf-ns-builders": "^5",
     "@tpluscode/rdf-string": "^1.3.4",
-    "@tpluscode/sparql-builder": "^3.0.1"
+    "@tpluscode/sparql-builder": "^3.0.1",
+    "lodash-es": "^4.17.21"
   },
   "devDependencies": {
     "@rdfjs/types": "^2.0.1",
+    "@types/lodash-es": "^4.17.12",
     "@graviola/edb-build-helper": "workspace:*",
     "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-tsconfig": "workspace:*",
