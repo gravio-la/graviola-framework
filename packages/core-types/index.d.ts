@@ -209,13 +209,57 @@ export type WalkerOptions = {
 };
 
 /**
+ * Sort order for ordering query results
+ */
+export type SortOrder = "asc" | "desc";
+
+/**
+ * Order by clause for a single property (Prisma-style)
+ * Example: { name: 'asc' } or { createdAt: 'desc' }
+ */
+export type OrderByClause<T = any> = {
+  [K in keyof T]?: SortOrder;
+};
+
+/**
  * Pagination options for limiting and offsetting relationship queries
+ * Supports Prisma-style orderBy for sorting results
  */
 export type PaginationOptions = {
   /** Maximum number of items to return */
   take?: number;
   /** Number of items to skip before returning results */
   skip?: number;
+  /**
+   * Order by clause(s) for sorting results (Prisma-style)
+   * Can be a single object or array of objects
+   * Example: { name: 'asc' } or [{ name: 'asc' }, { createdAt: 'desc' }]
+   * Note: Required for pagination on blank nodes (unnamed nodes)
+   */
+  orderBy?: OrderByClause | OrderByClause[];
+};
+
+/**
+ * Pagination metadata that can be attached to array schemas
+ *
+ * The `source` field indicates where pagination was applied:
+ * - "extraction": Apply during graph traversal (default)
+ * - "query": Already applied at SPARQL CONSTRUCT query stage (skip during extraction)
+ *
+ * The `orderBy` field specifies sort criteria (Prisma-style):
+ * - Required for consistent pagination on blank nodes (unnamed nodes)
+ * - Optional for named nodes
+ * - Can be single object or array: { name: 'asc' } or [{ name: 'asc' }, { createdAt: 'desc' }]
+ */
+export type PaginationMetadata = {
+  /** Number of items to skip */
+  skip?: number;
+  /** Maximum number of items to take */
+  take?: number;
+  /** Where pagination was applied - prevents double pagination */
+  source?: "extraction" | "query";
+  /** Order by clause(s) for sorting - required for blank nodes */
+  orderBy?: OrderByClause | OrderByClause[];
 };
 
 /**
@@ -256,6 +300,14 @@ export type GraphTraversalFilterOptions = {
   omit?: OmitPattern;
   includeRelationsByDefault?: boolean;
   defaultPaginationLimit?: number;
+  /**
+   * Whether to exclude JSON-LD metadata properties (starting with @)
+   * from schema normalization. Defaults to true.
+   *
+   * JSON-LD properties like @id, @type, @context, @graph are metadata
+   * and should not be mapped to RDF predicates in SPARQL queries.
+   */
+  excludeJsonLdMetadata?: boolean;
 };
 
 /**

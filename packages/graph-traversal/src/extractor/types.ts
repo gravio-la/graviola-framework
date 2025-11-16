@@ -1,24 +1,14 @@
 import type { DatasetCore } from "@rdfjs/types";
 import type { JSONSchema7 } from "json-schema";
-import type { ExtendedWalkerOptions } from "@graviola/edb-core-types";
+import type {
+  ExtendedWalkerOptions,
+  PaginationMetadata,
+} from "@graviola/edb-core-types";
 import type { NormalizedSchema, PropertyMetadata } from "../normalizer";
 import type { Logger } from "./logger";
 
-/**
- * Pagination metadata that can be attached to array schemas
- *
- * The `source` field indicates where pagination was applied:
- * - "extraction": Apply during graph traversal (default)
- * - "query": Already applied at SPARQL CONSTRUCT query stage (skip during extraction)
- */
-export type PaginationMetadata = {
-  /** Number of items to skip */
-  skip?: number;
-  /** Maximum number of items to take */
-  take?: number;
-  /** Where pagination was applied - prevents double pagination */
-  source?: "extraction" | "query";
-};
+// Re-export PaginationMetadata for backward compatibility
+export type { PaginationMetadata };
 
 /**
  * Context passed through the extraction process

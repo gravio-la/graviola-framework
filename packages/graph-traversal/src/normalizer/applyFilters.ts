@@ -9,6 +9,69 @@ import type {
 import type { PropertyMetadata } from "./types";
 
 /**
+ * Recursively filters JSON-LD metadata properties from a nested schema
+ * @param schema The nested schema to filter
+ * @param excludeJsonLd Whether to exclude @ properties
+ * @returns Filtered schema
+ */
+function filterJsonLdFromNestedSchema(
+  schema: JSONSchema7,
+  excludeJsonLd: boolean,
+): JSONSchema7 {
+  if (!excludeJsonLd || !schema.properties) {
+    return schema;
+  }
+
+  const newProperties: Record<string, JSONSchema7> = {};
+
+  for (const [propName, propSchema] of Object.entries(schema.properties)) {
+    // Skip @ properties
+    if (propName.startsWith("@")) {
+      continue;
+    }
+
+    let processedSchema = propSchema as JSONSchema7;
+
+    // Recursively filter nested objects
+    if (processedSchema.type === "object" && processedSchema.properties) {
+      processedSchema = filterJsonLdFromNestedSchema(
+        processedSchema,
+        excludeJsonLd,
+      );
+    }
+
+    // Recursively filter array items
+    if (processedSchema.type === "array" && processedSchema.items) {
+      const items = Array.isArray(processedSchema.items)
+        ? processedSchema.items[0]
+        : processedSchema.items;
+      if (
+        typeof items === "object" &&
+        !Array.isArray(items) &&
+        items.type === "object" &&
+        items.properties
+      ) {
+        const filteredItems = filterJsonLdFromNestedSchema(
+          items as JSONSchema7,
+          excludeJsonLd,
+        );
+        processedSchema = {
+          ...processedSchema,
+          items: filteredItems,
+        };
+      }
+    }
+
+    newProperties[propName] = processedSchema;
+  }
+
+  return {
+    ...schema,
+    properties: newProperties,
+  };
+}
+
+/**
  * Checks if a property should be included based on filter options
  * @param propertyName The name of the property
  * @param metadata Metadata about the property
@@ -43,28 +106,35 @@ export function shouldIncludeProperty(
     return { include: isSelected };
   }
 
-  // For relationships, check include pattern
-  if (metadata.isRelationship) {
-    if (include && propertyName in include) {
-      const includeValue = include[propertyName];
+  // Check include pattern (for both relationships and arrays with pagination)
+  if (include && propertyName in include) {
+    const includeValue = include[propertyName];
 
-      // If it's a boolean
-      if (typeof includeValue === "boolean") {
+    // If it's a boolean
+    if (typeof includeValue === "boolean") {
+      // For relationships, respect the boolean value
+      if (metadata.isRelationship) {
         return { include: includeValue };
       }
-
-      // If it's an object with pagination
-      if (typeof includeValue === "object") {
-        return {
-          include: true,
-          pagination: {
-            take: includeValue.take,
-            skip: includeValue.skip,
-          },
-        };
-      }
+      // For non-relationships, boolean true means include
+      return { include: includeValue };
     }
 
+    // If it's an object with pagination (for arrays)
+    if (typeof includeValue === "object") {
+      return {
+        include: true,
+        pagination: {
+          take: includeValue.take,
+          skip: includeValue.skip,
+          orderBy: includeValue.orderBy, // Include orderBy for pagination
+        },
+      };
+    }
+  }
+
+  // For relationships not in include pattern
+  if (metadata.isRelationship) {
     // Use default behavior for relationships not in include
     return { include: includeRelationsByDefault };
   }
@@ -92,8 +162,16 @@ export function applyFilters(
   const newSchema: JSONSchema7 = { ...schema };
   const newProperties: Record<string, JSONSchema7> = {};
 
+  // Default: exclude JSON-LD metadata properties (@id, @type, @context, etc.)
+  const excludeJsonLdMetadata = filterOptions.excludeJsonLdMetadata !== false;
+
   // Process each property
   for (const [propName, propSchema] of Object.entries(schema.properties)) {
+    // Skip JSON-LD metadata properties if flag is true (default)
+    if (excludeJsonLdMetadata && propName.startsWith("@")) {
+      continue;
+    }
+
     const metadata = propertyMetadata[propName];
 
     if (!metadata) {
@@ -117,6 +195,44 @@ export function applyFilters(
           ...processedSchema,
           "x-pagination": pagination,
         } as JSONSchema7;
+      }
+
+      // Recursively filter @ properties from nested objects
+      if (
+        excludeJsonLdMetadata &&
+        processedSchema.type === "object" &&
+        processedSchema.properties
+      ) {
+        processedSchema = filterJsonLdFromNestedSchema(
+          processedSchema,
+          excludeJsonLdMetadata,
+        );
+      }
+
+      // Recursively filter @ properties from array items
+      if (
+        excludeJsonLdMetadata &&
+        processedSchema.type === "array" &&
+        processedSchema.items
+      ) {
+        const items = Array.isArray(processedSchema.items)
+          ? processedSchema.items[0]
+          : processedSchema.items;
+        if (
+          typeof items === "object" &&
+          !Array.isArray(items) &&
+          items.type === "object" &&
+          items.properties
+        ) {
+          const filteredItems = filterJsonLdFromNestedSchema(
+            items as JSONSchema7,
+            excludeJsonLdMetadata,
+          );
+          processedSchema = {
+            ...processedSchema,
+            items: filteredItems,
+          };
+        }
       }
 
       newProperties[propName] = processedSchema;
@@ -155,6 +271,7 @@ export function extractPaginationOptions(
     return {
       take: includeValue.take,
       skip: includeValue.skip,
+      orderBy: includeValue.orderBy, // Include orderBy for pagination
     };
   }
 

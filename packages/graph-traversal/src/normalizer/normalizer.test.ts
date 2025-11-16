@@ -1,6 +1,7 @@
 import { describe, expect, test } from "@jest/globals";
 import type { JSONSchema7 } from "json-schema";
 import type { GraphTraversalFilterOptions } from "@graviola/edb-core-types";
+import { bringDefinitionToTop } from "@graviola/json-schema-utils";
 import { normalizeSchema } from "./index";
 
 describe("normalizeSchema - integration tests", () => {
@@ -230,9 +231,11 @@ describe("normalizeSchema - integration tests", () => {
 
     const normalized = normalizeSchema(schema, filterOptions);
 
+    // JSON-LD metadata properties should be filtered out by default
+    expect(normalized.properties).not.toHaveProperty("@id");
+    expect(normalized.properties).not.toHaveProperty("@type");
+
     // Should have basic properties
-    expect(normalized.properties).toHaveProperty("@id");
-    expect(normalized.properties).toHaveProperty("@type");
     expect(normalized.properties).toHaveProperty("filePath");
     expect(normalized.properties).toHaveProperty("fileName");
 
@@ -418,5 +421,151 @@ describe("normalizeSchema - integration tests", () => {
 
     // Note: defaultPaginationLimit is stored in filterOptions but not automatically applied
     // to properties without explicit pagination. This could be implemented in future if needed.
+  });
+
+  test("logs normalized schema for Person with jobs and WorkingPeriod relationships - depth 1 and 2", () => {
+    // Create fixture schema with Person, Organization, and WorkingPeriod
+    const rootSchema: JSONSchema7 = {
+      type: "object",
+      $defs: {
+        Person: {
+          type: "object",
+          properties: {
+            "@id": { type: "string" },
+            name: { type: "string" },
+            jobs: {
+              type: "array",
+              items: { $ref: "#/$defs/WorkingPeriod" },
+            },
+          },
+        },
+        Organization: {
+          type: "object",
+          properties: {
+            "@id": { type: "string" },
+            name: { type: "string" },
+            businessCategory: { type: "string" },
+          },
+        },
+        WorkingPeriod: {
+          type: "object",
+          properties: {
+            "@id": { type: "string" },
+            startTime: { type: "string", format: "date-time" },
+            endTime: { type: "string", format: "date-time" },
+            for: {
+              anyOf: [
+                { $ref: "#/$defs/Person" },
+                { $ref: "#/$defs/Organization" },
+              ],
+            },
+          },
+        },
+      },
+    };
+
+    // Get Person as top-level schema
+    const personSchema = bringDefinitionToTop(rootSchema, "Person");
+
+    console.log("\n=== Person Schema (Top-Level) ===");
+    console.log(JSON.stringify(personSchema, null, 2));
+
+    // Test 1: Depth 1 - Only include jobs, but not nested "for" relationship
+    console.log(
+      "\n=== Test 1: Depth 1 - Include jobs only (no nested 'for') ===",
+    );
+    const normalizedDepth1 = normalizeSchema(personSchema, {
+      includeRelationsByDefault: false,
+      include: {
+        jobs: true, // Include jobs but not the nested "for" relationship
+      },
+    });
+    console.log(JSON.stringify(normalizedDepth1, null, 2));
+    console.log("\nProperty Metadata:", normalizedDepth1._propertyMetadata);
+
+    // Test 2: Depth 2 - Include jobs and the nested "for" relationship
+    console.log(
+      "\n=== Test 2: Depth 2 - Include jobs with nested 'for' relationship ===",
+    );
+    const normalizedDepth2 = normalizeSchema(personSchema, {
+      includeRelationsByDefault: false,
+      include: {
+        jobs: {
+          include: {
+            for: true, // Include the nested "for" relationship within jobs
+          },
+        },
+      },
+    });
+    console.log(JSON.stringify(normalizedDepth2, null, 2));
+    console.log("\nProperty Metadata:", normalizedDepth2._propertyMetadata);
+
+    // Test 3: Select only name and jobs
+    console.log("\n=== Test 3: Select only name and jobs ===");
+    const normalizedSelect = normalizeSchema(personSchema, {
+      select: {
+        name: true,
+        jobs: true,
+      },
+    });
+    console.log(JSON.stringify(normalizedSelect, null, 2));
+    console.log("\nProperty Metadata:", normalizedSelect._propertyMetadata);
+
+    // Test 4: Include all relations by default
+    console.log("\n=== Test 4: Include all relations by default ===");
+    const normalizedAllRelations = normalizeSchema(personSchema, {
+      includeRelationsByDefault: true,
+    });
+    console.log(JSON.stringify(normalizedAllRelations, null, 2));
+    console.log(
+      "\nProperty Metadata:",
+      normalizedAllRelations._propertyMetadata,
+    );
+
+    // Test 5: Include jobs with pagination and nested "for"
+    console.log(
+      "\n=== Test 5: Include jobs with pagination and nested 'for' ===",
+    );
+    const normalizedPagination = normalizeSchema(personSchema, {
+      includeRelationsByDefault: false,
+      include: {
+        jobs: {
+          take: 10,
+          include: {
+            for: true, // Include the nested "for" relationship
+          },
+        },
+      },
+    });
+    console.log(JSON.stringify(normalizedPagination, null, 2));
+    console.log("\nProperty Metadata:", normalizedPagination._propertyMetadata);
+
+    // Test 6: Omit jobs but include name
+    console.log("\n=== Test 6: Omit jobs, include name ===");
+    const normalizedOmit = normalizeSchema(personSchema, {
+      omit: ["jobs"],
+    });
+    console.log(JSON.stringify(normalizedOmit, null, 2));
+    console.log("\nProperty Metadata:", normalizedOmit._propertyMetadata);
+
+    // Test 7: Depth 2 with nested "for" included
+    console.log("\n=== Test 7: Depth 2 - Include jobs with nested 'for' ===");
+    const normalizedOrgFields = normalizeSchema(personSchema, {
+      includeRelationsByDefault: false,
+      include: {
+        jobs: {
+          include: {
+            for: true, // Include the nested "for" relationship
+          },
+        },
+      },
+    });
+    console.log(JSON.stringify(normalizedOrgFields, null, 2));
+    console.log("\nProperty Metadata:", normalizedOrgFields._propertyMetadata);
+
+    // Note: This test currently only logs output for review
+    // Assertions will be added later once the expected output is verified
+    expect(normalizedDepth1._normalized).toBe(true);
+    expect(normalizedDepth2._normalized).toBe(true);
   });
 });
