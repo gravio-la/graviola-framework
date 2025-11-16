@@ -45,6 +45,14 @@ const PersonDefinition: JSONSchema7 = {
     "schema:familyName": { type: "string" },
     "schema:email": { type: "string" },
     "schema:jobTitle": { type: "string" },
+    "schema:knows": {
+      type: "array",
+      items: { $ref: "#/$defs/Person" },
+    },
+    "schema:colleague": {
+      type: "array",
+      items: { $ref: "#/$defs/Person" },
+    },
   },
 };
 
@@ -437,6 +445,99 @@ export const MinimalStub: Story = {
     },
     prefixMap: schemaPrefixes,
     title: "TBBT: Minimal Stub (@id only) for Performance",
+    triples: tbbtTriples,
+  },
+};
+
+// ============================================================================
+// Story 9: Nested Includes with Pagination (knows -> knows)
+// ============================================================================
+
+export const NestedIncludesWithPagination: Story = {
+  args: {
+    schema: {
+      $defs: {
+        Person: PersonDefinition,
+      },
+      type: "object",
+      properties: {
+        "@id": { type: "string" },
+        "@type": { type: "string" },
+        "schema:givenName": { type: "string" },
+        "schema:familyName": { type: "string" },
+        "schema:knows": {
+          type: "array",
+          items: { $ref: "#/$defs/Person" },
+        },
+      },
+    },
+    subjectIRI: "http://localhost:8080/data/person/leonard-hofstadter",
+    filterOptions: {
+      includeRelationsByDefault: false,
+      include: {
+        "schema:knows": {
+          take: 5,
+          include: {
+            "schema:knows": {
+              take: 5,
+            },
+          },
+        },
+      },
+    },
+    prefixMap: schemaPrefixes,
+    title:
+      "TBBT: Nested Includes with Pagination (Leonard → knows (5) → their knows (5))",
+    triples: tbbtTriples,
+  },
+};
+
+// ============================================================================
+// Story 10: Deeply Nested Includes (3 levels)
+// ============================================================================
+
+export const DeeplyNestedIncludes: Story = {
+  args: {
+    schema: {
+      $defs: {
+        Person: PersonDefinition,
+      },
+      type: "object",
+      properties: {
+        "@id": { type: "string" },
+        "@type": { type: "string" },
+        "schema:givenName": { type: "string" },
+        "schema:familyName": { type: "string" },
+        "schema:knows": {
+          type: "array",
+          items: { $ref: "#/$defs/Person" },
+        },
+      },
+    },
+    subjectIRI: "http://localhost:8080/data/person/sheldon-cooper",
+    filterOptions: {
+      includeRelationsByDefault: false,
+      include: {
+        "schema:knows": {
+          take: 10,
+          orderBy: { "schema:givenName": "asc" },
+          include: {
+            "schema:knows": {
+              take: 5,
+              orderBy: { "schema:familyName": "asc" },
+              include: {
+                "schema:knows": {
+                  take: 2,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    prefixMap: schemaPrefixes,
+    title:
+      "TBBT: Deeply Nested Includes (Sheldon → knows (10) → knows (5) → knows (2))",
     triples: tbbtTriples,
   },
 };

@@ -77,11 +77,13 @@ export function normalizeSchema(
     }
   }
 
-  // Phase 3: Apply filters
+  // Phase 3: Apply filters (pass rootSchema for nested filter resolution)
   const filteredSchema = applyFilters(
     resolvedSchema,
     propertyMetadata,
     filterOptions,
+    schema, // Pass root schema for nested filtering
+    0, // Start at depth 0
   );
 
   // Return as normalized schema with metadata

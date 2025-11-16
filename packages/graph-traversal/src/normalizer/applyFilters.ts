@@ -6,7 +6,11 @@ import type {
   OmitPattern,
   PaginationOptions,
 } from "@graviola/edb-core-types";
-import type { PropertyMetadata } from "./types";
+import type { PropertyMetadata, NormalizationContext } from "./types";
+import {
+  isRelationshipSchema,
+  extractPropertyMetadata,
+} from "./resolveAllRefs";
 
 /**
  * Recursively filters JSON-LD metadata properties from a nested schema
@@ -144,16 +148,67 @@ export function shouldIncludeProperty(
 }
 
 /**
+ * Recursively applies nested filter options to a schema
+ * This handles nested includes by recursively extracting metadata and applying filters
+ * @param schema The schema to filter
+ * @param nestedFilterOptions The nested filter options (with nested includes)
+ * @param rootSchema The root schema for resolving any remaining refs
+ * @param depth Current recursion depth
+ * @returns A new schema with nested filters applied
+ */
+function applyNestedFilters(
+  schema: JSONSchema7,
+  nestedFilterOptions: GraphTraversalFilterOptions,
+  rootSchema: JSONSchema7,
+  depth: number,
+): JSONSchema7 {
+  if (!schema.properties || depth > 50) {
+    return schema;
+  }
+
+  // Extract metadata for all properties in this schema
+  const context: NormalizationContext = {
+    rootSchema,
+    filterOptions: nestedFilterOptions,
+    visitedRefs: new Set(),
+    depth,
+  };
+
+  const nestedPropertyMetadata: Record<string, PropertyMetadata> = {};
+  for (const [propName, propSchema] of Object.entries(schema.properties)) {
+    if (typeof propSchema === "object" && !Array.isArray(propSchema)) {
+      nestedPropertyMetadata[propName] = extractPropertyMetadata(
+        propSchema as JSONSchema7,
+        context,
+      );
+    }
+  }
+
+  // Apply filters with the nested include pattern
+  return applyFilters(
+    schema,
+    nestedPropertyMetadata,
+    nestedFilterOptions,
+    rootSchema,
+    depth + 1,
+  );
+}
+
+/**
  * Applies filter options to a schema's properties
  * @param schema The schema to filter
  * @param propertyMetadata Metadata about each property
  * @param filterOptions The filter options to apply
+ * @param rootSchema The root schema for resolving refs in nested filters
+ * @param depth Current recursion depth for nested filtering
  * @returns A new schema with filtered properties
  */
 export function applyFilters(
   schema: JSONSchema7,
   propertyMetadata: Record<string, PropertyMetadata>,
   filterOptions: GraphTraversalFilterOptions,
+  rootSchema?: JSONSchema7,
+  depth: number = 0,
 ): JSONSchema7 {
   if (!schema.properties) {
     return schema;
@@ -189,6 +244,13 @@ export function applyFilters(
     if (include) {
       let processedSchema = propSchema as JSONSchema7;
 
+      // Extract nested include pattern if present
+      const includeValue = filterOptions.include?.[propName];
+      const nestedInclude =
+        typeof includeValue === "object" && includeValue !== null
+          ? includeValue.include
+          : undefined;
+
       // Apply pagination metadata if applicable
       if (pagination && metadata.isArray) {
         processedSchema = {
@@ -207,6 +269,19 @@ export function applyFilters(
           processedSchema,
           excludeJsonLdMetadata,
         );
+
+        // Apply nested filters if present (recursively)
+        if (nestedInclude && processedSchema.properties && rootSchema) {
+          processedSchema = applyNestedFilters(
+            processedSchema,
+            {
+              ...filterOptions,
+              include: nestedInclude,
+            },
+            rootSchema,
+            depth,
+          );
+        }
       }
 
       // Recursively filter @ properties from array items
@@ -224,10 +299,24 @@ export function applyFilters(
           items.type === "object" &&
           items.properties
         ) {
-          const filteredItems = filterJsonLdFromNestedSchema(
+          let filteredItems = filterJsonLdFromNestedSchema(
             items as JSONSchema7,
             excludeJsonLdMetadata,
           );
+
+          // Apply nested filters to array items if present (recursively)
+          if (nestedInclude && filteredItems.properties && rootSchema) {
+            filteredItems = applyNestedFilters(
+              filteredItems,
+              {
+                ...filterOptions,
+                include: nestedInclude,
+              },
+              rootSchema,
+              depth,
+            );
+          }
+
           processedSchema = {
             ...processedSchema,
             items: filteredItems,

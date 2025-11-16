@@ -568,4 +568,181 @@ describe("normalizeSchema - integration tests", () => {
     expect(normalizedDepth1._normalized).toBe(true);
     expect(normalizedDepth2._normalized).toBe(true);
   });
+
+  test("handles nested includes with pagination (knows -> knows)", () => {
+    const schema: JSONSchema7 = {
+      type: "object",
+      $defs: {
+        Person: {
+          type: "object",
+          properties: {
+            "@id": { type: "string" },
+            "schema:givenName": { type: "string" },
+            "schema:familyName": { type: "string" },
+            "schema:knows": {
+              type: "array",
+              items: { $ref: "#/$defs/Person" },
+            },
+          },
+        },
+      },
+      properties: {
+        "@id": { type: "string" },
+        "@type": { type: "string" },
+        "schema:givenName": { type: "string" },
+        "schema:familyName": { type: "string" },
+        "schema:knows": {
+          type: "array",
+          items: { $ref: "#/$defs/Person" },
+        },
+      },
+    };
+
+    const filterOptions: GraphTraversalFilterOptions = {
+      includeRelationsByDefault: false,
+      include: {
+        "schema:knows": {
+          take: 5,
+          include: {
+            "schema:knows": {
+              take: 5,
+            },
+          },
+        },
+      },
+    };
+
+    const normalized = normalizeSchema(schema, filterOptions);
+
+    expect(normalized._normalized).toBe(true);
+    expect(normalized.properties).toHaveProperty("schema:knows");
+
+    // Top-level knows should have pagination
+    const knowsSchema = normalized.properties?.["schema:knows"] as JSONSchema7;
+    expect(knowsSchema).toBeDefined();
+    expect((knowsSchema as any)["x-pagination"]).toEqual({
+      take: 5,
+      skip: undefined,
+      orderBy: undefined,
+    });
+
+    // Nested knows (within array items) should also have pagination
+    expect(knowsSchema.type).toBe("array");
+    const itemsSchema = knowsSchema.items as JSONSchema7;
+    expect(itemsSchema).toBeDefined();
+    expect(itemsSchema.properties).toHaveProperty("schema:knows");
+
+    const nestedKnowsSchema = itemsSchema.properties?.[
+      "schema:knows"
+    ] as JSONSchema7;
+    expect(nestedKnowsSchema).toBeDefined();
+    expect((nestedKnowsSchema as any)["x-pagination"]).toEqual({
+      take: 5,
+      skip: undefined,
+      orderBy: undefined,
+    });
+
+    // Verify metadata
+    expect(normalized._propertyMetadata["schema:knows"].isRelationship).toBe(
+      true,
+    );
+    expect(normalized._propertyMetadata["schema:knows"].isArray).toBe(true);
+  });
+
+  test("handles deeply nested includes with pagination (3 levels: knows -> knows -> knows)", () => {
+    const schema: JSONSchema7 = {
+      type: "object",
+      $defs: {
+        Person: {
+          type: "object",
+          properties: {
+            "@id": { type: "string" },
+            "schema:givenName": { type: "string" },
+            "schema:familyName": { type: "string" },
+            "schema:knows": {
+              type: "array",
+              items: { $ref: "#/$defs/Person" },
+            },
+          },
+        },
+      },
+      properties: {
+        "@id": { type: "string" },
+        "@type": { type: "string" },
+        "schema:givenName": { type: "string" },
+        "schema:familyName": { type: "string" },
+        "schema:knows": {
+          type: "array",
+          items: { $ref: "#/$defs/Person" },
+        },
+      },
+    };
+
+    const filterOptions: GraphTraversalFilterOptions = {
+      includeRelationsByDefault: false,
+      include: {
+        "schema:knows": {
+          take: 10,
+          include: {
+            "schema:knows": {
+              take: 5,
+              include: {
+                "schema:knows": {
+                  take: 2,
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+
+    const normalized = normalizeSchema(schema, filterOptions);
+
+    expect(normalized._normalized).toBe(true);
+    expect(normalized.properties).toHaveProperty("schema:knows");
+
+    // Level 1: Top-level knows should have pagination (take: 10)
+    const level1Knows = normalized.properties?.["schema:knows"] as JSONSchema7;
+    expect(level1Knows).toBeDefined();
+    expect((level1Knows as any)["x-pagination"]).toEqual({
+      take: 10,
+      skip: undefined,
+      orderBy: undefined,
+    });
+
+    // Level 2: Nested knows should have pagination (take: 5)
+    expect(level1Knows.type).toBe("array");
+    const level1Items = level1Knows.items as JSONSchema7;
+    expect(level1Items).toBeDefined();
+    expect(level1Items.properties).toHaveProperty("schema:knows");
+
+    const level2Knows = level1Items.properties?.["schema:knows"] as JSONSchema7;
+    expect(level2Knows).toBeDefined();
+    expect((level2Knows as any)["x-pagination"]).toEqual({
+      take: 5,
+      skip: undefined,
+      orderBy: undefined,
+    });
+
+    // Level 3: Deeply nested knows should have pagination (take: 2)
+    expect(level2Knows.type).toBe("array");
+    const level2Items = level2Knows.items as JSONSchema7;
+    expect(level2Items).toBeDefined();
+    expect(level2Items.properties).toHaveProperty("schema:knows");
+
+    const level3Knows = level2Items.properties?.["schema:knows"] as JSONSchema7;
+    expect(level3Knows).toBeDefined();
+    expect((level3Knows as any)["x-pagination"]).toEqual({
+      take: 2,
+      skip: undefined,
+      orderBy: undefined,
+    });
+
+    // Verify metadata
+    expect(normalized._propertyMetadata["schema:knows"].isRelationship).toBe(
+      true,
+    );
+    expect(normalized._propertyMetadata["schema:knows"].isArray).toBe(true);
+  });
 });

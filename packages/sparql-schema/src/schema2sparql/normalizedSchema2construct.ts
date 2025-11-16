@@ -439,6 +439,14 @@ function handleNestedObject(
   construct.push(nestedTypePattern);
   addWherePattern(where, nestedTypePattern, false); // rdf:type is always optional
 
+  // Create a minimal NormalizedSchema for nested property processing
+  // This allows createPropertyPatterns to check for required properties
+  const nestedNormalizedSchema: NormalizedSchema = {
+    ...objectSchema,
+    _normalized: true,
+    _propertyMetadata: {},
+  };
+
   // Walk through nested properties
   if (objectSchema.properties) {
     Object.entries(objectSchema.properties).forEach(
@@ -448,33 +456,19 @@ function handleNestedObject(
           return; // Skip boolean schemas
         }
 
-        const nestedPredicate = createPredicate(nestedPropName, prefixMap);
-        const nestedVarName = `${sanitizeVariableName(nestedPropName)}_${depth}`;
-        const nestedObjectVar = df.variable(nestedVarName);
+        // Use createPropertyPatterns to handle all property types (including arrays with pagination)
+        const nestedPatterns = createPropertyPatterns(
+          subject,
+          nestedPropName,
+          nestedPropSchema as JSONSchema7,
+          nestedNormalizedSchema,
+          depth,
+          maxRecursion,
+          prefixMap,
+        );
 
-        const nestedTriple = sparql`${subject} ${nestedPredicate} ${nestedObjectVar} .`;
-        construct.push(nestedTriple);
-
-        // Check if nested property is required
-        const isNestedRequired =
-          objectSchema.required?.includes(nestedPropName) || false;
-        addWherePattern(where, nestedTriple, isNestedRequired);
-
-        // Recursively handle nested structures
-        if (
-          (nestedPropSchema as JSONSchema7).type === "object" &&
-          (nestedPropSchema as JSONSchema7).properties
-        ) {
-          const deeperPatterns = handleNestedObject(
-            nestedObjectVar,
-            nestedPropSchema as JSONSchema7,
-            depth + 1,
-            maxRecursion,
-            prefixMap,
-          );
-          construct.push(...deeperPatterns.construct);
-          where.push(...deeperPatterns.where);
-        }
+        construct.push(...nestedPatterns.construct);
+        where.push(...nestedPatterns.where);
       },
     );
   }
