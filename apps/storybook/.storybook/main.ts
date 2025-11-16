@@ -1,4 +1,7 @@
+import { fileURLToPath } from "node:url";
+import { dirname } from "node:path";
 import type { StorybookConfig } from "@storybook/react-vite";
+import mermaid from "mdx-mermaid";
 
 const config: StorybookConfig = {
   stories: [
@@ -6,17 +9,20 @@ const config: StorybookConfig = {
     "../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
   ],
   addons: [
-    "@storybook/addon-essentials",
-    "@storybook/addon-docs",
-    "@storybook/addon-controls",
-    "@storybook/addon-actions",
+    {
+      name: getAbsolutePath("@storybook/addon-docs"),
+      options: {
+        mdxPluginOptions: {
+          mdxCompileOptions: {
+            remarkPlugins: [mermaid],
+          },
+        },
+      },
+    },
   ],
   framework: {
-    name: "@storybook/react-vite",
+    name: getAbsolutePath("@storybook/react-vite"),
     options: {},
-  },
-  core: {
-    builder: "@storybook/builder-vite",
   },
   staticDirs: ["../public"],
   env: (config) => {
@@ -43,7 +49,19 @@ const config: StorybookConfig = {
       jsxImportSource: "react",
     };
 
+    // Ensure React runs in development mode
+    config.define = {
+      ...config.define,
+      "process.env.NODE_ENV": JSON.stringify(
+        process.env.NODE_ENV || "development",
+      ),
+    };
+
     return config;
   },
 };
 export default config;
+
+function getAbsolutePath(value: string): any {
+  return dirname(fileURLToPath(import.meta.resolve(`${value}/package.json`)));
+}

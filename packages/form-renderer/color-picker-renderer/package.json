@@ -47,7 +47,7 @@
     "@graviola/edb-tsup-config": "workspace:*",
     "@jsonforms/core": "^3",
     "@jsonforms/react": "^3",
-    "@storybook/react": "^8.1.5",
+    "@storybook/react": "10.0.7",
     "@types/ajv": "^1.0.4",
     "@types/lodash-es": "^4.17.12",
     "@types/react": "~18.3",

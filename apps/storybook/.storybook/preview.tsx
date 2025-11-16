@@ -23,6 +23,7 @@ import {
 import { EntityFinder } from "@graviola/entity-finder";
 import { Provider } from "react-redux";
 import { AppRouterContext } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import "@triply/yasgui/build/yasgui.min.css";
 import {
   SemanticJsonFormNoOps,
   createSemanticConfig,
