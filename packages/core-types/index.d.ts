@@ -266,6 +266,25 @@ export type PaginationMetadata = {
  * Include pattern for relationships with support for nested includes and pagination
  * - Set to `true` to include the relationship with default settings
  * - Set to an object to configure pagination and nested includes
+ *
+ * @template T - The type to derive include pattern from (optional, defaults to any for backward compatibility)
+ *
+ * @example
+ * ```typescript
+ * // With Zod type inference for type safety
+ * import { z } from 'zod';
+ * const schema = z.object({ name: z.string(), friends: z.array(z.object({ name: z.string() })) });
+ * type Person = z.infer<typeof schema>;
+ *
+ * const include: IncludePattern<Person> = {
+ *   friends: { take: 10, include: { name: true } }
+ * };
+ *
+ * // Without type parameter (backward compatible)
+ * const include2: IncludePattern = {
+ *   friends: { take: 10 }
+ * };
+ * ```
  */
 export type IncludePattern<T = any> = {
   [K in keyof T]?:
@@ -276,6 +295,18 @@ export type IncludePattern<T = any> = {
 /**
  * Select pattern for explicitly choosing which fields to include in the result
  * When specified, only the selected fields will be included
+ *
+ * @template T - The type to derive select pattern from (optional, defaults to any for backward compatibility)
+ *
+ * @example
+ * ```typescript
+ * // With type safety
+ * type Person = { name: string; age: number; email: string };
+ * const select: SelectPattern<Person> = { name: true, age: true };
+ *
+ * // Without type parameter (backward compatible)
+ * const select2: SelectPattern = { name: true, age: true };
+ * ```
  */
 export type SelectPattern<T = any> = {
   [K in keyof T]?: boolean;
@@ -283,6 +314,18 @@ export type SelectPattern<T = any> = {
 
 /**
  * Omit pattern for excluding specific fields from the result
+ *
+ * @template T - The type to derive omit pattern from (optional, defaults to any for backward compatibility)
+ *
+ * @example
+ * ```typescript
+ * // With type safety
+ * type Person = { name: string; age: number; email: string };
+ * const omit: OmitPattern<Person> = ['age', 'email'];
+ *
+ * // Without type parameter (backward compatible)
+ * const omit2: OmitPattern = ['age', 'email'];
+ * ```
  */
 export type OmitPattern<T = any> = Array<keyof T>;
 
@@ -293,11 +336,36 @@ export type OmitPattern<T = any> = Array<keyof T>;
  * - `omit`: Exclude specific fields from the result
  * - `includeRelationsByDefault`: Whether to include relationships by default (default: true)
  * - `defaultPaginationLimit`: Default limit for relationship pagination
+ *
+ * @template T - The type to derive filter patterns from (optional, defaults to any for backward compatibility)
+ *
+ * @example
+ * ```typescript
+ * // With Zod type inference for full type safety
+ * import { z } from 'zod';
+ * const schema = z.object({
+ *   name: z.string(),
+ *   age: z.number(),
+ *   friends: z.array(z.object({ name: z.string() }))
+ * });
+ * type Person = z.infer<typeof schema>;
+ *
+ * const options: GraphTraversalFilterOptions<Person> = {
+ *   select: { name: true, age: true }, // Only valid keys allowed
+ *   include: { friends: { take: 10 } },
+ *   includeRelationsByDefault: false
+ * };
+ *
+ * // Without type parameter (backward compatible)
+ * const options2: GraphTraversalFilterOptions = {
+ *   select: { name: true }
+ * };
+ * ```
  */
-export type GraphTraversalFilterOptions = {
-  select?: SelectPattern;
-  include?: IncludePattern;
-  omit?: OmitPattern;
+export type GraphTraversalFilterOptions<T = any> = {
+  select?: SelectPattern<T>;
+  include?: IncludePattern<T>;
+  omit?: OmitPattern<T>;
   includeRelationsByDefault?: boolean;
   defaultPaginationLimit?: number;
   /**
@@ -312,8 +380,11 @@ export type GraphTraversalFilterOptions = {
 
 /**
  * Extended walker options combining legacy options with new filter capabilities
+ *
+ * @template T - The type to derive filter patterns from (optional, defaults to any for backward compatibility)
  */
-export type ExtendedWalkerOptions = WalkerOptions & GraphTraversalFilterOptions;
+export type ExtendedWalkerOptions<T = any> = WalkerOptions &
+  GraphTraversalFilterOptions<T>;
 
 export type Entity = {
   entityIRI: string;
