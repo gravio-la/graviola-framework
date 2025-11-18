@@ -1,0 +1,10 @@
+{
+  "files": ["src/index.test-d.ts"],
+  "compilerOptions": {
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "moduleResolution": "node"
+  }
+}
+

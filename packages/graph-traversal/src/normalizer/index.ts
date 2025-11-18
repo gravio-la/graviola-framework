@@ -15,12 +15,14 @@ import { applyFilters } from "./applyFilters";
  * 1. Resolve all $ref references to create a flat schema structure
  * 2. Apply include/exclude/omit filters to determine which properties to traverse
  *
+ * @template T - The type to derive filter patterns from (typically z.infer<typeof zodSchema>)
  * @param schema The JSON Schema to normalize
  * @param filterOptions Filter options for selecting/including/omitting properties
  * @returns A normalized schema with all refs resolved and filters applied
  *
  * @example
  * ```typescript
+ * // Without type parameter (backward compatible)
  * const schema = {
  *   type: "object",
  *   properties: {
@@ -45,11 +47,23 @@ import { applyFilters } from "./applyFilters";
  *   include: { tags: { take: 10 } },
  *   includeRelationsByDefault: false
  * });
+ *
+ * // With Zod type inference for type safety
+ * import { z } from 'zod';
+ * const zodSchema = z.object({
+ *   name: z.string(),
+ *   tags: z.array(z.object({ label: z.string() }))
+ * });
+ * type MyType = z.infer<typeof zodSchema>;
+ *
+ * const normalized2 = normalizeSchema<MyType>(schema, {
+ *   include: { tags: { take: 10 } } // Type-safe: only valid keys allowed
+ * });
  * ```
  */
-export function normalizeSchema(
+export function normalizeSchema<T = any>(
   schema: JSONSchema7,
-  filterOptions: GraphTraversalFilterOptions = {},
+  filterOptions: GraphTraversalFilterOptions<T> = {},
 ): NormalizedSchema {
   // Phase 1: Resolve all $refs
   const context: NormalizationContext = {
@@ -82,7 +96,7 @@ export function normalizeSchema(
     resolvedSchema,
     propertyMetadata,
     filterOptions,
-    schema, // Pass root schema for nested filtering
+    schema,
     0, // Start at depth 0
   );
 

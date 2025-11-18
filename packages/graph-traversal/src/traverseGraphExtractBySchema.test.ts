@@ -7,9 +7,8 @@ import fs from "fs";
 import type { JSONSchema7 } from "json-schema";
 import { dirname, resolve } from "path";
 import dsExt from "rdf-dataset-ext";
-//import * as tbbt from "tbbt-ld/dist/tbbt.nq";
 //@ts-ignore
-//import testResult01 from "fixture/test_01.json";
+//import * as tbbt from "tbbt-ld/dist/tbbt.nq";
 import { fileURLToPath } from "url";
 
 import { traverseGraphExtractBySchema } from "./traverseGraphExtractBySchema";

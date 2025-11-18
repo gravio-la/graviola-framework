@@ -22,6 +22,7 @@ import { extractObject } from "./extractObject";
  * - Structured logging support
  * - Depth control via schema structure (no infinite loops)
  *
+ * @template T - The type to derive filter patterns from (typically z.infer<typeof zodSchema>)
  * @param iri The IRI of the entity to extract
  * @param dataset The RDF dataset to extract from
  * @param schema The JSON Schema defining the structure to extract
@@ -33,6 +34,7 @@ import { extractObject } from "./extractObject";
  *
  * @example
  * ```typescript
+ * // Without type parameter (backward compatible)
  * const result = extractFromGraph(
  *   "http://example.com/person1",
  *   dataset,
@@ -45,13 +47,30 @@ import { extractObject } from "./extractObject";
  *   "http://schema.org/",
  *   { dc: "http://purl.org/dc/elements/1.1/" }
  * );
+ *
+ * // With Zod type inference for type safety
+ * import { z } from 'zod';
+ * const zodSchema = z.object({
+ *   name: z.string(),
+ *   friends: z.array(z.object({ name: z.string() }))
+ * });
+ * type Person = z.infer<typeof zodSchema>;
+ *
+ * const result2 = extractFromGraph<Person>(
+ *   "http://example.com/person1",
+ *   dataset,
+ *   personSchema,
+ *   {
+ *     include: { friends: { take: 10 } } // Type-safe: only valid keys allowed
+ *   }
+ * );
  * ```
  */
-export function extractFromGraph(
+export function extractFromGraph<T = any>(
   iri: string,
   dataset: DatasetCore,
   schema: JSONSchema7,
-  options: Partial<ExtendedWalkerOptions> = {},
+  options: Partial<ExtendedWalkerOptions<T>> = {},
   baseIRI: string = "http://schema.org/",
   context?: Record<string, string>,
   logger?: Logger,

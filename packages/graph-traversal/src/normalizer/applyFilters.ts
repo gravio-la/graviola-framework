@@ -77,15 +77,16 @@ function filterJsonLdFromNestedSchema(
 
 /**
  * Checks if a property should be included based on filter options
+ * @template T - The type to derive filter patterns from
  * @param propertyName The name of the property
  * @param metadata Metadata about the property
  * @param filterOptions The filter options to apply
  * @returns Object with inclusion status and pagination options
  */
-export function shouldIncludeProperty(
+export function shouldIncludeProperty<T = any>(
   propertyName: string,
   metadata: PropertyMetadata,
-  filterOptions: GraphTraversalFilterOptions,
+  filterOptions: GraphTraversalFilterOptions<T>,
 ): { include: boolean; pagination?: PaginationOptions } {
   const {
     select,
@@ -150,15 +151,16 @@ export function shouldIncludeProperty(
 /**
  * Recursively applies nested filter options to a schema
  * This handles nested includes by recursively extracting metadata and applying filters
+ * @template T - The type to derive filter patterns from
  * @param schema The schema to filter
  * @param nestedFilterOptions The nested filter options (with nested includes)
  * @param rootSchema The root schema for resolving any remaining refs
  * @param depth Current recursion depth
  * @returns A new schema with nested filters applied
  */
-function applyNestedFilters(
+function applyNestedFilters<T = any>(
   schema: JSONSchema7,
-  nestedFilterOptions: GraphTraversalFilterOptions,
+  nestedFilterOptions: GraphTraversalFilterOptions<T>,
   rootSchema: JSONSchema7,
   depth: number,
 ): JSONSchema7 {
@@ -196,6 +198,7 @@ function applyNestedFilters(
 
 /**
  * Applies filter options to a schema's properties
+ * @template T - The type to derive filter patterns from
  * @param schema The schema to filter
  * @param propertyMetadata Metadata about each property
  * @param filterOptions The filter options to apply
@@ -203,10 +206,10 @@ function applyNestedFilters(
  * @param depth Current recursion depth for nested filtering
  * @returns A new schema with filtered properties
  */
-export function applyFilters(
+export function applyFilters<T = any>(
   schema: JSONSchema7,
   propertyMetadata: Record<string, PropertyMetadata>,
-  filterOptions: GraphTraversalFilterOptions,
+  filterOptions: GraphTraversalFilterOptions<T>,
   rootSchema?: JSONSchema7,
   depth: number = 0,
 ): JSONSchema7 {
@@ -342,13 +345,14 @@ export function applyFilters(
 
 /**
  * Extracts pagination options for a specific property from include pattern
+ * @template T - The type to derive filter patterns from
  * @param propertyName The property name
  * @param include The include pattern
  * @returns Pagination options if specified
  */
-export function extractPaginationOptions(
+export function extractPaginationOptions<T = any>(
   propertyName: string,
-  include?: IncludePattern,
+  include?: IncludePattern<T>,
 ): PaginationOptions | undefined {
   if (!include || !(propertyName in include)) {
     return undefined;

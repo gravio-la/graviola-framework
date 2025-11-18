@@ -30,6 +30,7 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch --color",
     "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "test:types": "tsd -f src/index.test-d.ts",
     "docs": "typedoc --out docs"
   },
   "devDependencies": {
@@ -51,8 +52,10 @@
     "tbbt-ld": "^1.1.0",
     "ts-jest": "^29.1.2",
     "ts-jest-mock-import-meta": "^1.2.0",
+    "tsd": "^0.31.0",
     "tsup": "^8.0.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "zod": "^4.1.12"
   },
   "peerDependencies": {
     "@rdfjs/data-model": "^2.0.2"
