@@ -791,7 +791,6 @@ export const PipelineWithGlobalRegistry: Story = {
       uri: (id) => `#/definitions/${id}`,
       target: "draft-7",
     });
-    console.log(registryJsonSchema);
 
     // ========================================================================
     // 4. Use helper to bring Person to top level
@@ -896,6 +895,7 @@ export const TypeSafeFiltersExample: Story = {
       "schema:birthDate": z.string().optional(),
       "schema:email": z.string().email().optional(),
       "schema:telephone": z.string().optional(),
+      "schema:postalCode": z.union([z.string(), z.number().int()]).optional(),
       "schema:knows": z
         .array(
           z.object({
@@ -907,6 +907,8 @@ export const TypeSafeFiltersExample: Story = {
     });
 
     type Person = z.infer<typeof PersonSchema>;
+
+    const schema = z.toJSONSchema(PersonSchema, { target: "draft-7" });
 
     // Type-safe filters - try adding invalid properties!
     const filters: TypedGraphTraversalFilterOptions<Person> = {
@@ -941,6 +943,7 @@ export const TypeSafeFiltersExample: Story = {
             type="json"
             title="Filters Configuration"
           />
+          <OutputDisplay data={schema} type="json" title="Schema" />
         </Paper>
       </Box>
     );
