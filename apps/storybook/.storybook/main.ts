@@ -40,7 +40,13 @@ const config: StorybookConfig = {
   },
   viteFinal: async (config) => {
     // Add support for .nq and .ttl files (Turtle/RDF formats)
-    config.assetsInclude = ["**/*.nq", "**/*.ttl", "**/*.rdf", "**/*.owl"];
+    config.assetsInclude = [
+      "**/*.nq",
+      "**/*.nt",
+      "**/*.ttl",
+      "**/*.rdf",
+      "**/*.owl",
+    ];
 
     // Configure JSX transform to use react-jsx (automatic JSX transform)
     config.esbuild = {

@@ -41,7 +41,8 @@ import type {
   Url,
 } from "@graviola/semantic-jsonform-types";
 import { useAdbContext, useDataStore } from "@graviola/edb-state-hooks";
-
+//@ts-ignore
+import tbbt from "tbbt-ld/dist/tbbt.nt";
 // Hardcoded values for Storybook
 const BASE_IRI = "http://ontologies.slub-dresden.de/exhibition#";
 const PUBLIC_BASE_PATH = "";
@@ -104,7 +105,8 @@ const LocalStoreWithExampleDataProvider = ({
       const ontology = await fetch(
         basePath + "/ontology/exhibition-info.owl.ttl",
       ).then((res) => res.text());
-      return [data, ontology];
+      const tbbtData = await fetch(tbbt).then((res) => res.text());
+      return [data, ontology, tbbtData];
     },
   });
 
