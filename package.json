@@ -44,8 +44,6 @@
     "prepare": "[ \"$CI\" != \"true\" ] && husky install || echo \"Skipping husky install in CI environment\"",
     "precommit": "lint-staged",
     "changeset:init": "changeset init",
-
-    
     "changeset": "changeset",
     "publish": "turbo run publish-clean --continue --concurrency 1; bun run restore",
     "helper:deps": "bun ./packages/build-helper/get-dependencies.js",
