@@ -4,6 +4,7 @@ import type {
   StringToIRIFn,
   WalkerOptions,
   Entity,
+  TypedGraphTraversalFilterOptions,
 } from "@graviola/edb-core-types";
 import type { NamespaceBuilder } from "@rdfjs/namespace";
 import type { JsonLdContext } from "jsonld-context-parser";
@@ -73,6 +74,30 @@ export type CountAndIterable<DocumentResult> = {
   amount: number;
   iterable: AsyncIterable<DocumentResult>;
 };
+
+/**
+ * Options for filtering a single typed document
+ * Generic enough to work with any datastore implementation (SPARQL, Prisma, etc.)
+ */
+export type TypedDocumentFilterOptions<T = any> =
+  TypedGraphTraversalFilterOptions<T> & {
+    /** Walker options for graph/document traversal */
+    walkerOptions?: Partial<WalkerOptions>;
+    /** Maximum recursion depth for nested objects */
+    maxRecursion?: number;
+  };
+
+/**
+ * Options for finding multiple typed documents
+ * Adds search and pagination on top of filter options
+ */
+export type TypedDocumentsSearchOptions<T = any> =
+  TypedDocumentFilterOptions<T> & {
+    /** Search string to filter entities by label/name */
+    searchString?: string | null;
+    /** Maximum number of entities to return */
+    limit?: number;
+  };
 
 export type AbstractDatastoreIterable<
   TypeName extends string = string,
@@ -212,6 +237,34 @@ export type AbstractDatastore<
     query?: Partial<QuerySearch>,
   ) => Promise<number>;
   getClasses?: (entityIRI: string) => Promise<string[]>;
+  /**
+   * Load a single document with type-safe filters
+   * Supports Prisma-style where/include/select with full TypeScript inference
+   *
+   * @template T - Type of the document (e.g., z.infer<typeof PersonSchema>)
+   * @param typeName - Name of the type/class
+   * @param entityIRI - IRI of the entity to load
+   * @param options - Type-safe filter options (where, include, select, etc.)
+   * @returns Promise resolving to the filtered document of type T
+   */
+  filterTypedDocument?: <T = any>(
+    typeName: TypeName,
+    entityIRI: string,
+    options?: TypedDocumentFilterOptions<T>,
+  ) => Promise<T>;
+  /**
+   * Find multiple documents by type with type-safe filters
+   * Supports Prisma-style where/include/select with search and pagination
+   *
+   * @template T - Type of the documents (e.g., z.infer<typeof PersonSchema>)
+   * @param typeName - Name of the type/class to search for
+   * @param options - Type-safe filter and search options
+   * @returns Promise resolving to array of filtered documents of type T[]
+   */
+  filterTypedDocuments?: <T = any>(
+    typeName: TypeName,
+    options?: TypedDocumentsSearchOptions<T>,
+  ) => Promise<T[]>;
   iterableImplementation?: AbstractDatastoreIterable<
     TypeName,
     DocumentResultTypeMap,

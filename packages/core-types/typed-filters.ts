@@ -82,6 +82,32 @@ export type GeoFilterOperators = {
 };
 
 /**
+ * Node reference type - represents a reference to a linked data entity by IRI
+ * Can use full IRI, prefixed IRI, or default prefix
+ */
+export type NodeReference = {
+  "@id": string;
+};
+
+/**
+ * Relationship filter operators
+ * Available for array properties that represent relationships to other entities
+ *
+ * Follows Prisma's naming conventions:
+ * - some: At least one related entity matches the filter
+ * - every: All related entities must match the filter
+ * - none: No related entities match the filter
+ */
+export type RelationshipFilterOperators<T> = {
+  // At least one related entity matches (default when using shorthand)
+  some?: NodeReference | TypedWhereInput<T>;
+  // All specified entities must be present in the relationship
+  every?: NodeReference[] | TypedWhereInput<T>[];
+  // No related entities match the criteria
+  none?: NodeReference | NodeReference[] | TypedWhereInput<T>;
+};
+
+/**
  * Map TypeScript types to appropriate filter operators
  * This is the key to type-safe filtering - each type gets its own operators
  *
@@ -106,9 +132,17 @@ export type FilterOperatorsForType<T> =
           : // Date type gets datetime operators
             T extends Date
             ? string | Date | DateTimeFilterOperators
-            : // Array types - recurse into element type
+            : // Array types - check if it's a relationship array or primitive array
               T extends Array<infer U>
-              ? TypedWhereInput<U> | TypedWhereInput<U>[]
+              ? // If array of objects with @id, it's a relationship - add relationship operators
+                U extends { "@id"?: string }
+                ?
+                    | NodeReference
+                    | RelationshipFilterOperators<U>
+                    | TypedWhereInput<U>
+                    | TypedWhereInput<U>[]
+                : // Otherwise it's a primitive array - recurse normally
+                  TypedWhereInput<U> | TypedWhereInput<U>[]
               : // Object types - recurse into object properties
                 T extends object
                 ? TypedWhereInput<T>
