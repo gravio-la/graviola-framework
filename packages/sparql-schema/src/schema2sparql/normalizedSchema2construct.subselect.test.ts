@@ -20,18 +20,23 @@ describe("normalizedSchema2construct - SUBSELECT Generation", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {
+    const filterOptions = {
       include: {
         friends: {
           take: 10,
-          orderBy: { name: "asc" },
+          orderBy: { name: "asc" as const },
         },
       },
-    });
+    };
+
+    const normalized = normalizeSchema(schema, filterOptions);
 
     const result = normalizedSchema2construct(
       "http://example.com/person1",
       normalized,
+      {
+        filterOptions,
+      },
     );
 
     // Verify pagination metadata is collected
@@ -71,19 +76,24 @@ describe("normalizedSchema2construct - SUBSELECT Generation", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {
+    const filterOptions = {
       include: {
         posts: {
           take: 20,
           skip: 5,
-          orderBy: [{ createdAt: "desc" }, { title: "asc" }],
+          orderBy: [{ createdAt: "desc" as const }, { title: "asc" as const }],
         },
       },
-    });
+    };
+
+    const normalized = normalizeSchema(schema, filterOptions);
 
     const result = normalizedSchema2construct(
       "http://example.com/blog1",
       normalized,
+      {
+        filterOptions,
+      },
     );
 
     const whereString = result.wherePatterns
@@ -112,18 +122,23 @@ describe("normalizedSchema2construct - SUBSELECT Generation", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {
+    const filterOptions = {
       include: {
         items: {
           take: 5,
           // No orderBy
         },
       },
-    });
+    };
+
+    const normalized = normalizeSchema(schema, filterOptions);
 
     const result = normalizedSchema2construct(
       "http://example.com/list1",
       normalized,
+      {
+        filterOptions,
+      },
     );
 
     const whereString = result.wherePatterns
@@ -186,18 +201,23 @@ describe("normalizedSchema2construct - SUBSELECT Generation", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {
+    const filterOptions = {
       include: {
         items: {
           take: 10,
           skip: 20,
         },
       },
-    });
+    };
+
+    const normalized = normalizeSchema(schema, filterOptions);
 
     const result = normalizedSchema2construct(
       "http://example.com/container1",
       normalized,
+      {
+        filterOptions,
+      },
     );
 
     const whereString = result.wherePatterns
@@ -226,18 +246,23 @@ describe("normalizedSchema2construct - SUBSELECT Generation", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {
+    const filterOptions = {
       include: {
         friends: {
           take: 10,
-          orderBy: { name: "asc" },
+          orderBy: { name: "asc" as const },
         },
       },
-    });
+    };
+
+    const normalized = normalizeSchema(schema, filterOptions);
 
     const result = normalizedSchema2construct(
       "http://example.com/person1",
       normalized,
+      {
+        filterOptions,
+      },
     );
 
     const whereString = result.wherePatterns
@@ -266,14 +291,16 @@ describe("normalizedSchema2construct - SUBSELECT Generation", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {
+    const filterOptions = {
       include: {
         friends: {
           take: 10,
-          orderBy: { "foaf:name": "asc" },
+          orderBy: { "foaf:name": "asc" as const },
         },
       },
-    });
+    };
+
+    const normalized = normalizeSchema(schema, filterOptions);
 
     const result = normalizedSchema2construct(
       "http://example.com/person1",
@@ -282,6 +309,7 @@ describe("normalizedSchema2construct - SUBSELECT Generation", () => {
         prefixMap: {
           foaf: "http://xmlns.com/foaf/0.1/",
         },
+        filterOptions,
       },
     );
 

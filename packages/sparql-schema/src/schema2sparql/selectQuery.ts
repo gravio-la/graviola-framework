@@ -1,6 +1,7 @@
 import type { BindingsStream } from "@comunica/types";
 import type { Prefixes, RDFSelectResult } from "@graviola/edb-core-types";
 import { Literal, NamedNode } from "@rdfjs/types";
+import { SELECT } from "@tpluscode/sparql-builder";
 
 import { prefixes2sparqlPrefixDeclaration } from "./prefixes2sparqlPrefixDeclaration";
 import { rdfLiteralToNative } from "./primitives";
@@ -64,9 +65,14 @@ export const sparqlSelectFieldsQuery = (
     wrapAround,
     includeLabel,
     includeDescription,
+    prefixes,
   }: Pick<
     SparqlSelectViaFieldMappingOptions,
-    "fieldMapping" | "wrapAround" | "includeLabel" | "includeDescription"
+    | "fieldMapping"
+    | "wrapAround"
+    | "includeLabel"
+    | "includeDescription"
+    | "prefixes"
   >,
 ) => {
   const [before, after] = wrapAround || ["", ""];
@@ -100,11 +106,19 @@ export const sparqlSelectFieldsQuery = (
       return where;
     })
     .join("\n");
-  return `
-    SELECT * WHERE {
-       ${whereMapping}
+
+  // Build query using SELECT template string
+  let query = SELECT`*`.WHERE`${whereMapping}`;
+
+  // Add PREFIX declarations using prologue if prefixes are provided
+  if (prefixes) {
+    const prefixDecls = prefixes2sparqlPrefixDeclaration(prefixes);
+    if (prefixDecls) {
+      query = query.prologue`${prefixDecls}`;
     }
-    `;
+  }
+
+  return query.build().toString();
 };
 
 const isRDFSelectResult = (
@@ -129,10 +143,10 @@ export const sparqlSelectViaFieldMappings = async (
     ...params
   }: SparqlSelectViaFieldMappingOptions,
 ) => {
-  const sparqlQuery = `
-    ${prefixes ? prefixes2sparqlPrefixDeclaration(prefixes) : ""}
-    ${sparqlSelectFieldsQuery(subjectIRI, params)}
-    `;
+  const sparqlQuery = sparqlSelectFieldsQuery(subjectIRI, {
+    ...params,
+    prefixes,
+  });
 
   const bindingsStream: BindingsStream | RDFSelectResult =
     await query(sparqlQuery);

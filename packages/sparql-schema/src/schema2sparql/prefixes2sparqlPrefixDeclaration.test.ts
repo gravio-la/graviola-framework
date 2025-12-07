@@ -11,14 +11,16 @@ describe("prefixes2sparqlPrefixDeclaration", () => {
 
     const result = prefixes2sparqlPrefixDeclaration(prefixes);
 
-    expect(result).toContain("PREFIX : <http://example.com/>");
-    expect(result).toContain("PREFIX foaf: <http://xmlns.com/foaf/0.1/>");
-    expect(result).toContain("PREFIX schema: <http://schema.org/>");
+    expect(result).toBeTruthy();
+    const resultString = result?.toString();
+    expect(resultString).toContain("PREFIX : <http://example.com/>");
+    expect(resultString).toContain("PREFIX foaf: <http://xmlns.com/foaf/0.1/>");
+    expect(resultString).toContain("PREFIX schema: <http://schema.org/>");
   });
 
   test("handles empty prefix map", () => {
     const result = prefixes2sparqlPrefixDeclaration({});
-    expect(result).toBe("");
+    expect(result).toBeNull();
   });
 
   test("deduplicates prefixes when existingQuery is provided", () => {
@@ -34,13 +36,14 @@ CONSTRUCT { ?s ?p ?o }
 WHERE { ?s ?p ?o }`;
 
     const result = prefixes2sparqlPrefixDeclaration(prefixes, existingQuery);
+    const resultString = result?.toString();
 
     // Should include new prefixes
-    expect(result).toContain("PREFIX : <http://example.com/>");
-    expect(result).toContain("PREFIX schema: <http://schema.org/>");
+    expect(resultString).toContain("PREFIX : <http://example.com/>");
+    expect(resultString).toContain("PREFIX schema: <http://schema.org/>");
 
     // Should NOT include already-declared prefixes
-    expect(result).not.toContain("PREFIX foaf:");
+    expect(resultString).not.toContain("PREFIX foaf:");
   });
 
   test("filters out auto-added prefixes (rdf, xsd)", () => {
@@ -52,14 +55,15 @@ WHERE { ?s ?p ?o }`;
     };
 
     const result = prefixes2sparqlPrefixDeclaration(prefixes);
+    const resultString = result?.toString();
 
     // Should include custom prefixes
-    expect(result).toContain("PREFIX : <http://example.com/>");
-    expect(result).toContain("PREFIX schema: <http://schema.org/>");
+    expect(resultString).toContain("PREFIX : <http://example.com/>");
+    expect(resultString).toContain("PREFIX schema: <http://schema.org/>");
 
     // Should NOT include auto-added prefixes
-    expect(result).not.toContain("PREFIX rdf:");
-    expect(result).not.toContain("PREFIX xsd:");
+    expect(resultString).not.toContain("PREFIX rdf:");
+    expect(resultString).not.toContain("PREFIX xsd:");
   });
 
   test("handles case-insensitive PREFIX matching", () => {
@@ -71,12 +75,15 @@ WHERE { ?s ?p ?o }`;
     const existingQuery = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>`;
 
     const result = prefixes2sparqlPrefixDeclaration(prefixes, existingQuery);
+    const resultString = result?.toString();
 
     // Should still deduplicate rdf (case-sensitive match is enough)
-    expect(result).not.toContain("PREFIX rdf:");
+    expect(resultString).not.toContain("PREFIX rdf:");
 
     // But RDF (uppercase) is different and should be included
-    expect(result).toContain("PREFIX RDF:");
+    expect(resultString).toContain(
+      "PREFIX RDF: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+    );
   });
 
   test("handles default prefix (empty string)", () => {
@@ -89,7 +96,7 @@ WHERE { ?s ?p ?o }`;
     const result = prefixes2sparqlPrefixDeclaration(prefixes, existingQuery);
 
     // Should deduplicate default prefix
-    expect(result).toBe("");
+    expect(result).toBeNull();
   });
 
   test("handles complex query with multiple PREFIX declarations", () => {
@@ -105,16 +112,17 @@ CONSTRUCT { ?s foaf:name ?name }
 WHERE { ?s foaf:name ?name }`;
 
     const result = prefixes2sparqlPrefixDeclaration(prefixes, existingQuery);
+    const resultString = result?.toString();
 
     // Should include new prefixes
-    expect(result).toContain("PREFIX dcterms:");
-    expect(result).toContain("PREFIX schema:");
+    expect(resultString).toContain("PREFIX dcterms:");
+    expect(resultString).toContain("PREFIX schema:");
 
     // Should not include existing prefix
-    expect(result).not.toContain("PREFIX foaf:");
+    expect(resultString).not.toContain("PREFIX foaf:");
   });
 
-  test("generates correct format with newlines", () => {
+  test("generates correct format as SparqlTemplateResult", () => {
     const prefixes = {
       foaf: "http://xmlns.com/foaf/0.1/",
       schema: "http://schema.org/",
@@ -122,9 +130,10 @@ WHERE { ?s foaf:name ?name }`;
 
     const result = prefixes2sparqlPrefixDeclaration(prefixes);
 
-    // Should have newline between declarations
-    expect(result).toBe(
-      "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\nPREFIX schema: <http://schema.org/>",
-    );
+    // Should return a SparqlTemplateResult
+    expect(result).toBeTruthy();
+    const resultString = result?.toString();
+    expect(resultString).toContain("PREFIX foaf: <http://xmlns.com/foaf/0.1/>");
+    expect(resultString).toContain("PREFIX schema: <http://schema.org/>");
   });
 });

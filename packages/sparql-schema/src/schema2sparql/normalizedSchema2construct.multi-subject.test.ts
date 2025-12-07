@@ -1,0 +1,252 @@
+import { describe, it, expect } from "vitest";
+import { normalizedSchema2construct } from "./normalizedSchema2construct";
+import type { NormalizedSchema } from "@graviola/edb-graph-traversal";
+
+describe("normalizedSchema2construct - Multiple Subjects", () => {
+  it("should generate VALUES pattern for multiple subject IRIs", () => {
+    const schema: NormalizedSchema = {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+        age: { type: "number" },
+      },
+      _normalized: true,
+    };
+
+    const result = normalizedSchema2construct(
+      [
+        "http://example.com/person1",
+        "http://example.com/person2",
+        "http://example.com/person3",
+      ],
+      schema,
+    );
+
+    const whereQuery = result.wherePatterns.map((p) => p.toString()).join(" ");
+
+    // Should use VALUES for multiple subjects
+    expect(whereQuery).toContain("VALUES");
+    expect(whereQuery).toContain("?subject");
+    expect(whereQuery).toContain("<http://example.com/person1>");
+    expect(whereQuery).toContain("<http://example.com/person2>");
+    expect(whereQuery).toContain("<http://example.com/person3>");
+
+    // Should use ?subject variable in patterns
+    expect(whereQuery).toContain("?subject");
+    expect(whereQuery).toContain("?type");
+  });
+
+  it("should generate BIND pattern for single subject IRI with oxigraph flavour", () => {
+    const schema: NormalizedSchema = {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+      },
+      _normalized: true,
+    };
+
+    const result = normalizedSchema2construct(
+      "http://example.com/person1",
+      schema,
+      {
+        flavour: "oxigraph",
+      },
+    );
+
+    const whereQuery = result.wherePatterns.map((p) => p.toString()).join(" ");
+
+    // Should use BIND for single subject with oxigraph
+    expect(whereQuery).toContain("BIND");
+    expect(whereQuery).toContain("?subject");
+    expect(whereQuery).toContain("<http://example.com/person1>");
+  });
+
+  it("should generate VALUES pattern for single subject IRI with default flavour", () => {
+    const schema: NormalizedSchema = {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+      },
+      _normalized: true,
+    };
+
+    const result = normalizedSchema2construct(
+      "http://example.com/person1",
+      schema,
+      {
+        flavour: "default",
+      },
+    );
+
+    const whereQuery = result.wherePatterns.map((p) => p.toString()).join(" ");
+
+    // Should use VALUES even for single subject with default flavour
+    expect(whereQuery).toContain("VALUES");
+    expect(whereQuery).toContain("?subject");
+    expect(whereQuery).toContain("<http://example.com/person1>");
+  });
+
+  it("should handle prefixed IRIs in multiple subjects", () => {
+    const schema: NormalizedSchema = {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+      },
+      _normalized: true,
+    };
+
+    const result = normalizedSchema2construct(
+      ["ex:person1", "ex:person2"],
+      schema,
+      {
+        prefixMap: { ex: "http://example.com/" },
+      },
+    );
+
+    const whereQuery = result.wherePatterns.map((p) => p.toString()).join(" ");
+
+    // Should use VALUES with prefixed names
+    expect(whereQuery).toContain("VALUES");
+    expect(whereQuery).toContain("?subject");
+    expect(whereQuery).toContain("ex:person1");
+    expect(whereQuery).toContain("ex:person2");
+  });
+
+  it("should handle mix of prefixed and full IRIs", () => {
+    const schema: NormalizedSchema = {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+      },
+      _normalized: true,
+    };
+
+    const result = normalizedSchema2construct(
+      ["ex:person1", "http://example.com/person2", "urn:uuid:12345"],
+      schema,
+      {
+        prefixMap: { ex: "http://example.com/" },
+      },
+    );
+
+    const whereQuery = result.wherePatterns.map((p) => p.toString()).join(" ");
+
+    // Should handle mixed formats
+    expect(whereQuery).toContain("VALUES");
+    expect(whereQuery).toContain("?subject");
+    expect(whereQuery).toContain("ex:person1");
+    expect(whereQuery).toContain("<http://example.com/person2>");
+    expect(whereQuery).toContain("<urn:uuid:12345>");
+  });
+
+  it("should generate correct CONSTRUCT patterns for multiple subjects", () => {
+    const schema: NormalizedSchema = {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+        age: { type: "number" },
+      },
+      _normalized: true,
+    };
+
+    const result = normalizedSchema2construct(
+      ["http://example.com/person1", "http://example.com/person2"],
+      schema,
+    );
+
+    const constructQuery = result.constructPatterns
+      .map((p) => p.toString())
+      .join(" ");
+
+    // CONSTRUCT patterns should use ?subject variable
+    expect(constructQuery).toContain("?subject");
+    expect(constructQuery).toContain("?type");
+    expect(constructQuery).toContain("?name_0");
+    expect(constructQuery).toContain("?age_0");
+  });
+
+  it("should work with nested objects for multiple subjects", () => {
+    const schema: NormalizedSchema = {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+        address: {
+          type: "object",
+          properties: {
+            street: { type: "string" },
+            city: { type: "string" },
+          },
+        },
+      },
+      _normalized: true,
+    };
+
+    const result = normalizedSchema2construct(
+      ["http://example.com/person1", "http://example.com/person2"],
+      schema,
+    );
+
+    const whereQuery = result.wherePatterns.map((p) => p.toString()).join(" ");
+
+    // Should handle nested objects with multiple subjects
+    expect(whereQuery).toContain("VALUES");
+    expect(whereQuery).toContain("?subject");
+    expect(whereQuery).toContain("?address_0");
+    expect(whereQuery).toContain("?street_1");
+    expect(whereQuery).toContain("?city_1");
+  });
+
+  it("should work with arrays for multiple subjects", () => {
+    const schema: NormalizedSchema = {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+        friends: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              name: { type: "string" },
+            },
+          },
+        },
+      },
+      _normalized: true,
+    };
+
+    const result = normalizedSchema2construct(
+      ["http://example.com/person1", "http://example.com/person2"],
+      schema,
+      {
+        filterOptions: {
+          include: {
+            friends: { take: 10, orderBy: { name: "asc" } },
+          },
+        },
+      },
+    );
+
+    const whereQuery = result.wherePatterns.map((p) => p.toString()).join(" ");
+
+    // Should handle arrays with pagination for multiple subjects
+    expect(whereQuery).toContain("VALUES");
+    expect(whereQuery).toContain("?subject");
+    expect(whereQuery).toContain("?friends_0");
+    expect(whereQuery).toContain("SELECT");
+    expect(whereQuery).toContain("LIMIT 10");
+  });
+
+  it("should throw error for empty array of subject IRIs", () => {
+    const schema: NormalizedSchema = {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+      },
+      _normalized: true,
+    };
+
+    expect(() => {
+      normalizedSchema2construct([], schema);
+    }).toThrow("entityIRIList is empty");
+  });
+});

@@ -1,7 +1,7 @@
 import { describe, it, expect } from "bun:test";
 import { normalizeSchema } from "@graviola/edb-graph-traversal";
 import { normalizedSchema2construct } from "./normalizedSchema2construct";
-import { buildCompleteSPARQLQuery } from "./buildCompleteSPARQLQuery";
+import { buildSPARQLConstructQuery } from "./buildSPARQLConstructQuery";
 import type { JSONSchema7 } from "json-schema";
 
 describe("buildCompleteSPARQLQuery", () => {
@@ -19,7 +19,7 @@ describe("buildCompleteSPARQLQuery", () => {
       "http://example.com/person/1",
       normalized,
     );
-    const query = buildCompleteSPARQLQuery(result, {
+    const query = buildSPARQLConstructQuery(result, {
       "": "http://example.com/",
     });
 
@@ -43,16 +43,16 @@ describe("buildCompleteSPARQLQuery", () => {
       "http://example.com/person/1",
       normalized,
     );
-    const query = buildCompleteSPARQLQuery(result, {
+    const query = buildSPARQLConstructQuery(result, {
       "": "http://example.com/",
     });
 
     // Check that WHERE patterns have dots inside OPTIONAL blocks (correct SPARQL syntax)
     expect(query).toContain("WHERE");
-    // Subject is output as full IRI, not prefixed form
-    expect(query).toMatch(
-      /OPTIONAL \{ <http:\/\/example\.com\/person\/1> :name \?name_\d+ \. \}/,
-    );
+    // Subject is now a variable with VALUES clause binding it to the IRI
+    expect(query).toContain("VALUES ?subject");
+    expect(query).toContain("<http://example.com/person/1>");
+    expect(query).toMatch(/OPTIONAL \{ \?subject :name \?name_\d+ \. \}/);
   });
 
   it("should handle pagination with SUBSELECT correctly", () => {
@@ -76,19 +76,24 @@ describe("buildCompleteSPARQLQuery", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {
+    const filterOptions = {
       include: {
         friends: {
           take: 10,
           orderBy: { name: "asc" },
         },
       },
-    });
+    };
+
+    const normalized = normalizeSchema(schema, filterOptions);
     const result = normalizedSchema2construct(
       "http://example.com/person/1",
       normalized,
+      {
+        filterOptions,
+      },
     );
-    const query = buildCompleteSPARQLQuery(result, {
+    const query = buildSPARQLConstructQuery(result, {
       "": "http://example.com/",
     });
 
@@ -98,10 +103,10 @@ describe("buildCompleteSPARQLQuery", () => {
     expect(query).toContain("LIMIT 10");
 
     // SUBSELECT should have dots inside its WHERE clause
-    // Subject is output as full IRI, not prefixed form
-    expect(query).toMatch(
-      /<http:\/\/example\.com\/person\/1> :friends \?friends_\d+ \./,
-    );
+    // Subject is now a variable with VALUES clause binding it to the IRI
+    expect(query).toContain("VALUES ?subject");
+    expect(query).toContain("<http://example.com/person/1>");
+    expect(query).toMatch(/\?subject :friends \?friends_\d+ \./);
     expect(query).toMatch(/OPTIONAL \{ \?friends_\d+ :name \?name \. \}/);
   });
 });

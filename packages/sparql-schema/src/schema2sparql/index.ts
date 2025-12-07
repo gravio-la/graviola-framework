@@ -4,4 +4,5 @@ export * from "./selectQuery";
 export * from "./primitives";
 export * from "./prefixes2sparqlPrefixDeclaration";
 export * from "./normalizedSchema2construct";
-export * from "./buildCompleteSPARQLQuery";
+export * from "./buildSPARQLConstructQuery";
+export * from "./buildTypedSPARQLQuery";

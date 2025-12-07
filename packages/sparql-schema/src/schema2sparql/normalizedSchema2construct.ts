@@ -22,8 +22,33 @@ import type {
   OrderByClause,
   SortOrder,
   PaginationMetadata,
+  GraphTraversalFilterOptions,
+  SPARQLFlavour,
 } from "@graviola/edb-core-types";
 import df from "@rdfjs/data-model";
+import { get } from "lodash";
+import { convertIRIToNode } from "../utils/iriConverter";
+import { createBindOrValuesPattern } from "../utils/sparqlBindOrValues";
+
+/**
+ * Context for query construction
+ * Carries all necessary state through the recursion
+ * Similar to ExtractionContext in graph-traversal
+ */
+export type QueryConstructionContext = {
+  /** The current schema being processed */
+  schema: NormalizedSchema;
+  /** Filter options (select, include, omit, where) carried through recursion */
+  filterOptions: GraphTraversalFilterOptions;
+  /** Prefix mappings for property names */
+  prefixMap: Prefixes;
+  /** Current recursion depth */
+  depth: number;
+  /** Maximum recursion depth */
+  maxRecursion: number;
+  /** Properties to exclude from the query */
+  excludedProperties: string[];
+};
 
 /**
  * Result of CONSTRUCT query generation
@@ -76,6 +101,69 @@ function addWherePattern(
 }
 
 /**
+ * Type for nested filter options object (from IncludePattern)
+ */
+type NestedFilterOptions = {
+  include?: any;
+  select?: any;
+  omit?: any;
+  where?: any;
+  skip?: number;
+  take?: number;
+  orderBy?: any;
+};
+
+/**
+ * Type guard to check if a value is a nested filter options object (not boolean)
+ */
+function isNestedFilterOptions(value: unknown): value is NestedFilterOptions {
+  return typeof value === "object" && value !== null;
+}
+
+/**
+ * Extract nested filter options from include value
+ * Uses lodash get for safe property access
+ */
+function extractNestedFilterOptions(
+  includeValue: unknown,
+): Partial<GraphTraversalFilterOptions> {
+  if (!isNestedFilterOptions(includeValue)) {
+    return {};
+  }
+
+  return {
+    include: get(includeValue, "include"),
+    select: get(includeValue, "select"),
+    omit: get(includeValue, "omit"),
+    where: get(includeValue, "where"),
+  };
+}
+
+/**
+ * Build nested query construction context with filter options
+ * Increments depth and applies nested filter options
+ */
+function createNestedContext(
+  ctx: QueryConstructionContext,
+  propertyName: string,
+  nestedSchema?: NormalizedSchema,
+): QueryConstructionContext {
+  const includeValue = ctx.filterOptions.include?.[propertyName];
+  const nestedFilterOptions: Partial<GraphTraversalFilterOptions> =
+    extractNestedFilterOptions(includeValue);
+
+  return {
+    ...ctx,
+    schema: nestedSchema || ctx.schema,
+    filterOptions: {
+      ...ctx.filterOptions,
+      ...nestedFilterOptions,
+    },
+    depth: ctx.depth + 1,
+  };
+}
+
+/**
  * Normalize orderBy to array format
  * Converts single object or array of objects to consistent array format
  * Example: { name: 'asc' } => [{ name: 'asc' }]
@@ -122,8 +210,7 @@ function hasOrderBy(paginationMeta: any): boolean {
  * @param objectVar - Variable for the array items
  * @param itemSchema - Schema for array items
  * @param paginationMeta - Pagination metadata with orderBy, take, skip
- * @param prefixMap - Prefix mappings
- * @param depth - Current recursion depth
+ * @param ctx - Query construction context
  * @returns SPARQL SUBSELECT query using SELECT builder
  */
 function createPaginatedSubselect(
@@ -132,8 +219,7 @@ function createPaginatedSubselect(
   objectVar: any,
   itemSchema: JSONSchema7,
   paginationMeta: any,
-  prefixMap: Prefixes,
-  depth: number,
+  ctx: QueryConstructionContext,
 ): SparqlTemplateResult {
   // Start with SELECT builder - select the object variable (dots required by SPARQL syntax)
   let query = SELECT`${objectVar}`
@@ -145,7 +231,7 @@ function createPaginatedSubselect(
 
     for (const clause of normalized) {
       for (const property of Object.keys(clause)) {
-        const propPredicate = createPredicate(property, prefixMap);
+        const propPredicate = createPredicate(property, ctx.prefixMap);
         const propVarName = sanitizeVariableName(property);
         const propVar = df.variable(propVarName);
 
@@ -197,25 +283,31 @@ function createPaginatedSubselect(
 /**
  * Generate SPARQL CONSTRUCT query from a normalized schema
  *
- * @param subjectIRI - The IRI of the subject to construct
+ * @param subjectIRI - The IRI(s) of the subject(s) to construct (single IRI or array of IRIs)
  * @param normalizedSchema - Schema with all $refs resolved
  * @param options - Optional configuration
  * @returns CONSTRUCT and WHERE patterns with metadata
  */
 export function normalizedSchema2construct(
-  subjectIRI: string,
+  subjectIRI: string | string[],
   normalizedSchema: NormalizedSchema,
   options?: {
     excludedProperties?: string[];
     maxRecursion?: number;
     prefixMap?: Prefixes; // Prefix mappings (e.g., { "foaf": "http://xmlns.com/foaf/0.1/" })
+    filterOptions?: GraphTraversalFilterOptions; // Filter options for nested queries
+    flavour?: SPARQLFlavour; // SPARQL flavour for BIND vs VALUES optimization
   },
 ): ConstructResult {
-  // Always exclude JSON-LD metadata properties (starting with @)
-  const userExcluded = options?.excludedProperties || [];
-  const excludedProperties = userExcluded;
-  const maxRecursion = options?.maxRecursion || 4;
-  const prefixMap = options?.prefixMap || {};
+  // Create query construction context
+  const ctx: QueryConstructionContext = {
+    schema: normalizedSchema,
+    filterOptions: options?.filterOptions || {},
+    prefixMap: options?.prefixMap || {},
+    depth: 0,
+    maxRecursion: options?.maxRecursion || 4,
+    excludedProperties: options?.excludedProperties || [],
+  };
 
   const constructPatterns: SparqlTemplateResult[] = [];
   const wherePatterns: SparqlTemplateResult[] = [];
@@ -229,8 +321,21 @@ export function normalizedSchema2construct(
     }
   >();
 
-  // Create subject node
-  const subject = df.namedNode(subjectIRI);
+  // Create subject variable
+  const subjectVar = df.variable("subject");
+
+  // Use BIND or VALUES pattern to bind subject IRI(s) to variable
+  // This handles both single and multiple subjects efficiently
+  const subjectBindPattern = createBindOrValuesPattern(subjectIRI, subjectVar, {
+    flavour: options?.flavour,
+    prefixMap: options?.prefixMap,
+  });
+
+  // Add the BIND/VALUES pattern to WHERE clause (required, not optional)
+  wherePatterns.push(subjectBindPattern);
+
+  // Use subject variable instead of concrete node
+  const subject = subjectVar;
 
   // Add rdf:type pattern (always OPTIONAL)
   const typeVar = df.variable("type");
@@ -238,7 +343,6 @@ export function normalizedSchema2construct(
     "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
   );
 
-  // Use sparql builder to create patterns (dots required by SPARQL syntax)
   const typePattern = sparql`${subject} ${rdfType} ${typeVar} .`;
   constructPatterns.push(typePattern);
   addWherePattern(wherePatterns, typePattern, false); // rdf:type is always optional
@@ -250,7 +354,7 @@ export function normalizedSchema2construct(
         // Skip explicitly excluded properties
         // Note: JSON-LD metadata properties (@id, @type, etc.) should already be
         // filtered out during schema normalization (via excludeJsonLdMetadata flag)
-        if (excludedProperties.includes(propertyName)) {
+        if (ctx.excludedProperties.includes(propertyName)) {
           return;
         }
 
@@ -263,10 +367,7 @@ export function normalizedSchema2construct(
           subject,
           propertyName,
           propertySchema as JSONSchema7,
-          normalizedSchema,
-          0,
-          maxRecursion,
-          prefixMap,
+          ctx,
         );
 
         constructPatterns.push(...propertyPatterns.construct);
@@ -298,10 +399,7 @@ function createPropertyPatterns(
   subject: any,
   propertyName: string,
   propertySchema: JSONSchema7,
-  normalizedSchema: NormalizedSchema,
-  depth: number,
-  maxRecursion: number,
-  prefixMap: Prefixes,
+  ctx: QueryConstructionContext,
 ): {
   construct: SparqlTemplateResult[];
   where: SparqlTemplateResult[];
@@ -311,16 +409,16 @@ function createPropertyPatterns(
   const where: SparqlTemplateResult[] = [];
 
   // Stop if max recursion reached
-  if (depth > maxRecursion) {
+  if (ctx.depth > ctx.maxRecursion) {
     return { construct, where };
   }
 
   // Create predicate (property name)
   // Handle prefixed names (e.g., "dc:title") and full IRIs
-  const predicate = createPredicate(propertyName, prefixMap);
+  const predicate = createPredicate(propertyName, ctx.prefixMap);
 
   // Create object variable (use property name as basis + depth for uniqueness)
-  const varName = `${sanitizeVariableName(propertyName)}_${depth}`;
+  const varName = `${sanitizeVariableName(propertyName)}_${ctx.depth}`;
   const objectVar = df.variable(varName);
 
   // Create triple patterns (dots required by SPARQL syntax)
@@ -330,9 +428,16 @@ function createPropertyPatterns(
 
   // Handle different property types
   if (propertySchema.type === "array" && propertySchema.items) {
-    // Check for pagination metadata in the array schema
-    // Normalizer adds x-pagination to array properties when include patterns specify pagination
-    const paginationMeta = (propertySchema as any)["x-pagination"];
+    // Get pagination from filter options (carried through context)
+    const includeValue = ctx.filterOptions.include?.[propertyName];
+    const paginationMeta =
+      typeof includeValue === "object" && includeValue !== null
+        ? {
+            skip: includeValue.skip,
+            take: includeValue.take,
+            orderBy: includeValue.orderBy,
+          }
+        : undefined;
 
     // Handle array items
     const itemSchema = Array.isArray(propertySchema.items)
@@ -352,8 +457,7 @@ function createPropertyPatterns(
         objectVar,
         itemSchema as JSONSchema7,
         paginationMeta,
-        prefixMap,
-        depth,
+        ctx,
       );
 
       // Add SUBSELECT to WHERE clause
@@ -361,8 +465,7 @@ function createPropertyPatterns(
       addWherePattern(where, subselect, false);
     } else {
       // Regular pattern without pagination
-      const isRequired =
-        normalizedSchema.required?.includes(propertyName) || false;
+      const isRequired = ctx.schema.required?.includes(propertyName) || false;
       addWherePattern(where, triplePattern, isRequired);
     }
 
@@ -370,13 +473,11 @@ function createPropertyPatterns(
       typeof itemSchema !== "boolean" &&
       (itemSchema as JSONSchema7).type === "object"
     ) {
-      // Array of objects - recurse into nested structure
+      // Array of objects - recurse into nested structure with filter options
       const nestedPatterns = handleNestedObject(
         objectVar,
         itemSchema as JSONSchema7,
-        depth + 1,
-        maxRecursion,
-        prefixMap,
+        createNestedContext(ctx, propertyName),
       );
       construct.push(...nestedPatterns.construct);
       where.push(...nestedPatterns.where);
@@ -388,23 +489,20 @@ function createPropertyPatterns(
   } else if (propertySchema.type === "object" && propertySchema.properties) {
     // Handle nested object - recurse into its properties
     // Add WHERE pattern for the object property first
-    const isRequired =
-      normalizedSchema.required?.includes(propertyName) || false;
+    const isRequired = ctx.schema.required?.includes(propertyName) || false;
     addWherePattern(where, triplePattern, isRequired);
 
+    // Recurse into nested object with filter options
     const nestedPatterns = handleNestedObject(
       objectVar,
       propertySchema,
-      depth + 1,
-      maxRecursion,
-      prefixMap,
+      createNestedContext(ctx, propertyName),
     );
     construct.push(...nestedPatterns.construct);
     where.push(...nestedPatterns.where);
   } else {
     // For primitive types (string, number, boolean), add WHERE pattern
-    const isRequired =
-      normalizedSchema.required?.includes(propertyName) || false;
+    const isRequired = ctx.schema.required?.includes(propertyName) || false;
     addWherePattern(where, triplePattern, isRequired);
   }
 
@@ -417,20 +515,18 @@ function createPropertyPatterns(
 function handleNestedObject(
   subject: any,
   objectSchema: JSONSchema7,
-  depth: number,
-  maxRecursion: number,
-  prefixMap: Prefixes,
+  ctx: QueryConstructionContext,
 ): { construct: SparqlTemplateResult[]; where: SparqlTemplateResult[] } {
   const construct: SparqlTemplateResult[] = [];
   const where: SparqlTemplateResult[] = [];
 
   // Stop if max recursion reached
-  if (depth > maxRecursion) {
+  if (ctx.depth > ctx.maxRecursion) {
     return { construct, where };
   }
 
   // Add type pattern for nested object
-  const typeVar = df.variable(`type_${depth}`);
+  const typeVar = df.variable(`type_${ctx.depth}`);
   const rdfType = df.namedNode(
     "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
   );
@@ -444,7 +540,6 @@ function handleNestedObject(
   const nestedNormalizedSchema: NormalizedSchema = {
     ...objectSchema,
     _normalized: true,
-    _propertyMetadata: {},
   };
 
   // Walk through nested properties
@@ -461,10 +556,10 @@ function handleNestedObject(
           subject,
           nestedPropName,
           nestedPropSchema as JSONSchema7,
-          nestedNormalizedSchema,
-          depth,
-          maxRecursion,
-          prefixMap,
+          {
+            ...ctx,
+            schema: nestedNormalizedSchema,
+          },
         );
 
         construct.push(...nestedPatterns.construct);
@@ -479,36 +574,14 @@ function handleNestedObject(
 /**
  * Create a predicate node from a property name
  *
- * Logic:
- * - No colon: treat as local name with default prefix (:name)
- * - Has colon: check if prefix is in prefixMap
- *   - If in prefixMap: leave as-is (will be resolved by PREFIX declarations)
- *   - Otherwise: treat as full URL and wrap in angle brackets (e.g., <urn:x121>)
+ * Uses the shared convertIRIToNode utility for consistent IRI handling.
  *
  * @param propertyName - The property name from the schema
  * @param prefixMap - Prefix mappings (e.g., { "foaf": "http://xmlns.com/foaf/0.1/" })
  * @returns Predicate for SPARQL pattern
  */
 function createPredicate(propertyName: string, prefixMap: Prefixes): any {
-  // No colon: treat as local name with default prefix
-  if (!propertyName.includes(":")) {
-    return `:${propertyName}`;
-  }
-
-  // Has colon: split to check prefix
-  const colonIndex = propertyName.indexOf(":");
-  const prefix = propertyName.substring(0, colonIndex);
-
-  // Check if prefix is in prefixMap
-  if (prefixMap[prefix]) {
-    // Prefix is registered, leave as-is (e.g., "foaf:name")
-    // SPARQL engine will resolve using PREFIX declarations
-    return propertyName;
-  }
-
-  // Prefix not in prefixMap: treat as full URL
-  // Examples: urn:x121, http://example.com/prop, https://schema.org/name
-  return df.namedNode(propertyName);
+  return convertIRIToNode(propertyName, prefixMap);
 }
 
 /**

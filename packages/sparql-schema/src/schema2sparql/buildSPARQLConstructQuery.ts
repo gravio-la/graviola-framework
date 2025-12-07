@@ -18,30 +18,24 @@ import { prefixes2sparqlPrefixDeclaration } from "./prefixes2sparqlPrefixDeclara
  * @example
  * ```typescript
  * const result = normalizedSchema2construct(iri, schema, { prefixMap });
- * const query = buildCompleteSPARQLQuery(result, prefixMap);
+ * const query = buildSPARQLConstructQuery(result, prefixMap);
  * // Execute query against triple store
  * ```
  */
-export function buildCompleteSPARQLQuery(
+export function buildSPARQLConstructQuery(
   constructResult: ConstructResult,
   prefixMap?: Prefixes,
 ): string {
   const { constructPatterns, wherePatterns } = constructResult;
 
-  // Build the CONSTRUCT query using the builder
-  // This may add some prefixes automatically (e.g., rdf, xsd)
   let query = CONSTRUCT`${constructPatterns}`.WHERE`${wherePatterns}`;
 
-  // Manually add PREFIX declarations for all prefixes in prefixMap
-  // This is necessary because plain string predicates like "schema:givenName"
-  // don't automatically add PREFIX declarations (only NamespaceBuilder objects do)
-  // The helper will filter out auto-added prefixes (rdf, xsd) to avoid duplication
   if (prefixMap) {
     const prefixDecls = prefixes2sparqlPrefixDeclaration(prefixMap);
 
     if (prefixDecls) {
       // Use prologue to add PREFIX declarations at the top
-      query = (query as any).prologue([prefixDecls], []);
+      query = query.prologue`${prefixDecls}`;
     }
   }
 
@@ -51,4 +45,4 @@ export function buildCompleteSPARQLQuery(
 /**
  * Alias for backward compatibility
  */
-export const constructResultToSPARQL = buildCompleteSPARQLQuery;
+export const constructResultToSPARQL = buildSPARQLConstructQuery;
