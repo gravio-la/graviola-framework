@@ -3,8 +3,8 @@
  */
 
 export {
-  constructAndExtract,
-  constructAndExtractBatch,
-  type SparqlClient,
-  type ConstructAndExtractOptions,
-} from "./constructAndExtract";
+  filterTypedDocument,
+  filterTypedDocuments,
+  type TypedFilterOptions,
+  type TypedFilterAndSearchOptions,
+} from "./filterTypedDocument";
