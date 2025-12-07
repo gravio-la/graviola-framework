@@ -3,7 +3,12 @@
  */
 
 import type { SparqlTemplateResult } from "@tpluscode/sparql-builder";
-import type { SPARQLFlavour, Prefixes } from "@graviola/edb-core-types";
+import type {
+  SPARQLFlavour,
+  Prefixes,
+  FilterValidationMode,
+} from "@graviola/edb-core-types";
+import type { JSONSchema7 } from "json-schema";
 
 /**
  * Context for filter translation - everything needed to generate SPARQL patterns
@@ -17,6 +22,9 @@ export type FilterContext = {
   prefixMap: Prefixes;
   flavour: SPARQLFlavour;
   depth: number;
+
+  schema?: JSONSchema7; // Full schema for validation
+  validationMode?: FilterValidationMode; // How to handle validation errors
 };
 
 /**

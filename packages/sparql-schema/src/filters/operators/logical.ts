@@ -1,7 +1,6 @@
 /**
  * Logical filter operators for SPARQL
  * Implements: AND, OR, NOT
- * Phase 1: Focus on OR with simple combined FILTER
  */
 
 import { sparql } from "@tpluscode/sparql-builder";
@@ -30,16 +29,15 @@ function applyAndOperator(
 
 /**
  * OR: Use UNION or combined FILTER with ||
- * Phase 1: Simple case only - combined FILTER
  * For simple cases: FILTER(cond1 || cond2)
- * For complex: { PATTERN1 } UNION { PATTERN2 } (TODO: Phase 2)
+ * For complex: { PATTERN1 } UNION { PATTERN2 }
  */
 function applyOrOperator(
   conditions: any[],
   context: FilterContext,
 ): FilterResult {
   // Strategy: If all conditions are simple FILTER expressions, combine with ||
-  // Otherwise, use UNION (to be implemented in Phase 2)
+  // TODO: Implement UNION pattern generation
 
   const results = conditions.map((c) => filterToSparql(c, context));
 
@@ -58,7 +56,7 @@ function applyOrOperator(
     };
   } else {
     // Use UNION (more complex, less performant)
-    // TODO: Implement UNION pattern generation in Phase 2
+    // TODO: Implement UNION pattern generation
     throw new Error(
       "Complex OR with UNION not yet implemented - Phase 2 feature",
     );
