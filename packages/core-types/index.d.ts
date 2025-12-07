@@ -1,6 +1,7 @@
 import type { Bindings, DatasetCore, Quad, ResultStream } from "@rdfjs/types";
 import type { NamespaceBuilder } from "@rdfjs/namespace";
 export type * from "./settings";
+export type * from "./typed-filters";
 
 export type Prefixes = {
   [k: string]: string;
@@ -242,7 +243,7 @@ export type PaginationOptions = {
 /**
  * Pagination metadata that can be attached to array schemas
  *
- * The `source` field indicates where pagination was applied:
+ * The `_stage` field indicates where pagination was applied:
  * - "extraction": Apply during graph traversal (default)
  * - "query": Already applied at SPARQL CONSTRUCT query stage (skip during extraction)
  *
@@ -251,15 +252,8 @@ export type PaginationOptions = {
  * - Optional for named nodes
  * - Can be single object or array: { name: 'asc' } or [{ name: 'asc' }, { createdAt: 'desc' }]
  */
-export type PaginationMetadata = {
-  /** Number of items to skip */
-  skip?: number;
-  /** Maximum number of items to take */
-  take?: number;
-  /** Where pagination was applied - prevents double pagination */
-  source?: "extraction" | "query";
-  /** Order by clause(s) for sorting - required for blank nodes */
-  orderBy?: OrderByClause | OrderByClause[];
+export type PaginationMetadata = PaginationOptions & {
+  _stage?: "query" | "extraction";
 };
 
 /**
@@ -286,97 +280,30 @@ export type PaginationMetadata = {
  * };
  * ```
  */
-export type IncludePattern<T = any> = {
-  [K in keyof T]?:
-    | boolean
-    | (PaginationOptions & { include?: IncludePattern<T[K]> });
-};
 
 /**
- * Select pattern for explicitly choosing which fields to include in the result
- * When specified, only the selected fields will be included
- *
- * @template T - The type to derive select pattern from (optional, defaults to any for backward compatibility)
- *
- * @example
- * ```typescript
- * // With type safety
- * type Person = { name: string; age: number; email: string };
- * const select: SelectPattern<Person> = { name: true, age: true };
- *
- * // Without type parameter (backward compatible)
- * const select2: SelectPattern = { name: true, age: true };
- * ```
+ * Validation mode for runtime filter validation
+ * - 'throw': Throw an error if filter validation fails
+ * - 'warn': Log a warning to console if filter validation fails
+ * - 'ignore': Skip validation entirely (default)
  */
-export type SelectPattern<T = any> = {
-  [K in keyof T]?: boolean;
-};
+export type FilterValidationMode = "throw" | "warn" | "ignore";
 
-/**
- * Omit pattern for excluding specific fields from the result
- *
- * @template T - The type to derive omit pattern from (optional, defaults to any for backward compatibility)
- *
- * @example
- * ```typescript
- * // With type safety
- * type Person = { name: string; age: number; email: string };
- * const omit: OmitPattern<Person> = ['age', 'email'];
- *
- * // Without type parameter (backward compatible)
- * const omit2: OmitPattern = ['age', 'email'];
- * ```
- */
-export type OmitPattern<T = any> = Array<keyof T>;
-
-/**
- * Filter options for graph traversal with Prisma-style field selection
- * - `select`: Explicitly choose which fields to include
- * - `include`: Specify which relationships to include (with optional pagination)
- * - `omit`: Exclude specific fields from the result
- * - `includeRelationsByDefault`: Whether to include relationships by default (default: true)
- * - `defaultPaginationLimit`: Default limit for relationship pagination
- *
- * @template T - The type to derive filter patterns from (optional, defaults to any for backward compatibility)
- *
- * @example
- * ```typescript
- * // With Zod type inference for full type safety
- * import { z } from 'zod';
- * const schema = z.object({
- *   name: z.string(),
- *   age: z.number(),
- *   friends: z.array(z.object({ name: z.string() }))
- * });
- * type Person = z.infer<typeof schema>;
- *
- * const options: GraphTraversalFilterOptions<Person> = {
- *   select: { name: true, age: true }, // Only valid keys allowed
- *   include: { friends: { take: 10 } },
- *   includeRelationsByDefault: false
- * };
- *
- * // Without type parameter (backward compatible)
- * const options2: GraphTraversalFilterOptions = {
- *   select: { name: true }
- * };
- * ```
- */
-export type GraphTraversalFilterOptions<T = any> = {
-  select?: SelectPattern<T>;
-  include?: IncludePattern<T>;
-  omit?: OmitPattern<T>;
-  includeRelationsByDefault?: boolean;
-  defaultPaginationLimit?: number;
-  /**
-   * Whether to exclude JSON-LD metadata properties (starting with @)
-   * from schema normalization. Defaults to true.
-   *
-   * JSON-LD properties like @id, @type, @context, @graph are metadata
-   * and should not be mapped to RDF predicates in SPARQL queries.
-   */
-  excludeJsonLdMetadata?: boolean;
-};
+// Re-export type-safe filter types from typed-filters module
+export type {
+  StringFilterOperators,
+  NumberFilterOperators,
+  BooleanFilterOperators,
+  DateTimeFilterOperators,
+  GeoFilterOperators,
+  FilterOperatorsForType,
+  TypedWhereInput as WhereInput,
+  FlavourAwareWhereInput,
+  TypedSelectPattern as SelectPattern,
+  TypedOmitPattern as OmitPattern,
+  TypedIncludePattern as IncludePattern,
+  TypedGraphTraversalFilterOptions as GraphTraversalFilterOptions,
+} from "./typed-filters";
 
 /**
  * Extended walker options combining legacy options with new filter capabilities
@@ -395,4 +322,23 @@ export type Entity = {
   label?: string;
   description?: string;
   image?: string;
+};
+
+// Legacy runtime (non-typed) filter operators - kept for backward compatibility
+// @deprecated Use the typed versions above instead
+export type WhereOperators = {
+  equals?: any;
+  not?: any;
+  in?: any[];
+  notIn?: any[];
+  // String operators
+  contains?: string;
+  startsWith?: string;
+  endsWith?: string;
+  mode?: "default" | "insensitive";
+  // Numeric operators
+  lt?: number;
+  lte?: number;
+  gt?: number;
+  gte?: number;
 };
