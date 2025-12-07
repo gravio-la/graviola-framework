@@ -3,7 +3,7 @@ import { normalizeSchema } from "@graviola/edb-graph-traversal";
 import { JSONSchemaWithInverseProperties } from "@graviola/json-schema-utils";
 
 import { normalizedSchema2construct } from "@/schema2sparql/normalizedSchema2construct";
-import { buildCompleteSPARQLQuery } from "@/schema2sparql/buildCompleteSPARQLQuery";
+import { buildSPARQLConstructQuery } from "@/schema2sparql/buildSPARQLConstructQuery";
 
 /**
  * Generates a SPARQL CONSTRUCT query from a JSON Schema
@@ -33,5 +33,5 @@ export const makeSPARQLConstructQuery = (
   });
 
   // Build complete query
-  return buildCompleteSPARQLQuery(constructResult, prefixMap);
+  return buildSPARQLConstructQuery(constructResult, prefixMap);
 };

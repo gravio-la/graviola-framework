@@ -1,5 +1,8 @@
 // packages/sparql-schema/src/crud/makeSPARQLInverseSyncQuery.test.ts
-import { makeSPARQLInverseSyncQuery } from "./makeSPARQLInverseSyncQuery";
+import {
+  InversePropertyDataWithTypeIRI,
+  makeSPARQLInverseSyncQuery,
+} from "./makeSPARQLInverseSyncQuery";
 import { SPARQLCRUDOptions } from "@graviola/edb-core-types";
 import { InversePropertyData } from "@graviola/json-schema-utils";
 
@@ -28,10 +31,11 @@ describe("makeSPARQLInverseSyncQuery", () => {
 
   describe("when inverseProperties has one item with data", () => {
     it("should generate DELETE and INSERT query for single inverse property", () => {
-      const inverseProperties: InversePropertyData[] = [
+      const inverseProperties: InversePropertyDataWithTypeIRI[] = [
         {
           path: ["subscribers"],
           typeName: "MailingList",
+          typeIRI: "http://example.com/MailingList",
           schema: undefined,
           entityIRIs: [
             "http://example.com/mailinglist/tech",
@@ -63,10 +67,11 @@ describe("makeSPARQLInverseSyncQuery", () => {
 
   describe("when inverseProperties has one item with empty data array", () => {
     it("should generate only DELETE query (no INSERT)", () => {
-      const inverseProperties: InversePropertyData[] = [
+      const inverseProperties: InversePropertyDataWithTypeIRI[] = [
         {
           path: ["subscribers"],
           typeName: "MailingList",
+          typeIRI: "http://example.com/MailingList",
           schema: undefined,
           entityIRIs: [],
         },
@@ -90,10 +95,11 @@ describe("makeSPARQLInverseSyncQuery", () => {
 
   describe("when inverseProperties has two items", () => {
     it("should generate DELETE and INSERT query for multiple inverse properties", () => {
-      const inverseProperties: InversePropertyData[] = [
+      const inverseProperties: InversePropertyDataWithTypeIRI[] = [
         {
           path: ["subscribers"],
           typeName: "MailingList",
+          typeIRI: "http://example.com/MailingList",
           schema: undefined,
           entityIRIs: [
             "http://example.com/mailinglist/tech",
@@ -103,6 +109,7 @@ describe("makeSPARQLInverseSyncQuery", () => {
         {
           path: ["members"],
           typeName: "WorkingCircle",
+          typeIRI: "http://example.com/WorkingCircle",
           schema: undefined,
           entityIRIs: [
             "http://example.com/workingcircle/tech",
@@ -147,16 +154,18 @@ describe("makeSPARQLInverseSyncQuery", () => {
 
   describe("when inverseProperties has mixed empty and non-empty data", () => {
     it("should generate appropriate DELETE and INSERT patterns", () => {
-      const inverseProperties: InversePropertyData[] = [
+      const inverseProperties: InversePropertyDataWithTypeIRI[] = [
         {
           path: ["subscribers"],
           typeName: "MailingList",
+          typeIRI: "http://example.com/MailingList",
           schema: undefined,
           entityIRIs: [], // Empty - should only DELETE
         },
         {
           path: ["members"],
           typeName: "WorkingCircle",
+          typeIRI: "http://example.com/WorkingCircle",
           schema: undefined,
           entityIRIs: ["http://example.com/workingcircle/tech"], // Has data - should INSERT
         },
@@ -194,10 +203,11 @@ describe("makeSPARQLInverseSyncQuery", () => {
 
   describe("when inverseProperties has nested property paths", () => {
     it("should handle nested property paths correctly", () => {
-      const inverseProperties: InversePropertyData[] = [
+      const inverseProperties: InversePropertyDataWithTypeIRI[] = [
         {
           path: ["parent", "children"],
           typeName: "Person",
+          typeIRI: "http://example.com/Person",
           schema: undefined,
           entityIRIs: ["http://example.com/person/456"],
         },
