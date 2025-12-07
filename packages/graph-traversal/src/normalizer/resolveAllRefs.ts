@@ -1,6 +1,6 @@
 import type { JSONSchema7, JSONSchema7Definition } from "json-schema";
 import { resolveSchema, isJSONSchema } from "@graviola/json-schema-utils";
-import type { NormalizationContext, PropertyMetadata } from "./types";
+import type { NormalizationContext } from "./types";
 
 /**
  * Checks if a schema represents a relationship (an object with @id property)
@@ -18,48 +18,6 @@ export function isRelationshipSchema(schema: JSONSchema7): boolean {
   }
 
   return false;
-}
-
-/**
- * Determines metadata about a property from its schema
- * @param propSchema The schema of the property
- * @param context Normalization context
- * @returns Property metadata
- */
-export function extractPropertyMetadata(
-  propSchema: JSONSchema7,
-  context: NormalizationContext,
-): PropertyMetadata {
-  const metadata: PropertyMetadata = {
-    isRelationship: false,
-    isArray: false,
-  };
-
-  // Handle array types
-  if (propSchema.type === "array") {
-    metadata.isArray = true;
-
-    if (
-      propSchema.items &&
-      typeof propSchema.items === "object" &&
-      !Array.isArray(propSchema.items)
-    ) {
-      const itemSchema = propSchema.items as JSONSchema7;
-
-      if (itemSchema.type === "object" || itemSchema.properties) {
-        metadata.itemType = "object";
-        metadata.isRelationship = isRelationshipSchema(itemSchema);
-      } else if (itemSchema.type) {
-        metadata.itemType = itemSchema.type as any;
-      }
-    }
-  }
-  // Handle object types
-  else if (propSchema.type === "object" || propSchema.properties) {
-    metadata.isRelationship = isRelationshipSchema(propSchema);
-  }
-
-  return metadata;
 }
 
 /**

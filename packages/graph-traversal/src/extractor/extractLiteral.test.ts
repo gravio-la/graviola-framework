@@ -14,7 +14,6 @@ describe("extractLiteral", () => {
       type: "object",
       properties: {},
       _normalized: true,
-      _propertyMetadata: {},
     },
     options: {},
     depth: 0,

@@ -2,30 +2,11 @@ import type { JSONSchema7 } from "json-schema";
 import type { GraphTraversalFilterOptions } from "@graviola/edb-core-types";
 
 /**
- * Metadata about a property in a normalized schema
- */
-export type PropertyMetadata = {
-  /** Whether this property represents a relationship to another entity */
-  isRelationship: boolean;
-  /** Whether this property is an array */
-  isArray: boolean;
-  /** The type of the items if this is an array */
-  itemType?: "object" | "string" | "number" | "boolean" | "null";
-  /** Pagination options if this is a relationship array */
-  pagination?: {
-    take?: number;
-    skip?: number;
-  };
-};
-
-/**
- * A normalized JSON Schema with all $refs resolved and metadata attached
+ * A normalized JSON Schema with all $refs resolved
  */
 export type NormalizedSchema = JSONSchema7 & {
   /** Marker to indicate this schema has been normalized */
   _normalized: true;
-  /** Metadata about each property */
-  _propertyMetadata: Record<string, PropertyMetadata>;
 };
 
 /**

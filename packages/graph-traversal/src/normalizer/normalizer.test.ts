@@ -26,8 +26,6 @@ describe("normalizeSchema - integration tests", () => {
     const normalized = normalizeSchema(schema);
 
     expect(normalized._normalized).toBe(true);
-    expect(normalized._propertyMetadata).toBeDefined();
-    expect(normalized._propertyMetadata.author.isRelationship).toBe(true);
     expect((normalized.properties?.author as JSONSchema7).$ref).toBeUndefined();
     expect(
       (normalized.properties?.author as JSONSchema7).properties?.name,
@@ -85,15 +83,9 @@ describe("normalizeSchema - integration tests", () => {
     expect(normalized.properties).toHaveProperty("tags");
     expect(normalized.properties).not.toHaveProperty("author");
 
-    // Tags should have pagination metadata
-    expect((normalized.properties?.tags as any)["x-pagination"]).toEqual({
-      take: 10,
-      skip: undefined,
-    });
+    // Note: Pagination is no longer stored in schema, it's passed through context
 
     // Refs should be resolved
-    expect(normalized._propertyMetadata.tags.isRelationship).toBe(true);
-    expect(normalized._propertyMetadata.tags.isArray).toBe(true);
   });
 
   test("handles circular references in exhibition schema", () => {
@@ -251,17 +243,7 @@ describe("normalizeSchema - integration tests", () => {
     // Should not have excluded relationship
     expect(normalized.properties).not.toHaveProperty("people");
 
-    // Tags should have pagination
-    expect((normalized.properties?.tags as any)["x-pagination"]).toEqual({
-      take: 5,
-      skip: undefined,
-    });
-
-    // Metadata should be correct
-    expect(normalized._propertyMetadata.camera.isRelationship).toBe(true);
-    expect(normalized._propertyMetadata.location.isRelationship).toBe(true);
-    expect(normalized._propertyMetadata.tags.isRelationship).toBe(true);
-    expect(normalized._propertyMetadata.tags.isArray).toBe(true);
+    // Note: Pagination is no longer stored in schema, it's passed through context
   });
 
   test("handles schema with anyOf for nullable relationships", () => {
@@ -413,13 +395,8 @@ describe("normalizeSchema - integration tests", () => {
 
     const normalized = normalizeSchema(schema, filterOptions);
 
-    // Tags should have custom pagination
-    expect((normalized.properties?.tags as any)["x-pagination"]).toEqual({
-      take: 5,
-      skip: undefined,
-    });
-
-    // Note: defaultPaginationLimit is stored in filterOptions but not automatically applied
+    // Note: Pagination is no longer stored in schema, it's passed through context
+    // defaultPaginationLimit is stored in filterOptions but not automatically applied
     // to properties without explicit pagination. This could be implemented in future if needed.
   });
 
@@ -481,7 +458,6 @@ describe("normalizeSchema - integration tests", () => {
       },
     });
     console.log(JSON.stringify(normalizedDepth1, null, 2));
-    console.log("\nProperty Metadata:", normalizedDepth1._propertyMetadata);
 
     // Test 2: Depth 2 - Include jobs and the nested "for" relationship
     console.log(
@@ -498,7 +474,6 @@ describe("normalizeSchema - integration tests", () => {
       },
     });
     console.log(JSON.stringify(normalizedDepth2, null, 2));
-    console.log("\nProperty Metadata:", normalizedDepth2._propertyMetadata);
 
     // Test 3: Select only name and jobs
     console.log("\n=== Test 3: Select only name and jobs ===");
@@ -509,7 +484,6 @@ describe("normalizeSchema - integration tests", () => {
       },
     });
     console.log(JSON.stringify(normalizedSelect, null, 2));
-    console.log("\nProperty Metadata:", normalizedSelect._propertyMetadata);
 
     // Test 4: Include all relations by default
     console.log("\n=== Test 4: Include all relations by default ===");
@@ -517,10 +491,6 @@ describe("normalizeSchema - integration tests", () => {
       includeRelationsByDefault: true,
     });
     console.log(JSON.stringify(normalizedAllRelations, null, 2));
-    console.log(
-      "\nProperty Metadata:",
-      normalizedAllRelations._propertyMetadata,
-    );
 
     // Test 5: Include jobs with pagination and nested "for"
     console.log(
@@ -538,7 +508,6 @@ describe("normalizeSchema - integration tests", () => {
       },
     });
     console.log(JSON.stringify(normalizedPagination, null, 2));
-    console.log("\nProperty Metadata:", normalizedPagination._propertyMetadata);
 
     // Test 6: Omit jobs but include name
     console.log("\n=== Test 6: Omit jobs, include name ===");
@@ -546,7 +515,6 @@ describe("normalizeSchema - integration tests", () => {
       omit: ["jobs"],
     });
     console.log(JSON.stringify(normalizedOmit, null, 2));
-    console.log("\nProperty Metadata:", normalizedOmit._propertyMetadata);
 
     // Test 7: Depth 2 with nested "for" included
     console.log("\n=== Test 7: Depth 2 - Include jobs with nested 'for' ===");
@@ -561,7 +529,6 @@ describe("normalizeSchema - integration tests", () => {
       },
     });
     console.log(JSON.stringify(normalizedOrgFields, null, 2));
-    console.log("\nProperty Metadata:", normalizedOrgFields._propertyMetadata);
 
     // Note: This test currently only logs output for review
     // Assertions will be added later once the expected output is verified
@@ -617,16 +584,11 @@ describe("normalizeSchema - integration tests", () => {
     expect(normalized._normalized).toBe(true);
     expect(normalized.properties).toHaveProperty("schema:knows");
 
-    // Top-level knows should have pagination
+    // Top-level knows should be present (pagination passed through context)
     const knowsSchema = normalized.properties?.["schema:knows"] as JSONSchema7;
     expect(knowsSchema).toBeDefined();
-    expect((knowsSchema as any)["x-pagination"]).toEqual({
-      take: 5,
-      skip: undefined,
-      orderBy: undefined,
-    });
 
-    // Nested knows (within array items) should also have pagination
+    // Nested knows (within array items) should also be present
     expect(knowsSchema.type).toBe("array");
     const itemsSchema = knowsSchema.items as JSONSchema7;
     expect(itemsSchema).toBeDefined();
@@ -636,17 +598,8 @@ describe("normalizeSchema - integration tests", () => {
       "schema:knows"
     ] as JSONSchema7;
     expect(nestedKnowsSchema).toBeDefined();
-    expect((nestedKnowsSchema as any)["x-pagination"]).toEqual({
-      take: 5,
-      skip: undefined,
-      orderBy: undefined,
-    });
 
-    // Verify metadata
-    expect(normalized._propertyMetadata["schema:knows"].isRelationship).toBe(
-      true,
-    );
-    expect(normalized._propertyMetadata["schema:knows"].isArray).toBe(true);
+    // Note: Pagination is no longer stored in schema, it's passed through context
   });
 
   test("handles deeply nested includes with pagination (3 levels: knows -> knows -> knows)", () => {
@@ -702,16 +655,11 @@ describe("normalizeSchema - integration tests", () => {
     expect(normalized._normalized).toBe(true);
     expect(normalized.properties).toHaveProperty("schema:knows");
 
-    // Level 1: Top-level knows should have pagination (take: 10)
+    // Level 1: Top-level knows should be present (pagination passed through context)
     const level1Knows = normalized.properties?.["schema:knows"] as JSONSchema7;
     expect(level1Knows).toBeDefined();
-    expect((level1Knows as any)["x-pagination"]).toEqual({
-      take: 10,
-      skip: undefined,
-      orderBy: undefined,
-    });
 
-    // Level 2: Nested knows should have pagination (take: 5)
+    // Level 2: Nested knows should be present
     expect(level1Knows.type).toBe("array");
     const level1Items = level1Knows.items as JSONSchema7;
     expect(level1Items).toBeDefined();
@@ -719,13 +667,8 @@ describe("normalizeSchema - integration tests", () => {
 
     const level2Knows = level1Items.properties?.["schema:knows"] as JSONSchema7;
     expect(level2Knows).toBeDefined();
-    expect((level2Knows as any)["x-pagination"]).toEqual({
-      take: 5,
-      skip: undefined,
-      orderBy: undefined,
-    });
 
-    // Level 3: Deeply nested knows should have pagination (take: 2)
+    // Level 3: Deeply nested knows should be present
     expect(level2Knows.type).toBe("array");
     const level2Items = level2Knows.items as JSONSchema7;
     expect(level2Items).toBeDefined();
@@ -733,16 +676,7 @@ describe("normalizeSchema - integration tests", () => {
 
     const level3Knows = level2Items.properties?.["schema:knows"] as JSONSchema7;
     expect(level3Knows).toBeDefined();
-    expect((level3Knows as any)["x-pagination"]).toEqual({
-      take: 2,
-      skip: undefined,
-      orderBy: undefined,
-    });
 
-    // Verify metadata
-    expect(normalized._propertyMetadata["schema:knows"].isRelationship).toBe(
-      true,
-    );
-    expect(normalized._propertyMetadata["schema:knows"].isArray).toBe(true);
+    // Note: Pagination is no longer stored in schema, it's passed through context
   });
 });

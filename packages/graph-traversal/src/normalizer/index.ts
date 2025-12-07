@@ -1,11 +1,7 @@
 import type { JSONSchema7 } from "json-schema";
 import type { GraphTraversalFilterOptions } from "@graviola/edb-core-types";
-import type {
-  NormalizedSchema,
-  NormalizationContext,
-  PropertyMetadata,
-} from "./types";
-import { resolveAllRefs, extractPropertyMetadata } from "./resolveAllRefs";
+import type { NormalizedSchema, NormalizationContext } from "./types";
+import { resolveAllRefs } from "./resolveAllRefs";
 import { applyFilters } from "./applyFilters";
 
 /**
@@ -63,7 +59,7 @@ import { applyFilters } from "./applyFilters";
  */
 export function normalizeSchema<T = any>(
   schema: JSONSchema7,
-  filterOptions: GraphTraversalFilterOptions<T> = {},
+  filterOptions: GraphTraversalFilterOptions<T> = {} as GraphTraversalFilterOptions<T>,
 ): NormalizedSchema {
   // Phase 1: Resolve all $refs
   const context: NormalizationContext = {
@@ -75,50 +71,24 @@ export function normalizeSchema<T = any>(
 
   const resolvedSchema = resolveAllRefs(schema, context);
 
-  // Phase 2: Extract property metadata
-  const propertyMetadata: Record<string, PropertyMetadata> = {};
-
-  if (resolvedSchema.properties) {
-    for (const [propName, propSchema] of Object.entries(
-      resolvedSchema.properties,
-    )) {
-      if (typeof propSchema === "object" && !Array.isArray(propSchema)) {
-        propertyMetadata[propName] = extractPropertyMetadata(
-          propSchema as JSONSchema7,
-          context,
-        );
-      }
-    }
-  }
-
-  // Phase 3: Apply filters (pass rootSchema for nested filter resolution)
+  // Phase 2: Apply filters (pass rootSchema for nested filter resolution)
   const filteredSchema = applyFilters(
     resolvedSchema,
-    propertyMetadata,
     filterOptions,
     schema,
     0, // Start at depth 0
   );
 
-  // Return as normalized schema with metadata
+  // Return as normalized schema
   return {
     ...filteredSchema,
     _normalized: true,
-    _propertyMetadata: propertyMetadata,
   } as NormalizedSchema;
 }
 
 // Re-export types and utilities
-export type {
-  NormalizedSchema,
-  PropertyMetadata,
-  NormalizationContext,
-} from "./types";
-export {
-  resolveAllRefs,
-  isRelationshipSchema,
-  extractPropertyMetadata,
-} from "./resolveAllRefs";
+export type { NormalizedSchema, NormalizationContext } from "./types";
+export { resolveAllRefs, isRelationshipSchema } from "./resolveAllRefs";
 export {
   applyFilters,
   shouldIncludeProperty,

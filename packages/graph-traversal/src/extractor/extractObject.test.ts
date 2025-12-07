@@ -17,7 +17,6 @@ describe("extractObject", () => {
       type: "object",
       properties: {},
       _normalized: true,
-      _propertyMetadata: {},
     },
     options: {},
     depth: 0,
@@ -242,12 +241,21 @@ describe("extractObject", () => {
         knows: {
           type: "array",
           items: { type: "string" },
-          "x-pagination": { skip: 1, take: 3 },
-        } as any,
+        },
       },
     };
 
-    const result = extractObject(person as any, personSchema, createContext());
+    const result = extractObject(
+      person as any,
+      personSchema,
+      createContext({
+        options: {
+          include: {
+            knows: { skip: 1, take: 3 },
+          },
+        },
+      }),
+    );
 
     expect(result?.knows).toEqual(["Bob", "Charlie", "David"]);
   });

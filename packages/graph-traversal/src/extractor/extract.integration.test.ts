@@ -483,7 +483,7 @@ describe("extractFromGraph - Integration Tests with TBBT Dataset", () => {
   });
 
   test("explicit pagination: applies pagination during extraction stage", () => {
-    // Schema with explicit pagination metadata (source: "extraction")
+    // Schema without pagination metadata (passed through options instead)
     const schemaWithPagination: JSONSchema7 = {
       type: "object",
       properties: {
@@ -498,12 +498,6 @@ describe("extractFromGraph - Integration Tests with TBBT Dataset", () => {
               givenName: { type: "string" },
             },
           },
-          // Pagination metadata added by normalizer
-          "x-pagination": {
-            skip: 0,
-            take: 3, // Only take first 3 friends
-            source: "extraction", // Applied during graph walk
-          },
         },
       },
     };
@@ -512,7 +506,14 @@ describe("extractFromGraph - Integration Tests with TBBT Dataset", () => {
       "http://localhost:8080/data/person/leonard-hofstadter",
       dataset,
       schemaWithPagination,
-      {},
+      {
+        include: {
+          knows: {
+            skip: 0,
+            take: 3, // Only take first 3 friends
+          },
+        },
+      },
       "http://schema.org/",
     );
 
@@ -538,8 +539,8 @@ describe("extractFromGraph - Integration Tests with TBBT Dataset", () => {
   });
 
   test("explicit pagination: skips pagination when already applied at query stage", () => {
-    // Schema with pagination metadata marked as "query" source
-    // This simulates a SPARQL CONSTRUCT query that already applied LIMIT/OFFSET
+    // For query-stage pagination, the dataset is already limited
+    // So we don't pass pagination through options
     const schemaWithQueryPagination: JSONSchema7 = {
       type: "object",
       properties: {
@@ -555,12 +556,6 @@ describe("extractFromGraph - Integration Tests with TBBT Dataset", () => {
               familyName: { type: "string" },
             },
           },
-          // Pagination was already applied in CONSTRUCT query
-          "x-pagination": {
-            skip: 0,
-            take: 2, // This was applied at query time
-            source: "query", // Tells extractor to NOT paginate again
-          },
         },
       },
     };
@@ -569,7 +564,10 @@ describe("extractFromGraph - Integration Tests with TBBT Dataset", () => {
       "http://localhost:8080/data/person/leonard-hofstadter",
       dataset,
       schemaWithQueryPagination,
-      {},
+      {
+        // No pagination in options - simulates query-stage pagination
+        // where dataset is already limited
+      },
       "http://schema.org/",
     );
 
@@ -613,11 +611,6 @@ describe("extractFromGraph - Integration Tests with TBBT Dataset", () => {
               givenName: { type: "string" },
             },
           },
-          "x-pagination": {
-            skip: 2, // Skip first 2
-            take: 2, // Take next 2
-            source: "extraction",
-          },
         },
       },
     };
@@ -626,7 +619,14 @@ describe("extractFromGraph - Integration Tests with TBBT Dataset", () => {
       "http://localhost:8080/data/person/leonard-hofstadter",
       dataset,
       schemaWithSkip,
-      {},
+      {
+        include: {
+          knows: {
+            skip: 2, // Skip first 2
+            take: 2, // Take next 2
+          },
+        },
+      },
       "http://schema.org/",
     );
 
@@ -656,11 +656,6 @@ describe("extractFromGraph - Integration Tests with TBBT Dataset", () => {
               "@id": { type: "string" },
             },
           },
-          "x-pagination": {
-            skip: 1000, // Skip more than exists
-            take: 10,
-            source: "extraction",
-          },
         },
       },
     };
@@ -669,7 +664,14 @@ describe("extractFromGraph - Integration Tests with TBBT Dataset", () => {
       "http://localhost:8080/data/person/leonard-hofstadter",
       dataset,
       schemaWithLargeSkip,
-      {},
+      {
+        include: {
+          knows: {
+            skip: 1000, // Skip more than exists
+            take: 10,
+          },
+        },
+      },
       "http://schema.org/",
     );
 

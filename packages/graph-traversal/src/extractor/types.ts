@@ -4,7 +4,7 @@ import type {
   ExtendedWalkerOptions,
   PaginationMetadata,
 } from "@graviola/edb-core-types";
-import type { NormalizedSchema, PropertyMetadata } from "../normalizer";
+import type { NormalizedSchema } from "../normalizer";
 import type { Logger } from "./logger";
 
 // Re-export PaginationMetadata for backward compatibility
@@ -44,6 +44,5 @@ export type ExtractedValue = any;
 export type PropertyExtractor = (
   node: any, // clownface.GraphPointer
   propertySchema: JSONSchema7,
-  propertyMetadata: PropertyMetadata,
   ctx: ExtractionContext,
 ) => ExtractedValue;

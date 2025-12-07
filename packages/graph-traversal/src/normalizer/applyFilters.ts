@@ -2,15 +2,10 @@ import type { JSONSchema7 } from "json-schema";
 import type {
   GraphTraversalFilterOptions,
   IncludePattern,
-  SelectPattern,
-  OmitPattern,
   PaginationOptions,
 } from "@graviola/edb-core-types";
-import type { PropertyMetadata, NormalizationContext } from "./types";
-import {
-  isRelationshipSchema,
-  extractPropertyMetadata,
-} from "./resolveAllRefs";
+import { isRelationshipSchema } from "./resolveAllRefs";
+import { validateFilter } from "../validators/filterValidator";
 
 /**
  * Recursively filters JSON-LD metadata properties from a nested schema
@@ -79,13 +74,13 @@ function filterJsonLdFromNestedSchema(
  * Checks if a property should be included based on filter options
  * @template T - The type to derive filter patterns from
  * @param propertyName The name of the property
- * @param metadata Metadata about the property
+ * @param propSchema The property schema
  * @param filterOptions The filter options to apply
  * @returns Object with inclusion status and pagination options
  */
 export function shouldIncludeProperty<T = any>(
   propertyName: string,
-  metadata: PropertyMetadata,
+  propSchema: JSONSchema7,
   filterOptions: GraphTraversalFilterOptions<T>,
 ): { include: boolean; pagination?: PaginationOptions } {
   const {
@@ -101,7 +96,7 @@ export function shouldIncludeProperty<T = any>(
   }
 
   // Check omit list first
-  if (omit && omit.includes(propertyName as any)) {
+  if (omit && (omit as any).includes(propertyName)) {
     return { include: false };
   }
 
@@ -111,6 +106,20 @@ export function shouldIncludeProperty<T = any>(
     return { include: isSelected };
   }
 
+  // Determine if this is a relationship by checking the schema
+  // For arrays, check if the items are relationships
+  let isRelationship = false;
+  if (propSchema.type === "array" && propSchema.items) {
+    const items = Array.isArray(propSchema.items)
+      ? propSchema.items[0]
+      : propSchema.items;
+    if (typeof items === "object" && !Array.isArray(items)) {
+      isRelationship = isRelationshipSchema(items as JSONSchema7);
+    }
+  } else {
+    isRelationship = isRelationshipSchema(propSchema);
+  }
+
   // Check include pattern (for both relationships and arrays with pagination)
   if (include && propertyName in include) {
     const includeValue = include[propertyName];
@@ -118,7 +127,7 @@ export function shouldIncludeProperty<T = any>(
     // If it's a boolean
     if (typeof includeValue === "boolean") {
       // For relationships, respect the boolean value
-      if (metadata.isRelationship) {
+      if (isRelationship) {
         return { include: includeValue };
       }
       // For non-relationships, boolean true means include
@@ -139,7 +148,7 @@ export function shouldIncludeProperty<T = any>(
   }
 
   // For relationships not in include pattern
-  if (metadata.isRelationship) {
+  if (isRelationship) {
     // Use default behavior for relationships not in include
     return { include: includeRelationsByDefault };
   }
@@ -150,7 +159,7 @@ export function shouldIncludeProperty<T = any>(
 
 /**
  * Recursively applies nested filter options to a schema
- * This handles nested includes by recursively extracting metadata and applying filters
+ * This handles nested includes by recursively applying filters
  * @template T - The type to derive filter patterns from
  * @param schema The schema to filter
  * @param nestedFilterOptions The nested filter options (with nested includes)
@@ -168,53 +177,36 @@ function applyNestedFilters<T = any>(
     return schema;
   }
 
-  // Extract metadata for all properties in this schema
-  const context: NormalizationContext = {
-    rootSchema,
-    filterOptions: nestedFilterOptions,
-    visitedRefs: new Set(),
-    depth,
-  };
-
-  const nestedPropertyMetadata: Record<string, PropertyMetadata> = {};
-  for (const [propName, propSchema] of Object.entries(schema.properties)) {
-    if (typeof propSchema === "object" && !Array.isArray(propSchema)) {
-      nestedPropertyMetadata[propName] = extractPropertyMetadata(
-        propSchema as JSONSchema7,
-        context,
-      );
-    }
-  }
-
   // Apply filters with the nested include pattern
-  return applyFilters(
-    schema,
-    nestedPropertyMetadata,
-    nestedFilterOptions,
-    rootSchema,
-    depth + 1,
-  );
+  return applyFilters(schema, nestedFilterOptions, rootSchema, depth + 1);
 }
 
 /**
  * Applies filter options to a schema's properties
  * @template T - The type to derive filter patterns from
  * @param schema The schema to filter
- * @param propertyMetadata Metadata about each property
  * @param filterOptions The filter options to apply
  * @param rootSchema The root schema for resolving refs in nested filters
  * @param depth Current recursion depth for nested filtering
  * @returns A new schema with filtered properties
+ *
  */
 export function applyFilters<T = any>(
   schema: JSONSchema7,
-  propertyMetadata: Record<string, PropertyMetadata>,
   filterOptions: GraphTraversalFilterOptions<T>,
   rootSchema?: JSONSchema7,
   depth: number = 0,
 ): JSONSchema7 {
   if (!schema.properties) {
     return schema;
+  }
+
+  if (filterOptions.where && filterOptions.filterValidationMode) {
+    validateFilter(
+      filterOptions.where,
+      schema,
+      filterOptions.filterValidationMode,
+    );
   }
 
   const newSchema: JSONSchema7 = { ...schema };
@@ -230,17 +222,14 @@ export function applyFilters<T = any>(
       continue;
     }
 
-    const metadata = propertyMetadata[propName];
-
-    if (!metadata) {
-      // If we don't have metadata, include by default
-      newProperties[propName] = propSchema as JSONSchema7;
+    if (typeof propSchema === "boolean") {
+      // Skip boolean schemas
       continue;
     }
 
     const { include, pagination } = shouldIncludeProperty(
       propName,
-      metadata,
+      propSchema as JSONSchema7,
       filterOptions,
     );
 
@@ -254,13 +243,8 @@ export function applyFilters<T = any>(
           ? includeValue.include
           : undefined;
 
-      // Apply pagination metadata if applicable
-      if (pagination && metadata.isArray) {
-        processedSchema = {
-          ...processedSchema,
-          "x-pagination": pagination,
-        } as JSONSchema7;
-      }
+      // Note: pagination is extracted but NOT added to schema
+      // It will be passed through context during extraction/query building
 
       // Recursively filter @ properties from nested objects
       if (
@@ -280,7 +264,7 @@ export function applyFilters<T = any>(
             {
               ...filterOptions,
               include: nestedInclude,
-            },
+            } as any,
             rootSchema,
             depth,
           );
@@ -314,7 +298,7 @@ export function applyFilters<T = any>(
               {
                 ...filterOptions,
                 include: nestedInclude,
-              },
+              } as any,
               rootSchema,
               depth,
             );

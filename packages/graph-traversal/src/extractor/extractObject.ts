@@ -2,10 +2,48 @@ import type { JSONSchema7 } from "json-schema";
 import ds from "@rdfjs/data-model";
 import { rdf } from "@tpluscode/rdf-ns-builders";
 import type clownface from "clownface";
-import type { ExtractionContext, PaginationMetadata } from "./types";
-import type { PropertyMetadata } from "../normalizer";
+import type { ExtractionContext } from "./types";
 import { expandPropertyName } from "./expandPropertyName";
 import { extractLiteral } from "./extractLiteral";
+
+/**
+ * Type guard to check if a value is a nested filter options object (not boolean)
+ */
+function isNestedFilterOptions(value: unknown): value is Record<string, any> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+/**
+ * Extract nested filter options from include value
+ * Removes pagination properties (take, skip, orderBy, _stage) and returns only filter options
+ */
+function extractNestedFilterOptions(
+  includeValue: boolean | Record<string, any> | undefined,
+): Record<string, any> {
+  if (!includeValue || includeValue === true) {
+    return {};
+  }
+  if (isNestedFilterOptions(includeValue)) {
+    // Extract only the filter-related properties (not pagination)
+    const { take, skip, orderBy, _stage, ...filterOptions } = includeValue;
+    return filterOptions;
+  }
+  return {};
+}
+
+/**
+ * Build nested extraction context with filter options
+ */
+function buildNestedContext(
+  ctx: ExtractionContext,
+  nestedFilterOptions: Record<string, any>,
+): ExtractionContext {
+  return {
+    ...ctx,
+    options: { ...ctx.options, ...nestedFilterOptions },
+    depth: ctx.depth + 1,
+  };
+}
 
 /**
  * Extracts properties from an object node recursively following the schema structure
@@ -89,6 +127,7 @@ export function extractObject(
     const value = extractPropertyValue(
       propertyNode,
       propSchema as JSONSchema7,
+      propertyName,
       ctx,
     );
 
@@ -114,19 +153,21 @@ export function extractObject(
  *
  * @param node The property node (clownface pointer with dataset context)
  * @param schema The property schema
+ * @param propertyName The name of the property being extracted (for nested filter lookup)
  * @param ctx Extraction context
  * @returns The extracted value
  */
 function extractPropertyValue(
   node: clownface.GraphPointer,
   schema: JSONSchema7,
+  propertyName: string,
   ctx: ExtractionContext,
 ): any {
   const { logger } = ctx;
 
   // Handle array type
   if (schema.type === "array") {
-    return extractArrayProperty(node, schema, ctx);
+    return extractArrayProperty(node, schema, propertyName, ctx);
   }
 
   // Handle object type (nested object)
@@ -139,11 +180,17 @@ function extractPropertyValue(
       return undefined;
     }
 
+    // Extract nested filter options for this property
+    const includeValue = ctx.options.include?.[propertyName];
+    const nestedFilterOptions = extractNestedFilterOptions(includeValue);
+
     // Extract from the first pointer, which maintains dataset context
-    return extractObject(firstPointer, schema, {
-      ...ctx,
-      depth: ctx.depth + 1,
-    });
+    // Pass nested filter options through context
+    return extractObject(
+      firstPointer,
+      schema,
+      buildNestedContext(ctx, nestedFilterOptions),
+    );
   }
 
   // Handle primitive types (string, number, boolean, etc.)
@@ -161,12 +208,14 @@ function extractPropertyValue(
  *
  * @param node The property node (clownface pointer with multiple values)
  * @param schema The array schema
+ * @param propertyName The name of the property being extracted (for filter lookup)
  * @param ctx Extraction context
  * @returns Array of extracted values
  */
 function extractArrayProperty(
   node: clownface.GraphPointer,
   schema: JSONSchema7,
+  propertyName: string,
   ctx: ExtractionContext,
 ): any[] | undefined {
   const { logger, options } = ctx;
@@ -176,27 +225,29 @@ function extractArrayProperty(
     return options.omitEmptyArrays ? undefined : [];
   }
 
-  // Get pagination metadata from schema (x-pagination added by normalizer or query builder)
-  const pagination: PaginationMetadata | undefined = (schema as any)[
-    "x-pagination"
-  ];
+  // Get pagination from filter options (carried through context)
+  const includeValue = options.include?.[propertyName];
+  const paginationOptions = isNestedFilterOptions(includeValue)
+    ? (includeValue as any)
+    : undefined;
 
   // Determine if we should apply pagination at extraction stage
   const shouldPaginate =
-    pagination && (!pagination.source || pagination.source === "extraction");
+    paginationOptions &&
+    (paginationOptions.take !== undefined ||
+      paginationOptions.skip !== undefined) &&
+    (!paginationOptions._stage || paginationOptions._stage === "extraction");
 
-  let itemsToExtract: any[];
+  let itemsToExtract: clownface.GraphPointer[];
+
+  // Collect all pointers
+  const allPointers: clownface.GraphPointer[] = [];
+  node.forEach((pointer) => {
+    allPointers.push(pointer);
+  });
 
   if (shouldPaginate) {
-    const { skip = 0, take } = pagination;
-
-    // Apply pagination to the array of values
-    // node.values gives us the literal values, but we need the node pointers
-    // So we'll collect all pointers first
-    const allPointers: clownface.GraphPointer[] = [];
-    node.forEach((pointer) => {
-      allPointers.push(pointer);
-    });
+    const { skip = 0, take } = paginationOptions;
 
     itemsToExtract = allPointers.slice(skip, take ? skip + take : undefined);
 
@@ -207,7 +258,7 @@ function extractArrayProperty(
       processing: itemsToExtract.length,
     });
   } else {
-    if (pagination && pagination.source === "query") {
+    if (paginationOptions?._stage === "query") {
       logger.debug(
         "Pagination already applied at query stage, skipping extraction pagination",
         {
@@ -216,11 +267,6 @@ function extractArrayProperty(
       );
     }
 
-    // Collect all pointers without pagination
-    const allPointers: clownface.GraphPointer[] = [];
-    node.forEach((pointer) => {
-      allPointers.push(pointer);
-    });
     itemsToExtract = allPointers;
   }
 
@@ -238,6 +284,9 @@ function extractArrayProperty(
     return itemsToExtract.map((pointer) => pointer.value);
   }
 
+  // Extract nested filter options for array items
+  const nestedFilterOptions = extractNestedFilterOptions(includeValue);
+
   // Extract each item according to its schema
   // Each pointer maintains the clownface dataset context
   const items = itemsToExtract
@@ -246,12 +295,12 @@ function extractArrayProperty(
         (itemSchema as JSONSchema7).type === "object" ||
         (itemSchema as JSONSchema7).properties
       ) {
-        // For objects, extract recursively
-        // itemPointer already has the dataset context from clownface
-        return extractObject(itemPointer, itemSchema as JSONSchema7, {
-          ...ctx,
-          depth: ctx.depth + 1,
-        });
+        // For objects, extract recursively with nested filter options
+        return extractObject(
+          itemPointer,
+          itemSchema as JSONSchema7,
+          buildNestedContext(ctx, nestedFilterOptions),
+        );
       } else {
         // For primitives, use extractLiteral
         return extractLiteral(itemPointer, itemSchema as JSONSchema7, ctx);
