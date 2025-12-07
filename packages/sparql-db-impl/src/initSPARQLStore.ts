@@ -1,7 +1,8 @@
 import type {
   AbstractDatastore,
   CountAndIterable,
-  InitDatastoreFunction,
+  TypedDocumentFilterOptions,
+  TypedDocumentsSearchOptions,
 } from "@graviola/edb-global-types";
 import {
   bringDefinitionToTop,
@@ -20,6 +21,10 @@ import {
   save,
   searchEntityByLabel,
   withDefaultPrefix,
+  filterTypedDocument,
+  filterTypedDocuments,
+  type TypedFilterOptions,
+  type TypedFilterAndSearchOptions,
 } from "@graviola/sparql-schema";
 import type { JSONSchema7 } from "json-schema";
 
@@ -317,6 +322,53 @@ export const initSPARQLStore = (
         defaultPrefix,
         queryBuildOptions,
       }).then((classes) => classes || []);
+    },
+    filterTypedDocument: async <T = any>(
+      typeName: string,
+      entityIRI: string,
+      options: TypedDocumentFilterOptions<T> = {},
+    ): Promise<T> => {
+      const typeIRI = typeNameToTypeIRI(typeName);
+      const schema = bringDefinitionToTop(rootSchema, typeName) as JSONSchema7;
+
+      // Map global-types options to sparql-schema-specific options
+      const sparqlOptions: TypedFilterOptions<T> = {
+        ...options,
+        defaultPrefix,
+        queryBuildOptions,
+      };
+
+      const result = await filterTypedDocument<T>(
+        entityIRI,
+        typeIRI,
+        schema,
+        constructFetch,
+        sparqlOptions,
+      );
+
+      return result as T;
+    },
+    filterTypedDocuments: async <T = any>(
+      typeName: string,
+      options: TypedDocumentsSearchOptions<T> = {},
+    ): Promise<T[]> => {
+      const typeIRI = typeNameToTypeIRI(typeName);
+      const schema = bringDefinitionToTop(rootSchema, typeName) as JSONSchema7;
+
+      // Map global-types options to sparql-schema-specific options
+      const sparqlOptions: TypedFilterAndSearchOptions<T> = {
+        ...options,
+        defaultPrefix,
+        queryBuildOptions,
+      };
+
+      return await filterTypedDocuments<T>(
+        typeIRI,
+        schema,
+        selectFetch,
+        constructFetch,
+        sparqlOptions,
+      );
     },
     iterableImplementation: {
       listDocuments: (typeName, limit) => {
