@@ -27,3 +27,4 @@ export * from "./useCRUDWithQueryClient";
 export * from "./useGlobalCRUDOptions";
 export * from "./useModifiedRouter";
 export * from "./useExtendedSchema";
+export * from "./useTypedFilterStore";
