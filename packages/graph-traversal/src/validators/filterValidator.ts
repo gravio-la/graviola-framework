@@ -59,10 +59,15 @@ const VALID_OPERATORS_BY_TYPE: Record<string, Set<string>> = {
   // Special handling for date/time strings
   date: new Set(["equals", "not", "lt", "lte", "gt", "gte"]),
   datetime: new Set(["equals", "not", "lt", "lte", "gt", "gte"]),
+  // Relationship operators for array types
+  array: new Set(["equals", "not", "in", "notIn", "some", "every", "none"]),
 };
 
 // Logical operators are always valid
 const LOGICAL_OPERATORS = new Set(["AND", "OR", "NOT"]);
+
+// Relationship operators for filtering array/relationship properties
+const RELATIONSHIP_OPERATORS = new Set(["some", "every", "none"]);
 
 /**
  * Get the JSON Schema type for a property
@@ -209,8 +214,107 @@ function validateWhereClause(
       continue;
     }
 
+    // Handle @id shorthand for node reference (implicit 'some')
+    if ("@id" in value && typeof value["@id"] === "string") {
+      // This is a node reference shorthand - validate it's on an array type
+      if (schemaType !== "array") {
+        errors.push({
+          path: [...path, key],
+          property: key,
+          operator: "@id",
+          value: value["@id"],
+          message: `Node reference (@id) can only be used on array/relationship properties. Property "${key}" has type ${schemaType}`,
+          schemaType: Array.isArray(schemaType)
+            ? schemaType.join(" | ")
+            : schemaType,
+        });
+      }
+      // Validate @id is a string
+      if (typeof value["@id"] !== "string") {
+        errors.push({
+          path: [...path, key, "@id"],
+          property: key,
+          operator: "@id",
+          value: value["@id"],
+          message: `@id must be a string (IRI). Got: ${typeof value["@id"]}`,
+        });
+      }
+      continue;
+    }
+
     // Handle operator object
     for (const [operator, operatorValue] of Object.entries(value)) {
+      // Special handling for relationship operators
+      if (RELATIONSHIP_OPERATORS.has(operator)) {
+        // Validate relationship operators are only used on array types
+        if (schemaType !== "array") {
+          errors.push({
+            path: [...path, key],
+            property: key,
+            operator,
+            value: operatorValue,
+            message: `Relationship operator "${operator}" can only be used on array/relationship properties. Property "${key}" has type ${schemaType}`,
+            schemaType: Array.isArray(schemaType)
+              ? schemaType.join(" | ")
+              : schemaType,
+          });
+          continue;
+        }
+
+        // Validate the structure of relationship operator values
+        if (operator === "some" || operator === "none") {
+          // some/none: single object or array
+          const items = Array.isArray(operatorValue)
+            ? operatorValue
+            : [operatorValue];
+          items.forEach((item, index) => {
+            if (
+              typeof item === "object" &&
+              item !== null &&
+              "@id" in item &&
+              typeof item["@id"] !== "string"
+            ) {
+              errors.push({
+                path: [...path, key, operator, `[${index}]`, "@id"],
+                property: key,
+                operator,
+                value: item["@id"],
+                message: `@id in "${operator}" must be a string (IRI). Got: ${typeof item["@id"]}`,
+              });
+            }
+          });
+        } else if (operator === "every") {
+          // every: must be an array
+          if (!Array.isArray(operatorValue)) {
+            errors.push({
+              path: [...path, key, operator],
+              property: key,
+              operator,
+              value: operatorValue,
+              message: `"every" operator requires an array of filter criteria`,
+            });
+          } else {
+            operatorValue.forEach((item, index) => {
+              if (
+                typeof item === "object" &&
+                item !== null &&
+                "@id" in item &&
+                typeof item["@id"] !== "string"
+              ) {
+                errors.push({
+                  path: [...path, key, operator, `[${index}]`, "@id"],
+                  property: key,
+                  operator,
+                  value: item["@id"],
+                  message: `@id in "every" must be a string (IRI). Got: ${typeof item["@id"]}`,
+                });
+              }
+            });
+          }
+        }
+        continue;
+      }
+
       // Check if operator is valid for this type
       if (!isOperatorValidForType(operator, schemaType)) {
         const typeStr = Array.isArray(schemaType)
@@ -245,13 +349,25 @@ function validateWhereClause(
         operator !== "OR" &&
         operator !== "NOT"
       ) {
-        // For 'in' and 'notIn', validate array elements
+        // For 'in' and 'notIn', validate array elements (including node references)
         if (
           (operator === "in" || operator === "notIn") &&
           Array.isArray(operatorValue)
         ) {
           operatorValue.forEach((item, index) => {
-            if (!validateFilterValue(item, schemaType, key, schema)) {
+            // Check if it's a node reference
+            if (typeof item === "object" && item !== null && "@id" in item) {
+              // Validate @id is a string
+              if (typeof item["@id"] !== "string") {
+                errors.push({
+                  path: [...path, key, operator, `[${index}]`, "@id"],
+                  property: key,
+                  operator,
+                  value: item["@id"],
+                  message: `@id must be a string (IRI). Got: ${typeof item["@id"]}`,
+                });
+              }
+            } else if (!validateFilterValue(item, schemaType, key, schema)) {
               errors.push({
                 path: [...path, key, operator, `[${index}]`],
                 property: key,
@@ -264,6 +380,21 @@ function validateWhereClause(
               });
             }
           });
+        } else if (
+          typeof operatorValue === "object" &&
+          operatorValue !== null &&
+          "@id" in operatorValue
+        ) {
+          // Single node reference with @id
+          if (typeof operatorValue["@id"] !== "string") {
+            errors.push({
+              path: [...path, key, operator, "@id"],
+              property: key,
+              operator,
+              value: operatorValue["@id"],
+              message: `@id must be a string (IRI). Got: ${typeof operatorValue["@id"]}`,
+            });
+          }
         } else if (
           !validateFilterValue(operatorValue, schemaType, key, schema)
         ) {
