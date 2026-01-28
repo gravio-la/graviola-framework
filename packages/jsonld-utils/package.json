@@ -41,11 +41,12 @@
   },
   "devDependencies": {
     "@graviola/edb-build-helper": "workspace:*",
+    "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
     "eslint-config-edb": "workspace:*",
-    "@rdfjs/types": "^2.0.1",
-    "json-schema": "^0.4.0",
+    "@rdfjs/types": "catalog:rdf",
+    "@types/json-schema": "catalog:",
     "typescript": "^5.8.2"
   },
   "typedocOptions": {

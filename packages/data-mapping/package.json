@@ -34,12 +34,12 @@
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
     "@types/jsonpath": "^0.2.4",
-    "json-schema": "^0.4.0",
     "dayjs": "^1.11.11",
     "ajv": "^8.12",
     "eslint-config-edb": "workspace:*",
     "tsup": "^8.0.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "@types/json-schema": "catalog:"
   },
   "peerDependencies": {
     "ajv": "^8.12",
@@ -48,7 +48,7 @@
   "dependencies": {
     "@graviola/edb-core-utils": "workspace:*",
     "@graviola/edb-core-types": "workspace:*",
-    "lodash-es": "^4.17.21",
+    "lodash-es": "catalog:",
     "jsonpath": "^1.1.1",
     "dot": "2.0.0-beta.1"
   },

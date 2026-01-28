@@ -39,15 +39,16 @@
     "eslint-config-edb": "workspace:*",
     "@storybook/react": "10.0.7",
     "tsup": "^8.0.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "@types/json-schema": "catalog:"
   },
   "peerDependencies": {
-    "@mui/material": "^5",
-    "@mui/icons-material": "^5",
+    "@mui/material": "catalog:mui",
+    "@mui/icons-material": "catalog:mui",
     "@ebay/nice-modal-react": "^1.2",
-    "@emotion/styled": "^11.3",
+    "@emotion/styled": "catalog:",
     "next-i18next": "^15",
-    "react": "^18"
+    "react": "catalog:"
   },
   "clean-package": {
     "extends": "../../../clean-package.config.cjs"

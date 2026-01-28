@@ -25,7 +25,8 @@
     "@graviola/edb-tsup-config": "workspace:*",
     "eslint-config-edb": "workspace:*",
     "typescript": "^5.8.2",
-    "prisma": "^5.11.0"
+    "prisma": "^5.11.0",
+    "@types/json-schema": "catalog:"
   },
   "dependencies": {
     "@graviola/json-schema-prisma-utils": "workspace:*",

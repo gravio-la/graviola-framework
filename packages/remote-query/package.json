@@ -35,12 +35,13 @@
     "@types/lodash-es": "^4.17.12",
     "eslint-config-edb": "workspace:*",
     "typescript": "^5.8.2",
-    "tsup": "^8.0.0"
+    "tsup": "^8.0.0",
+    "@types/json-schema": "catalog:"
   },
   "dependencies": {
     "@rdfjs/dataset": "^2.0.2",
     "n3": "^1.17.2",
-    "lodash-es": "^4.17.21"
+    "lodash-es": "catalog:"
   },
   "clean-package": {
     "extends": "../../../clean-package.config.cjs"

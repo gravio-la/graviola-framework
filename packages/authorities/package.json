@@ -35,7 +35,8 @@
     "@graviola/edb-tsup-config": "workspace:*",
     "eslint-config-edb": "workspace:*",
     "tsup": "^8.0.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "@types/json-schema": "catalog:"
   },
   "dependencies": {
     "cross-fetch": "^4.0.0"

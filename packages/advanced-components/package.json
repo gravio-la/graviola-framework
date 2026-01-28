@@ -28,11 +28,12 @@
     "publish-clean": "bun run clean-package && npm publish --access public && bun run clean-package restore"
   },
   "peerDependencies": {
-    "@mui/material": "^5",
-    "@mui/icons-material": "^5",
+    "@mui/material": "catalog:mui",
+    "@mui/icons-material": "catalog:mui",
     "@ebay/nice-modal-react": "^1.2",
+    "@tanstack/react-query": "^5",
     "html-react-parser": "^5.2.3",
-    "react": "^18"
+    "react": "catalog:"
   },
   "dependencies": {
     "@graviola/edb-basic-components": "workspace:*",
@@ -42,7 +43,7 @@
     "@graviola/edb-ui-utils": "workspace:*",
     "@graviola/jsonld-utils": "workspace:*",
     "dayjs": "^1.11.18",
-    "lodash-es": "^4.17.21",
+    "lodash-es": "catalog:",
     "next-i18next": "^15"
   },
   "devDependencies": {
@@ -56,9 +57,10 @@
     "@graviola/semantic-jsonform-types": "workspace:*",
     "@storybook/react": "10.0.7",
     "eslint-config-edb": "workspace:*",
-    "json-schema": "^0.4.0",
     "tsup": "^8.0.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "@types/json-schema": "catalog:",
+    "ajv": "^8.17.1"
   },
   "clean-package": {
     "extends": "../../../clean-package.config.cjs"

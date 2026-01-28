@@ -37,14 +37,15 @@
     "@graviola/edb-global-types": "workspace:*",
     "eslint-config-edb": "workspace:*",
     "typescript": "^5.8.2",
-    "tsup": "^8.0.0"
+    "tsup": "^8.0.0",
+    "@types/json-schema": "catalog:"
   },
   "peerDependencies": {
     "@rdfjs/dataset": "^2.0.2"
   },
   "dependencies": {
-    "@rdfjs/data-model": "^2.0.2",
-    "@rdfjs/namespace": "^2.0.0",
+    "@rdfjs/data-model": "catalog:rdf",
+    "@rdfjs/namespace": "catalog:rdf",
     "@graviola/edb-marc-to-rdf": "workspace:*",
     "@graviola/edb-graph-traversal": "workspace:*",
     "clownface": "2.0.2",

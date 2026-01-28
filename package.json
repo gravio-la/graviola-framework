@@ -55,13 +55,39 @@
     "depcheck": "turbo run depcheck --filter='./packages/*' --continue",
     "restore": "find -maxdepth 4 -name '*.json.backup' -execdir bunx clean-package restore \\;"
   },
-  "workspaces": [
-    "packages/*",
-    "packages/ideas/*",
-    "packages/form-renderer/*",
-    "manifestation/*",
-    "apps/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "packages/ideas/*",
+      "packages/form-renderer/*",
+      "manifestation/*",
+      "apps/*"
+    ],
+    "catalog": {
+      "react": "^19",
+      "react-dom": "^19.0.0",
+      "lodash-es": "^4.17.21",
+      "@types/json-schema": "^7.0.15",
+      "@emotion/react": "^11",
+      "@emotion/styled": "^11"
+    },
+    "catalogs": {
+      "mui": {
+        "@mui/material": "^5",
+        "@mui/icons-material": "^5"
+      },
+      "rdf": {
+        "@rdfjs/data-model": "^2.0.2",
+        "@rdfjs/types": "^2.0.1",
+        "@rdfjs/namespace": "^2.0.1"
+      },
+      "jsonforms": {
+        "@jsonforms/core": "^3",
+        "@jsonforms/react": "^3",
+        "@jsonforms/material-renderers": "^3"
+      }
+    }
+  },
   "devDependencies": {
     "@changesets/cli": "^2.27.12",
     "@turbo/gen": "^2.4.0",
@@ -77,7 +103,7 @@
     "syncpack": "^13.0.2",
     "tsup": "^8.3.6",
     "turbo": "^2.4.0",
-    "typescript": "^5.8.2"
+    "typescript": "5.8.2"
   },
   "packageManager": "bun@1.2.2",
   "lint-staged": {

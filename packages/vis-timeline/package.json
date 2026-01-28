@@ -25,10 +25,13 @@
     "vis-timeline": "^7.7.3"
   },
   "devDependencies": {
-    "react": "^18",
-    "@types/react": "~18.3"
+    "react": "catalog:",
+    "@types/react": "~18.3",
+    "@types/json-schema": "catalog:",
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*"
   },
   "peerDependencies": {
-    "react": "^18"
+    "react": "catalog:"
   }
 }

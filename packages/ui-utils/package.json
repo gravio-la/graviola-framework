@@ -41,24 +41,25 @@
     "typescript": "^5.8.2",
     "tsup": "^8.0.0",
     "dayjs": "^1.11.11",
-    "react": "^18"
+    "react": "catalog:",
+    "@types/json-schema": "catalog:"
   },
   "peerDependencies": {
-    "@jsonforms/core": "^3",
-    "@jsonforms/material-renderers": "^3",
-    "@jsonforms/react": "^3",
-    "@mui/icons-material": "^5",
-    "@mui/material": "^5",
+    "@jsonforms/core": "catalog:jsonforms",
+    "@jsonforms/material-renderers": "catalog:jsonforms",
+    "@jsonforms/react": "catalog:jsonforms",
+    "@mui/icons-material": "catalog:mui",
+    "@mui/material": "catalog:mui",
     "dayjs": "^1",
     "ajv": "^8.12",
     "ajv-formats": "^3",
-    "react": "^18"
+    "react": "catalog:"
   },
   "dependencies": {
     "@graviola/edb-core-utils": "workspace:*",
     "@graviola/json-schema-utils": "workspace:*",
     "json-schema-to-ts": "^3.0.1",
-    "lodash-es": "^4.17.21"
+    "lodash-es": "catalog:"
   },
   "clean-package": {
     "extends": "../../../clean-package.config.cjs"

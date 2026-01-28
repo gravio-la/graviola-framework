@@ -31,16 +31,19 @@
     "publish-clean": "bun run clean-package && npm publish --access public && bun run clean-package restore"
   },
   "peerDependencies": {
-    "@mui/material": "^5",
-    "@mui/icons-material": "^5",
-    "react": "^18"
+    "@mui/material": "catalog:mui",
+    "@mui/icons-material": "catalog:mui",
+    "react": "catalog:"
   },
   "dependencies": {},
   "devDependencies": {
     "@graviola/edb-build-helper": "workspace:*",
+    "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
+    "@types/react": "~18.3",
     "tsup": "^8.0.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "@types/json-schema": "catalog:"
   },
   "clean-package": {
     "extends": "../../../clean-package.config.cjs"

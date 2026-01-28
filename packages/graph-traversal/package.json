@@ -34,17 +34,19 @@
     "docs": "typedoc --out docs"
   },
   "devDependencies": {
+    "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-build-helper": "workspace:*",
     "@graviola/edb-global-types": "workspace:*",
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
     "@jest/globals": "^29.3.1",
-    "@rdfjs/data-model": "^2.0.2",
+    "@rdfjs/data-model": "catalog:rdf",
     "@rdfjs/dataset": "^2.0.1",
-    "@rdfjs/namespace": "^2.0.0",
+    "@rdfjs/namespace": "catalog:rdf",
     "@rdfjs/parser-n3": "^2.0.1",
-    "@rdfjs/types": "^2.0.1",
+    "@rdfjs/types": "catalog:rdf",
     "@types/jest": "^29.5.12",
+    "@types/json-schema": "catalog:",
     "@types/rdf-dataset-ext": "^1.0.3",
     "eslint-config-edb": "workspace:*",
     "jest": "^29.7.0",
@@ -60,7 +62,7 @@
     "ajv-formats": "^3.0.1"
   },
   "peerDependencies": {
-    "@rdfjs/data-model": "^2.0.2",
+    "@rdfjs/data-model": "catalog:rdf",
     "ajv": "^8.12",
     "ajv-formats": "^3"
   },
@@ -69,9 +71,9 @@
     "@graviola/json-schema-utils": "workspace:*",
     "@tpluscode/rdf-ns-builders": "^5",
     "rdf-dataset-ext": "^1.0.1",
-    "@rdfjs/namespace": "^2.0.0",
+    "@rdfjs/namespace": "catalog:rdf",
     "clownface": "2.0.2",
-    "lodash-es": "^4.17.21"
+    "lodash-es": "catalog:"
   },
   "clean-package": {
     "extends": "../../../clean-package.config.cjs"

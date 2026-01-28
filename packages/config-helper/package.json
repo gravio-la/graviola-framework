@@ -34,7 +34,8 @@
     "@graviola/edb-global-types": "workspace:*",
     "eslint-config-edb": "workspace:*",
     "typescript": "^5.8.2",
-    "tsup": "^8.0.0"
+    "tsup": "^8.0.0",
+    "@types/json-schema": "catalog:"
   },
   "clean-package": {
     "extends": "../../../clean-package.config.cjs"

@@ -28,13 +28,13 @@
     "publish-clean": "bun run clean-package && npm publish --access public && bun run clean-package restore"
   },
   "peerDependencies": {
-    "@mui/material": "^5",
-    "@mui/icons-material": "^5",
+    "@mui/material": "catalog:mui",
+    "@mui/icons-material": "catalog:mui",
     "@ebay/nice-modal-react": "^1.2",
     "material-react-table": "^2.0.0",
-    "@jsonforms/core": "^3",
+    "@jsonforms/core": "catalog:jsonforms",
     "notistack": "^3",
-    "react": "^18"
+    "react": "catalog:"
   },
   "dependencies": {
     "@graviola/edb-state-hooks": "workspace:*",
@@ -47,7 +47,7 @@
     "@graviola/edb-data-mapping": "workspace:*",
     "export-to-csv": "^1.2.1",
     "next-i18next": "^15",
-    "lodash-es": "^4.17.21",
+    "lodash-es": "catalog:",
     "uuid": "^9"
   },
   "devDependencies": {
@@ -58,11 +58,11 @@
     "@types/react": "~18.3",
     "@types/lodash-es": "^4.17.12",
     "@tanstack/table-core": "^8",
-    "json-schema": "^0.4.0",
     "notistack": "^3",
     "eslint-config-edb": "workspace:*",
     "tsup": "^8.0.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "@types/json-schema": "catalog:"
   },
   "clean-package": {
     "extends": "../../../clean-package.config.cjs"

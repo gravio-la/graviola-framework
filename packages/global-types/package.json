@@ -18,13 +18,12 @@
   },
   "devDependencies": {
     "@graviola/edb-core-types": "workspace:*",
-    "@rdfjs/namespace": "^2.0.1",
-    "json-schema": "^0.4.0",
-    "jsonld-context-parser": "^2.4.0"
+    "@rdfjs/namespace": "catalog:rdf",
+    "jsonld-context-parser": "^2.4.0",
+    "@types/json-schema": "catalog:"
   },
   "peerDependencies": {
-    "@rdfjs/namespace": "^2.0.1",
-    "json-schema": "^0.4.0",
+    "@rdfjs/namespace": "catalog:rdf",
     "jsonld-context-parser": "^2.4.0"
   },
   "typedocOptions": {

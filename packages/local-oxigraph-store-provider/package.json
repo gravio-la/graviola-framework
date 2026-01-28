@@ -27,10 +27,10 @@
   },
   "peerDependencies": {
     "@graviola/edb-state-hooks": "workspace:*",
-    "@tanstack/react-query": "^4 || ^5",
-    "@mui/material": "^5",
-    "@mui/icons-material": "^5",
-    "react": "^18",
+    "@tanstack/react-query": "^5",
+    "@mui/material": "catalog:mui",
+    "@mui/icons-material": "catalog:mui",
+    "react": "catalog:",
     "zustand": "^4.5.2"
   },
   "dependencies": {
@@ -38,18 +38,20 @@
     "@graviola/sparql-db-impl": "workspace:*",
     "@graviola/async-oxigraph": "workspace:*",
     "@rdfjs/dataset": "^2.0.2",
-    "@rdfjs/data-model": "^2.0.2",
+    "@rdfjs/data-model": "catalog:rdf",
     "n3": "^1.17.2",
     "oxigraph": "^0.4.8"
   },
   "devDependencies": {
     "@graviola/edb-build-helper": "workspace:*",
+    "@graviola/edb-core-types": "workspace:*",
+    "@graviola/edb-global-types": "workspace:*",
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
-    "@graviola/edb-core-types": "workspace:*",
     "zustand": "^4.5.2",
     "tsup": "^8.0.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "@types/json-schema": "catalog:"
   },
   "clean-package": {
     "extends": "../../../clean-package.config.cjs"

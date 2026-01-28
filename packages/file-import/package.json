@@ -29,15 +29,15 @@
     "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
-    "@rdfjs/types": "^2.0.1",
+    "@rdfjs/dataset": "^2.0.2",
+    "@rdfjs/types": "catalog:rdf",
     "@types/jest": "^29.5.12",
-    "@types/json-schema": "^7.0.14",
+    "@types/json-schema": "catalog:",
     "eslint-config-edb": "workspace:*",
     "typescript": "^5.8.2"
   },
   "dependencies": {
     "@graviola/edb-maintenance-utils": "workspace:*",
-    "json-schema": "^0.4.0",
     "jsonld": "^8.3.2",
     "jsonld-context-parser": "^2.4.0",
     "n3": "^1.17.2",

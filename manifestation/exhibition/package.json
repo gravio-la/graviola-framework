@@ -28,12 +28,12 @@
     "@graviola/edb-build-helper": "workspace:*",
     "@graviola/edb-data-mapping": "workspace:*",
     "@graviola/edb-core-types": "workspace:*",
-    "json-schema": "^0.4.0",
     "@adobe/jsonschema2md": "^7.1.5",
-    "schema2typebox": "^1.7.5"
+    "schema2typebox": "^1.7.5",
+    "@types/json-schema": "catalog:"
   },
   "dependencies": {
-    "@rdfjs/namespace": "^2.0.0",
+    "@rdfjs/namespace": "catalog:rdf",
     "@graviola/edb-wikidata-utils": "workspace:*",
     "@graviola/edb-authorities": "workspace:*"
   }

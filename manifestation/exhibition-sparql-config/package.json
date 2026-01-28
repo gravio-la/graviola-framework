@@ -29,12 +29,12 @@
     "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-global-types": "workspace:*",
     "@tsconfig/node18": "^18.2.2",
-    "json-schema": "^0.4.0",
     "tsx": "^4.7.1",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "@types/json-schema": "catalog:"
   },
   "dependencies": {
-    "@rdfjs/namespace": "^2.0.1",
+    "@rdfjs/namespace": "catalog:rdf",
     "@slub/exhibition-schema": "workspace:*",
     "@graviola/sparql-db-impl": "workspace:*"
   }

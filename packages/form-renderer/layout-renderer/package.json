@@ -28,27 +28,28 @@
     "publish-clean": "bun run clean-package && npm publish --access public && bun run clean-package restore"
   },
   "peerDependencies": {
-    "@mui/material": "^5",
-    "@mui/icons-material": "^5",
-    "@jsonforms/material-renderers": "^3",
-    "@jsonforms/core": "^3",
-    "@jsonforms/react": "^3",
-    "react": "^18"
+    "@mui/material": "catalog:mui",
+    "@mui/icons-material": "catalog:mui",
+    "@jsonforms/material-renderers": "catalog:jsonforms",
+    "@jsonforms/core": "catalog:jsonforms",
+    "@jsonforms/react": "catalog:jsonforms",
+    "react": "catalog:"
   },
   "dependencies": {
     "next-i18next": "^15",
-    "lodash-es": "^4.17.21"
+    "lodash-es": "catalog:"
   },
   "devDependencies": {
     "@types/react": "~18.3",
     "@types/lodash-es": "^4.17.12",
-    "@jsonforms/core": "^3",
-    "@jsonforms/react": "^3",
+    "@jsonforms/core": "catalog:jsonforms",
+    "@jsonforms/react": "catalog:jsonforms",
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
     "eslint-config-edb": "workspace:*",
     "tsup": "^8.0.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "@types/json-schema": "catalog:"
   },
   "clean-package": {
     "extends": "../../../clean-package.config.cjs"

@@ -23,17 +23,17 @@
   },
   "devDependencies": {
     "ajv": "^8.12",
-    "@jsonforms/react": "^3",
-    "@jsonforms/core": "^3",
+    "@jsonforms/react": "catalog:jsonforms",
+    "@jsonforms/core": "catalog:jsonforms",
     "jsonld-context-parser": "^2.4.0",
-    "json-schema": "^0.4.0",
-    "react": "^18",
+    "react": "catalog:",
     "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-global-types": "workspace:*",
-    "eslint-config-edb": "workspace:*"
+    "eslint-config-edb": "workspace:*",
+    "@types/json-schema": "catalog:"
   },
   "peerDependencies": {
-    "react": "^18"
+    "react": "catalog:"
   },
   "clean-package": {
     "extends": "../../../clean-package.config.cjs"

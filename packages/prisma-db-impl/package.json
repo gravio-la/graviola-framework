@@ -37,10 +37,9 @@
     "@graviola/edb-tsup-config": "workspace:*",
     "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-global-types": "workspace:*",
-    "@types/json-schema": "^7.0.14",
+    "@types/json-schema": "catalog:",
     "eslint-config-edb": "workspace:*",
     "typescript": "^5.8.2",
-    "json-schema": "^0.4.0",
     "prisma": "^5.11.0"
   },
   "dependencies": {
@@ -49,7 +48,7 @@
     "@graviola/edb-core-utils": "workspace:*",
     "@graviola/jsonld-utils": "workspace:*",
     "cli-progress": "^3.12.0",
-    "lodash-es": "^4.17.21"
+    "lodash-es": "catalog:"
   },
   "peerDependencies": {
     "@prisma/client": "^5 || ^6"

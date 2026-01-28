@@ -17,11 +17,12 @@
     "@graviola/edb-global-types": "workspace:*",
     "@tsconfig/node18": "^18.2.2",
     "tsx": "^4.7.1",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "@types/json-schema": "catalog:"
   },
   "dependencies": {
-    "@rdfjs/data-model": "^2.0.2",
-    "@rdfjs/namespace": "^2.0.1",
+    "@rdfjs/data-model": "catalog:rdf",
+    "@rdfjs/namespace": "catalog:rdf",
     "@graviola/sparql-db-impl": "workspace:*",
     "@slub/exhibition-sparql-config": "workspace:*",
     "@slub/exhibition-schema": "workspace:*",

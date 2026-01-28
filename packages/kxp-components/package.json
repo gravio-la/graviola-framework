@@ -27,14 +27,17 @@
     "@tpluscode/rdf-ns-builders": "^5"
   },
   "devDependencies": {
-    "@graviola/edb-tsup-config": "workspace:*",
-    "@rdfjs/types": "^2.0.1"
+    "@graviola/edb-global-types": "workspace:*",
+    "@rdfjs/types": "catalog:rdf",
+    "@types/json-schema": "catalog:",
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*"
   },
   "peerDependencies": {
     "@ebay/nice-modal-react": ">=1.2",
-    "@mui/material": "^5",
-    "@mui/icons-material": "^5",
-    "react": "^18",
+    "@mui/material": "catalog:mui",
+    "@mui/icons-material": "catalog:mui",
+    "react": "catalog:",
     "next-i18next": "^15"
   }
 }

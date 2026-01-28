@@ -30,11 +30,13 @@
   "devDependencies": {
     "@graviola/edb-build-helper": "workspace:*",
     "@graviola/edb-core-types": "workspace:*",
+    "@graviola/edb-global-types": "workspace:*",
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
     "@graviola/edb-data-mapping": "workspace:*",
+    "@graviola/json-schema-utils": "workspace:*",
     "@types/jest": "^29.5.12",
-    "@types/json-schema": "^7.0.14",
+    "@types/json-schema": "catalog:",
     "eslint-config-edb": "workspace:*",
     "typescript": "^5.8.2"
   },

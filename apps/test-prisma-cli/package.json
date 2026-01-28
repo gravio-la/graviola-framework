@@ -19,11 +19,12 @@
     "@tsconfig/node18": "^18.2.2",
     "@types/cli-progress": "^3",
     "tsx": "^4.7.1",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "@types/json-schema": "catalog:"
   },
   "dependencies": {
-    "@rdfjs/data-model": "^2.0.2",
-    "@rdfjs/namespace": "^2.0.1",
+    "@rdfjs/data-model": "catalog:rdf",
+    "@rdfjs/namespace": "catalog:rdf",
     "@graviola/edb-core-utils": "workspace:*",
     "@graviola/edb-graph-traversal": "workspace:*",
     "@graviola/prisma-db-impl": "workspace:*",
@@ -31,10 +32,9 @@
     "@graviola/json-schema-prisma-utils": "workspace:*",
     "@graviola/json-schema2prisma-schema": "workspace:*",
     "cmd-ts": "^0.13.0",
-    "json-schema": "^0.4.0",
     "@prisma/client": "~6.3.0",
     "prisma": "~6.3.0",
-    "lodash-es": "^4.17.21",
+    "lodash-es": "catalog:",
     "cli-progress": "^3"
   }
 }

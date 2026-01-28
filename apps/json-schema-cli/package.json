@@ -40,7 +40,8 @@
     "eslint-config-edb": "workspace:*",
     "tsx": "^4.7.1",
     "typescript": "^5.8.2",
-    "tsup": "^8.0.0"
+    "tsup": "^8.0.0",
+    "@types/json-schema": "catalog:"
   },
   "dependencies": {
     "@graviola/json-schema-utils": "workspace:*",

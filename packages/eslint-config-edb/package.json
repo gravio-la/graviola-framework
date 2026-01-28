@@ -16,7 +16,8 @@
     "eslint": "^8.57.0",
     "next": ">=14",
     "typescript": "^5.8.2",
-    "turbo": "^2.4.0"
+    "turbo": "^2.4.0",
+    "@types/json-schema": "catalog:"
   },
   "publishConfig": {
     "access": "public"

@@ -22,7 +22,8 @@
     "@tsconfig/node18": "^18.2.2",
     "bun-types": "^1.0.30",
     "tsx": "^4.7.1",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "@types/json-schema": "catalog:"
   },
   "dependencies": {
     "@elysiajs/eden": "^1.0.8",
@@ -37,7 +38,6 @@
     "@graviola/json-schema-utils": "workspace:*",
     "cmd-ts": "^0.13.0",
     "elysia": "^1.0.10",
-    "json-schema": "^0.4.0",
     "surreal.js": "^0.4.20",
     "surrealdb.ts": "^0.0.1-beta.3.6"
   }

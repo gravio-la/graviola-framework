@@ -25,12 +25,15 @@
   },
   "devDependencies": {
     "react-virtuoso": "^4.6.2",
-    "@types/react": "~18.3"
+    "@types/react": "~18.3",
+    "@types/json-schema": "catalog:",
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*"
   },
   "peerDependencies": {
-    "@mui/material": "^5",
-    "@mui/icons-material": "^5",
+    "@mui/material": "catalog:mui",
+    "@mui/icons-material": "catalog:mui",
     "react-virtuoso": "^4",
-    "react": "^18"
+    "react": "catalog:"
   }
 }
