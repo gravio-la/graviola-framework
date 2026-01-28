@@ -1,7 +1,7 @@
 import { ControlProps, showAsRequired, update } from "@jsonforms/core";
 import { withJsonFormsControlProps } from "@jsonforms/react";
 import { FormControl, FormLabel, Grid, Hidden } from "@mui/material";
-import merge from "lodash/merge";
+import merge from "lodash-es/merge";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { AutocompleteSuggestion } from "@graviola/edb-core-types";

@@ -16,7 +16,7 @@ import {
   InputProps,
   useTheme,
 } from "@mui/material";
-import merge from "lodash/merge";
+import merge from "lodash-es/merge";
 import Close from "@mui/icons-material/Close";
 import {
   JsonFormsTheme,

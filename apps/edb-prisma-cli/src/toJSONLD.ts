@@ -1,5 +1,5 @@
 import { filterUndefOrNull } from "@graviola/edb-core-utils";
-import merge from "lodash/merge";
+import merge from "lodash-es/merge";
 
 export const splitUpLoDashConnectedEntry = (str: string, value: any) => {
   const parts = str.split("_");

@@ -21,7 +21,7 @@ import Paper from "@mui/material/Paper";
 import df from "@rdfjs/data-model";
 import { SELECT } from "@tpluscode/sparql-builder";
 import { ParentSize } from "@visx/responsive";
-import get from "lodash/get";
+import get from "lodash-es/get";
 import { isString, orderBy, uniq } from "lodash-es";
 import { useTranslation } from "next-i18next";
 import * as React from "react";

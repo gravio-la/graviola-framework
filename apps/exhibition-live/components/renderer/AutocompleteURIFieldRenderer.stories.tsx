@@ -10,7 +10,7 @@ import {
   materialRenderers,
 } from "@jsonforms/material-renderers";
 import { JsonForms } from "@jsonforms/react";
-import isEmpty from "lodash/isEmpty";
+import isEmpty from "lodash-es/isEmpty";
 import { useCallback, useState } from "react";
 
 import AutocompleteURIFieldRenderer from "./AutocompleteURIFieldRenderer";
