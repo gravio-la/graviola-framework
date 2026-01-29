@@ -142,10 +142,14 @@ export type FilterOperatorsForType<T> =
                     | TypedWhereInput<U>
                     | TypedWhereInput<U>[]
                 : // Otherwise it's a primitive array - recurse normally
-                  TypedWhereInput<U> | TypedWhereInput<U>[]
-              : // Object types - recurse into object properties
+                    TypedWhereInput<U> | TypedWhereInput<U>[]
+              : // Object types - check if it's a single relationship or regular object
                 T extends object
-                ? TypedWhereInput<T>
+                ? // Single object with @id is a one-to-one relationship
+                  T extends { "@id"?: string }
+                  ? NodeReference | TypedWhereInput<T>
+                  : // Regular object - recurse into properties
+                    TypedWhereInput<T>
                 : // Fallback for truly unknown types - uses never to prevent invalid filters
                   never;
 
