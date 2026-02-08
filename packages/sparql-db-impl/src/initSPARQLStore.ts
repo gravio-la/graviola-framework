@@ -21,10 +21,9 @@ import {
   save,
   searchEntityByLabel,
   withDefaultPrefix,
-  filterTypedDocument,
   filterTypedDocuments,
   type TypedFilterOptions,
-  type TypedFilterAndSearchOptions,
+  getEntitiesWithClassesByFilter,
 } from "@graviola/sparql-schema";
 import type { JSONSchema7 } from "json-schema";
 
@@ -323,11 +322,21 @@ export const initSPARQLStore = (
         queryBuildOptions,
       }).then((classes) => classes || []);
     },
+    getEntitiesWithClassesByFilter: async <T = any>(
+      options: TypedDocumentsSearchOptions<T> = {},
+    ): Promise<Map<string, string[]>> => {
+      return await getEntitiesWithClassesByFilter(constructFetch, {
+        where: options.where,
+        prefixMap: queryBuildOptions.prefixes || {},
+        defaultPrefix,
+        flavour: queryBuildOptions.sparqlFlavour,
+      });
+    },
     filterTypedDocument: async <T = any>(
       typeName: string,
       entityIRI: string,
       options: TypedDocumentFilterOptions<T> = {},
-    ): Promise<T> => {
+    ): Promise<T | null> => {
       const typeIRI = typeNameToTypeIRI(typeName);
       const schema = bringDefinitionToTop(rootSchema, typeName) as JSONSchema7;
 
@@ -338,15 +347,20 @@ export const initSPARQLStore = (
         queryBuildOptions,
       };
 
-      const result = await filterTypedDocument<T>(
+      const result = await filterTypedDocuments<T>(
         entityIRI,
         typeIRI,
         schema,
         constructFetch,
         sparqlOptions,
       );
-
-      return result as T;
+      if (result.length > 1) {
+        throw new Error("Multiple documents found for entityIRI");
+      } else if (result.length === 1) {
+        return result[0];
+      } else {
+        return null;
+      }
     },
     filterTypedDocuments: async <T = any>(
       typeName: string,
@@ -356,16 +370,16 @@ export const initSPARQLStore = (
       const schema = bringDefinitionToTop(rootSchema, typeName) as JSONSchema7;
 
       // Map global-types options to sparql-schema-specific options
-      const sparqlOptions: TypedFilterAndSearchOptions<T> = {
+      const sparqlOptions: TypedFilterOptions<T> = {
         ...options,
         defaultPrefix,
         queryBuildOptions,
       };
 
       return await filterTypedDocuments<T>(
+        undefined,
         typeIRI,
         schema,
-        selectFetch,
         constructFetch,
         sparqlOptions,
       );
