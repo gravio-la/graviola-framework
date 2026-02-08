@@ -19,6 +19,7 @@ describe("normalizedSchema2construct - Multiple Subjects", () => {
         "http://example.com/person2",
         "http://example.com/person3",
       ],
+      undefined,
       schema,
     );
 
@@ -47,6 +48,7 @@ describe("normalizedSchema2construct - Multiple Subjects", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/person1",
+      undefined,
       schema,
       {
         flavour: "oxigraph",
@@ -72,6 +74,7 @@ describe("normalizedSchema2construct - Multiple Subjects", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/person1",
+      undefined,
       schema,
       {
         flavour: "default",
@@ -97,6 +100,7 @@ describe("normalizedSchema2construct - Multiple Subjects", () => {
 
     const result = normalizedSchema2construct(
       ["ex:person1", "ex:person2"],
+      undefined,
       schema,
       {
         prefixMap: { ex: "http://example.com/" },
@@ -123,6 +127,7 @@ describe("normalizedSchema2construct - Multiple Subjects", () => {
 
     const result = normalizedSchema2construct(
       ["ex:person1", "http://example.com/person2", "urn:uuid:12345"],
+      undefined,
       schema,
       {
         prefixMap: { ex: "http://example.com/" },
@@ -151,6 +156,7 @@ describe("normalizedSchema2construct - Multiple Subjects", () => {
 
     const result = normalizedSchema2construct(
       ["http://example.com/person1", "http://example.com/person2"],
+      undefined,
       schema,
     );
 
@@ -183,6 +189,7 @@ describe("normalizedSchema2construct - Multiple Subjects", () => {
 
     const result = normalizedSchema2construct(
       ["http://example.com/person1", "http://example.com/person2"],
+      undefined,
       schema,
     );
 
@@ -216,6 +223,7 @@ describe("normalizedSchema2construct - Multiple Subjects", () => {
 
     const result = normalizedSchema2construct(
       ["http://example.com/person1", "http://example.com/person2"],
+      undefined,
       schema,
       {
         filterOptions: {
@@ -236,7 +244,7 @@ describe("normalizedSchema2construct - Multiple Subjects", () => {
     expect(whereQuery).toContain("LIMIT 10");
   });
 
-  it("should throw error for empty array of subject IRIs", () => {
+  it("should handle empty array of subject IRIs (query all subjects)", () => {
     const schema: NormalizedSchema = {
       type: "object",
       properties: {
@@ -245,8 +253,16 @@ describe("normalizedSchema2construct - Multiple Subjects", () => {
       _normalized: true,
     };
 
-    expect(() => {
-      normalizedSchema2construct([], schema);
-    }).toThrow("entityIRIList is empty");
+    // Empty array is now treated like undefined - query all subjects
+    const result = normalizedSchema2construct([], undefined, schema);
+
+    expect(result).toBeDefined();
+    expect(result.constructPatterns).toBeDefined();
+    expect(result.wherePatterns).toBeDefined();
+
+    // Should not have BIND/VALUES pattern for subject when empty array is passed
+    const whereQuery = result.wherePatterns.map((p) => p.toString()).join(" ");
+    expect(whereQuery).not.toContain("VALUES ?subject");
+    expect(whereQuery).not.toContain("BIND");
   });
 });

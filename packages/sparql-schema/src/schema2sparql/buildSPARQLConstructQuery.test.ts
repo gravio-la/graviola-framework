@@ -17,6 +17,7 @@ describe("buildCompleteSPARQLQuery", () => {
     const normalized = normalizeSchema(schema);
     const result = normalizedSchema2construct(
       "http://example.com/person/1",
+      undefined,
       normalized,
     );
     const query = buildSPARQLConstructQuery(result, {
@@ -41,6 +42,7 @@ describe("buildCompleteSPARQLQuery", () => {
     const normalized = normalizeSchema(schema);
     const result = normalizedSchema2construct(
       "http://example.com/person/1",
+      undefined,
       normalized,
     );
     const query = buildSPARQLConstructQuery(result, {
@@ -88,6 +90,7 @@ describe("buildCompleteSPARQLQuery", () => {
     const normalized = normalizeSchema(schema, filterOptions);
     const result = normalizedSchema2construct(
       "http://example.com/person/1",
+      undefined,
       normalized,
       {
         filterOptions,

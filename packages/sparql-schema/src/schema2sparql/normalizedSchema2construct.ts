@@ -14,21 +14,28 @@ import {
   SparqlTemplateResult,
   SELECT,
 } from "@tpluscode/sparql-builder";
+import { rdf } from "@tpluscode/rdf-ns-builders";
 import { JSONSchema7 } from "json-schema";
 import { isJSONSchema } from "@graviola/json-schema-utils";
 import type { NormalizedSchema } from "@graviola/edb-graph-traversal";
 import type {
   Prefixes,
   OrderByClause,
-  SortOrder,
   PaginationMetadata,
   GraphTraversalFilterOptions,
   SPARQLFlavour,
 } from "@graviola/edb-core-types";
 import df from "@rdfjs/data-model";
-import { get } from "lodash";
-import { convertIRIToNode } from "../utils/iriConverter";
-import { createBindOrValuesPattern } from "../utils/sparqlBindOrValues";
+import get from "lodash-es/get";
+import { convertIRIToNode, createBindOrValuesPattern } from "@/utils";
+import {
+  isNilOrEmpty,
+  OptionalStringOrStringArray,
+  QUERY_RESULT_SUBJECT_IRI,
+  QUERY_RESULT_SUBJECT_IRI_NODE,
+} from "@/base";
+import { filterToSparql } from "@/filters/filterToSparql";
+import type { FilterContext } from "@/filters/types";
 
 /**
  * Context for query construction
@@ -66,6 +73,38 @@ export type ConstructResult = {
 };
 
 /**
+ * Tree structure for WHERE clause patterns
+ * Allows proper nesting of OPTIONAL blocks
+ */
+export type WherePart = OptionalWherePart | RequiredWherePart;
+
+export type OptionalWherePart = {
+  required: false;
+  whereTemplates: SparqlTemplateResult[];
+  children?: WherePart[];
+};
+
+export type RequiredWherePart = {
+  required: true;
+  whereTemplates: SparqlTemplateResult[];
+  children?: WherePart[];
+};
+
+/**
+ * Type guard to check if a WherePart is optional
+ */
+function isOptional(part: WherePart): part is OptionalWherePart {
+  return part.required === false;
+}
+
+/**
+ * Type guard to check if a WherePart is required
+ */
+function isRequired(part: WherePart): part is RequiredWherePart {
+  return part.required === true;
+}
+
+/**
  * Helper function to create an OPTIONAL WHERE pattern
  * Makes code more readable by clearly indicating optional patterns
  */
@@ -98,6 +137,66 @@ function addWherePattern(
       ? createRequiredWherePattern(pattern)
       : createOptionalWherePattern(pattern),
   );
+}
+
+/**
+ * Materialize WHERE tree structure into properly nested SPARQL patterns
+ *
+ * This function converts the tree structure of WhereParts into a flat array
+ * of SparqlTemplateResults with proper nesting of OPTIONAL blocks.
+ *
+ * Key behaviors:
+ * - Required parts: patterns added directly, children processed recursively
+ * - Optional parts: all patterns and children wrapped in single OPTIONAL block
+ * - Preserves semantic nesting from schema hierarchy
+ *
+ * @param parts - Array of WherePart nodes to materialize
+ * @param indentLevel - Current indentation level (for debugging/readability)
+ * @returns Flat array of properly nested SPARQL patterns
+ */
+function materializeWhereParts(
+  parts: WherePart[],
+  indentLevel: number = 0,
+): SparqlTemplateResult[] {
+  const results: SparqlTemplateResult[] = [];
+
+  for (const part of parts) {
+    if (isRequired(part)) {
+      // Required: Add patterns directly without OPTIONAL wrapper
+      results.push(...part.whereTemplates);
+
+      // Recursively add children
+      if (part.children && part.children.length > 0) {
+        results.push(...materializeWhereParts(part.children, indentLevel));
+      }
+    } else {
+      // Optional: Wrap patterns and children in single OPTIONAL block
+      const childPatterns: SparqlTemplateResult[] = [];
+
+      // Add this level's patterns first
+      childPatterns.push(...part.whereTemplates);
+
+      // Then add nested children (which may contain their own OPTIONALs)
+      if (part.children && part.children.length > 0) {
+        childPatterns.push(
+          ...materializeWhereParts(part.children, indentLevel + 1),
+        );
+      }
+
+      // Combine all into single OPTIONAL block
+      if (childPatterns.length > 0) {
+        // Create combined pattern for all child patterns
+        const combined = childPatterns.reduce((acc, pattern, idx) => {
+          if (idx === 0) return pattern;
+          return sparql`${acc}\n${pattern}`;
+        }, childPatterns[0]);
+
+        results.push(sparql`OPTIONAL { ${combined} }`);
+      }
+    }
+  }
+
+  return results;
 }
 
 /**
@@ -283,13 +382,16 @@ function createPaginatedSubselect(
 /**
  * Generate SPARQL CONSTRUCT query from a normalized schema
  *
- * @param subjectIRI - The IRI(s) of the subject(s) to construct (single IRI or array of IRIs)
+ *
+ * @param subjectIRI - The IRI(s) of the subject(s) to construct (single IRI or array of IRIs) or undefined/null to construct all subjects
+ * @param typeIRIs - The IRI(s) of the type(s) to construct (single IRI or array of IRIs) or undefined/null to construct all types
  * @param normalizedSchema - Schema with all $refs resolved
  * @param options - Optional configuration
  * @returns CONSTRUCT and WHERE patterns with metadata
  */
 export function normalizedSchema2construct(
-  subjectIRI: string | string[],
+  subjectIRI: OptionalStringOrStringArray,
+  typeIRIs: OptionalStringOrStringArray | undefined,
   normalizedSchema: NormalizedSchema,
   options?: {
     excludedProperties?: string[];
@@ -310,7 +412,7 @@ export function normalizedSchema2construct(
   };
 
   const constructPatterns: SparqlTemplateResult[] = [];
-  const wherePatterns: SparqlTemplateResult[] = [];
+  const whereParts: WherePart[] = [];
   const paginationMetadata = new Map<
     string,
     {
@@ -324,28 +426,54 @@ export function normalizedSchema2construct(
   // Create subject variable
   const subjectVar = df.variable("subject");
 
-  // Use BIND or VALUES pattern to bind subject IRI(s) to variable
-  // This handles both single and multiple subjects efficiently
-  const subjectBindPattern = createBindOrValuesPattern(subjectIRI, subjectVar, {
-    flavour: options?.flavour,
-    prefixMap: options?.prefixMap,
-  });
+  if (!isNilOrEmpty(subjectIRI)) {
+    // Use BIND or VALUES pattern to bind subject IRI(s) to variable
+    // This handles both single and multiple subjects efficiently
+    const subjectBindPattern = createBindOrValuesPattern(
+      subjectIRI,
+      subjectVar,
+      {
+        flavour: options?.flavour,
+        prefixMap: options?.prefixMap,
+      },
+    );
 
-  // Add the BIND/VALUES pattern to WHERE clause (required, not optional)
-  wherePatterns.push(subjectBindPattern);
+    // Add the BIND/VALUES pattern as required WHERE part
+    whereParts.push({
+      required: true,
+      whereTemplates: [subjectBindPattern],
+    });
+  }
 
   // Use subject variable instead of concrete node
   const subject = subjectVar;
 
-  // Add rdf:type pattern (always OPTIONAL)
+  // Add rdf:type pattern
   const typeVar = df.variable("type");
-  const rdfType = df.namedNode(
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-  );
+  const typePattern = sparql`${subject} ${rdf.type} ${typeVar} .`;
 
-  const typePattern = sparql`${subject} ${rdfType} ${typeVar} .`;
+  if (!isNilOrEmpty(typeIRIs)) {
+    const typeBindPattern = createBindOrValuesPattern(typeIRIs, typeVar, {
+      flavour: options?.flavour,
+      prefixMap: options?.prefixMap,
+    });
+    // Type with VALUES is required
+    whereParts.push({
+      required: true,
+      whereTemplates: [typeBindPattern, typePattern],
+    });
+  } else {
+    // Type without VALUES is optional
+    whereParts.push({
+      required: false,
+      whereTemplates: [typePattern],
+    });
+  }
   constructPatterns.push(typePattern);
-  addWherePattern(wherePatterns, typePattern, false); // rdf:type is always optional
+
+  //mark each subject as graviola:QueryResultSubject (construct pattern)
+  const queryResultSubjectPattern = sparql`${subject} ${rdf.type} ${QUERY_RESULT_SUBJECT_IRI_NODE} .`;
+  constructPatterns.push(queryResultSubjectPattern);
 
   // Walk through schema properties
   if (normalizedSchema.properties) {
@@ -371,7 +499,52 @@ export function normalizedSchema2construct(
         );
 
         constructPatterns.push(...propertyPatterns.construct);
-        wherePatterns.push(...propertyPatterns.where);
+        whereParts.push(...propertyPatterns.whereParts);
+
+        // Apply top-level WHERE filters to main entity properties
+        // Check if there's a where clause for this property at the top level
+        const topLevelWhereClause = ctx.filterOptions.where?.[propertyName];
+        if (topLevelWhereClause) {
+          const predicate = createPredicate(propertyName, ctx.prefixMap);
+          const varName = `${sanitizeVariableName(propertyName)}_${ctx.depth}`;
+          const objectVar = df.variable(varName);
+
+          const filterContext: FilterContext = {
+            subject: subject,
+            property: propertyName,
+            propertyVar: objectVar,
+            predicateNode: predicate,
+            schemaType:
+              typeof propertySchema !== "boolean"
+                ? ((propertySchema as JSONSchema7).type as string)
+                : undefined,
+            prefixMap: ctx.prefixMap,
+            flavour: options?.flavour || "default",
+            depth: ctx.depth,
+            schema:
+              typeof propertySchema !== "boolean"
+                ? (propertySchema as JSONSchema7)
+                : undefined,
+          };
+
+          const filterResult = filterToSparql(
+            topLevelWhereClause,
+            filterContext,
+          );
+
+          // Add top-level filter as required WHERE part
+          const filterPatterns: SparqlTemplateResult[] = [
+            ...filterResult.patterns,
+            ...filterResult.filters,
+          ];
+
+          if (filterPatterns.length > 0) {
+            whereParts.push({
+              required: true,
+              whereTemplates: filterPatterns,
+            });
+          }
+        }
 
         // Collect pagination metadata if present
         if (propertyPatterns.pagination) {
@@ -384,6 +557,9 @@ export function normalizedSchema2construct(
       },
     );
   }
+
+  // Materialize WHERE parts into properly nested patterns
+  const wherePatterns = materializeWhereParts(whereParts);
 
   return {
     constructPatterns,
@@ -402,15 +578,15 @@ function createPropertyPatterns(
   ctx: QueryConstructionContext,
 ): {
   construct: SparqlTemplateResult[];
-  where: SparqlTemplateResult[];
+  whereParts: WherePart[];
   pagination?: any;
 } {
   const construct: SparqlTemplateResult[] = [];
-  const where: SparqlTemplateResult[] = [];
+  const whereParts: WherePart[] = [];
 
   // Stop if max recursion reached
   if (ctx.depth > ctx.maxRecursion) {
-    return { construct, where };
+    return { construct, whereParts };
   }
 
   // Create predicate (property name)
@@ -428,7 +604,7 @@ function createPropertyPatterns(
 
   // Handle different property types
   if (propertySchema.type === "array" && propertySchema.items) {
-    // Get pagination from filter options (carried through context)
+    // Get pagination and where filters from filter options (carried through context)
     const includeValue = ctx.filterOptions.include?.[propertyName];
     const paginationMeta =
       typeof includeValue === "object" && includeValue !== null
@@ -437,6 +613,12 @@ function createPropertyPatterns(
             take: includeValue.take,
             orderBy: includeValue.orderBy,
           }
+        : undefined;
+
+    // Extract WHERE clause for relationship filtering
+    const whereClause =
+      typeof includeValue === "object" && includeValue !== null
+        ? includeValue.where
         : undefined;
 
     // Handle array items
@@ -449,6 +631,9 @@ function createPropertyPatterns(
       paginationMeta &&
       (paginationMeta.take !== undefined || hasOrderBy(paginationMeta));
 
+    const isRequired = ctx.schema.required?.includes(propertyName) || false;
+    const relationshipPatterns: SparqlTemplateResult[] = [];
+
     if (needsSubselect) {
       // Use SUBSELECT for pagination with ORDER BY
       const subselect = createPaginatedSubselect(
@@ -459,16 +644,38 @@ function createPropertyPatterns(
         paginationMeta,
         ctx,
       );
-
-      // Add SUBSELECT to WHERE clause
-      // SUBSELECT is always OPTIONAL for arrays (like all array relationships)
-      addWherePattern(where, subselect, false);
+      relationshipPatterns.push(subselect);
     } else {
       // Regular pattern without pagination
-      const isRequired = ctx.schema.required?.includes(propertyName) || false;
-      addWherePattern(where, triplePattern, isRequired);
+      relationshipPatterns.push(triplePattern);
     }
 
+    // Apply WHERE filters for relationship filtering
+    if (whereClause && typeof whereClause === "object") {
+      const filterContext: FilterContext = {
+        subject: subject,
+        property: propertyName,
+        propertyVar: objectVar,
+        predicateNode: predicate,
+        schemaType:
+          typeof itemSchema !== "boolean"
+            ? (itemSchema.type as string)
+            : undefined,
+        prefixMap: ctx.prefixMap,
+        flavour: "default", // Use default flavour for filters
+        depth: ctx.depth,
+        schema: typeof itemSchema !== "boolean" ? itemSchema : undefined,
+      };
+
+      const filterResult = filterToSparql(whereClause, filterContext);
+
+      // Add filter patterns to relationship patterns
+      relationshipPatterns.push(...filterResult.patterns);
+      relationshipPatterns.push(...filterResult.filters);
+    }
+
+    // Build nested structure for array items
+    const nestedWhereParts: WherePart[] = [];
     if (
       typeof itemSchema !== "boolean" &&
       (itemSchema as JSONSchema7).type === "object"
@@ -480,17 +687,22 @@ function createPropertyPatterns(
         createNestedContext(ctx, propertyName),
       );
       construct.push(...nestedPatterns.construct);
-      where.push(...nestedPatterns.where);
+      nestedWhereParts.push(...nestedPatterns.whereParts);
     }
     // For array of primitives, no further recursion needed
 
+    // Create WHERE part with proper nesting
+    const wherePart: WherePart = {
+      required: isRequired,
+      whereTemplates: relationshipPatterns,
+      children: nestedWhereParts.length > 0 ? nestedWhereParts : undefined,
+    };
+
     // Return pagination metadata for this property
-    return { construct, where, pagination: paginationMeta };
+    return { construct, whereParts: [wherePart], pagination: paginationMeta };
   } else if (propertySchema.type === "object" && propertySchema.properties) {
     // Handle nested object - recurse into its properties
-    // Add WHERE pattern for the object property first
     const isRequired = ctx.schema.required?.includes(propertyName) || false;
-    addWherePattern(where, triplePattern, isRequired);
 
     // Recurse into nested object with filter options
     const nestedPatterns = handleNestedObject(
@@ -499,14 +711,25 @@ function createPropertyPatterns(
       createNestedContext(ctx, propertyName),
     );
     construct.push(...nestedPatterns.construct);
-    where.push(...nestedPatterns.where);
-  } else {
-    // For primitive types (string, number, boolean), add WHERE pattern
-    const isRequired = ctx.schema.required?.includes(propertyName) || false;
-    addWherePattern(where, triplePattern, isRequired);
-  }
 
-  return { construct, where };
+    // Create WHERE part with nested children
+    const wherePart: WherePart = {
+      required: isRequired,
+      whereTemplates: [triplePattern],
+      children: nestedPatterns.whereParts,
+    };
+
+    return { construct, whereParts: [wherePart] };
+  } else {
+    // For primitive types (string, number, boolean), create simple WHERE part
+    const isRequired = ctx.schema.required?.includes(propertyName) || false;
+    const wherePart: WherePart = {
+      required: isRequired,
+      whereTemplates: [triplePattern],
+    };
+
+    return { construct, whereParts: [wherePart] };
+  }
 }
 
 /**
@@ -516,24 +739,26 @@ function handleNestedObject(
   subject: any,
   objectSchema: JSONSchema7,
   ctx: QueryConstructionContext,
-): { construct: SparqlTemplateResult[]; where: SparqlTemplateResult[] } {
+): { construct: SparqlTemplateResult[]; whereParts: WherePart[] } {
   const construct: SparqlTemplateResult[] = [];
-  const where: SparqlTemplateResult[] = [];
+  const whereParts: WherePart[] = [];
 
   // Stop if max recursion reached
   if (ctx.depth > ctx.maxRecursion) {
-    return { construct, where };
+    return { construct, whereParts };
   }
 
   // Add type pattern for nested object
   const typeVar = df.variable(`type_${ctx.depth}`);
-  const rdfType = df.namedNode(
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-  );
-
-  const nestedTypePattern = sparql`${subject} ${rdfType} ${typeVar} .`;
+  const nestedTypePattern = sparql`${subject} ${rdf.type} ${typeVar} .`;
   construct.push(nestedTypePattern);
-  addWherePattern(where, nestedTypePattern, false); // rdf:type is always optional
+
+  // Type pattern is always optional
+  const typeWherePart: OptionalWherePart = {
+    required: false,
+    whereTemplates: [nestedTypePattern],
+  };
+  whereParts.push(typeWherePart);
 
   // Create a minimal NormalizedSchema for nested property processing
   // This allows createPropertyPatterns to check for required properties
@@ -563,12 +788,12 @@ function handleNestedObject(
         );
 
         construct.push(...nestedPatterns.construct);
-        where.push(...nestedPatterns.where);
+        whereParts.push(...nestedPatterns.whereParts);
       },
     );
   }
 
-  return { construct, where };
+  return { construct, whereParts };
 }
 
 /**

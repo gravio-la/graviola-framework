@@ -3,8 +3,11 @@
  */
 
 export {
-  filterTypedDocument,
   filterTypedDocuments,
   type TypedFilterOptions,
-  type TypedFilterAndSearchOptions,
 } from "./filterTypedDocument";
+
+export {
+  getEntitiesWithClassesByFilter,
+  type GetEntitiesWithClassesOptions,
+} from "./getEntitiesWithClassesByFilter";

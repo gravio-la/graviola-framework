@@ -17,7 +17,7 @@ import { prefixes2sparqlPrefixDeclaration } from "./prefixes2sparqlPrefixDeclara
  *
  * @example
  * ```typescript
- * const result = normalizedSchema2construct(iri, schema, { prefixMap });
+ * const result = normalizedSchema2construct(iri, typeIRIs, schema, { prefixMap });
  * const query = buildSPARQLConstructQuery(result, prefixMap);
  * // Execute query against triple store
  * ```

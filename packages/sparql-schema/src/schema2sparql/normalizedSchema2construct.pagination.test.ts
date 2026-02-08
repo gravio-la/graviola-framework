@@ -34,6 +34,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/person1",
+      undefined,
       normalized,
     );
 
@@ -67,6 +68,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/user1",
+      undefined,
       normalized,
     );
 
@@ -97,6 +99,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/doc1",
+      undefined,
       normalized,
     );
 
@@ -133,6 +136,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/person1",
+      undefined,
       normalized,
     );
 
@@ -178,6 +182,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/collection1",
+      undefined,
       normalized,
     );
 
@@ -225,6 +230,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/company1",
+      undefined,
       normalized,
     );
 
@@ -252,6 +258,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/system1",
+      undefined,
       normalized,
     );
 
@@ -284,6 +291,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/db1",
+      undefined,
       normalized,
     );
 
@@ -325,6 +333,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/person1",
+      undefined,
       normalized,
     );
 
@@ -367,6 +376,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/blog1",
+      undefined,
       normalized,
     );
 
@@ -412,6 +422,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/person1",
+      undefined,
       normalized,
     );
 
@@ -445,6 +456,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/dataset1",
+      undefined,
       normalized,
     );
 

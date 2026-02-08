@@ -30,11 +30,16 @@ describe("normalizedSchema2construct - Injection Prevention", () => {
 
     // Should not throw - builder handles escaping
     expect(() => {
-      normalizedSchema2construct("http://example.com/test", normalized);
+      normalizedSchema2construct(
+        "http://example.com/test",
+        undefined,
+        normalized,
+      );
     }).not.toThrow();
 
     const result = normalizedSchema2construct(
       "http://example.com/test",
+      undefined,
       normalized,
     );
 
@@ -62,7 +67,7 @@ describe("normalizedSchema2construct - Injection Prevention", () => {
 
     malformedIRIs.forEach((iri) => {
       expect(() => {
-        normalizedSchema2construct(iri, normalized);
+        normalizedSchema2construct(iri, undefined, normalized);
       }).not.toThrow();
     });
   });
@@ -81,6 +86,7 @@ describe("normalizedSchema2construct - Injection Prevention", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/test",
+      undefined,
       normalized,
     );
 
@@ -102,6 +108,7 @@ describe("normalizedSchema2construct - Injection Prevention", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/test",
+      undefined,
       normalized,
     );
 
@@ -123,6 +130,7 @@ describe("normalizedSchema2construct - Injection Prevention", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/test",
+      undefined,
       normalized,
     );
 
@@ -144,6 +152,7 @@ describe("normalizedSchema2construct - Injection Prevention", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/test",
+      undefined,
       normalized,
     );
 
@@ -165,6 +174,7 @@ describe("normalizedSchema2construct - Injection Prevention", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/test",
+      undefined,
       normalized,
     );
 
@@ -189,6 +199,7 @@ describe("normalizedSchema2construct - Injection Prevention", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/test",
+      undefined,
       normalized,
     );
 
@@ -211,6 +222,7 @@ describe("normalizedSchema2construct - Injection Prevention", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/test",
+      undefined,
       normalized,
     );
 
@@ -237,6 +249,7 @@ describe("normalizedSchema2construct - Injection Prevention", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/test",
+      undefined,
       normalized,
     );
 

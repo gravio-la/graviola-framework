@@ -28,9 +28,14 @@ export const makeSPARQLConstructQuery = (
   });
 
   // Generate SPARQL patterns using new implementation
-  const constructResult = normalizedSchema2construct(entityIRI, normalized, {
-    prefixMap,
-  });
+  const constructResult = normalizedSchema2construct(
+    entityIRI,
+    typeIRI,
+    normalized,
+    {
+      prefixMap,
+    },
+  );
 
   // Build complete query
   return buildSPARQLConstructQuery(constructResult, prefixMap);

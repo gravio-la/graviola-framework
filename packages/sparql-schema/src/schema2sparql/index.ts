@@ -6,3 +6,4 @@ export * from "./prefixes2sparqlPrefixDeclaration";
 export * from "./normalizedSchema2construct";
 export * from "./buildSPARQLConstructQuery";
 export * from "./buildTypedSPARQLQuery";
+export * from "./buildClassesQuery";

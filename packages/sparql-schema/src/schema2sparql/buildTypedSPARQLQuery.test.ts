@@ -146,6 +146,7 @@ describe("buildTypedSPARQLQuery - Basic Functionality", () => {
   it("should generate basic CONSTRUCT query without filters", () => {
     const result = buildTypedSPARQLQuery<Person>(
       "http://example.com/person/1",
+      undefined, // typeIRIs
       personJSONSchema,
       {
         prefixMap: { "": "http://example.com/" },
@@ -162,6 +163,7 @@ describe("buildTypedSPARQLQuery - Basic Functionality", () => {
   it("should generate query with select pattern", () => {
     const result = buildTypedSPARQLQuery<Person>(
       "http://example.com/person/1",
+      undefined,
       personJSONSchema,
       {
         select: { name: true, age: true, email: true },
@@ -178,6 +180,7 @@ describe("buildTypedSPARQLQuery - Basic Functionality", () => {
   it("should generate query with omit pattern", () => {
     const result = buildTypedSPARQLQuery<Person>(
       "http://example.com/person/1",
+      undefined,
       personJSONSchema,
       {
         omit: ["email", "salary"],
@@ -196,6 +199,7 @@ describe("buildTypedSPARQLQuery - WHERE Filters", () => {
   it("should generate query with simple WHERE filters", () => {
     const result = buildTypedSPARQLQuery<Person>(
       "http://example.com/person/1",
+      undefined, // typeIRIs
       personJSONSchema,
       {
         where: {
@@ -215,6 +219,7 @@ describe("buildTypedSPARQLQuery - WHERE Filters", () => {
   it("should generate query with complex WHERE filters", () => {
     const result = buildTypedSPARQLQuery<Person>(
       "http://example.com/person/1",
+      undefined, // typeIRIs
       personJSONSchema,
       {
         where: {
@@ -240,6 +245,7 @@ describe("buildTypedSPARQLQuery - WHERE Filters", () => {
   it("should generate query with string filters", () => {
     const result = buildTypedSPARQLQuery<Person>(
       "http://example.com/person/1",
+      undefined, // typeIRIs
       personJSONSchema,
       {
         where: {
@@ -274,6 +280,7 @@ describe("buildTypedSPARQLQuery - WHERE Filters", () => {
   it("should generate query with 'in' operator", () => {
     const result = buildTypedSPARQLQuery<Person>(
       "http://example.com/person/1",
+      undefined, // typeIRIs
       personJSONSchema,
       {
         where: {
@@ -293,6 +300,7 @@ describe("buildTypedSPARQLQuery - Include Patterns", () => {
   it("should generate query with simple include", () => {
     const result = buildTypedSPARQLQuery<Person>(
       "http://example.com/person/1",
+      undefined,
       personJSONSchema,
       {
         include: {
@@ -310,6 +318,7 @@ describe("buildTypedSPARQLQuery - Include Patterns", () => {
   it("should generate query with paginated include", () => {
     const result = buildTypedSPARQLQuery<Person>(
       "http://example.com/person/1",
+      undefined,
       personJSONSchema,
       {
         include: {
@@ -332,6 +341,7 @@ describe("buildTypedSPARQLQuery - Include Patterns", () => {
   it("should generate query with nested include", () => {
     const result = buildTypedSPARQLQuery<Person>(
       "http://example.com/person/1",
+      undefined,
       personJSONSchema,
       {
         include: {
@@ -356,6 +366,7 @@ describe("buildTypedSPARQLQuery - Complex Scenarios", () => {
   it("should generate query with WHERE + include + select", () => {
     const result = buildTypedSPARQLQuery<Person>(
       "http://example.com/person/1",
+      undefined,
       personJSONSchema,
       {
         select: { name: true, age: true, friends: true },
@@ -385,6 +396,7 @@ describe("buildTypedSPARQLQuery - Complex Scenarios", () => {
   it("should generate blog post query with complex filters", () => {
     const result = buildTypedSPARQLQuery<BlogPost>(
       "http://example.com/blog/post/1",
+      undefined,
       blogPostJSONSchema,
       {
         select: {
@@ -411,6 +423,7 @@ describe("buildTypedSPARQLQuery - Complex Scenarios", () => {
   it("should handle multiple filters with different types", () => {
     const result = buildTypedSPARQLQuery<Person>(
       "http://example.com/person/1",
+      undefined,
       personJSONSchema,
       {
         where: {
@@ -433,6 +446,7 @@ describe("buildTypedSPARQLQuery - Filter Validation", () => {
     expect(() => {
       buildTypedSPARQLQuery<Person>(
         "http://example.com/person/1",
+        undefined,
         personJSONSchema,
         {
           where: {
@@ -449,6 +463,7 @@ describe("buildTypedSPARQLQuery - Filter Validation", () => {
     expect(() => {
       buildTypedSPARQLQuery<Person>(
         "http://example.com/person/1",
+        undefined,
         personJSONSchema,
         {
           where: {
@@ -464,6 +479,7 @@ describe("buildTypedSPARQLQuery - Filter Validation", () => {
   it("should skip validation when mode is ignore", () => {
     const result = buildTypedSPARQLQuery<Person>(
       "http://example.com/person/1",
+      undefined,
       personJSONSchema,
       {
         where: {
@@ -480,6 +496,7 @@ describe("buildTypedSPARQLQuery - Filter Validation", () => {
   it("should skip validation by default (no mode specified)", () => {
     const result = buildTypedSPARQLQuery<Person>(
       "http://example.com/person/1",
+      undefined,
       personJSONSchema,
       {
         where: {
@@ -496,6 +513,7 @@ describe("buildTypedSPARQLQuery - Filter Validation", () => {
     expect(() => {
       buildTypedSPARQLQuery<Person>(
         "http://example.com/person/1",
+        undefined,
         personJSONSchema,
         {
           where: {
@@ -515,6 +533,7 @@ describe("buildTypedSPARQLQuery - Real-World Use Cases", () => {
   it("should build user search query", () => {
     const result = buildTypedSPARQLQuery<Person>(
       "http://example.com/person/1",
+      undefined,
       personJSONSchema,
       {
         select: { name: true, email: true, age: true },
@@ -536,6 +555,7 @@ describe("buildTypedSPARQLQuery - Real-World Use Cases", () => {
   it("should build friend recommendation query", () => {
     const result = buildTypedSPARQLQuery<Person>(
       "http://example.com/person/1",
+      undefined,
       personJSONSchema,
       {
         include: {
@@ -563,6 +583,7 @@ describe("buildTypedSPARQLQuery - Real-World Use Cases", () => {
   it("should build blog feed query", () => {
     const result = buildTypedSPARQLQuery<BlogPost>(
       "http://example.com/blog/post/1",
+      undefined,
       blogPostJSONSchema,
       {
         select: {
@@ -595,6 +616,7 @@ describe("buildTypedSPARQLQuery - Real-World Use Cases", () => {
   it("should build filtered address lookup", () => {
     const result = buildTypedSPARQLQuery<Person>(
       "http://example.com/person/1",
+      undefined,
       personJSONSchema,
       {
         select: { name: true, address: true },
@@ -612,6 +634,7 @@ describe("buildTypedSPARQLQuery - Real-World Use Cases", () => {
   it("should build query with nested include and top-level where", () => {
     const result = buildTypedSPARQLQuery<Person>(
       "http://example.com/person/1",
+      undefined,
       personJSONSchema,
       {
         select: { name: true, email: true, age: true, friends: true },
@@ -652,6 +675,7 @@ describe("buildTypedSPARQLQuery - Real-World Use Cases", () => {
   it("should build query with deeply nested where and include patterns", () => {
     const result = buildTypedSPARQLQuery<Person>(
       "http://example.com/person/1",
+      undefined,
       personJSONSchema,
       {
         select: { name: true, email: true, friends: true },
@@ -693,6 +717,7 @@ describe("buildTypedSPARQLQuery - Edge Cases", () => {
   it("should handle empty where clause", () => {
     const result = buildTypedSPARQLQuery<Person>(
       "http://example.com/person/1",
+      undefined,
       personJSONSchema,
       {
         where: {},
@@ -725,6 +750,7 @@ describe("buildTypedSPARQLQuery - Edge Cases", () => {
   it("should handle deeply nested includes", () => {
     const result = buildTypedSPARQLQuery<Person>(
       "http://example.com/person/1",
+      undefined,
       personJSONSchema,
       {
         include: {

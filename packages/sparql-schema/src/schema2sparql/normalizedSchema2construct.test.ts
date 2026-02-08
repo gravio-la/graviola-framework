@@ -17,6 +17,7 @@ describe("normalizedSchema2construct - Step 1: Basic Types & Variable Handling",
     const normalized = normalizeSchema(schema, {});
     const result = normalizedSchema2construct(
       "http://example.com/person1",
+      undefined,
       normalized,
     );
 
@@ -42,6 +43,7 @@ describe("normalizedSchema2construct - Step 1: Basic Types & Variable Handling",
     const normalized = normalizeSchema(schema, {});
     const result = normalizedSchema2construct(
       "http://example.com/person1",
+      undefined,
       normalized,
     );
 
@@ -64,7 +66,11 @@ describe("normalizedSchema2construct - Step 1: Basic Types & Variable Handling",
 
     // Should not throw, should handle safely
     expect(() => {
-      normalizedSchema2construct("http://example.com/doc1", normalized);
+      normalizedSchema2construct(
+        "http://example.com/doc1",
+        undefined,
+        normalized,
+      );
     }).not.toThrow();
   });
 
@@ -84,6 +90,7 @@ describe("normalizedSchema2construct - Step 1: Basic Types & Variable Handling",
     // Test with prefixMap that has foaf and dc prefixes
     const result = normalizedSchema2construct(
       "http://example.com/person1",
+      undefined,
       normalized,
       {
         prefixMap: {
@@ -116,6 +123,7 @@ describe("normalizedSchema2construct - Step 1: Basic Types & Variable Handling",
     // Test without context - these should be treated as full URLs
     const result = normalizedSchema2construct(
       "http://example.com/book1",
+      undefined,
       normalized,
     );
 
@@ -145,6 +153,7 @@ describe("normalizedSchema2construct - Step 2: Property Type Handlers", () => {
     const normalized = normalizeSchema(schema, {});
     const result = normalizedSchema2construct(
       "http://example.com/person1",
+      undefined,
       normalized,
     );
 
@@ -168,6 +177,7 @@ describe("normalizedSchema2construct - Step 2: Property Type Handlers", () => {
     const normalized = normalizeSchema(schema, {});
     const result = normalizedSchema2construct(
       "http://example.com/doc1",
+      undefined,
       normalized,
     );
 
@@ -196,6 +206,7 @@ describe("normalizedSchema2construct - Step 2: Property Type Handlers", () => {
     const normalized = normalizeSchema(schema, {});
     const result = normalizedSchema2construct(
       "http://example.com/person1",
+      undefined,
       normalized,
     );
 
@@ -226,6 +237,7 @@ describe("normalizedSchema2construct - Step 2: Property Type Handlers", () => {
     const normalized = normalizeSchema(schema, {});
     const result = normalizedSchema2construct(
       "http://example.com/person1",
+      undefined,
       normalized,
       { maxRecursion: 1 }, // Only go 1 level deep
     );
@@ -248,6 +260,7 @@ describe("normalizedSchema2construct - Step 2: Property Type Handlers", () => {
     const normalized = normalizeSchema(schema, {});
     const result = normalizedSchema2construct(
       "http://example.com/person1",
+      undefined,
       normalized,
     );
 
@@ -284,6 +297,7 @@ describe("normalizedSchema2construct - Step 3: Pagination with Query-Stage Marki
 
     const result = normalizedSchema2construct(
       "http://example.com/person1",
+      undefined,
       normalized,
     );
 
@@ -319,6 +333,7 @@ describe("normalizedSchema2construct - Step 3: Pagination with Query-Stage Marki
 
     const result = normalizedSchema2construct(
       "http://example.com/user1",
+      undefined,
       normalized,
     );
 
@@ -351,6 +366,7 @@ describe("normalizedSchema2construct - Step 3: Pagination with Query-Stage Marki
 
     const result = normalizedSchema2construct(
       "http://example.com/doc1",
+      undefined,
       normalized,
     );
 

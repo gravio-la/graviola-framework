@@ -22,15 +22,18 @@ import { normalizeSchema } from "@graviola/edb-graph-traversal";
 import { normalizedSchema2construct } from "./normalizedSchema2construct";
 import { buildSPARQLConstructQuery } from "./buildSPARQLConstructQuery";
 import type { ConstructResult } from "./normalizedSchema2construct";
+import { OptionalStringOrStringArray } from "@/base";
 import { TypedGraphTraversalFilterOptions } from "@graviola/edb-core-types";
+import { z } from "zod";
 
 /**
  * Options for building typed SPARQL queries
  *
  * @template T - The type to derive filter patterns from (typically z.infer<typeof schema>)
  */
-export interface BuildTypedSPARQLQueryOptions<T = any>
-  extends TypedGraphTraversalFilterOptions<T> {
+export interface BuildTypedSPARQLQueryOptions<
+  T = any,
+> extends TypedGraphTraversalFilterOptions<T> {
   /** Prefix mappings for the query (e.g., { "foaf": "http://xmlns.com/foaf/0.1/" }) */
   prefixMap?: Prefixes;
   /** Maximum recursion depth for nested objects (default: 4) */
@@ -64,7 +67,8 @@ export interface TypedSPARQLQueryResult {
  *
  * @template T - The type to derive filters from (typically z.infer<typeof zodSchema>)
  * @param subjectIRI - The IRI(s) of the subject(s) to query (single IRI or array)
- * @param schema - JSON Schema for the data structure
+ * @param typeIRIs - The type IRI(s) for the entities (can be undefined)
+ * @param schema - Zod schema or JSON Schema for the data structure
  * @param options - Type-safe filter options (select, include, where, etc.)
  * @returns Complete SPARQL query with metadata
  *
@@ -76,10 +80,13 @@ export interface TypedSPARQLQueryResult {
  * import { buildTypedSPARQLQuery } from '@graviola/sparql-schema';
  *
  * const PersonSchema = z.object({
+ *   '@id': z.string().optional(),
+ *   '@type': z.literal('http://example.com/Person'),
  *   name: z.string(),
  *   age: z.number(),
  *   email: z.string(),
  *   friends: z.array(z.object({
+ *     '@id': z.string().optional(),
  *     name: z.string(),
  *     age: z.number()
  *   }))
@@ -87,10 +94,11 @@ export interface TypedSPARQLQueryResult {
  *
  * type Person = z.infer<typeof PersonSchema>;
  *
- * // Single subject
- * const result1 = buildTypedSPARQLQuery<Person>(
+ * // Pass Zod schema directly - conversion happens automatically!
+ * const result = buildTypedSPARQLQuery<Person>(
  *   'http://example.com/person/1',
- *   PersonSchema.schema, // JSON Schema from Zod
+ *   'http://example.com/Person', // Type IRI
+ *   PersonSchema, // Zod schema - auto-converted to JSON Schema
  *   {
  *     select: { name: true, age: true },
  *     include: {
@@ -106,22 +114,13 @@ export interface TypedSPARQLQueryResult {
  *   }
  * );
  *
- * // Multiple subjects (batch query)
- * const result2 = buildTypedSPARQLQuery<Person>(
- *   ['http://example.com/person/1', 'http://example.com/person/2'],
- *   PersonSchema.schema,
- *   {
- *     select: { name: true, age: true },
- *     flavour: 'default' // Uses VALUES for multiple subjects
- *   }
- * );
- *
- * console.log(result1.query); // Complete SPARQL query
+ * console.log(result.query); // Complete SPARQL query
  * ```
  */
 export function buildTypedSPARQLQuery<T = any>(
-  subjectIRI: string | string[],
-  schema: JSONSchema7,
+  subjectIRI: OptionalStringOrStringArray,
+  typeIRIs: OptionalStringOrStringArray | undefined,
+  schema: z.ZodType<T> | JSONSchema7,
   options: BuildTypedSPARQLQueryOptions<T> = {},
 ): TypedSPARQLQueryResult {
   const {
@@ -133,8 +132,22 @@ export function buildTypedSPARQLQuery<T = any>(
     ...filterOptions
   } = options;
 
+  // Convert Zod schema to JSON Schema if needed
+  // Check if it's a Zod schema by checking for _def property
+  let jsonSchema: JSONSchema7;
+  if (schema && typeof schema === "object" && "_def" in schema) {
+    // Zod schema - convert to JSON Schema
+    jsonSchema = z.toJSONSchema(schema as z.ZodType<T>, {
+      target: "draft-7",
+      reused: "ref",
+    }) as JSONSchema7;
+  } else {
+    // Already JSON Schema
+    jsonSchema = schema as JSONSchema7;
+  }
+
   // This applies select, include, omit, and validates WHERE filters
-  const normalizedSchema = normalizeSchema(schema, {
+  const normalizedSchema = normalizeSchema(jsonSchema, {
     ...filterOptions,
     filterValidationMode,
   });
@@ -143,78 +156,7 @@ export function buildTypedSPARQLQuery<T = any>(
   // Now supports single or multiple subject IRIs
   const constructResult = normalizedSchema2construct(
     subjectIRI,
-    normalizedSchema,
-    {
-      prefixMap,
-      maxRecursion,
-      excludedProperties,
-      filterOptions,
-      flavour,
-    },
-  );
-
-  const query = buildSPARQLConstructQuery(constructResult, prefixMap);
-
-  return {
-    query,
-    constructResult,
-    normalizedSchema,
-  };
-}
-
-/**
- * Build a type-safe SPARQL CONSTRUCT query for multiple subjects
- * Useful for batch queries
- *
- * @template T - The type to derive filters from
- * @param subjectIRIs - Array of subject IRIs to query
- * @param schema - JSON Schema for the data structure
- * @param options - Type-safe filter options
- * @returns SPARQL query that fetches all subjects
- *
- * @example
- * ```typescript
- * const result = buildTypedSPARQLQueryBatch<Person>(
- *   [
- *     'http://example.com/person/1',
- *     'http://example.com/person/2',
- *     'http://example.com/person/3'
- *   ],
- *   personSchema,
- *   {
- *     where: { age: { gte: 18 } },
- *     include: { friends: { take: 5 } }
- *   }
- * );
- * ```
- */
-export function buildTypedSPARQLQueryBatch<T = any>(
-  subjectIRIs: string[],
-  schema: JSONSchema7,
-  options: BuildTypedSPARQLQueryOptions<T> = {},
-): TypedSPARQLQueryResult {
-  if (subjectIRIs.length === 0) {
-    throw new Error("At least one subject IRI is required");
-  }
-
-  const {
-    prefixMap = {},
-    maxRecursion = 4,
-    excludedProperties = [],
-    filterValidationMode,
-    flavour,
-    ...filterOptions
-  } = options;
-
-  // This applies select, include, omit, and validates WHERE filters
-  const normalizedSchema = normalizeSchema(schema, {
-    ...filterOptions,
-    filterValidationMode,
-  });
-
-  // Pass array of subject IRIs - normalizedSchema2construct now handles multiple subjects
-  const constructResult = normalizedSchema2construct(
-    subjectIRIs,
+    typeIRIs,
     normalizedSchema,
     {
       prefixMap,

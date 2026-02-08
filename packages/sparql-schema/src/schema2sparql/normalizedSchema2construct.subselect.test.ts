@@ -33,6 +33,7 @@ describe("normalizedSchema2construct - SUBSELECT Generation", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/person1",
+      undefined,
       normalized,
       {
         filterOptions,
@@ -90,6 +91,7 @@ describe("normalizedSchema2construct - SUBSELECT Generation", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/blog1",
+      undefined,
       normalized,
       {
         filterOptions,
@@ -135,6 +137,7 @@ describe("normalizedSchema2construct - SUBSELECT Generation", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/list1",
+      undefined,
       normalized,
       {
         filterOptions,
@@ -171,6 +174,7 @@ describe("normalizedSchema2construct - SUBSELECT Generation", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/article1",
+      undefined,
       normalized,
     );
 
@@ -214,6 +218,7 @@ describe("normalizedSchema2construct - SUBSELECT Generation", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/container1",
+      undefined,
       normalized,
       {
         filterOptions,
@@ -259,6 +264,7 @@ describe("normalizedSchema2construct - SUBSELECT Generation", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/person1",
+      undefined,
       normalized,
       {
         filterOptions,
@@ -304,6 +310,7 @@ describe("normalizedSchema2construct - SUBSELECT Generation", () => {
 
     const result = normalizedSchema2construct(
       "http://example.com/person1",
+      undefined,
       normalized,
       {
         prefixMap: {
