@@ -13,9 +13,9 @@ import {
   IRIToStringFn,
   PrimaryFieldDeclaration,
 } from "@graviola/edb-core-types";
-import get from "lodash/get";
-import debounce from "lodash/debounce";
-import isString from "lodash/isString";
+import get from "lodash-es/get";
+import debounce from "lodash-es/debounce";
+import isString from "lodash-es/isString";
 import * as React from "react";
 import { ParentSize } from "@visx/responsive";
 import NiceModal from "@ebay/nice-modal-react";
