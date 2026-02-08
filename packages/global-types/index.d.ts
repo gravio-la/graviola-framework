@@ -130,12 +130,10 @@ export type AbstractDatastoreIterable<
 export type AbstractDatastore<
   TypeName extends string = string,
   DocumentResultTypeMap extends Record<string, any> = Record<string, any>,
-  FindResultTypeMap extends Record<
-    string,
-    any[]
-  > = DocumentResultTypeMap extends undefined
-    ? Record<string, any[]>
-    : { [K in keyof DocumentResultTypeMap]: DocumentResultTypeMap[K][] },
+  FindResultTypeMap extends Record<string, any[]> =
+    DocumentResultTypeMap extends undefined
+      ? Record<string, any[]>
+      : { [K in keyof DocumentResultTypeMap]: DocumentResultTypeMap[K][] },
   UpsertResultTypeMap extends Record<string, any> = DocumentResultTypeMap,
   UpsertDocumentTypeMap extends Record<string, any> = DocumentResultTypeMap,
   RemoveResultTypeMap extends Record<string, any> = DocumentResultTypeMap,
@@ -238,6 +236,26 @@ export type AbstractDatastore<
   ) => Promise<number>;
   getClasses?: (entityIRI: string) => Promise<string[]>;
   /**
+   * Get entities with their classes filtered by type-safe where clause
+   * Used to find all entities matching a filter and return their type IRIs
+   *
+   * @template T - Type for filter validation (e.g., z.infer<typeof schema>)
+   * @param options - Type-safe filter options (primarily where clause)
+   * @returns Promise resolving to Map of entity IRI -> array of type IRIs
+   *
+   * @example
+   * ```typescript
+   * // Find all entities with geoFeature relationship
+   * const entityClassMap = await dataStore.getEntitiesWithClassesByFilter({
+   *   where: { geoFeature: { '@id': 'http://example.com/feature/1' } }
+   * });
+   * // Returns: Map { 'http://example.com/patch/1' => ['http://...#Patch'], ... }
+   * ```
+   */
+  getEntitiesWithClassesByFilter?: <T = any>(
+    options: TypedDocumentsSearchOptions<T>,
+  ) => Promise<Map<string, string[]>>;
+  /**
    * Load a single document with type-safe filters
    * Supports Prisma-style where/include/select with full TypeScript inference
    *
@@ -245,13 +263,13 @@ export type AbstractDatastore<
    * @param typeName - Name of the type/class
    * @param entityIRI - IRI of the entity to load
    * @param options - Type-safe filter options (where, include, select, etc.)
-   * @returns Promise resolving to the filtered document of type T
+   * @returns Promise resolving to the filtered document of type T or null if no document found
    */
   filterTypedDocument?: <T = any>(
     typeName: TypeName,
     entityIRI: string,
     options?: TypedDocumentFilterOptions<T>,
-  ) => Promise<T>;
+  ) => Promise<T | null>;
   /**
    * Find multiple documents by type with type-safe filters
    * Supports Prisma-style where/include/select with search and pagination
