@@ -1,7 +1,8 @@
 import { JSONSchema7, JSONSchema7Definition } from "json-schema";
 import isObject from "lodash-es/isObject";
 
-import { defs, getDefintitionKey } from "./jsonSchema";
+import { defs, getDefintitionKey, isJSONSchema } from "./jsonSchema";
+import { resolveSchema } from "./resolver";
 
 export type GenRequiredPropertiesFunction = (modelName: string) => string[];
 export type GeneratePropertiesFunction = (
@@ -30,6 +31,34 @@ export type SchemaExpander = {
   additionalProperties: Record<string, JSONSchema7Definition>;
   options: RefAppendOptions;
 };
+
+/**
+ * Checks if a schema represents an entity (has @id property indicating a linked data entity)
+ * @param schema The schema to check
+ * @param rootSchema The root schema for resolving references
+ * @returns True if this schema represents an entity with @id
+ */
+const isEntitySchema = (
+  schema: JSONSchema7,
+  rootSchema: JSONSchema7,
+): boolean => {
+  // If it's a $ref, resolve it first
+  if (schema.$ref) {
+    const resolved = resolveSchema(rootSchema, schema.$ref, rootSchema);
+    if (resolved && isJSONSchema(resolved as JSONSchema7Definition)) {
+      return isEntitySchema(resolved as JSONSchema7, rootSchema);
+    }
+    return false;
+  }
+
+  // Check if schema has @id property (marker for linked data entities)
+  if (schema.properties && "@id" in schema.properties) {
+    return true;
+  }
+
+  return false;
+};
+
 export const recursivelyFindRefsAndAppendStub: (
   field: string,
   schema: JSONSchema7,
@@ -58,10 +87,15 @@ export const recursivelyFindRefsAndAppendStub: (
     ) {
       return schema;
     }
-    return {
-      ...schema,
-      $ref: `${schema.$ref}Stub`,
-    };
+    // Only create stubs for entity schemas (those with @id property)
+    // Non-entity refs (like internal Zod __schema0, __schema1) should be kept as-is
+    if (isEntitySchema(schema, rootSchema)) {
+      return {
+        ...schema,
+        $ref: `${schema.$ref}Stub`,
+      };
+    }
+    return schema;
   }
   if (isObject(schema.items)) {
     return {
@@ -121,6 +155,7 @@ export const recursivelyFindRefsAndAppendStub: (
 export const definitionsToStubDefinitions = (
   definitions: JSONSchema7["definitions"],
   options?: RefAppendOptions,
+  rootSchema?: JSONSchema7,
 ) =>
   Object.entries(definitions || {}).reduce((acc, [key, value]) => {
     if (options?.excludeType?.includes(key))
@@ -128,9 +163,21 @@ export const definitionsToStubDefinitions = (
         ...acc,
         [key]: value,
       };
+
+    // Only create stubs for entity schemas (those with @id property)
+    // Skip non-entity definitions (like internal Zod __schema0, __schema1)
+    if (isObject(value) && rootSchema) {
+      const schema = value as JSONSchema7;
+      // Check if this definition represents an entity
+      if (!schema.properties || !("@id" in schema.properties)) {
+        // Not an entity, skip stub creation
+        return acc;
+      }
+    }
+
     const stubKey = `${key}Stub`;
     const stub = {
-      ...(isObject(value) ? value : {}),
+      ...((isObject(value) ? value : {}) as Object),
       required: [],
       properties: isObject(value)
         ? filterForPrimitives((value as any)?.properties)
@@ -220,7 +267,11 @@ export const prepareStubbedSchema = (
 ) => {
   const definitionsKey = getDefintitionKey(schema);
 
-  const stubDefinitions = definitionsToStubDefinitions(defs(schema), options);
+  const stubDefinitions = definitionsToStubDefinitions(
+    defs(schema),
+    options,
+    schema,
+  );
   const schemaWithRefStub = recursivelyFindRefsAndAppendStub(
     "root",
     schema,
