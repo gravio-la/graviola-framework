@@ -1,8 +1,7 @@
 /**
  * Simplified SPARQL query builder for getting entity classes with filters
  *
- * This is a lightweight alternative to normalizedSchema2construct specifically
- * designed for the useAnyOfFilterStore use case where we only need to:
+ * This is a lightweight alternative to normalizedSchema2construct
  * 1. Find entities matching a where clause
  * 2. Get their rdf:type triples
  *
@@ -34,6 +33,16 @@ export interface BuildClassesQueryOptions {
   flavour?: SPARQLFlavour;
 
   defaultPrefix?: string;
+}
+
+/**
+ * Sanitize variable name to be valid in SPARQL
+ * Only allow alphanumeric and underscore
+ */
+function sanitizeVariableName(name: string): string {
+  // Remove any characters that aren't alphanumeric or underscore
+  // Replace colons and other special chars with underscore
+  return name.replace(/[^a-zA-Z0-9_]/g, "_");
 }
 
 /**
@@ -141,14 +150,4 @@ export function buildClassesWithFilterQuery(
   return {
     query: query.build().toString(),
   };
-}
-
-/**
- * Sanitize variable name to be valid in SPARQL
- * Only allow alphanumeric and underscore
- */
-function sanitizeVariableName(name: string): string {
-  // Remove any characters that aren't alphanumeric or underscore
-  // Replace colons and other special chars with underscore
-  return name.replace(/[^a-zA-Z0-9_]/g, "_");
 }

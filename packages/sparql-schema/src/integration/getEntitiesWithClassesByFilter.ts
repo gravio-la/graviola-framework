@@ -4,7 +4,6 @@
  * This module provides a high-level function to query entities matching
  * a where clause and retrieve their rdf:type relationships.
  *
- * Used by useAnyOfFilterStore to determine which entities belong to which types.
  */
 
 import type { DatasetCore } from "@rdfjs/types";
