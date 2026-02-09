@@ -1,6 +1,6 @@
-import isEmpty from "lodash/isEmpty";
-import startCase from "lodash/startCase";
-import keys from "lodash/keys";
+import isEmpty from "lodash-es/isEmpty";
+import startCase from "lodash-es/startCase";
+import keys from "lodash-es/keys";
 import type {
   ControlElement,
   JsonSchema,
