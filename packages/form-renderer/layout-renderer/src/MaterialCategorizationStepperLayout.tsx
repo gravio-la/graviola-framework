@@ -47,8 +47,7 @@ export interface CategorizationStepperState {
 }
 
 export interface MaterialCategorizationStepperLayoutRendererProps
-  extends StatePropsOfLayout,
-    AjvProps {
+  extends StatePropsOfLayout, AjvProps {
   data: any;
   actionContainer?: HTMLElement;
 }
@@ -80,7 +79,7 @@ export const MaterialCategorizationStepperLayout = (
     marginRight: "1em",
   };
   const categories = categorization.elements.filter((category: Category) =>
-    isVisible(category, data, undefined, ajv as any),
+    isVisible(category, data, undefined, ajv as any, undefined),
   );
   const { t } = useTranslation();
   const childProps: MaterialLayoutRendererProps = {

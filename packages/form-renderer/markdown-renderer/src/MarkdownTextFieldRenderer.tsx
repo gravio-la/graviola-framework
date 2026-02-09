@@ -138,7 +138,9 @@ const MarkdownTextFieldRendererComponent = (props: ControlProps) => {
       if (!uploadImage) return;
 
       const files = Array.from(e.dataTransfer.files);
-      const imageFiles = files.filter((file) => file.type.startsWith("image/"));
+      const imageFiles = files.filter((file: File) =>
+        file.type.startsWith("image/"),
+      );
 
       if (imageFiles.length === 0) return;
 
@@ -150,7 +152,7 @@ const MarkdownTextFieldRendererComponent = (props: ControlProps) => {
           : textarea.value.length;
 
       try {
-        const uploadPromises = imageFiles.map(async (file) => {
+        const uploadPromises = imageFiles.map(async (file: File) => {
           const uploadedImage = await uploadImage(file);
           if (!uploadedImage) return null;
           const altText =

@@ -364,10 +364,12 @@ export const EntityFinder = <
     const intermediate = Object.entries(searchResults).reduce(
       (acc, [key, value]) => [
         ...acc,
-        ...value.map((entry) => {
-          idx++;
-          return { entry, idx, key };
-        }),
+        ...(Array.isArray(value)
+          ? value.map((entry) => {
+              idx++;
+              return { entry, idx, key };
+            })
+          : []),
       ],
       [],
     );

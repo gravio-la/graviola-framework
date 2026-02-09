@@ -10,8 +10,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import type { TerraDraw } from "terra-draw";
-import type { OnChangeContext, OnFinishContext } from "terra-draw/dist/common";
+import type { TerraDrawOnChangeContext } from "terra-draw/dist/common";
 import type {
   FeatureId,
   GeoJSONStoreFeatures,
@@ -29,7 +28,7 @@ interface TerradrawMapComponentProps {
   onFeatureDeleted?: (
     ids: FeatureId[],
     type: string,
-    context?: OnChangeContext,
+    context?: TerraDrawOnChangeContext,
   ) => void;
 }
 

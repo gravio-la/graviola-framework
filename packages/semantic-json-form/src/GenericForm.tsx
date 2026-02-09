@@ -4,8 +4,13 @@ import {
   useFormDataStore,
 } from "@graviola/edb-state-hooks";
 import { SemanticJsonForm } from "./SemanticJsonForm";
-import { useCallback, useEffect, useState } from "react";
-import { SemanticJsonFormProps } from "@graviola/semantic-jsonform-types";
+import {
+  useCallback,
+  useEffect,
+  useState,
+  type FunctionComponent,
+} from "react";
+import type { SemanticJsonFormProps } from "@graviola/semantic-jsonform-types";
 
 type OwnProps = {
   entityIRI?: string;
@@ -26,12 +31,12 @@ type Props = OwnProps &
     >
   >;
 
-export function GenericForm({
+export const GenericForm: FunctionComponent<Props> = ({
   entityIRI,
   typeName,
   onFormDataChange,
   ...props
-}: Props) {
+}) => {
   const {
     typeNameToTypeIRI,
     createEntityIRI,
@@ -81,4 +86,4 @@ export function GenericForm({
       jsonldContext={jsonldContext as any}
     />
   );
-}
+};
