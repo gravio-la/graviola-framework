@@ -1,7 +1,11 @@
-import { useMemo } from "react";
+import { useMemo, type FC } from "react";
 import { Link } from "@mui/material";
 
-export const LabledLink = ({
+export const LabledLink: FC<{
+  uri: string;
+  label?: string;
+  onClick?: () => void;
+}> = ({
   uri,
   label,
   onClick,

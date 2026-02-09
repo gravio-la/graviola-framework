@@ -8,10 +8,11 @@ import {
 } from "@mui/material";
 import { LabledLink } from "./LabledLink";
 import { LabeledBNode } from "./LabeledBNode";
-import { BlankNode } from "@rdfjs/types";
+import type { BlankNode } from "@rdfjs/types";
 import type { RootNode } from "@graviola/edb-global-types";
+import type { FC } from "react";
 
-export const KXPAllPropTable = ({ entry }: { entry: RootNode }) => {
+export const KXPAllPropTable: FC<{ entry: RootNode }> = ({ entry }) => {
   return (
     <TableContainer component={Container}>
       <Table sx={{ minWidth: "100%" }} aria-label="custom table">

@@ -13,6 +13,7 @@ import {
 
 import { KXPAllPropTable } from "./KXPAllPropTable";
 import type { NodePropertyTree } from "@graviola/edb-global-types";
+import type { FC } from "react";
 
 const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -24,13 +25,10 @@ const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
     fontSize: 11,
   },
 }));
-export const LabeledBNode = ({
-  bnode,
-  properties,
-}: {
+export const LabeledBNode: FC<{
   bnode: BlankNode;
   properties: NodePropertyTree;
-}) => {
+}> = ({ bnode, properties }) => {
   const label = useMemo(
     () =>
       findFirstInProps(
