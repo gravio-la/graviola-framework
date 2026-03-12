@@ -12,18 +12,14 @@
         devShell = pkgs.mkShell {
           buildInputs = with pkgs; [
             nodejs_latest
-            nodePackages_latest.yarn
-            nodePackages_latest.pnpm
             nodePackages_latest.prisma
             prisma-engines
             #jetbrains.idea-ultimate
-            apache-jena
-            librdf_raptor2
+            #apache-jena
+            #librdf_raptor2
             bun
             openssl
-            appimage-run
             tree
-            graphviz
           ];
           LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
           PRISMA_QUERY_ENGINE_BINARY = "${pkgs.prisma-engines}/bin/query-engine";
