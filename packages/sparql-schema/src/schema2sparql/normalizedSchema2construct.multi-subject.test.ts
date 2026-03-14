@@ -167,8 +167,8 @@ describe("normalizedSchema2construct - Multiple Subjects", () => {
     // CONSTRUCT patterns should use ?subject variable
     expect(constructQuery).toContain("?subject");
     expect(constructQuery).toContain("?type");
-    expect(constructQuery).toContain("?name_0");
-    expect(constructQuery).toContain("?age_0");
+    expect(constructQuery).toMatch(/\?name_\d+/);
+    expect(constructQuery).toMatch(/\?age_\d+/);
   });
 
   it("should work with nested objects for multiple subjects", () => {
@@ -198,9 +198,9 @@ describe("normalizedSchema2construct - Multiple Subjects", () => {
     // Should handle nested objects with multiple subjects
     expect(whereQuery).toContain("VALUES");
     expect(whereQuery).toContain("?subject");
-    expect(whereQuery).toContain("?address_0");
-    expect(whereQuery).toContain("?street_1");
-    expect(whereQuery).toContain("?city_1");
+    expect(whereQuery).toMatch(/\?address_\d+/);
+    expect(whereQuery).toMatch(/\?street_\d+/);
+    expect(whereQuery).toMatch(/\?city_\d+/);
   });
 
   it("should work with arrays for multiple subjects", () => {
@@ -239,7 +239,7 @@ describe("normalizedSchema2construct - Multiple Subjects", () => {
     // Should handle arrays with pagination for multiple subjects
     expect(whereQuery).toContain("VALUES");
     expect(whereQuery).toContain("?subject");
-    expect(whereQuery).toContain("?friends_0");
+    expect(whereQuery).toMatch(/\?friends_\d+/);
     expect(whereQuery).toContain("SELECT");
     expect(whereQuery).toContain("LIMIT 10");
   });

@@ -45,7 +45,7 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
       console.log(query);
 
       // address pattern should be in OPTIONAL
-      expect(query).toMatch(/OPTIONAL \{[^}]*:address[^}]*\?address_0/);
+      expect(query).toMatch(/OPTIONAL \{[^}]*:address[^}]*\?address_\d+/);
 
       // Nested properties should be inside the parent OPTIONAL
       // The pattern should look like: OPTIONAL { ?subject :address ?address_0 . ... nested patterns ... }
@@ -61,7 +61,7 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
       if (addressOptionalMatch) {
         const addressBlock = addressOptionalMatch[0];
         // Nested properties should be inside this block
-        expect(addressBlock).toContain("address_0");
+        expect(addressBlock).toMatch(/address_\d+/);
         expect(addressBlock).toContain("street");
         expect(addressBlock).toContain("city");
       }
@@ -112,7 +112,7 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
       if (friendsOptionalMatch) {
         const friendsBlock = friendsOptionalMatch[0];
         // Nested properties of friend items should be inside this block
-        expect(friendsBlock).toContain("friends_0");
+        expect(friendsBlock).toMatch(/friends_\d+/);
         expect(friendsBlock).toContain("name");
         expect(friendsBlock).toContain("age");
       }
@@ -260,16 +260,16 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
       const whereSection = query.substring(query.indexOf("WHERE"));
 
       // Root name should NOT be in OPTIONAL
-      expect(whereSection).toMatch(/\?subject :name \?name_0 \./);
+      expect(whereSection).toMatch(/\?subject :name \?name_\d+ \./);
       expect(whereSection).not.toMatch(/OPTIONAL \{[^}]*\?subject :name/);
 
       // Company should NOT be in OPTIONAL (it's required)
-      expect(whereSection).toMatch(/\?subject :company \?company_0 \./);
+      expect(whereSection).toMatch(/\?subject :company \?company_\d+ \./);
       expect(whereSection).not.toMatch(/OPTIONAL \{[^}]*\?subject :company/);
 
       // Company's required property (name) should also NOT be in OPTIONAL within the company context
       // But website should be optional
-      expect(whereSection).toContain("company_0");
+      expect(whereSection).toMatch(/company_\d+/);
       expect(whereSection).toContain("website");
     });
 
@@ -319,7 +319,7 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
         // street should be present
         expect(addressBlock).toContain("street");
         // street should NOT have its own OPTIONAL wrapper (required within parent)
-        expect(addressBlock).toMatch(/\?address_0 :street \?street/);
+        expect(addressBlock).toMatch(/\?address_\d+ :street \?street/);
       }
     });
   });
@@ -354,8 +354,10 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
 
       // Find position of address binding
       const addressBindPos = whereSection.indexOf(":address");
-      // Find position of first use of address variable
-      const addressVarPos = whereSection.indexOf("?address_0");
+      // Find position of first use of address variable (with any counter suffix)
+      const addressVarMatch = whereSection.match(/\?address_\d+/);
+      expect(addressVarMatch).toBeTruthy();
+      const addressVarPos = addressVarMatch!.index!;
 
       // address variable should appear at or after the binding position
       expect(addressVarPos).toBeGreaterThanOrEqual(addressBindPos);
@@ -399,7 +401,9 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
 
       // friends variable should be bound before being used
       const friendsBindPos = whereSection.indexOf(":friends");
-      const friendsVarFirstUse = whereSection.indexOf("?friends_0");
+      const friendsVarMatch = whereSection.match(/\?friends_\d+/);
+      expect(friendsVarMatch).toBeTruthy();
+      const friendsVarFirstUse = friendsVarMatch!.index!;
 
       expect(friendsVarFirstUse).toBeGreaterThanOrEqual(friendsBindPos);
     });
@@ -461,9 +465,9 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
       const whereSection = query.substring(query.indexOf("WHERE"));
 
       // Verify root required property is NOT in OPTIONAL
-      expect(whereSection).toMatch(/\?subject :name \?name_0 \./);
+      expect(whereSection).toMatch(/\?subject :name \?name_\d+ \./);
       expect(whereSection).not.toMatch(
-        /OPTIONAL \{[^}]*\?subject :name \?name_0/,
+        /OPTIONAL \{[^}]*\?subject :name \?name_\d+/,
       );
 
       // Verify patches (optional) is in OPTIONAL
@@ -476,8 +480,8 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
       );
       if (patchesMatch) {
         const patchesBlock = patchesMatch[0];
-        // Should contain patches_0 :name pattern without OPTIONAL wrapper
-        expect(patchesBlock).toMatch(/\?patches_0 :name \?name_\d+/);
+        // Should contain patches_N :name pattern without OPTIONAL wrapper
+        expect(patchesBlock).toMatch(/\?patches_\d+ :name \?name_\d+/);
       }
 
       // Verify plantingPlans is nested inside patches OPTIONAL
@@ -526,19 +530,18 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
 
       // Company should be in OPTIONAL
       const companyMatch = whereSection.match(
-        /OPTIONAL \{[\s\S]*?:company \?company_0[\s\S]*?\n\}/m,
+        /OPTIONAL \{[\s\S]*?:company \?company_\d+[\s\S]*?\n\}/m,
       );
       expect(companyMatch).toBeTruthy();
 
       if (companyMatch) {
         const companyBlock = companyMatch[0];
         // Company name should be present
-        expect(companyBlock).toContain("company_0");
+        expect(companyBlock).toMatch(/company_\d+/);
         expect(companyBlock).toContain("name");
 
         // Company name should NOT have its own OPTIONAL (it's required)
-        // It should be a direct pattern like: ?company_0 :name ?name_1 .
-        expect(companyBlock).toMatch(/\?company_0 :name \?name_\d+ \./);
+        expect(companyBlock).toMatch(/\?company_\d+ :name \?name_\d+ \./);
 
         // Website should be in OPTIONAL (it's optional)
         expect(companyBlock).toMatch(/OPTIONAL \{[\s\S]*?website/);
@@ -591,7 +594,7 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
       if (patchesMatch) {
         const patchesBlock = patchesMatch[0];
         // Patch name is required (not in its own OPTIONAL)
-        expect(patchesBlock).toMatch(/\?patches_0 :name \?name_\d+ \./);
+        expect(patchesBlock).toMatch(/\?patches_\d+ :name \?name_\d+ \./);
 
         // Description and area should be in OPTIONAL
         expect(patchesBlock).toMatch(/OPTIONAL \{[\s\S]*?description/);
@@ -660,9 +663,9 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
       const whereSection = query.substring(query.indexOf("WHERE"));
 
       // Root properties should NOT be in OPTIONAL
-      expect(whereSection).toMatch(/\?subject :name \?name_0 \./);
-      expect(whereSection).toMatch(/\?subject :age \?age_0 \./);
-      expect(whereSection).toMatch(/\?subject :email \?email_0 \./);
+      expect(whereSection).toMatch(/\?subject :name \?name_\d+ \./);
+      expect(whereSection).toMatch(/\?subject :age \?age_\d+ \./);
+      expect(whereSection).toMatch(/\?subject :email \?email_\d+ \./);
 
       // Should still have type in OPTIONAL (without explicit typeIRIs)
       expect(whereSection).toMatch(/OPTIONAL \{[^}]*rdf:type/);

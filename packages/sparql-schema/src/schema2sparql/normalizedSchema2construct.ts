@@ -26,12 +26,12 @@ import type {
   SPARQLFlavour,
 } from "@graviola/edb-core-types";
 import df from "@rdfjs/data-model";
+import type { Variable } from "@rdfjs/types";
 import get from "lodash-es/get";
 import { convertIRIToNode, createBindOrValuesPattern } from "@/utils";
 import {
   isNilOrEmpty,
   OptionalStringOrStringArray,
-  QUERY_RESULT_SUBJECT_IRI,
   QUERY_RESULT_SUBJECT_IRI_NODE,
 } from "@/base";
 import { filterToSparql } from "@/filters/filterToSparql";
@@ -55,6 +55,11 @@ export type QueryConstructionContext = {
   maxRecursion: number;
   /** Properties to exclude from the query */
   excludedProperties: string[];
+  /**
+   * Shared mutable counter for generating globally unique SPARQL variable names.
+   * Wrapped in an object so the reference is preserved across recursive calls.
+   */
+  varCounter: { value: number };
 };
 
 /**
@@ -324,23 +329,23 @@ function createPaginatedSubselect(
   let query = SELECT`${objectVar}`
     .WHERE`${subject} ${predicate} ${objectVar} .`;
 
-  // Add OPTIONAL patterns for ORDER BY properties
+  // Track ORDER BY property variables so we can reuse them between WHERE and ORDER BY
+  const orderByVars = new Map<string, Variable>();
+
   if (paginationMeta.orderBy) {
     const normalized = normalizeOrderBy(paginationMeta.orderBy);
 
     for (const clause of normalized) {
       for (const property of Object.keys(clause)) {
         const propPredicate = createPredicate(property, ctx.prefixMap);
-        const propVarName = sanitizeVariableName(property);
-        const propVar = df.variable(propVarName);
+        const propVar = createUniqueVar(property, ctx);
+        orderByVars.set(property, propVar);
 
-        // Add OPTIONAL pattern for ORDER BY property (dots required by SPARQL syntax)
         query = query.WHERE`OPTIONAL { ${objectVar} ${propPredicate} ${propVar} . }`;
       }
     }
   }
 
-  // Apply ORDER BY if specified
   if (paginationMeta.orderBy) {
     const normalized = normalizeOrderBy(paginationMeta.orderBy);
     let orderBuilder = query.ORDER();
@@ -350,15 +355,13 @@ function createPaginatedSubselect(
       for (const [property, order] of Object.entries(clause)) {
         if (!order) continue;
 
-        const propVarName = sanitizeVariableName(property);
-        const propVar = df.variable(propVarName);
+        const propVar = orderByVars.get(property);
+        if (!propVar) continue;
         const isDesc = order === "desc";
 
         if (i === 0 && Object.keys(clause).indexOf(property) === 0) {
-          // First ORDER BY
           query = orderBuilder.BY(propVar, isDesc);
         } else {
-          // Subsequent ORDER BY (use THEN)
           query = (query as any).THEN.BY(propVar, isDesc);
         }
       }
@@ -409,6 +412,7 @@ export function normalizedSchema2construct(
     depth: 0,
     maxRecursion: options?.maxRecursion || 4,
     excludedProperties: options?.excludedProperties || [],
+    varCounter: { value: 0 },
   };
 
   const constructPatterns: SparqlTemplateResult[] = [];
@@ -504,15 +508,13 @@ export function normalizedSchema2construct(
         // Apply top-level WHERE filters to main entity properties
         // Check if there's a where clause for this property at the top level
         const topLevelWhereClause = ctx.filterOptions.where?.[propertyName];
-        if (topLevelWhereClause) {
+        if (topLevelWhereClause && propertyPatterns.objectVar) {
           const predicate = createPredicate(propertyName, ctx.prefixMap);
-          const varName = `${sanitizeVariableName(propertyName)}_${ctx.depth}`;
-          const objectVar = df.variable(varName);
 
           const filterContext: FilterContext = {
             subject: subject,
             property: propertyName,
-            propertyVar: objectVar,
+            propertyVar: propertyPatterns.objectVar,
             predicateNode: predicate,
             schemaType:
               typeof propertySchema !== "boolean"
@@ -580,6 +582,7 @@ function createPropertyPatterns(
   construct: SparqlTemplateResult[];
   whereParts: WherePart[];
   pagination?: any;
+  objectVar?: Variable;
 } {
   const construct: SparqlTemplateResult[] = [];
   const whereParts: WherePart[] = [];
@@ -589,13 +592,8 @@ function createPropertyPatterns(
     return { construct, whereParts };
   }
 
-  // Create predicate (property name)
-  // Handle prefixed names (e.g., "dc:title") and full IRIs
   const predicate = createPredicate(propertyName, ctx.prefixMap);
-
-  // Create object variable (use property name as basis + depth for uniqueness)
-  const varName = `${sanitizeVariableName(propertyName)}_${ctx.depth}`;
-  const objectVar = df.variable(varName);
+  const objectVar = createUniqueVar(propertyName, ctx);
 
   // Create triple patterns (dots required by SPARQL syntax)
   const triplePattern = sparql`${subject} ${predicate} ${objectVar} .`;
@@ -698,8 +696,12 @@ function createPropertyPatterns(
       children: nestedWhereParts.length > 0 ? nestedWhereParts : undefined,
     };
 
-    // Return pagination metadata for this property
-    return { construct, whereParts: [wherePart], pagination: paginationMeta };
+    return {
+      construct,
+      whereParts: [wherePart],
+      pagination: paginationMeta,
+      objectVar,
+    };
   } else if (propertySchema.type === "object" && propertySchema.properties) {
     // Handle nested object - recurse into its properties
     const isRequired = ctx.schema.required?.includes(propertyName) || false;
@@ -719,7 +721,7 @@ function createPropertyPatterns(
       children: nestedPatterns.whereParts,
     };
 
-    return { construct, whereParts: [wherePart] };
+    return { construct, whereParts: [wherePart], objectVar };
   } else {
     // For primitive types (string, number, boolean), create simple WHERE part
     const isRequired = ctx.schema.required?.includes(propertyName) || false;
@@ -728,7 +730,7 @@ function createPropertyPatterns(
       whereTemplates: [triplePattern],
     };
 
-    return { construct, whereParts: [wherePart] };
+    return { construct, whereParts: [wherePart], objectVar };
   }
 }
 
@@ -748,8 +750,7 @@ function handleNestedObject(
     return { construct, whereParts };
   }
 
-  // Add type pattern for nested object
-  const typeVar = df.variable(`type_${ctx.depth}`);
+  const typeVar = createUniqueVar("__type", ctx);
   const nestedTypePattern = sparql`${subject} ${rdf.type} ${typeVar} .`;
   construct.push(nestedTypePattern);
 
@@ -814,7 +815,18 @@ function createPredicate(propertyName: string, prefixMap: Prefixes): any {
  * Only allow alphanumeric and underscore
  */
 function sanitizeVariableName(name: string): string {
-  // Remove any characters that aren't alphanumeric or underscore
-  // Replace colons and other special chars with underscore
-  return name.replace(/[^a-zA-Z0-9_]/g, "_");
+  const cleaned = name.replace(/[^a-zA-Z0-9_]/g, "_");
+  if (!/^[a-zA-Z]/.test(cleaned)) return `var_${cleaned}`;
+  return cleaned;
+}
+
+/**
+ * Single gateway for creating SPARQL variables with globally unique names.
+ * Always routes through df.variable() to prevent injection from weird schema property names.
+ */
+function createUniqueVar(
+  name: string,
+  ctx: QueryConstructionContext,
+): Variable {
+  return df.variable(`${sanitizeVariableName(name)}_${ctx.varCounter.value++}`);
 }
