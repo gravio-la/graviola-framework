@@ -33,10 +33,11 @@
     "eslint-config-edb": "workspace:*",
     "typescript": "^5.8.2",
     "recharts": "^2.12.6",
-    "react": "^18"
+    "react": "catalog:",
+    "@types/json-schema": "catalog:"
   },
   "peerDependencies": {
     "recharts": "^2",
-    "react": "^18"
+    "react": "catalog:"
   }
 }
