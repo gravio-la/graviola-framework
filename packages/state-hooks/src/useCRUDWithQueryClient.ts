@@ -165,7 +165,12 @@ export const useCRUDWithQueryClient: UseCRUDHook<
       return await dataStore.removeDocument(typeName, entityIRI);
     },
     onSuccess: async () => {
+      const typeName = dataStore.typeIRItoTypeName(typeIRI);
       queryClient.invalidateQueries({ queryKey: ["type", typeIRI] });
+      queryClient.invalidateQueries({ queryKey: ["list", typeName] });
+      queryClient.invalidateQueries({
+        queryKey: ["type", typeIRI, "list"],
+      });
     },
   });
 
@@ -196,7 +201,12 @@ export const useCRUDWithQueryClient: UseCRUDHook<
       };
     },
     onSuccess: async (result) => {
+      const typeName = dataStore.typeIRItoTypeName(typeIRI);
       await queryClient.invalidateQueries({ queryKey: ["entity", entityIRI] });
+      await queryClient.invalidateQueries({ queryKey: ["list", typeName] });
+      await queryClient.invalidateQueries({
+        queryKey: ["type", typeIRI, "list"],
+      });
       for (const draftDocument of result.draftDocuments) {
         await queryClient.invalidateQueries({
           queryKey: ["entity", draftDocument["@id"]],
