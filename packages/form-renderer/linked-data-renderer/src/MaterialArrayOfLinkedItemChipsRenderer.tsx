@@ -1,6 +1,5 @@
 import type { ArrayLayoutProps } from "@jsonforms/core";
 import { withJsonFormsArrayLayoutProps } from "@jsonforms/react";
-import { Hidden } from "@mui/material";
 import { useCallback } from "react";
 
 import { MaterialArrayChipsLayout } from "./MaterialArrayChipsLayout";

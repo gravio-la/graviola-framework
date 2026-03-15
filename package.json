@@ -73,8 +73,8 @@
     },
     "catalogs": {
       "mui": {
-        "@mui/material": "^5",
-        "@mui/icons-material": "^5"
+        "@mui/material": "^7",
+        "@mui/icons-material": "^7"
       },
       "rdf": {
         "@rdfjs/data-model": "^2.0.2",

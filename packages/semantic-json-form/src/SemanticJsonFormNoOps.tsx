@@ -157,14 +157,12 @@ export const SemanticJsonFormNoOps: FunctionComponent<
 
   return (
     <Grid container spacing={0}>
-      <Grid item flex={1}>
+      <Grid  flex={1}>
         <Grid container spacing={0}>
           <Grid
-            item
-            xs={
+           size={
               disableSimilarityFinder || enableSidebar || !searchText ? 12 : 6
-            }
-          >
+            }>
             <WithCard wrapWithinCard={wrapWithinCard}>
               {toolbar && React.isValidElement(toolbar) ? toolbar : null}
               <JsonForms
@@ -179,7 +177,7 @@ export const SemanticJsonFormNoOps: FunctionComponent<
             </WithCard>
           </Grid>
           {!disableSimilarityFinder && !enableSidebar && searchText && (
-            <Grid xs={6} item>
+            <Grid  size={6}>
               <SimilarityFinder
                 finderId={formsPath}
                 search={searchText}
@@ -194,7 +192,7 @@ export const SemanticJsonFormNoOps: FunctionComponent<
         </Grid>
       </Grid>
       {formsPath === globalPath && (
-        <Grid item>
+        <Grid >
           <SearchbarWithFloatingButton>
             <SimilarityFinder
               finderId={formsPath}

@@ -13,14 +13,14 @@ export const FormDebuggingTools = ({ jsonData }: FormDebuggingToolsProps) => {
     <Grid container direction={"column"} spacing={2}>
       {Object.entries(jsonData).map(([key, value]) => {
         return (
-          <Grid item key={key}>
+          <Grid  key={key}>
             <Typography variant={"h3"}>{key}</Typography>
             <JsonView data={value} shouldExpandNode={(lvl) => lvl < 5} />
             <Divider />
           </Grid>
         );
       })}
-      <Grid item>
+      <Grid >
         <SPARQLLocalOxigraphToolkit sparqlQuery={crudOptions?.constructFetch} />
       </Grid>
     </Grid>

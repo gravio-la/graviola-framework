@@ -5,7 +5,7 @@ import { extractFieldIfString } from "@graviola/edb-data-mapping";
 import { useAdbContext, useDataStore } from "@graviola/edb-state-hooks";
 import { ControlProps, OwnPropsOfControl, Resolve } from "@jsonforms/core";
 import { useJsonForms, withJsonFormsControlProps } from "@jsonforms/react";
-import { FormControl, Hidden } from "@mui/material";
+import { FormControl } from "@mui/material";
 import merge from "lodash-es/merge";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 

@@ -160,7 +160,7 @@ export const cellConfigRegistry: MuiTableColumnDefinitionRegistryEntry[] = [
                 }
                 alignItems={"center"}
               >
-                <Grid item>
+                <Grid >
                   {table.getState().columnFilters.find((cf) => cf.id === id) ? (
                     <OverflowContainer>{renderedCellValue}</OverflowContainer>
                   ) : (
@@ -171,7 +171,7 @@ export const cellConfigRegistry: MuiTableColumnDefinitionRegistryEntry[] = [
                   count > 0 &&
                   parseMarkdownLinks(group).map(({ label, url }, index) => {
                     return (
-                      <Grid item key={url + index} sx={{ m: 0.5 }}>
+                      <Grid  key={url + index} sx={{ m: 0.5 }}>
                         <Link>
                           <OverflowChip entityIRI={url} label={label} />
                         </Link>

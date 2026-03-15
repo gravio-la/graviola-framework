@@ -77,7 +77,7 @@ const GroupComponent = ({
       {!isEmpty(i18nLabel) && <CardHeader title={i18nLabel} />}
       <CardContent>
         {i18nDescription && i18nDescription.length > 0 && (
-          <Grid item xs>
+          <Grid  xs>
             <FormHelperText>
               <MDEditorMarkdown
                 source={i18nDescription}

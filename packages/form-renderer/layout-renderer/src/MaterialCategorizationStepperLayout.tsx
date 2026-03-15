@@ -112,7 +112,7 @@ export const MaterialCategorizationStepperLayout = (
         wrap={"nowrap"}
         direction={{ md: "row", xs: "column" }}
       >
-        <Grid item xs={2}>
+        <Grid size={2}>
           <Stepper
             activeStep={activeCategory}
             nonLinear
@@ -163,8 +163,7 @@ export const MaterialCategorizationStepperLayout = (
           </Box>
         </Grid>
         <Grid
-          item
-          xs={10}
+          size={10}
           sx={(theme) => ({
             marginTop: 4,
             [theme.breakpoints.down("md")]: {
