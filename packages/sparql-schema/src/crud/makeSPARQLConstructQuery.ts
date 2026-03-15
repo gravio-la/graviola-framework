@@ -34,6 +34,8 @@ export const makeSPARQLConstructQuery = (
     normalized,
     {
       prefixMap,
+      resolveInverseMaxDepth: options.resolveInverseMaxDepth,
+      maxRecursion: options.maxRecursion,
     },
   );
 

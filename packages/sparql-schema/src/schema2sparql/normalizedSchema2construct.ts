@@ -55,6 +55,8 @@ export type QueryConstructionContext = {
   maxRecursion: number;
   /** Properties to exclude from the query */
   excludedProperties: string[];
+  /** Max depth at which inverse (x-inverseOf) properties are resolved. Default 0 = root only. */
+  resolveInverseMaxDepth: number;
   /**
    * Shared mutable counter for generating globally unique SPARQL variable names.
    * Wrapped in an object so the reference is preserved across recursive calls.
@@ -399,6 +401,7 @@ export function normalizedSchema2construct(
   options?: {
     excludedProperties?: string[];
     maxRecursion?: number;
+    resolveInverseMaxDepth?: number;
     prefixMap?: Prefixes; // Prefix mappings (e.g., { "foaf": "http://xmlns.com/foaf/0.1/" })
     filterOptions?: GraphTraversalFilterOptions; // Filter options for nested queries
     flavour?: SPARQLFlavour; // SPARQL flavour for BIND vs VALUES optimization
@@ -412,6 +415,7 @@ export function normalizedSchema2construct(
     depth: 0,
     maxRecursion: options?.maxRecursion || 4,
     excludedProperties: options?.excludedProperties || [],
+    resolveInverseMaxDepth: options?.resolveInverseMaxDepth ?? 0,
     varCounter: { value: 0 },
   };
 
@@ -631,6 +635,11 @@ function createPropertyPatterns(
     useInverseWhere && inversePredicate
       ? sparql`${objectVar} ${inversePredicate} ${subject} .`
       : null;
+
+  // Skip inverse properties that are deeper than the allowed max depth
+  if (useInverseWhere && ctx.depth > ctx.resolveInverseMaxDepth) {
+    return { construct, whereParts };
+  }
 
   // Create triple patterns (dots required by SPARQL syntax). CONSTRUCT always uses subject-predicate-object.
   const triplePattern = sparql`${subject} ${predicate} ${objectVar} .`;
