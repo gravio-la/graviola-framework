@@ -228,4 +228,41 @@ describe("makeSPARQLInverseSyncQuery", () => {
       );
     });
   });
+
+  describe("when adding members to a WorkingCircle (inverse: Person.workingCircles)", () => {
+    it("should generate UPDATE that INSERTs the circle IRI into each person's workingCircles", () => {
+      const circleIRI = "http://example.com/workingcircle/1";
+      const person1 = "http://example.com/person/1";
+      const person2 = "http://example.com/person/2";
+
+      const inverseProperties: InversePropertyDataWithTypeIRI[] = [
+        {
+          path: ["workingCircles"],
+          typeName: "Person",
+          typeIRI: "http://example.com/Person",
+          schema: undefined,
+          entityIRIs: [person1, person2],
+        },
+      ];
+
+      const result = makeSPARQLInverseSyncQuery(
+        circleIRI,
+        inverseProperties,
+        mockOptions,
+      );
+
+      expect(result).not.toBeNull();
+      expect(result).toContain("DELETE");
+      expect(result).toContain("INSERT");
+      expect(result).toContain(
+        "?oldTarget_1 :workingCircles <http://example.com/workingcircle/1>",
+      );
+      expect(result).toContain(
+        "?newTarget_2 :workingCircles <http://example.com/workingcircle/1>",
+      );
+      expect(result).toContain("VALUES ?newTarget_2");
+      expect(result).toContain("<http://example.com/person/1>");
+      expect(result).toContain("<http://example.com/person/2>");
+    });
+  });
 });
