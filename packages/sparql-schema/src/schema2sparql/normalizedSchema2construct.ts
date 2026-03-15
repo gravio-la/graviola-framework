@@ -571,6 +571,29 @@ export function normalizedSchema2construct(
 }
 
 /**
+ * Parse x-inverseOf inverseOf string to get the inverse property path (e.g. ["groups"] from "#/definitions/Person/properties/groups").
+ * Used so WHERE matches triples stored on the other side (e.g. ?person :groups ?group) while CONSTRUCT still outputs subject :members object.
+ */
+function getInversePathFromAnnotation(
+  propertySchema: JSONSchema7,
+): string[] | null {
+  const inverseOf = (
+    propertySchema as { "x-inverseOf"?: { inverseOf: string[] } }
+  )["x-inverseOf"]?.inverseOf;
+  if (!inverseOf?.[0]) return null;
+  const parts = inverseOf[0].split("/");
+  const idx =
+    parts.indexOf("definitions") !== -1
+      ? parts.indexOf("definitions") + 1
+      : parts.indexOf("$defs") + 1;
+  if (idx === 0) return null;
+  const path = parts.slice(idx).filter((p) => p !== "properties");
+  const typeName = path.shift();
+  if (!typeName || path.length === 0) return null;
+  return path;
+}
+
+/**
  * Create SPARQL patterns for a single property
  */
 function createPropertyPatterns(
@@ -595,10 +618,27 @@ function createPropertyPatterns(
   const predicate = createPredicate(propertyName, ctx.prefixMap);
   const objectVar = createUniqueVar(propertyName, ctx);
 
-  // Create triple patterns (dots required by SPARQL syntax)
+  // When property has x-inverseOf, triples are stored as (object inversePredicate subject). WHERE must use that pattern; CONSTRUCT still outputs (subject predicate object).
+  const inversePath = getInversePathFromAnnotation(propertySchema);
+  const useInverseWhere = inversePath != null && inversePath.length > 0;
+  const inversePredicate =
+    useInverseWhere && inversePath
+      ? inversePath.length === 1
+        ? createPredicate(inversePath[0], ctx.prefixMap)
+        : null
+      : null;
+  const inverseWherePattern =
+    useInverseWhere && inversePredicate
+      ? sparql`${objectVar} ${inversePredicate} ${subject} .`
+      : null;
+
+  // Create triple patterns (dots required by SPARQL syntax). CONSTRUCT always uses subject-predicate-object.
   const triplePattern = sparql`${subject} ${predicate} ${objectVar} .`;
 
   construct.push(triplePattern);
+
+  // WHERE pattern: use inverse when available so we match stored triples (e.g. ?person :groups ?group)
+  const whereTriplePattern = inverseWherePattern ?? triplePattern;
 
   // Handle different property types
   if (propertySchema.type === "array" && propertySchema.items) {
@@ -644,8 +684,8 @@ function createPropertyPatterns(
       );
       relationshipPatterns.push(subselect);
     } else {
-      // Regular pattern without pagination
-      relationshipPatterns.push(triplePattern);
+      // Regular pattern without pagination (use inverse WHERE when x-inverseOf)
+      relationshipPatterns.push(whereTriplePattern);
     }
 
     // Apply WHERE filters for relationship filtering
@@ -714,10 +754,10 @@ function createPropertyPatterns(
     );
     construct.push(...nestedPatterns.construct);
 
-    // Create WHERE part with nested children
+    // Create WHERE part with nested children (use inverse WHERE when x-inverseOf)
     const wherePart: WherePart = {
       required: isRequired,
-      whereTemplates: [triplePattern],
+      whereTemplates: [whereTriplePattern],
       children: nestedPatterns.whereParts,
     };
 
@@ -727,7 +767,7 @@ function createPropertyPatterns(
     const isRequired = ctx.schema.required?.includes(propertyName) || false;
     const wherePart: WherePart = {
       required: isRequired,
-      whereTemplates: [triplePattern],
+      whereTemplates: [whereTriplePattern],
     };
 
     return { construct, whereParts: [wherePart], objectVar };
