@@ -139,10 +139,11 @@ export const initSPARQLStore = (
       return await exists(entityIRI, typeNameToTypeIRI(typeName), askFetch);
     },
     removeDocument: async (typeName, entityIRI) => {
+      const schema = bringDefinitionToTop(rootSchema, typeName) as JSONSchema7;
       return await remove(
         entityIRI,
         typeNameToTypeIRI(typeName),
-        rootSchema,
+        schema,
         updateFetch,
         {
           defaultPrefix,
@@ -174,7 +175,14 @@ export const initSPARQLStore = (
       });
 
       if (enableInversePropertiesFeature) {
-        const inverseProperties = getInverseProperties(rootSchema, schema, doc);
+        // Use type schema from rootSchema (not stub) so x-inverseOf and other
+        // annotations are preserved for inverse extraction
+        const schemaForInverse = bringDefinitionToTop(rootSchema, typeName);
+        const inverseProperties = getInverseProperties(
+          rootSchema,
+          schemaForInverse as JSONSchema7,
+          doc,
+        );
         const inversePropertiesWithTypeIRI = inverseProperties.map(
           (inverseProperty) => ({
             ...inverseProperty,
