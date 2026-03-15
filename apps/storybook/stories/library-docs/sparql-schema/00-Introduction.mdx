@@ -81,31 +81,72 @@ WHERE {
 }
 ```
 
-### Full Pipeline Helper
+### Type-Safe Filtering with filterTypedDocument
 
-For convenience, use the `constructAndExtract` helper:
+For type-safe entity loading with Prisma-style filters:
 
 ```typescript
-import { constructAndExtract } from "@graviola/sparql-schema";
+import { filterTypedDocument } from "@graviola/sparql-schema";
+import { z } from "zod";
 
-const result = await constructAndExtract(
+// Define your schema with Zod
+const PersonSchema = z.object({
+  name: z.string(),
+  age: z.number(),
+  friends: z.array(z.object({
+    name: z.string(),
+    age: z.number()
+  }))
+});
+
+type Person = z.infer<typeof PersonSchema>;
+
+// Load entity with type-safe filters
+const person = await filterTypedDocument<Person>(
   "http://example.com/person/1",
-  schema,
-  sparqlClient,
+  "http://example.com/Person",
+  personJSONSchema, // JSON Schema from Zod
+  constructFetch,
   {
-    filterOptions: {
-      include: {
-        friends: { take: 10, orderBy: { name: 'asc' } }
+    select: { name: true, age: true },
+    include: { 
+      friends: { 
+        take: 10, 
+        orderBy: { name: 'asc' },
+        where: { age: { gte: 18 } }  // Type-safe!
       }
     },
-    prefixMap: {
-      "": "http://example.com/"
-    }
+    where: { age: { gte: 21 } },  // Type-safe!
+    defaultPrefix: "http://example.com/"
   }
 );
 
-// Result: Extracted JavaScript object
-console.log(result);
+// Result: Fully typed Person object
+console.log(person.name);  // ✓ Type-safe
+```
+
+### Finding Multiple Entities
+
+Use `filterTypedDocuments` to search and filter entities by type:
+
+```typescript
+import { filterTypedDocuments } from "@graviola/sparql-schema";
+
+const adults = await filterTypedDocuments<Person>(
+  "http://example.com/Person",
+  personJSONSchema,
+  selectFetch,
+  constructFetch,
+  {
+    where: { age: { gte: 18 } },
+    searchString: "john",
+    limit: 50,
+    defaultPrefix: "http://example.com/"
+  }
+);
+
+// Result: Array of Person objects
+console.log(adults.length);
 ```
 
 ## Main Exports
@@ -135,27 +176,95 @@ function normalizedSchema2construct(
 
 [Learn more about Query Generation →](/docs/library-docs-sparql-schema-query-generation--docs)
 
-### constructAndExtract
+### buildTypedSPARQLQuery
 
-End-to-end helper that normalizes → generates SPARQL → executes → extracts.
+Type-safe SPARQL query builder with Prisma-style filters.
 
 ```typescript
-async function constructAndExtract(
-  iri: string,
+function buildTypedSPARQLQuery<T = any>(
+  subjectIRI: string | string[],
   schema: JSONSchema7,
-  sparqlClient: SparqlClient,
-  options?: ConstructAndExtractOptions
-): Promise<any>
+  options?: BuildTypedSPARQLQueryOptions<T>
+): TypedSPARQLQueryResult
 ```
 
 **Features**:
-- Automatic schema normalization
-- SPARQL generation
-- Query execution
-- Data extraction
-- All in one function!
+- Full TypeScript type safety
+- Prisma-style where/include/select/omit
+- Runtime filter validation
+- Support for single and batch queries
+
+### filterTypedDocument
+
+Load single or multiple entities by IRI with type-safe filters.
+
+```typescript
+async function filterTypedDocument<T = any>(
+  entityIRI: string | string[],
+  typeIRI: string,
+  schema: JSONSchema7,
+  constructFetch: (query: string) => Promise<DatasetCore>,
+  options?: TypedFilterOptions<T>
+): Promise<T | T[]>
+```
+
+**Features**:
+- Type-safe filtering with `where` clauses
+- Field selection with `select`
+- Nested loading with `include`
+- Batch entity loading support
+- Automatic query generation and execution
+
+### filterTypedDocuments
+
+Find multiple entities by type with search and filters.
+
+```typescript
+async function filterTypedDocuments<T = any>(
+  typeIRI: string,
+  schema: JSONSchema7,
+  selectFetch: (query: string) => Promise<any>,
+  constructFetch: (query: string) => Promise<DatasetCore>,
+  options?: TypedFilterAndSearchOptions<T>
+): Promise<T[]>
+```
+
+**Features**:
+- Search entities by type
+- Full-text search with `searchString`
+- Type-safe filters and field selection
+- Limit results
+- Returns fully typed objects
 
 ## Key Features
+
+### Type-Safe Prisma-Style Filters
+
+Full TypeScript type safety with Prisma-inspired API:
+
+```typescript
+type Person = z.infer<typeof PersonSchema>;
+
+const result = await filterTypedDocument<Person>(..., {
+  select: { name: true, age: true },     // ✓ Type-safe field selection
+  where: { 
+    age: { gte: 18, lte: 65 },           // ✓ Type-safe operators
+    name: { contains: 'John' }           // ✓ String operators
+  },
+  include: { 
+    friends: {                            // ✓ Nested includes
+      take: 10,
+      where: { age: { gte: 18 } }        // ✓ Nested filters
+    }
+  }
+});
+```
+
+**Supported Filter Operators**:
+- **String**: `equals`, `contains`, `startsWith`, `endsWith`, `in`, `notIn`
+- **Number**: `equals`, `gt`, `gte`, `lt`, `lte`, `in`, `notIn`
+- **Boolean**: `equals`, `not`
+- **Logical**: `AND`, `OR`, `NOT`
 
 ### Injection-Safe Query Building
 
@@ -304,15 +413,53 @@ This prevents double-pagination during extraction.
 
 ## Type Safety
 
-The package is fully typed:
+The package is fully typed with comprehensive TypeScript support:
 
 ```typescript
 import type {
   ConstructResult,
-  ConstructAndExtractOptions,
+  TypedFilterOptions,
+  TypedFilterAndSearchOptions,
+  BuildTypedSPARQLQueryOptions,
   Prefixes
 } from "@graviola/sparql-schema";
 ```
+
+### React Hooks Integration
+
+Use with `@graviola/state-hooks` for seamless React integration:
+
+```typescript
+import { useTypedFilterStore } from "@graviola/state-hooks";
+
+function PersonComponent() {
+  const { useLoadDocument, loadDocumentsAsync } = 
+    useTypedFilterStore<Person>("Person");
+  
+  // React Query hook (declarative)
+  const { data, isLoading } = useLoadDocument(personIRI, {
+    select: { name: true, age: true },
+    where: { age: { gte: 18 } }
+  });
+  
+  // Imperative async function (uses queryClient)
+  const handleSearch = async () => {
+    const results = await loadDocumentsAsync({
+      where: { age: { gte: 21 } },
+      searchString: 'john',
+      limit: 50
+    });
+  };
+  
+  return <div>{data?.name}</div>;
+}
+```
+
+**Hook Features**:
+- ✅ Automatic schema resolution
+- ✅ React Query cache integration
+- ✅ Both declarative and imperative APIs
+- ✅ Full TypeScript type inference
 
 ## Examples
 

@@ -108,11 +108,13 @@ Handles schema normalization and graph extraction.
 
 ### 2. @graviola/sparql-schema
 
-Generates SPARQL CONSTRUCT queries from normalized schemas.
+Generates SPARQL CONSTRUCT queries from normalized schemas with type-safe Prisma-style filters.
 
 **Main Exports**:
 - `normalizedSchema2construct(iri, schema, options)` - Generates SPARQL patterns
-- `constructAndExtract(iri, schema, client, options)` - Full pipeline helper
+- `buildTypedSPARQLQuery<T>(iri, schema, options)` - Type-safe query builder with filters
+- `filterTypedDocument<T>(iri, typeIRI, schema, fetch, options)` - Load entities with filters
+- `filterTypedDocuments<T>(typeIRI, schema, selectFetch, constructFetch, options)` - Find entities with filters
 
 [Go to sparql-schema documentation →](/docs/library-docs-sparql-schema-00-introduction--docs)
 
@@ -152,7 +154,8 @@ Here's a more detailed view of how the packages interact:
     
     subgraph "@graviola/sparql-schema"
         GEN[normalizedSchema2construct]
-        HELPER[constructAndExtract]
+        TYPED[buildTypedSPARQLQuery]
+        FILTER[filterTypedDocument]
     end
     
     subgraph "@graviola/edb-core-types"
@@ -166,12 +169,14 @@ Here's a more detailed view of how the packages interact:
     
     APP --> NORM
     APP --> GEN
-    APP --> HELPER
+    APP --> TYPED
+    APP --> FILTER
     
-    HELPER --> NORM
-    HELPER --> GEN
-    HELPER --> CLIENT
-    HELPER --> EXTRACT
+    FILTER --> TYPED
+    TYPED --> NORM
+    TYPED --> GEN
+    FILTER --> CLIENT
+    FILTER --> EXTRACT
     
     NORM --> TYPES
     GEN --> TYPES
