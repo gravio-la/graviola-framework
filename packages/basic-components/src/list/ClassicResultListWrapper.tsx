@@ -22,7 +22,7 @@ export const ClassicResultListWrapper: FunctionComponent<
   return (
     <Paper sx={{ width: "100%" }}>
       <Grid container sx={{ width: "100%", display: "block" }}>
-        <Grid item sx={{ width: "100%" }}>
+        <Grid  sx={{ width: "100%" }}>
           <ListItemButton
             sx={{ width: "100%", flexGrow: 0 }}
             alignItems="flex-start"
@@ -51,7 +51,7 @@ export const ClassicResultListWrapper: FunctionComponent<
           </ListItemButton>
         </Grid>
         <Divider />
-        <Grid item>
+        <Grid >
           <>
             <Paper
               sx={{

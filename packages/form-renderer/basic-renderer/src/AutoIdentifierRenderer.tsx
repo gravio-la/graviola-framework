@@ -30,13 +30,13 @@ const AutoIdentifierRendererComponent = (props: ControlProps) => {
         sx={(theme) => ({ marginBottom: theme.spacing(2) })}
       >
         <Grid container alignItems="baseline">
-          <Grid item>
+          <Grid >
             <IconButton onClick={() => setEditMode((prev) => !prev)}>
               {editMode ? <VisibilityOff /> : <Visibility />}
             </IconButton>
           </Grid>
           {editMode && (
-            <Grid item>
+            <Grid >
               <FormLabel
                 error={!isValid}
                 required={showAsRequired(

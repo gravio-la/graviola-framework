@@ -78,7 +78,7 @@ const AdvancedFilterSettingsMenu = ({
 
   return (
     <Grid container alignItems="center">
-      <Grid item>
+      <Grid >
         <Button
           size="small"
           variant="outlined"
@@ -432,7 +432,7 @@ export const EntityFinder = <
             spacing={2}
             style={{ overflowY: "auto", marginBottom: margin }}
           >
-            <Grid item sx={{ width: "100%" }}>
+            <Grid  sx={{ width: "100%" }}>
               <SearchFieldWithBadges
                 onCreateNew={showEditDialog}
                 disabled={false}
@@ -451,7 +451,7 @@ export const EntityFinder = <
               />
             </Grid>
             <Grid
-              item
+              
               sx={{
                 width: "100%",
                 height: `calc(100vh - 150px)`,

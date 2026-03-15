@@ -7,7 +7,7 @@ import {
   UISchemaElement,
 } from "@jsonforms/core";
 import { JsonFormsDispatch, withJsonFormsDetailProps } from "@jsonforms/react";
-import { Hidden } from "@mui/material";
+
 import isEmpty from "lodash-es/isEmpty";
 import React, { useMemo } from "react";
 

@@ -1,7 +1,6 @@
 import * as React from "react";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 import MuiDrawer, { DrawerProps } from "@mui/material/Drawer";
-import { makeStyles } from "@mui/styles";
 import { useCallback, useMemo } from "react";
 import { useDrawerDimensions } from "./useDrawerDimensions";
 
@@ -51,39 +50,11 @@ const Drawer = styled(MuiDrawer, {
     "& .MuiDrawer-paper": closedMixin(theme),
   }),
 }));
-const useStyles = makeStyles<Theme, DrawerProps>((theme) => ({
-  dragger: (props) =>
-    isHorizontal(props.anchor)
-      ? {
-          height: "10px",
-          width: "100%",
-          backgroundColor: "#f4f7f9",
-          cursor: "ns-resize",
-          padding: "0 4px 0",
-          position: "absolute",
-          top: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: theme.zIndex ? theme.zIndex.drawer + 2 : 200,
-        }
-      : {
-          width: "5px",
-          backgroundColor: "#f4f7f9",
-          cursor: "ew-resize",
-          padding: "4px 0 0",
-          position: "absolute",
-          top: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: theme.zIndex ? theme.zIndex.drawer + 2 : 200,
-        },
-}));
+
 
 type MiniDrawerProps = DrawerProps & {};
 export const ResizableDrawer = (props: MiniDrawerProps) => {
   const theme = useTheme();
-  useStyles(props);
-
   const [open, setOpen] = React.useState(false);
 
   const minDrawerWidth = 50;

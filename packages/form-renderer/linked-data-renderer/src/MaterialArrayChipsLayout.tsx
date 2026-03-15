@@ -136,7 +136,7 @@ const MaterialArrayChipsLayoutComponent = (props: ArrayLayoutProps & {}) => {
           direction={"row"}
           alignItems={"center"}
         >
-          <Grid item flex={"1"}>
+          <Grid  flex={"1"}>
             <SemanticFormsInline
               schema={subSchema}
               entityIRI={formData["@id"]}
@@ -149,7 +149,7 @@ const MaterialArrayChipsLayoutComponent = (props: ArrayLayoutProps & {}) => {
               formsPath={makeFormsPath(config?.formsPath, path)}
             />
           </Grid>
-          <Grid item>
+          <Grid >
             <IconButton onClick={handleSaveAndAdd}>
               <AddIcon style={{ fontSize: 40 }} />
             </IconButton>

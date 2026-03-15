@@ -344,7 +344,7 @@ export const MaterialArrayLayout = (props: ArrayLayoutProps) => {
             direction={"row"}
             alignItems={"center"}
           >
-            <Grid item flex={"1"}>
+            <Grid  flex={"1"}>
               <SemanticFormsInline
                 schema={subSchema}
                 entityIRI={formData["@id"]}
@@ -359,7 +359,7 @@ export const MaterialArrayLayout = (props: ArrayLayoutProps) => {
                 formsPath={formsPath}
               />
             </Grid>
-            <Grid item>
+            <Grid >
               <Tooltip
                 title={
                   inlineErrors && (
