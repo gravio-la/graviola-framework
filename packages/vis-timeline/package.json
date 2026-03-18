@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "react": "catalog:",
-    "@types/react": "~18.3",
+    "@types/react": "catalog:",
     "@types/json-schema": "catalog:",
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*"

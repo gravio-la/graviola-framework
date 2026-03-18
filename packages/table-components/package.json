@@ -55,7 +55,7 @@
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
     "@ebay/nice-modal-react": "^1.2",
-    "@types/react": "~18.3",
+    "@types/react": "catalog:",
     "@types/lodash-es": "^4.17.12",
     "@tanstack/table-core": "^8",
     "notistack": "^3",

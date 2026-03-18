@@ -31,7 +31,7 @@
     "@graviola/edb-state-hooks": "workspace:*"
   },
   "devDependencies": {
-    "@types/react": "~18.3",
+    "@types/react": "catalog:",
     "@ebay/nice-modal-react": "^1.2",
     "next-i18next": "^15.3.0",
     "@graviola/edb-tsconfig": "workspace:*",

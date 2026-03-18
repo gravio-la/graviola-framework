@@ -106,8 +106,10 @@ export const VisTimelineWrapper = ({
 }: Props) => {
   const timelineContainerRef: RefObject<HTMLDivElement> =
     useRef<HTMLDivElement>(null);
-  const timelineDatasetRef = useRef<DataSet<TimelineItem> | null>();
-  const timelineGroupsRef = useRef<DataGroupCollectionType>();
+  const timelineDatasetRef = useRef<DataSet<TimelineItem> | null>(null);
+  const timelineGroupsRef = useRef<DataGroupCollectionType | undefined>(
+    undefined,
+  );
   const timelineRef = useRef<TimelineType | null>(null);
   const prevItems = useRef<TimelineItem[] | null>(null);
 

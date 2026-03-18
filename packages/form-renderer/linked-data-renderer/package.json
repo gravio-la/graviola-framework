@@ -61,7 +61,7 @@
     "@rdfjs/namespace": "catalog:rdf",
     "@storybook/react": "10.0.7",
     "@types/lodash-es": "^4.17.4",
-    "@types/react": "~18.3",
+    "@types/react": "catalog:",
     "ajv": "^8.12",
     "depcheck": "^1.4.7",
     "eslint-config-edb": "workspace:*",

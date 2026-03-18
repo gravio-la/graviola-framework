@@ -69,7 +69,7 @@ type BlogPost = z.infer<typeof BlogPostSchema>;
 
 // ============================================================================
 // 3. Type-Safe Include Patterns
-// ============================================================================
+// ===============================s============================================
 
 // Example 1: Simple include with pagination
 const simpleInclude: TypedIncludePattern<Person> = {

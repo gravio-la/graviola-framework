@@ -47,7 +47,7 @@
     "next-i18next": "^15"
   },
   "devDependencies": {
-    "@types/react": "~18.3",
+    "@types/react": "catalog:",
     "@types/lodash-es": "^4.17.12",
     "@ebay/nice-modal-react": "^1.2",
     "@graviola/edb-tsconfig": "workspace:*",

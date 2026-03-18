@@ -35,7 +35,7 @@
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
     "@graviola/edb-core-types": "workspace:*",
-    "@types/react": "~18.3",
+    "@types/react": "catalog:",
     "eslint-config-edb": "workspace:*",
     "tsup": "^8.0.0",
     "typescript": "^5.8.2",
