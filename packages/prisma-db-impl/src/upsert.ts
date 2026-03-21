@@ -61,6 +61,7 @@ async function cleanAndSave(
     jsonldContext: options.jsonldContext,
     defaultPrefix: options.defaultPrefix,
     keepContext: options.keepContext,
+    pruneLinkedDocuments: true,
   });
 
   await save(typeName, cleanData, prisma, error, {

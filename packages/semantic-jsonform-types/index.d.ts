@@ -135,6 +135,13 @@ export type EditEntityModalProps = {
   entityIRI: string;
   data: any;
   disableLoad?: boolean;
+  /** Controlled errors: when provided with onErrorsChange, caller handles validation errors. */
+  errors?: ErrorObject[];
+  onErrorsChange?: (errors: ErrorObject[]) => void;
+  /** When true, save/accept is disabled while there are validation errors. Default false. */
+  preventSaveOnError?: boolean;
+  /** When true, hide the tooltip and error badge on the accept button. Default false. */
+  disableErrorBadge?: boolean;
 };
 
 export type EntityDetailModalProps = EditEntityModalProps & {

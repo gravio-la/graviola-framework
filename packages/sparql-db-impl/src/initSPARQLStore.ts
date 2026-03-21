@@ -167,6 +167,7 @@ export const initSPARQLStore = (
         defaultPrefix,
         keepContext: true,
         removeInverseProperties: enableInversePropertiesFeature,
+        pruneLinkedDocuments: true,
       });
       await save(cleanData, schema, updateFetch, {
         defaultPrefix,

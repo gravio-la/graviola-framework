@@ -24,6 +24,13 @@ type CleanJSONLDOptions = {
   defaultPrefix: string;
   keepContext?: boolean;
   removeInverseProperties?: boolean;
+  /**
+   * When true, every nested JSON-LD node object with an `@id` string different from the
+   * root entity IRI is reduced to `{ "@id": "..." }` before cleaning. Prevents accidental
+   * writes of partial linked-document payloads. Nested objects without `@id` (blank nodes)
+   * are left intact. IRIs are compared by strict string equality.
+   */
+  pruneLinkedDocuments?: boolean;
 };
 
 export const defaultWalkerOptions: Partial<WalkerOptions> = {
@@ -150,6 +157,39 @@ const prepareSchema = (
 };
 
 /**
+ * Recursively reduces nested named nodes (objects with `@id` ≠ `rootEntityIRI`) to
+ * reference objects `{ "@id": "..." }` so linked documents are not carried as expanded graphs.
+ */
+export const pruneLinkedDocumentsToReferences = (
+  data: any,
+  rootEntityIRI: string,
+): any => {
+  if (data === null || data === undefined) {
+    return data;
+  }
+  if (Array.isArray(data)) {
+    return data.map((item) =>
+      pruneLinkedDocumentsToReferences(item, rootEntityIRI),
+    );
+  }
+  if (typeof data === "object") {
+    if (typeof data["@id"] === "string" && data["@id"] !== rootEntityIRI) {
+      return { "@id": data["@id"] };
+    }
+    const result: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(data)) {
+      if (key === "@context") {
+        result[key] = value;
+        continue;
+      }
+      result[key] = pruneLinkedDocumentsToReferences(value, rootEntityIRI);
+    }
+    return result;
+  }
+  return data;
+};
+
+/**
  *
  * cleans a JSONLD document by removing empty objects and arrays and all reoccuring inner objects that have the same @id
  * @param data - the data to clean
@@ -160,6 +200,7 @@ const prepareSchema = (
  *  - walkerOptions - the walker options to use
  *  - keepContext - whether to keep the JSONLD context
  *  - removeInverseProperties - whether to remove inverse properties
+ *  - pruneLinkedDocuments - whether to strip nested linked nodes to `@id` references only
  * @returns
  */
 export const cleanJSONLD = async (
@@ -171,9 +212,13 @@ export const cleanJSONLD = async (
     walkerOptions: walkerOptionsPassed = {},
     keepContext,
     removeInverseProperties,
+    pruneLinkedDocuments,
   }: CleanJSONLDOptions,
 ) => {
   const entityIRI = data["@id"];
+  const dataForCleaning = pruneLinkedDocuments
+    ? (pruneLinkedDocumentsToReferences(data, entityIRI) as NamedEntityData)
+    : data;
   const walkerOptions = {
     ...defaultWalkerOptions,
     ...walkerOptionsPassed,
@@ -189,7 +234,7 @@ export const cleanJSONLD = async (
   // here we remove all empty objects and arrays and all reoccuring inner objects that have the same @id, otherwise we would save the same object multiple times and might end up getting the old version of the object
   const jsonldDoc = {
     ...recursiveFilter(
-      cleanProperty(data),
+      cleanProperty(dataForCleaning),
       (data, level) => level > 0 && data["@id"] === entityIRI,
     ),
     ...(finalJsonldContext ? { "@context": finalJsonldContext } : {}),

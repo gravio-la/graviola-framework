@@ -4,7 +4,7 @@ import {
   recursiveFilter,
   removeInversePropertiesFromSchema,
   cleanJSONLD,
-  defaultWalkerOptions,
+  pruneLinkedDocumentsToReferences,
 } from "./cleanJSONLD";
 
 describe("cleanJSONLD", () => {
@@ -150,6 +150,80 @@ describe("cleanJSONLD", () => {
     });
   });
 
+  describe("pruneLinkedDocumentsToReferences", () => {
+    const root = "urn:comment1";
+
+    it("reduces nested object with different @id to reference only", () => {
+      const input = {
+        "@id": root,
+        "@type": "Comment",
+        body: "hi",
+        createdBy: {
+          "@id": "urn:volunteer1",
+          "@type": "Person",
+          name: "Jane",
+          email: "j@example.com",
+        },
+      };
+      expect(pruneLinkedDocumentsToReferences(input, root)).toEqual({
+        "@id": root,
+        "@type": "Comment",
+        body: "hi",
+        createdBy: { "@id": "urn:volunteer1" },
+      });
+    });
+
+    it("maps arrays of linked entities to references", () => {
+      const input = {
+        "@id": root,
+        tags: [
+          { "@id": "urn:tag1", label: "a" },
+          { "@id": "urn:tag2", label: "b" },
+        ],
+      };
+      expect(pruneLinkedDocumentsToReferences(input, root)).toEqual({
+        "@id": root,
+        tags: [{ "@id": "urn:tag1" }, { "@id": "urn:tag2" }],
+      });
+    });
+
+    it("leaves nested objects without @id unchanged (blank nodes / value blocks)", () => {
+      const input = {
+        "@id": root,
+        address: {
+          street: "1 Main",
+          city: "Berlin",
+        },
+      };
+      expect(pruneLinkedDocumentsToReferences(input, root)).toEqual(input);
+    });
+
+    it("does not strip the root node", () => {
+      const input = {
+        "@id": root,
+        title: "t",
+      };
+      expect(pruneLinkedDocumentsToReferences(input, root)).toEqual(input);
+    });
+
+    it("passes through minimal references unchanged", () => {
+      const input = {
+        "@id": root,
+        ref: { "@id": "urn:other" },
+      };
+      expect(pruneLinkedDocumentsToReferences(input, root)).toEqual(input);
+    });
+
+    it("preserves @context without recursing into it", () => {
+      const input = {
+        "@id": root,
+        "@context": { ex: "http://example.com/ns#" },
+        x: 1,
+      };
+      expect(pruneLinkedDocumentsToReferences(input, root)).toEqual(input);
+    });
+  });
+
   describe("removeInversePropertiesFromSchema", () => {
     it("should remove properties with x-inverseOf annotation", () => {
       const schema: JSONSchema7 = {
@@ -248,6 +322,97 @@ describe("cleanJSONLD", () => {
       expect(() => {
         cleanJSONLD(data, schema, testOptions);
       }).not.toThrow();
+    });
+
+    describe("pruneLinkedDocuments", () => {
+      it("cleanJSONLD strips expanded linked nodes to @id references in saved shape", async () => {
+        const volunteerIri = "urn:volunteer1";
+        const data = {
+          "@id": "urn:comment1",
+          "@type": "Comment",
+          body: "text",
+          createdBy: {
+            "@id": volunteerIri,
+            "@type": "Person",
+            name: "Jane",
+            email: "x@y.z",
+          },
+        };
+        const schema: JSONSchema7 = {
+          definitions: {
+            Person: {
+              type: "object",
+              properties: {
+                name: { type: "string" },
+                email: { type: "string" },
+              },
+            },
+            Comment: {
+              type: "object",
+              properties: {
+                body: { type: "string" },
+                createdBy: { $ref: "#/definitions/Person" },
+              },
+            },
+          },
+          type: "object",
+          properties: {
+            body: { type: "string" },
+            createdBy: { $ref: "#/definitions/Person" },
+          },
+        };
+
+        const pruned = await cleanJSONLD(data, schema, {
+          ...testOptions,
+          pruneLinkedDocuments: true,
+        });
+        expect(pruned.createdBy).toEqual({ "@id": volunteerIri });
+      });
+
+      it("cleanJSONLD default matches explicit pruneLinkedDocuments false (no behavior change)", async () => {
+        const volunteerIri = "urn:volunteer1";
+        const data = {
+          "@id": "urn:comment1",
+          "@type": "Comment",
+          body: "text",
+          createdBy: {
+            "@id": volunteerIri,
+            "@type": "Person",
+            name: "Jane",
+            email: "x@y.z",
+          },
+        };
+        const schema: JSONSchema7 = {
+          definitions: {
+            Person: {
+              type: "object",
+              properties: {
+                name: { type: "string" },
+                email: { type: "string" },
+              },
+            },
+            Comment: {
+              type: "object",
+              properties: {
+                body: { type: "string" },
+                createdBy: { $ref: "#/definitions/Person" },
+              },
+            },
+          },
+          type: "object",
+          properties: {
+            body: { type: "string" },
+            createdBy: { $ref: "#/definitions/Person" },
+          },
+        };
+
+        const defaultOpts = await cleanJSONLD(data, schema, testOptions);
+        const explicitFalse = await cleanJSONLD(data, schema, {
+          ...testOptions,
+          pruneLinkedDocuments: false,
+        });
+        expect(defaultOpts).toEqual(explicitFalse);
+      });
     });
 
     describe("Data cleaning scenarios", () => {
