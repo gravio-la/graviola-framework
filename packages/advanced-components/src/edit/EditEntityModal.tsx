@@ -14,6 +14,7 @@ import {
   Typography,
   Badge,
   Tooltip,
+  useControlled,
 } from "@mui/material";
 import type { JSONSchema7 } from "json-schema";
 import type { ErrorObject } from "ajv";
@@ -35,6 +36,10 @@ const EditEntityModalContent = ({
   defaultData,
   disableLoad,
   modal,
+  errors: errorsProp,
+  onErrorsChange,
+  preventSaveOnError = false,
+  disableErrorBadge = false,
 }: {
   classIRI: string;
   entityIRI: string;
@@ -42,6 +47,10 @@ const EditEntityModalContent = ({
   defaultData?: any;
   disableLoad?: boolean;
   modal: ReturnType<typeof useModal>;
+  errors?: ErrorObject[];
+  onErrorsChange?: (errors: ErrorObject[]) => void;
+  preventSaveOnError?: boolean;
+  disableErrorBadge?: boolean;
 }) => {
   const {
     jsonLDConfig,
@@ -150,7 +159,21 @@ const EditEntityModalContent = ({
     modal.remove();
   }, [modal]);
 
-  const [errors, setErrors] = useState<ErrorObject[]>([]);
+  const [errors, setErrorsState] = useControlled({
+    controlled: errorsProp,
+    default: [] as ErrorObject[],
+    name: "EditEntityModal",
+    state: "errors",
+  });
+
+  const setErrors = useCallback(
+    (newErrors: ErrorObject[]) => {
+      setErrorsState(newErrors);
+      onErrorsChange?.(newErrors);
+    },
+    [setErrorsState, onErrorsChange],
+  );
+
   const hasErrors = useMemo(() => errors.length > 0, [errors]);
 
   const handleError = useCallback(
@@ -173,12 +196,16 @@ const EditEntityModalContent = ({
 
   const ErrorBadgedAcceptButton = () => {
     const acceptButton = (
-      <Button onClick={handleAccept} disabled={hasErrors} variant="contained">
+      <Button
+        onClick={handleAccept}
+        disabled={preventSaveOnError && hasErrors}
+        variant="contained"
+      >
         {isStale || !firstTimeSaved ? t("save and accept") : t("accept")}
       </Button>
     );
 
-    if (!hasErrors) return acceptButton;
+    if (disableErrorBadge || !hasErrors) return acceptButton;
 
     return (
       <Tooltip
@@ -201,7 +228,7 @@ const EditEntityModalContent = ({
     <MuiEditDialog
       open={modal.visible}
       onClose={handleClose}
-      onSave={hasErrors ? undefined : handleSave}
+      onSave={preventSaveOnError && hasErrors ? undefined : handleSave}
       title={cardInfo.label}
       editMode={true}
       actions={
@@ -241,6 +268,10 @@ export const EditEntityModal = NiceModal.create(
     entityIRI,
     data: defaultData,
     disableLoad,
+    errors,
+    onErrorsChange,
+    preventSaveOnError = false,
+    disableErrorBadge = false,
   }: EditEntityModalProps) => {
     const modal = useModal();
     const { t } = useTranslation();
@@ -293,6 +324,10 @@ export const EditEntityModal = NiceModal.create(
         defaultData={defaultData}
         disableLoad={disableLoad}
         modal={modal}
+        errors={errors}
+        onErrorsChange={onErrorsChange}
+        preventSaveOnError={preventSaveOnError}
+        disableErrorBadge={disableErrorBadge}
       />
     );
   },
