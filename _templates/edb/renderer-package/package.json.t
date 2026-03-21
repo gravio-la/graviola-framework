@@ -27,8 +27,8 @@ to: packages/form-renderer/<%= name.split("/")[1] %>/package.json
     "dev": "tsup --watch",
     "lint": "eslint src/**/*.{ts,tsx}",
     "lint-fix": "eslint --fix src/**/*.{ts,tsx}",
-    "pack-clean": "bun run clean-package && (bun pm pack || true) ; bun run clean-package restore",
-    "publish-clean": "bun run clean-package && npm publish --access public && bun run clean-package restore"
+    "pack-tarball": "bun pm pack",
+    "release": "bun publish --access public"
   },
   "peerDependencies": {
     "@graviola/edb-state-hooks": "workspace:*",
@@ -55,9 +55,6 @@ to: packages/form-renderer/<%= name.split("/")[1] %>/package.json
     "eslint-config-edb": "workspace:*",
     "tsup": "^8.0.0",
     "typescript": "^5.8.2"
-  },
-  "clean-package": {
-    "extends": "../../../clean-package.config.cjs"
   },
   "eslintConfig": {
     "root": true,

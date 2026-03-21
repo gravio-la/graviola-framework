@@ -23,16 +23,13 @@ to: packages/<%= name.split("/")[1] %>/package.json
     "dev": "tsup --watch",
     "lint": "eslint \"**/*.ts*\"",
     "lint-fix": "eslint --fix \"**/*.ts*\"",
-    "pack-clean": "bun run clean-package && (bun pm pack || true) ; bun run clean-package restore",
-    "publish-clean": "bun run clean-package && npm publish --access public && bun run clean-package restore"
+    "pack-tarball": "bun pm pack",
+    "release": "bun publish --access public"
   },
   "devDependencies": {
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
     "eslint-config-edb": "workspace:*"
-  },
-  "clean-package": {
-    "extends": "../../../clean-package.config.cjs"
   },
   "eslintConfig": {
     "root": true,
