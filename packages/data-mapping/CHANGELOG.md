@@ -1,5 +1,35 @@
 # @graviola/edb-data-mapping
 
+## 0.3.2
+
+### Patch Changes
+
+- packaging fixes
+- Updated dependencies
+  - @graviola/edb-core-types@1.4.2
+  - @graviola/edb-core-utils@1.5.2
+
+## 0.3.1
+
+### Patch Changes
+
+- fixing catalog packaging
+- Updated dependencies
+  - @graviola/edb-core-types@1.4.1
+  - @graviola/edb-core-utils@1.5.1
+
+## 0.3.0
+
+### Minor Changes
+
+- typesafe filters and redesigned sparql and graph extraction architecture, bug fixes, api stabilisation, features
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/edb-core-types@1.4.0
+  - @graviola/edb-core-utils@1.5.0
+
 ## 0.2.7
 
 ### Patch Changes

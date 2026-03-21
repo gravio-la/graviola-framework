@@ -1,5 +1,17 @@
 # @graviola/async-oxigraph
 
+## 0.2.2
+
+### Patch Changes
+
+- packaging fixes
+
+## 0.2.1
+
+### Patch Changes
+
+- fixing catalog packaging
+
 ## 0.2.0
 
 ### Minor Changes

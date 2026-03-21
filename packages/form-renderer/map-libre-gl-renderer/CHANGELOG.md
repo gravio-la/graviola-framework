@@ -1,5 +1,35 @@
 # @graviola/map-libre-gl-renderer
 
+## 4.0.2
+
+### Patch Changes
+
+- packaging fixes
+- Updated dependencies
+  - @graviola/edb-state-hooks@1.6.2
+  - @graviola/edb-core-utils@1.5.2
+
+## 4.0.1
+
+### Patch Changes
+
+- fixing catalog packaging
+- Updated dependencies
+  - @graviola/edb-state-hooks@1.6.1
+  - @graviola/edb-core-utils@1.5.1
+
+## 4.0.0
+
+### Minor Changes
+
+- typesafe filters and redesigned sparql and graph extraction architecture, bug fixes, api stabilisation, features
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/edb-state-hooks@1.6.0
+  - @graviola/edb-core-utils@1.5.0
+
 ## 3.0.0
 
 ### Patch Changes

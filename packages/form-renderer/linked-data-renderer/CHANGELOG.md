@@ -1,5 +1,57 @@
 # @graviola/edb-linked-data-renderer
 
+## 5.0.7
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/edb-advanced-components@1.6.7
+
+## 5.0.2
+
+### Patch Changes
+
+- packaging fixes
+- Updated dependencies
+  - @graviola/edb-advanced-components@1.6.2
+  - @graviola/json-schema-utils@1.5.2
+  - @graviola/edb-basic-components@1.4.2
+  - @graviola/edb-data-mapping@0.3.2
+  - @graviola/edb-state-hooks@1.6.2
+  - @graviola/edb-core-utils@1.5.2
+  - @graviola/edb-ui-utils@0.3.2
+
+## 5.0.1
+
+### Patch Changes
+
+- fixing catalog packaging
+- Updated dependencies
+  - @graviola/edb-advanced-components@1.6.1
+  - @graviola/json-schema-utils@1.5.1
+  - @graviola/edb-basic-components@1.4.1
+  - @graviola/edb-data-mapping@0.3.1
+  - @graviola/edb-state-hooks@1.6.1
+  - @graviola/edb-core-utils@1.5.1
+  - @graviola/edb-ui-utils@0.3.1
+
+## 5.0.0
+
+### Minor Changes
+
+- typesafe filters and redesigned sparql and graph extraction architecture, bug fixes, api stabilisation, features
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/edb-advanced-components@1.6.0
+  - @graviola/json-schema-utils@1.5.0
+  - @graviola/edb-basic-components@1.4.0
+  - @graviola/edb-data-mapping@0.3.0
+  - @graviola/edb-state-hooks@1.6.0
+  - @graviola/edb-core-utils@1.5.0
+  - @graviola/edb-ui-utils@0.3.0
+
 ## 4.0.0
 
 ### Minor Changes

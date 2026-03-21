@@ -1,5 +1,23 @@
 # @graviola/edb-authorities
 
+## 0.3.2
+
+### Patch Changes
+
+- packaging fixes
+
+## 0.3.1
+
+### Patch Changes
+
+- fixing catalog packaging
+
+## 0.3.0
+
+### Minor Changes
+
+- typesafe filters and redesigned sparql and graph extraction architecture, bug fixes, api stabilisation, features
+
 ## 0.2.4
 
 ### Patch Changes

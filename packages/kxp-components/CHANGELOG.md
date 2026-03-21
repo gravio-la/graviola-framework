@@ -1,5 +1,44 @@
 # @graviola/edb-kxp-components
 
+## 1.1.2
+
+### Patch Changes
+
+- packaging fixes
+- Updated dependencies
+  - @graviola/edb-basic-components@1.4.2
+  - @graviola/edb-graph-traversal@1.5.2
+  - @graviola/edb-marc-to-rdf@1.2.2
+  - @graviola/edb-state-hooks@1.6.2
+  - @graviola/edb-kxp-utils@1.2.2
+
+## 1.1.1
+
+### Patch Changes
+
+- fixing catalog packaging
+- Updated dependencies
+  - @graviola/edb-basic-components@1.4.1
+  - @graviola/edb-graph-traversal@1.5.1
+  - @graviola/edb-marc-to-rdf@1.2.1
+  - @graviola/edb-state-hooks@1.6.1
+  - @graviola/edb-kxp-utils@1.2.1
+
+## 1.1.0
+
+### Minor Changes
+
+- typesafe filters and redesigned sparql and graph extraction architecture, bug fixes, api stabilisation, features
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/edb-basic-components@1.4.0
+  - @graviola/edb-graph-traversal@1.5.0
+  - @graviola/edb-marc-to-rdf@1.2.0
+  - @graviola/edb-state-hooks@1.6.0
+  - @graviola/edb-kxp-utils@1.2.0
+
 ## 1.0.10
 
 ### Patch Changes

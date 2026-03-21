@@ -1,5 +1,23 @@
 # @graviola/semantic-jsonform-types
 
+## 1.4.2
+
+### Patch Changes
+
+- packaging fixes
+
+## 1.4.1
+
+### Patch Changes
+
+- fixing catalog packaging
+
+## 1.4.0
+
+### Minor Changes
+
+- typesafe filters and redesigned sparql and graph extraction architecture, bug fixes, api stabilisation, features
+
 ## 1.3.0
 
 ### Minor Changes

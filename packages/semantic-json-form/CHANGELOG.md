@@ -1,5 +1,61 @@
 # @graviola/semantic-json-form
 
+## 1.5.7
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/edb-advanced-components@1.6.7
+  - @graviola/edb-linked-data-renderer@5.0.7
+
+## 1.5.2
+
+### Patch Changes
+
+- packaging fixes
+- Updated dependencies
+  - @graviola/edb-linked-data-renderer@5.0.2
+  - @graviola/semantic-jsonform-types@1.4.2
+  - @graviola/edb-advanced-components@1.6.2
+  - @graviola/json-schema-utils@1.5.2
+  - @graviola/edb-basic-components@1.4.2
+  - @graviola/entity-finder@1.4.2
+  - @graviola/jsonld-utils@1.5.2
+  - @graviola/edb-state-hooks@1.6.2
+
+## 1.5.1
+
+### Patch Changes
+
+- fixing catalog packaging
+- Updated dependencies
+  - @graviola/edb-linked-data-renderer@5.0.1
+  - @graviola/semantic-jsonform-types@1.4.1
+  - @graviola/edb-advanced-components@1.6.1
+  - @graviola/json-schema-utils@1.5.1
+  - @graviola/edb-basic-components@1.4.1
+  - @graviola/entity-finder@1.4.1
+  - @graviola/jsonld-utils@1.5.1
+  - @graviola/edb-state-hooks@1.6.1
+
+## 1.5.0
+
+### Minor Changes
+
+- typesafe filters and redesigned sparql and graph extraction architecture, bug fixes, api stabilisation, features
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/edb-linked-data-renderer@5.0.0
+  - @graviola/semantic-jsonform-types@1.4.0
+  - @graviola/edb-advanced-components@1.6.0
+  - @graviola/json-schema-utils@1.5.0
+  - @graviola/edb-basic-components@1.4.0
+  - @graviola/entity-finder@1.4.0
+  - @graviola/jsonld-utils@1.5.0
+  - @graviola/edb-state-hooks@1.6.0
+
 ## 1.4.0
 
 ### Minor Changes

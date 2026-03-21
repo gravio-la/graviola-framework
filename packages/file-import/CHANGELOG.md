@@ -1,5 +1,32 @@
 # @graviola/edb-file-import
 
+## 1.1.2
+
+### Patch Changes
+
+- packaging fixes
+- Updated dependencies
+  - @graviola/edb-maintenance-utils@1.2.2
+
+## 1.1.1
+
+### Patch Changes
+
+- fixing catalog packaging
+- Updated dependencies
+  - @graviola/edb-maintenance-utils@1.2.1
+
+## 1.1.0
+
+### Minor Changes
+
+- typesafe filters and redesigned sparql and graph extraction architecture, bug fixes, api stabilisation, features
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/edb-maintenance-utils@1.2.0
+
 ## 1.0.8
 
 ### Patch Changes

@@ -1,5 +1,35 @@
 # @graviola/jsonld-utils
 
+## 1.5.2
+
+### Patch Changes
+
+- packaging fixes
+- Updated dependencies
+  - @graviola/edb-graph-traversal@1.5.2
+  - @graviola/edb-core-utils@1.5.2
+
+## 1.5.1
+
+### Patch Changes
+
+- fixing catalog packaging
+- Updated dependencies
+  - @graviola/edb-graph-traversal@1.5.1
+  - @graviola/edb-core-utils@1.5.1
+
+## 1.5.0
+
+### Minor Changes
+
+- typesafe filters and redesigned sparql and graph extraction architecture, bug fixes, api stabilisation, features
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/edb-graph-traversal@1.5.0
+  - @graviola/edb-core-utils@1.5.0
+
 ## 1.3.0
 
 ### Minor Changes

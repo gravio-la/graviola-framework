@@ -1,5 +1,38 @@
 # @graviola/sparql-store-provider
 
+## 5.0.2
+
+### Patch Changes
+
+- packaging fixes
+- Updated dependencies
+  - @graviola/sparql-db-impl@1.5.2
+  - @graviola/remote-query-implementations@1.4.2
+  - @graviola/edb-state-hooks@1.6.2
+
+## 5.0.1
+
+### Patch Changes
+
+- fixing catalog packaging
+- Updated dependencies
+  - @graviola/sparql-db-impl@1.5.1
+  - @graviola/remote-query-implementations@1.4.1
+  - @graviola/edb-state-hooks@1.6.1
+
+## 5.0.0
+
+### Minor Changes
+
+- typesafe filters and redesigned sparql and graph extraction architecture, bug fixes, api stabilisation, features
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/sparql-db-impl@1.5.0
+  - @graviola/remote-query-implementations@1.4.0
+  - @graviola/edb-state-hooks@1.6.0
+
 ## 4.0.0
 
 ### Minor Changes

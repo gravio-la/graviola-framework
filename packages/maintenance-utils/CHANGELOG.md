@@ -1,5 +1,35 @@
 # @graviola/edb-maintenance-utils
 
+## 1.2.2
+
+### Patch Changes
+
+- packaging fixes
+- Updated dependencies
+  - @graviola/json-schema-utils@1.5.2
+  - @graviola/edb-graph-traversal@1.5.2
+
+## 1.2.1
+
+### Patch Changes
+
+- fixing catalog packaging
+- Updated dependencies
+  - @graviola/json-schema-utils@1.5.1
+  - @graviola/edb-graph-traversal@1.5.1
+
+## 1.2.0
+
+### Minor Changes
+
+- typesafe filters and redesigned sparql and graph extraction architecture, bug fixes, api stabilisation, features
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/json-schema-utils@1.5.0
+  - @graviola/edb-graph-traversal@1.5.0
+
 ## 1.1.8
 
 ### Patch Changes

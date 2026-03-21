@@ -1,5 +1,32 @@
 # @graviola/edb-wikidata-utils
 
+## 1.2.2
+
+### Patch Changes
+
+- packaging fixes
+- Updated dependencies
+  - @graviola/sparql-schema@1.5.2
+
+## 1.2.1
+
+### Patch Changes
+
+- fixing catalog packaging
+- Updated dependencies
+  - @graviola/sparql-schema@1.5.1
+
+## 1.2.0
+
+### Minor Changes
+
+- typesafe filters and redesigned sparql and graph extraction architecture, bug fixes, api stabilisation, features
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/sparql-schema@1.5.0
+
 ## 1.1.0
 
 ### Minor Changes

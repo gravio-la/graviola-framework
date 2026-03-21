@@ -1,5 +1,35 @@
 # @graviola/data-mapping-hooks
 
+## 1.2.2
+
+### Patch Changes
+
+- packaging fixes
+- Updated dependencies
+  - @graviola/edb-data-mapping@0.3.2
+  - @graviola/edb-state-hooks@1.6.2
+
+## 1.2.1
+
+### Patch Changes
+
+- fixing catalog packaging
+- Updated dependencies
+  - @graviola/edb-data-mapping@0.3.1
+  - @graviola/edb-state-hooks@1.6.1
+
+## 1.2.0
+
+### Minor Changes
+
+- typesafe filters and redesigned sparql and graph extraction architecture, bug fixes, api stabilisation, features
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/edb-data-mapping@0.3.0
+  - @graviola/edb-state-hooks@1.6.0
+
 ## 1.1.8
 
 ### Patch Changes

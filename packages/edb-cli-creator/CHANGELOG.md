@@ -1,5 +1,32 @@
 # @graviola/edb-cli-creator
 
+## 1.3.2
+
+### Patch Changes
+
+- packaging fixes
+- Updated dependencies
+  - @graviola/edb-core-utils@1.5.2
+
+## 1.3.1
+
+### Patch Changes
+
+- fixing catalog packaging
+- Updated dependencies
+  - @graviola/edb-core-utils@1.5.1
+
+## 1.3.0
+
+### Minor Changes
+
+- typesafe filters and redesigned sparql and graph extraction architecture, bug fixes, api stabilisation, features
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/edb-core-utils@1.5.0
+
 ## 1.2.5
 
 ### Patch Changes

@@ -1,5 +1,32 @@
 # @graviola/edb-basic-components
 
+## 1.4.2
+
+### Patch Changes
+
+- packaging fixes
+- Updated dependencies
+  - @graviola/edb-state-hooks@1.6.2
+
+## 1.4.1
+
+### Patch Changes
+
+- fixing catalog packaging
+- Updated dependencies
+  - @graviola/edb-state-hooks@1.6.1
+
+## 1.4.0
+
+### Minor Changes
+
+- typesafe filters and redesigned sparql and graph extraction architecture, bug fixes, api stabilisation, features
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/edb-state-hooks@1.6.0
+
 ## 1.3.0
 
 ### Minor Changes

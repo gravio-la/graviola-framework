@@ -1,5 +1,23 @@
 # @slub/sparql-db-impl
 
+## 1.5.2
+
+### Patch Changes
+
+- packaging fixes
+
+## 1.5.1
+
+### Patch Changes
+
+- fixing catalog packaging
+
+## 1.5.0
+
+### Minor Changes
+
+- typesafe filters and redesigned sparql and graph extraction architecture, bug fixes, api stabilisation, features
+
 ## 1.4.0
 
 ### Minor Changes

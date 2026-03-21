@@ -1,5 +1,32 @@
 # @graviola/edb-virtualized-components
 
+## 1.1.2
+
+### Patch Changes
+
+- packaging fixes
+- Updated dependencies
+  - @graviola/edb-ui-utils@0.3.2
+
+## 1.1.1
+
+### Patch Changes
+
+- fixing catalog packaging
+- Updated dependencies
+  - @graviola/edb-ui-utils@0.3.1
+
+## 1.1.0
+
+### Minor Changes
+
+- typesafe filters and redesigned sparql and graph extraction architecture, bug fixes, api stabilisation, features
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/edb-ui-utils@0.3.0
+
 ## 1.0.7
 
 ### Patch Changes
