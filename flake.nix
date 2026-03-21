@@ -27,6 +27,14 @@
           PRISMA_SCHEMA_ENGINE_BINARY = "${pkgs.prisma-engines}/bin/schema-engine";
           CYPRESS_RUN_BINARY = "${pkgs.cypress}/bin/Cypress";
         };
+        # Use nix-provided bun (from nixpkgs unstable) for install and compilation:
+        #   nix run .#bun -- install
+        #   nix run .#bun -- run build
+        #   nix run .#unstable -- install   (same as #bun)
+        apps = {
+          default = { type = "app"; program = "${pkgs.bun}/bin/bun"; };
+          bun = { type = "app"; program = "${pkgs.bun}/bin/bun"; };
+        };
       }
     );
 }
