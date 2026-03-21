@@ -24,7 +24,7 @@
     "build:prisma": {
       "cache": false
     },
-    "publish-clean": {
+    "release": {
       "dependsOn": ["^build"],
       "cache": false
     },
