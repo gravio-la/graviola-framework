@@ -19,7 +19,7 @@ import {
   Grid,
 } from "@mui/material";
 import isEmpty from "lodash-es/isEmpty";
-import { useMemo } from "react";
+import { type ComponentType, useMemo } from "react";
 import rehypeExternalLinks from "rehype-external-links";
 import rehypeSanitize from "rehype-sanitize";
 
@@ -77,7 +77,7 @@ const GroupComponent = ({
       {!isEmpty(i18nLabel) && <CardHeader title={i18nLabel} />}
       <CardContent>
         {i18nDescription && i18nDescription.length > 0 && (
-          <Grid  xs>
+          <Grid>
             <FormHelperText>
               <MDEditorMarkdown
                 source={i18nDescription}
@@ -128,6 +128,5 @@ const MaterializedGroupLayoutRendererComponent = ({
   );
 };
 
-export const MaterializedGroupLayoutRenderer = withJsonFormsLayoutProps(
-  MaterializedGroupLayoutRendererComponent,
-);
+export const MaterializedGroupLayoutRenderer: ComponentType<LayoutProps> =
+  withJsonFormsLayoutProps(MaterializedGroupLayoutRendererComponent);

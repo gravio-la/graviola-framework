@@ -15,35 +15,27 @@ import type {
  */
 const MDEditor: ComponentType<MDEditorProps & RefAttributes<ContextStore>> =
   dynamic(
-    () => {
-      const promise:
-        | Promise<
-            ForwardRefExoticComponent<
-              MDEditorProps & RefAttributes<ContextStore>
-            > & {
-              Markdown: ForwardRefExoticComponent<
-                MarkdownPreviewProps & RefAttributes<MarkdownPreviewRef>
-              >;
-            }
-          >
-        | LoaderComponent<MDEditorProps & RefAttributes<ContextStore>> =
-        import("@uiw/react-md-editor").then((mod) => mod.default);
-      return promise;
-    },
+    () =>
+      import("@uiw/react-md-editor").then(
+        (mod) =>
+          mod.default as unknown as ComponentType<
+            MDEditorProps & RefAttributes<ContextStore>
+          >,
+      ),
     { ssr: false },
-  );
+  ) as ComponentType<MDEditorProps & RefAttributes<ContextStore>>;
+
 export const MDEditorMarkdown: ComponentType<
   MarkdownPreviewProps & RefAttributes<MarkdownPreviewRef>
 > = dynamic(
-  () => {
-    const promise: Promise<
-      React.ForwardRefExoticComponent<
-        MarkdownPreviewProps & RefAttributes<MarkdownPreviewRef>
-      >
-    > = import("@uiw/react-md-editor").then((mod) => mod.default.Markdown);
-    return promise;
-  },
+  () =>
+    import("@uiw/react-md-editor").then(
+      (mod) =>
+        mod.default.Markdown as unknown as ComponentType<
+          MarkdownPreviewProps & RefAttributes<MarkdownPreviewRef>
+        >,
+    ),
   { ssr: false },
-);
+) as ComponentType<MarkdownPreviewProps & RefAttributes<MarkdownPreviewRef>>;
 
 export default MDEditor;
