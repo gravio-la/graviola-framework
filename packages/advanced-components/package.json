@@ -1,6 +1,6 @@
 {
   "name": "@graviola/edb-advanced-components",
-  "version": "1.5.0",
+  "version": "1.6.7",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -24,8 +24,8 @@
     "dev": "tsup --watch",
     "lint": "eslint src/**/*.{ts,tsx}",
     "lint-fix": "eslint --fix src/**/*.{ts,tsx}",
-    "pack-clean": "bun run clean-package && (bun pm pack || true) ; bun run clean-package restore",
-    "publish-clean": "bun run clean-package && npm publish --access public && bun run clean-package restore"
+    "release": "bun publish --access public",
+    "pack-tarball": "bun pm pack"
   },
   "peerDependencies": {
     "@mui/material": "catalog:mui",
@@ -61,9 +61,6 @@
     "typescript": "^5.8.2",
     "@types/json-schema": "catalog:",
     "ajv": "^8.17.1"
-  },
-  "clean-package": {
-    "extends": "../../../clean-package.config.cjs"
   },
   "eslintConfig": {
     "root": true,

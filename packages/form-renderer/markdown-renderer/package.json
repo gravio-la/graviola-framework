@@ -1,6 +1,6 @@
 {
   "name": "@graviola/edb-markdown-renderer",
-  "version": "1.3.0",
+  "version": "1.4.6",
   "description": "A markdown renderer for json forms",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -24,16 +24,16 @@
   ],
   "scripts": {
     "depcheck": "depcheck",
-    "build": "tsup src/index.tsx --format esm,cjs --dts --external react",
-    "dev": "tsup src/index.tsx --format esm,cjs --watch --dts --external react",
+    "build": "tsup src/index.tsx --format esm,cjs --external react && tsc --declaration --emitDeclarationOnly --skipLibCheck --outDir dist",
+    "dev": "tsup src/index.tsx --format esm,cjs --watch --external react",
     "lint": "eslint \"**/*.{ts,tsx}\"",
     "lint-fix": "eslint --fix \"**/*.{ts,tsx}\"",
     "test": "jest",
     "test:watch": "jest --watch --color",
     "test:coverage": "jest --coverage",
     "doc": "typedoc",
-    "pack-clean": "bun run clean-package && (bun pm pack || true) ; bun run clean-package restore",
-    "publish-clean": "bun run clean-package && npm publish --access public && bun run clean-package restore"
+    "release": "bun publish --access public",
+    "pack-tarball": "bun pm pack"
   },
   "devDependencies": {
     "@graviola/edb-tsconfig": "workspace:*",
@@ -65,9 +65,6 @@
       "src/index.tsx"
     ],
     "skipErrorChecking": true
-  },
-  "clean-package": {
-    "extends": "../../../clean-package.config.cjs"
   },
   "eslintConfig": {
     "root": true,

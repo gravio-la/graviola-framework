@@ -1,7 +1,7 @@
 {
   "name": "@graviola/edb-authorities",
   "description": "Methods and metadata to search and retrieve data from different authorities",
-  "version": "0.2.4",
+  "version": "0.3.6",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -24,11 +24,11 @@
     "dev": "tsup --watch",
     "lint": "eslint src/**/*.ts",
     "lint-fix": "eslint --fix src/**/*.ts",
-    "pack-clean": "bun run clean-package && (bun pm pack || true) ; bun run clean-package restore",
-    "publish-clean": "bun run clean-package && npm publish --access public && bun run clean-package restore",
     "test": "jest",
     "test:watch": "jest --watch --color",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "release": "bun publish --access public",
+    "pack-tarball": "bun pm pack"
   },
   "devDependencies": {
     "@graviola/edb-tsconfig": "workspace:*",
@@ -40,9 +40,6 @@
   },
   "dependencies": {
     "cross-fetch": "^4.0.0"
-  },
-  "clean-package": {
-    "extends": "../../../clean-package.config.cjs"
   },
   "eslintConfig": {
     "root": true,

@@ -1,7 +1,7 @@
 {
   "name": "@graviola/edb-debug-utils",
   "description": "Frontend Debug utilities for the EDB framework",
-  "version": "1.2.2",
+  "version": "1.3.6",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -24,12 +24,12 @@
     "dev": "tsup --watch",
     "lint": "eslint src/**/*.{ts,tsx}",
     "lint-fix": "eslint --fix src/**/*.{ts,tsx}",
-    "pack-clean": "bun run clean-package && (bun pm pack || true) ; bun run clean-package restore",
-    "publish-clean": "bun run clean-package && npm publish --access public && bun run clean-package restore",
     "test": "jest",
     "test:watch": "jest --watch --color",
     "test:coverage": "jest --coverage",
-    "doc": "typedoc"
+    "doc": "typedoc",
+    "release": "bun publish --access public",
+    "pack-tarball": "bun pm pack"
   },
   "devDependencies": {
     "@graviola/edb-tsconfig": "workspace:*",
@@ -50,9 +50,6 @@
     "@graviola/edb-state-hooks": "workspace:*",
     "@triply/yasgui": "^4.2.28",
     "react-json-view-lite": "^2.4.1"
-  },
-  "clean-package": {
-    "extends": "../../../clean-package.config.cjs"
   },
   "eslintConfig": {
     "root": true,

@@ -1,6 +1,6 @@
 {
   "name": "@graviola/restfull-fetch-db-impl",
-  "version": "1.4.0",
+  "version": "1.5.6",
   "description": "Store implementation that fetches and stores data from a RESTful API",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -32,8 +32,8 @@
     "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch --color",
     "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
     "doc": "typedoc",
-    "pack-clean": "bun run clean-package && (bun pm pack || true) ; bun run clean-package restore",
-    "publish-clean": "bun run clean-package && npm publish --access public && bun run clean-package restore"
+    "release": "bun publish --access public",
+    "pack-tarball": "bun pm pack"
   },
   "devDependencies": {
     "@graviola/edb-core-types": "workspace:*",
@@ -53,9 +53,6 @@
       "src/index.ts"
     ],
     "skipErrorChecking": true
-  },
-  "clean-package": {
-    "extends": "../../../clean-package.config.cjs"
   },
   "eslintConfig": {
     "root": true,

@@ -1,6 +1,6 @@
 {
   "name": "@graviola/edb-core-types",
-  "version": "1.3.0",
+  "version": "1.4.6",
   "description": "Core types for EDB",
   "type": "module",
   "types": "./index.d.ts",
@@ -13,8 +13,8 @@
     "lint": "eslint \"**/*.d.ts\"",
     "lint-fix": "eslint --fix \"**/*.d.ts\"",
     "doc": "typedoc",
-    "pack-clean": "bun run clean-package && (bun pm pack || true) ; bun run clean-package restore",
-    "publish-clean": "bun run clean-package && npm publish --access public && bun run clean-package restore"
+    "release": "bun publish --access public",
+    "pack-tarball": "bun pm pack"
   },
   "peerDependencies": {
     "@rdfjs/namespace": "catalog:rdf",
@@ -30,9 +30,6 @@
       "index.d.ts"
     ],
     "skipErrorChecking": true
-  },
-  "clean-package": {
-    "extends": "../../../clean-package.config.cjs"
   },
   "eslintConfig": {
     "extends": "edb"

@@ -1,6 +1,6 @@
 {
   "name": "@graviola/edb-state-hooks",
-  "version": "1.5.1",
+  "version": "1.6.6",
   "description": "use hooks that implement global state management logic for the EDB project",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -25,12 +25,12 @@
     "dev": "tsup --watch",
     "lint": "eslint src/**/*.ts",
     "lint-fix": "eslint --fix src/**/*.ts",
-    "pack-clean": "bun run clean-package && (bun pm pack || true) ; bun run clean-package restore",
-    "publish-clean": "bun run clean-package && npm publish --access public && bun run clean-package restore",
     "test": "jest",
     "test:watch": "jest --watch --color",
     "test:coverage": "jest --coverage",
-    "doc": "typedoc"
+    "doc": "typedoc",
+    "release": "bun publish --access public",
+    "pack-tarball": "bun pm pack"
   },
   "devDependencies": {
     "@graviola/edb-core-types": "workspace:*",
@@ -58,9 +58,6 @@
     "@graviola/edb-core-utils": "workspace:*",
     "@graviola/json-schema-utils": "workspace:*",
     "@graviola/jsonld-utils": "workspace:*"
-  },
-  "clean-package": {
-    "extends": "../../../clean-package.config.cjs"
   },
   "eslintConfig": {
     "root": true,
