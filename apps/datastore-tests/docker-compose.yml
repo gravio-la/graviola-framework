@@ -1,0 +1,113 @@
+version: "3.9"
+
+# Docker services for datastore-tests.
+# Start all: docker compose up -d --wait
+# Then run:  OXIGRAPH_URL=http://localhost:7878 BLAZEGRAPH_URL=http://localhost:9999/bigdata \
+#            POSTGRES_URL=postgresql://test:test@localhost:5432/graviola_test \
+#            MARIADB_URL=mysql://test:test@localhost:3306/graviola_test \
+#            bun test
+
+services:
+
+  # ─── SPARQL stores ──────────────────────────────────────────────────────────
+
+  oxigraph:
+    image: ghcr.io/oxigraph/oxigraph:latest
+    platform: linux/amd64
+    ports:
+      - "7878:7878"
+    command: serve --location /data --bind 0.0.0.0:7878
+    healthcheck:
+      test: ["CMD", "sh", "-c", "wget -q --spider http://localhost:7878/health || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  blazegraph:
+    image: lyrasis/blazegraph:2.1.6
+    ports:
+      - "9999:9999"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "sh",
+          "-c",
+          "wget -q --spider http://localhost:9999/bigdata/ || exit 1",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+    # Blazegraph can be slow to start; give it extra time
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+
+  # ─── Relational databases ───────────────────────────────────────────────────
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: graviola_test
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "test", "-d", "graviola_test"]
+      interval: 3s
+      timeout: 3s
+      retries: 15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  mariadb:
+    image: mariadb:11
+    environment:
+      MARIADB_DATABASE: graviola_test
+      MARIADB_USER: test
+      MARIADB_PASSWORD: test
+      MARIADB_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "healthcheck.sh",
+          "--su-mysql",
+          "--connect",
+          "--innodb_initialized",
+        ]
+      interval: 3s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+  # ─── Document stores ────────────────────────────────────────────────────────
+
+  mongodb:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mongosh",
+          "--quiet",
+          "--eval",
+          "db.adminCommand('ping').ok",
+        ]
+      interval: 3s
+      timeout: 5s
+      retries: 15
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  postgres_data:
+  mariadb_data:
+  mongodb_data:

@@ -1,0 +1,38 @@
+{
+  "name": "@graviola/datastore-tests",
+  "description": "Integration/contract tests for all AbstractDatastore implementations",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "pretest": "bun scripts/setup-prisma.ts",
+    "test": "bun test",
+    "test:local": "bun test --testPathPattern='datastore'",
+    "docker:up": "docker compose up -d --wait",
+    "docker:down": "docker compose down"
+  },
+  "dependencies": {
+    "@graviola/sparql-db-impl": "workspace:*",
+    "@graviola/prisma-db-impl": "workspace:*",
+    "@graviola/json-schema-utils": "workspace:*",
+    "@graviola/json-schema-prisma-utils": "workspace:*",
+    "@graviola/edb-core-types": "workspace:*",
+    "@graviola/edb-global-types": "workspace:*",
+    "@rdfjs/dataset": "^2.0.2",
+    "@rdfjs/types": "catalog:rdf",
+    "n3": "^1.17.2"
+  },
+  "devDependencies": {
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@types/json-schema": "catalog:",
+    "typescript": "^5.8.2"
+  },
+  "peerDependencies": {
+    "@prisma/client": ">=5",
+    "prisma": ">=5"
+  },
+  "peerDependenciesMeta": {
+    "@prisma/client": { "optional": true },
+    "prisma": { "optional": true }
+  }
+}
