@@ -12,15 +12,16 @@
     "docker:down": "docker compose down"
   },
   "dependencies": {
-    "@graviola/sparql-db-impl": "workspace:*",
-    "@graviola/prisma-db-impl": "workspace:*",
-    "@graviola/json-schema-utils": "workspace:*",
-    "@graviola/json-schema-prisma-utils": "workspace:*",
     "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-global-types": "workspace:*",
+    "@graviola/json-schema-prisma-utils": "workspace:*",
+    "@graviola/json-schema-utils": "workspace:*",
+    "@graviola/prisma-db-impl": "workspace:*",
+    "@graviola/sparql-db-impl": "workspace:*",
     "@rdfjs/dataset": "^2.0.2",
     "@rdfjs/types": "catalog:rdf",
-    "n3": "^1.17.2"
+    "n3": "^1.17.2",
+    "oxigraph": "^0.5.6"
   },
   "devDependencies": {
     "@graviola/edb-tsconfig": "workspace:*",
@@ -32,7 +33,11 @@
     "prisma": ">=5"
   },
   "peerDependenciesMeta": {
-    "@prisma/client": { "optional": true },
-    "prisma": { "optional": true }
+    "@prisma/client": {
+      "optional": true
+    },
+    "prisma": {
+      "optional": true
+    }
   }
 }

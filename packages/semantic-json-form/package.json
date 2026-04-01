@@ -54,6 +54,7 @@
     "@graviola/edb-tsup-config": "workspace:*",
     "@rdfjs/namespace": "catalog:rdf",
     "@storybook/react": "10.0.7",
+    "@types/react": "catalog:",
     "@types/json-schema": "catalog:",
     "eslint-config-edb": "workspace:*",
     "tsup": "^8.0.0"
