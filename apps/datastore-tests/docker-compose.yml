@@ -24,16 +24,16 @@ services:
       retries: 10
 
   blazegraph:
-    image: lyrasis/blazegraph:2.1.6
+    image: lyrasis/blazegraph:2.1.5
     ports:
-      - "9999:9999"
+      - "9999:8080"
     healthcheck:
       test:
         [
           "CMD",
           "sh",
           "-c",
-          "wget -q --spider http://localhost:9999/bigdata/ || exit 1",
+          "wget -q --spider http://localhost:8080/bigdata/ || exit 1",
         ]
       interval: 5s
       timeout: 5s
@@ -70,7 +70,7 @@ services:
       MARIADB_PASSWORD: test
       MARIADB_ROOT_PASSWORD: root
     ports:
-      - "3306:3306"
+      - "3307:3306"
     healthcheck:
       test:
         [
