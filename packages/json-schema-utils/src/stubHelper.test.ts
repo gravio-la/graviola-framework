@@ -25,6 +25,23 @@ const schemaWithEntities: JSONSchema7 = {
   },
 };
 
+/** Merged Zod-style schema: string fields are often $ref to helper defs, not inline type: string */
+const schemaWithPrimitiveRefProperties: JSONSchema7 = {
+  $schema: "http://json-schema.org/draft-07/schema#",
+  definitions: {
+    GeoFeature: {
+      type: "object",
+      properties: {
+        "@id": { type: "string" },
+        geo: { $ref: "#/definitions/__wktString" },
+        name: { $ref: "#/definitions/__nameString" },
+      },
+    },
+    __wktString: { type: "string" },
+    __nameString: { type: "string" },
+  },
+};
+
 const schemaWithNonEntityRefs: JSONSchema7 = {
   $schema: "http://json-schema.org/draft-07/schema#",
   $id: "https://example.com/plant.schema.json",
@@ -111,6 +128,17 @@ describe("JSON Schema Utility Functions", () => {
           },
         },
       },
+    });
+  });
+
+  it("GeoFeatureStub should keep primitive fields that use $ref to string definitions", () => {
+    const stub = prepareStubbedSchema(schemaWithPrimitiveRefProperties);
+    const geoFeatureStub = stub.definitions?.GeoFeatureStub as JSONSchema7;
+    expect(geoFeatureStub?.properties?.geo).toEqual({
+      $ref: "#/definitions/__wktString",
+    });
+    expect(geoFeatureStub?.properties?.name).toEqual({
+      $ref: "#/definitions/__nameString",
     });
   });
 

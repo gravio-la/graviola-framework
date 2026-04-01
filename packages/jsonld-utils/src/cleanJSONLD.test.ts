@@ -6,6 +6,19 @@ import {
   cleanJSONLD,
   pruneLinkedDocumentsToReferences,
 } from "./cleanJSONLD";
+import {
+  GARDEN_IRI,
+  geoFeatureRootSchema,
+  geoFeatureRootSchemaZodOptionalStyle,
+} from "./geo-feature-schema.fixture";
+
+/** Same as bringDefinitionToTop(schema, "GeoFeature") for root schemas that only define `definitions`. */
+const bringGeoFeatureToTop = (schema: JSONSchema7): JSONSchema7 => {
+  const def = schema.definitions?.GeoFeature as JSONSchema7 | undefined;
+  if (!def) throw new Error("fixture: missing definitions.GeoFeature");
+  const { title: _t, description: _d, ...rest } = schema;
+  return { ...rest, ...def };
+};
 
 describe("cleanJSONLD", () => {
   // Shared options for all tests
@@ -314,6 +327,45 @@ describe("cleanJSONLD", () => {
   });
 
   describe("cleanJSONLD", () => {
+    const gardenGeoOptions = {
+      defaultPrefix: GARDEN_IRI,
+      jsonldContext: { "@context": { "@vocab": GARDEN_IRI } },
+      keepContext: true,
+      pruneLinkedDocuments: true,
+    };
+
+    it("GeoFeature: preserves WKT geo and modificationTime (pergola-style schema)", async () => {
+      const schema = bringGeoFeatureToTop(geoFeatureRootSchema);
+      const entityIRI = `${GARDEN_IRI}GeoFeature/kgaz2ac3f5g`;
+      const wkt =
+        "POLYGON ((13.731322209 51.083341811, 13.731324438 51.083328847))";
+      const data = {
+        "@id": entityIRI,
+        "@type": `${GARDEN_IRI}GeoFeature`,
+        geo: wkt,
+        modificationTime: "2026-03-28T01:41:29.764Z",
+      };
+      const result = await cleanJSONLD(data as any, schema, gardenGeoOptions);
+      expect(result.geo).toBe(wkt);
+      expect(result.modificationTime).toBe("2026-03-28T01:41:29.764Z");
+    });
+
+    it("GeoFeature: preserves literals when schema uses Zod-style type [string, null] (upsert regression)", async () => {
+      const schema = bringGeoFeatureToTop(geoFeatureRootSchemaZodOptionalStyle);
+      const entityIRI = `${GARDEN_IRI}GeoFeature/kgaz2ac3f5g`;
+      const wkt =
+        "POLYGON ((13.731322209 51.083341811, 13.731324438 51.083328847))";
+      const data = {
+        "@id": entityIRI,
+        "@type": `${GARDEN_IRI}GeoFeature`,
+        geo: wkt,
+        modificationTime: "2026-03-28T01:41:29.764Z",
+      };
+      const result = await cleanJSONLD(data as any, schema, gardenGeoOptions);
+      expect(result.geo).toBe(wkt);
+      expect(result.modificationTime).toBe("2026-03-28T01:41:29.764Z");
+    });
+
     it("should accept the expected parameters", () => {
       const data = { "@id": "http://example.com/entity" };
       const schema: JSONSchema7 = { type: "object" };

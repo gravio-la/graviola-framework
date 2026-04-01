@@ -1,24 +1,42 @@
 import { JSONSchema7, JSONSchema7Definition } from "json-schema";
 import isObject from "lodash-es/isObject";
 
-import { defs, getDefintitionKey, isJSONSchema } from "./jsonSchema";
+import {
+  defs,
+  getDefintitionKey,
+  isJSONSchema,
+  isPrimitive,
+} from "./jsonSchema";
 import { resolveSchema } from "./resolver";
 
 export type GenRequiredPropertiesFunction = (modelName: string) => string[];
 export type GeneratePropertiesFunction = (
   modelName: string,
 ) => JSONSchema7["properties"];
-export const filterForPrimitives = (properties: JSONSchema7["properties"]) =>
+
+/**
+ * Keeps properties that are primitive-valued (direct type or $ref to a primitive definition).
+ */
+export const filterForPrimitives = (
+  properties: JSONSchema7["properties"],
+  rootSchema?: JSONSchema7,
+) =>
   Object.fromEntries(
-    Object.entries(properties || {}).filter(
-      ([, value]) =>
-        typeof value === "object" &&
-        (value.type === "string" ||
-          value.type === "number" ||
-          value.type === "integer" ||
-          value.oneOf ||
-          value.type === "boolean"),
-    ),
+    Object.entries(properties || {}).filter(([, value]) => {
+      if (typeof value !== "object" || value === null) return false;
+      const v = value as JSONSchema7;
+      if (isPrimitive(v.type as string | undefined) || v.oneOf) {
+        return true;
+      }
+      if (v.$ref && rootSchema) {
+        const resolved = resolveSchema(rootSchema, v.$ref, rootSchema);
+        if (resolved && isJSONSchema(resolved as JSONSchema7Definition)) {
+          const r = resolved as JSONSchema7;
+          return isPrimitive(r.type as string | undefined) || Boolean(r.oneOf);
+        }
+      }
+      return false;
+    }),
   );
 
 export type RefAppendOptions = {
@@ -180,7 +198,7 @@ export const definitionsToStubDefinitions = (
       ...((isObject(value) ? value : {}) as Object),
       required: [],
       properties: isObject(value)
-        ? filterForPrimitives((value as any)?.properties)
+        ? filterForPrimitives((value as any)?.properties, rootSchema)
         : undefined,
     };
     return {
