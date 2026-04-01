@@ -139,7 +139,10 @@ export const initSPARQLStore = (
       return await exists(entityIRI, typeNameToTypeIRI(typeName), askFetch);
     },
     removeDocument: async (typeName, entityIRI) => {
-      const schema = bringDefinitionToTop(rootSchema, typeName) as JSONSchema7;
+      const schema = bringDefinitionToTop(
+        makeStubSchema ? makeStubSchema(rootSchema) : rootSchema,
+        typeName,
+      ) as JSONSchema7;
       return await remove(
         entityIRI,
         typeNameToTypeIRI(typeName),
