@@ -1,6 +1,6 @@
 {
   "name": "@graviola/sparql-db-impl",
-  "version": "1.5.6",
+  "version": "1.5.11",
   "description": "a set of store specific implementations of SPARQL query builders",
   "type": "module",
   "main": "./dist/index.cjs",

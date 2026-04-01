@@ -1,5 +1,14 @@
 # @graviola/edb-maintenance-utils
 
+## 1.2.7
+
+### Patch Changes
+
+- fixing wrong package pinning in release pipeline
+- Updated dependencies
+  - @graviola/json-schema-utils@1.5.7
+  - @graviola/edb-graph-traversal@1.5.7
+
 ## 1.2.2
 
 ### Patch Changes

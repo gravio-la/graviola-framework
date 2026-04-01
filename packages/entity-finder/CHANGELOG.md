@@ -1,5 +1,23 @@
 # @graviola/entity-finder
 
+## 1.4.8
+
+### Patch Changes
+
+- fixing wrong package pinning in release pipeline
+- Updated dependencies
+  - @graviola/data-mapping-hooks@1.2.8
+  - @graviola/edb-basic-components@1.4.8
+  - @graviola/edb-state-hooks@1.6.8
+
+## 1.4.7
+
+### Patch Changes
+
+- @graviola/edb-state-hooks@1.6.7
+- @graviola/edb-basic-components@1.4.7
+- @graviola/data-mapping-hooks@1.2.7
+
 ## 1.4.2
 
 ### Patch Changes

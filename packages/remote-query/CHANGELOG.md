@@ -1,5 +1,11 @@
 # @slub/remote-query-implementations
 
+## 1.4.7
+
+### Patch Changes
+
+- fixing wrong package pinning in release pipeline
+
 ## 1.4.2
 
 ### Patch Changes

@@ -1,7 +1,7 @@
 {
   "name": "@graviola/edb-authorities",
   "description": "Methods and metadata to search and retrieve data from different authorities",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",

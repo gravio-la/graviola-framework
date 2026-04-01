@@ -1,5 +1,36 @@
 # @graviola/sparql-store-provider
 
+## 5.0.10
+
+### Patch Changes
+
+- fixing wrong package pinning in release pipeline
+- Updated dependencies
+  - @graviola/sparql-db-impl@1.5.11
+  - @graviola/remote-query-implementations@1.4.7
+  - @graviola/edb-state-hooks@1.6.8
+
+## 5.0.9
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/sparql-db-impl@1.5.9
+
+## 5.0.8
+
+### Patch Changes
+
+- @graviola/sparql-db-impl@1.5.8
+
+## 5.0.7
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/sparql-db-impl@1.5.7
+  - @graviola/edb-state-hooks@1.6.7
+
 ## 5.0.2
 
 ### Patch Changes

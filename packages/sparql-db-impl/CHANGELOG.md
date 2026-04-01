@@ -1,5 +1,37 @@
 # @slub/sparql-db-impl
 
+## 1.5.11
+
+### Patch Changes
+
+- fixing wrong package pinning in release pipeline
+- Updated dependencies
+  - @graviola/json-schema-utils@1.5.7
+  - @graviola/sparql-schema@1.5.9
+  - @graviola/jsonld-utils@1.5.8
+
+## 1.5.9
+
+### Patch Changes
+
+- pass stub schema to remove operation to prevent greedy delete
+
+## 1.5.8
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/sparql-schema@1.5.8
+
+## 1.5.7
+
+### Patch Changes
+
+- fix possible nested ddocument override in upsert
+- Updated dependencies
+  - @graviola/jsonld-utils@1.5.7
+  - @graviola/sparql-schema@1.5.7
+
 ## 1.5.2
 
 ### Patch Changes

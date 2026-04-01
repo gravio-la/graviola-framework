@@ -1,5 +1,24 @@
 # @graviola/edb-kxp-components
 
+## 1.1.5
+
+### Patch Changes
+
+- fixing wrong package pinning in release pipeline
+- Updated dependencies
+  - @graviola/edb-basic-components@1.4.8
+  - @graviola/edb-graph-traversal@1.5.7
+  - @graviola/edb-marc-to-rdf@1.2.7
+  - @graviola/edb-state-hooks@1.6.8
+  - @graviola/edb-kxp-utils@1.2.7
+
+## 1.1.4
+
+### Patch Changes
+
+- @graviola/edb-state-hooks@1.6.7
+- @graviola/edb-basic-components@1.4.7
+
 ## 1.1.2
 
 ### Patch Changes

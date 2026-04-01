@@ -1,5 +1,11 @@
 # @slub/edb-build-helper
 
+## 0.4.4
+
+### Patch Changes
+
+- fixing wrong package pinning in release pipeline
+
 ## 0.4.2
 
 ### Patch Changes

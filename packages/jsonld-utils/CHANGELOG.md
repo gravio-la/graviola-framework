@@ -1,5 +1,20 @@
 # @graviola/jsonld-utils
 
+## 1.5.8
+
+### Patch Changes
+
+- fixing wrong package pinning in release pipeline
+- Updated dependencies
+  - @graviola/edb-graph-traversal@1.5.7
+  - @graviola/edb-core-utils@1.5.7
+
+## 1.5.7
+
+### Patch Changes
+
+- fix possible nested ddocument override in upsert
+
 ## 1.5.2
 
 ### Patch Changes

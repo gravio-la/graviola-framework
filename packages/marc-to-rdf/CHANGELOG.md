@@ -1,5 +1,13 @@
 # @graviola/edb-marc-to-rdf
 
+## 1.2.7
+
+### Patch Changes
+
+- fixing wrong package pinning in release pipeline
+- Updated dependencies
+  - @graviola/edb-core-utils@1.5.7
+
 ## 1.2.2
 
 ### Patch Changes

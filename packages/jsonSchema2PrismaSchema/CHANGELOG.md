@@ -1,5 +1,14 @@
 # @graviola/json-schema2prisma-schema
 
+## 0.2.7
+
+### Patch Changes
+
+- fixing wrong package pinning in release pipeline
+- Updated dependencies
+  - @graviola/json-schema-prisma-utils@1.3.7
+  - @graviola/json-schema-utils@1.5.7
+
 ## 0.2.2
 
 ### Patch Changes

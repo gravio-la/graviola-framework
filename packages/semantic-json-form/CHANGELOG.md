@@ -1,5 +1,32 @@
 # @graviola/semantic-json-form
 
+## 1.5.9
+
+### Patch Changes
+
+- fixing wrong package pinning in release pipeline
+- Updated dependencies
+  - @graviola/edb-linked-data-renderer@5.0.9
+  - @graviola/semantic-jsonform-types@1.4.7
+  - @graviola/edb-advanced-components@1.6.9
+  - @graviola/json-schema-utils@1.5.7
+  - @graviola/edb-basic-components@1.4.8
+  - @graviola/entity-finder@1.4.8
+  - @graviola/jsonld-utils@1.5.8
+  - @graviola/edb-state-hooks@1.6.8
+
+## 1.5.8
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/jsonld-utils@1.5.7
+  - @graviola/edb-advanced-components@1.6.8
+  - @graviola/edb-state-hooks@1.6.7
+  - @graviola/edb-linked-data-renderer@5.0.8
+  - @graviola/edb-basic-components@1.4.7
+  - @graviola/entity-finder@1.4.7
+
 ## 1.5.7
 
 ### Patch Changes

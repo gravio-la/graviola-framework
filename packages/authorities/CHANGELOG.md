@@ -1,5 +1,11 @@
 # @graviola/edb-authorities
 
+## 0.3.7
+
+### Patch Changes
+
+- fixing wrong package pinning in release pipeline
+
 ## 0.3.2
 
 ### Patch Changes

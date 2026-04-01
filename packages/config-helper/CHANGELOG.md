@@ -1,5 +1,11 @@
 # @graviola/edb-config-helper
 
+## 1.2.7
+
+### Patch Changes
+
+- fixing wrong package pinning in release pipeline
+
 ## 1.2.2
 
 ### Patch Changes

@@ -1,5 +1,20 @@
 # @graviola/map-libre-gl-renderer
 
+## 4.0.8
+
+### Patch Changes
+
+- fixing wrong package pinning in release pipeline
+- Updated dependencies
+  - @graviola/edb-state-hooks@1.6.8
+  - @graviola/edb-core-utils@1.5.7
+
+## 4.0.7
+
+### Patch Changes
+
+- @graviola/edb-state-hooks@1.6.7
+
 ## 4.0.2
 
 ### Patch Changes

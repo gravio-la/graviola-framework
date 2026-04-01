@@ -1,5 +1,11 @@
 # @graviola/simple-local-data-store
 
+## 1.1.7
+
+### Patch Changes
+
+- fixing wrong package pinning in release pipeline
+
 ## 1.1.2
 
 ### Patch Changes

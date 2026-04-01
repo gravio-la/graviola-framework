@@ -1,5 +1,11 @@
 # @slub/edb-global-types
 
+## 1.3.7
+
+### Patch Changes
+
+- fixing wrong package pinning in release pipeline
+
 ## 1.3.2
 
 ### Patch Changes

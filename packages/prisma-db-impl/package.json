@@ -1,6 +1,6 @@
 {
   "name": "@graviola/prisma-db-impl",
-  "version": "1.6.6",
+  "version": "1.6.8",
   "description": "A set of store specific implementations of PRISMA query builders",
   "type": "module",
   "main": "./dist/index.cjs",

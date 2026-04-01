@@ -1,5 +1,27 @@
 # @graviola/edb-advanced-components
 
+## 1.6.9
+
+### Patch Changes
+
+- fixing wrong package pinning in release pipeline
+- Updated dependencies
+  - @graviola/edb-basic-components@1.4.8
+  - @graviola/edb-data-mapping@0.3.7
+  - @graviola/jsonld-utils@1.5.8
+  - @graviola/edb-state-hooks@1.6.8
+  - @graviola/edb-core-utils@1.5.7
+  - @graviola/edb-ui-utils@0.3.7
+
+## 1.6.8
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/jsonld-utils@1.5.7
+  - @graviola/edb-state-hooks@1.6.7
+  - @graviola/edb-basic-components@1.4.7
+
 ## 1.6.7
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @graviola/json-schema-utils
 
+## 1.5.7
+
+### Patch Changes
+
+- fixing wrong package pinning in release pipeline
+- Updated dependencies
+  - @graviola/edb-core-utils@1.5.7
+
 ## 1.5.2
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@graviola/simple-local-data-store",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "a datastore that uses zustand in memory data structure to store data",
   "type": "module",
   "main": "./dist/index.cjs",

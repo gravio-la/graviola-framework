@@ -1,5 +1,26 @@
 # @graviola/edb-wikidata-utils
 
+## 1.2.9
+
+### Patch Changes
+
+- fixing wrong package pinning in release pipeline
+- Updated dependencies
+  - @graviola/sparql-schema@1.5.9
+
+## 1.2.8
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/sparql-schema@1.5.8
+
+## 1.2.7
+
+### Patch Changes
+
+- @graviola/sparql-schema@1.5.7
+
 ## 1.2.2
 
 ### Patch Changes

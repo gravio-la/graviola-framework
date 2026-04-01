@@ -1,5 +1,27 @@
 # @graviola/edb-linked-data-renderer
 
+## 5.0.9
+
+### Patch Changes
+
+- fixing wrong package pinning in release pipeline
+- Updated dependencies
+  - @graviola/edb-advanced-components@1.6.9
+  - @graviola/json-schema-utils@1.5.7
+  - @graviola/edb-basic-components@1.4.8
+  - @graviola/edb-data-mapping@0.3.7
+  - @graviola/edb-state-hooks@1.6.8
+  - @graviola/edb-core-utils@1.5.7
+  - @graviola/edb-ui-utils@0.3.7
+
+## 5.0.8
+
+### Patch Changes
+
+- @graviola/edb-advanced-components@1.6.8
+- @graviola/edb-state-hooks@1.6.7
+- @graviola/edb-basic-components@1.4.7
+
 ## 5.0.7
 
 ### Patch Changes

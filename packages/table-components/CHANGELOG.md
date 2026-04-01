@@ -1,5 +1,35 @@
 # @graviola/edb-table-components
 
+## 1.4.9
+
+### Patch Changes
+
+- fixing wrong package pinning in release pipeline
+- Updated dependencies
+  - @graviola/json-schema-utils@1.5.7
+  - @graviola/edb-basic-components@1.4.8
+  - @graviola/sparql-schema@1.5.9
+  - @graviola/edb-data-mapping@0.3.7
+  - @graviola/edb-state-hooks@1.6.8
+  - @graviola/edb-core-types@1.4.7
+  - @graviola/edb-core-utils@1.5.7
+  - @graviola/edb-ui-utils@0.3.7
+
+## 1.4.8
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/sparql-schema@1.5.8
+
+## 1.4.7
+
+### Patch Changes
+
+- @graviola/sparql-schema@1.5.7
+- @graviola/edb-state-hooks@1.6.7
+- @graviola/edb-basic-components@1.4.7
+
 ## 1.4.2
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @graviola/edb-vis-timeline
 
+## 1.1.4
+
+### Patch Changes
+
+- fixing wrong package pinning in release pipeline
+
 ## 1.1.2
 
 ### Patch Changes

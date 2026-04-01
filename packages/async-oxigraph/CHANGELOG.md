@@ -1,5 +1,11 @@
 # @graviola/async-oxigraph
 
+## 0.2.6
+
+### Patch Changes
+
+- fixing wrong package pinning in release pipeline
+
 ## 0.2.2
 
 ### Patch Changes
