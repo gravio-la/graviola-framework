@@ -9,9 +9,9 @@ import App from "./App.tsx";
 import { schema as itemSchema } from "./schema.ts";
 import { schema as metalSchema } from "./metal-schema.ts";
 import { allRenderers } from "./provider/config.ts";
-import { generateDefaultUISchema } from "@graviola/edb-ui-utils";
 import dayjs from "dayjs";
 import { materialCells } from "@jsonforms/material-renderers";
+import { generateDefaultUISchema } from "@graviola/edb-ui-utils";
 
 // Create a theme instance
 const theme = createTheme({
@@ -203,12 +203,11 @@ createRoot(document.getElementById("root")!).render(
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <GraviolaProvider
-          apiBaseUrl="https://graph.walther.sebastian-tilsch.de/query"
           schema={config.schema as any}
           renderers={allRenderers}
           cellRendererRegistry={materialCells}
           baseIRI={"http://www.example.org/"}
-          entityBaseIRI={"http://www.example.org/Item/"}
+          entityBaseIRI={"http://www.example.org/example/"}
           primaryFields={config.primaryFields}
           typeNameLabelMap={config.typeNameLabelMap}
           typeNameUiSchemaOptionsMap={config.typeNameUiSchemaOptionsMap}

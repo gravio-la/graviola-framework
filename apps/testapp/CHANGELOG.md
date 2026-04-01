@@ -1,5 +1,67 @@
 # testapp
 
+## 0.0.14
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/edb-linked-data-renderer@5.0.9
+  - @graviola/semantic-jsonform-types@1.4.7
+  - @graviola/sparql-store-provider@5.0.10
+  - @graviola/edb-advanced-components@1.6.9
+  - @graviola/semantic-json-form@1.5.9
+  - @graviola/json-schema-utils@1.5.7
+  - @graviola/edb-basic-components@1.4.8
+  - @graviola/entity-finder@1.4.8
+  - @graviola/edb-data-mapping@0.3.7
+  - @graviola/jsonld-utils@1.5.8
+  - @graviola/edb-state-hooks@1.6.8
+  - @graviola/edb-core-types@1.4.7
+
+## 0.0.13
+
+### Patch Changes
+
+- @graviola/sparql-store-provider@5.0.9
+
+## 0.0.12
+
+### Patch Changes
+
+- @graviola/sparql-store-provider@5.0.8
+
+## 0.0.11
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/jsonld-utils@1.5.7
+  - @graviola/sparql-store-provider@5.0.7
+  - @graviola/edb-advanced-components@1.6.8
+  - @graviola/semantic-json-form@1.5.8
+  - @graviola/edb-state-hooks@1.6.7
+  - @graviola/edb-linked-data-renderer@5.0.8
+  - @graviola/edb-basic-components@1.4.7
+  - @graviola/entity-finder@1.4.7
+
+## 0.0.10
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/edb-linked-data-renderer@5.0.0
+  - @graviola/semantic-jsonform-types@1.4.0
+  - @graviola/sparql-store-provider@5.0.0
+  - @graviola/edb-advanced-components@1.6.0
+  - @graviola/semantic-json-form@1.5.0
+  - @graviola/json-schema-utils@1.5.0
+  - @graviola/edb-basic-components@1.4.0
+  - @graviola/entity-finder@1.4.0
+  - @graviola/edb-data-mapping@0.3.0
+  - @graviola/jsonld-utils@1.5.0
+  - @graviola/edb-state-hooks@1.6.0
+  - @graviola/edb-core-types@1.4.0
+
 ## 0.0.9
 
 ### Patch Changes

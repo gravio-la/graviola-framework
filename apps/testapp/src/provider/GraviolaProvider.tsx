@@ -13,6 +13,7 @@ import {
 } from "@graviola/edb-core-types";
 import NiceModal from "@ebay/nice-modal-react";
 import { SparqlStoreProvider } from "@graviola/sparql-store-provider";
+import { LocalOxigraphStoreProvider } from "@graviola/local-oxigraph-store-provider";
 import { Provider } from "react-redux";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
@@ -40,16 +41,16 @@ import {
 } from "@jsonforms/core";
 import { JSONSchema7 } from "json-schema";
 import { allRenderers } from "./config";
+import { CircularProgress } from "@mui/material";
+import { exampleDataTurtle } from "../fixture";
 
 type GraviolaProviderProps = {
-  apiBaseUrl: string;
   baseIRI: string;
   entityBaseIRI: string;
   children: React.ReactNode;
   schema: JSONSchema7;
   renderers?: JsonFormsRendererRegistryEntry[];
   cellRendererRegistry?: JsonFormsCellRendererRegistryEntry[];
-  authBearerToken?: string;
   typeNameLabelMap: Record<string, string>;
   typeNameUiSchemaOptionsMap: Record<string, any>;
   primaryFields: PrimaryFieldDeclaration;
@@ -103,19 +104,17 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
   primaryFields,
   renderers,
   cellRendererRegistry,
-  apiBaseUrl,
-  authBearerToken,
   typeNameLabelMap,
   typeNameUiSchemaOptionsMap,
 }: GraviolaProviderProps) => {
   const endpoint: SparqlEndpoint = useMemo(() => {
     return {
-      endpoint: `${apiBaseUrl}`,
+      endpoint: "urn:worker",
       label: "SPARQL service",
       provider: "oxigraph",
       active: true,
     };
-  }, [apiBaseUrl, authBearerToken]);
+  }, []);
 
   const definitionToTypeIRI = (definitionName: string) =>
     `${baseIRI}${definitionName}`;
@@ -182,7 +181,14 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
         uischemata={uischemata}
       >
         <SparqlStoreProvider endpoint={endpoint} defaultLimit={20}>
-          <NiceModal.Provider>{children}</NiceModal.Provider>
+          <LocalOxigraphStoreProvider
+            endpoint={endpoint}
+            defaultLimit={10}
+            initialData={exampleDataTurtle}
+            loader={<CircularProgress />}
+          >
+            <NiceModal.Provider>{children}</NiceModal.Provider>
+          </LocalOxigraphStoreProvider>
         </SparqlStoreProvider>
         <ReactQueryDevtools initialIsOpen={true} />
       </AdbProvider>

@@ -15,10 +15,10 @@ import { useState } from "react";
 
 function App() {
   const [itemUrl, setItemUrl] = useState<string | undefined>(
-    "https://www.example.org/WeldedComponent/1yjpjqkptbn",
+    "http://www.example.org/example/template-pressure-vessel-da12",
   );
   const [inputURL, setInputURL] = useState<string>(
-    "http://www.example.org/WeldedComponent/1yjpjqkptbn",
+    "http://www.example.org/example/template-pressure-vessel-da12",
   );
   const [formData, setFormData] = useState<any>(undefined);
 
@@ -102,7 +102,18 @@ function App() {
         }}
       >
         <code>
-          <pre>{formData && JSON.stringify(formData, null, 2)}</pre>
+          <pre
+            style={{
+              maxHeight: 400,
+              width: "100%",
+              // enables scroll, but no overflow outside container
+              overflowY: "auto",
+              overflowX: "auto",
+              margin: 0,
+            }}
+          >
+            {formData && JSON.stringify(formData, null, 2)}
+          </pre>
         </code>
       </Paper>
     </Box>
