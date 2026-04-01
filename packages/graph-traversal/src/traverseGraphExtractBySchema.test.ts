@@ -168,6 +168,209 @@ describe("can get data via json schema", () => {
     });
   });
 
+  test("handles $ref to primitive types transparently", () => {
+    const dataset = datasetFactory.dataset();
+    const subject = ds.namedNode("http://example.com/garden1");
+    const rdfType = ds.namedNode(
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    );
+
+    dataset.add(
+      ds.quad(subject, rdfType, ds.namedNode("http://example.com/Garden")),
+    );
+    dataset.add(
+      ds.quad(
+        subject,
+        ds.namedNode("http://example.com/name"),
+        ds.literal("My Garden"),
+      ),
+    );
+    dataset.add(
+      ds.quad(
+        subject,
+        ds.namedNode("http://example.com/area"),
+        ds.literal("42.5"),
+      ),
+    );
+    dataset.add(
+      ds.quad(
+        subject,
+        ds.namedNode("http://example.com/isPublic"),
+        ds.literal("true"),
+      ),
+    );
+    dataset.add(
+      ds.quad(
+        subject,
+        ds.namedNode("http://example.com/plotCount"),
+        ds.literal("7"),
+      ),
+    );
+    dataset.add(
+      ds.quad(
+        subject,
+        ds.namedNode("http://example.com/description"),
+        ds.literal("A beautiful community garden"),
+      ),
+    );
+
+    // Schema where all properties use $ref to primitive type definitions
+    // (as Zod's toJSONSchema with reused: "ref" generates)
+    const schema: JSONSchema7 = {
+      type: "object",
+      definitions: {
+        stringDef: { type: "string" },
+        numberDef: { type: "number" },
+        integerDef: { type: "integer" },
+        booleanDef: { type: "boolean" },
+        // Chained ref: ref -> ref -> primitive
+        chainedRef: { $ref: "#/definitions/stringDef" },
+      },
+      properties: {
+        name: { $ref: "#/definitions/stringDef" },
+        area: { $ref: "#/definitions/numberDef" },
+        isPublic: { $ref: "#/definitions/booleanDef" },
+        plotCount: { $ref: "#/definitions/integerDef" },
+        description: { $ref: "#/definitions/chainedRef" },
+      },
+    };
+
+    const result = traverseGraphExtractBySchema(
+      "http://example.com/",
+      "http://example.com/garden1",
+      dataset as Dataset,
+      schema,
+      { omitEmptyArrays: true, omitEmptyObjects: true },
+    );
+
+    expect(result).toEqual({
+      "@id": "http://example.com/garden1",
+      "@type": "http://example.com/Garden",
+      name: "My Garden",
+      area: 42.5,
+      isPublic: true,
+      plotCount: 7,
+      description: "A beautiful community garden",
+    });
+  });
+
+  test("handles $ref to array of primitives", () => {
+    const dataset = datasetFactory.dataset();
+    const subject = ds.namedNode("http://example.com/garden1");
+    const rdfType = ds.namedNode(
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    );
+
+    dataset.add(
+      ds.quad(subject, rdfType, ds.namedNode("http://example.com/Garden")),
+    );
+    dataset.add(
+      ds.quad(
+        subject,
+        ds.namedNode("http://example.com/tags"),
+        ds.literal("organic"),
+      ),
+    );
+    dataset.add(
+      ds.quad(
+        subject,
+        ds.namedNode("http://example.com/tags"),
+        ds.literal("community"),
+      ),
+    );
+
+    // $ref pointing to an array definition with primitive items
+    const schema: JSONSchema7 = {
+      type: "object",
+      definitions: {
+        stringDef: { type: "string" },
+        tagArray: {
+          type: "array",
+          items: { $ref: "#/definitions/stringDef" },
+        },
+      },
+      properties: {
+        tags: { $ref: "#/definitions/tagArray" },
+      },
+    };
+
+    const result = traverseGraphExtractBySchema(
+      "http://example.com/",
+      "http://example.com/garden1",
+      dataset as Dataset,
+      schema,
+      { omitEmptyArrays: true, omitEmptyObjects: true },
+    );
+
+    expect(result["@id"]).toBe("http://example.com/garden1");
+    expect(result.tags).toBeDefined();
+    expect(result.tags).toContain("organic");
+    expect(result.tags).toContain("community");
+    expect(result.tags.length).toBe(2);
+  });
+
+  test("handles $ref to array of objects (existing behavior preserved)", () => {
+    const dataset = datasetFactory.dataset();
+    const subject = ds.namedNode("http://example.com/garden1");
+    const patch1 = ds.namedNode("http://example.com/patch1");
+    const rdfType = ds.namedNode(
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    );
+
+    dataset.add(
+      ds.quad(subject, rdfType, ds.namedNode("http://example.com/Garden")),
+    );
+    dataset.add(
+      ds.quad(subject, ds.namedNode("http://example.com/patches"), patch1),
+    );
+    dataset.add(
+      ds.quad(patch1, rdfType, ds.namedNode("http://example.com/Patch")),
+    );
+    dataset.add(
+      ds.quad(
+        patch1,
+        ds.namedNode("http://example.com/name"),
+        ds.literal("Tomato Bed"),
+      ),
+    );
+
+    const schema: JSONSchema7 = {
+      type: "object",
+      definitions: {
+        Patch: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+          },
+        },
+        patchArray: {
+          type: "array",
+          items: { $ref: "#/definitions/Patch" },
+        },
+      },
+      properties: {
+        patches: { $ref: "#/definitions/patchArray" },
+      },
+    };
+
+    const result = traverseGraphExtractBySchema(
+      "http://example.com/",
+      "http://example.com/garden1",
+      dataset as Dataset,
+      schema,
+      { omitEmptyArrays: true, omitEmptyObjects: true },
+    );
+
+    expect(result["@id"]).toBe("http://example.com/garden1");
+    expect(result.patches).toBeDefined();
+    expect(result.patches.length).toBe(1);
+    expect(result.patches[0]).toEqual({
+      "@id": "http://example.com/patch1",
+      "@type": "http://example.com/Patch",
+      name: "Tomato Bed",
+    });
+  });
+
   test("context parameter is optional and backward compatible", () => {
     // Create a simple dataset
     const dataset = datasetFactory.dataset();

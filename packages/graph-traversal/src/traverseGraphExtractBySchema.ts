@@ -20,6 +20,87 @@ type CircularCounter = {
   [ref: string]: number;
 };
 
+const PRIMITIVE_TYPES = new Set(["string", "number", "integer", "boolean"]);
+
+/**
+ * JSON Schema allows `type` as a string or an array (e.g. `["string", "null"]` from Zod optional
+ * fields). Extraction must treat the first primitive member as the literal type, otherwise
+ * `!Array.isArray(schema.type)` blocks reading RDF literals back into JSON.
+ */
+const normalizePrimitiveType = (schema: JSONSchema7): string | undefined => {
+  const t = schema.type;
+  if (typeof t === "string" && PRIMITIVE_TYPES.has(t)) return t;
+  if (Array.isArray(t)) {
+    const prim = (t as string[]).find((x) => PRIMITIVE_TYPES.has(x));
+    return prim;
+  }
+  return undefined;
+};
+
+const isPrimitiveSchema = (schema: JSONSchema7): boolean =>
+  Boolean(normalizePrimitiveType(schema)) &&
+  !schema.properties &&
+  !schema.items;
+
+/**
+ * Zod / merged schemas often chain $ref (e.g. geo -> __schema17 -> __schema18 -> string).
+ * resolveSchema only peels one hop; without this, primitives are mis-classified and extraction drops literals.
+ */
+const unwrapRefChain = (
+  schema: JSONSchema7 | undefined,
+  rootSchema: JSONSchema7,
+  maxDepth = 32,
+): JSONSchema7 | undefined => {
+  let s: JsonSchema | undefined = schema;
+  for (
+    let i = 0;
+    i < maxDepth && s && isJSONSchema(s as JSONSchema7Definition);
+    i++
+  ) {
+    const cur = s as JSONSchema7;
+    if (isPrimitiveSchema(cur)) return cur;
+    if (typeof cur.type === "string" && cur.type !== "object") return cur;
+    if (
+      cur.type === "object" &&
+      cur.properties &&
+      Object.keys(cur.properties).length > 0
+    )
+      return cur;
+    if (cur.$ref) {
+      const next = resolveSchema(
+        rootSchema as JsonSchema,
+        cur.$ref,
+        rootSchema as JsonSchema,
+      );
+      if (!next) return cur;
+      s = next;
+      continue;
+    }
+    return cur;
+  }
+  return s as JSONSchema7 | undefined;
+};
+
+const extractPrimitiveValue = (
+  values: string[],
+  type: string | undefined,
+): any => {
+  if (!values || values.length === 0) return undefined;
+  switch (type) {
+    case "number":
+      const f = parseFloat(values[0]);
+      return isNaN(f) ? undefined : f;
+    case "integer":
+      const i = parseInt(values[0]);
+      return isNaN(i) ? undefined : i;
+    case "boolean":
+      return isNil(values[0]) ? undefined : values[0] === "true";
+    case "string":
+    default:
+      return values[0];
+  }
+};
+
 /**
  * Expands a prefixed property name using the context
  * e.g., "dc:title" with context {"dc": "http://purl.org/dc/elements/1.1/"}
@@ -106,16 +187,92 @@ const propertyWalker = (
             "",
             rootSchema as JsonSchema,
           );
+          const resolved = unwrapRefChain(subSchema as JSONSchema7, rootSchema);
           if (
-            subSchema &&
-            isJSONSchemaDefinition(subSchema as JSONSchema7Definition) &&
-            isJSONSchema(subSchema as JSONSchema7)
+            resolved &&
+            isJSONSchemaDefinition(resolved as JSONSchema7Definition) &&
+            isJSONSchema(resolved as JSONSchema7)
           ) {
-            if (!circularSet[ref] || circularSet[ref] < MAX_RECURSION) {
+            if (isPrimitiveSchema(resolved)) {
+              val = extractPrimitiveValue(
+                newNode.values,
+                normalizePrimitiveType(resolved),
+              );
+            } else if (
+              resolved.type === "array" &&
+              resolved.items &&
+              !resolved.properties
+            ) {
+              val = filterUndefOrNull(
+                newNode.map((quad) => {
+                  if (
+                    isJSONSchemaDefinition(resolved.items) &&
+                    isJSONSchema(resolved.items)
+                  ) {
+                    const itemSchema = resolved.items.$ref
+                      ? unwrapRefChain(
+                          resolveSchema(
+                            resolved.items as JsonSchema,
+                            "",
+                            rootSchema as JsonSchema,
+                          ) as JSONSchema7,
+                          rootSchema,
+                        )
+                      : (resolved.items as JSONSchema7);
+                    if (itemSchema && isPrimitiveSchema(itemSchema)) {
+                      return extractPrimitiveValue(
+                        [quad.value],
+                        normalizePrimitiveType(itemSchema),
+                      );
+                    }
+                    if (
+                      itemSchema &&
+                      isJSONSchemaDefinition(
+                        itemSchema as JSONSchema7Definition,
+                      ) &&
+                      isJSONSchema(itemSchema)
+                    ) {
+                      const itemRef =
+                        resolved.items.$ref || (itemSchema as any).$ref;
+                      if (
+                        itemRef &&
+                        (circularSet[itemRef] || 0) < MAX_RECURSION
+                      ) {
+                        return propertyWalker(
+                          baseIRI,
+                          quad,
+                          itemSchema,
+                          rootSchema,
+                          level + 1,
+                          {
+                            ...circularSet,
+                            [itemRef]: (circularSet[itemRef] || 0) + 1,
+                          },
+                          options,
+                          skipNextProps,
+                          context,
+                        );
+                      }
+                      return propertyWalker(
+                        baseIRI,
+                        quad,
+                        itemSchema,
+                        rootSchema,
+                        level + 1,
+                        circularSet,
+                        options,
+                        skipNextProps,
+                        context,
+                      );
+                    }
+                  }
+                }),
+              );
+            } else if (!circularSet[ref] || circularSet[ref] < MAX_RECURSION) {
               val = propertyWalker(
                 baseIRI,
                 newNode as clownface.GraphPointer,
-                subSchema as JSONSchema7,
+                resolved,
                 rootSchema,
                 level + 1,
                 { ...circularSet, [ref]: (circularSet[ref] || 0) + 1 },
@@ -151,18 +308,28 @@ const propertyWalker = (
                     "",
                     rootSchema as JsonSchema,
                   );
+                  const resolvedItems = unwrapRefChain(
+                    subSchema as JSONSchema7,
+                    rootSchema,
+                  );
                   if (
-                    subSchema &&
+                    resolvedItems &&
                     isJSONSchemaDefinition(
-                      subSchema as JSONSchema7Definition,
+                      resolvedItems as JSONSchema7Definition,
                     ) &&
-                    isJSONSchema(subSchema as JSONSchema7)
+                    isJSONSchema(resolvedItems as JSONSchema7)
                   ) {
+                    if (isPrimitiveSchema(resolvedItems)) {
+                      return extractPrimitiveValue(
+                        [quad.value],
+                        normalizePrimitiveType(resolvedItems),
+                      );
+                    }
                     if ((circularSet[ref] || 0) < MAX_RECURSION) {
                       return propertyWalker(
                         baseIRI,
                         quad,
-                        subSchema as JSONSchema7,
+                        resolvedItems,
                         rootSchema,
                         level + 1,
                         { ...circularSet, [ref]: (circularSet[ref] || 0) + 1 },
@@ -187,6 +354,23 @@ const propertyWalker = (
                   );
                 }
                 if (schema.items.type) {
+                  const itemPrim = normalizePrimitiveType(
+                    schema.items as JSONSchema7,
+                  );
+                  if (itemPrim) {
+                    switch (itemPrim) {
+                      case "integer":
+                        return parseInt(quad.value);
+                      case "number":
+                        return parseFloat(quad.value);
+                      case "boolean":
+                        return quad.value === "true";
+                      case "string":
+                        return quad.value;
+                      default:
+                        return quad.value;
+                    }
+                  }
                   if (!Array.isArray(schema.items.type)) {
                     switch (schema.items.type) {
                       case "object":
@@ -213,8 +397,9 @@ const propertyWalker = (
           val = newNode.values;
         }
         if (!val) {
-          if (!Array.isArray(schema.type) && newNode.values) {
-            switch (schema.type) {
+          const primitiveType = normalizePrimitiveType(schema as JSONSchema7);
+          if (primitiveType && newNode.values) {
+            switch (primitiveType) {
               case "number":
                 val = parseFloat(newNode.values[0]);
                 if (isNaN(val)) val = undefined;
@@ -268,7 +453,7 @@ export const traverseGraphExtractBySchema = (
 ) => {
   const tbbt = clownface({ dataset });
   const startNode: clownface.GraphPointer = tbbt.node(ds.namedNode(iri));
-  return propertyWalker(
+  const result = propertyWalker(
     baseIRI,
     startNode,
     rootSchema,
@@ -279,4 +464,5 @@ export const traverseGraphExtractBySchema = (
     false,
     context,
   );
+  return result;
 };
