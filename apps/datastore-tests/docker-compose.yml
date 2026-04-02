@@ -3,8 +3,11 @@
 # Then run:  OXIGRAPH_URL=http://localhost:7878 BLAZEGRAPH_URL=http://localhost:9999/bigdata \
 #            POSTGRES_URL=postgresql://test:test@localhost:5432/graviola_test \
 #            MARIADB_URL=mysql://test:test@localhost:3307/graviola_test \
-#            MONGODB_URL=mongodb://test:test@localhost:27017/graviola_test?authSource=admin \
 #            bun test
+#
+# MongoDB: this file still defines a mongo:7 service for local experiments, but the test suite
+# targets Prisma ORM 7.x, which does not support MongoDB yet (Prisma docs: use 6.x for MongoDB until
+# support lands). Do not expect MONGODB_URL-based Prisma tests to pass until that is addressed.
 
 services:
 
@@ -86,6 +89,7 @@ services:
       - mariadb_data:/var/lib/mysql
 
   # ─── Document stores ────────────────────────────────────────────────────────
+  # MongoDB + Prisma 7: not supported by Prisma yet (see README). Service kept for manual/driver tests.
 
   mongodb:
     image: mongo:7

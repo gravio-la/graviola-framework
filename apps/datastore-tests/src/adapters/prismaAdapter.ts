@@ -5,7 +5,8 @@
  *   SQLITE_URL    — e.g. "file:./test.db"  (default, no Docker required)
  *   POSTGRES_URL  — e.g. "postgresql://test:test@localhost:5432/graviola_test"
  *   MARIADB_URL   — e.g. "mysql://test:test@localhost:3306/graviola_test"
- *   MONGODB_URL   — e.g. "mongodb://localhost:27017/graviola_test"
+ *   MONGODB_URL   — not usable with Prisma 7 (MongoDB requires Prisma 6.x per Prisma docs); adapter
+ *                   throws until a supported stack is wired — see datastore-tests README.
  *
  * On each `setup()`, `scripts/setupPrismaCore` regenerates schema + client for **this**
  * adapter’s `databaseUrl` (sqlite vs mysql, …). No global pre-step runs for non-Prisma adapters.
@@ -78,7 +79,8 @@ async function createPrismaClientForUrl(databaseUrl: string): Promise<any> {
 
   if (u.startsWith("mongodb:")) {
     throw new Error(
-      "Prisma MongoDB: datastore-tests does not configure a Prisma 7 driver adapter for MongoDB yet.",
+      "Prisma MongoDB: Prisma ORM 7 does not support MongoDB yet (use Prisma 6.x for MongoDB per Prisma docs). " +
+        "datastore-tests has not wired a separate Prisma 6 Mongo path.",
     );
   }
 

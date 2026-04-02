@@ -5,9 +5,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "setup:prisma": "nix develop \"$(cd ../.. && pwd)\" -c bun scripts/setup-prisma.ts",
-    "test": "nix develop \"$(cd ../.. && pwd)\" -c bun test",
-    "test:local": "nix develop \"$(cd ../.. && pwd)\" -c bun test --testPathPattern='datastore'",
+    "setup:prisma": "bun scripts/setup-prisma.ts",
+    "test": "bun test",
+    "test:mongo": "SKIP_DEFAULT_ADAPTER=1 MONGODB_URL=mongodb://test:test@localhost:27017/graviola_test?authSource=admin bun run test",
+    "test:local": "bun test --testPathPattern='datastore'",
     "setup:prisma:plain": "bun scripts/setup-prisma.ts",
     "test:plain": "bun test",
     "docker:up": "docker compose up -d --wait",

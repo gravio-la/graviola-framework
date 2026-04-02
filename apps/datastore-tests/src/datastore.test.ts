@@ -13,7 +13,9 @@
  *   BLAZEGRAPH_URL=http://localhost:9999/bigdata  → SPARQL/Blazegraph (Docker)
  *   POSTGRES_URL=postgresql://...        → Prisma/PostgreSQL
  *   MARIADB_URL=mysql://...              → Prisma/MariaDB
- *   MONGODB_URL=mongodb://...            → Prisma/MongoDB
+ *   MONGODB_URL=mongodb://...            → Prisma/MongoDB (blocked: Prisma ORM 7 does not support
+ *                                          MongoDB yet; official guidance is to use Prisma 6.x for
+ *                                          MongoDB until support exists — see README in this app)
  *
  * SKIP_DEFAULT_ADAPTER=1 — run only backends selected via env (omit default Oxigraph + default SQLite Prisma).
  *   Example: SKIP_DEFAULT_ADAPTER=1 MARIADB_URL=mysql://… bun test

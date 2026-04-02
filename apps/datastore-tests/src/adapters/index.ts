@@ -23,7 +23,7 @@ function skipDefaultAdaptersEnv(): boolean {
  *   - SQLITE_URL      → Prisma/SQLite (with SKIP_DEFAULT_ADAPTER, must be set explicitly to include SQLite)
  *   - POSTGRES_URL    → Prisma/PostgreSQL
  *   - MARIADB_URL     → Prisma/MariaDB
- *   - MONGODB_URL     → Prisma/MongoDB (experimental)
+ *   - MONGODB_URL     → Prisma/MongoDB (not supported with Prisma 7 — see README)
  *
  * SKIP_DEFAULT_ADAPTER=1 — omit the default in-process Oxigraph and default Prisma/SQLite.
  *   Only backends you select with env vars run (e.g. MARIADB_URL=… bun test).
