@@ -90,6 +90,9 @@ export const importDocument = async (
     console.error("no id");
     return;
   }
+  const type = options?.typeNameToTypeIRI
+    ? options.typeNameToTypeIRI(typeNameOrigin)
+    : typeNameOrigin;
   try {
     const upsertResult = await prisma[typeNameOrigin].upsert({
       where: {
@@ -97,6 +100,7 @@ export const importDocument = async (
       },
       create: {
         id,
+        type,
         ...properties,
       },
       update: {

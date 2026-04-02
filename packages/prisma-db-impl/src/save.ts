@@ -28,6 +28,9 @@ export const save = async (
     console.error("no id");
     return;
   }
+  const type = options.typeNameToTypeIRI
+    ? options.typeNameToTypeIRI(typeNameOrigin)
+    : typeNameOrigin;
   try {
     // Combine upsert and connect operations into a single transaction
     const result = await prisma.$transaction(async (tx) => {
@@ -38,6 +41,7 @@ export const save = async (
         },
         create: {
           id,
+          type,
           ...properties,
           // Include all connections in the create operation
           ...Object.fromEntries(
