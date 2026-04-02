@@ -4,31 +4,48 @@ import { createOxigraphLocalAdapter } from "./oxigraphLocalAdapter";
 import { createSparqlAdapter } from "./sparqlAdapter";
 import { createPrismaAdapter } from "./prismaAdapter";
 
+/** True when SKIP_DEFAULT_ADAPTER is set to a truthy value (1, true, yes; not 0/false/no). */
+function skipDefaultAdaptersEnv(): boolean {
+  const v = process.env.SKIP_DEFAULT_ADAPTER;
+  if (v === undefined || v === "") return false;
+  return !["0", "false", "no"].includes(v.trim().toLowerCase());
+}
+
 /**
  * Returns the list of adapters to test against, based on environment variables.
  *
- * Always-on (no env var needed):
+ * Always-on (no env var needed), unless SKIP_DEFAULT_ADAPTER=1:
  *   - SPARQL/Oxigraph (in-process) — uses oxigraph npm Store directly
  *
  * Opt-in via env vars:
  *   - OXIGRAPH_URL    → SPARQL/Oxigraph (Docker HTTP)
  *   - BLAZEGRAPH_URL  → SPARQL/Blazegraph (Docker HTTP)
- *   - SQLITE_URL      → Prisma/SQLite  (default: file:./prisma/test.db)
+ *   - SQLITE_URL      → Prisma/SQLite (with SKIP_DEFAULT_ADAPTER, must be set explicitly to include SQLite)
  *   - POSTGRES_URL    → Prisma/PostgreSQL
  *   - MARIADB_URL     → Prisma/MariaDB
  *   - MONGODB_URL     → Prisma/MongoDB (experimental)
  *
+ * SKIP_DEFAULT_ADAPTER=1 — omit the default in-process Oxigraph and default Prisma/SQLite.
+ *   Only backends you select with env vars run (e.g. MARIADB_URL=… bun test).
+ *   To include Prisma/SQLite in that mode, set SQLITE_URL explicitly.
+ *
  * Example — run with all SPARQL backends:
  *   OXIGRAPH_URL=http://localhost:7878 BLAZEGRAPH_URL=http://localhost:9999/bigdata bun test
  *
- * Example — run with SQLite Prisma (runs pretest to generate schema):
- *   bun run pretest && SQLITE_URL=file:./prisma/test.db bun test
+ * Example — SQLite Prisma (schema is generated on first Prisma adapter setup):
+ *   SQLITE_URL=file:./prisma/test.db bun test
+ *
+ * Example — only MariaDB Prisma:
+ *   SKIP_DEFAULT_ADAPTER=1 MARIADB_URL=mysql://… bun test
  */
 export async function getActiveAdapters(): Promise<DatastoreAdapter[]> {
   const adapters: DatastoreAdapter[] = [];
+  const skipDefault = skipDefaultAdaptersEnv();
 
   // ─── Always-on: local Oxigraph in-process ────────────────────────────────
-  adapters.push(createOxigraphLocalAdapter());
+  if (!skipDefault) {
+    adapters.push(createOxigraphLocalAdapter());
+  }
 
   // ─── SPARQL HTTP endpoints ────────────────────────────────────────────────
   if (process.env.OXIGRAPH_URL) {
@@ -54,10 +71,16 @@ export async function getActiveAdapters(): Promise<DatastoreAdapter[]> {
   // ─── Prisma adapters ──────────────────────────────────────────────────────
   const sqliteUrl = process.env.SQLITE_URL ?? "file:./prisma/test.db";
 
-  // SQLite is the always-on Prisma adapter (no Docker required).
-  // Only include if pretest has been run (SKIP_PRISMA=1 to disable).
+  // SKIP_PRISMA=1 omits all Prisma adapters.
+  // With SKIP_DEFAULT_ADAPTER, default Prisma/SQLite is omitted unless SQLITE_URL is set explicitly.
   if (!process.env.SKIP_PRISMA) {
-    adapters.push(createPrismaAdapter("Prisma/SQLite", sqliteUrl));
+    if (!skipDefault) {
+      adapters.push(createPrismaAdapter("Prisma/SQLite", sqliteUrl));
+    } else if (process.env.SQLITE_URL) {
+      adapters.push(
+        createPrismaAdapter("Prisma/SQLite", process.env.SQLITE_URL),
+      );
+    }
   }
 
   if (process.env.POSTGRES_URL) {

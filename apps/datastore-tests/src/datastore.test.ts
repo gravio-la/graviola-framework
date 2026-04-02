@@ -4,9 +4,9 @@
  * Runs all contract suite functions against every active adapter.
  * Active adapters are determined by environment variables (see adapters/index.ts).
  *
- * Always-on adapters (no env var needed):
+ * Default adapters (no env var), unless SKIP_DEFAULT_ADAPTER=1:
  *   - SPARQL/Oxigraph (in-process)
- *   - Prisma/SQLite (requires pretest to have run, disable with SKIP_PRISMA=1)
+ *   - Prisma/SQLite (schema generated on adapter setup; disable with SKIP_PRISMA=1)
  *
  * Opt-in adapters:
  *   OXIGRAPH_URL=http://localhost:7878    → SPARQL/Oxigraph (Docker)
@@ -15,8 +15,12 @@
  *   MARIADB_URL=mysql://...              → Prisma/MariaDB
  *   MONGODB_URL=mongodb://...            → Prisma/MongoDB
  *
+ * SKIP_DEFAULT_ADAPTER=1 — run only backends selected via env (omit default Oxigraph + default SQLite Prisma).
+ *   Example: SKIP_DEFAULT_ADAPTER=1 MARIADB_URL=mysql://… bun test
+ *   Include SQLite Prisma in that mode by setting SQLITE_URL explicitly.
+ *
  * Usage:
- *   bun test                             # local adapters only
+ *   bun test                             # default local adapters
  *   OXIGRAPH_URL=... bun test            # + Docker Oxigraph
  *   SKIP_PRISMA=1 bun test               # skip Prisma entirely
  */
@@ -43,8 +47,9 @@ const adapters = await getActiveAdapters();
 
 if (adapters.length === 0) {
   throw new Error(
-    "No datastore adapters found. This should never happen — " +
-      "the local Oxigraph adapter is always included.",
+    "No datastore adapters. With SKIP_DEFAULT_ADAPTER=1 you must set at least one backend " +
+      "(e.g. MARIADB_URL, OXIGRAPH_URL, SQLITE_URL, …). " +
+      "Unset SKIP_DEFAULT_ADAPTER to use the default Oxigraph + Prisma/SQLite.",
   );
 }
 

@@ -5,9 +5,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "pretest": "bun scripts/setup-prisma.ts",
-    "test": "bun test",
-    "test:local": "bun test --testPathPattern='datastore'",
+    "setup:prisma": "nix develop \"$(cd ../.. && pwd)\" -c bun scripts/setup-prisma.ts",
+    "test": "nix develop \"$(cd ../.. && pwd)\" -c bun test",
+    "test:local": "nix develop \"$(cd ../.. && pwd)\" -c bun test --testPathPattern='datastore'",
+    "setup:prisma:plain": "bun scripts/setup-prisma.ts",
+    "test:plain": "bun test",
     "docker:up": "docker compose up -d --wait",
     "docker:down": "docker compose down"
   },
@@ -18,26 +20,21 @@
     "@graviola/json-schema-utils": "workspace:*",
     "@graviola/prisma-db-impl": "workspace:*",
     "@graviola/sparql-db-impl": "workspace:*",
+    "@prisma/client": "^7.6.0",
+    "@prisma/adapter-mariadb": "^7.6.0",
+    "@prisma/adapter-pg": "^7.6.0",
+    "@synapsenwerkstatt/prisma-bun-sqlite-adapter": "^1.2.2",
     "@rdfjs/dataset": "^2.0.2",
     "@rdfjs/types": "catalog:rdf",
+    "mariadb": "^3.5.2",
     "n3": "^1.17.2",
-    "oxigraph": "^0.5.6"
+    "oxigraph": "^0.5.6",
+    "pg": "^8.20.0"
   },
   "devDependencies": {
     "@graviola/edb-tsconfig": "workspace:*",
     "@types/json-schema": "catalog:",
+    "prisma": "^7.6.0",
     "typescript": "^5.8.2"
-  },
-  "peerDependencies": {
-    "@prisma/client": ">=5",
-    "prisma": ">=5"
-  },
-  "peerDependenciesMeta": {
-    "@prisma/client": {
-      "optional": true
-    },
-    "prisma": {
-      "optional": true
-    }
   }
 }
