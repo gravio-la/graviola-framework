@@ -72,6 +72,7 @@ type PropertiesToPrismaReturnType = {
 };
 
 type PropertiesToPrismaOptions = {
+  databaseProvider?: "sqlite" | "postgresql" | "mysql" | "mongodb";
   reverseMap: Record<string, string>;
 };
 
@@ -162,6 +163,25 @@ export const propertiesToPrisma = (
               .split("/")
               .pop() as string;
             const relationName = `${typeName}_${pp}_${type}`;
+            if (options?.databaseProvider === "mongodb") {
+              // MongoDB requires explicit ID arrays on both sides of M2M relations
+              return {
+                directProperties: [
+                  `${pp}_ids String[]`,
+                  `${pp} ${type}[] @relation(fields: [${pp}_ids], references: [id])`,
+                ],
+                externalComplementaryProperties: [
+                  {
+                    tableName: type,
+                    property: `${reverseProperty}_ids String[]`,
+                  },
+                  {
+                    tableName: type,
+                    property: `${reverseProperty} ${typeName}[] @relation(fields: [${reverseProperty}_ids], references: [id])`,
+                  },
+                ],
+              };
+            }
             return {
               directProperties: [
                 `${pp} ${type}[] @relation(name: "${relationName}")`,
@@ -237,7 +257,17 @@ export const propertiesToPrisma = (
               return direct(`${pp} DateTime${qm(propName)}`);
             }
             if (propName === "@id" && propSchema.type === "string") {
+              if (options?.databaseProvider === "mongodb") {
+                return direct(`${replaceAt(propName)} String @id @map("_id")`);
+              }
               return direct(`${replaceAt(propName)} String @id`);
+            }
+            // extendSchemaShortcut(..., "type", "id") adds plain `id` — must be the PK
+            if (propName === "id" && propSchema.type === "string") {
+              if (options?.databaseProvider === "mongodb") {
+                return direct(`id String @id @map("_id")`);
+              }
+              return direct(`id String @id`);
             }
             if (propName.startsWith("@") && propSchema.type === "string") {
               return direct(`${replaceAt(propName)} String${qm(propName)}`);
@@ -359,7 +389,6 @@ generator client {
 
 datasource db {
   provider = env("DATABASE_PROVIDER")
-  url      = env("DATABASE_URL")
 }
 `;
 

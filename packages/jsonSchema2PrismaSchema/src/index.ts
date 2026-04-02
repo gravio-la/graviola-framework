@@ -60,7 +60,6 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
 }
 `;
       result = `${preamble}${prismaSchema}`;
