@@ -72,6 +72,10 @@
       "@emotion/styled": "^11"
     },
     "catalogs": {
+      "prisma": {
+        "prisma": "7.6.0",
+        "@prisma/client": "7.6.0"
+      },
       "mui": {
         "@mui/material": "^7",
         "@mui/icons-material": "^7"

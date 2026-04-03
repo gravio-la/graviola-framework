@@ -32,8 +32,8 @@
     "@graviola/json-schema-prisma-utils": "workspace:*",
     "@graviola/json-schema2prisma-schema": "workspace:*",
     "cmd-ts": "^0.13.0",
-    "@prisma/client": "~7.6.0",
-    "prisma": "~7.6.0",
+    "@prisma/client": "catalog:prisma",
+    "prisma": "catalog:prisma",
     "lodash-es": "catalog:",
     "cli-progress": "^3"
   }
