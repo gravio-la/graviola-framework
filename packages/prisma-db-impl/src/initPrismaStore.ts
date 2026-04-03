@@ -12,6 +12,37 @@ import { bindings2RDFResultSet } from "./helper/bindings2RDFResultSet";
 import { importAllDocuments, importSingleDocument } from "./import";
 import type { PrismaStoreOptions } from "./types";
 import { upsert } from "./upsert";
+
+/** Prisma accepts `mode` on string filters only for some connectors. */
+function prismaDatasourceSupportsStringMode(provider: string): boolean {
+  const p = provider.toLowerCase();
+  return ["postgresql", "postgres", "cockroachdb", "mongodb"].includes(p);
+}
+
+type PrismaContainsFilter = {
+  contains: string;
+  mode?: "insensitive";
+};
+
+function buildPrimaryLabelContainsFilter(
+  searchString: string,
+  likeInsensitive: boolean,
+  datasourceProvider: string,
+  onCaseSensitiveNotEnforceable: () => void,
+): PrismaContainsFilter {
+  const supportsMode = prismaDatasourceSupportsStringMode(datasourceProvider);
+
+  if (likeInsensitive !== false) {
+    if (supportsMode) {
+      return { contains: searchString, mode: "insensitive" };
+    } else {
+      onCaseSensitiveNotEnforceable();
+    }
+  }
+
+  return { contains: searchString };
+}
+
 /**
  * Initialize a prisma store with the given prisma client
  *
@@ -32,6 +63,7 @@ import { upsert } from "./upsert";
  * @param options.IRItoId A function to convert an IRI to an id (if empty it is assumed that the id is already an id)
  * @param options.allowUnknownNestedElementCreation Whether to allow unknown nested elements to be created
  * @param options.isAllowedNestedElement A function to check if a nested element is allowed to be created
+ * @param options.datasourceProvider Prisma `datasource db` provider string (e.g. `sqlite`, `postgresql`)
  */
 export const initPrismaStore: (
   prisma: any,
@@ -51,10 +83,24 @@ export const initPrismaStore: (
     IRItoId,
     typeIsNotIRI,
     allowUnknownNestedElementCreation,
+    allowNonTransactionalFallback,
     isAllowedNestedElement,
     debug,
+    datasourceProvider,
   },
 ) => {
+  const primarySearchFilter = (
+    searchString: string,
+    likeInsensitive: boolean,
+  ) =>
+    buildPrimaryLabelContainsFilter(
+      searchString,
+      likeInsensitive,
+      datasourceProvider,
+      () => {
+        //TODO: decide what to do here (warn/throw/ignore)
+      },
+    );
   const toJSONLDWithOptions = (entry: any) => {
     return toJSONLD(entry, new WeakSet(), {
       idToIRI,
@@ -111,6 +157,7 @@ export const initPrismaStore: (
   const searchMany = async (
     typeName: string,
     searchString: string,
+    likeInsensitive: boolean,
     limit?: number,
   ) => {
     const select = jsonSchema2PrismaSelect(typeName, rootSchema, {
@@ -122,9 +169,7 @@ export const initPrismaStore: (
     }
     const entries = await prisma[typeName].findMany({
       where: {
-        [prim.label]: {
-          contains: searchString,
-        },
+        [prim.label]: primarySearchFilter(searchString, likeInsensitive),
       },
       take: limit,
       select,
@@ -152,7 +197,12 @@ export const initPrismaStore: (
     findDocuments: async (typeName, query, limit, cb) => {
       const entries =
         query.search && query.search.length > 0
-          ? await searchMany(typeName, query.search, limit)
+          ? await searchMany(
+              typeName,
+              query.search,
+              query.insensitive !== false,
+              limit,
+            )
           : await loadMany(typeName, limit);
       if (cb) {
         for (const entry of entries) {
@@ -192,6 +242,7 @@ export const initPrismaStore: (
         defaultPrefix,
         keepContext: false,
         allowUnknownNestedElementCreation,
+        allowNonTransactionalFallback,
         isAllowedNestedElement,
         idToIRI,
         typeNameToTypeIRI,
@@ -273,10 +324,7 @@ export const initPrismaStore: (
       }
       return classes;
     },
-    countDocuments: async (
-      typeName: string,
-      query: { search?: string } = {},
-    ) => {
+    countDocuments: async (typeName: string, query: QueryType = {}) => {
       const prim = primaryFields[typeName];
       if (!prim) {
         throw new Error("No primary field found for type " + typeName);
@@ -285,9 +333,10 @@ export const initPrismaStore: (
       if (query.search && query.search.length > 0) {
         return await prisma[typeName].count({
           where: {
-            [prim.label]: {
-              contains: query.search,
-            },
+            [prim.label]: primarySearchFilter(
+              query.search,
+              query.insensitive !== false,
+            ),
           },
         });
       }

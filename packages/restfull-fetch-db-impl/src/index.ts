@@ -40,6 +40,7 @@ const buildQueryString = (
           pageSize: query.pagination.pageSize,
         }
       : {}),
+    ...(query?.insensitive !== undefined && { insensitive: query.insensitive }),
   };
   return qs.stringify(q);
 };
@@ -105,15 +106,19 @@ export const initRestfullStore: InitDatastoreFunction<
   const findDocumentsIterable: (
     typeName: string,
     limit?: number,
-    searchString?: string | null,
+    searchQuery?: QueryType | null,
   ) => Promise<CountAndIterable<any>> = async (
     typeName: string,
     limit?: number,
-    searchString?: string | null,
+    searchQuery?: QueryType | null,
   ) => {
     const queryString = buildQueryString(
-      { search: searchString },
-      undefined,
+      {
+        ...(searchQuery?.search !== undefined && searchQuery.search !== null
+          ? { search: searchQuery.search }
+          : {}),
+      },
+      searchQuery ?? undefined,
       limit,
     );
     const items = await fetch(
@@ -276,7 +281,11 @@ export const initRestfullStore: InitDatastoreFunction<
         return findDocumentsIterable(typeName, limit, null);
       },
       findDocuments: (typeName, query, limit) => {
-        return findDocumentsIterable(typeName, limit, query.search);
+        return findDocumentsIterable(
+          typeName,
+          limit,
+          query.search && query.search.length > 0 ? query : null,
+        );
       },
     },
   } as AbstractDatastore;

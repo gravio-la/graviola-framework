@@ -1,6 +1,7 @@
 import type {
   AbstractDatastore,
   CountAndIterable,
+  QueryType,
   TypedDocumentFilterOptions,
   TypedDocumentsSearchOptions,
 } from "@graviola/edb-global-types";
@@ -66,15 +67,23 @@ export const initSPARQLStore = (
   const findDocuments = async (
     typeName: string,
     limit?: number,
-    searchString?: string | null,
+    searchQuery?: Pick<QueryType, "search" | "insensitive"> | null,
     cb?: (document: any) => Promise<any>,
   ) => {
     const typeIRI = typeNameToTypeIRI(typeName);
+    const searchString =
+      searchQuery?.search && searchQuery.search.length > 0
+        ? searchQuery.search
+        : null;
     const items = await findEntityByClass(
-      searchString || null,
+      searchString,
       typeIRI,
       selectFetch,
-      { queryBuildOptions, defaultPrefix },
+      {
+        queryBuildOptions,
+        defaultPrefix,
+        searchInsensitive: searchQuery?.insensitive !== false,
+      },
       limit || defaultLimit,
     );
     const results: any[] = [];
@@ -91,18 +100,26 @@ export const initSPARQLStore = (
   const findDocumentsIterable: (
     typeName: string,
     limit?: number,
-    searchString?: string | null,
+    searchQuery?: Pick<QueryType, "search" | "insensitive"> | null,
   ) => Promise<CountAndIterable<any>> = async (
     typeName: string,
     limit?: number,
-    searchString?: string | null,
+    searchQuery?: Pick<QueryType, "search" | "insensitive"> | null,
   ) => {
     const typeIRI = typeNameToTypeIRI(typeName);
+    const searchString =
+      searchQuery?.search && searchQuery.search.length > 0
+        ? searchQuery.search
+        : null;
     const items = await findEntityByClass(
-      searchString || null,
+      searchString,
       typeIRI,
       selectFetch,
-      { queryBuildOptions, defaultPrefix },
+      {
+        queryBuildOptions,
+        defaultPrefix,
+        searchInsensitive: searchQuery?.insensitive !== false,
+      },
       limit || defaultLimit,
     );
     let currentIndex = 0;
@@ -212,7 +229,12 @@ export const initSPARQLStore = (
     listDocuments: (typeName, limit, cb) =>
       findDocuments(typeName, limit, null, cb),
     findDocuments: (typeName, query, limit, cb) =>
-      findDocuments(typeName, limit, query.search, cb),
+      findDocuments(
+        typeName,
+        limit,
+        query.search && query.search.length > 0 ? query : null,
+        cb,
+      ),
     findDocumentsByLabel: async (typeName, label, limit = 10) => {
       const typeIRI = typeNameToTypeIRI(typeName);
       const ids = await searchEntityByLabel(
@@ -401,7 +423,11 @@ export const initSPARQLStore = (
         return findDocumentsIterable(typeName, limit, null);
       },
       findDocuments: (typeName, query, limit) => {
-        return findDocumentsIterable(typeName, limit, query.search);
+        return findDocumentsIterable(
+          typeName,
+          limit,
+          query.search && query.search.length > 0 ? query : null,
+        );
       },
     },
   };

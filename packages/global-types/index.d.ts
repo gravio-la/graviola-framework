@@ -51,6 +51,11 @@ export type QuerySorting = {
 
 export type QuerySearch = {
   search: string;
+  /**
+   * Omit or `true`: case-insensitive match (default).
+   * `false`: case-sensitive match.
+   */
+  insensitive?: boolean;
 };
 
 export type QueryFields = {
