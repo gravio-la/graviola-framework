@@ -7,6 +7,7 @@ import {
 } from "@graviola/edb-core-types";
 import datasetFactory from "@rdfjs/dataset";
 import N3 from "n3";
+
 import { createAuthHeaders } from "./authHelpers";
 
 const fetchNTriples = (

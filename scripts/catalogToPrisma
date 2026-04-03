@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+# Set workspaces.catalogs.prisma (prisma + @prisma/client) in the monorepo root package.json.
+# Intended for use inside `nix develop` (jq on PATH). Example:
+#   catalogToPrisma 6.19.1   # with nix develop .#prisma6
+#   catalogToPrisma 7.6.0    # with nix develop (default)
+#
+# Resolves repo root by walking up from $PWD for a package.json that defines workspaces.catalogs.prisma
+# (so the same logic works when this file is installed from Nix to the store).
+set -euo pipefail
+
+usage() {
+  echo "Usage: catalogToPrisma <version>" >&2
+  echo "  Sets workspaces.catalogs.prisma.prisma and @prisma/client to <version> in package.json." >&2
+  echo "  Run from a directory inside the graviola-crud-framework monorepo (or cd there first)." >&2
+  exit 1
+}
+
+if [[ $# -ne 1 ]] || [[ -z "${1// }" ]]; then
+  usage
+fi
+
+VERSION="$1"
+if ! command -v jq &>/dev/null; then
+  echo "catalogToPrisma: jq not found. Use a dev shell that provides jq (e.g. nix develop)." >&2
+  exit 1
+fi
+
+resolve_root() {
+  local d="$PWD"
+  while [[ "$d" != "/" ]]; do
+    if [[ -f "$d/package.json" ]] && jq -e '.workspaces.catalogs.prisma' "$d/package.json" &>/dev/null; then
+      echo "$d"
+      return 0
+    fi
+    d="$(dirname "$d")"
+  done
+  return 1
+}
+
+ROOT="$(resolve_root)" || {
+  echo "catalogToPrisma: could not find monorepo root (package.json with workspaces.catalogs.prisma)." >&2
+  echo "  cd into graviola-crud-framework (or a subdirectory) and try again." >&2
+  exit 1
+}
+
+PKG="$ROOT/package.json"
+
+tmp="$(mktemp)"
+trap 'rm -f "$tmp"' EXIT
+
+jq --arg v "$VERSION" \
+  '.workspaces.catalogs.prisma.prisma = $v
+   | .workspaces.catalogs.prisma["@prisma/client"] = $v' \
+  "$PKG" >"$tmp"
+mv "$tmp" "$PKG"
+trap - EXIT
+
+echo "Updated workspaces.catalogs.prisma to $VERSION in $PKG"
+echo "Next: bun install (repo root)"
