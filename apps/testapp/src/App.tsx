@@ -12,6 +12,7 @@ import CodeIcon from "@mui/icons-material/Code";
 import "./App.css";
 import { GenericForm } from "@graviola/semantic-json-form";
 import { useState } from "react";
+import { useAdbContext } from "@graviola/edb-state-hooks";
 
 function App() {
   const [itemUrl, setItemUrl] = useState<string | undefined>(
@@ -28,6 +29,7 @@ function App() {
   const handleHideAndShow = () => {
     setHideForm(!hideForm);
   };
+  const { schema } = useAdbContext();
 
   return (
     <Box sx={{ mt: 4, width: "600px" }}>
@@ -113,6 +115,20 @@ function App() {
             }}
           >
             {formData && JSON.stringify(formData, null, 2)}
+          </pre>
+        </code>
+        <code>
+          <pre
+            style={{
+              maxHeight: 400,
+              width: "100%",
+              // enables scroll, but no overflow outside container
+              overflowY: "auto",
+              overflowX: "auto",
+              margin: 0,
+            }}
+          >
+            {schema && JSON.stringify(schema, null, 2)}
           </pre>
         </code>
       </Paper>

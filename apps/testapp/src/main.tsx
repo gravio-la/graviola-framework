@@ -194,7 +194,7 @@ const configurations = {
 };
 
 // Get the active configuration from environment variable
-const activeConfig = import.meta.env.VITE_ACTIVE_SCHEMA || "items";
+const activeConfig = import.meta.env.VITE_ACTIVE_SCHEMA || "metal";
 const config = configurations[activeConfig as keyof typeof configurations];
 
 createRoot(document.getElementById("root")!).render(

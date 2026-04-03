@@ -1,4 +1,6 @@
-import config, { initSPARQLDataStoreFromConfig } from "@slub/exhibition-sparql-config";
+import config, {
+  initSPARQLDataStoreFromConfig,
+} from "@slub/exhibition-sparql-config";
 import {
   getProviderOrDefault,
   getSPARQLFlavour,
@@ -36,6 +38,7 @@ const initPrisma = async () => {
     defaultPrefix: config.defaultPrefix,
     typeIRItoTypeName: typeIRItoTypeName,
     typeNameToTypeIRI: typeNameToTypeIRI,
+    datasourceProvider: "postgresql",
   });
 };
 

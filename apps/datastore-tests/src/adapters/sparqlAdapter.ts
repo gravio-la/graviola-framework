@@ -15,16 +15,13 @@
  *   Update: POST ${base}/sparql  (with application/sparql-update content-type)
  */
 import type { AbstractDatastore } from "@graviola/edb-global-types";
-import type { CRUDFunctions } from "@graviola/edb-core-types";
 import { initSPARQLStore } from "@graviola/sparql-db-impl";
 import type { SPARQLFlavour } from "@graviola/edb-core-types";
-import datasetFactory from "@rdfjs/dataset";
-import N3 from "n3";
+import { createHttpSparqlCrudFunctions } from "@graviola/remote-query-implementations";
 
 import {
   rawTestSchema,
   typeNameToTypeIRI,
-  typeIRItoTypeName,
   queryBuildOptions,
   BASE_IRI,
 } from "../schema/testSchema";
@@ -52,81 +49,6 @@ function buildEndpointConfig(
     queryUrl: `${base}/query`,
     updateUrl: `${base}/update`,
     flavour: "oxigraph",
-  };
-}
-
-function makeHttpCRUDFunctions(cfg: EndpointConfig): CRUDFunctions {
-  const { queryUrl, updateUrl } = cfg;
-
-  return {
-    askFetch: async (query: string): Promise<boolean> => {
-      const res = await fetch(queryUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/sparql-query",
-          Accept: "application/sparql-results+json",
-        },
-        body: query,
-      });
-      if (!res.ok) {
-        throw new Error(`ASK failed (${res.status}): ${await res.text()}`);
-      }
-      const json = await res.json();
-      return json.boolean === true;
-    },
-
-    constructFetch: async (query: string) => {
-      const res = await fetch(queryUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/sparql-query",
-          Accept: "text/turtle",
-        },
-        body: query,
-      });
-      if (!res.ok) {
-        throw new Error(
-          `CONSTRUCT failed (${res.status}): ${await res.text()}`,
-        );
-      }
-      const turtle = await res.text();
-      const parser = new N3.Parser({ format: "Turtle" });
-      const quads = parser.parse(turtle);
-      return datasetFactory.dataset(quads as any);
-    },
-
-    updateFetch: async (query: string) => {
-      const res = await fetch(updateUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/sparql-update" },
-        body: query,
-      });
-      if (!res.ok) {
-        throw new Error(`UPDATE failed (${res.status}): ${await res.text()}`);
-      }
-    },
-
-    selectFetch: ((query: string, options?: { withHeaders?: boolean }) => {
-      return fetch(queryUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/sparql-query",
-          Accept: "application/sparql-results+json",
-        },
-        body: query,
-      })
-        .then(async (res) => {
-          if (!res.ok) {
-            throw new Error(
-              `SELECT failed (${res.status}): ${await res.text()}`,
-            );
-          }
-          return res.json();
-        })
-        .then((json) =>
-          options?.withHeaders ? json : (json.results?.bindings ?? []),
-        );
-    }) as CRUDFunctions["selectFetch"],
   };
 }
 
@@ -177,7 +99,10 @@ export function createSparqlAdapter(
         );
       }
 
-      const crudFunctions = makeHttpCRUDFunctions(cfg);
+      const crudFunctions = createHttpSparqlCrudFunctions({
+        queryUrl: cfg.queryUrl,
+        updateUrl: cfg.updateUrl,
+      });
 
       return initSPARQLStore({
         schema: rawTestSchema as any,

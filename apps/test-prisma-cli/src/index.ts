@@ -47,6 +47,7 @@ export const dataStore = initPrismaStore(prisma, rootSchema, primaryFields, {
   defaultPrefix: config.defaultPrefix,
   typeIRItoTypeName: typeIRItoTypeName,
   typeNameToTypeIRI: typeNameToTypeIRI,
+  datasourceProvider: "postgresql",
 });
 
 export const dataStoreWithNestedElements = initPrismaStore(
@@ -58,6 +59,7 @@ export const dataStoreWithNestedElements = initPrismaStore(
     defaultPrefix: config.defaultPrefix,
     typeIRItoTypeName: typeIRItoTypeName,
     typeNameToTypeIRI: typeNameToTypeIRI,
+    datasourceProvider: "postgresql",
     allowUnknownNestedElementCreation: true,
     isAllowedNestedElement: (element: any) =>
       element["@type"] === "http://example.com/Category",

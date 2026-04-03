@@ -37,6 +37,7 @@ const dataStore = initPrismaStore(prisma, rootSchema, primaryFields, {
   defaultPrefix: config.defaultPrefix,
   typeIRItoTypeName: typeIRItoTypeName,
   typeNameToTypeIRI: typeNameToTypeIRI,
+  datasourceProvider: "postgresql",
 });
 //bun only runs if we call it here: why??
 //find first object that can be counted:
