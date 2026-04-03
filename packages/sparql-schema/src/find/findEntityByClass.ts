@@ -1,9 +1,15 @@
 import { withDefaultPrefix } from "@/crud";
-import { Entity, PrimaryField, QueryOptions } from "@graviola/edb-core-types";
+import { Entity, QueryOptions } from "@graviola/edb-core-types";
 import df from "@rdfjs/data-model";
-import { SELECT } from "@tpluscode/sparql-builder";
+import { SELECT, sparql } from "@tpluscode/sparql-builder";
 
-export type FindEntityByClassOptions = QueryOptions;
+export type FindEntityByClassOptions = QueryOptions & {
+  /**
+   * When `false`, substring match is case-sensitive.
+   * When `true` or omitted, match follows SQL LIKE–style case-insensitive substring semantics.
+   */
+  searchInsensitive?: boolean;
+};
 
 /**
  * This function will ensure that GROUP BY is always before ORDER BY
@@ -46,7 +52,8 @@ export const findEntityByClass: FindEntityByClassFn = async (
   options,
   limit?: number,
 ) => {
-  const { queryBuildOptions, defaultPrefix } = options;
+  const { queryBuildOptions, defaultPrefix, searchInsensitive } = options;
+  const likeInsensitive = searchInsensitive !== false;
   const { primaryFields, typeIRItoTypeName } = queryBuildOptions;
   const primaryFieldDeclaration = primaryFields?.[typeIRItoTypeName(typeIRI)];
   const { label, description, image } = primaryFieldDeclaration || {};
@@ -71,10 +78,16 @@ export const findEntityByClass: FindEntityByClassFn = async (
     firstImageV = df.variable("firstImage"),
     firstDescriptionV = df.variable("firstDescription");
 
-  let query =
-    searchString && searchString.length > 0
-      ? SELECT.DISTINCT` ${subjectV} (SAMPLE(${oneOfLabelOrDesc}) AS ${firstOneOfTitleV}) (SAMPLE(${imageV}) AS ${firstImageV}) (SAMPLE(${descriptionV}) AS ${firstDescriptionV})`
-          .WHERE`
+  let query;
+  if (searchString && searchString.length > 0) {
+    const searchLiteral = df.literal(searchString);
+    const searchFilter = likeInsensitive
+      ? sparql`FILTER(contains(lcase(str(${concatenatedV})), lcase(${searchLiteral}))) .
+            `
+      : sparql`FILTER(contains(str(${concatenatedV}), ${searchLiteral})) .
+            `;
+    query = SELECT.DISTINCT` ${subjectV} (SAMPLE(${oneOfLabelOrDesc}) AS ${firstOneOfTitleV}) (SAMPLE(${imageV}) AS ${firstImageV}) (SAMPLE(${descriptionV}) AS ${firstDescriptionV})`
+      .WHERE`
           ${subjectV} a <${typeIRI}> .
             OPTIONAL {${subjectV} ${labelPredicate} ${nameV} .}
             OPTIONAL {${subjectV} ${titlePredicate} ${titleV} .}
@@ -88,13 +101,14 @@ export const findEntityByClass: FindEntityByClassFn = async (
             BIND (COALESCE(${nameV}, ${titleV}, ${descriptionV}, "") AS ${oneOfLabelOrDesc})
 
             BIND (CONCAT(${safeNameV}, " ", ${safeTitleV}, " ", ${safeDescriptionV}) AS ${concatenatedV})
-            FILTER(contains(lcase(${concatenatedV}), lcase("${searchString}") )) .
+            ${searchFilter}
 
             FILTER isIRI(${subjectV})
             FILTER (strlen(${oneOfLabelOrDesc}) > 0)
-        `
-      : SELECT.DISTINCT` ${subjectV} (SAMPLE(${oneOfLabelOrDesc}) AS ${firstOneOfTitleV}) (SAMPLE(${imageV}) AS ${firstImageV}) (SAMPLE(${descriptionV}) AS ${firstDescriptionV})`
-          .WHERE`
+        `;
+  } else {
+    query = SELECT.DISTINCT` ${subjectV} (SAMPLE(${oneOfLabelOrDesc}) AS ${firstOneOfTitleV}) (SAMPLE(${imageV}) AS ${firstImageV}) (SAMPLE(${descriptionV}) AS ${firstDescriptionV})`
+      .WHERE`
           ${subjectV} a <${typeIRI}> .
             OPTIONAL {${subjectV} ${labelPredicate} ${nameV} .}
             OPTIONAL {${subjectV} ${titlePredicate} ${titleV} .}
@@ -103,6 +117,7 @@ export const findEntityByClass: FindEntityByClassFn = async (
             FILTER isIRI(${subjectV})
             FILTER (strlen(${oneOfLabelOrDesc}) > 0)
         `;
+  }
   if (typeof limit === "number") query = query.LIMIT(limit);
   query = query.GROUP().BY(subjectV).ORDER().BY(firstOneOfTitleV);
   const fixedQuery = fixSparqlOrder(query.build(queryBuildOptions));
