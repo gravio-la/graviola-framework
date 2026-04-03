@@ -40,7 +40,7 @@
     "@types/json-schema": "catalog:",
     "eslint-config-edb": "workspace:*",
     "typescript": "^5.8.2",
-    "prisma": "^7.6.0"
+    "prisma": "catalog:prisma"
   },
   "dependencies": {
     "@graviola/json-schema-prisma-utils": "workspace:*",
@@ -51,7 +51,7 @@
     "lodash-es": "catalog:"
   },
   "peerDependencies": {
-    "@prisma/client": "^7"
+    "@prisma/client": "^6.0.0 || ^7.0.0"
   },
   "typedocOptions": {
     "entryPoints": [

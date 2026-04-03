@@ -22,6 +22,7 @@ export interface UpsertOptions {
   defaultPrefix: string;
   jsonldContext?: any;
   keepContext?: boolean;
+  allowNonTransactionalFallback?: boolean;
   allowUnknownNestedElementCreation?: boolean;
   isAllowedNestedElement?: (element: any) => boolean;
   idToIRI?: StringToIRIFn;
@@ -49,6 +50,7 @@ async function cleanAndSave(
     idToIRI?: StringToIRIFn;
     typeNameToTypeIRI?: StringToIRIFn;
     typeIsNotIRI?: boolean;
+    allowNonTransactionalFallback?: boolean;
   },
 ) {
   const { schema: rootSchema } = options;
@@ -64,10 +66,18 @@ async function cleanAndSave(
     pruneLinkedDocuments: true,
   });
 
+  const {
+    allowNonTransactionalFallback,
+    idToIRI,
+    typeNameToTypeIRI,
+    typeIsNotIRI,
+  } = options;
+
   await save(typeName, cleanData, prisma, error, {
-    idToIRI: options.idToIRI,
-    typeNameToTypeIRI: options.typeNameToTypeIRI,
-    typeIsNotIRI: options.typeIsNotIRI,
+    idToIRI,
+    typeNameToTypeIRI,
+    typeIsNotIRI,
+    allowNonTransactionalFallback,
   });
 
   return cleanData;
@@ -145,6 +155,7 @@ async function createNestedElements(
     typeIsNotIRI?: boolean;
     isAllowedNestedElement?: (element: any) => boolean;
     debug: boolean;
+    allowNonTransactionalFallback?: boolean;
   },
 ) {
   const { typeIRItoTypeName, debug } = options;
@@ -197,6 +208,7 @@ export async function upsert(
     typeNameToTypeIRI,
     typeIRItoTypeName,
     typeIsNotIRI,
+    allowNonTransactionalFallback,
     allowUnknownNestedElementCreation,
     isAllowedNestedElement,
     debug = false,
@@ -220,6 +232,7 @@ export async function upsert(
       typeIsNotIRI,
       isAllowedNestedElement,
       debug,
+      allowNonTransactionalFallback,
     });
   }
 
@@ -233,6 +246,7 @@ export async function upsert(
     idToIRI,
     typeNameToTypeIRI,
     typeIsNotIRI,
+    allowNonTransactionalFallback,
   });
 
   if (error.size > 0) {
