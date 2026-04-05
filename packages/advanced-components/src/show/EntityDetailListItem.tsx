@@ -7,6 +7,7 @@ import {
 } from "@graviola/edb-data-mapping";
 import { useAdbContext, useTypeIRIFromEntity } from "@graviola/edb-state-hooks";
 import { useCRUDWithQueryClient } from "@graviola/edb-state-hooks";
+import { queryOptionMixinBasedOnEntity } from "@graviola/edb-ui-utils";
 import { Clear, HideImage } from "@mui/icons-material";
 import {
   Avatar,
@@ -46,10 +47,14 @@ export const EntityDetailListItem = ({
   } = useCRUDWithQueryClient({
     entityIRI,
     typeIRI: classIRI,
-    queryOptions: { enabled: true, refetchOnWindowFocus: true },
+    queryOptions: {
+      enabled: true,
+      refetchOnWindowFocus: true,
+      ...queryOptionMixinBasedOnEntity(defaultData),
+    },
     loadQueryKey: "show",
   });
-  const data = rawData?.document?.["@type"] ? rawData?.document : defaultData;
+  const data = rawData?.document;
   const cardInfo = useMemo<PrimaryFieldResults<string>>(() => {
     const fieldDecl = primaryFields[typeName];
     if (data && fieldDecl) {

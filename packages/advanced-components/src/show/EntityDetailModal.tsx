@@ -39,6 +39,7 @@ import { useTranslation } from "next-i18next";
 import { FC, useCallback, useMemo } from "react";
 
 import { EntityDetailCard } from "./EntityDetailCard";
+import { queryOptionMixinBasedOnEntity } from "@graviola/edb-ui-utils";
 
 /**
  * Skeleton component for the EntityDetailCard to show while loading
@@ -277,12 +278,12 @@ const EntityDetailDataWrapper: FC<{
     queryOptions: {
       enabled: !disableLoad,
       refetchOnWindowFocus: true,
-      initialData: defaultData,
+      ...queryOptionMixinBasedOnEntity(defaultData),
     },
     loadQueryKey: "show",
   });
 
-  const data = rawData?.document || defaultData;
+  const data = rawData?.document;
 
   // Setup edit functionality
   const { push } = useModifiedRouter();
@@ -426,7 +427,7 @@ export const EntityDetailModal = NiceModal.create(
     const modal = useModal();
 
     const handleClose = useCallback(() => {
-      modal.reject();
+      //modal.reject();
       modal.remove();
     }, [modal]);
 

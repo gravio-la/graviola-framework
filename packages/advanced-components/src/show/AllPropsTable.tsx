@@ -252,7 +252,6 @@ const PropertyItem = ({
                     data={v}
                     entityIRI={v["@id"]}
                     typeIRI={v["@type"]}
-                    disableLoad={true}
                   />
                 );
               }

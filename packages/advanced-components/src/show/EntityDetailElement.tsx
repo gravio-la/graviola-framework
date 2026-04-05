@@ -13,6 +13,7 @@ import { Box, BoxProps } from "@mui/material";
 import { useMemo } from "react";
 
 import { EntityDetailCard } from "./EntityDetailCard";
+import { queryOptionMixinBasedOnEntity } from "@graviola/edb-ui-utils";
 
 export type EntityDetailElementProps = {
   typeIRI: string | undefined;
@@ -51,11 +52,11 @@ export const EntityDetailElement = ({
     queryOptions: {
       enabled: true,
       refetchOnWindowFocus: true,
-      initialData: initialData ? { document: initialData } : undefined,
+      ...queryOptionMixinBasedOnEntity(initialData),
     },
     loadQueryKey: "show",
   });
-  const data = initialData || rawData?.document;
+  const data = rawData?.document;
   const fieldDeclaration = useMemo(
     () => primaryFields[typeName] as PrimaryField,
     [typeName, primaryFields],

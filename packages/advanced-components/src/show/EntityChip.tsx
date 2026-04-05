@@ -7,6 +7,7 @@ import {
 } from "@graviola/edb-data-mapping";
 import { useAdbContext, useTypeIRIFromEntity } from "@graviola/edb-state-hooks";
 import { useCRUDWithQueryClient } from "@graviola/edb-state-hooks";
+import { queryOptionMixinBasedOnEntity } from "@graviola/edb-ui-utils";
 import { Avatar, Chip, ChipProps, Tooltip } from "@mui/material";
 import { MouseEvent, useCallback, useMemo, useState } from "react";
 
@@ -41,14 +42,14 @@ export const EntityChip = ({
     entityIRI,
     typeIRI: classIRI,
     queryOptions: {
-      enabled: !disableLoad && !defaultData,
+      enabled: !disableLoad,
       refetchOnWindowFocus: true,
-      initialData: defaultData,
+      ...queryOptionMixinBasedOnEntity(defaultData),
     },
     loadQueryKey: "show",
   });
 
-  const data = rawData?.document?.["@type"] ? rawData?.document : defaultData;
+  const data = rawData?.document;
   const cardInfo = useMemo<PrimaryFieldResults<string>>(() => {
     const fieldDecl = primaryFieldExtracts[typeName] || primaryFields[typeName];
     if (data && fieldDecl) {
