@@ -90,16 +90,23 @@ export type SPARQLCRUDOptions = {
 
 export type SPARQLQueryType = "construct" | "select" | "ask" | "update";
 
+export type SPARQLQueryLogMeta = {
+  durationMs: number;
+  error?: unknown;
+};
+
 export type SPARQLQueryOptions = {
   queryKey?: string;
 };
 
 export type SPARQLCRUDLogger = {
   logger?: Logger;
+  /** Called after each SPARQL round-trip; fourth argument carries timing and optional error. */
   logQuery?: (
     queryKey: string | undefined,
     query: string,
     queryType: SPARQLQueryType,
+    meta?: SPARQLQueryLogMeta,
   ) => void;
 };
 

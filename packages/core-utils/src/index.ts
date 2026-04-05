@@ -21,3 +21,4 @@ export * from "./replaceJSONLD";
 export * from "./flatResultExtractor";
 export * from "./logger";
 export * from "./sparqLoggingWrapper";
+export * from "./sparqAsyncQueryKey";
