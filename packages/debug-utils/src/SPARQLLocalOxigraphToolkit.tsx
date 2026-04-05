@@ -1,34 +1,25 @@
-import Yasgui from "@triply/yasgui";
-import React, { FunctionComponent, useCallback, useState } from "react";
-import { SPARQLToolkit } from "./SPARQLToolkit";
+import type { CRUDFunctions } from "@graviola/edb-core-types";
+import { useAdbContext } from "@graviola/edb-state-hooks";
+import React, { FunctionComponent } from "react";
 
-interface OwnProps {
-  sparqlQuery?: (query: string) => Promise<any>;
-}
+import YasguiSPARQLEditor from "./YasguiSPARQLEditor";
 
-type Props = OwnProps;
+export type SPARQLLocalOxigraphToolkitProps = {
+  /** Full SPARQL CRUD layer; YASQE Run query executes through these functions. */
+  sparqlCrud?: CRUDFunctions | null;
+};
 
-export const SPARQLLocalOxigraphToolkit: FunctionComponent<Props> = ({
-  sparqlQuery,
-}) => {
-  const [yasgui, setYasgui] = useState<Yasgui | null>(null);
-
-  const handleSparqlQuery = useCallback(async () => {
-    if (!yasgui || !sparqlQuery) return;
-    // @ts-ignore
-    const yasqe = yasgui.getTab(0)?.getYasqe();
-    // @ts-ignore
-    const yasr = yasgui.getTab(0)?.getYasr();
-    const query = yasqe?.getValueWithoutComments();
-    if (!query) return;
-    const response = await sparqlQuery(query);
-    yasr?.setResponse(response.data);
-  }, [yasgui, sparqlQuery]);
+export const SPARQLLocalOxigraphToolkit: FunctionComponent<
+  SPARQLLocalOxigraphToolkitProps
+> = ({ sparqlCrud }) => {
+  const { queryBuildOptions } = useAdbContext();
+  const prefixes = queryBuildOptions?.prefixes;
 
   return (
-    <SPARQLToolkit
-      onInit={(yg) => setYasgui(yg)}
-      onSendClicked={handleSparqlQuery}
+    <YasguiSPARQLEditor
+      containerId="yasgui-local-oxigraph-toolkit"
+      prefixes={prefixes}
+      sparqlCrud={sparqlCrud ?? null}
     />
   );
 };

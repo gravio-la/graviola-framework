@@ -44,11 +44,14 @@
   "peerDependencies": {
     "next": ">=14",
     "react": "catalog:",
-    "@mui/material": "catalog:mui"
+    "@mui/material": "catalog:mui",
+    "@mui/icons-material": "catalog:mui"
   },
   "dependencies": {
+    "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-state-hooks": "workspace:*",
     "@triply/yasgui": "^4.2.28",
+    "n3": "^1.17.2",
     "react-json-view-lite": "^2.4.1"
   },
   "eslintConfig": {
