@@ -17,6 +17,10 @@ export type PrismaStoreOptions = {
   idToIRI?: StringToIRIFn;
   IRItoId?: IRIToStringFn;
   typeIsNotIRI?: boolean;
+  /**
+   * Max recursion depth for the relations to resolve
+   */
+  maxRecursionDepth?: number;
   allowUnknownNestedElementCreation?: boolean;
   /**
    * Whether to allow update operations to be executed outside of a transaction as a fallback.

@@ -85,6 +85,7 @@ export const initPrismaStore: (
     allowUnknownNestedElementCreation,
     allowNonTransactionalFallback,
     isAllowedNestedElement,
+    maxRecursionDepth = 4,
     debug,
     datasourceProvider,
   },
@@ -109,7 +110,7 @@ export const initPrismaStore: (
   };
   const load = async (typeName: string, entityIRI: string) => {
     const select = jsonSchema2PrismaSelect(typeName, rootSchema, {
-      maxRecursion: 4,
+      maxRecursion: maxRecursionDepth,
     });
     const entry = await prisma[typeName].findUnique({
       where: {
@@ -122,7 +123,7 @@ export const initPrismaStore: (
 
   const loadMany = async (typeName: string, limit?: number) => {
     const select = jsonSchema2PrismaSelect(typeName, rootSchema, {
-      maxRecursion: 4,
+      maxRecursion: maxRecursionDepth,
     });
     const entries = await prisma[typeName].findMany({
       take: limit,
@@ -161,7 +162,7 @@ export const initPrismaStore: (
     limit?: number,
   ) => {
     const select = jsonSchema2PrismaSelect(typeName, rootSchema, {
-      maxRecursion: 4,
+      maxRecursion: maxRecursionDepth,
     });
     const prim = primaryFields[typeName];
     if (!prim) {
