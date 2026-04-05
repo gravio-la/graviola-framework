@@ -19,3 +19,5 @@ export * from "./makeColumnDesc";
 export * from "./formatJSONResult";
 export * from "./replaceJSONLD";
 export * from "./flatResultExtractor";
+export * from "./logger";
+export * from "./sparqLoggingWrapper";
