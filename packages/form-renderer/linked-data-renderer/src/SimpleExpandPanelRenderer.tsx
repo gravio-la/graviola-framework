@@ -8,8 +8,11 @@ import {
   useAdbContext,
   useCRUDWithQueryClient,
 } from "@graviola/edb-state-hooks";
-import { specialDate2LocalDate, withEllipsis } from "@graviola/edb-ui-utils";
-import { bringDefinitionToTop } from "@graviola/json-schema-utils";
+import {
+  queryOptionMixinBasedOnEntity,
+  specialDate2LocalDate,
+  withEllipsis,
+} from "@graviola/edb-ui-utils";
 import { JsonSchema, update } from "@jsonforms/core";
 import { useJsonForms } from "@jsonforms/react";
 import { Clear, Save } from "@mui/icons-material";
@@ -86,7 +89,7 @@ export const SimpleExpandPanelRenderer = (
     queryOptions: {
       enabled: true, //!data?.__draft && !data?.__label,
       refetchOnWindowFocus: true,
-      initialData: initialData ? { document: initialData } : undefined,
+      ...queryOptionMixinBasedOnEntity(initialData),
     },
   });
 

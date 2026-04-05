@@ -7,6 +7,7 @@ import {
   useAdbContext,
   useCRUDWithQueryClient,
 } from "@graviola/edb-state-hooks";
+import { queryOptionMixinBasedOnEntity } from "@graviola/edb-ui-utils";
 import { bringDefinitionToTop } from "@graviola/json-schema-utils";
 import { JsonSchema, update } from "@jsonforms/core";
 import { useJsonForms } from "@jsonforms/react";
@@ -108,8 +109,8 @@ export const SimpleChipRenderer = (
     typeIRI,
     queryOptions: {
       enabled: queryEnabled,
-      initialData: data ? { document: data } : undefined,
       refetchOnWindowFocus: true,
+      ...queryOptionMixinBasedOnEntity(data),
     },
   });
   useEffect(() => {
