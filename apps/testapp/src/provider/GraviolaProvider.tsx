@@ -17,6 +17,10 @@ import { LocalOxigraphStoreProvider } from "@graviola/local-oxigraph-store-provi
 import { Provider } from "react-redux";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
+  SPARQLQueryDevtools,
+  sparqlDevtoolsLogQuery,
+} from "@graviola/edb-debug-utils";
+import {
   EditEntityModal,
   EntityDetailModal,
   KBMainDatabase,
@@ -113,6 +117,7 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
       label: "SPARQL service",
       provider: "oxigraph",
       active: true,
+      ...(import.meta.env.DEV ? { logQuery: sparqlDevtoolsLogQuery } : {}),
     };
   }, []);
 
@@ -191,6 +196,9 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
             initialData={exampleDataTurtle}
             loader={<CircularProgress />}
           >
+            {import.meta.env.DEV ? (
+              <SPARQLQueryDevtools initialIsOpen={false} />
+            ) : null}
             <NiceModal.Provider>{children}</NiceModal.Provider>
           </LocalOxigraphStoreProvider>
         </SparqlStoreProvider>

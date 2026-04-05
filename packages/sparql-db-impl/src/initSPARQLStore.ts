@@ -319,6 +319,7 @@ export const initSPARQLStore = (
       );
       const res = await selectFetch(queryString, {
         withHeaders: true,
+        queryKey: "datastore:findDocumentsAsFlatResultSet",
       });
       return res;
     },
@@ -339,6 +340,7 @@ export const initSPARQLStore = (
       );
       const res = await selectFetch(queryString, {
         withHeaders: true,
+        queryKey: "datastore:countDocuments",
       });
       const literalValue = res.results?.bindings[0]?.entity_count?.value;
       if (!literalValue) {
