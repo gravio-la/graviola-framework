@@ -180,7 +180,11 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
         cellRendererRegistry={cellRendererRegistry}
         uischemata={uischemata}
       >
-        <SparqlStoreProvider endpoint={endpoint} defaultLimit={20}>
+        <SparqlStoreProvider
+          endpoint={endpoint}
+          defaultLimit={20}
+          enableInversePropertiesFeature={true}
+        >
           <LocalOxigraphStoreProvider
             endpoint={endpoint}
             defaultLimit={10}
