@@ -23,12 +23,6 @@ export { extractLiteral } from "./extractLiteral";
 
 // Utilities
 export { expandPropertyName } from "./expandPropertyName";
-export {
-  createNoOpLogger,
-  createConsoleLogger,
-  type Logger,
-  type LogLevel,
-} from "./logger";
 
 // Types
 export type {

@@ -1,9 +1,8 @@
 import { describe, expect, test } from "@jest/globals";
 import datasetFactory from "@rdfjs/dataset";
-import type { JSONSchema7 } from "json-schema";
 import clownface from "clownface";
 import { extractLiteral } from "./extractLiteral";
-import { createNoOpLogger } from "./logger";
+import { createNoOpLogger } from "@graviola/edb-core-utils";
 import type { ExtractionContext } from "./types";
 
 describe("extractLiteral", () => {

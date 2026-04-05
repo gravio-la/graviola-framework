@@ -8,7 +8,7 @@ import fs from "fs";
 import { resolve, dirname } from "path";
 import stringToStream from "string-to-stream";
 import { extractFromGraph } from "./extract";
-import { createConsoleLogger } from "./logger";
+import { createConsoleLogger } from "@graviola/edb-core-utils";
 
 // Get path to tbbt.nq file using require.resolve
 // This works across different module systems and bundlers

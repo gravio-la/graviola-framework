@@ -2,10 +2,10 @@ import type { DatasetCore } from "@rdfjs/types";
 import type { JSONSchema7 } from "json-schema";
 import ds from "@rdfjs/data-model";
 import clownface from "clownface";
-import type { ExtendedWalkerOptions } from "@graviola/edb-core-types";
+import type { ExtendedWalkerOptions, Logger } from "@graviola/edb-core-types";
 import { normalizeSchema, type NormalizedSchema } from "../normalizer";
 import type { ExtractionContext } from "./types";
-import { createNoOpLogger, type Logger } from "./logger";
+import { createNoOpLogger } from "@graviola/edb-core-utils";
 import { extractObject } from "./extractObject";
 
 /**

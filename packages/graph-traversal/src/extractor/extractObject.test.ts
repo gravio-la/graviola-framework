@@ -4,7 +4,7 @@ import type { JSONSchema7 } from "json-schema";
 import clownface from "clownface";
 import { schema, rdf } from "@tpluscode/rdf-ns-builders";
 import { extractObject } from "./extractObject";
-import { createNoOpLogger } from "./logger";
+import { createNoOpLogger } from "@graviola/edb-core-utils";
 import type { ExtractionContext } from "./types";
 
 describe("extractObject", () => {

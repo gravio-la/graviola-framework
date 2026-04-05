@@ -5,7 +5,7 @@ import type {
   PaginationMetadata,
 } from "@graviola/edb-core-types";
 import type { NormalizedSchema } from "../normalizer";
-import type { Logger } from "./logger";
+import type { Logger } from "@graviola/edb-core-types";
 
 // Re-export PaginationMetadata for backward compatibility
 export type { PaginationMetadata };
