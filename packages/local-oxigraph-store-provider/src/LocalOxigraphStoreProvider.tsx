@@ -1,4 +1,8 @@
-import { SparqlEndpoint } from "@graviola/edb-core-types";
+import type {
+  SPARQLCRUDLogger,
+  SparqlEndpoint,
+} from "@graviola/edb-core-types";
+import { sparqlLoggingWrapper } from "@graviola/edb-core-utils";
 import { CrudProviderContext, useAdbContext } from "@graviola/edb-state-hooks";
 import { initSPARQLStore } from "@graviola/sparql-db-impl";
 import {
@@ -14,7 +18,7 @@ import { bulkLoader, LoadableData } from "./bulkLoader";
 
 export type LocalOxigraphStoreProviderProps = {
   children: ReactNode;
-  endpoint: SparqlEndpoint;
+  endpoint: SparqlEndpoint & Partial<SPARQLCRUDLogger>;
   defaultLimit: number;
   initialData?: LoadableData;
   loader?: ReactNode;
@@ -24,7 +28,13 @@ export const LocalOxigraphStoreProvider: FunctionComponent<
   LocalOxigraphStoreProviderProps
 > = ({ children, endpoint, defaultLimit, initialData, loader }) => {
   const { oxigraph } = useOxigraph();
-  const crudOptions = useAsyncLocalWorkerCrudOptions(endpoint);
+  const baseCrud = useAsyncLocalWorkerCrudOptions(endpoint);
+  const crudOptions = useMemo(() => {
+    if (endpoint.logQuery || endpoint.logger) {
+      return sparqlLoggingWrapper(endpoint, baseCrud);
+    }
+    return baseCrud;
+  }, [endpoint, baseCrud]);
   const {
     schema,
     typeNameToTypeIRI,
