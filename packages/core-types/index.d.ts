@@ -88,6 +88,21 @@ export type SPARQLCRUDOptions = {
   defaultUpdateGraph?: string;
 };
 
+export type SPARQLQueryType = "construct" | "select" | "ask" | "update";
+
+export type SPARQLQueryOptions = {
+  queryKey?: string;
+};
+
+export type SPARQLCRUDLogger = {
+  logger?: Logger;
+  logQuery?: (
+    queryKey: string | undefined,
+    query: string,
+    queryType: SPARQLQueryType,
+  ) => void;
+};
+
 export type ResultBindings = any[];
 
 export type RDFSelectResult = {
@@ -100,13 +115,20 @@ export type RDFSelectResult = {
 };
 
 export type SelectFetchOverload = {
-  (query: string, options: { withHeaders: true }): Promise<RDFSelectResult>;
-  (query: string, options?: { withHeaders?: false }): Promise<ResultBindings>;
+  (
+    query: string,
+    options: { withHeaders: true } & SPARQLQueryOptions,
+  ): Promise<RDFSelectResult>;
+  (
+    query: string,
+    options?: { withHeaders?: false } & SPARQLQueryOptions,
+  ): Promise<ResultBindings>;
 };
 
 export type CRUDFunctions = {
   updateFetch: (
     query: string,
+    options?: SPARQLQueryOptions,
   ) => Promise<
     | ResultStream<any>
     | boolean
@@ -115,9 +137,12 @@ export type CRUDFunctions = {
     | ResultStream<Quad>
     | Response
   >;
-  constructFetch: (query: string) => Promise<DatasetCore>;
+  constructFetch: (
+    query: string,
+    options?: SPARQLQueryOptions,
+  ) => Promise<DatasetCore>;
   selectFetch: SelectFetchOverload;
-  askFetch: (query: string) => Promise<boolean>;
+  askFetch: (query: string, options?: SPARQLQueryOptions) => Promise<boolean>;
 };
 
 export type SparqlEndpoint = {
@@ -344,3 +369,52 @@ export type WhereOperators = {
   gt?: number;
   gte?: number;
 };
+
+/**
+ * Log levels for the logger
+ */
+export type LogLevel = "debug" | "info" | "warn" | "error";
+
+/**
+ * Logger interface for structured logging during graph extraction
+ * Provides a facade that can be implemented by any logging framework
+ */
+export interface Logger {
+  /**
+   * Start a timer with a label
+   * @param label The label to identify the timer
+   */
+  time(label: string): void;
+  /**
+   * Stop a timer with a label
+   * @param label The label to identify the timer
+   */
+  timeEnd(label: string): void;
+  /**
+   * Log debug information (detailed execution flow)
+   * @param message Human-readable message
+   * @param context Optional structured data for context
+   */
+  debug(message: string, context?: Record<string, any>): void;
+
+  /**
+   * Log informational messages (high-level operations)
+   * @param message Human-readable message
+   * @param context Optional structured data for context
+   */
+  info(message: string, context?: Record<string, any>): void;
+
+  /**
+   * Log warning messages (non-fatal issues)
+   * @param message Human-readable message
+   * @param context Optional structured data for context
+   */
+  warn(message: string, context?: Record<string, any>): void;
+
+  /**
+   * Log error messages (failures)
+   * @param message Human-readable message
+   * @param context Optional structured data for context
+   */
+  error(message: string, context?: Record<string, any>): void;
+}
