@@ -1,8 +1,9 @@
 import { AsyncOxigraph, LoadPayload } from "@graviola/async-oxigraph";
-import { Store } from "oxigraph/web";
-import df from "@rdfjs/data-model";
-import { isAsyncOxigraph } from "./isAsyncOxigraph";
 import { RDFMimetype } from "@graviola/async-oxigraph";
+import df from "@rdfjs/data-model";
+import { Store } from "oxigraph/web";
+
+import { isAsyncOxigraph } from "./isAsyncOxigraph";
 
 type OneOrMany<T> = T | T[];
 export type LoadableData = OneOrMany<LoadPayload | string>;

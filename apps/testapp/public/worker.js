@@ -94,8 +94,16 @@ async function load(payload, result) {
 
 // Dump store
 async function dump(payload, result) {
+  if (store == undefined) {
+    result.message = "No store available - nothing to dump.";
+    return result;
+  }
   const t1 = new Date().getTime();
-  result.data = store.dump(payload.mimetype, payload.graphURI);
+  const dumpOptions = { format: payload.mimetype };
+  if (payload.graphURI != undefined) {
+    dumpOptions.from_graph_name = scripts.oxigraph.namedNode(payload.graphURI);
+  }
+  result.data = store.dump(dumpOptions);
   const t2 = new Date().getTime();
 
   const timeInSeconds = (t2 - t1) / 1000;

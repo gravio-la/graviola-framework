@@ -194,6 +194,12 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
             endpoint={endpoint}
             defaultLimit={10}
             initialData={exampleDataTurtle}
+            localPersistence={{
+              enabled: true,
+              restoreOnLoad: true,
+              debounceMS: 5000,
+              storageKey: "testapp",
+            }}
             loader={<CircularProgress />}
           >
             {import.meta.env.DEV ? (

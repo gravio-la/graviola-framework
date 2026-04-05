@@ -40,12 +40,14 @@
     "@graviola/async-oxigraph": "workspace:*",
     "@rdfjs/dataset": "^2.0.2",
     "@rdfjs/data-model": "catalog:rdf",
+    "lodash-es": "catalog:",
     "n3": "^1.17.2",
     "oxigraph": "^0.4.8"
   },
   "devDependencies": {
     "@graviola/edb-build-helper": "workspace:*",
     "@graviola/edb-core-types": "workspace:*",
+    "@types/lodash-es": "^4.17.12",
     "@graviola/edb-global-types": "workspace:*",
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",

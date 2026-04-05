@@ -1,6 +1,9 @@
-import { SparqlEndpoint } from "@graviola/edb-core-types";
+import { RDFMimetype } from "@graviola/async-oxigraph";
+import type { CRUDFunctions, SparqlEndpoint } from "@graviola/edb-core-types";
+import { AbstractDatastore } from "@graviola/edb-global-types";
 import { CrudProviderContext, useAdbContext } from "@graviola/edb-state-hooks";
 import { initSPARQLStore } from "@graviola/sparql-db-impl";
+import { debounce } from "lodash-es";
 import {
   type FunctionComponent,
   type ReactNode,
@@ -9,9 +12,16 @@ import {
 } from "react";
 
 import { bulkLoader, LoadableData } from "./bulkLoader";
-import { useSyncLocalWorkerCrudOptions } from "./localSyncOxigraph";
+import { dumpSyncStore } from "./dumpOxigraph";
+import {
+  createLocalStorageGraphBlobStorage,
+  fullStorageKey,
+  getPersistedTurtle,
+  type LocalPersistenceOptions,
+  setPersistedTurtle,
+} from "./localGraphPersistence";
+import { makeLocalWorkerCrudOptions } from "./localSyncOxigraph";
 import { initSyncOxigraph } from "./useOxigraph";
-import { AbstractDatastore } from "@graviola/edb-global-types";
 
 export type LocalSyncOxigraphStoreProviderProps = {
   children: ReactNode;
@@ -19,12 +29,19 @@ export type LocalSyncOxigraphStoreProviderProps = {
   defaultLimit: number;
   initialData?: LoadableData;
   loader?: ReactNode;
+  localPersistence?: LocalPersistenceOptions;
 };
 
 export const LocalSyncOxigraphStoreProvider: FunctionComponent<
   LocalSyncOxigraphStoreProviderProps
-> = ({ children, endpoint, defaultLimit, initialData, loader }) => {
-  const crudOptions = useSyncLocalWorkerCrudOptions(endpoint);
+> = ({
+  children,
+  endpoint,
+  defaultLimit,
+  initialData,
+  loader,
+  localPersistence,
+}) => {
   const {
     schema,
     typeNameToTypeIRI,
@@ -33,13 +50,49 @@ export const LocalSyncOxigraphStoreProvider: FunctionComponent<
     env: { publicBasePath },
   } = useAdbContext();
   const [dataLoaded, setDataLoaded] = useState(false);
-  const [dataStore, setDataStore] = useState<AbstractDatastore | null>(null);
+  const [bundle, setBundle] = useState<{
+    dataStore: AbstractDatastore;
+    crudOptions: CRUDFunctions;
+  } | null>(null);
+
   useEffect(() => {
-    const init = async () => {
+    let cancelled = false;
+    let debouncedPersist: ReturnType<typeof debounce> | null = null;
+
+    const run = async () => {
       const store = await initSyncOxigraph(publicBasePath);
-      if (!store) {
-        return null;
+      if (!store || cancelled) {
+        return;
       }
+
+      const storage = createLocalStorageGraphBlobStorage();
+      const fullKey = localPersistence
+        ? fullStorageKey(localPersistence.storageKey)
+        : "";
+
+      const innerCrud = makeLocalWorkerCrudOptions(store)(endpoint);
+      let crudOptions: CRUDFunctions = innerCrud;
+
+      if (localPersistence?.enabled) {
+        const persist = () => {
+          try {
+            const turtle = dumpSyncStore(store);
+            setPersistedTurtle(storage, fullKey, turtle);
+          } catch (e) {
+            console.error(e);
+          }
+        };
+        debouncedPersist = debounce(persist, localPersistence.debounceMS);
+        crudOptions = {
+          ...innerCrud,
+          updateFetch: async (query, options) => {
+            const r = await innerCrud.updateFetch(query, options);
+            debouncedPersist?.();
+            return r;
+          },
+        };
+      }
+
       const dataStore = initSPARQLStore({
         defaultPrefix,
         jsonldContext,
@@ -56,26 +109,43 @@ export const LocalSyncOxigraphStoreProvider: FunctionComponent<
         defaultUpdateGraph: endpoint.defaultUpdateGraph,
       });
 
-      if (initialData && !dataLoaded) {
-        bulkLoader(store, initialData)
-          .then(() => {
-            setDataLoaded(true);
-          })
-          .catch((error) => {
-            console.error(error);
-          })
-          .finally(() => {
-            setDataLoaded(true);
-          });
-      } else {
-        setDataLoaded(true);
+      try {
+        const shouldRestore =
+          localPersistence?.enabled === true &&
+          localPersistence.restoreOnLoad === true;
+        if (shouldRestore) {
+          const persisted = getPersistedTurtle(storage, fullKey);
+          if (persisted) {
+            await bulkLoader(store, {
+              triples: persisted,
+              mimetype: RDFMimetype.NQUADS,
+            });
+          } else if (initialData) {
+            await bulkLoader(store, initialData);
+          }
+        } else if (initialData) {
+          await bulkLoader(store, initialData);
+        }
+      } catch (error) {
+        console.error(error);
       }
 
-      setDataStore(dataStore);
+      if (!cancelled) {
+        setBundle({ dataStore, crudOptions });
+        setDataLoaded(true);
+      }
     };
-    init();
+
+    void run();
+
+    return () => {
+      cancelled = true;
+      debouncedPersist?.flush();
+      debouncedPersist?.cancel();
+    };
   }, [
-    crudOptions,
+    publicBasePath,
+    endpoint,
     schema,
     typeNameToTypeIRI,
     queryBuildOptions,
@@ -83,17 +153,16 @@ export const LocalSyncOxigraphStoreProvider: FunctionComponent<
     jsonldContext,
     defaultLimit,
     initialData,
-    setDataLoaded,
-    setDataStore,
+    localPersistence,
     endpoint.defaultUpdateGraph,
   ]);
 
-  return dataStore ? (
+  return bundle ? (
     <CrudProviderContext.Provider
       value={{
-        crudOptions,
-        dataStore,
-        isReady: Boolean(dataStore && dataLoaded),
+        crudOptions: bundle.crudOptions,
+        dataStore: bundle.dataStore,
+        isReady: Boolean(bundle && dataLoaded),
       }}
     >
       {!loader || dataLoaded ? children : loader}
