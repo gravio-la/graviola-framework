@@ -6,3 +6,4 @@ export * from "./typography";
 export * from "./style";
 export * from "./forms";
 export * from "./i18n/translateJsonSchema";
+export * from "./query";
