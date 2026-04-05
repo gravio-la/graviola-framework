@@ -1,8 +1,10 @@
 import type {
   CRUDFunctions,
+  SPARQLCRUDLogger,
   SparqlEndpoint,
   WalkerOptions,
 } from "@graviola/edb-core-types";
+import { sparqlLoggingWrapper } from "@graviola/edb-core-utils";
 import { CrudProviderContext, useAdbContext } from "@graviola/edb-state-hooks";
 import { initSPARQLStore } from "@graviola/sparql-db-impl";
 import { type FunctionComponent, type ReactNode, useMemo } from "react";
@@ -11,7 +13,7 @@ import { tripleStoreImplementations } from "./tripleStoreImplementations";
 
 export type SparqlStoreProviderProps = {
   children: ReactNode;
-  endpoint: SparqlEndpoint;
+  endpoint: SparqlEndpoint & Partial<SPARQLCRUDLogger>;
   defaultLimit: number;
   walkerOptions?: Partial<WalkerOptions>;
   enableInversePropertiesFeature?: boolean;
@@ -25,9 +27,17 @@ export const SparqlStoreProvider: FunctionComponent<
   walkerOptions,
   enableInversePropertiesFeature,
 }) => {
-  const crudOptions = useMemo<CRUDFunctions | null>(() => {
+  const rawCrud = useMemo<CRUDFunctions | null>(() => {
     return tripleStoreImplementations[endpoint.provider](endpoint);
   }, [endpoint]);
+
+  const crudOptions = useMemo<CRUDFunctions | null>(() => {
+    if (!rawCrud) return null;
+    if (endpoint.logQuery || endpoint.logger) {
+      return sparqlLoggingWrapper(endpoint, rawCrud);
+    }
+    return rawCrud;
+  }, [endpoint, rawCrud]);
 
   const {
     schema,
