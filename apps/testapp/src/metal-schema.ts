@@ -1,9 +1,15 @@
+const type = (name: string) => ({
+  type: "string",
+  const: `http://www.example.org/example/${name}`,
+});
 export const schema = {
   $schema: "http://json-schema.org/draft-07/schema#",
   definitions: {
     Person: {
       type: "object",
       properties: {
+        "@id": { type: "string" },
+        "@type": type("Person"),
         firstName: { type: "string", title: "Vorname" },
         lastName: { type: "string", title: "Nachname" },
         employeeId: { type: "string", title: "Mitarbeiternummer" },
@@ -11,6 +17,14 @@ export const schema = {
           type: "string",
           title: "Qualifikation",
           enum: ["Schweißer", "Schweißfachingenieur", "Prüfer", "Meister"],
+        },
+        designedTemplates: {
+          type: "array",
+          title: "Entwürfe",
+          items: { $ref: "#/definitions/WeldingTemplate" },
+          "x-inverseOf": {
+            inverseOf: ["#/definitions/WeldingTemplate/properties/designer"],
+          },
         },
         certification: {
           type: "array",
@@ -34,6 +48,8 @@ export const schema = {
     QualityCheck: {
       type: "object",
       properties: {
+        "@id": { type: "string" },
+        "@type": type("QualityCheck"),
         type: {
           type: "string",
           title: "Prüfart",
@@ -57,6 +73,8 @@ export const schema = {
     Defect: {
       type: "object",
       properties: {
+        "@id": { type: "string" },
+        "@type": type("Defect"),
         type: {
           type: "string",
           title: "Mangelart",
@@ -86,6 +104,8 @@ export const schema = {
     Documentation: {
       type: "object",
       properties: {
+        "@id": { type: "string" },
+        "@type": type("Documentation"),
         type: {
           type: "string",
           title: "Dokumenttyp",
@@ -103,6 +123,8 @@ export const schema = {
     WeldingTemplate: {
       type: "object",
       properties: {
+        "@id": { type: "string" },
+        "@type": type("WeldingTemplate"),
         name: { type: "string", title: "Bauteilbezeichnung" },
         drawingNumber: { type: "string", title: "Zeichnungsnummer" },
         material: { type: "string", title: "Werkstoff" },
@@ -131,6 +153,8 @@ export const schema = {
     WeldedComponent: {
       type: "object",
       properties: {
+        "@id": { type: "string" },
+        "@type": type("WeldedComponent"),
         // Reference to the template this component is based on
         weldingTemplate: {
           $ref: "#/definitions/WeldingTemplate",
