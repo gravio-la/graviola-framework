@@ -59,14 +59,41 @@ import { v4 as uuidv4 } from "uuid";
 
 import { ExportMenuButton } from "./ExportMenuButton";
 import { computeColumns } from "./listHelper";
-import { TableConfigRegistry } from "./types";
+import type { ListConfigType, TableConfigRegistry } from "./types";
 
 const defaultLimit = 25;
 const upperLimit = 10000;
 
+/** Hidden by default; callers can override via `tableConfigRegistry` to show again. */
+const DEFAULT_SEMANTIC_TABLE_COLUMN_VISIBILITY: MRT_VisibilityState = {
+  "@id_single": false,
+  "@type_single": false,
+};
+
+/**
+ * Resolved column visibility for MRT when {@link TableConfigRegistry} is omitted or
+ * has no `columnVisibility` for this type / `default` — all columns visible except
+ * {@link DEFAULT_SEMANTIC_TABLE_COLUMN_VISIBILITY}.
+ */
+function resolveInitialColumnVisibility(
+  conf: Partial<ListConfigType> | undefined,
+  tableConfig: TableConfigRegistry | undefined,
+): MRT_VisibilityState {
+  return {
+    ...DEFAULT_SEMANTIC_TABLE_COLUMN_VISIBILITY,
+    ...tableConfig?.default?.columnVisibility,
+    ...conf?.columnVisibility,
+  };
+}
+
 export type SemanticTableProps = {
   typeName: string;
   csvOptions?: ConfigOptions;
+  /**
+   * Optional: per-type column visibility and column-definition matchers.
+   * If omitted, the table still works — columns come from the JSON Schema and
+   * default to fully visible (no crash; do not require a `default` entry).
+   */
   tableConfigRegistry?: TableConfigRegistry;
   onShowEntry?: (id: string, typeIRI: string) => void;
   onEditEntry?: (id: string, typeIRI: string) => void;
@@ -195,7 +222,7 @@ export const SemanticTable = ({
 
   const conf = useMemo(
     () => tableConfig?.[typeName] || tableConfig?.default,
-    [typeName],
+    [tableConfig, typeName],
   );
 
   const displayColumns = useMemo<MRT_ColumnDef<any>[]>(() => {
@@ -216,10 +243,18 @@ export const SemanticTable = ({
     queryBuildOptions.primaryFields,
   ]);
 
-  const columnOrder = useMemo(
-    () => ["mrt-row-select", ...displayColumns.map((col) => col.id)],
-    [displayColumns],
-  );
+  const columnOrder = useMemo(() => {
+    const ids = displayColumns.map((col) => col.id);
+    const labelField = queryBuildOptions.primaryFields?.[typeName]?.label as
+      | string
+      | undefined;
+    const primaryColId = labelField ? `${labelField}_single` : undefined;
+    const ordered =
+      primaryColId && ids.includes(primaryColId)
+        ? [primaryColId, ...ids.filter((id) => id !== primaryColId)]
+        : ids;
+    return ["mrt-row-select", ...ordered];
+  }, [displayColumns, queryBuildOptions.primaryFields, typeName]);
 
   const { push, query } = useModifiedRouter();
   const locale = (query.locale || "en") as string;
@@ -354,7 +389,7 @@ export const SemanticTable = ({
   );
 
   const [columnVisibility, setColumnVisibility] = useState<MRT_VisibilityState>(
-    conf?.columnVisibility || tableConfig?.default?.columnVisibility,
+    () => resolveInitialColumnVisibility(conf, tableConfig),
   );
 
   const handleChangeColumnVisibility = useCallback(
@@ -480,7 +515,7 @@ export const SemanticTable = ({
     },
     columnFilterDisplayMode: "popover",
     initialState: {
-      columnVisibility: conf.columnVisibility,
+      columnVisibility: resolveInitialColumnVisibility(conf, tableConfig),
       pagination: { pageIndex: 0, pageSize: defaultLimit },
     },
     localization,
