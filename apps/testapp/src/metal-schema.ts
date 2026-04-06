@@ -159,6 +159,11 @@ export const schema = {
         weldingTemplate: {
           $ref: "#/definitions/WeldingTemplate",
           title: "Schweißvorlage",
+          "x-inverseOf": {
+            inverseOf: [
+              "#/definitions/WeldingTemplate/properties/weldedComponents",
+            ],
+          },
         },
         uniqueNumber: { type: "string", title: "Seriennummer / Bauteilnummer" },
         partId: { type: "string", title: "Part-ID" },

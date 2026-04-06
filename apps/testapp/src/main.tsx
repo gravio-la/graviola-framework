@@ -6,7 +6,7 @@ import { GraviolaProvider } from "./provider/GraviolaProvider";
 import { bringDefinitionToTop } from "@graviola/json-schema-utils";
 import "./index.css";
 import App from "./App.tsx";
-import { schema as itemSchema } from "./schema.ts";
+import { schema as itemSchema } from "./item-schema.ts";
 import { schema as metalSchema } from "./metal-schema.ts";
 import { allRenderers } from "./provider/config.ts";
 import dayjs from "dayjs";
