@@ -53,7 +53,6 @@ import {
 import { MRT_Localization_DE } from "material-react-table/locales/de";
 import { MRT_Localization_EN } from "material-react-table/locales/en";
 import { useTranslation } from "next-i18next";
-import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
@@ -313,31 +312,26 @@ export const SemanticTable = ({
       queryClient.invalidateQueries({ queryKey: ["type", typeIRI] });
     },
   });
-  const { enqueueSnackbar } = useSnackbar();
   const handleRemove = useCallback(
     async (id: string) => {
       NiceModal.show(GenericModal, {
         type: "delete",
       }).then(async () => {
-        enqueueSnackbar(t("about to remove"), { variant: "info" });
         await removeEntity(id);
-        enqueueSnackbar(t("removed"), { variant: "success" });
       });
     },
-    [removeEntity, enqueueSnackbar, t],
+    [removeEntity],
   );
   const handleMoveToTrash = useCallback(
     async (id: string) => {
       NiceModal.show(GenericModal, {
         type: "moveToTrash",
       }).then(async () => {
-        enqueueSnackbar("About to move to trash", { variant: "info" });
         await moveToTrashAsync(id);
-        enqueueSnackbar("Moved to trash", { variant: "success" });
         return;
       });
     },
-    [moveToTrashAsync, enqueueSnackbar],
+    [moveToTrashAsync],
   );
 
   const tableContainerRef = useRef<HTMLDivElement>(null); //we can get access to the underlying TableContainer element and react to its scroll events
@@ -408,9 +402,6 @@ export const SemanticTable = ({
         extraMessage: t("delete selected entries", { count: c }),
       })
         .then(() => {
-          enqueueSnackbar(t("will remove entries", { count: c }), {
-            variant: "info",
-          });
           return Promise.all(
             selectedRows.map(async (row) => {
               const id = (row.original.entity as any)?.value;
@@ -421,12 +412,12 @@ export const SemanticTable = ({
           );
         })
         .then(() => {
-          enqueueSnackbar(t("successfully removed entries", { count: c }), {
-            variant: "success",
-          });
+          //enqueueSnackbar(t("successfully removed entries", { count: c }), {
+          //  variant: "success",
+          //});
         });
     },
-    [removeEntity, enqueueSnackbar, t],
+    [removeEntity],
   );
   const handleMoveToTrashSelected = useCallback(
     (table_: MRT_TableInstance<any>) => {
@@ -438,9 +429,6 @@ export const SemanticTable = ({
         extraMessage: t("move selected entries to trash", { count: c }),
       })
         .then(async () => {
-          enqueueSnackbar(t("will move entries to trash", { count: c }), {
-            variant: "info",
-          });
           return await moveToTrashAsync(
             filterUndefOrNull(
               selectedRows.map((row) => {
@@ -449,16 +437,9 @@ export const SemanticTable = ({
             ),
           );
         })
-        .then(() => {
-          enqueueSnackbar(
-            t("successfully moved entries to trash", { count: c }),
-            {
-              variant: "success",
-            },
-          );
-        });
+        .then(() => {});
     },
-    [moveToTrashAsync, enqueueSnackbar, t],
+    [moveToTrashAsync],
   );
 
   const table = useMaterialReactTable({
@@ -467,8 +448,11 @@ export const SemanticTable = ({
     enableStickyHeader: true,
     rowVirtualizerInstanceRef: rowVirtualizerInstanceRef,
     muiTableContainerProps: {
-      ref: tableContainerRef, //get access to the table container element
+      ref: tableContainerRef,
       sx: {
+        flex: 1,
+        overflow: "auto",
+        minHeight: 0,
         "&::-webkit-scrollbar": {
           height: 8,
         },
@@ -497,8 +481,8 @@ export const SemanticTable = ({
     layoutMode: "semantic",
     muiTablePaperProps: {
       sx: {
-        height: "100%",
-        maxHeight: "100%",
+        position: "absolute",
+        inset: 0,
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",
@@ -712,36 +696,36 @@ export const SemanticTable = ({
   useEffect(() => {
     if (typeName && typeLoaded !== typeName) {
       setTypeLoaded(typeName);
-      enqueueSnackbar(t("loading typename", { typeName: t(typeName) }), {
-        variant: "info",
-      });
       table.reset();
     }
-  }, [typeName, typeLoaded, enqueueSnackbar, t, table]);
+  }, [typeName, typeLoaded, t, table]);
 
   return (
     <Box
       sx={{
-        width: "100%",
-        height: "100%",
-        maxHeight: "100%",
-        display: "flex",
-        flexDirection: "column",
+        flex: 1,
+        minHeight: 0,
         overflow: "hidden",
+        position: "relative",
       }}
     >
+      <Backdrop
+        sx={{
+          color: "#fff",
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          position: "absolute",
+        }}
+        open={isLoading || aboutToRemove}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       {isLoading && displayColumns.length <= 0 ? (
-        <Skeleton variant="rectangular" height={"50%"} />
+        <Skeleton
+          variant="rectangular"
+          sx={{ position: "absolute", inset: 0 }}
+        />
       ) : (
-        <>
-          <Backdrop
-            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={isLoading || aboutToRemove}
-          >
-            <CircularProgress color="inherit" />
-          </Backdrop>
-          <MaterialReactTable table={table} />
-        </>
+        <MaterialReactTable table={table} />
       )}
     </Box>
   );

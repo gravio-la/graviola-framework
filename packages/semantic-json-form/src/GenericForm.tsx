@@ -35,6 +35,7 @@ export const GenericForm: FunctionComponent<Props> = ({
   entityIRI,
   typeName,
   onFormDataChange,
+  forceEditMode = true,
   ...props
 }) => {
   const {
@@ -79,7 +80,7 @@ export const GenericForm: FunctionComponent<Props> = ({
       typeIRI={typeIRI}
       data={formData}
       shouldLoadInitially={true}
-      forceEditMode
+      forceEditMode={forceEditMode}
       onChange={handleFormDataChange}
       schema={extendedSchema}
       defaultPrefix={defaultPrefix}
