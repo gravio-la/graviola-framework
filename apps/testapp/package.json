@@ -22,6 +22,7 @@
     "@graviola/edb-state-hooks": "workspace:*",
     "@graviola/edb-ui-utils": "workspace:*",
     "@graviola/entity-finder": "workspace:*",
+    "@graviola/edb-table-components": "workspace:*",
     "@graviola/json-schema-utils": "workspace:*",
     "@graviola/jsonld-utils": "workspace:*",
     "@graviola/local-oxigraph-store-provider": "workspace:*",
@@ -36,10 +37,14 @@
     "@tanstack/react-query": "^5.28.5",
     "@tanstack/react-query-devtools": "^5.72.1",
     "dayjs": "^1.11.11",
+    "i18next": "^23.7.7",
     "lodash-es": "catalog:",
+    "notistack": "^3.0.1",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-redux": "^9.2.0"
+    "react-i18next": "^15.0.0",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "catalog:"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",

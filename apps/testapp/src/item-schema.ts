@@ -1,10 +1,25 @@
+import type { JSONSchema7 } from "json-schema";
+import { bringDefinitionToTop } from "@graviola/json-schema-utils";
+import { generateDefaultUISchema } from "@graviola/edb-ui-utils";
+import type { SchemaConfig } from "./schemaTypes";
+import { exampleDataTurtle } from "./item-fixture";
+
+const type = (name: string) => ({
+  type: "string",
+  const: `http://www.example.org/example/${name}`,
+});
 export const schema = {
   type: "object",
   definitions: {
     Category: {
       type: "object",
       properties: {
+        "@id": { type: "string" },
+        "@type": type("Category"),
         name: {
+          type: "string",
+        },
+        image: {
           type: "string",
         },
         description: {
@@ -14,12 +29,26 @@ export const schema = {
           type: "number",
           multipleOf: 0.01,
         },
+        subCategories: {
+          type: "array",
+          items: {
+            $ref: "#/definitions/Category",
+          },
+          "x-inverseOf": {
+            inverseOf: ["#/definitions/Category/properties/parentCategory"],
+          },
+        },
+        parentCategory: {
+          $ref: "#/definitions/Category",
+        },
       },
       required: ["name"],
     },
     Item: {
       type: "object",
       properties: {
+        "@id": { type: "string" },
+        "@type": type("Item"),
         name: {
           type: "string",
         },
@@ -33,7 +62,6 @@ export const schema = {
           type: "array",
           items: {
             type: "string",
-            format: "uri",
           },
         },
         condition: {
@@ -61,6 +89,8 @@ export const schema = {
     Tag: {
       type: "object",
       properties: {
+        "@id": { type: "string" },
+        "@type": type("Tag"),
         name: {
           type: "string",
         },
@@ -72,65 +102,85 @@ export const schema = {
         },
       },
     },
-    Profession: {
-      type: "object",
-      properties: {
-        id: {
-          type: "string",
-        },
-        title: {
-          type: "string",
-          title: "Job Title",
-        },
-        field: {
-          type: "string",
-          title: "Field",
-          enum: ["Technology", "Healthcare", "Education", "Finance", "Other"],
-        },
-        description: {
-          type: "string",
-        },
-        yearsExperience: {
-          type: "integer",
-          minimum: 0,
-          title: "Years of Experience",
-        },
-      },
-      required: ["title", "field"],
+  },
+};
+
+const itemJsonSchema = schema as unknown as JSONSchema7;
+
+export const itemSchemaConfig: SchemaConfig = {
+  schemaName: "item-schema",
+  label: "Items catalog",
+  description:
+    "Categories, items, tags — generic CRUD with list, create, edit, and detail routes.",
+  version: "0.1.0",
+  cardImage: "/item-schema-card.webp",
+  color: "#2e7d32",
+  icon: "🛒",
+  storageKey: "testapp-items",
+  initialData: exampleDataTurtle,
+  baseIRI: "http://www.example.org/",
+  entityBaseIRI: "http://www.example.org/example/",
+  schema: itemJsonSchema,
+  primaryFields: {
+    Category: {
+      label: "name",
+      description: "description",
+      image: "image",
     },
-    Person: {
-      properties: {
-        name: {
-          type: "string",
-          minLength: 3,
-        },
-        email: {
-          type: "string",
-          format: "email",
-        },
-        age: {
-          type: "integer",
-          minimum: 0,
-        },
-        comment: {
-          type: "string",
-        },
-        hasItem: {
-          $ref: "#/definitions/Item",
-        },
-        hasItems: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              id: {
-                type: "string",
-              },
+    Item: {
+      label: "name",
+      description: "description",
+      image: "photos",
+    },
+    Tag: {
+      label: "name",
+      description: "description",
+      image: "image",
+    },
+  },
+  typeNameLabelMap: {
+    Category: "Kategorie",
+    Item: "Artikel",
+    Tag: "Tag",
+  },
+  typeNameUiSchemaOptionsMap: {
+    Category: {
+      dropdown: true,
+    },
+    Tag: {
+      chips: true,
+    },
+  },
+  uischemata: {
+    Category: generateDefaultUISchema(
+      bringDefinitionToTop(itemJsonSchema as any, "Category") as any,
+      {
+        scopeOverride: {
+          "#/properties/subCategories": {
+            type: "Control",
+            scope: "#/properties/subCategories",
+            options: {
+              dropdown: true,
+              chips: true,
             },
           },
         },
       },
-      required: ["name", "email"],
-    },
+    ),
+    Item: generateDefaultUISchema(
+      bringDefinitionToTop(itemJsonSchema as any, "Item") as any,
+      {
+        scopeOverride: {
+          "#/properties/tags": {
+            type: "Control",
+            scope: "#/properties/tags",
+            options: {
+              chips: true,
+              dropdown: true,
+            },
+          },
+        },
+      },
+    ),
   },
 };

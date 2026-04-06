@@ -1,3 +1,10 @@
+import type { JSONSchema7 } from "json-schema";
+import dayjs from "dayjs";
+import { bringDefinitionToTop } from "@graviola/json-schema-utils";
+import { generateDefaultUISchema } from "@graviola/edb-ui-utils";
+import type { SchemaConfig } from "./schemaTypes";
+import { exampleDataTurtle } from "./metal-fixture";
+
 const type = (name: string) => ({
   type: "string",
   const: `http://www.example.org/example/${name}`,
@@ -197,5 +204,125 @@ export const schema = {
       },
       required: ["uniqueNumber", "partId", "weldingDate"],
     },
+  },
+};
+
+const metalSchema = schema as unknown as JSONSchema7;
+
+export const metalSchemaConfig: SchemaConfig = {
+  schemaName: "metal-schema",
+  label: "Metal / welding",
+  description:
+    "Welding templates, welded components, QA checks — demo data for linked-data forms.",
+  version: "0.1.0",
+  cardImage: "/metal-schema-card.jpg",
+  color: "#1565c0",
+  icon: "⚙️",
+  storageKey: "testapp-metal",
+  initialData: exampleDataTurtle,
+  baseIRI: "http://www.example.org/",
+  entityBaseIRI: "http://www.example.org/example/",
+  schema: metalSchema,
+  primaryFields: {
+    WeldingTemplate: {
+      label: "name",
+      description: "drawingNumber",
+    },
+    WeldedComponent: {
+      label: "uniqueNumber",
+      description: "partId",
+    },
+    Person: {
+      label: "lastName",
+      description: "employeeId",
+    },
+    QualityCheck: {
+      label: "type",
+      description: "notes",
+    },
+    Defect: {
+      label: "type",
+      description: "location",
+    },
+    Documentation: {
+      label: "type",
+      description: "file",
+    },
+  },
+  typeNameLabelMap: {
+    WeldingTemplate: "Schweißvorlage",
+    WeldedComponent: "Geschweißtes Bauteil",
+    Person: "Mitarbeiter",
+    QualityCheck: "Qualitätsprüfung",
+    Defect: "Mangel",
+    Documentation: "Dokument",
+  },
+  typeNameUiSchemaOptionsMap: {
+    WeldedComponent: {
+      dropdown: true,
+    },
+    Person: {
+      dropdown: true,
+    },
+  },
+  uischemata: {
+    WeldingTemplate: generateDefaultUISchema(
+      bringDefinitionToTop(metalSchema as any, "WeldingTemplate") as any,
+      {
+        scopeOverride: {
+          "#/properties/weldedComponents": {
+            type: "Control",
+            scope: "#/properties/weldedComponents",
+            options: {
+              dropdown: true,
+              showCreateButton: true,
+              prepareNewEntityData: (parentData: any) => {
+                const newData = {
+                  material: parentData.material,
+                  weldingTemplate: parentData,
+                  weldingDate: dayjs().format("YYYY-MM-DD"),
+                  uniqueNumber: String(
+                    Math.floor(10000000 + Math.random() * 90000000),
+                  ),
+                  partId: Array.from({ length: 8 }, () =>
+                    String.fromCharCode(65 + Math.floor(Math.random() * 26)),
+                  ).join(""),
+                };
+                return newData;
+              },
+            },
+          },
+        },
+      },
+    ),
+    WeldedComponent: generateDefaultUISchema(
+      bringDefinitionToTop(metalSchema as any, "WeldedComponent") as any,
+      {
+        scopeOverride: {
+          "#/properties/qualityChecks": {
+            type: "Control",
+            scope: "#/properties/qualityChecks",
+            options: {
+              chips: true,
+            },
+          },
+          "#/properties/defects": {
+            type: "Control",
+            scope: "#/properties/defects",
+            label: "Mängelliste",
+            options: {
+              chips: true,
+            },
+          },
+          "#/properties/welder": {
+            type: "Control",
+            scope: "#/properties/welder",
+            options: {
+              dropdown: true,
+            },
+          },
+        },
+      },
+    ),
   },
 };

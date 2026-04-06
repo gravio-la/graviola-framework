@@ -36,7 +36,6 @@ import {
   EntityFinderProps,
   FinderKnowledgeBaseDescription,
   GlobalSemanticConfig,
-  ModRouter,
 } from "@graviola/semantic-jsonform-types";
 import {
   JsonFormsCellRendererRegistryEntry,
@@ -46,7 +45,8 @@ import {
 import { JSONSchema7 } from "json-schema";
 import { allRenderers } from "./config";
 import { CircularProgress } from "@mui/material";
-import { exampleDataTurtle } from "../fixture";
+import { useSnackbar } from "notistack";
+import { useRouterHook } from "../useRouterHook";
 
 type GraviolaProviderProps = {
   baseIRI: string;
@@ -59,6 +59,8 @@ type GraviolaProviderProps = {
   typeNameUiSchemaOptionsMap: Record<string, any>;
   primaryFields: PrimaryFieldDeclaration;
   uischemata?: Record<string, UISchemaElement>;
+  storageKey: string;
+  initialData?: string;
 };
 
 const SimilarityFinder = (props: EntityFinderProps) => {
@@ -84,21 +86,6 @@ const SimilarityFinder = (props: EntityFinderProps) => {
   return <EntityFinder {...props} allKnowledgeBases={allKnowledgeBases} />;
 };
 
-export const useRouterMock = () => {
-  return {
-    push: async (url) => {
-      console.log("push", url);
-    },
-    replace: async (url) => {
-      console.log("replace", url);
-    },
-    asPath: "",
-    pathname: "",
-    query: {},
-    searchParams: {},
-  } as ModRouter;
-};
-
 export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
   children,
   baseIRI,
@@ -110,6 +97,8 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
   cellRendererRegistry,
   typeNameLabelMap,
   typeNameUiSchemaOptionsMap,
+  storageKey,
+  initialData,
 }: GraviolaProviderProps) => {
   const endpoint: SparqlEndpoint = useMemo(() => {
     return {
@@ -143,7 +132,7 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
         primaryFields,
       },
     };
-  }, [baseIRI, entityBaseIRI, primaryFields]);
+  }, [baseIRI, primaryFields]);
 
   const makeStubSchema = useCallback(
     (schema: JSONSchema7) => {
@@ -177,7 +166,8 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
           SemanticJsonForm: SemanticJsonFormNoOps,
           SimilarityFinder: SimilarityFinder,
         }}
-        useRouterHook={useRouterMock}
+        useRouterHook={useRouterHook}
+        useSnackbar={useSnackbar}
         schema={schema}
         makeStubSchema={makeStubSchema}
         uiSchemaDefaultRegistry={registry}
@@ -191,14 +181,15 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
           enableInversePropertiesFeature={true}
         >
           <LocalOxigraphStoreProvider
+            key={storageKey}
             endpoint={endpoint}
             defaultLimit={10}
-            initialData={exampleDataTurtle}
+            initialData={initialData ?? ""}
             localPersistence={{
               enabled: true,
               restoreOnLoad: true,
               debounceMS: 5000,
-              storageKey: "testapp",
+              storageKey,
             }}
             loader={<CircularProgress />}
           >

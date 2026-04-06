@@ -9,12 +9,11 @@ import {
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import CodeIcon from "@mui/icons-material/Code";
-import "./App.css";
 import { GenericForm } from "@graviola/semantic-json-form";
 import { useState } from "react";
 import { useAdbContext } from "@graviola/edb-state-hooks";
 
-function App() {
+export function MetalFormPage() {
   const [itemUrl, setItemUrl] = useState<string | undefined>(
     "http://www.example.org/example/template-pressure-vessel-da12",
   );
@@ -32,7 +31,7 @@ function App() {
   const { schema } = useAdbContext();
 
   return (
-    <Box sx={{ mt: 4, width: "600px" }}>
+    <Box sx={{ p: 2, width: "600px" }}>
       <ButtonGroup sx={{ mb: 2 }}>
         <Button
           onClick={() => setShowControls(!showControls)}
@@ -108,7 +107,6 @@ function App() {
             style={{
               maxHeight: 400,
               width: "100%",
-              // enables scroll, but no overflow outside container
               overflowY: "auto",
               overflowX: "auto",
               margin: 0,
@@ -122,7 +120,6 @@ function App() {
             style={{
               maxHeight: 400,
               width: "100%",
-              // enables scroll, but no overflow outside container
               overflowY: "auto",
               overflowX: "auto",
               margin: 0,
@@ -135,5 +132,3 @@ function App() {
     </Box>
   );
 }
-
-export default App;
