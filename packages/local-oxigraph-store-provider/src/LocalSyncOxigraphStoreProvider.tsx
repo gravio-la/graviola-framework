@@ -59,6 +59,9 @@ export const LocalSyncOxigraphStoreProvider: FunctionComponent<
     let cancelled = false;
     let debouncedPersist: ReturnType<typeof debounce> | null = null;
 
+    setBundle(null);
+    setDataLoaded(false);
+
     const run = async () => {
       const store = await initSyncOxigraph(publicBasePath);
       if (!store || cancelled) {
@@ -99,7 +102,7 @@ export const LocalSyncOxigraphStoreProvider: FunctionComponent<
         typeNameToTypeIRI,
         queryBuildOptions,
         walkerOptions: {
-          maxRecursion: 1,
+          maxRecursion: 3,
           maxRecursionEachRef: 3,
           skipAtLevel: 10,
         },

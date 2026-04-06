@@ -5,3 +5,4 @@ export * from "./useRDFDataSources";
 export * from "./bulkLoader";
 export * from "./localGraphPersistence";
 export * from "./dumpOxigraph";
+export * from "./clearAsyncOxigraph";

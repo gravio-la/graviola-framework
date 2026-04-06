@@ -18,6 +18,7 @@ import {
   useState,
 } from "react";
 
+import { clearAsyncOxigraphDataset } from "./clearAsyncOxigraph";
 import { bulkLoader, LoadableData } from "./bulkLoader";
 import { dumpAsyncOxigraph } from "./dumpOxigraph";
 import { useAsyncLocalWorkerCrudOptions } from "./localAsyncOxigraph";
@@ -154,9 +155,11 @@ export const LocalOxigraphStoreProvider: FunctionComponent<
       return;
     }
 
+    setDataLoaded(false);
     let cancelled = false;
     (async () => {
       try {
+        await clearAsyncOxigraphDataset(store as AsyncOxigraph);
         const shouldRestore =
           localPersistence?.enabled === true &&
           localPersistence.restoreOnLoad === true;
