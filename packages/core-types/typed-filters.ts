@@ -5,12 +5,7 @@
  * with full type safety and schema inference.
  */
 
-import type {
-  PaginationMetadata,
-  PaginationOptions,
-  SortOrder,
-  OrderByClause,
-} from "./index";
+import type { PaginationMetadata } from "./index";
 
 /**
  * String-specific filter operators
