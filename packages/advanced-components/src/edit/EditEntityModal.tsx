@@ -290,7 +290,7 @@ export const EditEntityModal = NiceModal.create(
         <MuiEditDialog
           open={modal.visible}
           onClose={handleClose}
-          title={t("Loading...")}
+          title={t("edit-dialog.loadingTitle", "Loading...")}
           editMode={false}
           actions={
             <Button onClick={handleClose} color="error">

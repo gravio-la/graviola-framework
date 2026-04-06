@@ -76,7 +76,7 @@ export const MuiEditDialog = ({
       <AppBar position="static">
         <Toolbar variant="dense">
           <Typography variant="h6" color="inherit" component="div">
-            {title || t("edit-dialog.title")}
+            {title || t("edit-dialog.title", "Edit entry")}
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: "flex" }}>

@@ -124,7 +124,7 @@ export const SemanticFormsModal = (props: SemanticFormsModalProps) => {
   }, [editMode, setEditMode]);
   return (
     <MuiEditDialog
-      title={label || ""}
+      title={label}
       open={open}
       onClose={askCancel}
       onCancel={askCancel}
