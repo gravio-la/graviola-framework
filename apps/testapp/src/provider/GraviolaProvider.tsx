@@ -13,7 +13,7 @@ import {
 } from "@graviola/edb-core-types";
 import NiceModal from "@ebay/nice-modal-react";
 import { SparqlStoreProvider } from "@graviola/sparql-store-provider";
-import { LocalOxigraphStoreProvider } from "@graviola/local-oxigraph-store-provider";
+import { IndexedDBStoreProvider } from "@graviola/indexeddb-store-provider";
 import { Provider } from "react-redux";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
@@ -180,24 +180,18 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
           defaultLimit={20}
           enableInversePropertiesFeature={true}
         >
-          <LocalOxigraphStoreProvider
+          <IndexedDBStoreProvider
             key={storageKey}
-            endpoint={endpoint}
+            dbName={storageKey}
             defaultLimit={10}
-            initialData={initialData ?? ""}
-            localPersistence={{
-              enabled: true,
-              restoreOnLoad: true,
-              debounceMS: 5000,
-              storageKey,
-            }}
+            initialData={initialData}
             loader={<CircularProgress />}
           >
             {import.meta.env.DEV ? (
               <SPARQLQueryDevtools initialIsOpen={false} />
             ) : null}
             <NiceModal.Provider>{children}</NiceModal.Provider>
-          </LocalOxigraphStoreProvider>
+          </IndexedDBStoreProvider>
         </SparqlStoreProvider>
         <ReactQueryDevtools initialIsOpen={true} />
       </AdbProvider>

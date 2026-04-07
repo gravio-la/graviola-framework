@@ -25,6 +25,7 @@
     "@graviola/edb-table-components": "workspace:*",
     "@graviola/json-schema-utils": "workspace:*",
     "@graviola/jsonld-utils": "workspace:*",
+    "@graviola/indexeddb-store-provider": "workspace:*",
     "@graviola/local-oxigraph-store-provider": "workspace:*",
     "@graviola/semantic-json-form": "workspace:*",
     "@graviola/semantic-jsonform-types": "workspace:*",
