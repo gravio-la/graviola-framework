@@ -117,12 +117,5 @@
     "*.{js,ts,jsx,tsx,md}": [
       "prettier --write --ignore-unknown"
     ]
-  },
-  "dependencies": {
-    "@chromatic-com/storybook": "^5.1.1",
-    "@mui/x-date-pickers": "^8.27.2",
-    "@storybook/addon-docs": "^10.3.4",
-    "@storybook/react-vite": "^10.3.4",
-    "storybook": "^10.3.4"
   }
 }
