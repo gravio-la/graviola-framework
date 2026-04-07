@@ -30,7 +30,7 @@
   "peerDependencies": {
     "@mui/material": "catalog:mui",
     "@mui/icons-material": "catalog:mui",
-    "@mui/x-date-pickers": "^7 | ^8",
+    "@mui/x-date-pickers": "catalog:mui",
     "@jsonforms/material-renderers": "catalog:jsonforms",
     "@jsonforms/core": "catalog:jsonforms",
     "@jsonforms/react": "catalog:jsonforms",
