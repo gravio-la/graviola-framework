@@ -1,0 +1,44 @@
+{
+  "name": "@graviola/indexeddb-store-provider",
+  "version": "0.1.0",
+  "description": "React store provider backed by IndexedDB hexastore + Comunica SPARQL",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "bun test",
+    "test:watch": "bun test --watch"
+  },
+  "dependencies": {
+    "@comunica/query-sparql-rdfjs": "^4.0.0",
+    "@graviola/indexeddb-dataset": "workspace:*",
+    "@graviola/sparql-db-impl": "workspace:*",
+    "@graviola/edb-core-utils": "workspace:*",
+    "n3": "^1.17.2"
+  },
+  "peerDependencies": {
+    "@graviola/edb-core-types": "workspace:*",
+    "@graviola/edb-state-hooks": "workspace:*",
+    "@rdfjs/types": "catalog:rdf",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*",
+    "fake-indexeddb": "^6.0.0",
+    "typescript": "^5.8.2"
+  }
+}
