@@ -132,7 +132,7 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
         <GraviolaLoungeProviders>
           <LocalOxigraphStoreProvider
             key={storageKey}
-            endpoint={endpoint}
+            dbName={storageKey}
             defaultLimit={10}
             enableInversePropertiesFeature={true}
             initialData={initialData ?? ""}
