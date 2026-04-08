@@ -27,13 +27,11 @@
     "start": "turbo run demo",
     "build": "turbo run build",
     "build:packages": "turbo run build --filter='./packages/**/*' --continue",
-    "build:manifestations": "turbo run build --filter='./manifestation/*' --continue",
     "build:pages": "turbo run build:pages",
-    "cli": "bun ./apps/edb-cli/src/index.ts",
     "dev": "turbo run dev --parallel",
     "dev:api": "turbo run dev:api",
-    "dev:exhibition": "turbo run dev --parallel --filter='./apps/exhibition-live'",
-    "dev:vite": "turbo run dev:vite --parallel --filter='./apps/exhibition-live'",
+    "dev:testapp": "turbo run dev --filter='./apps/testapp'",
+    "dev:storybook": "turbo run storybook --filter='./apps/storybook'",
     "dev:packages": "turbo run dev --parallel --filter='./packages/*'",
     "dev:form-renderer": "turbo run dev --parallel --filter='./packages/form-renderer/*'",
     "test": "turbo run test",
@@ -48,8 +46,6 @@
     "release": "turbo run release --continue --concurrency 1",
     "helper:deps": "bun ./packages/build-helper/get-dependencies.js",
     "build:prisma": "turbo run build:prisma && sed -i \"s/env(\\\"DATABASE_PROVIDER\\\")/\\\"${DATABASE_PROVIDER:-sqlite}\\\"/g\" ./prisma/*.prisma",
-    "prisma:exhibition:generate": "prisma generate --schema ./prisma/exhibition.prisma",
-    "prisma:exhibition:migrate": "prisma migrate dev --schema ./prisma/exhibition.prisma",
     "purge": "rm -rf node_modules && find -maxdepth 3 -name node_modules | xargs rm -rf",
     "syncpack:mismatches": "syncpack list-mismatches --types prod",
     "depcheck": "turbo run depcheck --filter='./packages/*' --continue"
@@ -59,7 +55,6 @@
       "packages/*",
       "packages/ideas/*",
       "packages/form-renderer/*",
-      "manifestation/*",
       "apps/*"
     ],
     "catalog": {

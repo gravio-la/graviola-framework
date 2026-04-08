@@ -20,23 +20,21 @@ The Graviola framework enables:
 
 ## Live Demo
 
-A live demo of the exhibition catalog application (built with the Graviola framework) is available here: [https://slub.github.io/exhibition-live/](https://slub.github.io/exhibition-live/)
-
-You can set your own storage backend(s) within the settings modal.
+The hosted Storybook for this repository is published to GitHub Pages when CI runs on the default branch.
 
 ## Documentation
 
-Please check the **[Storybook of the Graviola Framework](https://slub.github.io/exhibition-live/storybook/)** for in-depth documentation of the frontend components, CLI tools, and the overall architecture of the framework.
+Use the **Storybook** app in this monorepo (`apps/storybook`) for interactive documentation of the frontend components and architecture.
 
 ## Getting Started
 
-For a quick start, install all dependencies, build the packages, and start the development server of the exhibition-live application:
+Install dependencies, build all library packages, and run the minimal **testapp** example:
 
 ```bash
-bun i && bun build:packages && (cd apps/exhibition-live && bun run dev:vite)
+bun install && bun run build:packages && bun run dev:testapp
 ```
 
-Open [http://localhost:5173/de/list/Exhibition](http://localhost:5173/de/list/Exhibition) with your browser to see the result.
+Then open the URL printed by Vite (typically `http://localhost:5173`).
 
 ## Framework Architecture
 

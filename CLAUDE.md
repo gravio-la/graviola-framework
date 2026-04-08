@@ -22,35 +22,28 @@ graviola-crud-framework/
 │   ├── ideas/             # Experimental / incubating packages (sub-workspace)
 │   └── ...                # Core packages (see below)
 ├── apps/                  # Applications
-│   ├── testapp/           # ← PRIMARY example app (Vite + React, stays long-term)
-│   ├── exhibition-live/   # Large demo app (may be extracted to its own repo)
+│   ├── testapp/           # ← PRIMARY example app (Vite + React)
 │   ├── storybook/         # Component playground
-│   ├── edb-cli/           # CLI tool
-│   ├── edb-api/           # REST API backend
-│   └── ...                # Other CLI/API apps
-├── manifestation/         # Domain-specific implementations (may be extracted)
-│   ├── exhibition/
-│   ├── kulinarik/
-│   └── exhibition-sparql-config/
+│   └── ...                # Other CLI/API apps (see repo)
 ├── _templates/            # Code generation templates (hygen)
 ├── prisma/                # Prisma schema files
 ├── docker/                # Docker Compose services
 └── .changeset/            # Changeset versioning
 ```
 
-> **Note**: `apps/exhibition-live` and `manifestation/*` are large demonstration projects that may be moved to a separate repository. The canonical example to study is `apps/testapp`.
+> **Note**: Domain-specific SLUB apps and schemas live in a separate repository (`split/manifestations` branch elsewhere). The canonical example in this repo is `apps/testapp`.
 
 ---
 
 ## Monorepo Tooling
 
-| Tool | Purpose |
-|------|---------|
-| **Bun** (v1.3.10+) | Package manager and runtime |
-| **Turborepo** | Build orchestration and caching |
-| **tsup** | Per-package TypeScript bundler (CJS + ESM output) |
-| **TypeScript** v5.8+ | Strict mode, target ES2022 |
-| **Changesets** | Version management and changelog generation |
+| Tool                 | Purpose                                           |
+| -------------------- | ------------------------------------------------- |
+| **Bun** (v1.3.10+)   | Package manager and runtime                       |
+| **Turborepo**        | Build orchestration and caching                   |
+| **tsup**             | Per-package TypeScript bundler (CJS + ESM output) |
+| **TypeScript** v5.8+ | Strict mode, target ES2022                        |
+| **Changesets**       | Version management and changelog generation       |
 
 ### Common Commands
 
@@ -101,11 +94,13 @@ All packages are scoped under `@graviola/`:
 - `@graviola/*-db-impl` — Database implementation adapters
 
 ### Internal workspace dependencies use `workspace:*`:
+
 ```json
 "@graviola/edb-core-types": "workspace:*"
 ```
 
 ### Shared dependency versions use the catalog:
+
 ```json
 "react": "catalog:",
 "@mui/material": "catalog:",
@@ -118,27 +113,28 @@ All packages are scoped under `@graviola/`:
 
 ### Layer 1 — Foundation (no framework deps)
 
-| Package | Purpose |
-|---------|---------|
-| `@graviola/edb-core-types` | TypeScript definitions, RDF/SPARQL types |
-| `@graviola/edb-core-utils` | IRI encoding, utility functions |
-| `@graviola/edb-global-types` | Global interface definitions |
+| Package                       | Purpose                                                  |
+| ----------------------------- | -------------------------------------------------------- |
+| `@graviola/edb-core-types`    | TypeScript definitions, RDF/SPARQL types                 |
+| `@graviola/edb-core-utils`    | IRI encoding, utility functions                          |
+| `@graviola/edb-global-types`  | Global interface definitions                             |
 | `@graviola/json-schema-utils` | JSON Schema manipulation (resolve `$ref`, flatten, etc.) |
-| `@graviola/jsonld-utils` | JSON-LD ↔ RDF conversion utilities |
+| `@graviola/jsonld-utils`      | JSON-LD ↔ RDF conversion utilities                       |
 
-> **Critical constraint**: Layer 1 and Layer 2 packages (below) **must never take on React, MUI, or any browser/frontend dependencies**. They are consumed by the CLI (`apps/edb-cli`, `@graviola/edb-cli-creator`) and the REST API (`apps/edb-api`) running on the server via Bun. Introducing frontend deps into these packages would break non-browser consumers.
+> **Critical constraint**: Layer 1 and Layer 2 packages (below) **must never take on React, MUI, or any browser/frontend dependencies**. They are consumed by CLIs and server-side apps (for example `@graviola/edb-cli-creator`) via Bun. Introducing frontend deps into these packages would break non-browser consumers.
 
 ### Layer 2 — Schema → Query Translation
 
-| Package | Purpose |
-|---------|---------|
-| `@graviola/sparql-schema` | **JSON Schema → SPARQL queries** (CONSTRUCT, SELECT, filters) |
-| `@graviola/graph-traversal` | **RDF graph → JSON** extraction guided by JSON Schema |
-| `@graviola/sparql-db-impl` | SPARQL CRUD operations (save/load/remove/trash) |
-| `@graviola/prisma-db-impl` | Prisma ORM CRUD operations |
-| `@graviola/restfull-fetch-db-impl` | REST/fetch-based CRUD operations |
+| Package                            | Purpose                                                       |
+| ---------------------------------- | ------------------------------------------------------------- |
+| `@graviola/sparql-schema`          | **JSON Schema → SPARQL queries** (CONSTRUCT, SELECT, filters) |
+| `@graviola/graph-traversal`        | **RDF graph → JSON** extraction guided by JSON Schema         |
+| `@graviola/sparql-db-impl`         | SPARQL CRUD operations (save/load/remove/trash)               |
+| `@graviola/prisma-db-impl`         | Prisma ORM CRUD operations                                    |
+| `@graviola/restfull-fetch-db-impl` | REST/fetch-based CRUD operations                              |
 
 **The semantic CRUD pipeline:**
+
 ```
 JSON Schema definition
     ↓ sparql-schema
@@ -153,13 +149,14 @@ React component state
 
 ### Layer 3 — State Management
 
-| Package | Purpose |
-|---------|---------|
-| `@graviola/edb-state-hooks` | React hooks for CRUD, forms, search, filters, routing |
-| `@graviola/edb-data-mapping` | Declarative field mapping/transformation |
-| `@graviola/edb-data-mapping-hooks` | React hooks wrapping data-mapping |
+| Package                            | Purpose                                               |
+| ---------------------------------- | ----------------------------------------------------- |
+| `@graviola/edb-state-hooks`        | React hooks for CRUD, forms, search, filters, routing |
+| `@graviola/edb-data-mapping`       | Declarative field mapping/transformation              |
+| `@graviola/edb-data-mapping-hooks` | React hooks wrapping data-mapping                     |
 
 Key hooks in `edb-state-hooks`:
+
 - `useFormData` — manages entity load/save lifecycle
 - `useFormEditor` — editor state (dirty, validation)
 - `useCRUDWithQueryClient` — TanStack Query-integrated CRUD
@@ -171,36 +168,36 @@ Key hooks in `edb-state-hooks`:
 
 ### Layer 4 — Store Providers
 
-| Package | Purpose |
-|---------|---------|
-| `@graviola/sparql-store-provider` | SPARQL endpoint React context provider |
-| `@graviola/local-oxigraph-store-provider` | In-browser Oxigraph (WebWorker) provider |
-| `@graviola/rest-store-provider` | REST API provider |
-| `@graviola/simple-local-data-store` | In-memory Zustand store (testing/prototyping) |
+| Package                                   | Purpose                                       |
+| ----------------------------------------- | --------------------------------------------- |
+| `@graviola/sparql-store-provider`         | SPARQL endpoint React context provider        |
+| `@graviola/local-oxigraph-store-provider` | In-browser Oxigraph (WebWorker) provider      |
+| `@graviola/rest-store-provider`           | REST API provider                             |
+| `@graviola/simple-local-data-store`       | In-memory Zustand store (testing/prototyping) |
 
 ### Layer 5 — Form Rendering
 
-| Package | Purpose |
-|---------|---------|
-| `@graviola/semantic-json-form` | **Top-level form component** (`SemanticJsonForm`, `GenericForm`) |
-| `@graviola/semantic-jsonform-types` | TypeScript types for form props |
-| `@graviola/edb-basic-renderer` | Standard JSON Forms field renderers |
-| `@graviola/edb-linked-data-renderer` | RDF/linked-data-aware renderers (entity pickers, etc.) |
-| `@graviola/edb-layout-renderer` | Layout renderers (grids, tabs, sections) |
-| `@graviola/edb-color-picker-renderer` | Color input renderer |
-| `@graviola/edb-map-libre-gl-renderer` | Map/geo renderer (MapLibre GL) |
-| `@graviola/edb-markdown-renderer` | Markdown editor/preview renderer |
+| Package                               | Purpose                                                          |
+| ------------------------------------- | ---------------------------------------------------------------- |
+| `@graviola/semantic-json-form`        | **Top-level form component** (`SemanticJsonForm`, `GenericForm`) |
+| `@graviola/semantic-jsonform-types`   | TypeScript types for form props                                  |
+| `@graviola/edb-basic-renderer`        | Standard JSON Forms field renderers                              |
+| `@graviola/edb-linked-data-renderer`  | RDF/linked-data-aware renderers (entity pickers, etc.)           |
+| `@graviola/edb-layout-renderer`       | Layout renderers (grids, tabs, sections)                         |
+| `@graviola/edb-color-picker-renderer` | Color input renderer                                             |
+| `@graviola/edb-map-libre-gl-renderer` | Map/geo renderer (MapLibre GL)                                   |
+| `@graviola/edb-markdown-renderer`     | Markdown editor/preview renderer                                 |
 
 ### Layer 6 — UI Components
 
-| Package | Purpose |
-|---------|---------|
-| `@graviola/edb-basic-components` | Foundational React components |
-| `@graviola/edb-advanced-components` | Complex composite components |
-| `@graviola/edb-table-components` | **`SemanticTable`** — schema-driven data tables |
-| `@graviola/edb-virtualized-components` | Virtualized list components |
-| `@graviola/edb-ui-utils` | UI utility functions |
-| `@graviola/entity-finder` | Entity search/picker component |
+| Package                                | Purpose                                         |
+| -------------------------------------- | ----------------------------------------------- |
+| `@graviola/edb-basic-components`       | Foundational React components                   |
+| `@graviola/edb-advanced-components`    | Complex composite components                    |
+| `@graviola/edb-table-components`       | **`SemanticTable`** — schema-driven data tables |
+| `@graviola/edb-virtualized-components` | Virtualized list components                     |
+| `@graviola/edb-ui-utils`               | UI utility functions                            |
+| `@graviola/entity-finder`              | Entity search/picker component                  |
 
 ---
 
@@ -209,12 +206,14 @@ Key hooks in `edb-state-hooks`:
 ### JSON Schema as the Single Source of Truth
 
 Everything flows from a JSON Schema definition:
+
 - Forms are generated automatically from the schema (with optional UI schema overrides)
 - SPARQL queries are generated from the schema
 - Table columns can be derived from the schema
 - Validation uses the same schema (via `ajv`)
 
 Example schema usage (from `apps/testapp`):
+
 ```typescript
 // Define schema with $refs for nested entities
 export const schema = {
@@ -244,6 +243,7 @@ export const schema = {
 ### SemanticJsonForm / GenericForm
 
 `GenericForm` is the highest-level convenience component. It:
+
 1. Looks up the JSON Schema for the given `typeName`
 2. Generates a JSON Forms UI
 3. Loads/saves the entity via the configured store provider
@@ -254,6 +254,7 @@ export const schema = {
 ### SemanticTable
 
 Schema-driven table with built-in:
+
 - SPARQL-backed pagination, sorting, filtering
 - Soft delete (move to trash / restore)
 - CSV export
@@ -265,6 +266,7 @@ Uses `material-react-table` under the hood.
 ### Data Mapping Layer
 
 `@graviola/edb-data-mapping` provides declarative transformations between formats:
+
 ```typescript
 // Map external authority data (e.g., Wikidata) into local schema shape
 mapByConfig(sourceData, mappingConfig);
@@ -272,6 +274,7 @@ mapByConfigFlat(sourceData, mappingConfig);
 ```
 
 Supports:
+
 - JSONPath field extraction
 - Dot-notation template strings
 - Strategy-based field mapping (first match, concat, etc.)
@@ -280,6 +283,7 @@ Supports:
 ### Store Provider Pattern
 
 The framework is store-agnostic. Wrap your app with a store provider:
+
 ```tsx
 // SPARQL endpoint
 <SparqlStoreProvider endpoint="http://localhost:3030/ds">
@@ -335,7 +339,7 @@ packages/<name>/
 - **Jest** with `ts-jest` — still present in many packages, being phased out
 - Test files: `*.test.ts` / `*.test.tsx` co-located with source
 - Packages with tests: `core-utils`, `json-schema-utils`, `data-mapping`, `sparql-schema`, `graph-traversal`
-- **Cypress** for E2E tests in `apps/exhibition-live` (not the primary focus)
+- **Cypress** for E2E tests in some apps (not the primary focus for core libraries)
 
 ### Linting & Formatting
 
@@ -359,20 +363,21 @@ packages/<name>/
 
 The framework uses the RDFJS ecosystem:
 
-| Library | Role |
-|---------|------|
-| `@rdfjs/data-model` | RDF term creation |
-| `@rdfjs/types` | TypeScript types for RDF |
-| `@rdfjs/namespace` | IRI namespace helpers |
-| `n3` | Turtle/N-Triples/TriG parsing |
-| `jsonld` | JSON-LD processing |
-| `clownface` | Graph traversal API |
-| `oxigraph` | In-browser SPARQL engine (WebWorker) |
-| `@tpluscode/sparql-builder` | Type-safe SPARQL query construction |
+| Library                     | Role                                 |
+| --------------------------- | ------------------------------------ |
+| `@rdfjs/data-model`         | RDF term creation                    |
+| `@rdfjs/types`              | TypeScript types for RDF             |
+| `@rdfjs/namespace`          | IRI namespace helpers                |
+| `n3`                        | Turtle/N-Triples/TriG parsing        |
+| `jsonld`                    | JSON-LD processing                   |
+| `clownface`                 | Graph traversal API                  |
+| `oxigraph`                  | In-browser SPARQL engine (WebWorker) |
+| `@tpluscode/sparql-builder` | Type-safe SPARQL query construction  |
 
 ### SPARQL Flavours
 
 The `sparql-schema` package supports multiple SPARQL dialects:
+
 - `default` (standard SPARQL 1.1)
 - `oxigraph`
 - `blazegraph`
@@ -385,6 +390,7 @@ The `sparql-schema` package supports multiple SPARQL dialects:
 ### Environment Variables
 
 Key env vars (see `.env` and `turbo.json` `globalDependencies`):
+
 - `DATABASE_PROVIDER` — `sqlite` | `postgresql` | etc. (for Prisma)
 - SPARQL endpoint URLs (app-specific)
 
@@ -400,8 +406,7 @@ Key env vars (see `.env` and `turbo.json` `globalDependencies`):
 
 ## What NOT to Focus On
 
-- **`apps/exhibition-live`** — Large exhibition catalog demo app; likely to be extracted to its own repository. Avoid deep analysis or making it a reference for patterns.
-- **`manifestation/`** — Domain-specific implementations (exhibition, kulinarik); also candidates for extraction. Not representative of the core framework.
+- **Domain-specific SLUB apps** — Maintained in a separate repository; not part of this core monorepo branch.
 - **`packages/ideas/`** — Experimental/incubating packages; unstable API.
 
 The **canonical reference implementation** is `apps/testapp` — a minimal Vite+React app demonstrating `GenericForm` and core framework usage.
@@ -410,15 +415,15 @@ The **canonical reference implementation** is `apps/testapp` — a minimal Vite+
 
 ## Key Files for Understanding the Framework
 
-| File | Why |
-|------|-----|
-| `apps/testapp/src/App.tsx` | Minimal complete usage example |
-| `apps/testapp/src/schema.ts` | Example JSON Schema with `$ref` nesting |
-| `packages/semantic-json-form/src/SemanticJsonForm.tsx` | Core form component |
-| `packages/semantic-json-form/src/GenericForm.tsx` | Top-level convenience component |
-| `packages/sparql-schema/src/crud.ts` | CRUD → SPARQL translation |
-| `packages/sparql-schema/src/schema2sparql.ts` | JSON Schema → SPARQL CONSTRUCT |
-| `packages/graph-traversal/src/index.ts` | RDF graph → JSON extraction |
-| `packages/state-hooks/src/useCRUDWithQueryClient.ts` | React Query CRUD integration |
-| `packages/table-components/src/SemanticTable.tsx` | Schema-driven table |
-| `packages/data-mapping/src/index.ts` | Mapping/transformation layer |
+| File                                                   | Why                                     |
+| ------------------------------------------------------ | --------------------------------------- |
+| `apps/testapp/src/App.tsx`                             | Minimal complete usage example          |
+| `apps/testapp/src/schema.ts`                           | Example JSON Schema with `$ref` nesting |
+| `packages/semantic-json-form/src/SemanticJsonForm.tsx` | Core form component                     |
+| `packages/semantic-json-form/src/GenericForm.tsx`      | Top-level convenience component         |
+| `packages/sparql-schema/src/crud.ts`                   | CRUD → SPARQL translation               |
+| `packages/sparql-schema/src/schema2sparql.ts`          | JSON Schema → SPARQL CONSTRUCT          |
+| `packages/graph-traversal/src/index.ts`                | RDF graph → JSON extraction             |
+| `packages/state-hooks/src/useCRUDWithQueryClient.ts`   | React Query CRUD integration            |
+| `packages/table-components/src/SemanticTable.tsx`      | Schema-driven table                     |
+| `packages/data-mapping/src/index.ts`                   | Mapping/transformation layer            |
