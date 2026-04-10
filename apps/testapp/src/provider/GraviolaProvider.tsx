@@ -175,30 +175,24 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
         cellRendererRegistry={cellRendererRegistry}
         uischemata={uischemata}
       >
-        <SparqlStoreProvider
+        <LocalOxigraphStoreProvider
+          key={storageKey}
           endpoint={endpoint}
-          defaultLimit={20}
-          enableInversePropertiesFeature={true}
+          defaultLimit={10}
+          initialData={initialData ?? ""}
+          localPersistence={{
+            enabled: true,
+            restoreOnLoad: true,
+            debounceMS: 5000,
+            storageKey,
+          }}
+          loader={<CircularProgress />}
         >
-          <LocalOxigraphStoreProvider
-            key={storageKey}
-            endpoint={endpoint}
-            defaultLimit={10}
-            initialData={initialData ?? ""}
-            localPersistence={{
-              enabled: true,
-              restoreOnLoad: true,
-              debounceMS: 5000,
-              storageKey,
-            }}
-            loader={<CircularProgress />}
-          >
-            {import.meta.env.DEV ? (
-              <SPARQLQueryDevtools initialIsOpen={false} />
-            ) : null}
-            <NiceModal.Provider>{children}</NiceModal.Provider>
-          </LocalOxigraphStoreProvider>
-        </SparqlStoreProvider>
+          {import.meta.env.DEV ? (
+            <SPARQLQueryDevtools initialIsOpen={false} />
+          ) : null}
+          <NiceModal.Provider>{children}</NiceModal.Provider>
+        </LocalOxigraphStoreProvider>
         <ReactQueryDevtools initialIsOpen={true} />
       </AdbProvider>
     </Provider>
