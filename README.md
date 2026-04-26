@@ -16,7 +16,7 @@ The framework is **storage-agnostic**. The same schemas, forms, and tables opera
 
 It also includes a **declarative mapping layer** for ingesting records from external authority sources — Wikidata, the German Integrated Authority File (GND), DBpedia — into the application's local data model.
 
-For conceptual background, motivation, and architecture detail, see the **[Graviola conceptual documentation](https://github.com/gravio-la/graviola-conceptual-documentation)** book.
+For conceptual background, motivation, and architecture detail, see the **[Graviola conceptual documentation](https://gravio-la.github.io/graviola-concept-documentation/)** book.
 
 ## What it is not
 
