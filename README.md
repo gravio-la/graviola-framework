@@ -1,203 +1,109 @@
-# Graviola CRUD EDB Framework
+# Graviola
 
-A flexible, form-centric data management framework for working with linked data.
+A TypeScript framework for building schema-driven applications that manage structured data through forms, tables, and queries — across a range of storage backends.
 
-## Overview
+## What it is
 
-The Graviola CRUD EDB Framework is a comprehensive solution for building applications that manage linked data through intuitive form-based interfaces. The project originated as a framework for managing metadata in cultural heritage institutions using semantic web technologies, focusing on performances, exhibitions, and collections involving geo-spatial event-centered entities and norm data mappings. It has since matured into a generic data management framework suitable for a wide range of applications.
+Graviola takes a **JSON Schema** definition as its central artifact and derives from it, at runtime: forms for creating and editing entities, tables for browsing them, queries against the configured storage backend, and validation of the data flowing in and out. The same schema drives the user interface, the persistence layer, and the integration layer.
 
-The framework is built with a "convention before configuration" approach, making it flexible for various web applications with complex data models. Users can choose to use just the form-renderers with their own storage layer, or build a frontend application that works with a SPARQL endpoint. Backend engineers can use triple stores or other storage options like Prisma with JSON-schema, which still produces valid JSON-LD.
+The framework is **storage-agnostic**. The same schemas, forms, and tables operate against:
 
-The Graviola framework enables:
+- an in-browser [Oxigraph](https://github.com/oxigraph/oxigraph) SPARQL store (WebAssembly, no server required),
+- a remote SPARQL 1.1 endpoint (Fuseki, Virtuoso, Blazegraph, GraphDB, …),
+- a [Prisma](https://www.prisma.io/)-backed relational database (PostgreSQL, SQLite, …),
+- a REST API,
+- or an in-memory store for testing and prototyping.
 
-- **Schema-driven development**: Define your data model once in JSON Schema and automatically generate forms, validation, queries, and more
-- **Linked data management**: Seamlessly work with RDF data using familiar JSON structures
-- **Flexible storage options**: Use in-memory stores for development or connect to any SPARQL 1.1 endpoint, Prisma-based relational databases, or custom REST backends
-- **Composable UI components**: Build rich interfaces with specialized form renderers and components
-- **Client-first architecture**: Run entirely in the browser or with optional server integration
-- **Norm Data and secondary Data Sources**: The framework supports the use of norm data and secondary data sources to enrich the data model and link to entities in public linked data repositories (Wikidata, GND, DBpedia, etc.).
-- **Declarative Mapping**: The framework supports the use of declarative mapping to map the data coming from secondary data sources to the current data model.
+It also includes a **declarative mapping layer** for ingesting records from external authority sources — Wikidata, the German Integrated Authority File (GND), DBpedia — into the application's local data model.
 
-## Live Demo
+For conceptual background, motivation, and architecture detail, see the **[Graviola conceptual documentation](https://github.com/gravio-la/graviola-conceptual-documentation)** book.
 
-The hosted Storybook for this repository is published to GitHub Pages when CI runs on the default branch.
+## What it is not
 
-## Documentation
+- Not a database — it is a layer over storage backends you choose and operate.
+- Not a CMS — no built-in role model, publication workflow, or asset pipeline.
+- Not a complete frontend stack — page routing, application shell, and authentication are application concerns.
+- Not a reasoner — inference, where needed, is the store's or the application's responsibility.
 
-Use the **Storybook** app in this monorepo (`apps/storybook`) for interactive documentation of the frontend components and architecture.
+## Quick start
 
-## Getting Started
-
-Install dependencies, build all library packages, and run the minimal **testapp** example:
+Requires [Bun](https://bun.sh/) (see `packageManager` field in `package.json` for the pinned version).
 
 ```bash
-bun install && bun run build:packages && bun run dev:testapp
+bun install
+bun run build:packages
+bun run dev:testapp
 ```
 
-Then open the URL printed by Vite (typically `http://localhost:5173`).
+Open the URL printed by Vite (typically `http://localhost:5173`).
 
-## Framework Architecture
+The entry point for the example is `apps/testapp` — a minimal Vite + React application demonstrating `GenericForm` over a small schema with nested entities. It exercises the full CRUD path end-to-end.
 
-The Graviola framework is structured as a monorepo with multiple packages that can be used independently or together:
+### Launching a local SPARQL endpoint
 
-### Core Packages
-
-- **core-types**: Essential TypeScript type definitions
-- **core-utils**: Common utility functions
-- **sparql-schema**: Converts JSON Schema to SPARQL queries
-- **state-hooks**: React hooks for state management
-- **json-schema-utils**: Utilities for working with JSON Schema
-
-### Form Rendering
-
-- **semantic-json-form**: Main form component with JSON Schema support
-- **form-renderer/**: Specialized form renderers for different data types
-  - basic-renderer: Core form field renderers
-  - color-picker-renderer: Color picker components
-  - layout-renderer: Advanced layout renderers
-  - linked-data-renderer: Renderers for linked data
-  - map-libre-gl-renderer: Map integration
-  - markdown-renderer: Markdown editing and preview
-
-### Components
-
-- **basic-components**: Fundamental UI components
-- **advanced-components**: Complex UI components
-- **table-components**: Data table components
-- **virtualized-components**: Performance-optimized list components
-
-### Data Management
-
-- **data-mapping**: Utilities for data transformation
-- **entity-finder**: Components for finding and selecting entities
-- **sparql-db-impl**: SPARQL database implementation
-- **prisma-db-impl**: Relational database implementation using Prisma ORM
-- **simple-local-data-store**: In-memory data store
-- **rest-store-provider**: REST interface for arbitrary backend implementations
-- **local-oxigraph-store-provider**: Client-side Oxigraph implementation in a WebWorker
-
-## Storage Endpoints
-
-The framework can operate on a variety of storage endpoints:
-
-- **Browser memory**: Default in-memory DB for testing and development
-- **Oxigraph**: Lightweight SPARQL 1.1 endpoint that can run in a WebWorker for client-side storage
-- **Other SPARQL 1.1 endpoints**: Jena Fuseki, Virtuoso, Blazegraph, GraphDB, etc.
-- **Relational databases**: Via Prisma ORM integration
-- **REST APIs**: Through the REST store provider for custom backend implementations
-
-You can quickly launch an Oxigraph SPARQL 1.1 endpoint with Docker:
+The testapp works with an in-memory store by default. To connect to a SPARQL endpoint locally:
 
 ```bash
 docker run -p 7878:7878 -v $(pwd)/data:/data -it ghcr.io/oxigraph/oxigraph:latest
 ```
 
-Consult the [Oxigraph GitHub repository](https://github.com/oxigraph/oxigraph) for further information.
+Configure the endpoint URL in the app's settings modal, or set it via environment variable at build time.
 
-### Endpoint Configuration
+## Development commands
 
-Storage endpoints can be configured either dynamically at runtime using the settings modal or by providing a `SPARQL_ENDPOINT` environment variable at build time.
+| Command | Purpose |
+|---|---|
+| `bun run build` | Build all packages and apps |
+| `bun run build:packages` | Build library packages only |
+| `bun run dev:testapp` | Run the testapp in watch mode |
+| `bun run dev:storybook` | Run the component Storybook |
+| `bun run dev:packages` | Watch-build all library packages |
+| `bun run test` | Run all tests |
+| `bun run lint` | Lint the entire monorepo |
+| `bun run lint:fix` | Lint and auto-fix |
+| `bun run format` | Format all source files with Prettier |
 
-## Security Disclaimer
+### Committing
 
-**Warning**: The SPARQL implementation in this framework was designed primarily for use with open knowledge bases, with a focus on supporting SPARQL-compliant endpoints. Security considerations were not the primary focus during development, and as such, there are potential vulnerabilities that users should be aware of:
-
-- **Query Injection**: The current implementation may be susceptible to SPARQL query injection attacks.
-- **Data Exposure**: There is a risk of unintended exposure of data from the graph due to insufficient access controls.
-
-We acknowledge these limitations and plan to address them in future releases by implementing:
-
-- Access Control Lists (ACLs)
-- Query sanitization and validation (currently done by using @tpluscode/sparql-builder and @tpluscode/rdf-strings)
-- Data masking and filtering capabilities
-
-If you are using this framework in a production environment with sensitive data, we strongly recommend implementing additional security measures at the application or infrastructure level.
-
-## Development
-
-### Committing and Contributing
-
-Please only commit linted and formatted code by using husky:
+Formatting is enforced on commit via Husky and lint-staged. To install the hooks:
 
 ```bash
 bun run prepare
 ```
 
-### Storybook
-
-This project uses [Storybook](https://storybook.js.org/) to document components and provide development examples:
-
-```bash
-cd apps/exhibition-live
-bun i && bun run storybook
-```
-
-Open [http://localhost:6006](http://localhost:6006) with your browser to see the storybook.
-
 ### Testing
 
-Unit tests of core functionality are done with `jest`. For integration tests of the frontend, `Cypress` is used.
+Core packages use `bun test`. The project is migrating away from Jest; new tests should use `import { ... } from "bun:test"`.
 
-### Using Docker
+## Repository layout
 
-1. [Install Docker](https://docs.docker.com/get-docker/) on your machine.
-2. Build your container: `docker build -t graviola-docker .`.
-3. Run your container: `docker run -p 3000:3000 graviola-docker`.
-
-#### Develop within Docker
-
-```bash
-docker compose up -d
-docker compose exec exhibition-live /bin/bash
+```
+graviola-framework/
+├── packages/          # ~50 publishable library packages (@graviola/*)
+│   ├── form-renderer/ # JSON Forms renderer sub-workspace
+│   └── ...
+├── apps/
+│   ├── testapp/       # Canonical example (Vite + React)
+│   └── storybook/     # Component playground
+├── prisma/            # Prisma schema files
+└── docker/            # Docker Compose services
 ```
 
-## Core Technologies
+All packages are scoped under `@graviola/` and are designed to be consumed individually. Internal dependencies use `workspace:*`; shared external versions use Bun's `catalog:` protocol.
 
-### JSON Schema and JSON Forms
+## Documentation
 
-The architecture is based on JSON-Forms with a flexible tester and renderer concept. JSON Schema is the foundation of the framework, used for:
+- **[Graviola conceptual documentation](https://github.com/gravio-la/graviola-conceptual-documentation)** — architecture, design rationale, capabilities, and the framework's conceptual trajectory. Start here if you want to understand *why* decisions were made the way they were.
+- **Storybook** (`bun run dev:storybook`) — interactive examples for individual components.
+- **`apps/testapp`** — the simplest complete usage example in the codebase.
 
-- Form generation and validation
-- Data conversion
-- Query generation
-- Document extraction
-- Ontology generation and semantic mapping
+## Security note
 
-### RDF and SPARQL
+The SPARQL layer was designed for open or institutional knowledge bases. It has not been hardened for production deployments handling sensitive data. If you are exposing the framework to untrusted input, implement access controls and query validation at the infrastructure level.
 
-The framework uses the [RDFJS](https://rdf.js.org/) stack for RDF processing, enabling the same code to run in both browser and server environments:
+## License
 
-- **@rdfjs/parser-n3**: RDF parsing and serialization of Turtle and N-Triples
-- **@rdfjs/parser-jsonld**: RDF parsing and serialization of JSON-LD
-- **@rdfjs/dataset**: Temporary in-memory RDF store
-- **oxigraph**: SPARQL 1.1 compliant RDF storage in browser (WebWorker) or server
-- **@tpluscode/rdfine**: Common RDF vocabularies and typesafe namespaces
-- **@tpluscode/sparql-builder**: SPARQL query generation
-- **clownface**: RDF graph traversal
+Copyright © 2022–2025 Sebastian Tilsch  
+Copyright © 2024 SLUB Dresden
 
-### Database Implementations
-
-- **Triple/Quad Stores**: SPARQL 1.1 endpoints like Oxigraph, Jena Fuseki, Virtuoso, Blazegraph, GraphDB
-- **Relational Databases**: Via Prisma ORM integration that produces valid JSON-LD
-- **REST APIs**: Custom backend implementations through the REST store provider
-- **In-memory Stores**: For development and testing
-
-### React and UI
-
-- **React**: UI component library
-- **Material UI**: Component design system (up to Version 6)
-- **JSON Forms**: Form generation from JSON Schema
-- **React Query**: Data fetching and caching
-- **Zustand**: State management
-
-### React compatibility
-
-- **Next.js**: Next.js is supported and tested with the exhibition-live app
-- **Vite React**: best React compatibility for the frontend
-
-## Copyright and License
-
-- Copyright © 2022-2025 Sebastian Tilsch
-- Copyright © 2024 SLUB Dresden
-
-This project is licensed under the GNU General Public License - see the LICENSE file for details.
+Licensed under the [GNU General Public License v3.0](LICENSE).
