@@ -93,7 +93,7 @@ All packages are scoped under `@graviola/` and are designed to be consumed indiv
 
 ## Documentation
 
-- **[Graviola conceptual documentation](https://github.com/gravio-la/graviola-conceptual-documentation)** — architecture, design rationale, capabilities, and the framework's conceptual trajectory. Start here if you want to understand *why* decisions were made the way they were.
+- **[Graviola conceptual documentation](https://gravio-la.github.io/graviola-concept-documentation/)** — architecture, design rationale, capabilities, and the framework's conceptual trajectory. Start here if you want to understand *why* decisions were made the way they were.
 - **Storybook** (`bun run dev:storybook`) — interactive examples for individual components.
 - **`apps/testapp`** — the simplest complete usage example in the codebase.
 
