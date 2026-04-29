@@ -4,15 +4,30 @@ import type { Store } from "oxigraph/web";
 import { useEffect } from "react";
 import { create } from "zustand";
 
+const normalizePublicBasePath = (publicBasePath: string) => {
+  const trimmed = (publicBasePath || "").trim();
+  if (!trimmed || trimmed === "/") {
+    return "";
+  }
+  return trimmed.replace(/\/+$/, "");
+};
+
+const withPublicBasePath = (publicBasePath: string, fileName: string) => {
+  const normalizedBase = normalizePublicBasePath(publicBasePath);
+  return `${normalizedBase}/${fileName}`;
+};
+
 export const initAsyncOxigraph = async function (publicBasePath: string) {
-  const ao = AsyncOxigraph.getInstance(publicBasePath + "/worker.js");
-  await ao.init(publicBasePath + "/web_bg.wasm"); // Default is same folder as worker.js
+  const ao = AsyncOxigraph.getInstance(
+    withPublicBasePath(publicBasePath, "worker.js"),
+  );
+  await ao.init(withPublicBasePath(publicBasePath, "web_bg.wasm")); // Default is same folder as worker.js
   return ao;
 };
 
 export const initSyncOxigraph = async function (publicBasePath: string) {
   return import("oxigraph/web").then(async ({ default: init, Store }) => {
-    await init(publicBasePath + "/web_bg.wasm"); // Default is same folder as worker.js
+    await init(withPublicBasePath(publicBasePath, "web_bg.wasm")); // Default is same folder as worker.js
     return new Store();
   });
 };
