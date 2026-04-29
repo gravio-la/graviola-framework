@@ -104,27 +104,32 @@ function CourseSchemaLayout() {
   );
 }
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <HomePage allSchemas={ALL_SCHEMAS} />,
+    },
+    {
+      path: "metal-schema",
+      element: <MetalSchemaLayout />,
+      children: metalSchemaRouteObjects,
+    },
+    {
+      path: "item-schema",
+      element: <ItemSchemaLayout />,
+      children: itemSchemaRouteObjects,
+    },
+    {
+      path: "course-schema",
+      element: <CourseSchemaLayout />,
+      children: courseSchemaRouteObjects,
+    },
+  ],
   {
-    path: "/",
-    element: <HomePage allSchemas={ALL_SCHEMAS} />,
+    basename: import.meta.env.BASE_URL.replace(/\/+$/, ""),
   },
-  {
-    path: "metal-schema",
-    element: <MetalSchemaLayout />,
-    children: metalSchemaRouteObjects,
-  },
-  {
-    path: "item-schema",
-    element: <ItemSchemaLayout />,
-    children: itemSchemaRouteObjects,
-  },
-  {
-    path: "course-schema",
-    element: <CourseSchemaLayout />,
-    children: courseSchemaRouteObjects,
-  },
-]);
+);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

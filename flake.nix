@@ -32,6 +32,7 @@
             #apache-jena
             #librdf_raptor2
             bun
+            act
             openssl
             tree
           ];
@@ -45,6 +46,8 @@
           shellHook = ''
             echo "bun $(bun --version) (flake requires ≥ ${bunMin})"
             echo "Prisma catalog: \`cd\` to repo root, then \`catalogToPrisma ${catalogPrismaHint}\` and \`bun install\` (matches this shell's Prisma engines)."
+            alias pages-preview='bash ./preview-pages.sh'
+            echo "Pages preview: run \`pages-preview\` (or \`pages-preview /graviola-framework 4173\`)."
           '';
         };
       in

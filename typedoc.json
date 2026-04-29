@@ -6,5 +6,18 @@
   "includeVersion": true,
   "logLevel": "Verbose",
   "out": "docs",
-  "exclude": ["**/*.(spec|test).ts", "dist", "**/*.stories.{js,ts,tsx}", "**/*.d.ts", "packages/core-types", "packages/global-types", "packages/semantic-jsonform-types", "packages/sparql-schema", "packages/simple-local-data-store", "packages/wikidata-utils"]
+  "exclude": [
+    "**/*.spec.*",
+    "**/*.test.*",
+    "**/*.test-d.ts",
+    "dist",
+    "**/*.stories.*",
+    "**/*.d.ts",
+    "packages/core-types",
+    "packages/global-types",
+    "packages/semantic-jsonform-types",
+    "packages/sparql-schema",
+    "packages/simple-local-data-store",
+    "packages/wikidata-utils"
+  ]
 }

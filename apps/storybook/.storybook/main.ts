@@ -1,5 +1,6 @@
 import { fileURLToPath } from "node:url";
 import { dirname } from "node:path";
+import { createRequire } from "node:module";
 import type { StorybookConfig } from "@storybook/react-vite";
 import mermaid from "mdx-mermaid";
 
@@ -39,6 +40,11 @@ const config: StorybookConfig = {
     };
   },
   viteFinal: async (config) => {
+    const basePath = process.env.STORYBOOK_BASE_PATH || "";
+    const normalizedBase = basePath
+      ? `${basePath.replace(/\/+$/, "")}/`
+      : undefined;
+
     // Add support for .nq and .ttl files (Turtle/RDF formats)
     config.assetsInclude = [
       "**/*.nq",
@@ -63,11 +69,47 @@ const config: StorybookConfig = {
       ),
     };
 
+    const existingOnWarn = config.build?.rollupOptions?.onwarn;
+    config.build = {
+      ...config.build,
+      rollupOptions: {
+        ...config.build?.rollupOptions,
+        onwarn(warning, defaultHandler) {
+          if (
+            warning.code === "MODULE_LEVEL_DIRECTIVE" &&
+            warning.message.includes("use client")
+          ) {
+            return;
+          }
+          if (existingOnWarn) {
+            existingOnWarn(warning, defaultHandler);
+            return;
+          }
+          defaultHandler(warning);
+        },
+      },
+    };
+
+    const dedupe = new Set([...(config.resolve?.dedupe ?? [])]);
+    dedupe.add("react");
+    dedupe.add("react-dom");
+    dedupe.add("@mui/material");
+    dedupe.add("@mui/x-date-pickers");
+    config.resolve = {
+      ...config.resolve,
+      dedupe: Array.from(dedupe),
+    };
+
+    if (normalizedBase) {
+      config.base = normalizedBase;
+    }
+
     return config;
   },
 };
 export default config;
 
 function getAbsolutePath(value: string): any {
-  return dirname(fileURLToPath(import.meta.resolve(`${value}/package.json`)));
+  const require = createRequire(import.meta.url);
+  return dirname(require.resolve(`${value}/package.json`));
 }

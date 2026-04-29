@@ -1,0 +1,19 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "Graviola CRUD",
+  "entryPointStrategy": "expand",
+  "entryPoints": [
+    "packages/*/src/index.ts",
+    "packages/form-renderer/*/src/index.ts",
+    "packages/ideas/*/src/index.ts"
+  ],
+  "out": "_site/typedoc",
+  "exclude": [
+    "**/*.spec.*",
+    "**/*.test.*",
+    "**/*.test-d.ts",
+    "**/*.stories.*",
+    "**/*.d.ts",
+    "dist"
+  ]
+}

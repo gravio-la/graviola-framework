@@ -45,7 +45,10 @@ import { useAdbContext, useDataStore } from "@graviola/edb-state-hooks";
 import tbbt from "tbbt-ld/dist/tbbt.nt";
 // Hardcoded values for Storybook
 const BASE_IRI = "http://ontologies.slub-dresden.de/exhibition#";
-const PUBLIC_BASE_PATH = "";
+const PUBLIC_BASE_PATH =
+  (import.meta as any).env?.STORYBOOK_BASE_PATH ||
+  (import.meta as any).env?.VITE_BASE_PATH ||
+  "";
 
 const preview: Preview = {
   parameters: {

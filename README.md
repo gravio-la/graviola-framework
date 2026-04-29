@@ -65,7 +65,49 @@ Configure the endpoint URL in the app's settings modal, or set it via environmen
 
 ### Committing
 
-Formatting is enforced on commit via Husky and lint-staged. To install the hooks:
+**Warning**: The SPARQL implementation in this framework was designed primarily for use with open knowledge bases, with a focus on supporting SPARQL-compliant endpoints. Security considerations were not the primary focus during development, and as such, there are potential vulnerabilities that users should be aware of:
+
+- **Query Injection**: The current implementation may be susceptible to SPARQL query injection attacks.
+- **Data Exposure**: There is a risk of unintended exposure of data from the graph due to insufficient access controls.
+
+We acknowledge these limitations and plan to address them in future releases by implementing:
+
+- Access Control Lists (ACLs)
+- Query sanitization and validation (currently done by using @tpluscode/sparql-builder and @tpluscode/rdf-strings)
+- Data masking and filtering capabilities
+
+If you are using this framework in a production environment with sensitive data, we strongly recommend implementing additional security measures at the application or infrastructure level.
+
+## Development
+
+### Test Pages CI locally with act
+
+Use the Nix dev shell (includes `act`) and run the non-deploy jobs locally:
+
+```bash
+nix develop
+act -W .github/workflows/storybook-to-pages.yml -j build_storybook
+act -W .github/workflows/storybook-to-pages.yml -j build_typedoc
+act -W .github/workflows/storybook-to-pages.yml -j build_testapp
+```
+
+Create a temporary preview directory using the same build commands as CI:
+
+```bash
+pages-preview
+```
+
+Optional custom base path and port:
+
+```bash
+pages-preview /graviola-framework 4173
+```
+
+The command uses `bunx serve` and prints the local URL.
+
+### Committing and Contributing
+
+Please only commit linted and formatted code by using husky:
 
 ```bash
 bun run prepare

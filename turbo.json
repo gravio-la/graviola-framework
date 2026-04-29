@@ -11,7 +11,7 @@
     },
     "build:pages": {
       "dependsOn": ["^build"],
-      "outputs": ["_site"]
+      "outputs": ["_site/**"]
     },
     "dev:api": {},
     "build:watch": {},
