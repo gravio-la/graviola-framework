@@ -6,12 +6,12 @@ import mapValues from "lodash-es/mapValues";
 import {
   normalizeSchema,
   extractFromGraph,
-  type TypedGraphTraversalFilterOptions,
-  createConsoleLogger,
 } from "@graviola/edb-graph-traversal";
+import { createConsoleLogger } from "@graviola/edb-core-utils";
+import type { GraphTraversalFilterOptions } from "@graviola/edb-core-types";
 import {
   normalizedSchema2construct,
-  buildCompleteSPARQLQuery,
+  buildSPARQLConstructQuery,
 } from "@graviola/sparql-schema";
 import { useCrudProvider } from "@graviola/edb-state-hooks";
 import {
@@ -282,7 +282,7 @@ const PipelineStepCard: React.FC<{ data: PipelineStepData }> = ({ data }) => {
 
 interface TypeSafePipelineDemoProps<T = any> {
   zodSchema: z.ZodType<T>;
-  filters: TypedGraphTraversalFilterOptions<T>;
+  filters: GraphTraversalFilterOptions<T>;
   targetIRI: string;
   title?: string;
   description?: string;
@@ -385,6 +385,7 @@ const TypeSafePipelineDemo = <T extends any>({
       try {
         const constructResult = normalizedSchema2construct(
           targetIRI,
+          undefined,
           normalizedSchema as any,
           {
             prefixMap: tbbtSchemaPrefixes,
@@ -392,7 +393,7 @@ const TypeSafePipelineDemo = <T extends any>({
           },
         );
 
-        const sparqlQuery = buildCompleteSPARQLQuery(
+        const sparqlQuery = buildSPARQLConstructQuery(
           constructResult,
           tbbtSchemaPrefixes,
         );
@@ -698,7 +699,7 @@ export const Pipeline: Story = {
     // ========================================================================
     // 3. Define type-safe filters (full autocomplete!)
     // ========================================================================
-    const typeSafeFilters: TypedGraphTraversalFilterOptions<Person> = {
+    const typeSafeFilters: GraphTraversalFilterOptions<Person> = {
       include: {
         "schema:knows": {
           take: 3,
@@ -814,7 +815,7 @@ export const PipelineWithGlobalRegistry: Story = {
     type Person = z.infer<typeof PersonSchema>;
     type Organization = z.infer<typeof OrganizationSchema>;
 
-    const typeSafeFilters: TypedGraphTraversalFilterOptions<Person> = {
+    const typeSafeFilters: GraphTraversalFilterOptions<Person> = {
       include: {
         "schema:knows": {
           take: 2,
@@ -911,7 +912,7 @@ export const TypeSafeFiltersExample: Story = {
     const schema = z.toJSONSchema(PersonSchema, { target: "draft-7" });
 
     // Type-safe filters - try adding invalid properties!
-    const filters: TypedGraphTraversalFilterOptions<Person> = {
+    const filters: GraphTraversalFilterOptions<Person> = {
       include: {
         "schema:knows": {
           take: 5,
