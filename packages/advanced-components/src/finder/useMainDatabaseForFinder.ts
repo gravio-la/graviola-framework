@@ -5,12 +5,12 @@ import { KBMainDatabase } from "./KBMainDatabase";
 
 export const useMainDatabaseForFinder = () => {
   const {
-    jsonLDConfig: { defaultPrefix },
+    queryBuildOptions: { primaryFields },
     typeIRIToTypeName,
   } = useAdbContext();
   const { dataStore } = useCrudProvider();
   return useMemo(
-    () => KBMainDatabase(dataStore, defaultPrefix, typeIRIToTypeName),
-    [dataStore, defaultPrefix, typeIRIToTypeName],
+    () => KBMainDatabase(dataStore, primaryFields, typeIRIToTypeName),
+    [dataStore, primaryFields, typeIRIToTypeName],
   );
 };

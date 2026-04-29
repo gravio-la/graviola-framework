@@ -162,7 +162,7 @@ export function initPrismaStore<
       maxRecursion: maxRecursionDepth,
     });
     const prim = primaryFields[typeName];
-    if (!prim) {
+    if (!prim?.label) {
       throw new Error("No primary field found for type " + typeName);
     }
     const entries = await prisma[typeName].findMany({
@@ -324,7 +324,7 @@ export function initPrismaStore<
     },
     countDocuments: async (typeName: string, query: QueryType = {}) => {
       const prim = primaryFields[typeName];
-      if (!prim) {
+      if (!prim?.label) {
         throw new Error("No primary field found for type " + typeName);
       }
 

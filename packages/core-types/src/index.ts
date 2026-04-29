@@ -40,15 +40,14 @@ export type PrimaryFieldExtract<T> = Partial<{
   description: FieldExtractDeclaration<T>;
   image: FieldExtractDeclaration<T>;
 }>;
-export type PrimaryFieldDeclaration<Key extends string = string> = Record<
-  Key,
-  PrimaryField
+export type PrimaryFieldDeclaration<Key extends string = string> = Partial<
+  Record<Key, PrimaryField>
 >;
 
 export type PrimaryFieldExtractDeclaration<
   T = any,
   Key extends string = string,
-> = Record<Key, PrimaryFieldExtract<T>>;
+> = Partial<Record<Key, PrimaryFieldExtract<T>>>;
 
 export type PrimaryFieldResults<T> = {
   label: T | null;

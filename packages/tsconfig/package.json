@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
+  "dependencies": {
+    "@tsconfig/node18": "^18.2.2"
+  },
   "publishConfig": {
     "access": "public"
   }
