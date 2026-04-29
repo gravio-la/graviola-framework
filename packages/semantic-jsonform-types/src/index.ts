@@ -107,6 +107,14 @@ export type GlobalSemanticConfig = {
   queryBuildOptions: SparqlBuildOptions;
 };
 
+export type DetailViewConfigOptions = {
+  hideLinkedDataProperties?: boolean;
+  linkedDataPropertyNames?: string[];
+  hideHeaderPrimaryFields?: boolean;
+  hiddenPropertyNames?: string[];
+  alwaysShowPropertyNames?: string[];
+};
+
 type SnackbarKey = string | number;
 
 type SnackbarOptions = {
@@ -132,6 +140,7 @@ export type GlobalAppConfig<DeclarativeMappingType> = GlobalSemanticConfig & {
   rendererRegistry?: JsonFormsRendererRegistryEntry[];
   cellRendererRegistry?: JsonFormsCellRendererRegistryEntry[];
   uischemata?: Record<string, any>;
+  detailViewConfig?: DetailViewConfigOptions;
 };
 
 export type EditEntityModalProps = {
