@@ -1,6 +1,8 @@
+import type { JsonSchema } from "@jsonforms/core";
 import type { JSONSchema7 } from "json-schema";
 import { bringDefinitionToTop } from "@graviola/json-schema-utils";
 import { generateDefaultUISchema } from "@graviola/edb-ui-utils";
+import { generateDefaultDetailUISchema } from "@graviola/edb-detail-renderer";
 import type { SchemaConfig } from "./schemaTypes";
 import { exampleDataTurtle } from "./item-fixture";
 
@@ -26,8 +28,8 @@ export const schema = {
           type: "string",
         },
         basePrice: {
-          type: "number",
-          multipleOf: 0.01,
+          type: "integer",
+          minimum: 0,
         },
         subCategories: {
           type: "array",
@@ -70,6 +72,9 @@ export const schema = {
         category: {
           $ref: "#/definitions/Category",
         },
+        vendor: {
+          $ref: "#/definitions/Vendor",
+        },
         tags: {
           type: "array",
           items: {
@@ -77,8 +82,8 @@ export const schema = {
           },
         },
         basePrice: {
-          type: "number",
-          multipleOf: 0.01,
+          type: "integer",
+          minimum: 0,
         },
         isAvailable: {
           type: "boolean",
@@ -101,6 +106,32 @@ export const schema = {
           type: "string",
         },
       },
+    },
+    Vendor: {
+      type: "object",
+      properties: {
+        "@id": { type: "string" },
+        "@type": type("Vendor"),
+        name: {
+          type: "string",
+        },
+        description: {
+          type: "string",
+        },
+        website: {
+          type: "string",
+        },
+        email: {
+          type: "string",
+        },
+        address: {
+          type: "string",
+        },
+        logo: {
+          type: "string",
+        },
+      },
+      required: ["name"],
     },
   },
 };
@@ -137,11 +168,17 @@ export const itemSchemaConfig: SchemaConfig = {
       description: "description",
       image: "image",
     },
+    Vendor: {
+      label: "name",
+      description: "description",
+      image: "logo",
+    },
   },
   typeNameLabelMap: {
     Category: "Kategorie",
     Item: "Artikel",
     Tag: "Tag",
+    Vendor: "Lieferant",
   },
   typeNameUiSchemaOptionsMap: {
     Category: {
@@ -150,6 +187,65 @@ export const itemSchemaConfig: SchemaConfig = {
     Tag: {
       chips: true,
     },
+    Vendor: {
+      dropdown: true,
+    },
+  },
+  detailUiSchemata: {
+    Item: generateDefaultDetailUISchema(
+      bringDefinitionToTop(
+        itemJsonSchema as any,
+        "Item",
+      ) as unknown as JsonSchema,
+      {
+        layoutType: "TopLevelLayout",
+        skipScope: ["#/properties/photos"],
+        scopeOverride: {
+          "#/properties/basePrice": {
+            type: "Control",
+            scope: "#/properties/basePrice",
+            label: "Preis (€)",
+          },
+          "#/properties/isAvailable": {
+            type: "Control",
+            scope: "#/properties/isAvailable",
+            label: "Verfügbar",
+          },
+        },
+      },
+    ),
+    Category: generateDefaultDetailUISchema(
+      bringDefinitionToTop(
+        itemJsonSchema as any,
+        "Category",
+      ) as unknown as JsonSchema,
+      {
+        layoutType: "TopLevelLayout",
+        skipScope: ["#/properties/subCategories"],
+        scopeOverride: {
+          "#/properties/parentCategory": {
+            type: "Control",
+            scope: "#/properties/parentCategory",
+            label: "Übergeordnete Kategorie",
+          },
+          "#/properties/basePrice": {
+            type: "Control",
+            scope: "#/properties/basePrice",
+            label: "Basispreis (€)",
+          },
+        },
+      },
+    ),
+    Vendor: generateDefaultDetailUISchema(
+      bringDefinitionToTop(
+        itemJsonSchema as any,
+        "Vendor",
+      ) as unknown as JsonSchema,
+      {
+        layoutType: "TopLevelLayout",
+        skipScope: ["#/properties/logo"],
+      },
+    ),
   },
   uischemata: {
     Category: generateDefaultUISchema(
@@ -181,6 +277,10 @@ export const itemSchemaConfig: SchemaConfig = {
           },
         },
       },
+    ),
+    Vendor: generateDefaultUISchema(
+      bringDefinitionToTop(itemJsonSchema as any, "Vendor") as any,
+      {},
     ),
   },
 };

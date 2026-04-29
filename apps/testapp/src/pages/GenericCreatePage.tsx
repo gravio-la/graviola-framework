@@ -27,15 +27,17 @@ export function GenericCreatePage() {
   }
 
   return (
-    <Box sx={{ p: 2, maxWidth: 900 }}>
-      <Typography variant="h5" gutterBottom>
-        Create {typeName}
-      </Typography>
-      <GenericForm
-        key={newEntityIRI}
-        entityIRI={newEntityIRI}
-        typeName={typeName}
-      />
+    <Box sx={{ flex: 1, minHeight: 0, overflowY: "auto" }}>
+      <Box sx={{ p: 2, maxWidth: 900 }}>
+        <Typography variant="h5" gutterBottom>
+          Create {typeName}
+        </Typography>
+        <GenericForm
+          key={newEntityIRI}
+          entityIRI={newEntityIRI}
+          typeName={typeName}
+        />
+      </Box>
     </Box>
   );
 }

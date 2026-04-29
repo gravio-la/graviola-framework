@@ -26,4 +26,6 @@ export type SchemaConfig = {
   typeNameLabelMap: Record<string, string>;
   typeNameUiSchemaOptionsMap: Record<string, unknown>;
   uischemata?: Record<string, UISchemaElement>;
+  /** Per-typeName UISchema roots for the schema-driven detail view (JSON Forms shape) */
+  detailUiSchemata?: Record<string, UISchemaElement>;
 };

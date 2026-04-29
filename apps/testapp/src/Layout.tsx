@@ -48,7 +48,8 @@ export function Layout({ allSchemas, currentSchema }: LayoutProps) {
 
   const showSidebar =
     currentSchema.schemaName === "item-schema" ||
-    currentSchema.schemaName === "course-schema";
+    currentSchema.schemaName === "course-schema" ||
+    currentSchema.schemaName === "metal-schema";
 
   const itemMenuGroup = useMemo(() => {
     if (!showSidebar) return null;

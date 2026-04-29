@@ -64,69 +64,69 @@ export const exampleDataTurtle = `
       :description
         "Alles von der ersten Geige bis zum Notenpult — für Orchester, Band und Daheim." ;
       :image "/items/orchestra-1917.jpg" ;
-      :basePrice "0.00"^^xsd:decimal .
+      :basePrice "0"^^xsd:integer .
 
     ex:cat-streichinstrumente a :Category ;
       :name "Streichinstrumente" ;
       :description "Geigenfamilie, Kontrabass und historische Streicher." ;
       :image "/items/violin-vl100.jpg" ;
-      :basePrice "0.00"^^xsd:decimal ;
+      :basePrice "0"^^xsd:integer ;
       :parentCategory ex:cat-instrumente-root .
 
     ex:cat-violinen-bratschen a :Category ;
       :name "Violinen & Bratschen" ;
       :description "4/4 und fraktionierte Größen, auch für kleine Hände." ;
       :image "/items/violin-alexander-met.jpg" ;
-      :basePrice "199.00"^^xsd:decimal ;
+      :basePrice "19900"^^xsd:integer ;
       :parentCategory ex:cat-streichinstrumente .
 
     ex:cat-blasinstrumente a :Category ;
       :name "Blasinstrumente" ;
       :description "Blech, Holz und Mundharmonika — vom Einsteiger bis zur Profi-Klasse." ;
       :image "/items/wind-instruments-museum.jpg" ;
-      :basePrice "0.00"^^xsd:decimal ;
+      :basePrice "0"^^xsd:integer ;
       :parentCategory ex:cat-instrumente-root .
 
     ex:cat-holzblas a :Category ;
       :name "Holzblasinstrumente" ;
       :description "Klarinetten, Oboen, Fagotte und Saxophone." ;
       :image "/items/clarinet-001.jpg" ;
-      :basePrice "89.00"^^xsd:decimal ;
+      :basePrice "8900"^^xsd:integer ;
       :parentCategory ex:cat-blasinstrumente .
 
     ex:cat-tasteninstrumente a :Category ;
       :name "Tasteninstrumente" ;
       :description "Klavier, E-Piano, Keyboard und Orgel." ;
       :image "/items/yamaha-p125.jpg" ;
-      :basePrice "0.00"^^xsd:decimal ;
+      :basePrice "0"^^xsd:integer ;
       :parentCategory ex:cat-instrumente-root .
 
     ex:cat-schlagwerk a :Category ;
       :name "Schlagwerk & Becken" ;
       :description "Becken, Sticks, Practice Pads und kleines Percussion." ;
       :image "/items/crash-zildjian-14.jpg" ;
-      :basePrice "12.00"^^xsd:decimal ;
+      :basePrice "1200"^^xsd:integer ;
       :parentCategory ex:cat-instrumente-root .
 
     ex:cat-zubehoer a :Category ;
       :name "Zubehör & Pflege" ;
       :description "Saiten, Kolofonium, Kabel, Taschen und Pflegemittel." ;
       :image "/items/violin-cord-rosin-grains.jpg" ;
-      :basePrice "0.00"^^xsd:decimal ;
+      :basePrice "0"^^xsd:integer ;
       :parentCategory ex:cat-instrumente-root .
 
     ex:cat-saiten-pflege a :Category ;
       :name "Saiten & Bogenpflege" ;
       :description "Saitensätze, Kolofonium, Kolofonium-Ersatz und Bogenhaare." ;
       :image "/items/violin-strings-closeup.jpg" ;
-      :basePrice "4.50"^^xsd:decimal ;
+      :basePrice "450"^^xsd:integer ;
       :parentCategory ex:cat-zubehoer .
 
     ex:cat-notenpulte a :Category ;
       :name "Notenpulte & Ständer" ;
       :description "Orchesterpulte, Mikrofonständer, Laptop-Racks." ;
       :image "/items/music-stand-metal.jpg" ;
-      :basePrice "19.90"^^xsd:decimal ;
+      :basePrice "1990"^^xsd:integer ;
       :parentCategory ex:cat-zubehoer .
 
     # ═══════════════════════════════════════════════════════════════════════════
@@ -138,7 +138,7 @@ export const exampleDataTurtle = `
       :description
         "Handgearbeitete Decke aus Fichte, Boden aus Ahorn — warme, singende Obertöne. " ;
       :condition "Sehr gut — minimale Spielspuren, frisch besaitet." ;
-      :basePrice "1849.00"^^xsd:decimal ;
+      :basePrice "184900"^^xsd:integer ;
       :isAvailable "true"^^xsd:boolean ;
       :category ex:cat-violinen-bratschen ;
       :photos (
@@ -157,7 +157,7 @@ export const exampleDataTurtle = `
       :description
         "Grenadillholz, deutsche Mechanik — der Klassiker für den Übergang in die Oberstufe." ;
       :condition "Neu — nur für Probesessions ausgepackt." ;
-      :basePrice "1299.00"^^xsd:decimal ;
+      :basePrice "129900"^^xsd:integer ;
       :isAvailable "true"^^xsd:boolean ;
       :category ex:cat-holzblas ;
       :photos ( "/items/clarinet-001.jpg" ) ;
@@ -173,7 +173,7 @@ export const exampleDataTurtle = `
       :description
         "88 gewichtete Tasten, eingebaute Lautsprecher — kompakt für Wohnung und Proberaum." ;
       :condition "Neu" ;
-      :basePrice "519.00"^^xsd:decimal ;
+      :basePrice "51900"^^xsd:integer ;
       :isAvailable "true"^^xsd:boolean ;
       :category ex:cat-tasteninstrumente ;
       :photos (
@@ -192,7 +192,7 @@ export const exampleDataTurtle = `
       :description
         "Hell, durchsetzungsfähig — für Rock und Pop mit viel Headroom." ;
       :condition "Gebraucht — leichte Oxidation am Rand, kein Riss." ;
-      :basePrice "189.00"^^xsd:decimal ;
+      :basePrice "18900"^^xsd:integer ;
       :isAvailable "true"^^xsd:boolean ;
       :category ex:cat-schlagwerk ;
       :photos ( "/items/crash-zildjian-14.jpg" ) ;
@@ -206,7 +206,7 @@ export const exampleDataTurtle = `
       :name "Saitensatz Violine Pirastro Oliv" ;
       :description "Geschnittene Schafdarmseiten — rund, barock inspiriert." ;
       :condition "Neu, ungeöffnet" ;
-      :basePrice "78.00"^^xsd:decimal ;
+      :basePrice "7800"^^xsd:integer ;
       :isAvailable "true"^^xsd:boolean ;
       :parent ex:item-violine-mudenthaler-4-4 ;
       :category ex:cat-saiten-pflege ;
@@ -222,7 +222,7 @@ export const exampleDataTurtle = `
       :description
         "Weiche Packung, weniger Staub — ideal für kühle Proberäume." ;
       :condition "Neu" ;
-      :basePrice "24.90"^^xsd:decimal ;
+      :basePrice "2490"^^xsd:integer ;
       :isAvailable "true"^^xsd:boolean ;
       :category ex:cat-saiten-pflege ;
       :photos ( "/items/violin-rosin.jpg" ) ;
@@ -237,7 +237,7 @@ export const exampleDataTurtle = `
       :description
         "Orchesterpult mit breiter Ablage — stabil, klappbar, mit Tragetasche." ;
       :condition "Neu" ;
-      :basePrice "79.00"^^xsd:decimal ;
+      :basePrice "7900"^^xsd:integer ;
       :isAvailable "false"^^xsd:boolean ;
       :category ex:cat-notenpulte ;
       :photos ( "/items/music-stand-metal.jpg" ) ;

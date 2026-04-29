@@ -1,7 +1,9 @@
+import type { JsonSchema } from "@jsonforms/core";
 import type { JSONSchema7 } from "json-schema";
 import dayjs from "dayjs";
 import { bringDefinitionToTop } from "@graviola/json-schema-utils";
 import { generateDefaultUISchema } from "@graviola/edb-ui-utils";
+import { generateDefaultDetailUISchema } from "@graviola/edb-detail-renderer";
 import type { SchemaConfig } from "./schemaTypes";
 import { exampleDataTurtle } from "./metal-fixture";
 
@@ -264,6 +266,127 @@ export const metalSchemaConfig: SchemaConfig = {
     Person: {
       dropdown: true,
     },
+  },
+  detailUiSchemata: {
+    WeldedComponent: generateDefaultDetailUISchema(
+      bringDefinitionToTop(
+        metalSchema as any,
+        "WeldedComponent",
+      ) as unknown as JsonSchema,
+      {
+        layoutType: "TopLevelLayout",
+        skipScope: ["#/properties/uniqueNumber", "#/properties/partId"],
+        scopeOverride: {
+          "#/properties/weldingTemplate": {
+            type: "Control",
+            scope: "#/properties/weldingTemplate",
+            label: "Schweißvorlage",
+          },
+          "#/properties/material": {
+            type: "Control",
+            scope: "#/properties/material",
+            label: "Werkstoff",
+          },
+          "#/properties/weldingProcess": {
+            type: "Control",
+            scope: "#/properties/weldingProcess",
+            label: "Schweißverfahren",
+          },
+          "#/properties/welder": {
+            type: "Control",
+            scope: "#/properties/welder",
+            label: "Schweißer",
+          },
+          "#/properties/weldingDate": {
+            type: "Control",
+            scope: "#/properties/weldingDate",
+            label: "Schweißdatum",
+          },
+          "#/properties/qualityChecks": {
+            type: "Control",
+            scope: "#/properties/qualityChecks",
+            label: "Qualitätsprüfungen",
+          },
+          "#/properties/defects": {
+            type: "Control",
+            scope: "#/properties/defects",
+            label: "Mängel",
+          },
+          "#/properties/documentation": {
+            type: "Control",
+            scope: "#/properties/documentation",
+            label: "Dokumentation",
+          },
+        },
+      },
+    ),
+    WeldingTemplate: generateDefaultDetailUISchema(
+      bringDefinitionToTop(
+        metalSchema as any,
+        "WeldingTemplate",
+      ) as unknown as JsonSchema,
+      {
+        layoutType: "TopLevelLayout",
+        skipScope: [
+          "#/properties/name",
+          "#/properties/drawingNumber",
+          "#/properties/weldedComponents",
+        ],
+        scopeOverride: {
+          "#/properties/material": {
+            type: "Control",
+            scope: "#/properties/material",
+            label: "Werkstoff",
+          },
+          "#/properties/thickness": {
+            type: "Control",
+            scope: "#/properties/thickness",
+            label: "Materialstärke (mm)",
+          },
+          "#/properties/weldingProcess": {
+            type: "Control",
+            scope: "#/properties/weldingProcess",
+            label: "Schweißverfahren",
+          },
+          "#/properties/designer": {
+            type: "Control",
+            scope: "#/properties/designer",
+            label: "Designer",
+          },
+        },
+      },
+    ),
+    Person: generateDefaultDetailUISchema(
+      bringDefinitionToTop(
+        metalSchema as any,
+        "Person",
+      ) as unknown as JsonSchema,
+      {
+        layoutType: "TopLevelLayout",
+        skipScope: [
+          "#/properties/lastName",
+          "#/properties/employeeId",
+          "#/properties/designedTemplates",
+        ],
+        scopeOverride: {
+          "#/properties/firstName": {
+            type: "Control",
+            scope: "#/properties/firstName",
+            label: "Vorname",
+          },
+          "#/properties/qualification": {
+            type: "Control",
+            scope: "#/properties/qualification",
+            label: "Qualifikation",
+          },
+          "#/properties/certification": {
+            type: "Control",
+            scope: "#/properties/certification",
+            label: "Zertifizierungen",
+          },
+        },
+      },
+    ),
   },
   uischemata: {
     WeldingTemplate: generateDefaultUISchema(

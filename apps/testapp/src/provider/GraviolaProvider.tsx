@@ -12,7 +12,6 @@ import {
   SparqlEndpoint,
 } from "@graviola/edb-core-types";
 import NiceModal from "@ebay/nice-modal-react";
-import { SparqlStoreProvider } from "@graviola/sparql-store-provider";
 import { LocalOxigraphStoreProvider } from "@graviola/local-oxigraph-store-provider";
 import { Provider } from "react-redux";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -150,6 +149,8 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
     () => [...allRenderers, ...(renderers || [])],
     [renderers],
   );
+  const publicBasePath =
+    import.meta.env.VITE_PUBLIC_BASE_PATH || import.meta.env.BASE_URL || "";
 
   // @ts-ignore
   return (
@@ -157,7 +158,7 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
       <AdbProvider
         {...config}
         env={{
-          publicBasePath: "",
+          publicBasePath,
           baseIRI,
         }}
         components={{

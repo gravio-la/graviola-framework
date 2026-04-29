@@ -17,11 +17,13 @@ export function GenericEditPage() {
   }
 
   return (
-    <Box sx={{ p: 2, maxWidth: 900 }}>
-      <Typography variant="h5" gutterBottom>
-        Edit {typeName}
-      </Typography>
-      <GenericForm entityIRI={entityIRI} typeName={typeName} />
+    <Box sx={{ flex: 1, minHeight: 0, overflowY: "auto" }}>
+      <Box sx={{ p: 2, maxWidth: 900 }}>
+        <Typography variant="h5" gutterBottom>
+          Edit {typeName}
+        </Typography>
+        <GenericForm entityIRI={entityIRI} typeName={typeName} />
+      </Box>
     </Box>
   );
 }

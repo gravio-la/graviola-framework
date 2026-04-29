@@ -4,8 +4,10 @@
   "version": "0.0.14",
   "type": "module",
   "scripts": {
+    "download-items": "bun scripts/download-commons-items.ts",
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:pages": "tsc -b && vite build --outDir ../../_site/testapp",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -14,6 +16,7 @@
     "@emotion/react": "catalog:",
     "@emotion/styled": "catalog:",
     "@graviola/edb-advanced-components": "workspace:*",
+    "@graviola/edb-detail-renderer": "workspace:*",
     "@graviola/edb-basic-components": "workspace:*",
     "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-data-mapping": "workspace:*",
