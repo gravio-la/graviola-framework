@@ -823,11 +823,13 @@
       "devDependencies": {
         "@graviola/edb-core-types": "workspace:*",
         "@rdfjs/namespace": "catalog:rdf",
+        "@rdfjs/types": "catalog:rdf",
         "@types/json-schema": "catalog:",
         "jsonld-context-parser": "^2.4.0",
       },
       "peerDependencies": {
         "@rdfjs/namespace": "catalog:rdf",
+        "@rdfjs/types": "catalog:rdf",
         "jsonld-context-parser": "^2.4.0",
       },
     },

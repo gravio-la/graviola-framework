@@ -25,11 +25,13 @@
   "devDependencies": {
     "@graviola/edb-core-types": "workspace:*",
     "@rdfjs/namespace": "catalog:rdf",
+    "@rdfjs/types": "catalog:rdf",
     "jsonld-context-parser": "^2.4.0",
     "@types/json-schema": "catalog:"
   },
   "peerDependencies": {
     "@rdfjs/namespace": "catalog:rdf",
+    "@rdfjs/types": "catalog:rdf",
     "jsonld-context-parser": "^2.4.0"
   },
   "typedocOptions": {
