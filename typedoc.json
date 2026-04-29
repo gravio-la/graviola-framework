@@ -12,10 +12,6 @@
     "**/*.test-d.ts",
     "dist",
     "**/*.stories.*",
-    "**/*.d.ts",
-    "packages/core-types",
-    "packages/global-types",
-    "packages/semantic-jsonform-types",
     "packages/sparql-schema",
     "packages/simple-local-data-store",
     "packages/wikidata-utils"

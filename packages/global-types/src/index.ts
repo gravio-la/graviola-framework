@@ -176,8 +176,8 @@ export type AbstractDatastore<
       : DocumentResultTypeMap[T] | undefined | null
   >;
   existsDocument: (typeName: TypeName, entityIRI: string) => Promise<boolean>;
-  upsertDocument: (
-    typeName: TypeName,
+  upsertDocument: <T extends TypeName>(
+    typeName: T,
     entityIRI: string,
     document: UpsertDocumentTypeMap[T] extends undefined
       ? UpsertDocument

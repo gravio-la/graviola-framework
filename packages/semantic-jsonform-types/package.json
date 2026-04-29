@@ -3,20 +3,21 @@
   "version": "1.4.7",
   "description": "Prop types for Semantic JSON Forms",
   "type": "module",
-  "types": "./index.d.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./index.d.ts"
+      "types": "./dist/index.d.ts"
     }
   },
   "files": [
-    "index.d.ts",
+    "dist",
     "CHANGELOG.md"
   ],
   "scripts": {
+    "build": "tsc -p tsconfig.json",
     "depcheck": "depcheck",
-    "lint": "eslint \"**/*.d.ts\"",
-    "lint-fix": "eslint --fix \"**/*.d.ts\"",
+    "lint": "eslint \"**/*.ts\"",
+    "lint-fix": "eslint --fix \"**/*.ts\"",
     "doc": "typedoc",
     "release": "bun publish --access public",
     "pack-tarball": "bun pm pack"
@@ -34,6 +35,12 @@
   },
   "peerDependencies": {
     "react": "catalog:"
+  },
+  "typedocOptions": {
+    "entryPoints": [
+      "src/index.ts"
+    ],
+    "skipErrorChecking": true
   },
   "eslintConfig": {
     "root": true,

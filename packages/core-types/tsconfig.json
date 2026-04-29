@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig/base.json",
+  "include": ["src"],
+  "exclude": ["dist", "build", "node_modules"],
+  "compilerOptions": {
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "declarationMap": true,
+    "lib": ["es2022", "dom"],
+    "types": [],
+    "outDir": "dist",
+    "rootDir": "src"
+  }
+}

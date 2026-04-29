@@ -1,5 +1,6 @@
 import type { Bindings, DatasetCore, Quad, ResultStream } from "@rdfjs/types";
 import type { NamespaceBuilder } from "@rdfjs/namespace";
+import type { TypedGraphTraversalFilterOptions } from "./typed-filters";
 export type * from "./settings";
 export type * from "./typed-filters";
 
@@ -39,16 +40,15 @@ export type PrimaryFieldExtract<T> = Partial<{
   description: FieldExtractDeclaration<T>;
   image: FieldExtractDeclaration<T>;
 }>;
-export type PrimaryFieldDeclaration<Key extends string = string> = {
-  [typeName: Key]: PrimaryField;
-};
+export type PrimaryFieldDeclaration<Key extends string = string> = Record<
+  Key,
+  PrimaryField
+>;
 
 export type PrimaryFieldExtractDeclaration<
   T = any,
   Key extends string = string,
-> = {
-  [typeName: Key]: PrimaryFieldExtract<T>;
-};
+> = Record<Key, PrimaryFieldExtract<T>>;
 
 export type PrimaryFieldResults<T> = {
   label: T | null;
@@ -345,7 +345,7 @@ export type {
  * @template T - The type to derive filter patterns from (optional, defaults to any for backward compatibility)
  */
 export type ExtendedWalkerOptions<T = any> = WalkerOptions &
-  GraphTraversalFilterOptions<T>;
+  TypedGraphTraversalFilterOptions<T>;
 
 export type Entity = {
   entityIRI: string;

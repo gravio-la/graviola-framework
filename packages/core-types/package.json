@@ -3,15 +3,22 @@
   "version": "1.4.7",
   "description": "Core types for EDB",
   "type": "module",
-  "types": "./index.d.ts",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts"
+    }
+  },
   "files": [
-    "index.d.ts",
+    "dist",
+    "README.md",
     "CHANGELOG.md"
   ],
   "scripts": {
+    "build": "tsc -p tsconfig.json",
     "depcheck": "depcheck",
-    "lint": "eslint \"**/*.d.ts\"",
-    "lint-fix": "eslint --fix \"**/*.d.ts\"",
+    "lint": "eslint \"**/*.ts\"",
+    "lint-fix": "eslint --fix \"**/*.ts\"",
     "doc": "typedoc",
     "release": "bun publish --access public",
     "pack-tarball": "bun pm pack"
@@ -27,7 +34,7 @@
   },
   "typedocOptions": {
     "entryPoints": [
-      "index.d.ts"
+      "src/index.ts"
     ],
     "skipErrorChecking": true
   },
