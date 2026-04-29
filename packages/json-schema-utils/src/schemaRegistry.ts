@@ -102,7 +102,7 @@ function hasIdProperty(schema: JSONSchema7, rootSchema: JSONSchema7): boolean {
 /**
  * Extracts the type IRI from `properties["@type"].const` if present.
  */
-function extractTypeIRI(schema: JSONSchema7): string | undefined {
+export function extractTypeIRI(schema: JSONSchema7): string | undefined {
   const atType = schema.properties?.["@type"];
   if (atType && typeof atType === "object") {
     const typeSchema = atType as JSONSchema7;

@@ -17,7 +17,10 @@ import type {
 } from "@jsonforms/core";
 
 export type ChangeCause = "user" | "mapping" | "reload";
-export type AuthorityConfiguration = Record<string, any>;
+export type AuthorityConfiguration = {
+  authorityIRI: string;
+  getEntityByIRI: (iri: string) => Promise<any>;
+};
 
 export type SemanticJsonFormProps = {
   entityIRI?: string | undefined;
