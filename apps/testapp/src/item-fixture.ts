@@ -1,5 +1,7 @@
+import { publicAssetUrl } from "./publicAssetUrl";
+
 /** Seed Turtle for the item schema Oxigraph store when localStorage is empty. */
-export const exampleDataTurtle = `
+const rawItemFixtureTurtle = `
     PREFIX : <http://www.example.org/>
     PREFIX ex: <http://www.example.org/example/>
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -247,3 +249,9 @@ export const exampleDataTurtle = `
       ) .
 
 `;
+
+/** Rewrite `/items/...` paths so they work when the app is deployed under a subpath. */
+export const exampleDataTurtle = rawItemFixtureTurtle.replace(
+  /"(\/items\/[^"]+)"/g,
+  (_, path: string) => `"${publicAssetUrl(path.replace(/^\//, ""))}"`,
+);

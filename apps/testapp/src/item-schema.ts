@@ -5,6 +5,7 @@ import { generateDefaultUISchema } from "@graviola/edb-ui-utils";
 import { generateDefaultDetailUISchema } from "@graviola/edb-detail-renderer";
 import type { SchemaConfig } from "./schemaTypes";
 import { exampleDataTurtle } from "./item-fixture";
+import { publicAssetUrl } from "./publicAssetUrl";
 
 const type = (name: string) => ({
   type: "string",
@@ -144,7 +145,7 @@ export const itemSchemaConfig: SchemaConfig = {
   description:
     "Categories, items, tags — generic CRUD with list, create, edit, and detail routes.",
   version: "0.1.0",
-  cardImage: "/item-schema-card.webp",
+  cardImage: publicAssetUrl("item-schema-card.webp"),
   color: "#2e7d32",
   icon: "🛒",
   storageKey: "testapp-items",

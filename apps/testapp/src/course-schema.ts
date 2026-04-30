@@ -3,6 +3,7 @@ import { bringDefinitionToTop } from "@graviola/json-schema-utils";
 import { generateDefaultUISchema } from "@graviola/edb-ui-utils";
 import type { SchemaConfig } from "./schemaTypes";
 import { exampleDataTurtle } from "./course-fixture";
+import { publicAssetUrl } from "./publicAssetUrl";
 
 const type = (name: string) => ({
   type: "string",
@@ -234,7 +235,7 @@ export const courseSchemaConfig: SchemaConfig = {
   description:
     "Modulare Kurse, Dozenten- und Teilnehmerunterlagen, Präsentationen und Prüfungsfragenpool.",
   version: "0.1.0",
-  cardImage: "/course-schema-card.jpg",
+  cardImage: publicAssetUrl("course-schema-card.jpg"),
   color: "#6a1b9a",
   icon: "🎓",
   storageKey: "testapp-courses",

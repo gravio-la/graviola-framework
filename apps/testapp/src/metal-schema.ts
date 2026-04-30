@@ -6,6 +6,7 @@ import { generateDefaultUISchema } from "@graviola/edb-ui-utils";
 import { generateDefaultDetailUISchema } from "@graviola/edb-detail-renderer";
 import type { SchemaConfig } from "./schemaTypes";
 import { exampleDataTurtle } from "./metal-fixture";
+import { publicAssetUrl } from "./publicAssetUrl";
 
 const type = (name: string) => ({
   type: "string",
@@ -217,7 +218,7 @@ export const metalSchemaConfig: SchemaConfig = {
   description:
     "Welding templates, welded components, QA checks — demo data for linked-data forms.",
   version: "0.1.0",
-  cardImage: "/metal-schema-card.jpg",
+  cardImage: publicAssetUrl("metal-schema-card.jpg"),
   color: "#1565c0",
   icon: "⚙️",
   storageKey: "testapp-metal",
