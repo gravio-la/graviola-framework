@@ -22,7 +22,6 @@ import {
 } from "@graviola/edb-advanced-components";
 import { EntityFinder } from "@graviola/entity-finder";
 import { Provider } from "react-redux";
-import { AppRouterContext } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import "@triply/yasgui/build/yasgui.min.css";
 import {
   SemanticJsonFormNoOps,
@@ -52,9 +51,6 @@ const PUBLIC_BASE_PATH =
 
 const preview: Preview = {
   parameters: {
-    nextRouter: {
-      Provider: AppRouterContext.Provider,
-    },
     actions: { argTypesRegex: "^on[A-Z].*" },
     controls: {
       matchers: {
