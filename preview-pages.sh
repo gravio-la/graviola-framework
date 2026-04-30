@@ -18,6 +18,8 @@ TYPEDOC_BASE_PATH="${BASE_PATH}/typedoc" bun run docs:pages
 VITE_BASE_PATH="${BASE_PATH}/testapp/" VITE_PUBLIC_BASE_PATH="${BASE_PATH}/testapp" bun run --cwd ./apps/testapp build:pages
 
 cp ./apps/storybook/public/pages-index.html ./_site/index.html
+mkdir -p ./_site/assets
+cp -r ./apps/storybook/public/assets/. ./_site/assets/
 cp -R ./_site/. "${tmpdir}/"
 
 echo "Serving from ${tmpdir}"

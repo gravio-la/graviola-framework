@@ -146,7 +146,13 @@ jobs:
           name: site-testapp
           path: ./_site/testapp
       - name: Add root landing page
-        run: cp ./apps/storybook/public/pages-index.html ./_site/index.html
+        run: |
+          cp ./apps/storybook/public/pages-index.html ./_site/index.html
+          mkdir -p ./_site/assets
+          cp -r ./apps/storybook/public/assets/. ./_site/assets/
+          # Ensure brand logo is always present for index.html SEO and <img> (explicit path)
+          mkdir -p ./_site/assets/graviola
+          cp ./apps/storybook/public/assets/graviola/graviola.png ./_site/assets/graviola/graviola.png
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
         with:
