@@ -25,6 +25,7 @@
     "@mui/x-date-pickers": "catalog:mui",
     "ajv": "^8.17.1",
     "dayjs": "^1.11.0",
+    "lodash-es": "catalog:",
     "mdx-mermaid": "^2.0.3",
     "react": "catalog:",
     "react-dom": "catalog:",
@@ -38,6 +39,7 @@
     "@storybook/addon-docs": "^10.3.4",
     "@storybook/react-vite": "^10.3.4",
     "@types/bun": "latest",
+    "@types/lodash-es": "^4.17.12",
     "eslint-plugin-storybook": "^10.3.4",
     "storybook": "^10.3.4",
     "@types/json-schema": "catalog:"
