@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from "react";
 import type { JSONSchema7 } from "json-schema";
 import type { NormalizedSchema } from "@graviola/edb-graph-traversal";

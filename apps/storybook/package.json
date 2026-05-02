@@ -3,29 +3,39 @@
   "module": "index.ts",
   "type": "module",
   "dependencies": {
+    "@chenfengyuan/datepicker": "^1.0.10",
     "@ebay/nice-modal-react": "^1.2.13",
     "@graviola/edb-advanced-components": "workspace:*",
     "@graviola/edb-basic-components": "workspace:*",
+    "@graviola/edb-basic-renderer": "workspace:*",
     "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-core-utils": "workspace:*",
     "@graviola/edb-debug-utils": "workspace:*",
     "@graviola/edb-default-theme": "workspace:*",
     "@graviola/edb-graph-traversal": "workspace:*",
+    "@graviola/edb-layout-renderer": "workspace:*",
     "@graviola/edb-linked-data-renderer": "workspace:*",
+    "@graviola/edb-markdown-renderer": "workspace:*",
     "@graviola/edb-state-hooks": "workspace:*",
     "@graviola/edb-ui-utils": "workspace:*",
-    "@graviola/json-schema-utils": "workspace:*",
     "@graviola/entity-finder": "workspace:*",
+    "@graviola/json-schema-utils": "workspace:*",
     "@graviola/local-oxigraph-store-provider": "workspace:*",
     "@graviola/semantic-json-form": "workspace:*",
     "@graviola/semantic-jsonform-types": "workspace:*",
     "@graviola/sparql-schema": "workspace:*",
+    "@graviola/sparql-store-provider": "workspace:*",
+    "@jsonforms/core": "^3.7.0",
+    "@jsonforms/material-renderers": "^3.7.0",
+    "@jsonforms/react": "^3.7.0",
     "@mui/icons-material": "catalog:mui",
     "@mui/material": "catalog:mui",
     "@mui/x-date-pickers": "catalog:mui",
+    "@storybook/test": "^8.6.15",
     "@tpluscode/sparql-builder": "^3.0.1",
     "@triply/yasgui": "^4.2.28",
     "ajv": "^8.17.1",
+    "awesomplete": "^1.1.7",
     "dayjs": "^1.11.0",
     "lodash-es": "catalog:",
     "mdx-mermaid": "^2.0.3",
@@ -39,13 +49,18 @@
   "devDependencies": {
     "@chromatic-com/storybook": "5.1.1",
     "@storybook/addon-docs": "^10.3.4",
+    "@storybook/addon-vitest": "^10.3.6",
     "@storybook/react": "^10.3.4",
     "@storybook/react-vite": "^10.3.4",
     "@types/bun": "latest",
+    "@types/json-schema": "catalog:",
     "@types/lodash-es": "^4.17.12",
+    "@vitest/browser": "^4.1.5",
+    "@vitest/browser-playwright": "^4.1.5",
     "eslint-plugin-storybook": "^10.3.4",
+    "playwright": "^1.59.1",
     "storybook": "^10.3.4",
-    "@types/json-schema": "catalog:"
+    "vitest": "^4.1.5"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
@@ -58,6 +73,10 @@
   "scripts": {
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "build:pages": "storybook build -o ../../_site/storybook"
+    "storybook:build": "storybook build",
+    "build:pages": "storybook build -o ../../_site/storybook",
+    "test": "vitest run --config vitest.config.ts",
+    "test:storybook": "vitest run --config vitest.config.ts",
+    "test:storybook:watch": "vitest --config vitest.config.ts"
   }
 }

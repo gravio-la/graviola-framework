@@ -1,6 +1,6 @@
 import type { Preview } from "@storybook/react";
 import React from "react";
-import { CssBaseline, CircularProgress } from "@mui/material";
+import { CssBaseline } from "@mui/material";
 
 // Define global process object for Node.js compatibility in browser
 if (typeof window !== "undefined" && !window.process) {
@@ -8,46 +8,14 @@ if (typeof window !== "undefined" && !window.process) {
     env: {},
   };
 }
-import {
-  QueryClient,
-  QueryClientProvider,
-  useQuery,
-} from "@graviola/edb-state-hooks";
 
-import { AdbProvider, store } from "@graviola/edb-state-hooks";
-import {
-  EntityDetailModal,
-  EditEntityModal,
-  KBMainDatabase,
-} from "@graviola/edb-advanced-components";
-import { EntityFinder } from "@graviola/entity-finder";
-import { Provider } from "react-redux";
-import "@triply/yasgui/build/yasgui.min.css";
-import {
-  SemanticJsonFormNoOps,
-  createSemanticConfig,
-} from "@graviola/semantic-json-form";
+import { QueryClient, QueryClientProvider } from "@graviola/edb-state-hooks";
 import { ThemeComponent } from "@graviola/edb-default-theme";
-import { LocalOxigraphStoreProvider } from "@graviola/local-oxigraph-store-provider";
 import NiceModal from "@ebay/nice-modal-react";
 import "react-json-view-lite/dist/index.css";
+import "@triply/yasgui/build/yasgui.min.css";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import type {
-  EntityFinderProps,
-  FinderKnowledgeBaseDescription,
-  ModRouter,
-  Url,
-} from "@graviola/semantic-jsonform-types";
-import { useAdbContext, useDataStore } from "@graviola/edb-state-hooks";
-//@ts-ignore
-import tbbt from "tbbt-ld/dist/tbbt.nt";
-// Hardcoded values for Storybook
-const BASE_IRI = "http://ontologies.slub-dresden.de/exhibition#";
-const PUBLIC_BASE_PATH =
-  (import.meta as any).env?.STORYBOOK_BASE_PATH ||
-  (import.meta as any).env?.VITE_BASE_PATH ||
-  "";
 
 const preview: Preview = {
   parameters: {
@@ -63,123 +31,29 @@ const preview: Preview = {
 
 const queryClient = new QueryClient();
 
-// Modern SimilarityFinder component
-const SimilarityFinder = (props: EntityFinderProps) => {
-  const { queryBuildOptions } = useAdbContext();
-  const { dataStore } = useDataStore();
-  const allKnowledgeBases = React.useMemo<
-    FinderKnowledgeBaseDescription<any>[]
-  >(
-    () =>
-      dataStore
-        ? [
-            KBMainDatabase(
-              dataStore,
-              queryBuildOptions.primaryFields,
-              queryBuildOptions.typeIRItoTypeName,
-            ),
-          ]
-        : [],
-    [
-      dataStore,
-      queryBuildOptions.primaryFields,
-      queryBuildOptions.typeIRItoTypeName,
-    ],
-  );
-  return <EntityFinder {...props} allKnowledgeBases={allKnowledgeBases} />;
-};
+// Store providers (LocalOxigraphStoreProvider, SparqlStoreProvider, etc.)
+// are NOT registered globally. Each story that depends on a store must
+// declare the appropriate named decorator from .storybook/decorators/.
+// This makes the storage contract visible at the story level — readers
+// can see which infrastructure a component requires without reading
+// implementation code.
+//
+// Infrastructure providers (QueryClientProvider, ThemeComponent,
+// LocalizationProvider, NiceModal.Provider, CssBaseline) remain global
+// because they carry no semantic meaning about data storage.
+const withInfrastructure = (Story: any) => (
+  <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <ThemeComponent>
+      <QueryClientProvider client={queryClient}>
+        <NiceModal.Provider>
+          <CssBaseline />
+          <Story />
+        </NiceModal.Provider>
+      </QueryClientProvider>
+    </ThemeComponent>
+  </LocalizationProvider>
+);
 
-const LocalStoreWithExampleDataProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
-  const { data } = useQuery({
-    queryKey: ["exampleData"],
-    queryFn: async () => {
-      const basePath = PUBLIC_BASE_PATH || "";
-      const data = await fetch(basePath + "/example-exhibitions.ttl").then(
-        (res) => res.text(),
-      );
-      const ontology = await fetch(
-        basePath + "/ontology/exhibition-info.owl.ttl",
-      ).then((res) => res.text());
-      const tbbtData = await fetch(tbbt).then((res) => res.text());
-      return [data, ontology, tbbtData];
-    },
-  });
-
-  return (
-    <LocalOxigraphStoreProvider
-      endpoint={{
-        endpoint: "urn:worker",
-        label: "Local",
-        provider: "worker",
-        active: true,
-      }}
-      defaultLimit={10}
-      initialData={data}
-      loader={<CircularProgress />}
-    >
-      {children}
-    </LocalOxigraphStoreProvider>
-  );
-};
-
-export const useRouterMock = (): ModRouter => {
-  return {
-    push: async (url: Url) => {
-      console.log("push", url);
-    },
-    replace: async (url: Url) => {
-      console.log("replace", url);
-    },
-    asPath: "",
-    pathname: "",
-    query: {},
-    searchParams: new URLSearchParams(),
-  };
-};
-
-export const withGraviolaProvider = (Story: any) => {
-  console.log("PUBLIC_BASE_PATH", PUBLIC_BASE_PATH);
-
-  const config = createSemanticConfig({ baseIRI: BASE_IRI });
-
-  return (
-    <Provider store={store}>
-      <AdbProvider
-        {...config}
-        schema={{}}
-        env={{
-          publicBasePath: PUBLIC_BASE_PATH,
-          baseIRI: BASE_IRI,
-        }}
-        components={{
-          EntityDetailModal: EntityDetailModal,
-          EditEntityModal: EditEntityModal,
-          SemanticJsonForm: SemanticJsonFormNoOps,
-          SimilarityFinder: SimilarityFinder,
-        }}
-        useRouterHook={useRouterMock}
-      >
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <ThemeComponent>
-            <QueryClientProvider client={queryClient}>
-              <LocalStoreWithExampleDataProvider>
-                <NiceModal.Provider>
-                  <CssBaseline />
-                  <Story />
-                </NiceModal.Provider>
-              </LocalStoreWithExampleDataProvider>
-            </QueryClientProvider>
-          </ThemeComponent>
-        </LocalizationProvider>
-      </AdbProvider>
-    </Provider>
-  );
-};
-
-preview.decorators = [withGraviolaProvider];
+preview.decorators = [withInfrastructure];
 
 export default preview;

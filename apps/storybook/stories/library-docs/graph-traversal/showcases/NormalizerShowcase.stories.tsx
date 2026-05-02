@@ -71,7 +71,7 @@ export const WithFilters: Story = {
         age: { type: "number" },
       },
     },
-    includeFriends: false,
+    includeFriends: true,
     friendsLimit: 10,
     maxRecursion: 2,
     omitFields: ["password"],

@@ -14,6 +14,7 @@ import {
   buildSPARQLConstructQuery,
 } from "@graviola/sparql-schema";
 import { useCrudProvider } from "@graviola/edb-state-hooks";
+import { withGraviolaProvider } from "../../../.storybook/decorators";
 import {
   Box,
   Card,
@@ -647,6 +648,7 @@ with copy buttons for easy inspection.
     },
   },
   tags: ["autodocs"],
+  decorators: [withGraviolaProvider],
 };
 
 export default meta;

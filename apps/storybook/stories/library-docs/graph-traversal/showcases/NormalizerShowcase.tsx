@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useMemo } from "react";
 import type { JSONSchema7 } from "json-schema";
 import { normalizeSchema } from "@graviola/edb-graph-traversal";

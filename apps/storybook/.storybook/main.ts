@@ -20,6 +20,7 @@ const config: StorybookConfig = {
         },
       },
     },
+    getAbsolutePath("@storybook/addon-vitest"),
   ],
   framework: {
     name: getAbsolutePath("@storybook/react-vite"),
@@ -97,6 +98,13 @@ const config: StorybookConfig = {
     dedupe.add("@mui/x-date-pickers");
     config.resolve = {
       ...config.resolve,
+      alias: {
+        ...(typeof config.resolve?.alias === "object"
+          ? config.resolve.alias
+          : {}),
+        "~awesomplete": "awesomplete",
+        "~@chenfengyuan/datepicker": "@chenfengyuan/datepicker",
+      },
       dedupe: Array.from(dedupe),
     };
 
