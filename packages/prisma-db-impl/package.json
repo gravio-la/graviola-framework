@@ -42,6 +42,7 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
+    "@graviola/store-core": "workspace:*",
     "@graviola/json-schema-prisma-utils": "workspace:*",
     "@graviola/json-schema-utils": "workspace:*",
     "@graviola/edb-core-utils": "workspace:*",

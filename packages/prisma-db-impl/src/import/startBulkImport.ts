@@ -2,6 +2,7 @@ import {
   AbstractDatastore,
   CountAndIterable,
 } from "@graviola/edb-global-types";
+import { IRIToStringFn, StringToIRIFn } from "@graviola/edb-core-types";
 import cliProgress from "cli-progress";
 
 import { importDocument } from "./importDocument";
@@ -25,6 +26,11 @@ export const startBulkImport = async <
   prisma: TPrisma,
   limit: number,
   result: CountAndIterable<any>,
+  options: {
+    IRItoId?: IRIToStringFn;
+    typeNameToTypeIRI?: StringToIRIFn;
+    typeIsNotIRI?: boolean;
+  } = {},
 ) => {
   const visited = new Set<string>();
   const errored = new Set<string>();
@@ -40,6 +46,7 @@ export const startBulkImport = async <
         prisma,
         visited,
         errored,
+        options,
       );
     } catch (e) {
       console.error(e);

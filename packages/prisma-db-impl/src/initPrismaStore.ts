@@ -6,12 +6,46 @@ import {
 } from "@graviola/json-schema-prisma-utils";
 import { defs } from "@graviola/json-schema-utils";
 import type { JSONSchema7 } from "json-schema";
+import { createChangeBus } from "@graviola/store-core";
+import type {
+  BaseStore,
+  Counts,
+  EntityChangeEvent,
+  Exists,
+  FlatResultSet,
+  Imports,
+  Lists,
+  Loads,
+  ReadableImportSource,
+  Removes,
+  Resolves,
+  StoreId,
+  Writes,
+} from "@graviola/store-core";
 
 import { toJSONLD } from "./helper";
 import { bindings2RDFResultSet } from "./helper/bindings2RDFResultSet";
 import { importAllDocuments, importSingleDocument } from "./import";
+import { toImportDatastoreAdapter } from "./import/toImportDatastoreAdapter";
 import type { AbstractPrismaClient, PrismaStoreOptions } from "./types";
 import { upsert } from "./upsert";
+
+type PrismaSchemaRegistry = Record<string, unknown>;
+type PrismaStore = BaseStore<PrismaSchemaRegistry> &
+  Loads<PrismaSchemaRegistry> &
+  Lists<PrismaSchemaRegistry> &
+  FlatResultSet<PrismaSchemaRegistry> &
+  Counts<PrismaSchemaRegistry> &
+  Writes<PrismaSchemaRegistry> &
+  Removes<PrismaSchemaRegistry> &
+  Imports<PrismaSchemaRegistry> &
+  Exists<PrismaSchemaRegistry> &
+  Resolves;
+
+export type PrismaDatastorePair = {
+  store: PrismaStore;
+  abstractDatastore: AbstractDatastore;
+};
 
 /** Prisma accepts `mode` on string filters only for some connectors. */
 function prismaDatasourceSupportsStringMode(provider: string): boolean {
@@ -65,7 +99,8 @@ function buildPrimaryLabelContainsFilter(
  * @param options.isAllowedNestedElement A function to check if a nested element is allowed to be created
  * @param options.datasourceProvider Prisma `datasource db` provider string (e.g. `sqlite`, `postgresql`)
  */
-export function initPrismaStore<
+
+export function initPrismaDatastorePair<
   TPrisma extends AbstractPrismaClient = AbstractPrismaClient,
 >(
   prisma: TPrisma,
@@ -86,7 +121,7 @@ export function initPrismaStore<
     debug,
     datasourceProvider,
   }: PrismaStoreOptions,
-): AbstractDatastore {
+): PrismaDatastorePair {
   const primarySearchFilter = (
     searchString: string,
     likeInsensitive: boolean,
@@ -174,7 +209,7 @@ export function initPrismaStore<
     });
     return entries.map(toJSONLDWithOptions);
   };
-  const dataStore: AbstractDatastore = {
+  const abstractDatastore: AbstractDatastore = {
     typeNameToTypeIRI: typeNameToTypeIRI,
     typeIRItoTypeName: typeIRItoTypeName,
     importDocument: (typeName, entityIRI, importStore) =>
@@ -343,5 +378,182 @@ export function initPrismaStore<
     },
   };
 
-  return dataStore;
+  const changeBus = createChangeBus();
+  const storeId = `prisma:${datasourceProvider}` as StoreId;
+
+  const emitChange = (event: EntityChangeEvent) => {
+    changeBus.emit(event);
+  };
+
+  const store: PrismaStore = {
+    typeNameToTypeIRI,
+    typeIRItoTypeName,
+    storeId,
+    capabilities: {
+      identifies: true,
+      loads: true,
+      lists: true,
+      flatResultSet: true,
+      counts: true,
+      writes: true,
+      removes: true,
+      imports: true,
+      resolves: true,
+      exists: true,
+      profiles: {
+        counts: { cost: "O(1)" },
+      },
+    },
+    subscribe: changeBus.subscribe,
+    emit: changeBus.emit,
+    loadOne: async (
+      typeName: string,
+      iri: string,
+      options?: { withMeta?: boolean },
+    ) => {
+      const doc = await abstractDatastore.loadDocument(typeName, iri);
+      if (options?.withMeta) {
+        if (doc == null) return null;
+        return {
+          data: doc,
+          provenance: {
+            sources: [storeId],
+            fetchedAt: new Date().toISOString(),
+            freshness: "unknown",
+          },
+        };
+      }
+      return doc ?? null;
+    },
+    list: async (typeName: string, limit?: number, query?: QueryType) =>
+      abstractDatastore.findDocuments(typeName, query ?? {}, limit),
+    findDocumentsAsFlatResultSet: async (
+      typeName: string,
+      query?: QueryType,
+      limit?: number,
+    ) => {
+      if (!abstractDatastore.findDocumentsAsFlatResultSet) {
+        throw new Error("findDocumentsAsFlatResultSet not available");
+      }
+      return abstractDatastore.findDocumentsAsFlatResultSet(
+        typeName,
+        query ?? {},
+        limit,
+      );
+    },
+    count: async (
+      typeName: string,
+      query?: Pick<QueryType, "search" | "insensitive">,
+    ) => {
+      if (!abstractDatastore.countDocuments) {
+        throw new Error("countDocuments not available");
+      }
+      return abstractDatastore.countDocuments(typeName, query);
+    },
+    upsert: async (typeName: string, entityIRI: string, document: any) => {
+      const result = await abstractDatastore.upsertDocument(
+        typeName,
+        entityIRI,
+        document,
+      );
+      emitChange({
+        entityIRI,
+        changeType: "upsert",
+        typeIRI: typeNameToTypeIRI(typeName),
+        typeName,
+        data: result,
+      });
+      return result;
+    },
+    remove: async (typeName: string, entityIRI: string) => {
+      const result = await abstractDatastore.removeDocument(
+        typeName,
+        entityIRI,
+      );
+      emitChange({
+        entityIRI,
+        changeType: "remove",
+        typeIRI: typeNameToTypeIRI(typeName),
+        typeName,
+      });
+      return result;
+    },
+    importOne: async (
+      typeName: string,
+      entityIRI: string,
+      source: ReadableImportSource<PrismaSchemaRegistry>,
+    ) => {
+      const importStore = toImportDatastoreAdapter(
+        source,
+        typeNameToTypeIRI,
+        typeIRItoTypeName,
+      );
+      await importSingleDocument(typeName, entityIRI, importStore, prisma, {
+        IRItoId,
+        typeNameToTypeIRI,
+        typeIsNotIRI,
+      });
+      const loaded = await abstractDatastore.loadDocument(typeName, entityIRI);
+      if (!loaded) {
+        throw new Error(
+          `Could not load imported document ${typeName}:${entityIRI} after importOne`,
+        );
+      }
+      return loaded as Record<string, unknown>;
+    },
+    importMany: async (
+      typeName: string,
+      source: ReadableImportSource<PrismaSchemaRegistry>,
+      limit: number,
+    ) => {
+      const importStore = toImportDatastoreAdapter(
+        source,
+        typeNameToTypeIRI,
+        typeIRItoTypeName,
+      );
+      await importAllDocuments(typeName, importStore, prisma, limit, {
+        IRItoId,
+        typeNameToTypeIRI,
+        typeIsNotIRI,
+      });
+      return (await abstractDatastore.listDocuments(typeName, limit)) as Record<
+        string,
+        unknown
+      >[];
+    },
+    exists: async (typeName: string, entityIRI: string) =>
+      abstractDatastore.existsDocument(typeName, entityIRI),
+    resolveTypes: async (entityIRI: string) => {
+      if (!abstractDatastore.getClasses) {
+        return [];
+      }
+      return abstractDatastore.getClasses(entityIRI);
+    },
+  };
+
+  return { store, abstractDatastore };
+}
+
+export function initPrismaStore<
+  TPrisma extends AbstractPrismaClient = AbstractPrismaClient,
+>(
+  prisma: TPrisma,
+  rootSchema: JSONSchema7,
+  primaryFields: Partial<PrimaryFieldDeclaration>,
+  options: PrismaStoreOptions,
+): PrismaStore {
+  return initPrismaDatastorePair(prisma, rootSchema, primaryFields, options)
+    .store;
+}
+
+export function initPrismaAbstractDatastore<
+  TPrisma extends AbstractPrismaClient = AbstractPrismaClient,
+>(
+  prisma: TPrisma,
+  rootSchema: JSONSchema7,
+  primaryFields: Partial<PrimaryFieldDeclaration>,
+  options: PrismaStoreOptions,
+): AbstractDatastore {
+  return initPrismaDatastorePair(prisma, rootSchema, primaryFields, options)
+    .abstractDatastore;
 }

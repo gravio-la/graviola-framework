@@ -30,7 +30,7 @@ export const importAllDocuments = async <
   importStore.iterableImplementation
     ?.listDocuments(typeName, limit)
     .then(async (result) =>
-      startBulkImport(typeName, importStore, prisma, limit, result),
+      startBulkImport(typeName, importStore, prisma, limit, result, options),
     ) ||
   importStore.listDocuments(typeName, limit, (doc) =>
     importDocument(

@@ -164,5 +164,4 @@ export const importSingleDocument = <
     )
     .catch(async (e) => {
       console.error(e);
-    })
-    .finally(() => prisma.$disconnect());
+    });

@@ -3,7 +3,7 @@ import {
   PrimaryFieldDeclaration,
 } from "@graviola/edb-core-types";
 import { extendSchemaShortcut } from "@graviola/json-schema-utils";
-import { initPrismaStore } from "@graviola/prisma-db-impl";
+import { initPrismaAbstractDatastore } from "@graviola/prisma-db-impl";
 import { PrismaClient } from "@prisma/client";
 import { JSONSchema7 } from "json-schema";
 import schema from "./schema.json";
@@ -42,15 +42,20 @@ const prisma = new PrismaClient();
 export { prisma };
 
 // Create two different data stores - one with nested element creation enabled and one without
-export const dataStore = initPrismaStore(prisma, rootSchema, primaryFields, {
-  jsonldContext: config.defaultJsonldContext,
-  defaultPrefix: config.defaultPrefix,
-  typeIRItoTypeName: typeIRItoTypeName,
-  typeNameToTypeIRI: typeNameToTypeIRI,
-  datasourceProvider: "postgresql",
-});
+export const dataStore = initPrismaAbstractDatastore(
+  prisma,
+  rootSchema,
+  primaryFields,
+  {
+    jsonldContext: config.defaultJsonldContext,
+    defaultPrefix: config.defaultPrefix,
+    typeIRItoTypeName: typeIRItoTypeName,
+    typeNameToTypeIRI: typeNameToTypeIRI,
+    datasourceProvider: "postgresql",
+  },
+);
 
-export const dataStoreWithNestedElements = initPrismaStore(
+export const dataStoreWithNestedElements = initPrismaAbstractDatastore(
   prisma,
   rootSchema,
   primaryFields,
