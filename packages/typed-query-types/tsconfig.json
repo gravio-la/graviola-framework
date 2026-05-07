@@ -1,0 +1,7 @@
+{
+  "extends": "@graviola/edb-tsconfig/base.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts"]
+}

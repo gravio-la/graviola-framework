@@ -1,7 +1,9 @@
-/**
- * @deprecated Import types from `@graviola/typed-query-types` instead.
- * This module re-exports for backward compatibility with `@graviola/edb-core-types` consumers.
- */
+export type {
+  SortOrder,
+  OrderByClause,
+  PaginationOptions,
+  PaginationMetadata,
+} from "./pagination";
 
 export type {
   StringFilterOperators,
@@ -20,4 +22,4 @@ export type {
   NestedFilterOptions,
   TypedIncludePattern,
   TypedGraphTraversalFilterOptions,
-} from "@graviola/typed-query-types";
+} from "./typed-filters";
