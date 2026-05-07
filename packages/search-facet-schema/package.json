@@ -1,0 +1,41 @@
+{
+  "name": "@graviola/search-facet-schema",
+  "version": "0.1.0",
+  "description": "Search/facet schema types and AJV loader (Layer 1)",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsup",
+    "test": "bun test",
+    "depcheck": "depcheck",
+    "lint": "eslint src/**/*.ts",
+    "release": "bun publish --access public"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1"
+  },
+  "devDependencies": {
+    "@types/json-schema": "catalog:",
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*",
+    "eslint-config-edb": "workspace:*",
+    "tsup": "^8.0.0",
+    "typescript": "^5.8.2"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": ["eslint-config-edb"]
+  }
+}
+
