@@ -43,7 +43,8 @@
   "dependencies": {
     "@graviola/json-schema-utils": "workspace:*",
     "@graviola/sparql-schema": "workspace:*",
-    "@graviola/jsonld-utils": "workspace:*"
+    "@graviola/jsonld-utils": "workspace:*",
+    "@graviola/store-core": "workspace:*"
   },
   "eslintConfig": {
     "root": true,

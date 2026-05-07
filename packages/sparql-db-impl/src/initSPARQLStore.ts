@@ -24,15 +24,43 @@ import {
   withDefaultPrefix,
   filterTypedDocuments,
   type TypedFilterOptions,
-  getEntitiesWithClassesByFilter,
+  getEntitiesWithClassesByFilter as getEntitiesWithClassesByFilterImpl,
 } from "@graviola/sparql-schema";
 import type { JSONSchema7 } from "json-schema";
+import type {
+  EntityChangeEvent,
+  SparqlStore,
+  StoreId,
+  StoreListQuery,
+} from "@graviola/store-core";
+import { createChangeBus } from "@graviola/store-core";
 
 import type { SPARQLDataStoreConfig } from "./SPARQLDataStoreConfig";
 
-export const initSPARQLStore = (
+export type SPARQLDatastorePair = {
+  /** New capability-composed interface */
+  store: SparqlStore<Record<string, unknown>>;
+  /** Legacy `AbstractDatastore` for contract tests and Prisma import sources */
+  abstractDatastore: AbstractDatastore;
+};
+
+function toSearchPick(
+  query?: StoreListQuery | QueryType | null,
+): Pick<QueryType, "search" | "insensitive"> | null {
+  if (!query?.search || query.search.length === 0) return null;
+  return {
+    search: query.search,
+    insensitive: query.insensitive,
+  };
+}
+
+/**
+ * Internal factory — builds both the new {@link SparqlStore} and legacy {@link AbstractDatastore}
+ * sharing the same SPARQL closures.
+ */
+export function initSPARQLDatastorePair(
   dataStoreConfig: SPARQLDataStoreConfig,
-): AbstractDatastore => {
+): SPARQLDatastorePair {
   const {
     defaultPrefix,
     jsonldContext,
@@ -53,6 +81,15 @@ export const initSPARQLStore = (
   } = dataStoreConfig;
 
   const typeIRItoTypeName = queryBuildOptions.typeIRItoTypeName;
+  const flavour = queryBuildOptions.sparqlFlavour ?? "default";
+
+  const changeBus = createChangeBus();
+  const storeId = `sparql:${flavour}` as StoreId;
+
+  const emitChange = (event: EntityChangeEvent) => {
+    changeBus.emit(event);
+  };
+
   const loadDocument = async (typeName: string, entityIRI: string) => {
     const typeIRI = typeNameToTypeIRI(typeName);
     const schema = bringDefinitionToTop(rootSchema, typeName) as JSONSchema7;
@@ -64,7 +101,8 @@ export const initSPARQLStore = (
     });
     return res.document;
   };
-  const findDocuments = async (
+
+  const findDocumentsInner = async (
     typeName: string,
     limit?: number,
     searchQuery?: Pick<QueryType, "search" | "insensitive"> | null,
@@ -97,6 +135,7 @@ export const initSPARQLStore = (
     }
     return results;
   };
+
   const findDocumentsIterable: (
     typeName: string,
     limit?: number,
@@ -142,13 +181,14 @@ export const initSPARQLStore = (
       },
     };
   };
-  const store: AbstractDatastore = {
+
+  const abstractDatastore: AbstractDatastore = {
     typeNameToTypeIRI,
     typeIRItoTypeName: (iri: string) => iri.replace(defaultPrefix, ""),
-    importDocument: async (typeName, entityIRI, importStore) => {
+    importDocument: async () => {
       throw new Error("Not implemented");
     },
-    importDocuments: async (typeName, importStore, limit) => {
+    importDocuments: async () => {
       throw new Error("Not implemented");
     },
     loadDocument,
@@ -196,8 +236,6 @@ export const initSPARQLStore = (
       });
 
       if (enableInversePropertiesFeature) {
-        // Use type schema from rootSchema (not stub) so x-inverseOf and other
-        // annotations are preserved for inverse extraction
         const schemaForInverse = bringDefinitionToTop(rootSchema, typeName);
         const inverseProperties = getInverseProperties(
           rootSchema,
@@ -227,9 +265,9 @@ export const initSPARQLStore = (
       return doc;
     },
     listDocuments: (typeName, limit, cb) =>
-      findDocuments(typeName, limit, null, cb),
+      findDocumentsInner(typeName, limit, null, cb),
     findDocuments: (typeName, query, limit, cb) =>
-      findDocuments(
+      findDocumentsInner(
         typeName,
         limit,
         query.search && query.search.length > 0 ? query : null,
@@ -361,7 +399,7 @@ export const initSPARQLStore = (
     getEntitiesWithClassesByFilter: async <T = any>(
       options: TypedDocumentsSearchOptions<T> = {},
     ): Promise<Map<string, string[]>> => {
-      return await getEntitiesWithClassesByFilter(constructFetch, {
+      return await getEntitiesWithClassesByFilterImpl(constructFetch, {
         where: options.where,
         prefixMap: queryBuildOptions.prefixes || {},
         defaultPrefix,
@@ -376,7 +414,6 @@ export const initSPARQLStore = (
       const typeIRI = typeNameToTypeIRI(typeName);
       const schema = bringDefinitionToTop(rootSchema, typeName) as JSONSchema7;
 
-      // Map global-types options to sparql-schema-specific options
       const sparqlOptions: TypedFilterOptions<T> = {
         ...options,
         defaultPrefix,
@@ -409,7 +446,6 @@ export const initSPARQLStore = (
       const typeIRI = typeNameToTypeIRI(typeName);
       const schema = bringDefinitionToTop(rootSchema, typeName) as JSONSchema7;
 
-      // Map global-types options to sparql-schema-specific options
       const sparqlOptions: TypedFilterOptions<T> = {
         ...options,
         defaultPrefix,
@@ -442,5 +478,215 @@ export const initSPARQLStore = (
     },
   };
 
-  return store;
-};
+  const searchesProfile =
+    flavour === "blazegraph"
+      ? ({
+          mode: "fulltext",
+          ranked: true,
+        } as const)
+      : ({
+          mode: "substring",
+          ranked: false,
+        } as const);
+
+  const store: SparqlStore<Record<string, unknown>> = {
+    typeNameToTypeIRI,
+    typeIRItoTypeName: (iri: string) => iri.replace(defaultPrefix, ""),
+    storeId,
+    capabilities: {
+      identifies: true,
+      loads: true,
+      lists: true,
+      flatResultSet: true,
+      filters: true,
+      searches: true,
+      counts: true,
+      writes: true,
+      removes: true,
+      streams: true,
+      resolves: true,
+      exists: true,
+      speaksNative: true,
+      profiles: {
+        searches: searchesProfile,
+        counts: { cost: "O(1)" },
+        speaksNative: ["sparql"],
+      },
+    },
+    subscribe: changeBus.subscribe,
+    emit: changeBus.emit,
+
+    loadOne: async (
+      typeName: string,
+      iri: string,
+      options?: { withMeta?: boolean },
+    ) => {
+      const doc = await loadDocument(typeName, iri);
+      if (options?.withMeta) {
+        if (doc == null) return null;
+        return {
+          data: doc,
+          provenance: {
+            sources: [storeId],
+            fetchedAt: new Date().toISOString(),
+            freshness: "unknown",
+          },
+        };
+      }
+      return doc ?? null;
+    },
+
+    list: async (typeName, limit, query?) => {
+      const pick = toSearchPick(query ?? undefined);
+      return findDocumentsInner(typeName, limit, pick, undefined);
+    },
+
+    findDocumentsAsFlatResultSet: async (typeName, query, limit) => {
+      if (!abstractDatastore.findDocumentsAsFlatResultSet) {
+        throw new Error("findDocumentsAsFlatResultSet not available");
+      }
+      return abstractDatastore.findDocumentsAsFlatResultSet(
+        typeName,
+        query ?? {},
+        limit,
+      );
+    },
+
+    filterOne: async (typeName, entityIRI, options) => {
+      if (!abstractDatastore.filterTypedDocument) {
+        throw new Error("filterTypedDocument not available");
+      }
+      return abstractDatastore.filterTypedDocument(
+        typeName,
+        entityIRI,
+        options as any,
+      );
+    },
+
+    filterMany: async (typeName, options) => {
+      if (!abstractDatastore.filterTypedDocuments) {
+        throw new Error("filterTypedDocuments not available");
+      }
+      return abstractDatastore.filterTypedDocuments(typeName, options as any);
+    },
+
+    getEntitiesWithClassesByFilter: async (options) => {
+      if (!abstractDatastore.getEntitiesWithClassesByFilter) {
+        throw new Error("getEntitiesWithClassesByFilter not available");
+      }
+      return abstractDatastore.getEntitiesWithClassesByFilter(options as any);
+    },
+
+    searchByLabel: async (typeName, label, limit) => {
+      if (!abstractDatastore.findDocumentsByLabel) {
+        throw new Error("findDocumentsByLabel not available");
+      }
+      return abstractDatastore.findDocumentsByLabel(
+        typeName,
+        label,
+        limit,
+      ) as Promise<any[]>;
+    },
+
+    findEntityByTypeName: async (typeName, searchString, limit) => {
+      if (!abstractDatastore.findEntityByTypeName) {
+        throw new Error("findEntityByTypeName not available");
+      }
+      return abstractDatastore.findEntityByTypeName(
+        typeName,
+        searchString,
+        limit,
+      );
+    },
+
+    count: async (typeName, query) => {
+      if (!abstractDatastore.countDocuments) {
+        throw new Error("countDocuments not available");
+      }
+      return abstractDatastore.countDocuments(typeName, query);
+    },
+
+    upsert: async (typeName, entityIRI, document) => {
+      const doc = await abstractDatastore.upsertDocument(
+        typeName,
+        entityIRI,
+        document,
+      );
+      emitChange({
+        entityIRI,
+        changeType: "upsert",
+        typeIRI: typeNameToTypeIRI(typeName),
+        typeName,
+        data: doc,
+      });
+      return doc;
+    },
+
+    remove: async (typeName, entityIRI) => {
+      const res = await abstractDatastore.removeDocument(typeName, entityIRI);
+      emitChange({
+        entityIRI,
+        changeType: "remove",
+        typeIRI: typeNameToTypeIRI(typeName),
+        typeName,
+      });
+      return res;
+    },
+
+    streamList: async function* (typeName, limit, query) {
+      const pick = toSearchPick(query ?? undefined);
+      const { iterable } = await findDocumentsIterable(typeName, limit, pick);
+      for await (const doc of iterable as AsyncIterable<unknown>) {
+        yield doc;
+      }
+    },
+
+    importOne: async () => {
+      throw new Error("Not implemented");
+    },
+
+    importMany: async () => {
+      throw new Error("Not implemented");
+    },
+
+    resolveTypes: (entityIRI) => {
+      if (!abstractDatastore.getClasses) {
+        throw new Error("getClasses not available");
+      }
+      return abstractDatastore.getClasses(entityIRI);
+    },
+
+    exists: async (typeName, entityIRI) =>
+      abstractDatastore.existsDocument(typeName, entityIRI),
+
+    nativeQuery: async (lang, query, options) => {
+      if (lang !== "sparql") {
+        throw new Error(`Unsupported native query language: ${lang}`);
+      }
+      if (options !== undefined) {
+        return selectFetch(query, options as Parameters<typeof selectFetch>[1]);
+      }
+      return selectFetch(query);
+    },
+  };
+
+  return { store, abstractDatastore };
+}
+
+/**
+ * Preferred entry point — capability-composed {@link SparqlStore}.
+ */
+export function initSPARQLStore(
+  config: SPARQLDataStoreConfig,
+): SparqlStore<Record<string, unknown>> {
+  return initSPARQLDatastorePair(config).store;
+}
+
+/**
+ * Legacy {@link AbstractDatastore} — use for contract tests and adapters not yet migrated to `Store`.
+ */
+export function initSPARQLAbstractDatastore(
+  config: SPARQLDataStoreConfig,
+): AbstractDatastore {
+  return initSPARQLDatastorePair(config).abstractDatastore;
+}
