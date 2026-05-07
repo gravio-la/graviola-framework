@@ -7,7 +7,7 @@ import type {
 } from "@graviola/edb-core-types";
 import { sparqlLoggingWrapper } from "@graviola/edb-core-utils";
 import { CrudProviderContext, useAdbContext } from "@graviola/edb-state-hooks";
-import { initSPARQLStore } from "@graviola/sparql-db-impl";
+import { initSPARQLAbstractDatastore } from "@graviola/sparql-db-impl";
 import { debounce } from "lodash-es";
 import {
   type FunctionComponent,
@@ -125,7 +125,7 @@ export const LocalOxigraphStoreProvider: FunctionComponent<
     if (!store) {
       return null;
     }
-    return initSPARQLStore({
+    return initSPARQLAbstractDatastore({
       defaultPrefix,
       jsonldContext,
       typeNameToTypeIRI,

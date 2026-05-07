@@ -6,7 +6,7 @@ import type {
 } from "@graviola/edb-core-types";
 import { sparqlLoggingWrapper } from "@graviola/edb-core-utils";
 import { CrudProviderContext, useAdbContext } from "@graviola/edb-state-hooks";
-import { initSPARQLStore } from "@graviola/sparql-db-impl";
+import { initSPARQLAbstractDatastore } from "@graviola/sparql-db-impl";
 import { type FunctionComponent, type ReactNode, useMemo } from "react";
 
 import { tripleStoreImplementations } from "./tripleStoreImplementations";
@@ -48,7 +48,7 @@ export const SparqlStoreProvider: FunctionComponent<
   } = useAdbContext();
 
   const dataStore = useMemo(() => {
-    return initSPARQLStore({
+    return initSPARQLAbstractDatastore({
       defaultPrefix,
       jsonldContext,
       typeNameToTypeIRI,
