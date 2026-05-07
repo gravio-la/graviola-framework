@@ -23,14 +23,10 @@
     "release": "bun publish --access public",
     "pack-tarball": "bun pm pack"
   },
-  "peerDependencies": {
+  "dependencies": {
+    "@graviola/typed-query-types": "workspace:*",
     "@rdfjs/namespace": "catalog:rdf",
     "@rdfjs/types": "catalog:rdf"
-  },
-  "devDependencies": {
-    "@rdfjs/namespace": "catalog:rdf",
-    "@rdfjs/types": "catalog:rdf",
-    "@types/json-schema": "catalog:"
   },
   "typedocOptions": {
     "entryPoints": [
