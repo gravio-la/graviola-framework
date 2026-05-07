@@ -13,7 +13,7 @@
  */
 import type { AbstractDatastore } from "@graviola/edb-global-types";
 import type { CRUDFunctions } from "@graviola/edb-core-types";
-import { initSPARQLAbstractDatastore } from "@graviola/sparql-db-impl";
+import { initSPARQLDatastorePair } from "@graviola/sparql-db-impl";
 import datasetFactory from "@rdfjs/dataset";
 import type { Quad } from "@rdfjs/types";
 import { Store } from "oxigraph";
@@ -87,7 +87,7 @@ export function createOxigraphLocalAdapter(): DatastoreAdapter {
       store = new Store();
       const crudFunctions = makeSyncStoreCRUDFunctions(store);
 
-      datastore = initSPARQLAbstractDatastore({
+      const pair = initSPARQLDatastorePair({
         schema: rawTestSchema as any,
         defaultPrefix: BASE_IRI,
         jsonldContext: { "@vocab": BASE_IRI },
@@ -96,8 +96,9 @@ export function createOxigraphLocalAdapter(): DatastoreAdapter {
         sparqlQueryFunctions: crudFunctions,
         defaultLimit: 100,
       });
+      datastore = pair.abstractDatastore;
 
-      return datastore;
+      return { store: pair.store, abstractDatastore: pair.abstractDatastore };
     },
 
     clearAll: async (_store: AbstractDatastore) => {

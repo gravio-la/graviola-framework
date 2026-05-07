@@ -25,8 +25,10 @@
  *   OXIGRAPH_URL=... bun test            # + Docker Oxigraph
  *   SKIP_PRISMA=1 bun test               # skip Prisma entirely
  */
-import { describe, beforeAll, afterAll, beforeEach } from "bun:test";
+import { describe, afterAll, beforeEach } from "bun:test";
 import type { AbstractDatastore } from "@graviola/edb-global-types";
+import { hasCapability } from "@graviola/store-core";
+import type { BaseStore, CapabilityName } from "@graviola/store-core";
 
 import { getActiveAdapters, createSourceOxigraphStore } from "./adapters";
 import type { DatastoreAdapter } from "./types";
@@ -56,12 +58,22 @@ if (adapters.length === 0) {
 }
 
 for (const adapter of adapters) {
-  describe(adapter.name, () => {
-    let store: AbstractDatastore;
+  const setupResult = await adapter.setup();
 
-    beforeAll(async () => {
-      store = await adapter.setup();
-    });
+  describe(adapter.name, () => {
+    const store: AbstractDatastore = setupResult.abstractDatastore;
+    const newStore: BaseStore<any> | undefined = setupResult.store;
+
+    const supports = (
+      capability: CapabilityName,
+      legacyFallback: boolean,
+    ): boolean => {
+      // Prefer runtime store capabilities when the Store API is available.
+      if (newStore?.capabilities) {
+        return hasCapability(newStore.capabilities, capability);
+      }
+      return legacyFallback;
+    };
 
     afterAll(async () => {
       await adapter.teardown();
@@ -76,31 +88,36 @@ for (const adapter of adapters) {
     runQuerySuite(() => store);
 
     // ─── Optional suites (capability-gated) ────────────────────────────────
-    if (adapter.capabilities.countDocuments) {
+    if (supports("counts", adapter.capabilities.countDocuments)) {
       runCountSuite(() => store);
     }
 
-    if (adapter.capabilities.findDocumentsAsFlatResultSet) {
+    if (
+      supports(
+        "flatResultSet",
+        adapter.capabilities.findDocumentsAsFlatResultSet,
+      )
+    ) {
       runFlatResultSetSuite(() => store);
     }
 
-    if (adapter.capabilities.importDocuments) {
+    if (supports("imports", adapter.capabilities.importDocuments)) {
       runImportSuite(() => store, createSourceOxigraphStore);
     }
 
-    if (adapter.capabilities.getClasses) {
+    if (supports("resolves", adapter.capabilities.getClasses)) {
       runClassesSuite(() => store);
     }
 
-    if (adapter.capabilities.iterables) {
+    if (supports("streams", adapter.capabilities.iterables)) {
       runIterableSuite(() => store);
     }
 
-    if (adapter.capabilities.findDocumentsByLabel) {
+    if (supports("searches", adapter.capabilities.findDocumentsByLabel)) {
       runFindByLabelSuite(() => store);
     }
 
-    if (adapter.capabilities.filterTyped) {
+    if (supports("filters", adapter.capabilities.filterTyped)) {
       runTypedFilterSuite(() => store);
     }
   });

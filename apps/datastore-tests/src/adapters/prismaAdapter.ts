@@ -20,14 +20,14 @@
  * `@prisma/adapter-mariadb`. MongoDB is not supported on Prisma ORM 7 — use Prisma 6 for Mongo.
  *
  * Note: Not all operations are supported by Prisma:
- *   - countDocuments: not directly available (workaround possible, marked false for now)
+ *   - countDocuments: supported
  *   - findDocumentsByLabel: not implemented in prisma-db-impl
  *   - getClasses: not applicable to relational stores
  *   - importDocuments: supported via loadDocument loop
  *   - iterables: not implemented
  */
 import type { AbstractDatastore } from "@graviola/edb-global-types";
-import { initPrismaStore } from "@graviola/prisma-db-impl";
+import { initPrismaDatastorePair } from "@graviola/prisma-db-impl";
 import { extendSchemaShortcut } from "@graviola/json-schema-utils";
 import type { JSONSchema7 } from "json-schema";
 import {
@@ -146,7 +146,7 @@ export function createPrismaAdapter(
       crud: true,
       listDocuments: true,
       findDocuments: true,
-      countDocuments: false,
+      countDocuments: true,
       findDocumentsByLabel: false,
       findDocumentsByAuthorityIRI: false,
       findDocumentsAsFlatResultSet: true,
@@ -157,7 +157,7 @@ export function createPrismaAdapter(
       findEntityByTypeName: false,
     },
 
-    setup: async (): Promise<AbstractDatastore> => {
+    setup: async () => {
       process.env.DATABASE_URL = databaseUrl;
       // Regenerate schema + client for this URL’s provider (multiple Prisma adapters per run).
       runPrismaSetupForUrl(databaseUrl);
@@ -166,13 +166,20 @@ export function createPrismaAdapter(
 
       await prismaClient.$connect();
 
-      return initPrismaStore(prismaClient, extendedSchema, primaryFields, {
-        jsonldContext: { "@vocab": BASE_IRI },
-        defaultPrefix: BASE_IRI,
-        typeNameToTypeIRI,
-        typeIRItoTypeName,
-        datasourceProvider: databaseUrlToProvider(databaseUrl),
-      });
+      const { store, abstractDatastore } = initPrismaDatastorePair(
+        prismaClient,
+        extendedSchema,
+        primaryFields,
+        {
+          jsonldContext: { "@vocab": BASE_IRI },
+          defaultPrefix: BASE_IRI,
+          typeNameToTypeIRI,
+          typeIRItoTypeName,
+          datasourceProvider: databaseUrlToProvider(databaseUrl),
+        },
+      );
+
+      return { store, abstractDatastore };
     },
 
     clearAll: async (_store: AbstractDatastore) => {

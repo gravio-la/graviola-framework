@@ -121,5 +121,5 @@ export async function getActiveAdapters(): Promise<DatastoreAdapter[]> {
  */
 export async function createSourceOxigraphStore(): Promise<AbstractDatastore> {
   const adapter = createOxigraphLocalAdapter();
-  return adapter.setup();
+  return (await adapter.setup()).abstractDatastore;
 }

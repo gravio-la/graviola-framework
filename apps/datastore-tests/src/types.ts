@@ -1,4 +1,5 @@
 import type { AbstractDatastore } from "@graviola/edb-global-types";
+import type { BaseStore } from "@graviola/store-core";
 
 /**
  * Declares which optional AbstractDatastore operations are supported by a given adapter.
@@ -41,7 +42,10 @@ export type DatastoreAdapter = {
   /** Declared capabilities — drives which test suites are run */
   capabilities: DatastoreCapabilities;
   /** Called once in beforeAll: initialise the connection / in-memory store */
-  setup: () => Promise<AbstractDatastore>;
+  setup: () => Promise<{
+    abstractDatastore: AbstractDatastore;
+    store?: BaseStore<any>;
+  }>;
   /** Called in beforeEach: wipe all data without teardown/setup cycle */
   clearAll: (store: AbstractDatastore) => Promise<void>;
   /** Called once in afterAll: disconnect / cleanup resources */
