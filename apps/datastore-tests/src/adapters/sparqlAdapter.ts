@@ -20,7 +20,7 @@
  *   Update: POST ${base}/update
  */
 import type { AbstractDatastore } from "@graviola/edb-global-types";
-import { initSPARQLStore } from "@graviola/sparql-db-impl";
+import { initSPARQLAbstractDatastore } from "@graviola/sparql-db-impl";
 import type { SPARQLFlavour } from "@graviola/edb-core-types";
 import { createHttpSparqlCrudFunctions } from "@graviola/remote-query-implementations";
 
@@ -115,7 +115,7 @@ export function createSparqlAdapter(
         updateUrl: cfg.updateUrl,
       });
 
-      return initSPARQLStore({
+      return initSPARQLAbstractDatastore({
         schema: rawTestSchema as any,
         defaultPrefix: BASE_IRI,
         jsonldContext: { "@vocab": BASE_IRI },
