@@ -1,9 +1,6 @@
-import type { JsonSchema } from "@jsonforms/core";
 import type { JSONSchema7 } from "json-schema";
-import { bringDefinitionToTop } from "@graviola/json-schema-utils";
-import { generateDefaultUISchema } from "@graviola/edb-ui-utils";
-import { generateDefaultDetailUISchema } from "@graviola/edb-detail-renderer";
 import type { SchemaConfig } from "./schemaTypes";
+import { makeSchemaConfig } from "./makeSchemaConfig";
 import { exampleDataTurtle } from "./item-fixture";
 import { publicAssetUrl } from "./publicAssetUrl";
 
@@ -146,7 +143,7 @@ export const schema = {
 
 const itemJsonSchema = schema as unknown as JSONSchema7;
 
-export const itemSchemaConfig: SchemaConfig = {
+export const itemSchemaConfig: SchemaConfig = makeSchemaConfig({
   schemaName: "item-schema",
   label: "Items catalog",
   description:
@@ -199,108 +196,74 @@ export const itemSchemaConfig: SchemaConfig = {
       dropdown: true,
     },
   },
-  detailUiSchemata: {
-    Item: generateDefaultDetailUISchema(
-      bringDefinitionToTop(
-        itemJsonSchema as any,
-        "Item",
-      ) as unknown as JsonSchema,
-      {
-        layoutType: "TopLevelLayout",
-        skipScope: ["#/properties/photos"],
-        scopeOverride: {
-          "#/properties/basePrice": {
-            type: "Control",
-            scope: "#/properties/basePrice",
-            label: "Preis (€)",
-          },
-          "#/properties/isAvailable": {
-            type: "Control",
-            scope: "#/properties/isAvailable",
-            label: "Verfügbar",
-          },
+  detailUiSchemaScopeOverrides: {
+    Item: {
+      skipScope: ["#/properties/photos"],
+      scopeOverride: {
+        "#/properties/basePrice": {
+          type: "Control",
+          scope: "#/properties/basePrice",
+          label: "Preis (€)",
+        },
+        "#/properties/isAvailable": {
+          type: "Control",
+          scope: "#/properties/isAvailable",
+          label: "Verfügbar",
         },
       },
-    ),
-    Category: generateDefaultDetailUISchema(
-      bringDefinitionToTop(
-        itemJsonSchema as any,
-        "Category",
-      ) as unknown as JsonSchema,
-      {
-        layoutType: "TopLevelLayout",
-        skipScope: ["#/properties/subCategories"],
-        scopeOverride: {
-          "#/properties/parentCategory": {
-            type: "Control",
-            scope: "#/properties/parentCategory",
-            label: "Übergeordnete Kategorie",
-          },
-          "#/properties/basePrice": {
-            type: "Control",
-            scope: "#/properties/basePrice",
-            label: "Basispreis (€)",
-          },
+    },
+    Category: {
+      skipScope: ["#/properties/subCategories"],
+      scopeOverride: {
+        "#/properties/parentCategory": {
+          type: "Control",
+          scope: "#/properties/parentCategory",
+          label: "Übergeordnete Kategorie",
+        },
+        "#/properties/basePrice": {
+          type: "Control",
+          scope: "#/properties/basePrice",
+          label: "Basispreis (€)",
         },
       },
-    ),
-    Vendor: generateDefaultDetailUISchema(
-      bringDefinitionToTop(
-        itemJsonSchema as any,
-        "Vendor",
-      ) as unknown as JsonSchema,
-      {
-        layoutType: "TopLevelLayout",
-        skipScope: ["#/properties/logo"],
-      },
-    ),
+    },
+    Vendor: {
+      skipScope: ["#/properties/logo"],
+    },
   },
-  uischemata: {
-    Category: generateDefaultUISchema(
-      bringDefinitionToTop(itemJsonSchema as any, "Category") as any,
-      {
-        scopeOverride: {
-          "#/properties/subCategories": {
-            type: "Control",
-            scope: "#/properties/subCategories",
-            options: {
-              dropdown: true,
-              chips: true,
-            },
+  uischemaScopeOverrides: {
+    Category: {
+      scopeOverride: {
+        "#/properties/subCategories": {
+          type: "Control",
+          scope: "#/properties/subCategories",
+          options: {
+            dropdown: true,
+            chips: true,
           },
         },
       },
-    ),
-    Item: generateDefaultUISchema(
-      bringDefinitionToTop(itemJsonSchema as any, "Item") as any,
-      {
-        scopeOverride: {
-          "#/properties/tags": {
-            type: "Control",
-            scope: "#/properties/tags",
-            options: {
-              chips: true,
-              dropdown: true,
-            },
+    },
+    Item: {
+      scopeOverride: {
+        "#/properties/tags": {
+          type: "Control",
+          scope: "#/properties/tags",
+          options: {
+            chips: true,
+            dropdown: true,
           },
         },
       },
-    ),
-    Vendor: generateDefaultUISchema(
-      bringDefinitionToTop(itemJsonSchema as any, "Vendor") as any,
-      {},
-    ),
-    Tag: generateDefaultUISchema(
-      bringDefinitionToTop(itemJsonSchema as any, "Tag") as any,
-      {
-        scopeOverride: {
-          "#/properties/relatedTags": {
-            type: "Control",
-            scope: "#/properties/relatedTags",
-            label: "Related tags",
-          },
+    },
+    Tag: {
+      scopeOverride: {
+        "#/properties/relatedTags": {
+          type: "Control",
+          scope: "#/properties/relatedTags",
+          label: "Related tags",
         },
       },
-    ),
+    }
   },
-};
+});
