@@ -38,7 +38,7 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { UseQueryResult } from "@tanstack/react-query";
-import type { TypedDocumentsSearchOptions } from "@graviola/edb-global-types";
+import type { StoreDocumentsSearchOptions } from "@graviola/store-core";
 import { useDataStore } from "./useDataStore";
 
 /**
@@ -101,7 +101,7 @@ export function useAnyOfFilterStore<
   TResultMap extends Record<string, any[]> = Record<string, any[]>,
 >(
   typeMapping: TypeMapping,
-  options: TypedDocumentsSearchOptions<any> = {},
+  options: StoreDocumentsSearchOptions<any> = {},
 ): UseQueryResult<AnyOfFilterStoreResult<TResultMap>, Error> {
   const { dataStore, ready } = useDataStore();
   const queryClient = useQueryClient();
@@ -112,14 +112,15 @@ export function useAnyOfFilterStore<
       if (
         !ready ||
         !dataStore.getEntitiesWithClassesByFilter ||
-        !dataStore.filterTypedDocuments
+        !dataStore.filterMany
       ) {
         throw new Error("datastore must be ready and support required methods");
       }
 
       // Step 1: Get all entities matching the filter and their classes
-      const entityClassMap =
-        await dataStore.getEntitiesWithClassesByFilter(options);
+      const entityClassMap = await dataStore.getEntitiesWithClassesByFilter(
+        options as never,
+      );
 
       // Step 2: Group entities by requested types
       const typeNameEntityMap = new Map<string, string[]>();
@@ -155,7 +156,7 @@ export function useAnyOfFilterStore<
               options,
             ],
             queryFn: async () => {
-              return await dataStore.filterTypedDocuments!(typeName, options);
+              return await dataStore.filterMany!(typeName, options as never);
             },
             staleTime: 0,
           });

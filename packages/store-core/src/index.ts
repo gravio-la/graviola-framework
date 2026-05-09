@@ -37,7 +37,12 @@ export type {
   WritesProfile,
   StreamsProfile,
 } from "./descriptor";
-export { hasCapability, speaksLanguage } from "./descriptor";
+export { hasCapabilityInDescriptor, speaksLanguage } from "./descriptor";
+export type {
+  CapabilityFacets,
+  StoreWithCapability,
+} from "./capability-guards";
+export { hasCapability } from "./capability-guards";
 
 export type { Simulator } from "./simulator";
 

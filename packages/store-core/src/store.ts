@@ -48,7 +48,17 @@ export type SparqlStore<R extends SchemaRegistry> = BaseStore<R> &
   Imports<R> &
   Resolves &
   Exists<R> &
-  SpeaksNative<"sparql", unknown>;
+  SpeaksNative<"sparql", unknown> & {
+    /**
+     * Optional extension: resolve local entities by secondary authority identifier (SPARQL backends).
+     */
+    findDocumentsByAuthorityIRI?: (
+      typeName: string,
+      authorityIRI: string,
+      repositoryIRI?: string,
+      limit?: number,
+    ) => Promise<any[]>;
+  };
 
 /** Minimal read-mostly authority surface (e.g. Wikidata-shaped API). */
 export type MinimalLookupStore<R extends SchemaRegistry> = BaseStore<R> &

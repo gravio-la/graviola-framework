@@ -34,7 +34,7 @@ const queryToFilterManyOpts = <R extends SchemaRegistry>(
 
 /**
  * Thin {@link AbstractDatastore} façade over a HTTP-backed {@link Store}-shaped client.
- * Keeps React {@link CrudProviderContext} and hooks typed on `AbstractDatastore` until a hook migration lands.
+ * Used by legacy code paths; React {@link CrudProviderContext} is now typed on {@link CrudDatastoreStore}.
  */
 export const abstractDatastoreFromRestStore = <
   R extends SchemaRegistry = SchemaRegistry,

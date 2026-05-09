@@ -10,9 +10,7 @@ import {
   makeCreateDeeperContextFn,
   type StrategyContext,
 } from "@graviola/edb-data-mapping";
-import type { AbstractDatastore } from "@graviola/edb-global-types";
-
-
+import type { CrudDatastoreStore } from "@graviola/edb-state-hooks";
 
 /**
  * Creating a context for the mapping requires a lot of boilerplate code. Thus, this function is provided
@@ -29,7 +27,7 @@ import type { AbstractDatastore } from "@graviola/edb-global-types";
  * @param disableLogging whether to disable logging
  */
 export const makeDefaultMappingStrategyContext: (
-  dataStore: AbstractDatastore,
+  dataStore: CrudDatastoreStore,
   createEntityIRI: (typeIRI: string) => string,
   typeIRIToTypeName: IRIToStringFn,
   primaryFields: PrimaryFieldDeclaration,
@@ -50,13 +48,15 @@ export const makeDefaultMappingStrategyContext: (
     authorityIRI: string,
     typeIRI?: string | undefined,
   ) => {
-    // @ts-ignore
-    const ids = await dataStore.findDocumentsByAuthorityIRI(
-      secondaryIRI,
-      authorityIRI,
-      typeIRI,
-    );
-
+    if (!typeIRI) {
+      return null;
+    }
+    const typeName = typeIRItoTypeName(typeIRI);
+    const finder = dataStore.findDocumentsByAuthorityIRI;
+    if (!finder) {
+      return null;
+    }
+    const ids = await finder(typeName, secondaryIRI, authorityIRI);
     if (ids.length > 0) {
       console.warn("found more then one entity");
     }
@@ -65,13 +65,17 @@ export const makeDefaultMappingStrategyContext: (
   searchEntityByLabel: async (
     label: string,
     typeIRI: string,
-  ): Promise<string> => {
-    // @ts-ignore
-    const ids = await dataStore.findDocumentsByLabel(label, typeIRI);
-    if (ids.length > 0) {
+  ): Promise<string | null> => {
+    const typeName = typeIRItoTypeName(typeIRI);
+    if (!dataStore.searchByLabel) {
+      return null;
+    }
+    const docs = await dataStore.searchByLabel(typeName, label, 10);
+    if (docs.length > 0) {
       console.warn("found more then one entity");
     }
-    return ids[0] || null;
+    const first = docs[0] as { ["@id"]?: string } | undefined;
+    return (typeof first?.["@id"] === "string" ? first["@id"] : null) ?? null;
   },
   authorityAccess: authorityAccess,
   authorityIRI: "http://d-nb.info/gnd",

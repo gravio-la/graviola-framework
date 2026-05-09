@@ -16,7 +16,7 @@ export const useTypeIRIFromEntity = (
       "classes",
     ],
     queryFn: async () => {
-      return await dataStore.getClasses(entityIRI);
+      return await dataStore.resolveTypes(entityIRI);
     },
     enabled: Boolean(!typeIRI && entityIRI && ready && !disableQuery),
   });

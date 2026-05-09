@@ -1,9 +1,6 @@
 import type { SparqlEndpoint } from "@graviola/edb-core-types";
 import { CrudProviderContext, useAdbContext } from "@graviola/edb-state-hooks";
-import {
-  createLegacyRESTClientStore,
-  abstractDatastoreFromRestStore,
-} from "@graviola/rest-store-client";
+import { createLegacyRESTClientStore } from "@graviola/rest-store-client";
 import { type FunctionComponent, type ReactNode, useMemo } from "react";
 
 export type RestStoreProviderProps = {
@@ -30,7 +27,7 @@ export const RestStoreProvider: FunctionComponent<RestStoreProviderProps> = ({
     jsonLDConfig: { defaultPrefix },
   } = useAdbContext();
   const dataStore = useMemo(() => {
-    const store = createLegacyRESTClientStore({
+    return createLegacyRESTClientStore({
       apiURL: endpoint.endpoint,
       defaultPrefix,
       identifies: {
@@ -40,7 +37,6 @@ export const RestStoreProvider: FunctionComponent<RestStoreProviderProps> = ({
       requestOptions,
       buildEndpointURL,
     });
-    return abstractDatastoreFromRestStore(store);
   }, [
     endpoint,
     defaultPrefix,

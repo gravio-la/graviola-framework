@@ -37,3 +37,4 @@ export * from "./uiSlots/FinderSlot";
 export * from "./useExtendedSchema";
 export * from "./useTypedFilterStore";
 export * from "./useAnyOfFilterStore";
+export type { CrudDatastoreStore } from "./crudDatastoreStore";

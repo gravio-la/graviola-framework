@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "@graviola/edb-state-hooks": "workspace:*",
+    "@graviola/store-core": "workspace:*",
     "@graviola/edb-table-types": "workspace:*",
     "@graviola/edb-table-mrt-adapter": "workspace:*",
     "@graviola/edb-table-renderer-sparql-select": "workspace:*",

@@ -599,6 +599,23 @@ export function initSPARQLDatastorePair(
       );
     },
 
+    findDocumentsByAuthorityIRI: async (
+      typeName,
+      authorityIRI,
+      repositoryIRI,
+      limit,
+    ) => {
+      if (!abstractDatastore.findDocumentsByAuthorityIRI) {
+        throw new Error("findDocumentsByAuthorityIRI not available");
+      }
+      return abstractDatastore.findDocumentsByAuthorityIRI(
+        typeName,
+        authorityIRI,
+        repositoryIRI,
+        limit,
+      );
+    },
+
     count: async (typeName, query) => {
       if (!abstractDatastore.countDocuments) {
         throw new Error("countDocuments not available");

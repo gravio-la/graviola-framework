@@ -6,14 +6,14 @@ import {
   applyToEachField,
   extractFieldIfString,
 } from "@graviola/edb-data-mapping";
-import { AbstractDatastore } from "@graviola/edb-global-types";
+import type { CrudDatastoreStore } from "@graviola/edb-state-hooks";
 import { FinderKnowledgeBaseDescription } from "@graviola/semantic-jsonform-types";
 import { Storage as KnowledgebaseIcon } from "@mui/icons-material";
 
 import { KBListItemRenderer } from "../show/KBListItemRenderer";
 
 export const KBMainDatabase: (
-  dataStore: AbstractDatastore,
+  dataStore: CrudDatastoreStore,
   primaryFields: PrimaryFieldDeclaration,
   typeIRItoTypeName: (typeIRI: string) => string,
 ) => FinderKnowledgeBaseDescription = (
@@ -26,11 +26,10 @@ export const KBMainDatabase: (
   description: "Datenbank der Ausstellung",
   icon: <KnowledgebaseIcon />,
   find: async (searchString, typeIRI, typeName, findOptions) => {
-    const res = await dataStore.findDocuments(
-      typeName,
-      { search: searchString },
-      findOptions?.limit,
-    );
+    const res = await dataStore.filterMany(typeName, {
+      searchString: searchString ?? undefined,
+      limit: findOptions?.limit,
+    });
     return res.map((doc) => {
       const { label, image, description } = applyToEachField(
         doc,
@@ -46,7 +45,7 @@ export const KBMainDatabase: (
     });
   },
   getEntity(id, typeIRI) {
-    return dataStore.loadDocument(typeIRItoTypeName(typeIRI), id);
+    return dataStore.loadOne(typeIRItoTypeName(typeIRI), id);
   },
   listItemRenderer: (entry, idx, typeIRI, selected, onSelect, onAccept) => (
     <KBListItemRenderer

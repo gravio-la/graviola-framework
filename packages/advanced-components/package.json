@@ -42,6 +42,7 @@
     "@graviola/edb-state-hooks": "workspace:*",
     "@graviola/edb-ui-utils": "workspace:*",
     "@graviola/jsonld-utils": "workspace:*",
+    "@graviola/store-core": "workspace:*",
     "dayjs": "^1.11.18",
     "lodash-es": "catalog:",
     "next-i18next": "^15"

@@ -1,8 +1,8 @@
-import type { AbstractDatastore } from "@graviola/edb-global-types";
 import { useCrudProvider } from "./provider";
+import type { CrudDatastoreStore } from "./crudDatastoreStore";
 
 type UseDataStoreState = {
-  dataStore?: AbstractDatastore;
+  dataStore?: CrudDatastoreStore | null;
   ready: boolean;
 };
 

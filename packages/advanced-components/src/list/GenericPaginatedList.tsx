@@ -10,6 +10,7 @@ import {
   FlatResult,
   extractPrimaryFieldsFromFlatResult,
 } from "@graviola/edb-core-utils";
+import { hasCapability } from "@graviola/store-core";
 import { ListItemType } from "./listItemType";
 
 export type GenericPaginatedListProps = {
@@ -75,9 +76,9 @@ export const GenericPaginatedList: FunctionComponent<
   const { data: countData } = useQuery({
     queryKey: ["type", typeIRI, "count"],
     queryFn: async () => {
-      if (dataStore.countDocuments) {
+      if (dataStore && hasCapability(dataStore, "counts")) {
         try {
-          return await dataStore.countDocuments(typeName, {});
+          return await dataStore.count(typeName, {});
         } catch (e) {
           console.error(e);
           return 0;
@@ -121,10 +122,10 @@ export const GenericPaginatedList: FunctionComponent<
   const removeMutation = useMutation({
     mutationKey: ["remove", typeIRI],
     mutationFn: async (entityIRI: string) => {
-      if (!dataStore.removeDocument) {
-        throw new Error("removeDocument not available");
+      if (!dataStore.remove) {
+        throw new Error("remove not available");
       }
-      return await dataStore.removeDocument(typeName, entityIRI);
+      return await dataStore.remove(typeName, entityIRI);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["type", typeIRI] });

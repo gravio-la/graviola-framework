@@ -136,13 +136,10 @@ export const DiscoverAutocompleteInput: FunctionComponent<
         });
       }
       return (
-        await dataStore.findDocuments(
-          typeName,
-          {
-            search: searchString || null,
-          },
+        await dataStore.filterMany(typeName, {
+          searchString: searchString || undefined,
           limit,
-        )
+        })
       ).map((doc) => {
         const { label, image, description } = applyToEachField(
           doc,
@@ -159,7 +156,7 @@ export const DiscoverAutocompleteInput: FunctionComponent<
         return suggestion;
       });
     },
-    [typeIRI, limit, dataStore, primaryFields, primaryFieldExtracts],
+    [typeIRI, limit, typeName, dataStore, primaryFields, primaryFieldExtracts],
   );
 
   const { data: basicFields } = useQuery({
@@ -168,7 +165,7 @@ export const DiscoverAutocompleteInput: FunctionComponent<
       const value = selected?.value;
       if (value && typeIRI) {
         const typeName = typeIRItoTypeName(typeIRI);
-        const data = await dataStore.loadDocument(typeName, value);
+        const data = await dataStore.loadOne(typeName, value);
         const fieldDeclaration =
           primaryFieldExtracts[typeName] ||
           (primaryFields[typeName] as PrimaryField | undefined);

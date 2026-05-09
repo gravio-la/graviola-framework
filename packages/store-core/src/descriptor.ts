@@ -72,7 +72,11 @@ export type CapabilityDescriptor = {
   profiles?: CapabilityProfiles;
 };
 
-export function hasCapability(
+/**
+ * Descriptor-only capability check (e.g. handshake metadata before a Store exists).
+ * For store instances, use {@link hasCapability} from `./capability-guards`.
+ */
+export function hasCapabilityInDescriptor(
   descriptor: CapabilityDescriptor,
   name: CapabilityName,
 ): boolean {

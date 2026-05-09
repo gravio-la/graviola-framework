@@ -4,7 +4,7 @@ import { useAdbContext } from "./provider";
 import type { UseCRUDHook } from "./useCrudHook";
 import { useCallback } from "react";
 import type { NamedAndTypedEntity } from "@graviola/edb-core-types";
-import { AbstractDatastore } from "@graviola/edb-global-types";
+import type { CrudDatastoreStore } from "./crudDatastoreStore";
 
 type LoadResult = {
   document: any;
@@ -40,7 +40,7 @@ const findDraftDocuments = (data: any, depth: number = 0) => {
 
 const storeDraftDocuments: (
   data: any,
-  dataStore: AbstractDatastore,
+  dataStore: CrudDatastoreStore,
 ) => Promise<any[]> = async (data: any, dataStore) => {
   const draftDocuments = findDraftDocuments(data);
   const documentsProcessed = [];
@@ -52,7 +52,7 @@ const storeDraftDocuments: (
     documentsProcessed.push(draftDocument["@id"]);
     const typeName = dataStore.typeIRItoTypeName(draftDocument["@type"]);
     //delete draftDocument.__draft;
-    const result = await dataStore.upsertDocument(
+    const result = await dataStore.upsert(
       typeName,
       draftDocument["@id"],
       draftDocument,
@@ -147,7 +147,7 @@ export const useCRUDWithQueryClient: UseCRUDHook<
     queryFn: async () => {
       if (!entityIRI || !ready) return null;
       const typeName = dataStore.typeIRItoTypeName(typeIRI);
-      const result = await dataStore.loadDocument(typeName, entityIRI);
+      const result = await dataStore.loadOne(typeName, entityIRI);
       return processResult(result);
     },
     enabled: Boolean(entityIRI && typeIRI && ready) && enabled,
@@ -162,7 +162,7 @@ export const useCRUDWithQueryClient: UseCRUDHook<
         throw new Error("entityIRI or updateFetch is not defined");
       }
       const typeName = dataStore.typeIRItoTypeName(typeIRI);
-      return await dataStore.removeDocument(typeName, entityIRI);
+      return await dataStore.remove(typeName, entityIRI);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["entity", typeIRI] });
@@ -185,11 +185,11 @@ export const useCRUDWithQueryClient: UseCRUDHook<
         "@id": _entityIRI,
         "@type": typeIRI,
       } as NamedAndTypedEntity;
-      const result = await dataStore.upsertDocument(
+      const result = (await dataStore.upsert(
         typeName,
         _entityIRI,
         dataWithType,
-      );
+      )) as Record<string, unknown>;
       const { "@context": context, ...cleanDataWithoutContext } = result;
       return {
         mainDocument: cleanDataWithoutContext,
@@ -207,7 +207,7 @@ export const useCRUDWithQueryClient: UseCRUDHook<
     queryFn: async () => {
       if (!entityIRI || !typeIRI || !ready) return null;
       const typeName = dataStore.typeIRItoTypeName(typeIRI);
-      return await dataStore.existsDocument(typeName, entityIRI);
+      return await dataStore.exists(typeName, entityIRI);
     },
     enabled: Boolean(entityIRI && typeIRI && ready) && enabled,
     refetchOnWindowFocus: false,
@@ -220,7 +220,7 @@ export const useCRUDWithQueryClient: UseCRUDHook<
         queryKey: ["entity", typeIRI, entityIRI, "data", loadQueryKey],
         queryFn: async () => {
           const typeName = dataStore.typeIRItoTypeName(typeIRI);
-          const result = await dataStore.loadDocument(typeName, entityIRI);
+          const result = await dataStore.loadOne(typeName, entityIRI);
           return processResult(result);
         },
         staleTime: 0,

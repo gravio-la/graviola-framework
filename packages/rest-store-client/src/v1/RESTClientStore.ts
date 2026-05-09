@@ -1,26 +1,27 @@
 import type { Entity } from "@graviola/edb-core-types";
-import type {
-  BaseStore,
-  CapabilityDescriptor,
-  Counts,
-  EntityOf,
-  Exists,
-  Filters,
-  Identifies,
-  Lists,
-  Loads,
-  ReadResult,
-  Removes,
-  Resolves,
-  SchemaRegistry,
-  Searches,
-  StoreDocumentsSearchOptions,
-  StoreFilterTraversalOptions,
-  StoreId,
-  StoreListQuery,
-  Writes,
+import {
+  hasCapabilityInDescriptor,
+  type BaseStore,
+  type CapabilityDescriptor,
+  type CapabilityName,
+  type Counts,
+  type EntityOf,
+  type Exists,
+  type Filters,
+  type Identifies,
+  type Lists,
+  type Loads,
+  type ReadResult,
+  type Removes,
+  type Resolves,
+  type SchemaRegistry,
+  type Searches,
+  type StoreDocumentsSearchOptions,
+  type StoreFilterTraversalOptions,
+  type StoreId,
+  type StoreListQuery,
+  type Writes,
 } from "@graviola/store-core";
-import { hasCapability } from "@graviola/store-core";
 
 import { capabilityDescriptorFromHandshake } from "../descriptor-from-handshake";
 import type {
@@ -136,12 +137,9 @@ const listSearchParams = (
   return p;
 };
 
-const capOrThrow = (
-  desc: CapabilityDescriptor,
-  name: Parameters<typeof hasCapability>[1],
-): void => {
+const capOrThrow = (desc: CapabilityDescriptor, name: CapabilityName): void => {
   if (name === "identifies") return;
-  if (!hasCapability(desc, name)) {
+  if (!hasCapabilityInDescriptor(desc, name)) {
     throw new GraviolaRestError(
       `Capability ${String(name)} not advertised for this HTTP store`,
       501,

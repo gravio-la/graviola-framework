@@ -12,6 +12,7 @@ import {
   useQueryClient,
 } from "@graviola/edb-state-hooks";
 import { bringDefinitionToTop } from "@graviola/json-schema-utils";
+import { hasCapability } from "@graviola/store-core";
 import type { MRT_ColumnDef, MRT_SortingState } from "material-react-table";
 import { PaginationState } from "@tanstack/table-core";
 import type { JSONSchema7 } from "json-schema";
@@ -115,9 +116,9 @@ export const SemanticTable = ({
     queryKey: ["type", typeIRI, "count"],
     queryFn: async () => {
       const tn = typeIRIToTypeName(typeIRI);
-      if (dataStore.countDocuments) {
+      if (dataStore && hasCapability(dataStore, "counts")) {
         try {
-          const amount = await dataStore.countDocuments(tn);
+          const amount = await dataStore.count(tn);
           return amount;
         } catch (e) {
           console.error(e);
@@ -153,8 +154,8 @@ export const SemanticTable = ({
     queryFn: async () => {
       const tn = typeIRIToTypeName(typeIRI);
 
-      if (rowShape === "jsonld" && dataStore.filterTypedDocuments) {
-        const documents = await dataStore.filterTypedDocuments(tn, {
+      if (rowShape === "jsonld" && dataStore.filterMany) {
+        const documents = await dataStore.filterMany(tn, {
           pagination: loadAllAtOnce ? undefined : pagination,
         } as any);
         return {
@@ -282,9 +283,9 @@ export const SemanticTable = ({
   const { mutateAsync: removeEntity, isPending: aboutToRemove } = useMutation({
     mutationKey: ["remove", (id: string) => id],
     mutationFn: async (id: string) => {
-      if (!id || !dataStore.removeDocument)
-        throw new Error("entityIRI or removeDocument is not defined");
-      return dataStore.removeDocument(typeName, id);
+      if (!id || !dataStore.remove)
+        throw new Error("entityIRI or remove is not defined");
+      return dataStore.remove(typeName, id);
     },
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["type", typeIRI] });

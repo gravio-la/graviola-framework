@@ -1,10 +1,11 @@
-import { CRUDFunctions, SparqlEndpoint } from "@graviola/edb-core-types";
-import { AbstractDatastore } from "@graviola/edb-global-types";
+import { CRUDFunctions } from "@graviola/edb-core-types";
 import { createContext, useContext } from "react";
+
+import type { CrudDatastoreStore } from "../crudDatastoreStore";
 
 type CrudProviderContextValue = {
   crudOptions: CRUDFunctions | null;
-  dataStore: AbstractDatastore;
+  dataStore: CrudDatastoreStore | null;
   isReady: boolean;
 };
 

@@ -69,11 +69,11 @@ export const useDeclarativeMapper = () => {
             const typeName_ = typeIRIToTypeName(doc["@type"]);
             //return dataStore.createDocument(typeName_, doc);
             try {
-              const newDoc = await dataStore.upsertDocument(
+              const newDoc = (await dataStore.upsert(
                 typeName_,
                 entityIRI,
                 doc,
-              );
+              )) as Record<string, unknown>;
               return {
                 ...newDoc,
                 "@id": entityIRI,
@@ -90,12 +90,13 @@ export const useDeclarativeMapper = () => {
             typeIRI: string,
           ) => {
             const typeName_ = typeIRIToTypeName(typeIRI);
-            const ids = await dataStore.findDocumentsByAuthorityIRI(
+            const docs = await dataStore.findDocumentsByAuthorityIRI?.(
               typeName_,
               secondaryIRI,
               authorityIRI,
               limit,
             );
+            const ids = docs ?? [];
             if (ids.length > 0) {
               console.warn("found more then one entity");
             }
@@ -103,11 +104,14 @@ export const useDeclarativeMapper = () => {
           },
           searchEntityByLabel: async (label: string, typeIRI: string) => {
             const typeName_ = typeIRIToTypeName(typeIRI);
-            const ids = await dataStore.findDocumentsByLabel(
+            const docs = await dataStore.searchByLabel?.(
               typeName_,
               label,
               limit,
             );
+            const ids = (docs ?? [])
+              .map((d: any) => d?.["@id"])
+              .filter(Boolean);
             if (ids.length > 0) {
               console.warn("found more then one entity");
             }

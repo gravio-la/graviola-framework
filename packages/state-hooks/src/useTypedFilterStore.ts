@@ -12,9 +12,9 @@ import { useCallback, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { UseQueryOptions } from "@tanstack/react-query";
 import type {
-  TypedDocumentFilterOptions,
-  TypedDocumentsSearchOptions,
-} from "@graviola/edb-global-types";
+  StoreDocumentsSearchOptions,
+  StoreFilterTraversalOptions,
+} from "@graviola/store-core";
 import { useDataStore } from "./useDataStore";
 
 /**
@@ -84,7 +84,7 @@ export function useTypedFilterStore<T = any>(typeName: string) {
   const useLoadDocument = useCallback(
     (
       entityIRI: string,
-      options: TypedDocumentFilterOptions<T> = {},
+      options: StoreFilterTraversalOptions<T> = {},
       queryOptions?: Omit<UseQueryOptions<T, Error>, "queryKey" | "queryFn">,
     ) => {
       return useQuery<T, Error>({
@@ -96,19 +96,17 @@ export function useTypedFilterStore<T = any>(typeName: string) {
             );
           }
 
-          if (!dataStore.filterTypedDocument) {
-            throw new Error(
-              "filterTypedDocument not supported by this datastore",
-            );
+          if (!dataStore.filterOne) {
+            throw new Error("filterOne not supported by this datastore");
           }
 
-          const result = await dataStore.filterTypedDocument<T>(
-            typeName,
+          const result = (await dataStore.filterOne(
+            typeName as never,
             entityIRI,
-            options,
-          );
+            options as never,
+          )) as T | null;
 
-          return result;
+          return result as T;
         },
         enabled: Boolean(entityIRI && ready) && (queryOptions?.enabled ?? true),
         refetchOnWindowFocus: false,
@@ -127,7 +125,7 @@ export function useTypedFilterStore<T = any>(typeName: string) {
    */
   const useLoadDocuments = useCallback(
     (
-      options: TypedDocumentsSearchOptions<T> = {},
+      options: StoreDocumentsSearchOptions<T> = {},
       queryOptions?: Omit<UseQueryOptions<T[], Error>, "queryKey" | "queryFn">,
     ) => {
       return useQuery<T[], Error>({
@@ -137,16 +135,14 @@ export function useTypedFilterStore<T = any>(typeName: string) {
             throw new Error("datastore must be ready");
           }
 
-          if (!dataStore.filterTypedDocuments) {
-            throw new Error(
-              "filterTypedDocuments not supported by this datastore",
-            );
+          if (!dataStore.filterMany) {
+            throw new Error("filterMany not supported by this datastore");
           }
 
-          const results = await dataStore.filterTypedDocuments<T>(
-            typeName,
-            options,
-          );
+          const results = (await dataStore.filterMany(
+            typeName as never,
+            options as never,
+          )) as T[];
 
           return results;
         },
@@ -169,26 +165,26 @@ export function useTypedFilterStore<T = any>(typeName: string) {
   const loadDocumentAsync = useCallback(
     async (
       entityIRI: string,
-      options: TypedDocumentFilterOptions<T> = {},
+      options: StoreFilterTraversalOptions<T> = {},
     ): Promise<T> => {
       if (!entityIRI || !ready) {
         throw new Error("entityIRI is required and datastore must be ready");
       }
 
-      if (!dataStore.filterTypedDocument) {
-        throw new Error("filterTypedDocument not supported by this datastore");
+      if (!dataStore.filterOne) {
+        throw new Error("filterOne not supported by this datastore");
       }
 
       return queryClient.fetchQuery({
         queryKey: ["typedDocument", typeIRI, entityIRI, options],
         queryFn: async () => {
-          const result = await dataStore.filterTypedDocument<T>(
-            typeName,
+          const result = (await dataStore.filterOne(
+            typeName as never,
             entityIRI,
-            options,
-          );
+            options as never,
+          )) as T | null;
 
-          return result;
+          return result as T;
         },
         staleTime: 0,
       });
@@ -204,22 +200,22 @@ export function useTypedFilterStore<T = any>(typeName: string) {
    * @returns Promise resolving to array of documents
    */
   const loadDocumentsAsync = useCallback(
-    async (options: TypedDocumentsSearchOptions<T> = {}): Promise<T[]> => {
+    async (options: StoreDocumentsSearchOptions<T> = {}): Promise<T[]> => {
       if (!ready) {
         throw new Error("datastore must be ready");
       }
 
-      if (!dataStore.filterTypedDocuments) {
-        throw new Error("filterTypedDocuments not supported by this datastore");
+      if (!dataStore.filterMany) {
+        throw new Error("filterMany not supported by this datastore");
       }
 
       return queryClient.fetchQuery({
         queryKey: ["typedDocuments", typeIRI, options],
         queryFn: async () => {
-          const results = await dataStore.filterTypedDocuments<T>(
-            typeName,
-            options,
-          );
+          const results = (await dataStore.filterMany(
+            typeName as never,
+            options as never,
+          )) as T[];
 
           return results;
         },

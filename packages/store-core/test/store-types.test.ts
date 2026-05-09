@@ -1,11 +1,17 @@
 import { describe, expect, test } from "bun:test";
 import { expectTypeOf } from "expect-type";
-import type {
-  BaseStore,
-  EntityChangeEvent,
-  MinimalLookupStore,
-  ReadOnlyStructuralStore,
-  SparqlStore,
+import {
+  hasCapability,
+  hasCapabilityInDescriptor,
+  type BaseStore,
+  type CapabilityDescriptor,
+  type Counts,
+  type EntityChangeEvent,
+  type MinimalLookupStore,
+  type ReadOnlyStructuralStore,
+  type SchemaRegistry,
+  type SparqlStore,
+  type StoreId,
 } from "../src/index";
 
 type Wiki = { "@id": string; label: string };
@@ -44,5 +50,31 @@ describe("store paper scenarios (types)", () => {
       }
     };
     expectTypeOf(handle).toBeFunction();
+  });
+
+  test("hasCapabilityInDescriptor reads descriptor flags", () => {
+    const d: CapabilityDescriptor = { identifies: true, counts: true };
+    expect(hasCapabilityInDescriptor(d, "identifies")).toBe(true);
+    expect(hasCapabilityInDescriptor(d, "counts")).toBe(true);
+    expect(hasCapabilityInDescriptor(d, "imports")).toBe(false);
+  });
+
+  test("hasCapability narrows optional Counts into required count", () => {
+    type R = SchemaRegistry;
+    const store = {
+      storeId: "x" as StoreId,
+      capabilities: {
+        identifies: true,
+        counts: true,
+      } satisfies CapabilityDescriptor,
+      typeNameToTypeIRI: (_n: string) => "",
+      typeIRItoTypeName: (_iri: string) => "",
+    } as BaseStore<R> & Partial<Counts<R>>;
+
+    expectTypeOf(store.count).toEqualTypeOf<Counts<R>["count"] | undefined>();
+
+    if (hasCapability(store, "counts")) {
+      expectTypeOf(store.count).toEqualTypeOf<Counts<R>["count"]>();
+    }
   });
 });

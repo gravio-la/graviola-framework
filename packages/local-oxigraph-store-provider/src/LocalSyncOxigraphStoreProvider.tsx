@@ -1,8 +1,8 @@
 import { RDFMimetype } from "@graviola/async-oxigraph";
 import type { CRUDFunctions, SparqlEndpoint } from "@graviola/edb-core-types";
-import { AbstractDatastore } from "@graviola/edb-global-types";
+import type { SparqlStore } from "@graviola/store-core";
 import { CrudProviderContext, useAdbContext } from "@graviola/edb-state-hooks";
-import { initSPARQLAbstractDatastore } from "@graviola/sparql-db-impl";
+import { initSPARQLStore } from "@graviola/sparql-db-impl";
 import { debounce } from "lodash-es";
 import {
   type FunctionComponent,
@@ -54,7 +54,7 @@ export const LocalSyncOxigraphStoreProvider: FunctionComponent<
   } = useAdbContext();
   const [dataLoaded, setDataLoaded] = useState(false);
   const [bundle, setBundle] = useState<{
-    dataStore: AbstractDatastore;
+    dataStore: SparqlStore<Record<string, unknown>>;
     crudOptions: CRUDFunctions;
   } | null>(null);
 
@@ -99,7 +99,7 @@ export const LocalSyncOxigraphStoreProvider: FunctionComponent<
         };
       }
 
-      const dataStore = initSPARQLAbstractDatastore({
+      const dataStore = initSPARQLStore({
         defaultPrefix,
         jsonldContext,
         typeNameToTypeIRI,
