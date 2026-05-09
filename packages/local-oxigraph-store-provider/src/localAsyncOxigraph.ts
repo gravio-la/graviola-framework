@@ -10,6 +10,11 @@ import { useCallback, useMemo } from "react";
 
 import { useOxigraph } from "./useOxigraph";
 
+type LocalWorkerEndpoint = SparqlEndpoint & {
+  /** Optional per-query worker timeout override (milliseconds). */
+  queryTimeoutInMS?: number;
+};
+
 type DoQuery = (
   query: string,
   mimeType?: ResponseMimetype,
@@ -57,7 +62,7 @@ export const makeLocalWorkerCrudOptions: (
 };
 
 export const useAsyncLocalWorkerCrudOptions: (
-  endpoint: SparqlEndpoint,
+  endpoint: LocalWorkerEndpoint,
 ) => CRUDFunctions = (endpoint) => {
   const { oxigraph } = useOxigraph();
   const doQuery = useCallback(
@@ -65,9 +70,13 @@ export const useAsyncLocalWorkerCrudOptions: (
       if (!oxigraph) {
         throw new Error("Oxigraph not initialized");
       }
-      return (await oxigraph.ao.query(query, mimeType)) as WorkerResult;
+      return (await oxigraph.ao.query(
+        query,
+        mimeType,
+        endpoint.queryTimeoutInMS,
+      )) as WorkerResult;
     },
-    [oxigraph],
+    [oxigraph, endpoint.queryTimeoutInMS],
   );
   return useMemo(
     () => makeLocalWorkerCrudOptions(doQuery)(endpoint),

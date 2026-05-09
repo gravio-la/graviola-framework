@@ -77,10 +77,12 @@ export class AsyncOxigraph {
   async query(
     query: string,
     responseMimetype?: ResponseMimetype,
+    timeoutInMS?: number,
   ): Promise<WorkerResult> {
     return await this._runBackgroundTask({
       task: TaskType.QUERY,
       queryPayload: { query, responseMimetype },
+      ...(timeoutInMS !== undefined ? { timeoutInMS } : {}),
     });
   }
 
