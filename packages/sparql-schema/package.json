@@ -56,8 +56,7 @@
     "@types/lodash-es": "^4.17.12",
     "eslint-config-edb": "workspace:*",
     "tsup": "^8.0.0",
-    "typescript": "^5.8.2",
-    "zod": "^4.1.13"
+    "typescript": "^5.8.2"
   },
   "peerDependencies": {
     "@rdfjs/data-model": "catalog:rdf",

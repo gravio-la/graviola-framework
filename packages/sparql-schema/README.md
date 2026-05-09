@@ -31,23 +31,18 @@ flowchart TD
 ### Package Relationships
 
 - **Dependencies**:
-
   - `@graviola/edb-core-utils`: Provides utility functions for working with IRIs and other core operations
   - `@graviola/jsonld-utils`: Provides utilities for working with JSON-LD data
   - `@graviola/json-schema-utils`: Provides utilities for working with JSON Schema
   - `@graviola/edb-graph-traversal`: Provides utilities for traversing graph data structures
 
 - **Peer Dependencies**:
+  - `@rdfjs/data-model`: RDF/JS data model implementation (used throughout query construction)
+  - `jsonld-context-parser`: types such as `JsonLdContext` on load/CRUD options (`crud/load.ts`)
 
-  - `@rdfjs/data-model`: RDF/JS data model implementation
-  - `@rdfjs/parser-jsonld`: JSON-LD parser for RDF/JS
-  - `@tpluscode/sparql-builder`: SPARQL query builder
-  - `json-schema`: JSON Schema definitions
-  - `jsonld`: JSON-LD processor
-  - `jsonld-context-parser`: JSON-LD context parser
-  - `n3`: N3.js RDF library (parse and serialize turtle and n-triples)
-  - `rdf-dataset-ext`: RDF dataset extensions
-  - `string-to-stream`: Convert strings to streams
+  Direct dependencies include `@tpluscode/sparql-builder`, `lodash-es`, etc.; see `package.json`.
+
+  JSON-LD processing (`jsonld`) is provided transitively via `@graviola/jsonld-utils`; consumers should depend on `jsonld` only when calling `@graviola/jsonld-utils` APIs directly.
 
 - **Used By**:
   - `@graviola/sparql-db-impl`: Implements database operations using sparql-schema
@@ -221,7 +216,6 @@ console.log(results);
 Converts a JSON Schema to a SPARQL CONSTRUCT query.
 
 - **Parameters**:
-
   - `subjectURI`: The subject URI or variable
   - `rootSchema`: The JSON Schema to convert
   - `stopSymbols?`: Array of property names to stop recursion at
@@ -235,7 +229,6 @@ Converts a JSON Schema to a SPARQL CONSTRUCT query.
 Creates a SPARQL SELECT query.
 
 - **Parameters**:
-
   - `fields`: Array of field names to select
   - `where`: WHERE clause of the query
   - `limit?`: Maximum number of results
@@ -251,7 +244,6 @@ Creates a SPARQL SELECT query.
 Saves an entity to the RDF store.
 
 - **Parameters**:
-
   - `options`: Object with `entity`, `schema`, `sparqlEndpoint`, and `sparqlUpdateEndpoint`
 
 - **Returns**: Promise resolving to the save result
@@ -261,7 +253,6 @@ Saves an entity to the RDF store.
 Loads an entity from the RDF store.
 
 - **Parameters**:
-
   - `options`: Object with `entityIRI`, `typeIRI`, `schema`, and `sparqlEndpoint`
 
 - **Returns**: Promise resolving to the loaded entity
@@ -271,7 +262,6 @@ Loads an entity from the RDF store.
 Removes an entity from the RDF store.
 
 - **Parameters**:
-
   - `options`: Object with `entityIRI`, `typeIRI`, `schema`, `sparqlEndpoint`, and `sparqlUpdateEndpoint`
 
 - **Returns**: Promise resolving to the remove result

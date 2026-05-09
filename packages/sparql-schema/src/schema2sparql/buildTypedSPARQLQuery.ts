@@ -1,15 +1,16 @@
 /**
- * Type-safe SPARQL query builder with filter validation
+ * Filterable SPARQL query builder with filter validation
  *
  * This module provides a high-level API for building SPARQL CONSTRUCT queries
- * with full TypeScript type safety and optional runtime validation.
+ * with full TypeScript type safety for filter options and optional runtime validation.
  *
  * Features:
  * - Type-safe WHERE filters (Prisma-style)
  * - Type-safe include patterns with pagination
  * - Runtime filter validation using ajv
- * - Support for Zod schema inference
  * - Complex nested filters and includes
+ *
+ * Pass a JSON Schema for the entity shape (same artifact as the rest of Graviola).
  */
 
 import type { JSONSchema7 } from "json-schema";
@@ -24,14 +25,13 @@ import { buildSPARQLConstructQuery } from "./buildSPARQLConstructQuery";
 import type { ConstructResult } from "./normalizedSchema2construct";
 import { OptionalStringOrStringArray } from "@/base";
 import { TypedGraphTraversalFilterOptions } from "@graviola/edb-core-types";
-import { z } from "zod";
 
 /**
- * Options for building typed SPARQL queries
+ * Options for building filterable SPARQL queries
  *
- * @template T - The type to derive filter patterns from (typically z.infer<typeof schema>)
+ * @template T - Document shape used to type filter option bags (caller-supplied)
  */
-export interface BuildTypedSPARQLQueryOptions<
+export interface BuildFilterableSPARQLQueryOptions<
   T = any,
 > extends TypedGraphTraversalFilterOptions<T> {
   /** Prefix mappings for the query (e.g., { "foaf": "http://xmlns.com/foaf/0.1/" }) */
@@ -47,7 +47,7 @@ export interface BuildTypedSPARQLQueryOptions<
 }
 
 /**
- * Result of typed SPARQL query building
+ * Result of filterable SPARQL query building
  */
 export interface TypedSPARQLQueryResult {
   /** The complete SPARQL CONSTRUCT query string */
@@ -59,16 +59,16 @@ export interface TypedSPARQLQueryResult {
 }
 
 /**
- * Build a type-safe SPARQL CONSTRUCT query with optional filter validation
+ * Build a SPARQL CONSTRUCT query from JSON Schema with optional filter validation
  *
- * This is the main entry point for building SPARQL queries with full type safety.
+ * This is the main entry point for building SPARQL queries with typed filter options.
  * It combines schema normalization, filter validation, and query generation.
  * Supports both single and multiple subject IRIs for batch queries.
  *
- * @template T - The type to derive filters from (typically z.infer<typeof zodSchema>)
+ * @template T - Document shape used to type filter options (caller-supplied)
  * @param subjectIRI - The IRI(s) of the subject(s) to query (single IRI or array)
  * @param typeIRIs - The type IRI(s) for the entities (can be undefined)
- * @param schema - Zod schema or JSON Schema for the data structure
+ * @param schema - JSON Schema for the data structure
  * @param options - Type-safe filter options (select, include, where, etc.)
  * @returns Complete SPARQL query with metadata
  *
@@ -76,29 +76,15 @@ export interface TypedSPARQLQueryResult {
  *
  * @example
  * ```typescript
- * import { z } from 'zod';
- * import { buildTypedSPARQLQuery } from '@graviola/sparql-schema';
+ * import { buildFilterableSPARQLQuery } from '@graviola/sparql-schema';
+ * import type { JSONSchema7 } from 'json-schema';
  *
- * const PersonSchema = z.object({
- *   '@id': z.string().optional(),
- *   '@type': z.literal('http://example.com/Person'),
- *   name: z.string(),
- *   age: z.number(),
- *   email: z.string(),
- *   friends: z.array(z.object({
- *     '@id': z.string().optional(),
- *     name: z.string(),
- *     age: z.number()
- *   }))
- * });
+ * const personSchema: JSONSchema7 = { ... };
  *
- * type Person = z.infer<typeof PersonSchema>;
- *
- * // Pass Zod schema directly - conversion happens automatically!
- * const result = buildTypedSPARQLQuery<Person>(
+ * const result = buildFilterableSPARQLQuery<Person>(
  *   'http://example.com/person/1',
- *   'http://example.com/Person', // Type IRI
- *   PersonSchema, // Zod schema - auto-converted to JSON Schema
+ *   'http://example.com/Person',
+ *   personSchema,
  *   {
  *     select: { name: true, age: true },
  *     include: {
@@ -114,14 +100,14 @@ export interface TypedSPARQLQueryResult {
  *   }
  * );
  *
- * console.log(result.query); // Complete SPARQL query
+ * console.log(result.query);
  * ```
  */
-export function buildTypedSPARQLQuery<T = any>(
+export function buildFilterableSPARQLQuery<T = any>(
   subjectIRI: OptionalStringOrStringArray,
   typeIRIs: OptionalStringOrStringArray | undefined,
-  schema: z.ZodType<T> | JSONSchema7,
-  options: BuildTypedSPARQLQueryOptions<T> = {},
+  schema: JSONSchema7,
+  options: BuildFilterableSPARQLQueryOptions<T> = {},
 ): TypedSPARQLQueryResult {
   const {
     prefixMap = {},
@@ -132,19 +118,7 @@ export function buildTypedSPARQLQuery<T = any>(
     ...filterOptions
   } = options;
 
-  // Convert Zod schema to JSON Schema if needed
-  // Check if it's a Zod schema by checking for _def property
-  let jsonSchema: JSONSchema7;
-  if (schema && typeof schema === "object" && "_def" in schema) {
-    // Zod schema - convert to JSON Schema
-    jsonSchema = z.toJSONSchema(schema as z.ZodType<T>, {
-      target: "draft-7",
-      reused: "ref",
-    }) as JSONSchema7;
-  } else {
-    // Already JSON Schema
-    jsonSchema = schema as JSONSchema7;
-  }
+  const jsonSchema: JSONSchema7 = schema;
 
   // This applies select, include, omit, and validates WHERE filters
   const normalizedSchema = normalizeSchema(jsonSchema, {
@@ -153,7 +127,6 @@ export function buildTypedSPARQLQuery<T = any>(
   });
 
   // Pass filter options through context for nested query construction
-  // Now supports single or multiple subject IRIs
   const constructResult = normalizedSchema2construct(
     subjectIRI,
     typeIRIs,

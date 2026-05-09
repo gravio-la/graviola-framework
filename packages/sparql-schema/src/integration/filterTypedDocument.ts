@@ -2,7 +2,7 @@
  * Type-safe document filtering and loading with Prisma-style API
  *
  * This module provides high-level functions that combine:
- * - buildTypedSPARQLQuery for type-safe query generation
+ * - buildFilterableSPARQLQuery for filterable CONSTRUCT query generation
  * - SPARQL execution via constructFetch
  * - Data extraction via traverseGraphExtractBySchema
  *
@@ -22,8 +22,8 @@ import type {
   SparqlBuildOptions,
 } from "@graviola/edb-core-types";
 import { traverseGraphExtractBySchema } from "@graviola/edb-graph-traversal";
-import { buildTypedSPARQLQuery } from "../schema2sparql/buildTypedSPARQLQuery";
-import type { BuildTypedSPARQLQueryOptions } from "../schema2sparql/buildTypedSPARQLQuery";
+import { buildFilterableSPARQLQuery } from "../schema2sparql/buildTypedSPARQLQuery";
+import type { BuildFilterableSPARQLQueryOptions } from "../schema2sparql/buildTypedSPARQLQuery";
 import df from "@rdfjs/data-model";
 import {
   OptionalStringOrStringArray,
@@ -33,11 +33,11 @@ import { rdf } from "@tpluscode/rdf-ns-builders";
 
 /**
  * Options for filterTypedDocument
- * Extends BuildTypedSPARQLQueryOptions with CRUD-specific options
+ * Extends BuildFilterableSPARQLQueryOptions with CRUD-specific options
  */
 export interface TypedFilterOptions<
   T = any,
-> extends BuildTypedSPARQLQueryOptions<T> {
+> extends BuildFilterableSPARQLQueryOptions<T> {
   /** Walker options for graph traversal */
   walkerOptions?: Partial<WalkerOptions>;
   /** Default prefix for IRI resolution */
@@ -50,11 +50,11 @@ export interface TypedFilterOptions<
  * Load a single entity or batch of entities by IRI with type-safe filters
  *
  * This function combines:
- * 1. buildTypedSPARQLQuery - generates type-safe SPARQL CONSTRUCT query
+ * 1. buildFilterableSPARQLQuery - generates filterable SPARQL CONSTRUCT query
  * 2. constructFetch - executes the query
  * 3. traverseGraphExtractBySchema - extracts structured data from RDF graph
  *
- * @template T - The type to derive filters from (typically z.infer<typeof schema>)
+ * @template T - The type to derive filters from (caller-provided, e.g. your domain type)
  * @param entityIRIs - optional single IRI or array of IRIs to load
  * @param typeIRIs - optional single IRI or array of IRIs to filter by
  * @param schema - JSON Schema (should already have correct definition at top via bringDefinitionToTop)
@@ -111,10 +111,15 @@ export async function filterTypedDocuments<T = any>(
         : {};
 
   // Step 1: Build type-safe SPARQL query
-  const { query } = buildTypedSPARQLQuery<T>(entityIRIs, typeIRIs, schema, {
-    ...buildOptions,
-    prefixMap: finalPrefixMap,
-  });
+  const { query } = buildFilterableSPARQLQuery<T>(
+    entityIRIs,
+    typeIRIs,
+    schema,
+    {
+      ...buildOptions,
+      prefixMap: finalPrefixMap,
+    },
+  );
 
   // Step 2: Execute CONSTRUCT query
   const dataset = await constructFetch(query);
