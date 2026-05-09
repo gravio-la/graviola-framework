@@ -82,7 +82,7 @@ for (const adapter of adapters) {
 
     /** Suite gating — uses runtime capability descriptor exposed by each Store implementation. */
     const supports = (capability: CapabilityName): boolean =>
-      hasCapability(store.capabilities, capability);
+      hasCapability(store, capability);
 
     runCrudSuite(() => store);
     runQuerySuite(() => store);
