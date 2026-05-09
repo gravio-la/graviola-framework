@@ -1,5 +1,15 @@
 # @slub/sparql-schema
 
+## 1.5.10
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/json-schema-utils@1.5.8
+  - @graviola/edb-graph-traversal@1.5.8
+  - @graviola/edb-core-utils@1.5.7
+  - @graviola/jsonld-utils@1.5.9
+
 ## 1.5.9
 
 ### Patch Changes

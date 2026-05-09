@@ -1,5 +1,13 @@
 # @graviola/edb-data-mapping
 
+## 0.3.8
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/edb-core-types@1.4.8
+  - @graviola/edb-core-utils@1.5.7
+
 ## 0.3.7
 
 ### Patch Changes

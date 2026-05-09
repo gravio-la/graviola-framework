@@ -1,5 +1,13 @@
 # @slub/edb-core-types
 
+## 1.4.8
+
+### Patch Changes
+
+- Introduce `@graviola/store-core` (capability-based Store types, envelopes, descriptors, simulators) and `@graviola/typed-query-types` (extracted Prisma-style query types). SPARQL adapter exposes `initSPARQLStore`, `initSPARQLAbstractDatastore`, and `initSPARQLDatastorePair`. Core types re-export typed filters from the new package with deprecation notices.
+- Updated dependencies
+  - @graviola/typed-query-types@0.2.0
+
 ## 1.4.7
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@graviola/store-core",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "Capability-composed Store<R> interface, envelopes, descriptors, simulators (Layer 1)",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -14,7 +14,10 @@
       "default": "./dist/index.js"
     }
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsup",
     "test": "bun test",
@@ -36,6 +39,8 @@
   },
   "eslintConfig": {
     "root": true,
-    "extends": ["eslint-config-edb"]
+    "extends": [
+      "eslint-config-edb"
+    ]
   }
 }

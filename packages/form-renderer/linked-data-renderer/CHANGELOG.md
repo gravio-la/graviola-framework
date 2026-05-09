@@ -1,5 +1,18 @@
 # @graviola/edb-linked-data-renderer
 
+## 5.0.10
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/json-schema-utils@1.5.8
+  - @graviola/edb-state-hooks@1.6.9
+  - @graviola/edb-ui-utils@0.3.8
+  - @graviola/edb-advanced-components@1.6.10
+  - @graviola/edb-core-utils@1.5.7
+  - @graviola/edb-data-mapping@0.3.8
+  - @graviola/edb-basic-components@1.4.9
+
 ## 5.0.9
 
 ### Patch Changes

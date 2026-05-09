@@ -1,5 +1,14 @@
 # @slub/sparql-db-impl
 
+## 1.5.8
+
+### Patch Changes
+
+- Add `@graviola/rest-store-client`: HTTP `RESTClientStore` (v1 wire), `LegacyRESTClientStore` (v0 URLs), discovery handshake helpers, shared transport utilities, optional AbstractDatastore shim, specs under `spec/`, and generated OpenAPI 3.1. Delegate `@graviola/restfull-fetch-db-impl` through the new client package and wire `@graviola/rest-store-provider` to use `LegacyRESTClientStore` + shim directly.
+- Updated dependencies
+- Updated dependencies
+  - @graviola/rest-store-client@0.2.0
+
 ## 1.5.7
 
 ### Patch Changes

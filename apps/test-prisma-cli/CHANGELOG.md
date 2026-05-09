@@ -1,5 +1,17 @@
 # @graviola/test-prisma-cli
 
+## 1.0.5
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/json-schema-utils@1.5.8
+  - @graviola/edb-graph-traversal@1.5.8
+  - @graviola/json-schema-prisma-utils@1.3.8
+  - @graviola/json-schema2prisma-schema@0.2.8
+  - @graviola/prisma-db-impl@1.6.9
+  - @graviola/edb-core-utils@1.5.7
+
 ## 1.0.4
 
 ### Patch Changes

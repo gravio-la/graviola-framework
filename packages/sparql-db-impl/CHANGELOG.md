@@ -1,5 +1,20 @@
 # @slub/sparql-db-impl
 
+## 1.6.0
+
+### Minor Changes
+
+- Introduce `@graviola/store-core` (capability-based Store types, envelopes, descriptors, simulators) and `@graviola/typed-query-types` (extracted Prisma-style query types). SPARQL adapter exposes `initSPARQLStore`, `initSPARQLAbstractDatastore`, and `initSPARQLDatastorePair`. Core types re-export typed filters from the new package with deprecation notices.
+
+### Patch Changes
+
+- Updated dependencies
+- Updated dependencies
+  - @graviola/json-schema-utils@1.5.8
+  - @graviola/store-core@0.2.0
+  - @graviola/sparql-schema@1.5.10
+  - @graviola/jsonld-utils@1.5.9
+
 ## 1.5.11
 
 ### Patch Changes

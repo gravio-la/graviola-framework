@@ -1,5 +1,16 @@
 # @graviola/sparql-store-provider
 
+## 5.0.11
+
+### Patch Changes
+
+- Introduce `@graviola/store-core` (capability-based Store types, envelopes, descriptors, simulators) and `@graviola/typed-query-types` (extracted Prisma-style query types). SPARQL adapter exposes `initSPARQLStore`, `initSPARQLAbstractDatastore`, and `initSPARQLDatastorePair`. Core types re-export typed filters from the new package with deprecation notices.
+- Updated dependencies
+  - @graviola/sparql-db-impl@1.6.0
+  - @graviola/edb-state-hooks@1.6.9
+  - @graviola/edb-core-utils@1.5.7
+  - @graviola/remote-query-implementations@1.4.7
+
 ## 5.0.10
 
 ### Patch Changes

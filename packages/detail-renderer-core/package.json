@@ -1,6 +1,6 @@
 {
   "name": "@graviola/edb-detail-renderer-core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -13,7 +13,11 @@
       "default": "./dist/index.js"
     }
   },
-  "files": ["dist", "CHANGELOG.md", "README.md"],
+  "files": [
+    "dist",
+    "CHANGELOG.md",
+    "README.md"
+  ],
   "sideEffects": false,
   "scripts": {
     "build": "tsup",
@@ -40,6 +44,8 @@
   },
   "eslintConfig": {
     "root": true,
-    "extends": ["eslint-config-edb"]
+    "extends": [
+      "eslint-config-edb"
+    ]
   }
 }

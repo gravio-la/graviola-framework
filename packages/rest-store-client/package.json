@@ -1,6 +1,6 @@
 {
   "name": "@graviola/rest-store-client",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "HTTP client Stores (v0 legacy + v1 wire) for Graviola Store<R>",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -60,11 +60,17 @@
   },
   "eslintConfig": {
     "root": true,
-    "ignorePatterns": ["dist/**"],
-    "extends": ["eslint-config-edb/strict"],
+    "ignorePatterns": [
+      "dist/**"
+    ],
+    "extends": [
+      "eslint-config-edb/strict"
+    ],
     "overrides": [
       {
-        "files": ["scripts/**/*.{ts,tsx}"],
+        "files": [
+          "scripts/**/*.{ts,tsx}"
+        ],
         "rules": {
           "no-console": "off"
         }

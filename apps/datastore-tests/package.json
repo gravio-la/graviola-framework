@@ -1,7 +1,7 @@
 {
   "name": "@graviola/datastore-tests",
   "description": "Integration/contract tests for all AbstractDatastore implementations",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
   "scripts": {

@@ -1,5 +1,13 @@
 # @graviola/edb-debug-utils
 
+## 1.3.9
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/edb-core-types@1.4.8
+  - @graviola/edb-state-hooks@1.6.9
+
 ## 1.3.8
 
 ### Patch Changes
