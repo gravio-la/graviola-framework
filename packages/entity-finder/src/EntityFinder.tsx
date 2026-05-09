@@ -1,10 +1,11 @@
-import NiceModal from "@ebay/nice-modal-react";
 import { useDeclarativeMapper } from "@graviola/data-mapping-hooks";
 import { ClassicResultListWrapper } from "@graviola/edb-basic-components";
 import { PrimaryField } from "@graviola/edb-core-types";
 import {
+  EntityFinderChromeContext,
+  MODAL_EDIT_ENTITY,
   useAdbContext,
-  useModalRegistry,
+  useGraviolaModal,
   useSimilarityFinderState,
 } from "@graviola/edb-state-hooks";
 import {
@@ -78,7 +79,7 @@ const AdvancedFilterSettingsMenu = ({
 
   return (
     <Grid container alignItems="center">
-      <Grid >
+      <Grid>
         <Button
           size="small"
           variant="outlined"
@@ -132,17 +133,20 @@ export const EntityFinder = <
   additionalKnowledgeSources,
   allKnowledgeBases,
   prepareNewEntityData,
+  enableResultDetailPopper,
 }: EntityFinderProps<FindResultType, FullEntityType, SourceType>) => {
   const {
     queryBuildOptions,
     normDataMapping = {},
     createEntityIRI,
     typeIRIToTypeName,
-    components: { EditEntityModal },
   } = useAdbContext();
 
+  const editModal = useGraviolaModal(MODAL_EDIT_ENTITY);
+
   const [localSearch, setSearchString] = useState<string | undefined>();
-  const searchString = localSearch || search;
+  /** Empty string is valid (user cleared input); only fall back to prop when local is unset (`undefined`). */
+  const searchString = localSearch !== undefined ? localSearch : (search ?? "");
 
   const handleSearchStringChange = useCallback(
     (value: string) => {
@@ -151,6 +155,10 @@ export const EntityFinder = <
     },
     [setSearchString, onSearchChange],
   );
+
+  useEffect(() => {
+    setSearchString(undefined);
+  }, [finderId]);
 
   const typeName = useMemo(
     () => typeIRIToTypeName(typeIRI),
@@ -186,11 +194,14 @@ export const EntityFinder = <
   const {
     resetElementIndex,
     elementIndex,
+    elementCount,
     setElementCount,
     setElementIndex,
     activeFinderIds,
     addActiveFinder,
     removeActiveFinder,
+    cycleThroughElements,
+    setAcceptWishPending,
   } = useSimilarityFinderState();
   useEffect(() => {
     resetElementIndex();
@@ -297,15 +308,38 @@ export const EntityFinder = <
     [handleManuallyMapData, handleEntityChange],
   );
 
-  const { cycleThroughElements } = useSimilarityFinderState();
-  const handleKeyUp = useCallback(
+  /**
+   * Arrow/Page: keydown so caret does not move.
+   * Enter: same path as list rows — acceptWishPending + a selected row (idx starts at 1; elementIndex 0 means none).
+   */
+  const handleSearchFieldKeyDown = useCallback(
     (ev: React.KeyboardEvent<HTMLInputElement>) => {
-      if (ev.key === "ArrowUp" || ev.key === "ArrowDown") {
-        cycleThroughElements(ev.key === "ArrowDown" ? 1 : -1);
+      const k = ev.key;
+      if (k === "ArrowUp" || k === "ArrowDown") {
         ev.preventDefault();
+        ev.stopPropagation();
+        cycleThroughElements(k === "ArrowDown" ? 1 : -1);
+      } else if (k === "PageUp" || k === "PageDown") {
+        ev.preventDefault();
+        ev.stopPropagation();
+        cycleThroughElements(k === "PageDown" ? 10 : -10);
+      } else if (k === "Enter") {
+        ev.preventDefault();
+        ev.stopPropagation();
+        if (elementCount < 1) return;
+        if (elementIndex === 0) {
+          setElementIndex(1);
+        }
+        setAcceptWishPending(true);
       }
     },
-    [cycleThroughElements],
+    [
+      cycleThroughElements,
+      elementCount,
+      elementIndex,
+      setAcceptWishPending,
+      setElementIndex,
+    ],
   );
   const [margin, setMargin] = useState(0);
   const [ref, setRef] = useState<any | undefined>();
@@ -314,8 +348,6 @@ export const EntityFinder = <
       setMargin(ref.clientHeight);
     }
   }, [ref]);
-  const { registerModal } = useModalRegistry(NiceModal);
-
   const getDefaultLabelKey = useCallback(() => {
     const fieldDefinitions = primaryFields[typeName] as
       | PrimaryField
@@ -330,29 +362,31 @@ export const EntityFinder = <
       "@type": typeIRI,
       [defaultLabelKey]: searchString,
     };
-    const modalID = `edit-${newItem["@type"]}-${newItem["@id"]}`;
-    registerModal(modalID, EditEntityModal);
     const preparedData = prepareNewEntityData
       ? await prepareNewEntityData(newItem)
       : newItem;
-    NiceModal.show(modalID, {
-      entityIRI: newItem["@id"],
-      typeIRI: newItem["@type"],
-      data: preparedData,
-      disableLoad: true,
-    }).then(({ entityIRI, data }: { entityIRI: string; data: any }) => {
-      handleEntityChange(entityIRI, data);
-    });
+    editModal
+      .show(
+        {
+          entityIRI: newItem["@id"],
+          typeIRI: newItem["@type"],
+          data: preparedData,
+          disableLoad: true,
+        },
+        { instanceId: newItem["@id"] },
+      )
+      .then(({ entityIRI, data }: { entityIRI: string; data: any }) => {
+        handleEntityChange(entityIRI, data);
+      });
   }, [
-    registerModal,
     typeName,
     typeIRI,
     searchString,
     handleEntityChange,
     createEntityIRI,
     getDefaultLabelKey,
-    EditEntityModal,
     prepareNewEntityData,
+    editModal,
   ]);
 
   /**
@@ -398,120 +432,128 @@ export const EntityFinder = <
     [setElementIndex, onSelectedEntityChange],
   );
 
+  const finderChromeValue = useMemo(
+    () => ({
+      showResultDetailPopper: enableResultDetailPopper !== false,
+    }),
+    [enableResultDetailPopper],
+  );
+
   return (
     finderIsActive && (
-      <div style={{ overflow: "hidden", position: "relative" }}>
-        {mappingInProgress ? (
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "rgba(255, 255, 255, 0.7)",
-              zIndex: 1,
-            }}
-          >
-            <CircularProgress />
-          </div>
-        ) : null}
-        <div
-          style={{
-            filter: mappingInProgress ? "grayscale(100%)" : "none",
-            pointerEvents: mappingInProgress ? "none" : "auto",
-          }}
-        >
-          <Grid
-            container
-            alignItems="center"
-            direction={"column"}
-            spacing={2}
-            style={{ overflowY: "auto", marginBottom: margin }}
-          >
-            <Grid  sx={{ width: "100%" }}>
-              <SearchFieldWithBadges
-                onCreateNew={showEditDialog}
-                disabled={false}
-                searchString={searchString}
-                typeIRI={typeIRI}
-                onSearchStringChange={handleSearchStringChange}
-                selectedKnowledgeSources={selectedKnowledgeSources}
-                knowledgeBases={knowledgeBases}
-                onKeyUp={handleKeyUp}
-                advancedConfigChildren={
-                  <AdvancedFilterSettingsMenu
-                    onLimitChange={handleLimitChange}
-                    limit={limit}
-                  />
-                }
-              />
-            </Grid>
-            <Grid
-              
-              sx={{
-                width: "100%",
-                height: `calc(100vh - 150px)`,
+      <EntityFinderChromeContext.Provider value={finderChromeValue}>
+        <div style={{ overflow: "hidden", position: "relative" }}>
+          {mappingInProgress ? (
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
                 display: "flex",
-                flexDirection: "column" /* flexWrap: 'wrap'*/,
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "rgba(255, 255, 255, 0.7)",
+                zIndex: 1,
               }}
             >
-              {knowledgeBases.map((kb) => {
-                const entries = resultsWithIndex[kb.id] || [];
-                return (
-                  <ClassicResultListWrapper
-                    key={kb.id}
-                    label={kb.label}
-                    hitCount={entries.length}
-                  >
-                    {searchString && (
-                      <List>
-                        {entries.map(({ entry, idx }) =>
-                          kb.listItemRenderer(
-                            entry,
-                            idx,
-                            typeIRI,
-                            elementIndex === idx,
-                            (id, index) => handleSelectEntity(id, index, kb),
-                            (id, data) => handleAccept(id, data, kb.id),
-                          ),
-                        )}
-                      </List>
-                    )}
-                  </ClassicResultListWrapper>
-                );
-              })}
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            ref={setRef}
-            alignItems="center"
-            justifyContent="center"
-            direction={"column"}
-            sx={{
-              display: hideFooter ? "none" : "flex",
-              position: "absolute",
-              bottom: 0,
-              right: 0,
-              left: 0,
-              backgroundColor: "white",
+              <CircularProgress />
+            </div>
+          ) : null}
+          <div
+            style={{
+              filter: mappingInProgress ? "grayscale(100%)" : "none",
+              pointerEvents: mappingInProgress ? "none" : "auto",
             }}
           >
-            <Button
-              variant="contained"
-              color={"primary"}
-              startIcon={<NoteAdd />}
-              onClick={showEditDialog}
+            <Grid
+              container
+              alignItems="center"
+              direction={"column"}
+              spacing={1}
+              style={{ overflowY: "auto" }}
             >
-              {t("create new", { item: t(typeName) })}
-            </Button>
-          </Grid>
+              <Grid sx={{ width: "100%" }}>
+                <SearchFieldWithBadges
+                  onCreateNew={showEditDialog}
+                  disabled={false}
+                  searchString={searchString}
+                  typeIRI={typeIRI}
+                  onSearchStringChange={handleSearchStringChange}
+                  selectedKnowledgeSources={selectedKnowledgeSources}
+                  knowledgeBases={knowledgeBases}
+                  onKeyDown={handleSearchFieldKeyDown}
+                  advancedConfigChildren={
+                    <AdvancedFilterSettingsMenu
+                      onLimitChange={handleLimitChange}
+                      limit={limit}
+                    />
+                  }
+                />
+              </Grid>
+              <Grid
+                sx={{
+                  width: "100%",
+                  height: `calc(100vh - 150px)`,
+                  display: "flex",
+                  flexDirection: "column" /* flexWrap: 'wrap'*/,
+                }}
+              >
+                {knowledgeBases.map((kb) => {
+                  const entries = resultsWithIndex[kb.id] || [];
+                  return (
+                    <ClassicResultListWrapper
+                      key={kb.id}
+                      label={kb.label}
+                      hitCount={entries.length}
+                    >
+                      {searchString && (
+                        <List>
+                          {entries.map(({ entry, idx }) =>
+                            kb.listItemRenderer(
+                              entry,
+                              idx,
+                              typeIRI,
+                              elementIndex === idx,
+                              (id, index) => handleSelectEntity(id, index, kb),
+                              (id, data) => handleAccept(id, data, kb.id),
+                            ),
+                          )}
+                        </List>
+                      )}
+                    </ClassicResultListWrapper>
+                  );
+                })}
+              </Grid>
+            </Grid>
+            <Grid
+              container
+              ref={setRef}
+              alignItems="center"
+              justifyContent="center"
+              direction={"column"}
+              sx={{
+                display: hideFooter ? "none" : "flex",
+                position: "absolute",
+                bottom: 0,
+                right: 0,
+                left: 0,
+                backgroundColor: "white",
+              }}
+            >
+              <Button
+                variant="contained"
+                color={"primary"}
+                startIcon={<NoteAdd />}
+                onClick={showEditDialog}
+              >
+                {t("create new", { item: t(typeName) })}
+              </Button>
+            </Grid>
+          </div>
         </div>
-      </div>
+      </EntityFinderChromeContext.Provider>
     )
   );
 };

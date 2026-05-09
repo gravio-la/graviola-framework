@@ -44,40 +44,37 @@ export const SearchFieldWithBadges = ({
   return (
     <Grid
       container
-      spacing={2}
+      spacing={1}
       sx={{
-        m: 2,
-        px: 2,
-        py: 1,
+        m: 0,
+        p: 1,
         width: "auto",
-        border: 1,
-        borderColor: "primary.main",
-        borderRadius: "4px",
       }}
     >
-      {onCreateNew && (<Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          mr: 1,
-        }}
-      >
-        <Tooltip title={`${t("create_new")} ${t(typeName)}`}>
-          <IconButton
-            color="primary"
-            size="small"
-            onClick={() => {
-              // This will be handled by the parent component
-              if (onCreateNew) {
-                onCreateNew();
-              }
-            }}
-          >
-            <AddCircle />
-          </IconButton>
-        </Tooltip>
-      </Box>
+      {onCreateNew && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            mr: 0,
+          }}
+        >
+          <Tooltip title={`${t("create_new")} ${t(typeName)}`}>
+            <IconButton
+              color="primary"
+              size="small"
+              onClick={() => {
+                // This will be handled by the parent component
+                if (onCreateNew) {
+                  onCreateNew();
+                }
+              }}
+            >
+              <AddCircle />
+            </IconButton>
+          </Tooltip>
+        </Box>
       )}
       <Box sx={{ flexGrow: 1 }}>
         <TextField
