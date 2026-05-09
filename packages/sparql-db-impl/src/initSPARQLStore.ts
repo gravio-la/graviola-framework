@@ -381,6 +381,10 @@ export const initSPARQLStore = (
         ...options,
         defaultPrefix,
         queryBuildOptions,
+        walkerOptions: {
+          ...walkerOptions,
+          ...options.walkerOptions,
+        },
       };
 
       const result = await filterTypedDocuments<T>(
@@ -410,6 +414,10 @@ export const initSPARQLStore = (
         ...options,
         defaultPrefix,
         queryBuildOptions,
+        walkerOptions: {
+          ...walkerOptions,
+          ...options.walkerOptions,
+        },
       };
 
       return await filterTypedDocuments<T>(

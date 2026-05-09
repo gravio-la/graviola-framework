@@ -131,6 +131,8 @@ export const LocalOxigraphStoreProvider: FunctionComponent<
         maxRecursion: 3,
         maxRecursionEachRef: 3,
         skipAtLevel: 10,
+        omitEmptyArrays: true,
+        omitEmptyObjects: true,
       },
       sparqlQueryFunctions: wrappedCrud,
       schema,

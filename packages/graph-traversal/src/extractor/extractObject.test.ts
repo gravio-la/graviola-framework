@@ -349,7 +349,7 @@ describe("extractObject", () => {
     });
   });
 
-  test("omits empty object when option is set", () => {
+  test("omitEmptyObjects keeps named node with only @id (valid reference)", () => {
     const dataset = datasetFactory.dataset();
     const cf = clownface({ dataset });
 
@@ -370,7 +370,10 @@ describe("extractObject", () => {
       }),
     );
 
-    expect(result).toBeUndefined();
+    // Named-node references must not be dropped; only `{}` or `@type`-only blanks are omitted.
+    expect(result).toEqual({
+      "@id": "http://example.com/person1",
+    });
   });
 
   test("omits empty arrays when option is set", () => {

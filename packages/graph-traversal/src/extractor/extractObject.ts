@@ -137,11 +137,16 @@ export function extractObject(
     }
   }
 
-  // Apply omitEmpty options (don't count @id and @type)
+  // Apply omitEmpty options (don't count @id and @type). Named-node refs with only
+  // `@id` / `@type` must be kept — omitting them would drop valid entity links.
   const meaningfulKeys = Object.keys(result).filter(
     (k) => k !== "@id" && k !== "@type",
   );
-  if (options.omitEmptyObjects && meaningfulKeys.length === 0) {
+  if (
+    options.omitEmptyObjects &&
+    meaningfulKeys.length === 0 &&
+    result["@id"] === undefined
+  ) {
     return undefined;
   }
 
