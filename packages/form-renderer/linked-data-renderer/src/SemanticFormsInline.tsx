@@ -1,4 +1,4 @@
-import { useAdbContext } from "@graviola/edb-state-hooks";
+import { useAdbContext, useSemanticFormSlot } from "@graviola/edb-state-hooks";
 import { SemanticJsonFormProps } from "@graviola/semantic-jsonform-types";
 import { JsonSchema } from "@jsonforms/core";
 import { useControlled } from "@mui/material";
@@ -39,11 +39,8 @@ export const SemanticFormsInline = (props: SemanticFormsInlineProps) => {
     default: entityIRI ? { "@id": entityIRI } : {},
   });
 
-  const {
-    typeIRIToTypeName,
-    uischemata,
-    components: { SemanticJsonForm },
-  } = useAdbContext();
+  const { typeIRIToTypeName, uischemata } = useAdbContext();
+  const SemanticJsonForm = useSemanticFormSlot();
   const uischema = useMemo(
     () => uischemata?.[typeIRIToTypeName(typeIRI)],
     [typeIRI, typeIRIToTypeName],

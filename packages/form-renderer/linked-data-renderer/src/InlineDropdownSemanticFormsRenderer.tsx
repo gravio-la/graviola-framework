@@ -1,4 +1,3 @@
-import NiceModal from "@ebay/nice-modal-react";
 import {
   DiscoverAutocompleteInput,
   EntityDetailListItem,
@@ -9,10 +8,13 @@ import { PrimaryField } from "@graviola/edb-core-types";
 import { makeFormsPath } from "@graviola/edb-core-utils";
 import { extractFieldIfString } from "@graviola/edb-data-mapping";
 import {
+  MODAL_EDIT_ENTITY,
   useAdbContext,
+  useGlobalSearch,
   useGlobalSearchWithHelper,
-  useModalRegistry,
-  useRightDrawerState,
+  useGraviolaModal,
+  useKeyEventForSimilarityFinder,
+  useSimilarityFinderModal,
 } from "@graviola/edb-state-hooks";
 import { hidden } from "@graviola/edb-ui-utils";
 import {
@@ -33,7 +35,7 @@ import {
 } from "@mui/material";
 import { JSONSchema7 } from "json-schema";
 import merge from "lodash-es/merge";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useFormHelper } from "./formHelper";
 import cloneDeep from "lodash-es/cloneDeep";
 
@@ -57,13 +59,14 @@ const InlineDropdownSemanticFormsRendererComponent = (props: ControlProps) => {
     typeIRIToTypeName,
     createEntityIRI,
     queryBuildOptions: { primaryFields },
-    components: { SimilarityFinder, EditEntityModal },
   } = useAdbContext();
   const appliedUiSchemaOptions = merge({}, config, uischema.options);
   const ctx = useJsonForms();
   const registry = (ctx?.config as any)?.registry as SchemaRegistry | undefined;
   const { $ref } = appliedUiSchemaOptions || {};
   const enableFinder = appliedUiSchemaOptions.enableFinder || false;
+  const enableResultDetailPopper =
+    appliedUiSchemaOptions.enableResultDetailPopper as boolean | undefined;
   // Resolve typeIRI: explicit options → schema @type.const → registry O(1) lookup via $ref
   const typeIRI: string | undefined =
     appliedUiSchemaOptions.context?.typeIRI ||
@@ -86,7 +89,10 @@ const InlineDropdownSemanticFormsRendererComponent = (props: ControlProps) => {
     [ctx?.core?.data, prepareNewEntityData],
   );
 
-  const { registerModal } = useModalRegistry(NiceModal);
+  const editModal = useGraviolaModal(MODAL_EDIT_ENTITY);
+  const { hideFinder, showFinder } = useSimilarityFinderModal();
+  const similarityFinderOpen = useGlobalSearch((s) => s.similarityFinderOpen);
+
   const typeName = useMemo(
     () => typeIRI && typeIRIToTypeName(typeIRI),
     [typeIRI, typeIRIToTypeName],
@@ -127,12 +133,11 @@ const InlineDropdownSemanticFormsRendererComponent = (props: ControlProps) => {
     if (!data) setRealLabel("");
   }, [data, setRealLabel]);
 
-  const { closeDrawer } = useRightDrawerState();
   const handleSelectedChange = useCallback(
     (v: AutocompleteSuggestion) => {
       if (!v) {
         handleChange(path, undefined);
-        closeDrawer();
+        hideFinder();
         return;
       }
       if (v.value !== data)
@@ -147,7 +152,7 @@ const InlineDropdownSemanticFormsRendererComponent = (props: ControlProps) => {
         }
       setRealLabel(v.label);
     },
-    [path, handleChange, data, setRealLabel, closeDrawer, typeIRI],
+    [path, handleChange, data, setRealLabel, hideFinder, typeIRI],
   );
   const handleAcceptNewEntity = useCallback(
     (data: any) => {
@@ -179,21 +184,29 @@ const InlineDropdownSemanticFormsRendererComponent = (props: ControlProps) => {
     });
   }, [data, ctx?.core?.data, path, setRealLabel, primaryFields]);
 
-  const handleExistingEntityAccepted = useCallback(
-    (entityIRI: string, data: any) => {
-      handleSelectedChange({
-        value: entityIRI,
-        label: data.label || entityIRI,
-      });
-      closeDrawer();
-    },
-    [handleSelectedChange, closeDrawer],
-  );
-
   const labelKey = useMemo(() => {
     const fieldDecl = primaryFields[typeName] as PrimaryField | undefined;
     return fieldDecl?.label || "title";
   }, [typeName]);
+
+  const mappedDataAcceptedRef = useRef<(newData: any) => void>(() => {});
+
+  const {
+    path: globalPath,
+    searchString,
+    handleSearchStringChange,
+    handleMappedData,
+    handleFocus: handleFocusGlobal,
+    isActive,
+    setTypeName,
+    setPath,
+  } = useGlobalSearchWithHelper(
+    typeName,
+    typeIRI,
+    subSchema as JSONSchema7,
+    formsPath,
+    (newData: any) => mappedDataAcceptedRef.current(newData),
+  );
 
   const handleMappedDataAccepted = useCallback(
     (newData: any) => {
@@ -203,34 +216,80 @@ const InlineDropdownSemanticFormsRendererComponent = (props: ControlProps) => {
         value: newIRI,
         label: newData.__label || newIRI,
       });
+      handleSearchStringChange("");
     },
-    [handleSelectedChange],
+    [handleSelectedChange, handleSearchStringChange],
   );
-  const { open: sidebarOpen } = useRightDrawerState();
-  const {
-    path: globalPath,
-    searchString,
-    handleSearchStringChange,
-    handleMappedData,
-    handleFocus: handleFocusGlobal,
-    isActive,
-  } = useGlobalSearchWithHelper(
-    typeName,
-    typeIRI,
-    subSchema as JSONSchema7,
-    formsPath,
-    handleMappedDataAccepted,
+
+  mappedDataAcceptedRef.current = handleMappedDataAccepted;
+
+  const handleExistingEntityAccepted = useCallback(
+    (entityIRI: string, data: any) => {
+      handleSelectedChange({
+        value: entityIRI,
+        label: data.label || entityIRI,
+      });
+      handleSearchStringChange("");
+    },
+    [handleSelectedChange, handleSearchStringChange],
+  );
+
+  const handleMappedDataIntermediate = useCallback(
+    (d: any) => {
+      handleMappedData(d);
+    },
+    [handleMappedData],
+  );
+
+  const handleFieldSearchChange = useCallback(
+    (value: string | undefined) => {
+      handleSearchStringChange(value);
+      if (enableFinder && typeIRI && formsPath && typeName) {
+        const q = (value || "").trim();
+        if (q.length > 0) {
+          setTypeName(typeName);
+          setPath(formsPath);
+          void showFinder({
+            finderId: `${formsPath}_${path}`,
+            data,
+            classIRI: typeIRI,
+            jsonSchema: schema as JSONSchema7,
+            onExistingEntityAccepted: handleExistingEntityAccepted,
+            onMappedDataAccepted: handleMappedDataIntermediate,
+            onSearchChange: handleSearchStringChange,
+            ...(enableResultDetailPopper === false
+              ? { enableResultDetailPopper: false }
+              : {}),
+          });
+        }
+      }
+    },
+    [
+      handleSearchStringChange,
+      enableFinder,
+      typeIRI,
+      formsPath,
+      typeName,
+      path,
+      data,
+      schema,
+      handleExistingEntityAccepted,
+      handleMappedDataIntermediate,
+      showFinder,
+      setTypeName,
+      setPath,
+      enableResultDetailPopper,
+    ],
   );
 
   const [disabled, setDisabled] = useState(false);
   const showEditDialog = useCallback(() => {
+    if (!typeName || !typeIRI) return;
     const fieldDefinitions = primaryFields[typeName] as
       | PrimaryField
       | undefined;
     const defaultLabelKey = fieldDefinitions?.label || "title";
     const entityIRI = createEntityIRI(typeName);
-    const modalID = `edit-${typeIRI}-${entityIRI}`;
-    registerModal(modalID, EditEntityModal);
     setDisabled(true);
     const newItemStub = {
       "@id": entityIRI,
@@ -238,42 +297,69 @@ const InlineDropdownSemanticFormsRendererComponent = (props: ControlProps) => {
       [defaultLabelKey]: searchString,
     };
     const newItem = prepareNewEntityDataFinal(newItemStub);
-    NiceModal.show(modalID, {
-      entityIRI,
-      typeIRI,
-      data: newItem,
-      disableLoad: true,
-    })
-      .then(({ data }: { data: any }) => {
-        handleAcceptNewEntity(data);
+    editModal
+      .show(
+        {
+          entityIRI,
+          typeIRI,
+          typeName,
+          data: newItem,
+          disableLoad: true,
+        },
+        { instanceId: entityIRI },
+      )
+      .then((result: unknown) => {
+        const r = result as { data?: unknown } | undefined;
+        if (r?.data != null) handleAcceptNewEntity(r.data);
       })
       .finally(() => {
         setDisabled(false);
       });
   }, [
-    registerModal,
+    editModal,
     typeIRI,
     typeName,
-    handleSelectedChange,
     createEntityIRI,
-    EditEntityModal,
     primaryFields,
     searchString,
     setDisabled,
     prepareNewEntityDataFinal,
+    handleAcceptNewEntity,
   ]);
 
-  const handleMappedDataIntermediate = useCallback(
-    (d: any) => {
-      handleMappedData(d);
-      closeDrawer();
-    },
-    [handleMappedData, closeDrawer],
+  const finderProps = useMemo(
+    () =>
+      typeIRI && enableFinder
+        ? {
+            finderId: `${formsPath}_${path}`,
+            data,
+            classIRI: typeIRI,
+            jsonSchema: schema as JSONSchema7,
+            onExistingEntityAccepted: handleExistingEntityAccepted,
+            onMappedDataAccepted: handleMappedDataIntermediate,
+            onSearchChange: handleSearchStringChange,
+            ...(enableResultDetailPopper === false
+              ? { enableResultDetailPopper: false }
+              : {}),
+          }
+        : null,
+    [
+      typeIRI,
+      enableFinder,
+      formsPath,
+      path,
+      data,
+      schema,
+      handleExistingEntityAccepted,
+      handleMappedDataIntermediate,
+      handleSearchStringChange,
+      enableResultDetailPopper,
+    ],
   );
 
   const showAsFocused = useMemo(
-    () => isActive && sidebarOpen,
-    [isActive, sidebarOpen],
+    () => isActive && similarityFinderOpen,
+    [isActive, similarityFinderOpen],
   );
 
   const handleClear = useCallback(() => {
@@ -312,10 +398,15 @@ const InlineDropdownSemanticFormsRendererComponent = (props: ControlProps) => {
     onBlur();
   }, [onBlur]);
 
+  const handleKeyDown = useKeyEventForSimilarityFinder();
+
   const handleFocus = useCallback(() => {
     onFocus();
     handleFocusGlobal();
-  }, [onFocus, handleFocusGlobal]);
+    if (enableFinder && finderProps) {
+      void showFinder(finderProps);
+    }
+  }, [onFocus, handleFocusGlobal, enableFinder, finderProps, showFinder]);
 
   if (!visible) return null;
 
@@ -351,11 +442,13 @@ const InlineDropdownSemanticFormsRendererComponent = (props: ControlProps) => {
             title={label || ""}
             disabled={disabled}
             onSelectionChange={handleSelectedChange}
-            onSearchValueChange={handleSearchStringChange}
+            onSearchValueChange={handleFieldSearchChange}
             searchString={searchString || ""}
             inputProps={{
+              autoComplete: "off",
               onFocus: handleFocus,
               onBlur: handleBlur,
+              onKeyDown: handleKeyDown,
               ...(showAsFocused && { focused: true }),
             }}
           />
@@ -376,19 +469,9 @@ const InlineDropdownSemanticFormsRendererComponent = (props: ControlProps) => {
           />
         </List>
       )}
-      {globalPath === formsPath && enableFinder && (
-        <SearchbarWithFloatingButton>
-          <SimilarityFinder
-            finderId={`${formsPath}_${path}`}
-            search={searchString}
-            data={data}
-            classIRI={typeIRI}
-            jsonSchema={schema as JSONSchema7}
-            onExistingEntityAccepted={handleExistingEntityAccepted}
-            onMappedDataAccepted={handleMappedDataIntermediate}
-          />
-        </SearchbarWithFloatingButton>
-      )}
+      {globalPath === formsPath && enableFinder && finderProps ? (
+        <SearchbarWithFloatingButton finderProps={finderProps} />
+      ) : null}
     </Box>
   );
 };

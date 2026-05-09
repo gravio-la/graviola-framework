@@ -4,12 +4,13 @@ import { irisToData } from "@graviola/edb-core-utils";
 import {
   useAdbContext,
   useCRUDWithQueryClient,
+  useDispatchIntent,
+  useSemanticFormSlot,
 } from "@graviola/edb-state-hooks";
 import type { SemanticJsonFormProps } from "@graviola/semantic-jsonform-types";
 import { JsonSchema } from "@jsonforms/core";
 import { useControlled } from "@mui/material";
 import { JSONSchema7 } from "json-schema";
-import { useSnackbar } from "notistack";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 type SemanticFormsModalProps = {
@@ -51,11 +52,13 @@ export const SemanticFormsModal = (props: SemanticFormsModalProps) => {
 
   const [editMode, setEditMode] = useState(true);
 
-  const {
-    typeIRIToTypeName,
-    uischemata,
-    components: { SemanticJsonForm },
-  } = useAdbContext();
+  const { typeIRIToTypeName, uischemata } = useAdbContext();
+  const SemanticJsonForm = useSemanticFormSlot();
+  const dispatchIntent = useDispatchIntent();
+  const typeName = useMemo(
+    () => typeIRIToTypeName(typeIRI) ?? "",
+    [typeIRIToTypeName, typeIRI],
+  );
   const uischema = useMemo(
     () => uischemata?.[typeIRIToTypeName(typeIRI)],
     [typeIRI, typeIRIToTypeName],
@@ -77,31 +80,55 @@ export const SemanticFormsModal = (props: SemanticFormsModalProps) => {
     }
   }, [remoteData, setFormData, onFormDataChange]);
 
-  const { enqueueSnackbar } = useSnackbar();
   const handleSave = useCallback(async () => {
     saveMutation
       .mutateAsync(formData)
       .then(async () => {
-        enqueueSnackbar("Saved", { variant: "success" });
+        dispatchIntent({
+          kind: "entity-saved",
+          typeName,
+          entityIRI: formData?.["@id"] ?? entityIRI ?? "",
+          created: false,
+          origin: { source: "linked-data-renderer:SemanticFormsModal" },
+        });
         await loadQuery.refetch();
         askClose();
       })
-      .catch((e) => {
-        enqueueSnackbar("Error while saving " + e.message, {
-          variant: "error",
+      .catch((e: Error) => {
+        dispatchIntent({
+          kind: "entity-save-failed",
+          typeName,
+          entityIRI,
+          error: e,
+          origin: { source: "linked-data-renderer:SemanticFormsModal" },
         });
       });
-  }, [enqueueSnackbar, saveMutation, loadQuery, formData, askClose]);
+  }, [
+    dispatchIntent,
+    saveMutation,
+    loadQuery,
+    formData,
+    askClose,
+    typeName,
+    entityIRI,
+  ]);
 
   const handleRemove = useCallback(async () => {
     NiceModal.show(GenericModal, {
       type: "delete",
     }).then(() => {
       removeMutation.mutate();
-      enqueueSnackbar("Removed", { variant: "success" });
+      if (entityIRI) {
+        dispatchIntent({
+          kind: "entity-removed",
+          typeName,
+          entityIRI,
+          origin: { source: "linked-data-renderer:SemanticFormsModal" },
+        });
+      }
       askClose();
     });
-  }, [removeMutation]);
+  }, [removeMutation, dispatchIntent, typeName, entityIRI, askClose]);
 
   const handleReload = useCallback(async () => {
     NiceModal.show(GenericModal, {

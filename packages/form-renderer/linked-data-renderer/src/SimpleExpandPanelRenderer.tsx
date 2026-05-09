@@ -1,12 +1,12 @@
-import NiceModal from "@ebay/nice-modal-react";
 import { PrimaryFieldDeclaration } from "@graviola/edb-core-types";
 import {
   applyToEachField,
   extractFieldIfString,
 } from "@graviola/edb-data-mapping";
 import {
-  useAdbContext,
+  MODAL_ENTITY_DETAIL,
   useCRUDWithQueryClient,
+  useGraviolaModal,
 } from "@graviola/edb-state-hooks";
 import {
   queryOptionMixinBasedOnEntity,
@@ -75,9 +75,7 @@ export const SimpleExpandPanelRenderer = (
     },
     [mapData],
   );
-  const {
-    components: { EntityDetailModal },
-  } = useAdbContext();
+  const detailModal = useGraviolaModal(MODAL_ENTITY_DETAIL);
 
   const {
     i18n: { language: locale },
@@ -157,21 +155,35 @@ export const SimpleExpandPanelRenderer = (
 
   const showDetailModal = useCallback(() => {
     if (elementDetailItem?.["@id"] && elementDetailItem?.["@type"]) {
-      NiceModal.show(EntityDetailModal, {
-        typeIRI: elementDetailItem["@type"],
-        entityIRI: elementDetailItem["@id"],
-        data: elementDetailItem,
-        inlineEditing: true,
-      });
+      detailModal.show(
+        {
+          typeIRI: elementDetailItem["@type"],
+          entityIRI: elementDetailItem["@id"],
+          data: elementDetailItem,
+          disableInlineEditing: false,
+        },
+        {
+          origin: {
+            source: "linked-data-renderer:SimpleExpandPanel:element-detail",
+          },
+        },
+      );
     } else {
-      NiceModal.show(EntityDetailModal, {
-        typeIRI,
-        entityIRI,
-        data,
-        inlineEditing: true,
-      });
+      detailModal.show(
+        {
+          typeIRI,
+          entityIRI,
+          data,
+          disableInlineEditing: false,
+        },
+        {
+          origin: {
+            source: "linked-data-renderer:SimpleExpandPanel:main",
+          },
+        },
+      );
     }
-  }, [typeIRI, entityIRI, data, elementDetailItem]);
+  }, [typeIRI, entityIRI, data, elementDetailItem, detailModal]);
 
   return (
     <ListItem

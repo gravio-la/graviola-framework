@@ -1,11 +1,12 @@
-import NiceModal from "@ebay/nice-modal-react";
 import {
   applyToEachField,
   extractFieldIfString,
 } from "@graviola/edb-data-mapping";
 import {
+  MODAL_ENTITY_DETAIL,
   useAdbContext,
   useCRUDWithQueryClient,
+  useGraviolaModal,
 } from "@graviola/edb-state-hooks";
 import { queryOptionMixinBasedOnEntity } from "@graviola/edb-ui-utils";
 import { bringDefinitionToTop } from "@graviola/json-schema-utils";
@@ -64,8 +65,8 @@ export const SimpleChipRenderer = (
   const {
     typeIRIToTypeName,
     queryBuildOptions: { primaryFields },
-    components: { EntityDetailModal },
   } = useAdbContext();
+  const detailModal = useGraviolaModal(MODAL_ENTITY_DETAIL);
   const typeName = useMemo(
     () => typeIRI && typeIRIToTypeName(typeIRI),
     [typeIRI],
@@ -124,15 +125,22 @@ export const SimpleChipRenderer = (
   const showDetailModal = useCallback(
     (e: MouseEvent) => {
       e.preventDefault();
-      NiceModal.show(EntityDetailModal, {
-        typeIRI,
-        entityIRI,
-        data: Object.fromEntries(
-          Object.entries(data).filter(([key]) => !key.startsWith("__")),
-        ),
-      });
+      detailModal.show(
+        {
+          typeIRI,
+          entityIRI,
+          data: Object.fromEntries(
+            Object.entries(data).filter(([key]) => !key.startsWith("__")),
+          ),
+        },
+        {
+          origin: {
+            source: "linked-data-renderer:SimpleChipRenderer",
+          },
+        },
+      );
     },
-    [entityIRI, typeIRI, data],
+    [entityIRI, typeIRI, data, detailModal],
   );
   const handleShouldShow = useCallback(
     (e: MouseEvent<Element>) => {

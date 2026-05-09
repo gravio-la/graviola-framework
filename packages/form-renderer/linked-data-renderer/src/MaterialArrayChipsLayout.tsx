@@ -1,6 +1,9 @@
 import { irisToData, makeFormsPath } from "@graviola/edb-core-utils";
-import { useAdbContext } from "@graviola/edb-state-hooks";
-import { useCRUDWithQueryClient } from "@graviola/edb-state-hooks";
+import {
+  useAdbContext,
+  useCRUDWithQueryClient,
+  useDispatchIntent,
+} from "@graviola/edb-state-hooks";
 import { bringDefinitionToTop } from "@graviola/json-schema-utils";
 import {
   ArrayLayoutProps,
@@ -17,7 +20,6 @@ import { Box, Grid, IconButton, Stack } from "@mui/material";
 import { JSONSchema7 } from "json-schema";
 import { orderBy, uniqBy } from "lodash-es";
 import merge from "lodash-es/merge";
-import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { ArrayLayoutToolbar } from "./ArrayToolbar";
@@ -53,6 +55,7 @@ const MaterialArrayChipsLayoutComponent = (props: ArrayLayoutProps & {}) => {
     context,
     showCreateButton,
     allowCreateMultiple,
+    enableResultDetailPopper,
   } = useMemo(
     () => merge({}, config, props.uischema.options),
     [config, props.uischema.options],
@@ -81,28 +84,51 @@ const MaterialArrayChipsLayoutComponent = (props: ArrayLayoutProps & {}) => {
     queryOptions: { enabled: false },
   });
 
-  const { enqueueSnackbar } = useSnackbar();
+  const dispatchIntent = useDispatchIntent();
   const handleSaveAndAdd = useCallback(() => {
     const finalData = {
       ...formData,
     };
-    //if(typeof saveMethod === 'function')  saveMethod();
     saveMutation
       .mutateAsync(finalData)
       .then(({ mainDocument }) => {
-        enqueueSnackbar("Saved", { variant: "success" });
+        const iri = (mainDocument?.["@id"] as string) ?? entityIRI;
+        dispatchIntent({
+          kind: "entity-saved",
+          typeName,
+          entityIRI: iri,
+          created: false,
+          origin: { source: "linked-data-renderer:MaterialArrayChipsLayout" },
+        });
         addItem(path, mainDocument)();
         setFormData({
           "@id": createEntityIRI(typeName),
           "@type": typeIRI,
         });
       })
-      .catch((e) => {
-        enqueueSnackbar("Error while saving " + e.message, {
-          variant: "error",
+      .catch((e: Error) => {
+        dispatchIntent({
+          kind: "entity-save-failed",
+          typeName,
+          entityIRI,
+          error: e,
+          origin: {
+            source: "linked-data-renderer:MaterialArrayChipsLayout",
+          },
         });
       });
-  }, [saveMutation, typeIRI, typeName, addItem, setFormData]);
+  }, [
+    saveMutation,
+    typeIRI,
+    typeName,
+    addItem,
+    setFormData,
+    path,
+    formData,
+    entityIRI,
+    dispatchIntent,
+    createEntityIRI,
+  ]);
 
   useEffect(() => {
     setFormData(irisToData(createEntityIRI(typeName), typeIRI));
@@ -128,6 +154,7 @@ const MaterialArrayChipsLayoutComponent = (props: ArrayLayoutProps & {}) => {
         additionalKnowledgeSources={additionalKnowledgeSources}
         showCreateButton={showCreateButton}
         allowCreateMultiple={allowCreateMultiple}
+        enableResultDetailPopper={enableResultDetailPopper}
       />
       {isReifiedStatement && (
         <Grid
@@ -136,7 +163,7 @@ const MaterialArrayChipsLayoutComponent = (props: ArrayLayoutProps & {}) => {
           direction={"row"}
           alignItems={"center"}
         >
-          <Grid  flex={"1"}>
+          <Grid flex={"1"}>
             <SemanticFormsInline
               schema={subSchema}
               entityIRI={formData["@id"]}
@@ -149,7 +176,7 @@ const MaterialArrayChipsLayoutComponent = (props: ArrayLayoutProps & {}) => {
               formsPath={makeFormsPath(config?.formsPath, path)}
             />
           </Grid>
-          <Grid >
+          <Grid>
             <IconButton onClick={handleSaveAndAdd}>
               <AddIcon style={{ fontSize: 40 }} />
             </IconButton>

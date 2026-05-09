@@ -8,7 +8,7 @@ import {
   useAdbContext,
   useGlobalSearchWithHelper,
   useKeyEventForSimilarityFinder,
-  useRightDrawerState,
+  useSimilarityFinderModal,
 } from "@graviola/edb-state-hooks";
 import {
   ControlProps,
@@ -30,7 +30,7 @@ import {
 import { JSONSchema7 } from "json-schema";
 import merge from "lodash-es/merge";
 import isEqual from "lodash-es/isEqual";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useFormHelper } from "./formHelper";
 
 const InlineCondensedSemanticFormsRendererComponent = (props: ControlProps) => {
@@ -52,9 +52,10 @@ const InlineCondensedSemanticFormsRendererComponent = (props: ControlProps) => {
   const {
     typeIRIToTypeName,
     queryBuildOptions: { primaryFields },
-    components: { SimilarityFinder },
   } = useAdbContext();
   const appliedUiSchemaOptions = merge({}, config, uischema.options);
+  const enableResultDetailPopper =
+    appliedUiSchemaOptions.enableResultDetailPopper as boolean | undefined;
   const {
     $ref,
     typeIRI: typeIRIFromContext,
@@ -109,19 +110,19 @@ const InlineCondensedSemanticFormsRendererComponent = (props: ControlProps) => {
     if (!entityIRI) setRealLabel("");
   }, [entityIRI, setRealLabel]);
 
-  const { closeDrawer } = useRightDrawerState();
+  const { hideFinder, showFinder } = useSimilarityFinderModal();
   const handleSelectedChange = useCallback(
     (v: AutocompleteSuggestion) => {
       if (!v) {
         handleChange(path, undefined);
-        closeDrawer();
+        hideFinder();
         return;
       }
       const _data = mapData ? mapData(v.value) : v.value;
       if (!isEqual(_data, data)) handleChange(path, _data);
       setRealLabel(v.label);
     },
-    [path, handleChange, data, setRealLabel, closeDrawer, mapData],
+    [path, handleChange, data, setRealLabel, hideFinder, mapData],
   );
 
   useEffect(() => {
@@ -142,21 +143,28 @@ const InlineCondensedSemanticFormsRendererComponent = (props: ControlProps) => {
     });
   }, [entityIRI, ctx?.core?.data, path, setRealLabel]);
 
-  const handleExistingEntityAccepted = useCallback(
-    (entityIRI: string, _data: any) => {
-      handleSelectedChange({
-        value: entityIRI,
-        label: _data.label || entityIRI,
-      });
-      closeDrawer();
-    },
-    [handleSelectedChange, closeDrawer],
-  );
-
   const labelKey = useMemo(() => {
     const fieldDecl = primaryFields[typeName] as PrimaryField | undefined;
     return fieldDecl?.label || "title";
   }, [typeName]);
+
+  const mappedDataAcceptedRef = useRef<(newData: any) => void>(() => {});
+
+  const {
+    path: globalPath,
+    searchString,
+    handleSearchStringChange,
+    handleMappedData,
+    handleFocus: handleFocusGlobal,
+    setTypeName,
+    setPath,
+  } = useGlobalSearchWithHelper(
+    typeName,
+    typeIRI,
+    subSchema as JSONSchema7,
+    formsPath,
+    (newData: any) => mappedDataAcceptedRef.current(newData),
+  );
 
   const handleMappedDataAccepted = useCallback(
     (newData: any) => {
@@ -166,32 +174,101 @@ const InlineCondensedSemanticFormsRendererComponent = (props: ControlProps) => {
         value: newIRI,
         label: newData.__label || newIRI,
       });
+      handleSearchStringChange("");
     },
-    [handleSelectedChange],
+    [handleSelectedChange, handleSearchStringChange],
   );
-  const {
-    path: globalPath,
-    searchString,
-    handleSearchStringChange,
-    handleMappedData,
-    handleFocus: handleFocusGlobal,
-  } = useGlobalSearchWithHelper(
-    typeName,
-    typeIRI,
-    subSchema as JSONSchema7,
-    formsPath,
-    handleMappedDataAccepted,
+
+  mappedDataAcceptedRef.current = handleMappedDataAccepted;
+
+  const handleExistingEntityAccepted = useCallback(
+    (entityIRI: string, _data: any) => {
+      handleSelectedChange({
+        value: entityIRI,
+        label: _data.label || entityIRI,
+      });
+      handleSearchStringChange("");
+    },
+    [handleSelectedChange, handleSearchStringChange],
   );
 
   const handleMappedDataIntermediate = useCallback(
     (d: any) => {
       handleMappedData(d);
-      closeDrawer();
     },
-    [handleMappedData, closeDrawer],
+    [handleMappedData],
   );
 
-  const handleKeyUp = useKeyEventForSimilarityFinder();
+  const handleFieldSearchChange = useCallback(
+    (value: string | undefined) => {
+      handleSearchStringChange(value);
+      if (typeIRI && formsPath && typeName) {
+        const q = (value || "").trim();
+        if (q.length > 0) {
+          setTypeName(typeName);
+          setPath(formsPath);
+          void showFinder({
+            finderId: `${formsPath}_${path}`,
+            data,
+            classIRI: typeIRI,
+            jsonSchema: schema as JSONSchema7,
+            onExistingEntityAccepted: handleExistingEntityAccepted,
+            onMappedDataAccepted: handleMappedDataIntermediate,
+            onSearchChange: handleSearchStringChange,
+            ...(enableResultDetailPopper === false
+              ? { enableResultDetailPopper: false }
+              : {}),
+          });
+        }
+      }
+    },
+    [
+      handleSearchStringChange,
+      typeIRI,
+      formsPath,
+      typeName,
+      path,
+      data,
+      schema,
+      handleExistingEntityAccepted,
+      handleMappedDataIntermediate,
+      showFinder,
+      setTypeName,
+      setPath,
+      enableResultDetailPopper,
+    ],
+  );
+
+  const finderProps = useMemo(
+    () =>
+      typeIRI
+        ? {
+            finderId: `${formsPath}_${path}`,
+            data,
+            classIRI: typeIRI,
+            jsonSchema: schema as JSONSchema7,
+            onExistingEntityAccepted: handleExistingEntityAccepted,
+            onMappedDataAccepted: handleMappedDataIntermediate,
+            onSearchChange: handleSearchStringChange,
+            ...(enableResultDetailPopper === false
+              ? { enableResultDetailPopper: false }
+              : {}),
+          }
+        : null,
+    [
+      typeIRI,
+      formsPath,
+      path,
+      data,
+      schema,
+      handleExistingEntityAccepted,
+      handleMappedDataIntermediate,
+      handleSearchStringChange,
+      enableResultDetailPopper,
+    ],
+  );
+
+  const handleKeyDown = useKeyEventForSimilarityFinder();
 
   const handleClear = useCallback(() => {
     handleSelectedChange(null);
@@ -228,7 +305,10 @@ const InlineCondensedSemanticFormsRendererComponent = (props: ControlProps) => {
   const handleFocus = useCallback(() => {
     onFocus();
     handleFocusGlobal();
-  }, [onFocus, handleFocusGlobal]);
+    if (finderProps) {
+      void showFinder(finderProps);
+    }
+  }, [onFocus, handleFocusGlobal, showFinder, finderProps]);
 
   const handleBlur = useCallback(() => {
     onBlur();
@@ -260,13 +340,15 @@ const InlineCondensedSemanticFormsRendererComponent = (props: ControlProps) => {
             <TextField
               fullWidth
               disabled={!enabled}
-              onChange={(ev) => handleSearchStringChange(ev.target.value)}
+              autoComplete="off"
+              onChange={(ev) => handleFieldSearchChange(ev.target.value)}
               value={searchString || ""}
               label={label}
               inputProps={{
+                autoComplete: "off",
                 onFocus: handleFocus,
                 onBlur: handleBlur,
-                onKeyUp: handleKeyUp,
+                onKeyDown: handleKeyDown,
               }}
             />
             <FormHelperText error={!isValid && !showDescription}>
@@ -286,19 +368,9 @@ const InlineCondensedSemanticFormsRendererComponent = (props: ControlProps) => {
             />
           </List>
         )}
-        {globalPath === formsPath && enabled && (
-          <SearchbarWithFloatingButton>
-            <SimilarityFinder
-              finderId={`${formsPath}_${path}`}
-              search={searchString}
-              data={data}
-              classIRI={typeIRI}
-              jsonSchema={schema as JSONSchema7}
-              onExistingEntityAccepted={handleExistingEntityAccepted}
-              onMappedDataAccepted={handleMappedDataIntermediate}
-            />
-          </SearchbarWithFloatingButton>
-        )}
+        {globalPath === formsPath && enabled && finderProps ? (
+          <SearchbarWithFloatingButton finderProps={finderProps} />
+        ) : null}
       </Box>
     </>
   );

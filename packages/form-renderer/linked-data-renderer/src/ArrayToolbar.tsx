@@ -4,14 +4,15 @@ import { SearchbarWithFloatingButton } from "@graviola/edb-basic-components";
 import { AutocompleteSuggestion } from "@graviola/edb-core-types";
 import { PrimaryField } from "@graviola/edb-core-types";
 import {
+  MODAL_EDIT_ENTITY,
   useAdbContext,
   useGlobalSearchWithHelper,
+  useGraviolaModal,
   useKeyEventForSimilarityFinder,
-  useModalRegistry,
-  useRightDrawerState,
+  useSimilarityFinderModal,
 } from "@graviola/edb-state-hooks";
 import { KnowledgeSources } from "@graviola/semantic-jsonform-types";
-import { JsonSchema7 } from "@jsonforms/core";
+import type { JsonSchema7 as JsonFormsSchema } from "@jsonforms/core";
 import {
   Box,
   Button,
@@ -50,6 +51,9 @@ export interface ArrayLayoutToolbarProps {
   allowCreateMultiple?: boolean;
 
   prepareNewEntityData?: (newDataStub: any) => Promise<any>;
+
+  /** When false, similarity finder rows omit the side detail Popper. From `uischema.options`. */
+  enableResultDetailPopper?: boolean;
 }
 
 export const ArrayLayoutToolbar = ({
@@ -68,8 +72,9 @@ export const ArrayLayoutToolbar = ({
   showCreateButton,
   allowCreateMultiple,
   prepareNewEntityData,
+  enableResultDetailPopper,
 }: ArrayLayoutToolbarProps & {
-  schema?: JsonSchema7;
+  schema?: JsonFormsSchema;
   formsPath?: string;
   dropdown?: boolean;
 }) => {
@@ -77,7 +82,6 @@ export const ArrayLayoutToolbar = ({
     createEntityIRI,
     queryBuildOptions: { primaryFields },
     typeIRIToTypeName,
-    components: { SimilarityFinder, EditEntityModal },
   } = useAdbContext();
   const typeIRI = useMemo(
     () => _typeIRI ?? schema?.properties?.["@type"]?.const,
@@ -99,54 +103,104 @@ export const ArrayLayoutToolbar = ({
     [addItem, path],
   );
 
-  const handleExistingEntityAccepted = useCallback(
-    (iri: string, data: any) => {
-      addItem(path, data)();
-      handleSelectedChange({ value: undefined, label: "" });
-      inputRef.current?.focus();
-    },
-    [addItem, path, handleSelectedChange],
-  );
-
-  const handleMappedDataAccepted = useCallback(
-    (newData: any) => {
-      addItem(path, newData)();
-      inputRef.current?.focus();
-    },
-    [addItem, path],
-  );
-
-  const { open: sidebarOpen } = useRightDrawerState();
+  const editModal = useGraviolaModal(MODAL_EDIT_ENTITY);
+  const { showFinder } = useSimilarityFinderModal();
 
   const inputRef = React.useRef<HTMLInputElement | null>(null);
+  const mappedDataAcceptedRef = React.useRef<(newData: any) => void>(() => {});
+
   const {
     path: globalPath,
     searchString,
     handleSearchStringChange,
-    handleMappedData,
     handleFocus,
     isActive,
+    setTypeName,
+    setPath,
   } = useGlobalSearchWithHelper(
     typeName,
     typeIRI,
     schema as JSONSchema7,
     formsPath,
-    handleMappedDataAccepted,
+    (newData: any) => mappedDataAcceptedRef.current(newData),
   );
 
-  const handleKeyUp = useKeyEventForSimilarityFinder();
-  const { keepMounted } = useRightDrawerState();
+  const handleMappedDataAccepted = useCallback(
+    (newData: any) => {
+      addItem(path, newData)();
+      handleSearchStringChange("");
+      inputRef.current?.focus();
+    },
+    [addItem, path, handleSearchStringChange],
+  );
+
+  mappedDataAcceptedRef.current = handleMappedDataAccepted;
+
+  const handleExistingEntityAccepted = useCallback(
+    (iri: string, data: any) => {
+      addItem(path, data)();
+      handleSelectedChange({ value: undefined, label: "" });
+      handleSearchStringChange("");
+      inputRef.current?.focus();
+    },
+    [addItem, path, handleSelectedChange, handleSearchStringChange],
+  );
+
+  const handleFieldSearchChange = useCallback(
+    (value: string | undefined) => {
+      handleSearchStringChange(value);
+      if (!dropdown && typeIRI && formsPath && typeName) {
+        const q = trim(value || "");
+        if (q.length > 0) {
+          setTypeName(typeName);
+          setPath(formsPath);
+          void showFinder({
+            finderId: `${formsPath}_${path}`,
+            data: {},
+            classIRI: typeIRI,
+            jsonSchema: schema as JSONSchema7,
+            onExistingEntityAccepted: handleExistingEntityAccepted,
+            onMappedDataAccepted: handleMappedDataAccepted,
+            onSearchChange: handleSearchStringChange,
+            additionalKnowledgeSources:
+              additionalKnowledgeSources as KnowledgeSources[],
+            prepareNewEntityData,
+            ...(enableResultDetailPopper === false
+              ? { enableResultDetailPopper: false }
+              : {}),
+          });
+        }
+      }
+    },
+    [
+      handleSearchStringChange,
+      dropdown,
+      typeIRI,
+      formsPath,
+      typeName,
+      path,
+      schema,
+      handleExistingEntityAccepted,
+      handleMappedDataAccepted,
+      showFinder,
+      setTypeName,
+      setPath,
+      additionalKnowledgeSources,
+      prepareNewEntityData,
+      enableResultDetailPopper,
+    ],
+  );
+
+  const handleKeyDown = useKeyEventForSimilarityFinder();
 
   const [disabled, setDisabled] = React.useState(false);
-  const { registerModal } = useModalRegistry(NiceModal);
   const showEditDialog = useCallback(async () => {
+    if (!typeName || !typeIRI) return;
     const fieldDefinitions = primaryFields[typeName] as
       | PrimaryField
       | undefined;
     const defaultLabelKey = fieldDefinitions?.label || "title";
     const entityIRI = createEntityIRI(typeName);
-    const modalID = `edit-${typeIRI}-${entityIRI}`;
-    registerModal(modalID, EditEntityModal);
     const newItem = {
       "@id": entityIRI,
       "@type": typeIRI,
@@ -158,14 +212,23 @@ export const ArrayLayoutToolbar = ({
       ? await prepareNewEntityData(newItem)
       : newItem;
     setDisabled(true);
-    NiceModal.show(modalID, {
-      entityIRI,
-      typeIRI,
-      data: preparedData,
-      disableLoad: true,
-    })
-      .then(({ data }: { data: any }) => {
-        if (data["@id"] && data["@type"]) {
+    editModal
+      .show(
+        {
+          entityIRI,
+          typeIRI,
+          typeName,
+          data: preparedData,
+          disableLoad: true,
+        },
+        { instanceId: entityIRI },
+      )
+      .then((result: unknown) => {
+        const r = result as { data?: unknown } | undefined;
+        const data = r?.data as
+          | { "@id"?: string; "@type"?: string }
+          | undefined;
+        if (data?.["@id"] && data?.["@type"]) {
           addItem(path, cloneDeep(data))();
         }
       })
@@ -173,16 +236,57 @@ export const ArrayLayoutToolbar = ({
         setDisabled(false);
       });
   }, [
-    registerModal,
+    editModal,
     typeIRI,
     typeName,
     createEntityIRI,
-    EditEntityModal,
     primaryFields,
     searchString,
     setDisabled,
     prepareNewEntityData,
+    addItem,
+    path,
   ]);
+
+  const finderProps = useMemo(
+    () =>
+      typeIRI
+        ? {
+            finderId: `${formsPath}_${path}`,
+            data: {},
+            classIRI: typeIRI,
+            jsonSchema: schema as JSONSchema7,
+            onExistingEntityAccepted: handleExistingEntityAccepted,
+            onMappedDataAccepted: handleMappedDataAccepted,
+            onSearchChange: handleSearchStringChange,
+            additionalKnowledgeSources:
+              additionalKnowledgeSources as KnowledgeSources[],
+            prepareNewEntityData,
+            ...(enableResultDetailPopper === false
+              ? { enableResultDetailPopper: false }
+              : {}),
+          }
+        : null,
+    [
+      typeIRI,
+      formsPath,
+      path,
+      schema,
+      handleExistingEntityAccepted,
+      handleMappedDataAccepted,
+      handleSearchStringChange,
+      additionalKnowledgeSources,
+      prepareNewEntityData,
+      enableResultDetailPopper,
+    ],
+  );
+
+  const handleFocusWithFinder = useCallback(() => {
+    handleFocus();
+    if (!dropdown && finderProps) {
+      void showFinder(finderProps);
+    }
+  }, [handleFocus, dropdown, finderProps, showFinder]);
 
   const createAndAddItem = useCallback(async () => {
     const newItem = {
@@ -225,25 +329,23 @@ export const ArrayLayoutToolbar = ({
           alignItems: "stretch",
           gap: 0,
           marginTop: (theme) =>
-            theme.spacing(
-              !dropdown && (keepMounted || sidebarOpen) && !isReifiedStatement
-                ? 1
-                : 2,
-            ),
+            theme.spacing(!dropdown && !isReifiedStatement ? 1 : 2),
           marginBottom: (theme) => theme.spacing(1),
         }}
       >
-        {!dropdown && (keepMounted || sidebarOpen) && !isReifiedStatement ? (
+        {!dropdown && !isReifiedStatement ? (
           <TextField
             fullWidth
             disabled={!enabled}
+            autoComplete="off"
             label={labelAsHeadline ? typeName : label}
-            onChange={(ev) => handleSearchStringChange(ev.target.value)}
+            onChange={(ev) => handleFieldSearchChange(ev.target.value)}
             value={searchString || ""}
             inputProps={{
               ref: inputRef,
-              onFocus: handleFocus,
-              onKeyUp: handleKeyUp,
+              autoComplete: "off",
+              onFocus: handleFocusWithFinder,
+              onKeyDown: handleKeyDown,
             }}
             sx={{
               "& .MuiOutlinedInput-root": {
@@ -264,10 +366,12 @@ export const ArrayLayoutToolbar = ({
                 title={label || ""}
                 disabled={disabled}
                 onSelectionChange={handleSelectedChange}
-                onSearchValueChange={handleSearchStringChange}
+                onSearchValueChange={handleFieldSearchChange}
                 searchString={searchString || ""}
                 inputProps={{
-                  onFocus: handleFocus,
+                  autoComplete: "off",
+                  onFocus: handleFocusWithFinder,
+                  onKeyDown: handleKeyDown,
                   sx: {
                     "& .MuiOutlinedInput-root": {
                       borderTopRightRadius: showCreateButton ? 0 : undefined,
@@ -302,23 +406,9 @@ export const ArrayLayoutToolbar = ({
         )}
       </Box>
       <Box>
-        {globalPath === formsPath && !dropdown && (
-          <SearchbarWithFloatingButton>
-            <SimilarityFinder
-              finderId={`${formsPath}_${path}`}
-              search={searchString}
-              data={{}}
-              classIRI={typeIRI}
-              jsonSchema={schema as JSONSchema7}
-              onExistingEntityAccepted={handleExistingEntityAccepted}
-              onMappedDataAccepted={handleMappedData}
-              additionalKnowledgeSources={
-                additionalKnowledgeSources as KnowledgeSources[]
-              }
-              prepareNewEntityData={prepareNewEntityData}
-            />
-          </SearchbarWithFloatingButton>
-        )}
+        {globalPath === formsPath && !dropdown && finderProps ? (
+          <SearchbarWithFloatingButton finderProps={finderProps} />
+        ) : null}
       </Box>
     </Box>
   );

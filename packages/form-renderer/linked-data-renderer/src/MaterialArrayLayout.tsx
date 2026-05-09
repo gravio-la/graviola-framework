@@ -7,6 +7,7 @@ import {
 import {
   useAdbContext,
   useCRUDWithQueryClient,
+  useDispatchIntent,
   useFormDataStore,
 } from "@graviola/edb-state-hooks";
 import { validate } from "@graviola/edb-ui-utils";
@@ -29,7 +30,6 @@ import { JSONSchema } from "json-schema-to-ts";
 import { cloneDeep, orderBy, uniqBy } from "lodash-es";
 import merge from "lodash-es/merge";
 import { useTranslation } from "next-i18next";
-import { useSnackbar } from "notistack";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { ArrayLayoutToolbar } from "./ArrayToolbar";
@@ -79,6 +79,10 @@ const uiSchemaOptionsSchema = {
       type: "boolean",
     },
     allowCreateMultiple: {
+      type: "boolean",
+    },
+    /** When false, entity finder list rows do not show the side detail Popper. */
+    enableResultDetailPopper: {
       type: "boolean",
     },
   },
@@ -169,6 +173,7 @@ export const MaterialArrayLayout = (props: ArrayLayoutProps) => {
     dropdown,
     showCreateButton,
     allowCreateMultiple,
+    enableResultDetailPopper,
   } = useMemo(() => {
     const appliedUiSchemaOptions = merge({}, config, uischema.options);
     try {
@@ -214,7 +219,7 @@ export const MaterialArrayLayout = (props: ArrayLayoutProps) => {
     queryOptions: { enabled: false },
   });
 
-  const { enqueueSnackbar } = useSnackbar();
+  const dispatchIntent = useDispatchIntent();
   const handleSaveAndAdd = useCallback(() => {
     const finalData = {
       ...formData,
@@ -222,16 +227,37 @@ export const MaterialArrayLayout = (props: ArrayLayoutProps) => {
     saveMutation
       .mutateAsync(finalData)
       .then(({ mainDocument }) => {
-        enqueueSnackbar(t("successfully saved"), { variant: "success" });
+        const iri = (mainDocument?.["@id"] as string) ?? entityIRI;
+        dispatchIntent({
+          kind: "entity-saved",
+          typeName,
+          entityIRI: iri,
+          created: false,
+          origin: { source: "linked-data-renderer:MaterialArrayLayout" },
+        });
         addItem(path, mainDocument)();
         setEntityIRI(createEntityIRI(typeName));
       })
-      .catch((e) => {
-        enqueueSnackbar(t("error while saving") + e.message, {
-          variant: "error",
+      .catch((e: Error) => {
+        dispatchIntent({
+          kind: "entity-save-failed",
+          typeName,
+          entityIRI,
+          error: e,
+          origin: { source: "linked-data-renderer:MaterialArrayLayout" },
         });
       });
-  }, [saveMutation, typeIRI, typeName, createEntityIRI, addItem, setFormData]);
+  }, [
+    saveMutation,
+    typeName,
+    createEntityIRI,
+    addItem,
+    setFormData,
+    path,
+    formData,
+    entityIRI,
+    dispatchIntent,
+  ]);
 
   const [inlineErrors, setInlineErrors] = useState<ErrorObject[] | null>(null);
   const handleErrors = useCallback(
@@ -335,6 +361,7 @@ export const MaterialArrayLayout = (props: ArrayLayoutProps) => {
         dropdown={Boolean(dropdown)}
         showCreateButton={showCreateButton}
         allowCreateMultiple={allowCreateMultiple}
+        enableResultDetailPopper={enableResultDetailPopper}
       />
       {isReifiedStatement && (
         <Paper elevation={1} sx={{ p: 2, marginTop: 2, marginBottom: 1 }}>
@@ -344,7 +371,7 @@ export const MaterialArrayLayout = (props: ArrayLayoutProps) => {
             direction={"row"}
             alignItems={"center"}
           >
-            <Grid  flex={"1"}>
+            <Grid flex={"1"}>
               <SemanticFormsInline
                 schema={subSchema}
                 entityIRI={formData["@id"]}
@@ -359,7 +386,7 @@ export const MaterialArrayLayout = (props: ArrayLayoutProps) => {
                 formsPath={formsPath}
               />
             </Grid>
-            <Grid >
+            <Grid>
               <Tooltip
                 title={
                   inlineErrors && (
