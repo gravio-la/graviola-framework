@@ -1,0 +1,69 @@
+{
+  "name": "@graviola/graviola-app-config",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "depcheck": "depcheck",
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint src/**/*.{ts,tsx}",
+    "lint-fix": "eslint --fix src/**/*.{ts,tsx}",
+    "release": "bun publish --access public",
+    "pack-tarball": "bun pm pack"
+  },
+  "peerDependencies": {
+    "@ebay/nice-modal-react": "^1.2.13",
+    "@jsonforms/core": "catalog:jsonforms",
+    "@jsonforms/material-renderers": "catalog:jsonforms",
+    "@jsonforms/react": "catalog:jsonforms",
+    "@mui/material": "catalog:mui",
+    "@tanstack/react-query-devtools": "^5.72.1",
+    "notistack": "^3.0.1",
+    "react": "catalog:",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "catalog:"
+  },
+  "dependencies": {
+    "@graviola/edb-advanced-components": "workspace:*",
+    "@graviola/edb-core-types": "workspace:*",
+    "@graviola/edb-core-utils": "workspace:*",
+    "@graviola/edb-debug-utils": "workspace:*",
+    "@graviola/edb-detail-renderer": "workspace:*",
+    "@graviola/edb-state-hooks": "workspace:*",
+    "@graviola/edb-ui-utils": "workspace:*",
+    "@graviola/entity-finder": "workspace:*",
+    "@graviola/json-schema-utils": "workspace:*",
+    "@graviola/semantic-json-form": "workspace:*",
+    "@graviola/semantic-jsonform-types": "workspace:*"
+  },
+  "devDependencies": {
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*",
+    "@types/json-schema": "catalog:",
+    "@types/react": "catalog:",
+    "eslint-config-edb": "workspace:*",
+    "tsup": "^8.0.0",
+    "typescript": "^5.8.2"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "eslint-config-edb"
+    ]
+  }
+}
