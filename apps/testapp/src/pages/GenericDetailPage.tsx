@@ -8,7 +8,7 @@ import {
 } from "@graviola/edb-state-hooks";
 import { DetailRenderer } from "@graviola/edb-detail-renderer";
 import { bringDefinitionToTop } from "@graviola/json-schema-utils";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import type { SchemaRouteOutletContext } from "../schemaOutletContext";
 import { useEntityIRIFromEntityID } from "../useEntityIRIFromEntityID";
@@ -24,6 +24,16 @@ export function GenericDetailPage() {
   const { schemaConfig } = useOutletContext<SchemaRouteOutletContext>();
   const navigate = useNavigate();
   const basePath = `/${schemaConfig.schemaName}`;
+
+  /** Same segment encoding as {@link GenericListPage} so `/` in IRIs does not break `:entityID`. */
+  const toEntitySegment = useCallback(
+    (id: string) =>
+      id.startsWith(schemaConfig.entityBaseIRI) &&
+      id.length > schemaConfig.entityBaseIRI.length
+        ? encodeURIComponent(id.slice(schemaConfig.entityBaseIRI.length))
+        : encodeURIComponent(id),
+    [schemaConfig.entityBaseIRI],
+  );
 
   const {
     typeNameToTypeIRI,
@@ -102,7 +112,9 @@ export function GenericDetailPage() {
             <Button
               startIcon={<EditIcon />}
               onClick={() =>
-                navigate(`${basePath}/edit/${typeName}/${entityID}`)
+                navigate(
+                  `${basePath}/edit/${typeName}/${toEntitySegment(entityIRI)}`,
+                )
               }
             >
               Bearbeiten

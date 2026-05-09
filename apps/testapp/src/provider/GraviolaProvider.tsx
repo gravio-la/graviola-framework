@@ -1,17 +1,12 @@
 "use client";
 
+import NiceModal from "@ebay/nice-modal-react";
 import React, { useCallback, useMemo } from "react";
-import {
-  AdbProvider,
-  store,
-  useAdbContext,
-  useDataStore,
-} from "@graviola/edb-state-hooks";
+import { AdbProvider, store } from "@graviola/edb-state-hooks";
 import {
   PrimaryFieldDeclaration,
   SparqlEndpoint,
 } from "@graviola/edb-core-types";
-import NiceModal from "@ebay/nice-modal-react";
 import { LocalOxigraphStoreProvider } from "@graviola/local-oxigraph-store-provider";
 import { Provider } from "react-redux";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -20,22 +15,11 @@ import {
   sparqlDevtoolsLogQuery,
 } from "@graviola/edb-debug-utils";
 import {
-  EditEntityModal,
-  EntityDetailModal,
-  KBMainDatabase,
-} from "@graviola/edb-advanced-components";
-import { EntityFinder } from "@graviola/entity-finder";
-import {
   createSemanticConfig,
-  SemanticJsonFormNoOps,
   createUISchemata,
   createStubSchema,
 } from "@graviola/semantic-json-form";
-import {
-  EntityFinderProps,
-  FinderKnowledgeBaseDescription,
-  GlobalSemanticConfig,
-} from "@graviola/semantic-jsonform-types";
+import { GlobalSemanticConfig } from "@graviola/semantic-jsonform-types";
 import {
   JsonFormsCellRendererRegistryEntry,
   JsonFormsRendererRegistryEntry,
@@ -44,8 +28,7 @@ import {
 import { JSONSchema7 } from "json-schema";
 import { allRenderers } from "./config";
 import { CircularProgress } from "@mui/material";
-import { useSnackbar } from "notistack";
-import { useRouterHook } from "../useRouterHook";
+import { GraviolaLoungeProviders } from "@graviola/graviola-app-config";
 
 type GraviolaProviderProps = {
   baseIRI: string;
@@ -60,29 +43,6 @@ type GraviolaProviderProps = {
   uischemata?: Record<string, UISchemaElement>;
   storageKey: string;
   initialData?: string;
-};
-
-const SimilarityFinder = (props: EntityFinderProps) => {
-  const { queryBuildOptions } = useAdbContext();
-  const { dataStore } = useDataStore();
-  const allKnowledgeBases = useMemo<FinderKnowledgeBaseDescription<any>[]>(
-    () =>
-      dataStore
-        ? [
-            KBMainDatabase(
-              dataStore,
-              queryBuildOptions.primaryFields,
-              queryBuildOptions.typeIRItoTypeName,
-            ),
-          ]
-        : [],
-    [
-      dataStore,
-      queryBuildOptions.primaryFields,
-      queryBuildOptions.typeIRItoTypeName,
-    ],
-  );
-  return <EntityFinder {...props} allKnowledgeBases={allKnowledgeBases} />;
 };
 
 export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
@@ -149,10 +109,10 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
     () => [...allRenderers, ...(renderers || [])],
     [renderers],
   );
+  const tableActionRegistry = useMemo(() => [], []);
   const publicBasePath =
     import.meta.env.VITE_PUBLIC_BASE_PATH || import.meta.env.BASE_URL || "";
 
-  // @ts-ignore
   return (
     <Provider store={store}>
       <AdbProvider
@@ -161,40 +121,38 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
           publicBasePath,
           baseIRI,
         }}
-        components={{
-          EditEntityModal: EditEntityModal,
-          EntityDetailModal: EntityDetailModal,
-          SemanticJsonForm: SemanticJsonFormNoOps,
-          SimilarityFinder: SimilarityFinder,
-        }}
-        useRouterHook={useRouterHook}
-        useSnackbar={useSnackbar}
         schema={schema}
         makeStubSchema={makeStubSchema}
         uiSchemaDefaultRegistry={registry}
         rendererRegistry={rendererRegistry}
         cellRendererRegistry={cellRendererRegistry}
         uischemata={uischemata}
+        tableActionRegistry={tableActionRegistry}
       >
-        <LocalOxigraphStoreProvider
-          key={storageKey}
-          endpoint={endpoint}
-          defaultLimit={10}
-          initialData={initialData ?? ""}
-          localPersistence={{
-            enabled: true,
-            restoreOnLoad: true,
-            debounceMS: 5000,
-            storageKey,
-          }}
-          loader={<CircularProgress />}
-        >
-          {import.meta.env.DEV ? (
-            <SPARQLQueryDevtools initialIsOpen={false} />
-          ) : null}
-          <NiceModal.Provider>{children}</NiceModal.Provider>
-        </LocalOxigraphStoreProvider>
-        <ReactQueryDevtools initialIsOpen={true} />
+        <NiceModal.Provider>
+          <GraviolaLoungeProviders>
+            <LocalOxigraphStoreProvider
+              key={storageKey}
+              endpoint={endpoint}
+              defaultLimit={10}
+              enableInversePropertiesFeature={true}
+              initialData={initialData ?? ""}
+              localPersistence={{
+                enabled: true,
+                restoreOnLoad: true,
+                debounceMS: 5000,
+                storageKey,
+              }}
+              loader={<CircularProgress />}
+            >
+              {import.meta.env.DEV ? (
+                <SPARQLQueryDevtools initialIsOpen={false} />
+              ) : null}
+              {children}
+            </LocalOxigraphStoreProvider>
+          </GraviolaLoungeProviders>
+          <ReactQueryDevtools initialIsOpen={true} />
+        </NiceModal.Provider>
       </AdbProvider>
     </Provider>
   );

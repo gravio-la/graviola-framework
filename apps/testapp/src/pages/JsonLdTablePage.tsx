@@ -14,9 +14,7 @@ import {
 } from "react-router-dom";
 import type { SchemaRouteOutletContext } from "../schemaOutletContext";
 
-const ITEM_SCHEMA = "item-schema";
-
-export function GenericListPage() {
+export function JsonLdTablePage() {
   const { typeName } = useParams<{ typeName: string }>();
   const { schemaConfig } = useOutletContext<SchemaRouteOutletContext>();
   const navigate = useNavigate();
@@ -50,8 +48,6 @@ export function GenericListPage() {
     return <Typography color="error">Missing type name in route.</Typography>;
   }
 
-  const showRowShapeToggle = schemaConfig.schemaName === ITEM_SCHEMA;
-
   return (
     <Box
       sx={{
@@ -63,36 +59,45 @@ export function GenericListPage() {
         overflow: "hidden",
       }}
     >
-      {showRowShapeToggle ? (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "flex-end",
-            px: 1,
-            pt: 1,
-            flexShrink: 0,
-          }}
-        >
-          <ToggleButtonGroup exclusive value="sparql-select" size="small">
-            <ToggleButton
-              value="sparql-select"
-              component={Link}
-              to={`${basePath}/list/${typeName}`}
-            >
-              SPARQL SELECT
-            </ToggleButton>
-            <ToggleButton
-              value="jsonld"
-              component={Link}
-              to={`${basePath}/list-jsonld/${typeName}`}
-            >
-              JSON-LD
-            </ToggleButton>
-          </ToggleButtonGroup>
-        </Box>
-      ) : null}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          px: 1,
+          pt: 1,
+          flexShrink: 0,
+        }}
+      >
+        <ToggleButtonGroup exclusive value="jsonld" size="small">
+          <ToggleButton
+            value="sparql-select"
+            component={Link}
+            to={`${basePath}/list/${typeName}`}
+          >
+            SPARQL SELECT
+          </ToggleButton>
+          <ToggleButton
+            value="jsonld"
+            component={Link}
+            to={`${basePath}/list-jsonld/${typeName}`}
+          >
+            JSON-LD
+          </ToggleButton>
+        </ToggleButtonGroup>
+      </Box>
       <SemanticTable
         typeName={typeName}
+        rowShape="jsonld"
+        tableUiSchema={{
+          type: "Table",
+          mode: "blacklist",
+          columns: [
+            {
+              scope: "#/properties/@type",
+              visibility: "forbidden",
+            },
+          ],
+        }}
         onEditEntry={onEditEntry}
         onShowEntry={onShowEntry}
       />

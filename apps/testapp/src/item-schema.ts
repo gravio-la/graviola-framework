@@ -106,6 +106,13 @@ export const schema = {
         image: {
           type: "string",
         },
+        /** Semantic relation between tags (EntityFinder + similarity drawer in forms). */
+        relatedTags: {
+          type: "array",
+          items: {
+            $ref: "#/definitions/Tag",
+          },
+        },
       },
     },
     Vendor: {
@@ -282,6 +289,18 @@ export const itemSchemaConfig: SchemaConfig = {
     Vendor: generateDefaultUISchema(
       bringDefinitionToTop(itemJsonSchema as any, "Vendor") as any,
       {},
+    ),
+    Tag: generateDefaultUISchema(
+      bringDefinitionToTop(itemJsonSchema as any, "Tag") as any,
+      {
+        scopeOverride: {
+          "#/properties/relatedTags": {
+            type: "Control",
+            scope: "#/properties/relatedTags",
+            label: "Related tags",
+          },
+        },
+      },
     ),
   },
 };

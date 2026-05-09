@@ -3,6 +3,7 @@ import { GenericCreatePage } from "./pages/GenericCreatePage";
 import { GenericDetailPage } from "./pages/GenericDetailPage";
 import { GenericEditPage } from "./pages/GenericEditPage";
 import { GenericListPage } from "./pages/GenericListPage";
+import { JsonLdTablePage } from "./pages/JsonLdTablePage";
 
 export const itemSchemaRouteObjects: RouteObject[] = [
   {
@@ -16,6 +17,10 @@ export const itemSchemaRouteObjects: RouteObject[] = [
   {
     path: "list/:typeName",
     element: <GenericListPage />,
+  },
+  {
+    path: "list-jsonld/:typeName",
+    element: <JsonLdTablePage />,
   },
   {
     path: "edit/:typeName/:entityID",
