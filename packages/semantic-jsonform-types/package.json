@@ -22,19 +22,22 @@
     "release": "bun publish --access public",
     "pack-tarball": "bun pm pack"
   },
-  "devDependencies": {
-    "ajv": "^8.12",
-    "@jsonforms/react": "catalog:jsonforms",
-    "@jsonforms/core": "catalog:jsonforms",
-    "jsonld-context-parser": "^2.4.0",
-    "react": "catalog:",
+  "dependencies": {
     "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-global-types": "workspace:*",
-    "eslint-config-edb": "workspace:*",
-    "@types/json-schema": "catalog:"
+    "@graviola/edb-table-types": "workspace:*",
+    "@jsonforms/core": "catalog:jsonforms",
+    "@jsonforms/react": "catalog:jsonforms",
+    "@types/json-schema": "catalog:",
+    "ajv": "^8.12",
+    "jsonld-context-parser": "^2.4.0",
+    "react": "catalog:"
   },
   "peerDependencies": {
     "react": "catalog:"
+  },
+  "devDependencies": {
+    "eslint-config-edb": "workspace:*"
   },
   "typedocOptions": {
     "entryPoints": [

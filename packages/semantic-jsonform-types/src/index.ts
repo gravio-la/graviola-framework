@@ -15,6 +15,7 @@ import type {
   JsonFormsRendererRegistryEntry,
   JsonFormsUISchemaRegistryEntry,
 } from "@jsonforms/core";
+import type { TableColumnRegistry } from "@graviola/edb-table-types";
 
 export type ChangeCause = "user" | "mapping" | "reload";
 export type AuthorityConfiguration = {
@@ -43,6 +44,12 @@ export type SemanticJsonFormProps = {
   disableSimilarityFinder?: boolean;
   enableSidebar?: boolean;
   wrapWithinCard?: boolean;
+  /** When set, invoked instead of emitting `entity-saved` on the intent bus. */
+  onSaveSuccess?: (payload: { entityIRI?: string; created: boolean }) => void;
+  /** When set, invoked instead of emitting `entity-save-failed` on the intent bus. */
+  onSaveError?: (error: Error) => void;
+  /** Passed through to the similarity finder modal; when false, hides result-row detail Popper. */
+  enableResultDetailPopper?: boolean;
 };
 
 export type LoadResult = {
@@ -67,7 +74,10 @@ export type SemanticJsonFormNoOpsProps = {
   wrapWithinCard?: boolean;
   formsPath?: string;
   disabled?: boolean;
+  /** Passed through to the similarity finder modal; when false, hides result-row detail Popper. */
+  enableResultDetailPopper?: boolean;
 };
+export type SemanticJsonFormShellProps = SemanticJsonFormNoOpsProps;
 
 export type KnowledgeSources = "kb" | "gnd" | "wikidata" | "k10plus" | "ai";
 
@@ -95,6 +105,8 @@ export type EntityFinderProps<
     FullEntityType,
     SourceType
   >[];
+  /** When false, selected search results do not open the side detail Popper. Default true. */
+  enableResultDetailPopper?: boolean;
 };
 
 export type GlobalSemanticConfig = {
@@ -115,22 +127,6 @@ export type DetailViewConfigOptions = {
   alwaysShowPropertyNames?: string[];
 };
 
-type SnackbarKey = string | number;
-
-type SnackbarOptions = {
-  variant: "error" | "success" | "warning" | "info";
-  autoHideDuration?: number;
-  anchorOrigin?: {
-    vertical: "top" | "bottom";
-    horizontal: "left" | "center" | "right";
-  };
-};
-
-export type SnackbarFacade = {
-  enqueueSnackbar: (message: string, options?: SnackbarOptions) => SnackbarKey;
-  closeSnackbar: (key?: SnackbarKey) => void;
-};
-
 export type GlobalAppConfig<DeclarativeMappingType> = GlobalSemanticConfig & {
   normDataMapping?: Record<string, NormDataMapping<DeclarativeMappingType>>;
   authorityAccess?: Record<string, AuthorityConfiguration>;
@@ -141,6 +137,8 @@ export type GlobalAppConfig<DeclarativeMappingType> = GlobalSemanticConfig & {
   cellRendererRegistry?: JsonFormsCellRendererRegistryEntry[];
   uischemata?: Record<string, any>;
   detailViewConfig?: DetailViewConfigOptions;
+  tableColumnRegistry?: TableColumnRegistry;
+  tableActionRegistry?: any[];
 };
 
 export type EditEntityModalProps = {
@@ -155,25 +153,15 @@ export type EditEntityModalProps = {
   preventSaveOnError?: boolean;
   /** When true, hide the tooltip and error badge on the accept button. Default false. */
   disableErrorBadge?: boolean;
+  /** When set, invoked instead of emitting `entity-saved` on the intent bus after save. */
+  onSaveSuccess?: () => void;
+  /** When set, invoked instead of emitting `entity-save-failed` on the intent bus. */
+  onSaveError?: (error: Error) => void;
 };
 
 export type EntityDetailModalProps = EditEntityModalProps & {
   readonly?: boolean;
   disableInlineEditing?: boolean;
-};
-
-type Url = URL | string;
-
-type ParsedUrlQuery = Record<string, string | string[] | undefined>;
-
-export type ModRouter = {
-  query: ParsedUrlQuery;
-  asPath: string;
-  replace: (url: Url, as?: Url) => Promise<void | boolean>;
-  push: (url: Url, as?: Url) => Promise<void | boolean>;
-  pathname: string;
-  searchParams: URLSearchParams;
-  setSearchParams?: (searchParams: URLSearchParams) => void;
 };
 
 export type SelectedEntity<SourceType extends string = string> = {
