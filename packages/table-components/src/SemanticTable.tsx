@@ -1,10 +1,12 @@
 import NiceModal from "@ebay/nice-modal-react";
 import { GenericModal } from "@graviola/edb-basic-components";
-import { encodeIRI, filterUndefOrNull } from "@graviola/edb-core-utils";
+import { filterUndefOrNull } from "@graviola/edb-core-utils";
 import {
+  MODAL_ENTITY_DETAIL,
   useAdbContext,
   useDataStore,
-  useModifiedRouter,
+  useDispatchIntent,
+  useGraviolaModal,
   useMutation,
   useQuery,
   useQueryClient,
@@ -14,7 +16,7 @@ import type { MRT_ColumnDef, MRT_SortingState } from "material-react-table";
 import { PaginationState } from "@tanstack/table-core";
 import type { JSONSchema7 } from "json-schema";
 import { useTranslation } from "next-i18next";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
 import {
   computeColumns,
   type ColumnDefMatcher,
@@ -77,9 +79,11 @@ export const SemanticTable = ({
     typeIRIToTypeName,
     createEntityIRI,
     schema,
-    components: { EntityDetailModal },
     tableActionRegistry,
   } = useAdbContext() as any;
+
+  const dispatchIntent = useDispatchIntent();
+  const detailModal = useGraviolaModal(MODAL_ENTITY_DETAIL);
 
   const { t } = useTranslation();
   const { t: t2 } = useTranslation("table");
@@ -221,18 +225,29 @@ export const SemanticTable = ({
     return ["mrt-row-select", ...ordered];
   }, [displayColumns, queryBuildOptions.primaryFields, typeName]);
 
-  const { push, query } = useModifiedRouter();
-  const locale = (query.locale || "en") as string;
+  const locale = useSyncExternalStore(
+    (cb) => {
+      window.addEventListener("popstate", cb);
+      return () => window.removeEventListener("popstate", cb);
+    },
+    () => new URLSearchParams(window.location.search).get("locale") || "en",
+    () => "en",
+  );
 
   const editEntry = useCallback(
     (id: string) => {
       if (onEditEntryProp) {
         onEditEntryProp(id, typeIRI);
       } else {
-        push(`/create/${typeName}?encID=${encodeIRI(id)}`);
+        dispatchIntent({
+          kind: "edit-entity",
+          typeName,
+          entityIRI: id,
+          origin: { source: `semantic-table:${typeName}` },
+        });
       }
     },
-    [push, typeName, typeIRI, onEditEntryProp],
+    [dispatchIntent, typeName, typeIRI, onEditEntryProp],
   );
 
   const showEntry = useCallback(
@@ -240,14 +255,19 @@ export const SemanticTable = ({
       if (onShowEntryProp) {
         onShowEntryProp(id, typeIRI);
       } else {
-        NiceModal.show(EntityDetailModal, {
-          typeIRI: typeIRI,
-          entityIRI: id,
-          disableInlineEditing: true,
-        });
+        detailModal.show(
+          {
+            typeIRI: typeIRI,
+            entityIRI: id,
+            disableInlineEditing: true,
+          },
+          {
+            origin: { source: `semantic-table:${typeName}` },
+          },
+        );
       }
     },
-    [typeIRI, EntityDetailModal, onShowEntryProp],
+    [typeIRI, detailModal, onShowEntryProp, typeName],
   );
 
   const queryClient = useQueryClient();

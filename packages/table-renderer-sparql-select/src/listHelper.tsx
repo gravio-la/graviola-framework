@@ -1,4 +1,3 @@
-import NiceModal from "@ebay/nice-modal-react";
 import { OverflowContainer } from "@graviola/edb-basic-components";
 import type {
   PrimaryField,
@@ -6,7 +5,11 @@ import type {
 } from "@graviola/edb-core-types";
 import { filterUndefOrNull } from "@graviola/edb-core-utils";
 import { applyToEachField } from "@graviola/edb-data-mapping";
-import { useAdbContext } from "@graviola/edb-state-hooks";
+import {
+  MODAL_ENTITY_DETAIL,
+  useAdbContext,
+  useGraviolaModal,
+} from "@graviola/edb-state-hooks";
 import { isJSONSchema } from "@graviola/json-schema-utils";
 import { JsonSchema, RankedTester, TesterContext } from "@jsonforms/core";
 import { Avatar, Box, Link } from "@mui/material";
@@ -44,8 +47,8 @@ export const PrimaryColumnContent = ({
   const {
     queryBuildOptions: { primaryFields },
     typeNameToTypeIRI,
-    components: { EntityDetailModal },
   } = useAdbContext();
+  const detailModal = useGraviolaModal(MODAL_ENTITY_DETAIL);
   const primaryContent = useMemo(() => {
     const fieldDecl = primaryFields[typeName] as PrimaryField | undefined;
     if (data && fieldDecl)
@@ -62,14 +65,17 @@ export const PrimaryColumnContent = ({
       if (onShowEntry) {
         onShowEntry(entityIRI, typeNameToTypeIRI(typeName));
       } else {
-        NiceModal.show(EntityDetailModal, {
-          entityIRI,
-          typeIRI: typeNameToTypeIRI(typeName),
-          disableInlineEditing: true,
-        });
+        detailModal.show(
+          {
+            entityIRI,
+            typeIRI: typeNameToTypeIRI(typeName),
+            disableInlineEditing: true,
+          },
+          { origin: { source: `table-primary-column:${typeName}` } },
+        );
       }
     },
-    [entityIRI, EntityDetailModal, typeNameToTypeIRI, typeName, onShowEntry],
+    [entityIRI, detailModal, typeNameToTypeIRI, typeName, onShowEntry],
   );
 
   return (
