@@ -35,11 +35,12 @@
     "@graviola/edb-graph-traversal": "workspace:*"
   },
   "peerDependencies": {
-    "jsonld": "^8.3.2",
+    "jsonld": "catalog:",
     "@rdfjs/dataset": "^2.0.2",
     "n3": "^1.17.2"
   },
   "devDependencies": {
+    "jsonld": "catalog:",
     "@graviola/edb-build-helper": "workspace:*",
     "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-tsconfig": "workspace:*",

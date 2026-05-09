@@ -43,6 +43,7 @@
     "lodash-es": "catalog:"
   },
   "devDependencies": {
+    "jsonld": "catalog:",
     "@comunica/types": "^2.10.0",
     "@graviola/edb-build-helper": "workspace:*",
     "@graviola/edb-core-types": "workspace:*",
@@ -60,12 +61,7 @@
   },
   "peerDependencies": {
     "@rdfjs/data-model": "catalog:rdf",
-    "@rdfjs/parser-jsonld": "^2.1.1",
-    "jsonld": "^8.3.2",
-    "jsonld-context-parser": "^2.4.0",
-    "n3": "^1.17.2",
-    "rdf-dataset-ext": "^1.1.0",
-    "string-to-stream": "^3.0.1"
+    "jsonld-context-parser": "^2.4.0"
   },
   "eslintConfig": {
     "root": true,

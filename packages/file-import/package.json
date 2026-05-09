@@ -38,7 +38,8 @@
   },
   "dependencies": {
     "@graviola/edb-maintenance-utils": "workspace:*",
-    "jsonld": "^8.3.2",
+    "@graviola/jsonld-utils": "workspace:*",
+    "jsonld": "catalog:",
     "jsonld-context-parser": "^2.4.0",
     "n3": "^1.17.2",
     "rdf-dataset-ext": "^1.1.0",
