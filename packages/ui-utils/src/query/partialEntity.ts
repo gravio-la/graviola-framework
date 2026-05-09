@@ -12,7 +12,11 @@ export const isPartiallyLoadedEntity = (entity: any) => {
   return false;
 };
 
-export const queryOptionMixinBasedOnEntity = (entity: any) =>
-  isPartiallyLoadedEntity(entity)
+export const queryOptionMixinBasedOnEntity = (entity: any) => {
+  if (entity == null) {
+    return {};
+  }
+  return isPartiallyLoadedEntity(entity)
     ? { placeholderData: { document: entity } }
     : { initialData: { document: entity } };
+};
