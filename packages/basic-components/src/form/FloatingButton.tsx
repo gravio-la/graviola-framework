@@ -1,5 +1,6 @@
 import { Button } from "@mui/material";
 import { Search as SearchIcon } from "@mui/icons-material";
+import { Close as CloseSearchIcon } from "@mui/icons-material";
 
 type FloatingButtonProps = {
   drawerOpen: boolean;
@@ -18,6 +19,9 @@ export const FloatingButton = ({
       color="primary"
       sx={{
         // visibility: drawerOpen ? 'hidden' :  'visible',
+        [":focus"]: {
+          outline: "none",
+        },
         position: "fixed",
         display: "inline-flex",
         justifyContent: "center",
@@ -28,7 +32,7 @@ export const FloatingButton = ({
         height: "48px",
         top: "10%",
         right: drawerOpen ? drawerWidth : 0,
-        borderRadius: "24px 4px 4px 24px",
+        borderRadius: "24px 0 0 24px",
         zIndex: (theme) => theme.zIndex.drawer + 1,
         transition: (theme) =>
           theme.transitions.create("right", {
@@ -38,7 +42,7 @@ export const FloatingButton = ({
       }}
       onClick={toggleDrawer}
     >
-      <SearchIcon />
+      {drawerOpen ? <CloseSearchIcon /> : <SearchIcon />}
     </Button>
   );
 };

@@ -1,12 +1,12 @@
 import { Box, Toolbar } from "@mui/material";
 import React from "react";
 import MuiDrawer from "@mui/material/Drawer";
-import type { SearchbarWithFloatingButtonProps } from "./SearchbarWithFloatingButton";
 
 export type SearchbarProps = {
   drawerWidth: number;
   open: boolean;
-} & SearchbarWithFloatingButtonProps;
+  children?: React.ReactNode;
+};
 
 export const Searchbar = ({ open, drawerWidth, children }: SearchbarProps) => {
   try {
