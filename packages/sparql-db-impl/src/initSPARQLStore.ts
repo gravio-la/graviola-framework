@@ -186,7 +186,7 @@ export const initSPARQLStore = (
         jsonldContext,
         defaultPrefix,
         keepContext: true,
-        removeInverseProperties: enableInversePropertiesFeature,
+        removeInverseProperties: true,
         pruneLinkedDocuments: true,
       });
       await save(cleanData, schema, updateFetch, {

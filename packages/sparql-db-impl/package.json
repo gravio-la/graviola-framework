@@ -18,6 +18,7 @@
     "dist"
   ],
   "scripts": {
+    "test": "bun test",
     "depcheck": "depcheck",
     "build": "tsup",
     "dev": "tsup --watch",
@@ -31,8 +32,11 @@
     "@graviola/edb-global-types": "workspace:*",
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
+    "@rdfjs/dataset": "^2.0.2",
+    "@rdfjs/types": "catalog:rdf",
     "@types/json-schema": "catalog:",
     "eslint-config-edb": "workspace:*",
+    "oxigraph": "^0.5.6",
     "tsup": "^8.0.0",
     "typescript": "^5.8.2"
   },
