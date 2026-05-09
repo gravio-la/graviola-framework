@@ -1,5 +1,5 @@
 /**
- * Smoke tests for the new {@link SparqlStore} surface (vs legacy AbstractDatastore).
+ * Smoke tests for {@link SparqlStore} (`initSPARQLStore`) in isolation from the matrix runner.
  */
 import {
   describe,

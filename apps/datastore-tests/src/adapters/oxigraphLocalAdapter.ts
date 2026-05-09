@@ -11,7 +11,6 @@
  * If a test fails here but not on the Docker HTTP adapter, the issue is
  * likely in the local WASM layer, not the store logic.
  */
-import type { AbstractDatastore } from "@graviola/edb-global-types";
 import type { CRUDFunctions } from "@graviola/edb-core-types";
 import { initSPARQLDatastorePair } from "@graviola/sparql-db-impl";
 import datasetFactory from "@rdfjs/dataset";
@@ -25,7 +24,7 @@ import {
   queryBuildOptions,
   BASE_IRI,
 } from "../schema/testSchema";
-import type { DatastoreAdapter } from "../types";
+import type { DatastoreAdapter, DatastoreContractStore } from "../types";
 
 /** Build CRUDFunctions that delegate to a synchronous Oxigraph Store. */
 function makeSyncStoreCRUDFunctions(store: Store): CRUDFunctions {
@@ -63,25 +62,9 @@ function makeSyncStoreCRUDFunctions(store: Store): CRUDFunctions {
 
 export function createOxigraphLocalAdapter(): DatastoreAdapter {
   let store: Store;
-  let datastore: AbstractDatastore;
 
   return {
     name: "SPARQL/Oxigraph (in-process)",
-
-    capabilities: {
-      crud: true,
-      listDocuments: true,
-      findDocuments: true,
-      countDocuments: true,
-      findDocumentsByLabel: true,
-      findDocumentsByAuthorityIRI: false,
-      findDocumentsAsFlatResultSet: true,
-      getClasses: true,
-      importDocuments: false,
-      iterables: false,
-      filterTyped: true,
-      findEntityByTypeName: true,
-    },
 
     setup: async () => {
       store = new Store();
@@ -96,12 +79,11 @@ export function createOxigraphLocalAdapter(): DatastoreAdapter {
         sparqlQueryFunctions: crudFunctions,
         defaultLimit: 100,
       });
-      datastore = pair.abstractDatastore;
 
-      return { store: pair.store, abstractDatastore: pair.abstractDatastore };
+      return { store: pair.store as DatastoreContractStore };
     },
 
-    clearAll: async (_store: AbstractDatastore) => {
+    clearAll: async () => {
       store.update("CLEAR ALL");
     },
 

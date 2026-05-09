@@ -1,53 +1,77 @@
-import type { AbstractDatastore } from "@graviola/edb-global-types";
-import type { BaseStore } from "@graviola/store-core";
+import type {
+  BaseStore,
+  Counts,
+  Exists,
+  FlatResultSet,
+  Filters,
+  Imports,
+  Lists,
+  Loads,
+  Removes,
+  Resolves,
+  Searches,
+  Streams,
+  Writes,
+} from "@graviola/store-core";
 
 /**
- * Declares which optional AbstractDatastore operations are supported by a given adapter.
- * Required operations (crud, listDocuments, findDocuments) are always assumed to be supported.
+ * Schema registry for contract tests (`testSchema` definitions).
  */
-export type DatastoreCapabilities = {
-  /** Basic CRUD: upsertDocument, loadDocument, existsDocument, removeDocument */
-  crud: true;
-  /** listDocuments */
-  listDocuments: true;
-  /** findDocuments with QueryType (search, pagination, sorting) */
-  findDocuments: true;
-  /** Optional: countDocuments */
-  countDocuments: boolean;
-  /** Optional: findDocumentsByLabel */
-  findDocumentsByLabel: boolean;
-  /** Optional: findDocumentsByAuthorityIRI */
-  findDocumentsByAuthorityIRI: boolean;
-  /** Optional: findDocumentsAsFlatResultSet */
-  findDocumentsAsFlatResultSet: boolean;
-  /** Optional: getClasses */
-  getClasses: boolean;
-  /** Optional: importDocument / importDocuments */
-  importDocuments: boolean;
-  /** Optional: iterableImplementation */
-  iterables: boolean;
-  /** Optional: filterTypedDocument / filterTypedDocuments */
-  filterTyped: boolean;
-  /** Optional: findEntityByTypeName */
-  findEntityByTypeName: boolean;
-};
+export type TestSchemaRegistry = Record<string, unknown>;
 
 /**
- * Adapter wraps a datastore implementation for use in contract tests.
- * Each adapter handles its own lifecycle (setup, teardown, reset between tests).
+ * Core store shape exercised by baseline suites (CRUD + Query).
+ */
+export type DatastoreContractStore = BaseStore<TestSchemaRegistry> &
+  Loads<TestSchemaRegistry> &
+  Lists<TestSchemaRegistry> &
+  Writes<TestSchemaRegistry> &
+  Removes<TestSchemaRegistry> &
+  Exists<TestSchemaRegistry>;
+
+/** Optional suites: count — requires {@link Counts}. */
+export type DatastoreContractStoreWithCounts = DatastoreContractStore &
+  Counts<TestSchemaRegistry>;
+
+/** Optional suites: flat result set — requires {@link FlatResultSet}. */
+export type DatastoreContractStoreWithFlat = DatastoreContractStore &
+  FlatResultSet<TestSchemaRegistry>;
+
+/** Optional suites: RDF class resolution — requires {@link Resolves}. */
+export type DatastoreContractStoreWithResolves = DatastoreContractStore &
+  Resolves;
+
+/** Optional suites: async iteration listing — requires {@link Streams}. */
+export type DatastoreContractStoreWithStreams = DatastoreContractStore &
+  Streams<TestSchemaRegistry>;
+
+/** Optional suites: label search — requires {@link Searches}. */
+export type DatastoreContractStoreWithSearches = DatastoreContractStore &
+  Searches<TestSchemaRegistry>;
+
+/** Optional suites: typed graph filters — requires {@link Filters}. */
+export type DatastoreContractStoreWithFilters = DatastoreContractStore &
+  Filters<TestSchemaRegistry>;
+
+/** Optional suites: import — requires {@link Imports}. */
+export type DatastoreContractStoreWithImports = DatastoreContractStore &
+  Imports<TestSchemaRegistry>;
+
+/**
+ * Fresh Store usable as seed data source for import suite tests (readable + writable baseline).
+ */
+export type ImportSeedStore = DatastoreContractStore;
+
+/**
+ * Adapter wraps one Store implementation for contract tests.
  */
 export type DatastoreAdapter = {
-  /** Human-readable name, used in test output. E.g. "SPARQL/Oxigraph (local)" */
+  /** Human-readable name, used in test output. */
   name: string;
-  /** Declared capabilities — drives which test suites are run */
-  capabilities: DatastoreCapabilities;
-  /** Called once in beforeAll: initialise the connection / in-memory store */
-  setup: () => Promise<{
-    abstractDatastore: AbstractDatastore;
-    store?: BaseStore<any>;
-  }>;
-  /** Called in beforeEach: wipe all data without teardown/setup cycle */
-  clearAll: (store: AbstractDatastore) => Promise<void>;
-  /** Called once in afterAll: disconnect / cleanup resources */
+  /** Initialise store — invoked once before the adapter's describe block. */
+  setup: () => Promise<{ store: DatastoreContractStore }>;
+  /** Wipe backing data — invoked in beforeEach. */
+  clearAll: () => Promise<void>;
+  /** Disconnect / cleanup — invoked in afterAll. */
   teardown: () => Promise<void>;
 };

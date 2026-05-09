@@ -1,27 +1,26 @@
 /**
  * Core CRUD contract tests.
  *
- * Tests: upsertDocument, loadDocument, existsDocument, removeDocument.
- * These are required capabilities for ALL adapters.
+ * Tests: upsert, loadOne, exists, remove.
+ * These are required capabilities for ALL adapters (Store baseline).
  */
-import { describe, test, expect, beforeEach } from "bun:test";
-import type { AbstractDatastore } from "@graviola/edb-global-types";
+import { describe, test, expect } from "bun:test";
+import type { DatastoreContractStore } from "../types";
 import { entityIRI } from "../schema/testSchema";
-import { makeCategory, makeItem, makeTag } from "../fixtures/testData";
+import { makeCategory, makeItem } from "../fixtures/testData";
 
-export function runCrudSuite(getStore: () => AbstractDatastore): void {
+export function runCrudSuite(getStore: () => DatastoreContractStore): void {
   describe("CRUD", () => {
     const catId = entityIRI("Category", "crud-cat1");
-    const tagId = entityIRI("Tag", "crud-tag1");
     const itemId = entityIRI("Item", "crud-item1");
 
-    describe("upsertDocument + loadDocument", () => {
+    describe("upsert + loadOne", () => {
       test("creates a flat entity and loads it back", async () => {
         const store = getStore();
         const cat = makeCategory("crud-cat1");
-        await store.upsertDocument("Category", catId, cat);
+        await store.upsert("Category", catId, cat as never);
 
-        const loaded = await store.loadDocument("Category", catId);
+        const loaded = await store.loadOne("Category", catId);
         expect(loaded).toBeTruthy();
         expect(loaded?.name).toBe("Category crud-cat1");
         expect(loaded?.description).toBe("Description of category crud-cat1");
@@ -30,50 +29,50 @@ export function runCrudSuite(getStore: () => AbstractDatastore): void {
       test("loaded document contains @id", async () => {
         const store = getStore();
         const cat = makeCategory("crud-cat1");
-        await store.upsertDocument("Category", catId, cat);
+        await store.upsert("Category", catId, cat as never);
 
-        const loaded = await store.loadDocument("Category", catId);
+        const loaded = await store.loadOne("Category", catId);
         expect(loaded?.["@id"]).toBe(catId);
       });
 
       test("upsert is idempotent — re-saving same data does not duplicate", async () => {
         const store = getStore();
         const cat = makeCategory("crud-cat1");
-        await store.upsertDocument("Category", catId, cat);
-        await store.upsertDocument("Category", catId, cat);
+        await store.upsert("Category", catId, cat as never);
+        await store.upsert("Category", catId, cat as never);
 
-        const all = await store.listDocuments("Category");
+        const all = await store.list("Category");
         expect(all.length).toBe(1);
       });
 
       test("updates fields on second upsert", async () => {
         const store = getStore();
         const cat = makeCategory("crud-cat1");
-        await store.upsertDocument("Category", catId, cat);
+        await store.upsert("Category", catId, cat as never);
 
         const updated = { ...cat, name: "Updated Category" };
-        await store.upsertDocument("Category", catId, updated);
+        await store.upsert("Category", catId, updated as never);
 
-        const loaded = await store.loadDocument("Category", catId);
+        const loaded = await store.loadOne("Category", catId);
         expect(loaded?.name).toBe("Updated Category");
       });
 
       test("creates an item with scalar fields", async () => {
         const store = getStore();
         const item = makeItem("crud-item1");
-        await store.upsertDocument("Item", itemId, item);
+        await store.upsert("Item", itemId, item as never);
 
-        const loaded = await store.loadDocument("Item", itemId);
+        const loaded = await store.loadOne("Item", itemId);
         expect(loaded?.name).toBe("Item crud-item1");
         expect(loaded?.price).toBe(9.99);
         expect(loaded?.isAvailable).toBe(true);
       });
     });
 
-    describe("existsDocument", () => {
+    describe("exists", () => {
       test("returns false for a non-existent entity", async () => {
         const store = getStore();
-        const exists = await store.existsDocument(
+        const exists = await store.exists(
           "Category",
           entityIRI("Category", "nonexistent"),
         );
@@ -83,31 +82,31 @@ export function runCrudSuite(getStore: () => AbstractDatastore): void {
       test("returns true after upsert", async () => {
         const store = getStore();
         const cat = makeCategory("crud-cat1");
-        await store.upsertDocument("Category", catId, cat);
-        const exists = await store.existsDocument("Category", catId);
+        await store.upsert("Category", catId, cat as never);
+        const exists = await store.exists("Category", catId);
         expect(exists).toBe(true);
       });
     });
 
-    describe("removeDocument", () => {
+    describe("remove", () => {
       test("removes an existing entity", async () => {
         const store = getStore();
         const cat = makeCategory("crud-cat1");
-        await store.upsertDocument("Category", catId, cat);
+        await store.upsert("Category", catId, cat as never);
 
-        await store.removeDocument("Category", catId);
+        await store.remove("Category", catId);
 
-        const exists = await store.existsDocument("Category", catId);
+        const exists = await store.exists("Category", catId);
         expect(exists).toBe(false);
       });
 
-      test("entity is gone from listDocuments after removal", async () => {
+      test("entity is gone from list after removal", async () => {
         const store = getStore();
         const cat = makeCategory("crud-cat1");
-        await store.upsertDocument("Category", catId, cat);
-        await store.removeDocument("Category", catId);
+        await store.upsert("Category", catId, cat as never);
+        await store.remove("Category", catId);
 
-        const all = await store.listDocuments("Category");
+        const all = await store.list("Category");
         expect(all.length).toBe(0);
       });
     });
@@ -116,14 +115,14 @@ export function runCrudSuite(getStore: () => AbstractDatastore): void {
       test("item with category reference round-trips", async () => {
         const store = getStore();
         const cat = makeCategory("crud-cat1");
-        await store.upsertDocument("Category", catId, cat);
+        await store.upsert("Category", catId, cat as never);
 
         const item = makeItem("crud-item1", {
           category: { "@id": catId },
         });
-        await store.upsertDocument("Item", itemId, item);
+        await store.upsert("Item", itemId, item as never);
 
-        const loaded = await store.loadDocument("Item", itemId);
+        const loaded = await store.loadOne("Item", itemId);
         expect(loaded?.category?.["@id"]).toBe(catId);
       });
     });

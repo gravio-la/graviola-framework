@@ -14,8 +14,7 @@
       "@graviola/edb-core-utils": ["../../packages/core-utils/src/index.ts"],
       "@graviola/jsonld-utils": ["../../packages/jsonld-utils/src/index.ts"],
       "@graviola/sparql-schema": ["../../packages/sparql-schema/src/index.ts"],
-      "@graviola/edb-core-types": ["../../packages/core-types/index.d.ts"],
-      "@graviola/edb-global-types": ["../../packages/global-types/index.d.ts"]
+      "@graviola/edb-core-types": ["../../packages/core-types/index.d.ts"]
     }
   },
   "exclude": ["node_modules", "dist", "prisma"]

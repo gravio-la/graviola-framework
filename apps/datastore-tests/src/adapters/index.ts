@@ -1,5 +1,4 @@
-import type { AbstractDatastore } from "@graviola/edb-global-types";
-import type { DatastoreAdapter } from "../types";
+import type { DatastoreAdapter, ImportSeedStore } from "../types";
 import { createOxigraphLocalAdapter } from "./oxigraphLocalAdapter";
 import { createSparqlAdapter } from "./sparqlAdapter";
 import { createPrismaAdapter } from "./prismaAdapter";
@@ -119,7 +118,8 @@ export async function getActiveAdapters(): Promise<DatastoreAdapter[]> {
  * Creates a fresh in-process Oxigraph store for use as an import source.
  * Defined here (not in import.suite.ts) to centralise the oxigraph import.
  */
-export async function createSourceOxigraphStore(): Promise<AbstractDatastore> {
+export async function createSourceOxigraphStore(): Promise<ImportSeedStore> {
   const adapter = createOxigraphLocalAdapter();
-  return (await adapter.setup()).abstractDatastore;
+  const { store } = await adapter.setup();
+  return store as ImportSeedStore;
 }

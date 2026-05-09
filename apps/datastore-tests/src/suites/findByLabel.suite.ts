@@ -1,52 +1,47 @@
 /**
- * findDocumentsByLabel contract tests.
- * Only run when adapter.capabilities.findDocumentsByLabel === true.
+ * searchByLabel contract tests — exact primary-label match semantics of the backing store.
+ * Capability-gated: {@link CapabilityDescriptor.searches}.
  */
 import { describe, test, expect } from "bun:test";
-import type { AbstractDatastore } from "@graviola/edb-global-types";
+import type { DatastoreContractStoreWithSearches } from "../types";
 import { entityIRI } from "../schema/testSchema";
 import { makeCategory } from "../fixtures/testData";
 
-export function runFindByLabelSuite(getStore: () => AbstractDatastore): void {
-  describe("findDocumentsByLabel", () => {
+export function runFindByLabelSuite(
+  getStore: () => DatastoreContractStoreWithSearches,
+): void {
+  describe("searchByLabel", () => {
     test("finds documents matching exact label", async () => {
       const store = getStore();
-      // findDocumentsByLabel uses exact match on the primary label field
-      await store.upsertDocument(
+      await store.upsert(
         "Category",
         entityIRI("Category", "lbl-alpha"),
-        makeCategory("lbl-alpha", { name: "Electronics" }),
+        makeCategory("lbl-alpha", { name: "Electronics" }) as never,
       );
-      await store.upsertDocument(
+      await store.upsert(
         "Category",
         entityIRI("Category", "lbl-beta"),
-        makeCategory("lbl-beta", { name: "Books" }),
+        makeCategory("lbl-beta", { name: "Books" }) as never,
       );
-      await store.upsertDocument(
+      await store.upsert(
         "Category",
         entityIRI("Category", "lbl-gamma"),
-        makeCategory("lbl-gamma", { name: "Electronics" }),
+        makeCategory("lbl-gamma", { name: "Electronics" }) as never,
       );
 
-      const results = await store.findDocumentsByLabel!(
-        "Category",
-        "Electronics",
-      );
+      const results = await store.searchByLabel("Category", "Electronics");
       expect(results.length).toBe(2);
     });
 
     test("returns empty array for no matches", async () => {
       const store = getStore();
-      await store.upsertDocument(
+      await store.upsert(
         "Category",
         entityIRI("Category", "lbl-only"),
-        makeCategory("lbl-only", { name: "Only Category" }),
+        makeCategory("lbl-only", { name: "Only Category" }) as never,
       );
 
-      const results = await store.findDocumentsByLabel!(
-        "Category",
-        "XYZ_NO_MATCH",
-      );
+      const results = await store.searchByLabel("Category", "XYZ_NO_MATCH");
       expect(results.length).toBe(0);
     });
   });

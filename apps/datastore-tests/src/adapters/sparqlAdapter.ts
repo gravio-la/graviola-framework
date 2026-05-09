@@ -19,7 +19,6 @@
  *   Query:  POST ${base}/sparql
  *   Update: POST ${base}/update
  */
-import type { AbstractDatastore } from "@graviola/edb-global-types";
 import { initSPARQLDatastorePair } from "@graviola/sparql-db-impl";
 import type { SPARQLFlavour } from "@graviola/edb-core-types";
 import { createHttpSparqlCrudFunctions } from "@graviola/remote-query-implementations";
@@ -30,7 +29,7 @@ import {
   queryBuildOptions,
   BASE_IRI,
 } from "../schema/testSchema";
-import type { DatastoreAdapter } from "../types";
+import type { DatastoreAdapter, DatastoreContractStore } from "../types";
 
 type EndpointConfig = {
   queryUrl: string;
@@ -74,21 +73,6 @@ export function createSparqlAdapter(
   return {
     name,
 
-    capabilities: {
-      crud: true,
-      listDocuments: true,
-      findDocuments: true,
-      countDocuments: true,
-      findDocumentsByLabel: true,
-      findDocumentsByAuthorityIRI: false,
-      findDocumentsAsFlatResultSet: true,
-      getClasses: true,
-      importDocuments: false,
-      iterables: false,
-      filterTyped: true,
-      findEntityByTypeName: true,
-    },
-
     setup: async () => {
       // Verify the endpoint is reachable before running tests
       try {
@@ -115,7 +99,7 @@ export function createSparqlAdapter(
         updateUrl: cfg.updateUrl,
       });
 
-      const { store, abstractDatastore } = initSPARQLDatastorePair({
+      const { store } = initSPARQLDatastorePair({
         schema: rawTestSchema as any,
         defaultPrefix: BASE_IRI,
         jsonldContext: { "@vocab": BASE_IRI },
@@ -128,10 +112,12 @@ export function createSparqlAdapter(
         defaultLimit: 100,
       });
 
-      return { store, abstractDatastore };
+      return {
+        store: store as DatastoreContractStore,
+      };
     },
 
-    clearAll: async (_store: AbstractDatastore) => {
+    clearAll: async () => {
       const res = await fetch(cfg.updateUrl, {
         method: "POST",
         headers: { "Content-Type": "application/sparql-update" },

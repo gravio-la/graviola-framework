@@ -3,6 +3,14 @@ import type { ReadableImportSource } from "@graviola/store-core";
 
 type PrismaSchemaRegistry = Record<string, unknown>;
 
+type ListCapableSource = ReadableImportSource<PrismaSchemaRegistry> & {
+  list?: (
+    typeName: string,
+    limit?: number,
+    query?: unknown,
+  ) => Promise<unknown[]>;
+};
+
 /**
  * Temporary migration bridge: adapts a Store-core `ReadableImportSource` to the
  * legacy `AbstractDatastore` shape expected by the existing Prisma import helpers.
@@ -13,6 +21,8 @@ export function toImportDatastoreAdapter(
   typeNameToTypeIRI: (typeName: string) => string,
   typeIRItoTypeName: (iri: string) => string,
 ): AbstractDatastore {
+  const withList = source as ListCapableSource;
+
   return {
     typeNameToTypeIRI,
     typeIRItoTypeName,
@@ -43,10 +53,19 @@ export function toImportDatastoreAdapter(
         "upsertDocument is not available on import source adapter",
       );
     },
-    listDocuments: async () => {
-      throw new Error(
-        "listDocuments is not available on import source adapter",
-      );
+    listDocuments: async (typeName: string, limit?: number, cb?) => {
+      if (typeof withList.list !== "function") {
+        throw new Error(
+          "listDocuments is not available on import source adapter",
+        );
+      }
+      const rows = (await withList.list(typeName, limit)) as unknown[];
+      if (cb) {
+        for (const doc of rows) {
+          await cb(doc);
+        }
+      }
+      return rows;
     },
     findDocuments: async () => {
       throw new Error(

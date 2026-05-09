@@ -1,15 +1,15 @@
 # datastore-tests
 
-Integration and contract tests for [`AbstractDatastore`](../../packages/edb-global-types) implementations used across the Graviola stack. The same suites run against every **active** backend (SPARQL stores, Prisma-backed SQL, etc.) so behavior stays aligned.
+Integration and contract tests for [`@graviola/store-core`](../../packages/store-core) **`Store`** implementations (`initSPARQLStore`, `initPrismaStore`, pairs, …). Suites assert shared CRUD/query behavior and capability-gated options (counts, imports, typed filters, …) across SPARQL and Prisma backends.
 
 ## Purpose
 
-- Exercise CRUD, query, optional count/flat-result-set/import/class/iterable/label suites from `src/suites/`.
+- Exercise CRUD, query, optional count / flat-result-set / import / class resolution / iterable / label / typed-filter suites from `src/suites/`.
 - Regenerate Prisma schema per database URL when a Prisma adapter runs (`scripts/setupPrismaCore.ts`), so one app can target SQLite, PostgreSQL, MariaDB, or (in future) other Prisma providers without a global one-off setup.
 
 Runtime: **Bun** (`bun test`). Adapters are chosen from environment variables before tests collect (see `src/adapters/index.ts`).
 
-On **NixOS**, Prisma tests are meant to run inside a flake dev shell so nixpkgs engines and `PRISMA_*` match. You must also align **`workspaces.catalogs.prisma`** (root `package.json`) with that shell—see below.
+**Canonical way to run tests (especially with Prisma):** use `nix develop -c …` from the monorepo root so Prisma engines and `PRISMA_*` match the flake (see table below). Do not rely on executing `bun test` bare on NixOS for Prisma without that shell unless you consciously mirror the flake environment elsewhere.
 
 ## Prerequisites
 
@@ -72,23 +72,23 @@ Alternatively, run `nix develop .#prisma6` or `nix develop`, then `cd apps/datas
 
 ## Typical commands
 
-Default local run (in-process Oxigraph + Prisma/SQLite):
+Default local run (in-process Oxigraph + Prisma/SQLite) inside the flake shell:
 
 ```bash
-cd apps/datastore-tests
-bun test
+nix develop -c bash -c 'cd apps/datastore-tests && bun test'
 ```
 
 Only MariaDB Prisma (after `docker compose up` for `mariadb`):
 
 ```bash
-SKIP_DEFAULT_ADAPTER=1 MARIADB_URL='mysql://test:test@localhost:3307/graviola_test' bun test
+SKIP_DEFAULT_ADAPTER=1 MARIADB_URL='mysql://test:test@localhost:3307/graviola_test' \
+  nix develop -c bash -c 'cd apps/datastore-tests && bun test'
 ```
 
 Jena Fuseki (after `docker compose up` for `fuseki`):
 
 ```bash
-FUSEKI_URL=http://localhost:3030/ds bun test
+FUSEKI_URL=http://localhost:3030/ds nix develop -c bash -c 'cd apps/datastore-tests && bun test'
 ```
 
 The `fuseki` service mounts [`fuseki-assembler.ttl`](fuseki-assembler.ttl) so TDB2 uses a normal default graph (the stock SeCo image’s assembler sets `unionDefaultGraph`, which hides triples from plain `SELECT`/`CONSTRUCT`).

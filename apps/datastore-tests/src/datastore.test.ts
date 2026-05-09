@@ -1,7 +1,7 @@
 /**
  * Main datastore contract test entry point.
  *
- * Runs all contract suite functions against every active adapter.
+ * Runs all contract suite functions against every active adapter's Store implementation.
  * Active adapters are determined by environment variables (see adapters/index.ts).
  *
  * Default adapters (no env var), unless SKIP_DEFAULT_ADAPTER=1:
@@ -20,18 +20,27 @@
  *   Example: SKIP_DEFAULT_ADAPTER=1 MARIADB_URL=mysql://… bun test
  *   Include SQLite Prisma in that mode by setting SQLITE_URL explicitly.
  *
+ * Prefer running tests inside the flake devShell so Prisma engine paths match catalog clients:
+ *
  * Usage:
- *   bun test                             # default local adapters
- *   OXIGRAPH_URL=... bun test            # + Docker Oxigraph
- *   SKIP_PRISMA=1 bun test               # skip Prisma entirely
+ *   nix develop -c sh -lc 'cd apps/datastore-tests && bun test'
+ *   nix develop -c sh -lc 'cd apps/datastore-tests && SKIP_PRISMA=1 bun test'
  */
 import { describe, afterAll, beforeEach } from "bun:test";
-import type { AbstractDatastore } from "@graviola/edb-global-types";
 import { hasCapability } from "@graviola/store-core";
-import type { BaseStore, CapabilityName } from "@graviola/store-core";
+import type { CapabilityName } from "@graviola/store-core";
 
 import { getActiveAdapters, createSourceOxigraphStore } from "./adapters";
-import type { DatastoreAdapter } from "./types";
+import type {
+  DatastoreContractStore,
+  DatastoreContractStoreWithCounts,
+  DatastoreContractStoreWithFilters,
+  DatastoreContractStoreWithFlat,
+  DatastoreContractStoreWithImports,
+  DatastoreContractStoreWithResolves,
+  DatastoreContractStoreWithSearches,
+  DatastoreContractStoreWithStreams,
+} from "./types";
 
 import { runCrudSuite } from "./suites/crud.suite";
 import { runQuerySuite } from "./suites/query.suite";
@@ -61,64 +70,62 @@ for (const adapter of adapters) {
   const setupResult = await adapter.setup();
 
   describe(adapter.name, () => {
-    const store: AbstractDatastore = setupResult.abstractDatastore;
-    const newStore: BaseStore<any> | undefined = setupResult.store;
-
-    const supports = (
-      capability: CapabilityName,
-      legacyFallback: boolean,
-    ): boolean => {
-      // Prefer runtime store capabilities when the Store API is available.
-      if (newStore?.capabilities) {
-        return hasCapability(newStore.capabilities, capability);
-      }
-      return legacyFallback;
-    };
+    const store: DatastoreContractStore = setupResult.store;
 
     afterAll(async () => {
       await adapter.teardown();
     });
 
     beforeEach(async () => {
-      await adapter.clearAll(store);
+      await adapter.clearAll();
     });
 
-    // ─── Required suites (all adapters) ────────────────────────────────────
+    /** Suite gating — uses runtime capability descriptor exposed by each Store implementation. */
+    const supports = (capability: CapabilityName): boolean =>
+      hasCapability(store.capabilities, capability);
+
     runCrudSuite(() => store);
     runQuerySuite(() => store);
 
-    // ─── Optional suites (capability-gated) ────────────────────────────────
-    if (supports("counts", adapter.capabilities.countDocuments)) {
-      runCountSuite(() => store);
+    if (supports("counts")) {
+      runCountSuite(() => store as unknown as DatastoreContractStoreWithCounts);
     }
 
-    if (
-      supports(
-        "flatResultSet",
-        adapter.capabilities.findDocumentsAsFlatResultSet,
-      )
-    ) {
-      runFlatResultSetSuite(() => store);
+    if (supports("flatResultSet")) {
+      runFlatResultSetSuite(
+        () => store as unknown as DatastoreContractStoreWithFlat,
+      );
     }
 
-    if (supports("imports", adapter.capabilities.importDocuments)) {
-      runImportSuite(() => store, createSourceOxigraphStore);
+    if (supports("imports")) {
+      runImportSuite(
+        () => store as unknown as DatastoreContractStoreWithImports,
+        createSourceOxigraphStore,
+      );
     }
 
-    if (supports("resolves", adapter.capabilities.getClasses)) {
-      runClassesSuite(() => store);
+    if (supports("resolves")) {
+      runClassesSuite(
+        () => store as unknown as DatastoreContractStoreWithResolves,
+      );
     }
 
-    if (supports("streams", adapter.capabilities.iterables)) {
-      runIterableSuite(() => store);
+    if (supports("streams")) {
+      runIterableSuite(
+        () => store as unknown as DatastoreContractStoreWithStreams,
+      );
     }
 
-    if (supports("searches", adapter.capabilities.findDocumentsByLabel)) {
-      runFindByLabelSuite(() => store);
+    if (supports("searches")) {
+      runFindByLabelSuite(
+        () => store as unknown as DatastoreContractStoreWithSearches,
+      );
     }
 
-    if (supports("filters", adapter.capabilities.filterTyped)) {
-      runTypedFilterSuite(() => store);
+    if (supports("filters")) {
+      runTypedFilterSuite(
+        () => store as unknown as DatastoreContractStoreWithFilters,
+      );
     }
   });
 }

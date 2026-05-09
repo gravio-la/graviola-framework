@@ -19,14 +19,10 @@
  * `@synapsenwerkstatt/prisma-bun-sqlite-adapter`; PostgreSQL `@prisma/adapter-pg`; MySQL/MariaDB
  * `@prisma/adapter-mariadb`. MongoDB is not supported on Prisma ORM 7 — use Prisma 6 for Mongo.
  *
- * Note: Not all operations are supported by Prisma:
- *   - countDocuments: supported
- *   - findDocumentsByLabel: not implemented in prisma-db-impl
- *   - getClasses: not applicable to relational stores
- *   - importDocuments: supported via loadDocument loop
- *   - iterables: not implemented
+ * Note: The Prisma Store only advertises wired capabilities (`@graviola/prisma-db-impl`).
+ * Optional suites (label search, streams, typed graph filters, …) are skipped when the runtime
+ * `capabilities` descriptor does not expose the corresponding flags.
  */
-import type { AbstractDatastore } from "@graviola/edb-global-types";
 import { initPrismaDatastorePair } from "@graviola/prisma-db-impl";
 import { extendSchemaShortcut } from "@graviola/json-schema-utils";
 import type { JSONSchema7 } from "json-schema";
@@ -37,7 +33,7 @@ import {
   BASE_IRI,
   primaryFields,
 } from "../schema/testSchema";
-import type { DatastoreAdapter } from "../types";
+import type { DatastoreAdapter, DatastoreContractStore } from "../types";
 import {
   databaseUrlToProvider,
   getInstalledPrismaMajorVersion,
@@ -142,21 +138,6 @@ export function createPrismaAdapter(
   return {
     name,
 
-    capabilities: {
-      crud: true,
-      listDocuments: true,
-      findDocuments: true,
-      countDocuments: true,
-      findDocumentsByLabel: false,
-      findDocumentsByAuthorityIRI: false,
-      findDocumentsAsFlatResultSet: true,
-      getClasses: false,
-      importDocuments: true,
-      iterables: false,
-      filterTyped: true,
-      findEntityByTypeName: false,
-    },
-
     setup: async () => {
       process.env.DATABASE_URL = databaseUrl;
       // Regenerate schema + client for this URL’s provider (multiple Prisma adapters per run).
@@ -166,7 +147,7 @@ export function createPrismaAdapter(
 
       await prismaClient.$connect();
 
-      const { store, abstractDatastore } = initPrismaDatastorePair(
+      const { store } = initPrismaDatastorePair(
         prismaClient,
         extendedSchema,
         primaryFields,
@@ -179,10 +160,12 @@ export function createPrismaAdapter(
         },
       );
 
-      return { store, abstractDatastore };
+      return {
+        store: store as DatastoreContractStore,
+      };
     },
 
-    clearAll: async (_store: AbstractDatastore) => {
+    clearAll: async () => {
       await clearPrismaData(prismaClient);
     },
 
