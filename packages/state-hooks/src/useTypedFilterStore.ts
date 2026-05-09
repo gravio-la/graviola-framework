@@ -8,7 +8,7 @@
  * All operations use queryClient for proper cache integration.
  */
 
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { UseQueryOptions } from "@tanstack/react-query";
 import type {
@@ -65,6 +65,13 @@ import { useDataStore } from "./useDataStore";
 export function useTypedFilterStore<T = any>(typeName: string) {
   const { dataStore, ready } = useDataStore();
   const queryClient = useQueryClient();
+  const typeIRI = useMemo(
+    () =>
+      dataStore
+        ? dataStore.typeNameToTypeIRI(typeName)
+        : `__pending__:${typeName}`,
+    [dataStore, typeName],
+  );
 
   /**
    * React Query hook for loading a single document with type-safe filters
@@ -81,7 +88,7 @@ export function useTypedFilterStore<T = any>(typeName: string) {
       queryOptions?: Omit<UseQueryOptions<T, Error>, "queryKey" | "queryFn">,
     ) => {
       return useQuery<T, Error>({
-        queryKey: ["typedDocument", typeName, entityIRI, options],
+        queryKey: ["typedDocument", typeIRI, entityIRI, options],
         queryFn: async () => {
           if (!entityIRI || !ready) {
             throw new Error(
@@ -108,7 +115,7 @@ export function useTypedFilterStore<T = any>(typeName: string) {
         ...queryOptions,
       });
     },
-    [typeName, dataStore, ready],
+    [typeIRI, typeName, dataStore, ready],
   );
 
   /**
@@ -124,7 +131,7 @@ export function useTypedFilterStore<T = any>(typeName: string) {
       queryOptions?: Omit<UseQueryOptions<T[], Error>, "queryKey" | "queryFn">,
     ) => {
       return useQuery<T[], Error>({
-        queryKey: ["typedDocuments", typeName, options],
+        queryKey: ["typedDocuments", typeIRI, options],
         queryFn: async () => {
           if (!ready) {
             throw new Error("datastore must be ready");
@@ -148,7 +155,7 @@ export function useTypedFilterStore<T = any>(typeName: string) {
         ...queryOptions,
       });
     },
-    [typeName, dataStore, ready],
+    [typeIRI, typeName, dataStore, ready],
   );
 
   /**
@@ -173,7 +180,7 @@ export function useTypedFilterStore<T = any>(typeName: string) {
       }
 
       return queryClient.fetchQuery({
-        queryKey: ["typedDocument", typeName, entityIRI, options],
+        queryKey: ["typedDocument", typeIRI, entityIRI, options],
         queryFn: async () => {
           const result = await dataStore.filterTypedDocument<T>(
             typeName,
@@ -186,7 +193,7 @@ export function useTypedFilterStore<T = any>(typeName: string) {
         staleTime: 0,
       });
     },
-    [queryClient, typeName, dataStore, ready],
+    [queryClient, typeIRI, typeName, dataStore, ready],
   );
 
   /**
@@ -207,7 +214,7 @@ export function useTypedFilterStore<T = any>(typeName: string) {
       }
 
       return queryClient.fetchQuery({
-        queryKey: ["typedDocuments", typeName, options],
+        queryKey: ["typedDocuments", typeIRI, options],
         queryFn: async () => {
           const results = await dataStore.filterTypedDocuments<T>(
             typeName,
@@ -219,7 +226,7 @@ export function useTypedFilterStore<T = any>(typeName: string) {
         staleTime: 0,
       });
     },
-    [queryClient, typeName, dataStore, ready],
+    [queryClient, typeIRI, typeName, dataStore, ready],
   );
 
   return {

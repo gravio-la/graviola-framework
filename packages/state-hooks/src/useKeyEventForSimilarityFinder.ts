@@ -2,7 +2,8 @@ import React, { useCallback } from "react";
 import { useSimilarityFinderState } from "./useSimilarityFinderState";
 
 /**
- * a hook that returns a function that can be used to handle key events to cycle through the elements of the similarity finder
+ * Returns a handler for **keydown** on list rows (or inputs): cycles results on arrows/page keys,
+ * accepts on Enter. Uses keydown so the browser does not move caret / focus before we preventDefault.
  */
 export const useKeyEventForSimilarityFinder = (
   onEnter?: (selectedIndex: number) => void,
@@ -17,7 +18,7 @@ export const useKeyEventForSimilarityFinder = (
   );
 
   return useCallback(
-    (ev: React.KeyboardEvent<HTMLInputElement>) => {
+    (ev: React.KeyboardEvent) => {
       if (ev.key === "ArrowUp" || ev.key === "ArrowDown") {
         ev.preventDefault();
         ev.stopPropagation();

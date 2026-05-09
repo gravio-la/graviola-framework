@@ -143,7 +143,7 @@ export const useCRUDWithQueryClient: UseCRUDHook<
   const queryClient = useQueryClient();
 
   const loadQuery = useQuery({
-    queryKey: ["entity", entityIRI, typeIRI, loadQueryKey],
+    queryKey: ["entity", typeIRI, entityIRI, "data", loadQueryKey],
     queryFn: async () => {
       if (!entityIRI || !ready) return null;
       const typeName = dataStore.typeIRItoTypeName(typeIRI);
@@ -165,12 +165,8 @@ export const useCRUDWithQueryClient: UseCRUDHook<
       return await dataStore.removeDocument(typeName, entityIRI);
     },
     onSuccess: async () => {
-      const typeName = dataStore.typeIRItoTypeName(typeIRI);
-      queryClient.invalidateQueries({ queryKey: ["type", typeIRI] });
-      queryClient.invalidateQueries({ queryKey: ["list", typeName] });
-      queryClient.invalidateQueries({
-        queryKey: ["type", typeIRI, "list"],
-      });
+      await queryClient.invalidateQueries({ queryKey: ["entity", typeIRI] });
+      await queryClient.invalidateQueries({ queryKey: ["type", typeIRI] });
     },
   });
 
@@ -200,23 +196,14 @@ export const useCRUDWithQueryClient: UseCRUDHook<
         draftDocuments: draftDocumentsStored,
       };
     },
-    onSuccess: async (result) => {
-      const typeName = dataStore.typeIRItoTypeName(typeIRI);
-      await queryClient.invalidateQueries({ queryKey: ["entity", entityIRI] });
-      await queryClient.invalidateQueries({ queryKey: ["list", typeName] });
-      await queryClient.invalidateQueries({
-        queryKey: ["type", typeIRI, "list"],
-      });
-      for (const draftDocument of result.draftDocuments) {
-        await queryClient.invalidateQueries({
-          queryKey: ["entity", draftDocument["@id"]],
-        });
-      }
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["entity", typeIRI] });
+      await queryClient.invalidateQueries({ queryKey: ["type", typeIRI] });
     },
   });
 
   const existsQuery = useQuery({
-    queryKey: ["entity", entityIRI, "exists"],
+    queryKey: ["entity", typeIRI, entityIRI, "exists"],
     queryFn: async () => {
       if (!entityIRI || !typeIRI || !ready) return null;
       const typeName = dataStore.typeIRItoTypeName(typeIRI);
@@ -230,7 +217,7 @@ export const useCRUDWithQueryClient: UseCRUDHook<
   const loadEntity = useCallback(
     async (entityIRI: string, typeIRI: string) => {
       return queryClient.fetchQuery({
-        queryKey: ["entity", entityIRI, typeIRI, loadQueryKey],
+        queryKey: ["entity", typeIRI, entityIRI, "data", loadQueryKey],
         queryFn: async () => {
           const typeName = dataStore.typeIRItoTypeName(typeIRI);
           const result = await dataStore.loadDocument(typeName, entityIRI);
@@ -239,7 +226,7 @@ export const useCRUDWithQueryClient: UseCRUDHook<
         staleTime: 0,
       });
     },
-    [loadQueryKey, dataStore.loadDocument, queryClient],
+    [loadQueryKey, dataStore, queryClient],
   );
 
   return {

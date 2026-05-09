@@ -35,14 +35,12 @@ flowchart TD
 ### Package Relationships
 
 - **Dependencies**:
-
   - `@graviola/edb-core-utils`: Provides utility functions
   - `@graviola/json-schema-utils`: Provides utilities for working with JSON Schema
   - `@graviola/jsonld-utils`: Provides utilities for working with JSON-LD data
   - `lodash-es`: Provides utility functions
 
 - **Peer Dependencies**:
-
   - `@tanstack/react-query`: For data fetching and caching
   - `zustand`: For state management
   - `react-redux`: For Redux integration
@@ -82,15 +80,16 @@ yarn add @graviola/edb-state-hooks
 
 ### Navigation and Routing
 
-- **useModifiedRouter**: Hook for enhanced router functionality
+- **useDispatchIntent** / **GraviolaIntentBusProvider**: Semantic navigation and lifecycle intents (edit/show/create/list entities, saved/failed toasts via host handlers).
+- **usePathname** / **PathnameProvider**: Current path for nav highlighting (defaults to `window.location`; override with router integration).
+- **useGraviolaModal** / **ModalRegistryProvider**: Stable NiceModal ids (`MODAL_ENTITY_DETAIL`, `MODAL_EDIT_ENTITY`) instead of wiring concrete modal components through `AdbContext`.
 - **useLocalHistory**: Hook for managing local navigation history
 
 ### UI State Management
 
-- **useRightDrawerState**: Hook for managing the state of the right drawer
 - **useGlobalSearch**: Hook for global search functionality
 - **useSimilarityFinderState**: Hook for managing similarity finder state
-- **useModalRegistry**: Hook for managing modal state
+- **useModalRegistry**: Low-level NiceModal helper (still exported; prefer **useGraviolaModal** for cross-package modal triggers)
 
 ### Context and Configuration
 
@@ -257,38 +256,6 @@ const SearchComponent = () => {
 };
 ```
 
-### Right Drawer State
-
-```tsx
-import { useRightDrawerState } from "@graviola/edb-state-hooks";
-import React from "react";
-
-const DrawerComponent = () => {
-  // Use the right drawer state hook
-  const { open, width, setOpen, setWidth } = useRightDrawerState();
-
-  return (
-    <div>
-      <button onClick={() => setOpen(!open)}>
-        {open ? "Close Drawer" : "Open Drawer"}
-      </button>
-      {open && (
-        <div style={{ width }}>
-          <input
-            type="range"
-            min="200"
-            max="600"
-            value={width}
-            onChange={(e) => setWidth(Number(e.target.value))}
-          />
-          <div>Drawer Content</div>
-        </div>
-      )}
-    </div>
-  );
-};
-```
-
 ## Internal Usage
 
 This package is used throughout the Graviola framework for state management and data operations. Here are some examples from the exhibition-live app:
@@ -299,8 +266,7 @@ import {
   useAdbContext,
   useFormEditor,
   useGlobalSearch,
-  useModifiedRouter,
-  useRightDrawerState,
+  useDispatchIntent,
   useExtendedSchema,
   useFormDataStore,
   useCRUDWithQueryClient,
@@ -319,8 +285,10 @@ const TypedForm = ({ typeName, entityIRI, classIRI }) => {
   });
 
   const { search: searchText } = useGlobalSearch();
-  const router = useModifiedRouter();
+  const dispatchIntent = useDispatchIntent();
   const loadedSchema = useExtendedSchema({ typeName });
+
+  // Example: dispatchIntent({ kind: "navigate", href: "/path" });
 
   // ... rest of the component
 };

@@ -23,7 +23,7 @@
     "depcheck": "depcheck",
     "build": "tsup",
     "dev": "tsup --watch",
-    "lint": "eslint src/**/*.ts",
+    "lint": "eslint src/**/*.{ts,tsx}",
     "lint-fix": "eslint --fix src/**/*.ts",
     "test": "jest",
     "test:watch": "jest --watch --color",
@@ -35,7 +35,6 @@
   "devDependencies": {
     "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-global-types": "workspace:*",
-    "@graviola/semantic-jsonform-types": "workspace:*",
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
     "@types/lodash-es": "^4.17.12",
@@ -57,7 +56,8 @@
     "lodash-es": "catalog:",
     "@graviola/edb-core-utils": "workspace:*",
     "@graviola/json-schema-utils": "workspace:*",
-    "@graviola/jsonld-utils": "workspace:*"
+    "@graviola/jsonld-utils": "workspace:*",
+    "@graviola/semantic-jsonform-types": "workspace:*"
   },
   "eslintConfig": {
     "root": true,

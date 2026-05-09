@@ -149,7 +149,11 @@ export function useAnyOfFilterStore<
 
           // Query with the same where clause - it will return only entities of this type that match
           const allDocuments = await queryClient.fetchQuery({
-            queryKey: ["typedDocuments", typeName, options],
+            queryKey: [
+              "typedDocuments",
+              dataStore.typeNameToTypeIRI(typeName),
+              options,
+            ],
             queryFn: async () => {
               return await dataStore.filterTypedDocuments!(typeName, options);
             },

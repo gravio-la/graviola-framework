@@ -1,9 +1,6 @@
 import { useGlobalSearch } from "./useGlobalSearch";
 import { useCallback, useState } from "react";
-import { useCRUDWithQueryClient } from "./useCRUDWithQueryClient";
 import type { JSONSchema7 } from "json-schema";
-import get from "lodash-es/get";
-import { useRightDrawerState } from "./useRightDrawerState";
 import { useAdbContext } from "./provider";
 
 export const useGlobalSearchWithHelper = (
@@ -29,8 +26,6 @@ export const useGlobalSearchWithHelper = (
     },
     [setSearchString, setSearch],
   );
-  const { keepMounted, setOpen } = useRightDrawerState();
-
   const handleMappedData = useCallback(
     (newData: any) => {
       onDataAccepted && onDataAccepted(newData);
@@ -42,17 +37,7 @@ export const useGlobalSearchWithHelper = (
     setTypeName(typeName);
     setPath(formsPath);
     setSearch(searchString || "");
-    if (keepMounted) setOpen(true);
-  }, [
-    searchString,
-    setSearch,
-    setTypeName,
-    typeName,
-    setPath,
-    formsPath,
-    keepMounted,
-    setOpen,
-  ]);
+  }, [searchString, setSearch, setTypeName, typeName, setPath, formsPath]);
 
   return {
     ...globalSearch,
