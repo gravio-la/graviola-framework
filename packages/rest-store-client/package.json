@@ -1,0 +1,74 @@
+{
+  "name": "@graviola/rest-store-client",
+  "version": "0.1.0",
+  "description": "HTTP client Stores (v0 legacy + v1 wire) for Graviola Store<R>",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": {
+        "import": "./dist/index.d.ts",
+        "require": "./dist/index.d.cts"
+      },
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./shim": {
+      "types": {
+        "import": "./dist/shim/index.d.ts",
+        "require": "./dist/shim/index.d.cts"
+      },
+      "import": "./dist/shim/index.js",
+      "require": "./dist/shim/index.cjs",
+      "default": "./dist/shim/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "spec",
+    "openapi",
+    "CHANGELOG.md",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup && bun run scripts/generate-openapi.ts",
+    "dev": "tsup --watch",
+    "generate:openapi": "bun run scripts/generate-openapi.ts",
+    "test": "bun test",
+    "lint": "eslint \"**/*.ts*\"",
+    "lint-fix": "eslint --fix \"**/*.ts*\"",
+    "depcheck": "depcheck",
+    "release": "bun publish --access public"
+  },
+  "dependencies": {
+    "@graviola/edb-core-types": "workspace:*",
+    "@graviola/edb-global-types": "workspace:*",
+    "@graviola/store-core": "workspace:*",
+    "@graviola/typed-query-types": "workspace:*",
+    "cross-fetch": "^4.0.0",
+    "ky": "1.14.3",
+    "qs": "^6.12.3"
+  },
+  "devDependencies": {
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*",
+    "eslint-config-edb": "workspace:*",
+    "typescript": "^5.8.2"
+  },
+  "eslintConfig": {
+    "root": true,
+    "ignorePatterns": ["dist/**"],
+    "extends": ["eslint-config-edb/strict"],
+    "overrides": [
+      {
+        "files": ["scripts/**/*.{ts,tsx}"],
+        "rules": {
+          "no-console": "off"
+        }
+      }
+    ]
+  }
+}
