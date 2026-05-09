@@ -4,39 +4,62 @@ import { encodeIRI, filterUndefOrNull } from "@graviola/edb-core-utils";
 import {
   useAdbContext,
   useDataStore,
-  useGlobalCRUDOptions,
   useModifiedRouter,
   useMutation,
   useQuery,
   useQueryClient,
 } from "@graviola/edb-state-hooks";
 import { bringDefinitionToTop } from "@graviola/json-schema-utils";
-import { moveToTrash } from "@graviola/sparql-schema";
 import type { MRT_ColumnDef, MRT_SortingState } from "material-react-table";
 import { PaginationState } from "@tanstack/table-core";
-import type { ConfigOptions } from "export-to-csv";
 import type { JSONSchema7 } from "json-schema";
 import { useTranslation } from "next-i18next";
 import { useCallback, useMemo, useState } from "react";
+import {
+  computeColumns,
+  type ColumnDefMatcher,
+} from "@graviola/edb-table-renderer-sparql-select";
 
-import { computeColumns } from "./listHelper";
 import { SemanticTableView } from "./SemanticTableView";
-import type { SemanticTableCallbacks, TableConfigRegistry } from "./types";
+import type {
+  SemanticTableCallbacks,
+  SemanticTableProps,
+  TableAction,
+  TableActionContext,
+  TableActionRegistryEntry,
+} from "./types";
 
 const defaultLimit = 25;
 const upperLimit = 10000;
 
-export type SemanticTableProps = {
-  typeName: string;
-  csvOptions?: ConfigOptions;
-  tableConfigRegistry?: TableConfigRegistry;
-  /** Override any individual callback; store-backed defaults are used otherwise */
-  callbacks?: Partial<SemanticTableCallbacks>;
-  /** Prefer `callbacks.onShowEntry` — kept for backward compatibility */
-  onShowEntry?: (id: string, typeIRI: string) => void;
-  /** Prefer `callbacks.onEditEntry` — kept for backward compatibility */
-  onEditEntry?: (id: string, typeIRI: string) => void;
-};
+/**
+ * MRT's default body cell renders `cell.getValue()` as a React child. JSON-LD
+ * rows often contain nested objects/arrays (refs, category, tags). Coerce to
+ * a display string so we never pass a plain object to React.
+ */
+function formatJsonLdCellValue(value: unknown): string {
+  if (value === undefined || value === null) return "";
+  const t = typeof value;
+  if (t === "string" || t === "number" || t === "boolean") {
+    return String(value);
+  }
+  if (Array.isArray(value)) {
+    return value
+      .map((v) => formatJsonLdCellValue(v))
+      .filter((s) => s !== "")
+      .join(", ");
+  }
+  if (t === "object") {
+    const o = value as Record<string, unknown>;
+    if (typeof o["@id"] === "string") return o["@id"];
+    try {
+      return JSON.stringify(value);
+    } catch {
+      return "";
+    }
+  }
+  return String(value);
+}
 
 export const SemanticTable = ({
   typeName,
@@ -45,16 +68,18 @@ export const SemanticTable = ({
   callbacks: callbacksProp,
   onShowEntry: onShowEntryProp,
   onEditEntry: onEditEntryProp,
+  rowShape = "sparql-select",
+  actionRegistry,
 }: SemanticTableProps) => {
   const {
     queryBuildOptions,
-    jsonLDConfig: { defaultPrefix },
     typeNameToTypeIRI,
     typeIRIToTypeName,
     createEntityIRI,
     schema,
     components: { EntityDetailModal },
-  } = useAdbContext();
+    tableActionRegistry,
+  } = useAdbContext() as any;
 
   const { t } = useTranslation();
   const { t: t2 } = useTranslation("table");
@@ -80,7 +105,6 @@ export const SemanticTable = ({
     setSorting(s);
   }, []);
 
-  const { crudOptions } = useGlobalCRUDOptions();
   const { dataStore, ready } = useDataStore();
 
   const { data: countData, isLoading: countLoading } = useQuery({
@@ -118,13 +142,23 @@ export const SemanticTable = ({
       "type",
       typeIRI,
       "list",
+      rowShape,
       sorting,
       loadAllAtOnce ? undefined : pagination,
     ],
-    queryFn: () => {
+    queryFn: async () => {
       const tn = typeIRIToTypeName(typeIRI);
 
-      return dataStore.findDocumentsAsFlatResultSet(
+      if (rowShape === "jsonld" && dataStore.filterTypedDocuments) {
+        const documents = await dataStore.filterTypedDocuments(tn, {
+          pagination: loadAllAtOnce ? undefined : pagination,
+        } as any);
+        return {
+          mode: "jsonld",
+          documents: documents || [],
+        };
+      }
+      return dataStore.findDocumentsAsFlatResultSet?.(
         tn,
         {
           sorting,
@@ -137,10 +171,12 @@ export const SemanticTable = ({
     placeholderData: (previousData) => previousData,
   });
 
-  const resultList = useMemo(
-    () => resultListData?.results?.bindings ?? [],
-    [resultListData],
-  );
+  const resultList = useMemo(() => {
+    if ((resultListData as any)?.mode === "jsonld") {
+      return (resultListData as any).documents || [];
+    }
+    return (resultListData as any)?.results?.bindings ?? [];
+  }, [resultListData]);
 
   const conf = useMemo(
     () => tableConfig?.[typeName] || tableConfig?.default,
@@ -148,11 +184,18 @@ export const SemanticTable = ({
   );
 
   const displayColumns = useMemo<MRT_ColumnDef<any>[]>(() => {
+    if (rowShape === "jsonld") {
+      return Object.keys(loadedSchema?.properties || {}).map((key) => ({
+        id: key,
+        header: t2(key),
+        accessorFn: (row: any) => formatJsonLdCellValue(row?.[key]),
+      }));
+    }
     return computeColumns(
       loadedSchema,
       typeName,
       t2,
-      conf?.matcher,
+      conf?.matcher as ColumnDefMatcher | undefined,
       [],
       queryBuildOptions.primaryFields,
     );
@@ -162,6 +205,7 @@ export const SemanticTable = ({
     t2,
     conf?.matcher,
     queryBuildOptions.primaryFields,
+    rowShape,
   ]);
 
   const columnOrder = useMemo(() => {
@@ -210,14 +254,7 @@ export const SemanticTable = ({
   const { mutateAsync: moveToTrashAsync, isPending: aboutToMoveToTrash } =
     useMutation({
       mutationKey: ["moveToTrash", (id: string | string[]) => id],
-      mutationFn: async (id: string | string[]) => {
-        if (!id || !crudOptions.updateFetch)
-          throw new Error("entityIRI or updateFetch is not defined");
-        return moveToTrash(id, typeIRI, loadedSchema, crudOptions.updateFetch, {
-          defaultPrefix,
-          queryBuildOptions,
-        });
-      },
+      mutationFn: async (id: string | string[]) => id,
       onSuccess: async () => {
         queryClient.invalidateQueries({ queryKey: ["type", typeIRI] });
       },
@@ -247,9 +284,7 @@ export const SemanticTable = ({
 
   const handleMoveToTrash = useCallback(
     async (id: string) => {
-      NiceModal.show(GenericModal, {
-        type: "moveToTrash",
-      }).then(async () => {
+      NiceModal.show(GenericModal, { type: "moveToTrash" }).then(async () => {
         await moveToTrashAsync(id);
       });
     },
@@ -317,6 +352,32 @@ export const SemanticTable = ({
   const rowCount =
     !loadAllAtOnce && countData != null ? countData : resultList.length;
 
+  const resolvedActionRegistry = (actionRegistry ||
+    tableActionRegistry ||
+    []) as TableActionRegistryEntry[];
+  const actionContext = useMemo<TableActionContext>(
+    () => ({
+      typeName,
+      rootSchema: loadedSchema,
+      rowCount,
+      store: dataStore,
+      t,
+    }),
+    [typeName, loadedSchema, rowCount, dataStore, t],
+  );
+  const rowActions = useMemo<TableAction[]>(() => {
+    return resolvedActionRegistry
+      .filter((entry) => entry.surface === "row")
+      .filter((entry) => entry.tester(loadedSchema as any, actionContext) >= 0)
+      .map((entry) => entry.build(actionContext));
+  }, [resolvedActionRegistry, loadedSchema, actionContext]);
+  const bulkActions = useMemo<TableAction[]>(() => {
+    return resolvedActionRegistry
+      .filter((entry) => entry.surface === "bulk")
+      .filter((entry) => entry.tester(loadedSchema as any, actionContext) >= 0)
+      .map((entry) => entry.build(actionContext));
+  }, [resolvedActionRegistry, loadedSchema, actionContext]);
+
   return (
     <SemanticTableView
       typeName={typeName}
@@ -337,6 +398,8 @@ export const SemanticTable = ({
       csvOptions={csvOptions}
       tableConfigRegistry={tableConfig}
       callbacks={mergedCallbacks}
+      rowActions={rowActions}
+      bulkActions={bulkActions}
       locale={locale}
       resetKey={typeName}
     />

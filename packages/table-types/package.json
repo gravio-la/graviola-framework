@@ -1,0 +1,47 @@
+{
+  "name": "@graviola/edb-table-types",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "CHANGELOG.md"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint src/**/*.{ts,tsx}",
+    "lint-fix": "eslint --fix src/**/*.{ts,tsx}",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@jsonforms/core": "catalog:jsonforms",
+    "@types/json-schema": "catalog:",
+    "lodash-es": "catalog:"
+  },
+  "devDependencies": {
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*",
+    "@types/lodash-es": "^4.17.12",
+    "eslint-config-edb": "workspace:*",
+    "tsup": "^8.0.0",
+    "typescript": "^5.8.2"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "eslint-config-edb"
+    ]
+  }
+}

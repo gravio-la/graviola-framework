@@ -1,8 +1,12 @@
 import type { PaginationState, VisibilityState } from "@tanstack/table-core";
 import type { ConfigOptions } from "export-to-csv";
 import type { MRT_ColumnDef, MRT_SortingState } from "material-react-table";
-
-import { ColumnDefMatcher } from "./listHelper";
+import type { ReactNode } from "react";
+import type {
+  TableColumnRegistry,
+  TableUiSchema,
+} from "@graviola/edb-table-types";
+import type { ColumnDefMatcher } from "@graviola/edb-table-renderer-sparql-select";
 
 export type ListConfigType = {
   columnVisibility: VisibilityState;
@@ -40,6 +44,38 @@ export type SemanticTableCallbacks = {
   onToggleLoadAll?: () => void;
 };
 
+export type TableAction = {
+  id: string;
+  label: string;
+  icon?: ReactNode;
+  destructive?: boolean;
+  run: (
+    entities: { entityIRI: string; typeIRI?: string; data?: unknown }[],
+  ) => Promise<void> | void;
+};
+
+export type TableActionContext = {
+  typeName: string;
+  rootSchema: any;
+  rowCount: number;
+  store: unknown;
+  t?: (key: string, options?: any) => string;
+};
+
+export type TableActionTester = (
+  schema: any,
+  context: TableActionContext,
+) => number;
+
+export type TableActionRegistryEntry = {
+  surface: "row" | "bulk";
+  name?: string;
+  tester: TableActionTester;
+  build: (ctx: TableActionContext) => TableAction;
+};
+
+export type TableActionRegistry = TableActionRegistryEntry[];
+
 export type SemanticTableViewProps = {
   typeName: string;
   /** Used in row callbacks; defaults to empty string if omitted (callers should pass when using callbacks). */
@@ -70,4 +106,22 @@ export type SemanticTableViewProps = {
    * When this value changes, the table internal state is reset (e.g. pass `typeName`).
    */
   resetKey?: string;
+  rowActions?: TableAction[];
+  bulkActions?: TableAction[];
+};
+
+export type SemanticTableDataMode = "sparql-select" | "jsonld";
+
+export type SemanticTableProps = {
+  typeName: string;
+  csvOptions?: ConfigOptions;
+  tableConfigRegistry?: TableConfigRegistry;
+  callbacks?: Partial<SemanticTableCallbacks>;
+  onShowEntry?: (id: string, typeIRI: string) => void;
+  onEditEntry?: (id: string, typeIRI: string) => void;
+  rowShape?: SemanticTableDataMode;
+  filterMode?: "client" | "server";
+  tableUiSchema?: TableUiSchema;
+  columnRegistry?: TableColumnRegistry;
+  actionRegistry?: TableActionRegistry;
 };

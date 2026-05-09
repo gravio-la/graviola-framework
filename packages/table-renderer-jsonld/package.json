@@ -1,0 +1,57 @@
+{
+  "name": "@graviola/edb-table-renderer-jsonld",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "CHANGELOG.md"],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint src/**/*.{ts,tsx}",
+    "lint-fix": "eslint --fix src/**/*.{ts,tsx}",
+    "test": "bun test"
+  },
+  "peerDependencies": {
+    "@mui/material": "catalog:mui",
+    "@mui/icons-material": "catalog:mui",
+    "material-react-table": "^2.0.0",
+    "@jsonforms/core": "catalog:jsonforms",
+    "react": "catalog:"
+  },
+  "dependencies": {
+    "@graviola/edb-table-types": "workspace:*",
+    "@graviola/edb-table-mrt-adapter": "workspace:*",
+    "@graviola/edb-detail-renderer-core": "workspace:*",
+    "@graviola/edb-detail-renderer": "workspace:*",
+    "@graviola/jsonld-utils": "workspace:*",
+    "@graviola/edb-core-utils": "workspace:*",
+    "@graviola/edb-ui-utils": "workspace:*",
+    "@graviola/json-schema-utils": "workspace:*",
+    "lodash-es": "catalog:",
+    "next-i18next": "^15"
+  },
+  "devDependencies": {
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*",
+    "@types/react": "catalog:",
+    "@types/json-schema": "catalog:",
+    "eslint-config-edb": "workspace:*",
+    "tsup": "^8.0.0",
+    "typescript": "^5.8.2"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": ["eslint-config-edb"]
+  }
+}

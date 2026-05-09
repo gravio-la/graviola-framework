@@ -79,7 +79,9 @@ function resolveInitialColumnVisibility(
 
 function extractEntityId(rowOriginal: any): string | undefined {
   return (
-    rowOriginal?.entity?.value ?? rowOriginal?.originalValue?.entity?.value
+    rowOriginal?.entity?.value ??
+    rowOriginal?.originalValue?.entity?.value ??
+    rowOriginal?.["@id"]
   );
 }
 
@@ -102,6 +104,8 @@ export function SemanticTableView({
   csvOptions,
   tableConfigRegistry: tableConfig,
   callbacks = {},
+  rowActions = [],
+  bulkActions = [],
   locale = "en",
   resetKey,
 }: SemanticTableViewProps) {
@@ -156,7 +160,7 @@ export function SemanticTableView({
         Object.fromEntries(
           Object.entries(entity).map(([k, v]) => [
             k,
-            String((v as any)?.value || ""),
+            String((v as any)?.value ?? v ?? ""),
           ]),
         ),
       ),
@@ -216,9 +220,15 @@ export function SemanticTableView({
   );
 
   const hasRowActions = Boolean(
-    onShowEntry || onEditEntry || onRemoveEntry || onMoveToTrashEntry,
+    onShowEntry ||
+    onEditEntry ||
+    onRemoveEntry ||
+    onMoveToTrashEntry ||
+    rowActions.length > 0,
   );
-  const hasBulkActions = Boolean(onRemoveSelected || onMoveToTrashSelected);
+  const hasBulkActions = Boolean(
+    onRemoveSelected || onMoveToTrashSelected || bulkActions.length > 0,
+  );
 
   const table = useMaterialReactTable({
     columns,
@@ -340,6 +350,25 @@ export function SemanticTableView({
                   </IconButton>
                 </Tooltip>
               ) : null}
+              {bulkActions.map((action) => (
+                <Tooltip key={action.id} title={action.label}>
+                  <IconButton
+                    onClick={() =>
+                      void action.run(
+                        selectedRows.map((r) => ({
+                          entityIRI: r.id,
+                          typeIRI,
+                          data: r.original,
+                        })),
+                      )
+                    }
+                    color={action.destructive ? "error" : "default"}
+                    size="small"
+                  >
+                    {action.icon || <OpenInNew />}
+                  </IconButton>
+                </Tooltip>
+              ))}
             </>
           ) : null}
 
@@ -392,6 +421,7 @@ export function SemanticTableView({
     getRowId: (row) =>
       (row as any)?.entity?.value ||
       (row as any)?.originalValue?.entity?.value ||
+      (row as any)?.["@id"] ||
       `urn:${uuidv4()}`,
     displayColumnDefOptions: {
       "mrt-row-actions": {
@@ -457,6 +487,28 @@ export function SemanticTableView({
               </MenuItem>,
             );
           }
+          if (rowActions.length > 0) {
+            rowActions.forEach((action) => {
+              items.push(
+                <MenuItem
+                  key={action.id}
+                  onClick={() =>
+                    void action.run([
+                      {
+                        entityIRI: row.id,
+                        typeIRI,
+                        data: row.original,
+                      },
+                    ])
+                  }
+                  sx={{ minWidth: 200 }}
+                >
+                  <ListItemIcon>{action.icon || <OpenInNew />}</ListItemIcon>
+                  {action.label}
+                </MenuItem>,
+              );
+            });
+          }
           return items;
         }
       : undefined,
@@ -506,6 +558,7 @@ export function SemanticTableView({
     <Box
       sx={{
         flex: 1,
+        height: "100%",
         minHeight: 0,
         overflow: "hidden",
         position: "relative",

@@ -1,6 +1,6 @@
 {
-  "name": "@graviola/edb-table-components",
-  "version": "1.4.9",
+  "name": "@graviola/edb-table-renderer-sparql-select",
+  "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -13,73 +13,48 @@
       "default": "./dist/index.js"
     }
   },
-  "files": [
-    "dist",
-    "CHANGELOG.md"
-  ],
+  "files": ["dist", "CHANGELOG.md"],
   "sideEffects": false,
   "scripts": {
-    "depcheck": "depcheck",
     "build": "tsup",
     "dev": "tsup --watch",
     "lint": "eslint src/**/*.{ts,tsx}",
     "lint-fix": "eslint --fix src/**/*.{ts,tsx}",
-    "release": "bun publish --access public",
-    "pack-tarball": "bun pm pack"
+    "test": "bun test"
   },
   "peerDependencies": {
     "@mui/material": "catalog:mui",
     "@mui/icons-material": "catalog:mui",
-    "@ebay/nice-modal-react": "^1.2",
     "material-react-table": "^2.0.0",
     "@jsonforms/core": "catalog:jsonforms",
-    "notistack": "^3",
     "react": "catalog:",
-    "@graviola/edb-table-renderer-sparql-select": "workspace:*",
-    "@graviola/edb-table-renderer-jsonld": "workspace:*"
-  },
-  "peerDependenciesMeta": {
-    "@graviola/edb-table-renderer-sparql-select": {
-      "optional": true
-    },
-    "@graviola/edb-table-renderer-jsonld": {
-      "optional": true
-    }
+    "@ebay/nice-modal-react": "^1.2"
   },
   "dependencies": {
-    "@graviola/edb-state-hooks": "workspace:*",
     "@graviola/edb-table-types": "workspace:*",
     "@graviola/edb-table-mrt-adapter": "workspace:*",
-    "@graviola/edb-table-renderer-sparql-select": "workspace:*",
-    "@graviola/edb-table-renderer-jsonld": "workspace:*",
-    "@graviola/edb-core-utils": "workspace:*",
-    "@graviola/edb-ui-utils": "workspace:*",
-    "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-basic-components": "workspace:*",
+    "@graviola/edb-core-types": "workspace:*",
+    "@graviola/edb-core-utils": "workspace:*",
+    "@graviola/edb-state-hooks": "workspace:*",
     "@graviola/json-schema-utils": "workspace:*",
-    "export-to-csv": "^1.2.1",
-    "next-i18next": "^15",
+    "@graviola/edb-data-mapping": "workspace:*",
     "lodash-es": "catalog:",
-    "uuid": "^9"
+    "next-i18next": "^15"
   },
   "devDependencies": {
-    "i18next": "^23.7.7",
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
-    "@ebay/nice-modal-react": "^1.2",
     "@types/react": "catalog:",
+    "@types/json-schema": "catalog:",
     "@types/lodash-es": "^4.17.12",
-    "@tanstack/table-core": "^8",
-    "notistack": "^3",
     "eslint-config-edb": "workspace:*",
     "tsup": "^8.0.0",
     "typescript": "^5.8.2",
-    "@types/json-schema": "catalog:"
+    "i18next": "^23.7.7"
   },
   "eslintConfig": {
     "root": true,
-    "extends": [
-      "eslint-config-edb"
-    ]
+    "extends": ["eslint-config-edb"]
   }
 }
