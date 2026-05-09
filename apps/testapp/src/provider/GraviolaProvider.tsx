@@ -129,30 +129,30 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
         uischemata={uischemata}
         tableActionRegistry={tableActionRegistry}
       >
-        <NiceModal.Provider>
-          <GraviolaLoungeProviders>
-            <LocalOxigraphStoreProvider
-              key={storageKey}
-              endpoint={endpoint}
-              defaultLimit={10}
-              enableInversePropertiesFeature={true}
-              initialData={initialData ?? ""}
-              localPersistence={{
-                enabled: true,
-                restoreOnLoad: true,
-                debounceMS: 5000,
-                storageKey,
-              }}
-              loader={<CircularProgress />}
-            >
+        <GraviolaLoungeProviders>
+          <LocalOxigraphStoreProvider
+            key={storageKey}
+            endpoint={endpoint}
+            defaultLimit={10}
+            enableInversePropertiesFeature={true}
+            initialData={initialData ?? ""}
+            localPersistence={{
+              enabled: true,
+              restoreOnLoad: true,
+              debounceMS: 5000,
+              storageKey,
+            }}
+            loader={<CircularProgress />}
+          >
+            <NiceModal.Provider>
               {import.meta.env.DEV ? (
                 <SPARQLQueryDevtools initialIsOpen={false} />
               ) : null}
               {children}
-            </LocalOxigraphStoreProvider>
-          </GraviolaLoungeProviders>
-          <ReactQueryDevtools initialIsOpen={true} />
-        </NiceModal.Provider>
+              <ReactQueryDevtools initialIsOpen={true} />
+            </NiceModal.Provider>
+          </LocalOxigraphStoreProvider>
+        </GraviolaLoungeProviders>
       </AdbProvider>
     </Provider>
   );
