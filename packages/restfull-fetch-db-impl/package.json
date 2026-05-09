@@ -45,8 +45,7 @@
     "@types/json-schema": "catalog:"
   },
   "dependencies": {
-    "cross-fetch": "^4.0.0",
-    "qs": "^6.12.3"
+    "@graviola/rest-store-client": "workspace:*"
   },
   "typedocOptions": {
     "entryPoints": [

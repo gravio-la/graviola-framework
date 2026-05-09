@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@graviola/edb-state-hooks": "workspace:*",
-    "@graviola/restfull-fetch-db-impl": "workspace:*"
+    "@graviola/rest-store-client": "workspace:*"
   },
   "devDependencies": {
     "@graviola/edb-tsconfig": "workspace:*",

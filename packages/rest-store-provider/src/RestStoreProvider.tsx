@@ -1,6 +1,9 @@
 import type { SparqlEndpoint } from "@graviola/edb-core-types";
 import { CrudProviderContext, useAdbContext } from "@graviola/edb-state-hooks";
-import { initRestfullStore } from "@graviola/restfull-fetch-db-impl";
+import {
+  createLegacyRESTClientStore,
+  abstractDatastoreFromRestStore,
+} from "@graviola/rest-store-client";
 import { type FunctionComponent, type ReactNode, useMemo } from "react";
 
 export type RestStoreProviderProps = {
@@ -17,32 +20,33 @@ export type RestStoreProviderProps = {
 export const RestStoreProvider: FunctionComponent<RestStoreProviderProps> = ({
   children,
   endpoint,
-  defaultLimit,
+  defaultLimit: _unusedDefaultLimit,
   requestOptions,
   buildEndpointURL,
 }) => {
+  void _unusedDefaultLimit;
   const {
-    schema,
     typeNameToTypeIRI,
     jsonLDConfig: { defaultPrefix },
   } = useAdbContext();
   const dataStore = useMemo(() => {
-    return initRestfullStore({
+    const store = createLegacyRESTClientStore({
       apiURL: endpoint.endpoint,
-      defaultPrefix: defaultPrefix,
-      typeNameToTypeIRI,
-      schema,
-      defaultLimit,
+      defaultPrefix,
+      identifies: {
+        typeNameToTypeIRI,
+        typeIRItoTypeName: (iri: string) => iri.replace(defaultPrefix, ""),
+      },
       requestOptions,
       buildEndpointURL,
     });
+    return abstractDatastoreFromRestStore(store);
   }, [
     endpoint,
-    defaultLimit,
     defaultPrefix,
     typeNameToTypeIRI,
-    schema,
     requestOptions,
+    buildEndpointURL,
   ]);
   return (
     <CrudProviderContext.Provider
