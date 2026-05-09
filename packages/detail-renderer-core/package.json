@@ -13,7 +13,7 @@
       "default": "./dist/index.js"
     }
   },
-  "files": ["dist", "CHANGELOG.md"],
+  "files": ["dist", "CHANGELOG.md", "README.md"],
   "sideEffects": false,
   "scripts": {
     "build": "tsup",
