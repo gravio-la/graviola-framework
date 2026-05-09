@@ -10,8 +10,7 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
         lib = nixpkgs.lib;
-        # Monorepo (package.json engines / CI) expects Bun ≥ 1.3.10 — fail fast if nixpkgs lags.
-        bunMin = "1.3.10";
+        bunCfg = import ./bun.nix { inherit pkgs lib; };
         catalogToPrismaPkg = pkgs.writeShellApplication {
           name = "catalogToPrisma";
           runtimeInputs = [ pkgs.jq ];
@@ -31,7 +30,7 @@
             #jetbrains.idea-ultimate
             #apache-jena
             #librdf_raptor2
-            bun
+            bunCfg.bun
             act
             openssl
             tree
@@ -44,15 +43,13 @@
           PRISMA_SCHEMA_ENGINE_BINARY = "${prismaEnginesPkg}/bin/schema-engine";
           CYPRESS_RUN_BINARY = "${pkgs.cypress}/bin/Cypress";
           shellHook = ''
-            echo "bun $(bun --version) (flake requires ≥ ${bunMin})"
+            echo "bun $(bun --version) (flake requires ≥ ${bunCfg.bunMin}; see bun.nix)"
             echo "Prisma catalog: \`cd\` to repo root, then \`catalogToPrisma ${catalogPrismaHint}\` and \`bun install\` (matches this shell's Prisma engines)."
             alias pages-preview='bash ./preview-pages.sh'
             echo "Pages preview: run \`pages-preview\` (or \`pages-preview /graviola-framework 4173\`)."
           '';
         };
       in
-      assert lib.assertMsg (lib.versionAtLeast pkgs.bun.version bunMin)
-        "graviola-crud-framework: nixpkgs bun must be ≥ ${bunMin} (got ${pkgs.bun.version}). Try: nix flake update nixpkgs";
       {
         # nix develop — Prisma 7 engines (nixpkgs 25.11 / unstable expose prisma_7 / prisma-engines_7)
         devShells.default = mkDevShell {
@@ -72,8 +69,8 @@
         #   nix run .#bun -- install
         #   nix run .#bun -- run build
         apps = {
-          default = { type = "app"; program = "${pkgs.bun}/bin/bun"; };
-          bun = { type = "app"; program = "${pkgs.bun}/bin/bun"; };
+          default = bunCfg.mkBunApp bunCfg.bun;
+          bun = bunCfg.mkBunApp bunCfg.bun;
         };
       }
     );
