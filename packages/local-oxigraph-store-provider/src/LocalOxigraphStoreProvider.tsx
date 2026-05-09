@@ -38,6 +38,8 @@ export type LocalOxigraphStoreProviderProps = {
   initialData?: LoadableData;
   loader?: ReactNode;
   localPersistence?: LocalPersistenceOptions;
+  /** When true, parent-side edits to `x-inverseOf` properties sync canonical forward triples (e.g. child.parentCategory). */
+  enableInversePropertiesFeature?: boolean;
 };
 
 export const LocalOxigraphStoreProvider: FunctionComponent<
@@ -49,6 +51,7 @@ export const LocalOxigraphStoreProvider: FunctionComponent<
   initialData,
   loader,
   localPersistence,
+  enableInversePropertiesFeature,
 }) => {
   const { oxigraph } = useOxigraph();
   const baseCrud = useAsyncLocalWorkerCrudOptions(endpoint);
@@ -138,6 +141,7 @@ export const LocalOxigraphStoreProvider: FunctionComponent<
       schema,
       defaultLimit,
       defaultUpdateGraph: endpoint.defaultUpdateGraph,
+      enableInversePropertiesFeature,
     });
   }, [
     oxigraph?.ao,
@@ -149,6 +153,7 @@ export const LocalOxigraphStoreProvider: FunctionComponent<
     jsonldContext,
     defaultLimit,
     endpoint.defaultUpdateGraph,
+    enableInversePropertiesFeature,
   ]);
 
   useEffect(() => {

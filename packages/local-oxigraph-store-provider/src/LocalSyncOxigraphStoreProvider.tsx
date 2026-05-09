@@ -30,6 +30,8 @@ export type LocalSyncOxigraphStoreProviderProps = {
   initialData?: LoadableData;
   loader?: ReactNode;
   localPersistence?: LocalPersistenceOptions;
+  /** When true, parent-side edits to `x-inverseOf` properties sync canonical forward triples (e.g. child.parentCategory). */
+  enableInversePropertiesFeature?: boolean;
 };
 
 export const LocalSyncOxigraphStoreProvider: FunctionComponent<
@@ -41,6 +43,7 @@ export const LocalSyncOxigraphStoreProvider: FunctionComponent<
   initialData,
   loader,
   localPersistence,
+  enableInversePropertiesFeature,
 }) => {
   const {
     schema,
@@ -110,6 +113,7 @@ export const LocalSyncOxigraphStoreProvider: FunctionComponent<
         schema,
         defaultLimit,
         defaultUpdateGraph: endpoint.defaultUpdateGraph,
+        enableInversePropertiesFeature,
       });
 
       try {
@@ -158,6 +162,7 @@ export const LocalSyncOxigraphStoreProvider: FunctionComponent<
     initialData,
     localPersistence,
     endpoint.defaultUpdateGraph,
+    enableInversePropertiesFeature,
   ]);
 
   return bundle ? (
