@@ -1,7 +1,9 @@
 import { useState, MouseEvent, useCallback } from "react";
 import { Chip, Tooltip } from "@mui/material";
-import NiceModal from "@ebay/nice-modal-react";
-import { useAdbContext } from "@graviola/edb-state-hooks";
+import {
+  MODAL_ENTITY_DETAIL,
+  useGraviolaModal,
+} from "@graviola/edb-state-hooks";
 
 export type OverflowChipProps = {
   label: React.ReactNode;
@@ -15,17 +17,18 @@ export const OverflowChip = ({
   secondary,
 }: OverflowChipProps) => {
   const [tooltipEnabled, setTooltipEnabled] = useState(false);
-  const {
-    components: { EntityDetailModal },
-  } = useAdbContext();
+  const detailModal = useGraviolaModal(MODAL_ENTITY_DETAIL);
 
   const showDetailModal = useCallback(
     (e: MouseEvent) => {
       if (!entityIRI) return;
       e.preventDefault();
-      NiceModal.show(EntityDetailModal, { entityIRI });
+      detailModal.show(
+        { entityIRI },
+        { origin: { source: "basic-components:OverflowChip" } },
+      );
     },
-    [entityIRI, EntityDetailModal],
+    [entityIRI, detailModal],
   );
 
   const handleShouldShow = useCallback(

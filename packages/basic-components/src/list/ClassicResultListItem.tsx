@@ -28,6 +28,8 @@ type OwnProps = {
   altAvatar?: string;
   popperChildren?: React.ReactNode;
   listItemProps?: Partial<ListItemProps>;
+  /** When true, detail Popper renders inline (no portal) — fixes stacking inside drawers/modals. */
+  popperDisablePortal?: boolean;
   onEnter?: () => void;
   onClose?: () => void;
   popperClosed?: boolean;
@@ -49,6 +51,7 @@ export const ClassicResultListItem: FunctionComponent<
   selected,
   popperChildren,
   listItemProps,
+  popperDisablePortal = false,
   onEnter,
   popperClosed,
   onClose,
@@ -56,6 +59,30 @@ export const ClassicResultListItem: FunctionComponent<
 }) => {
   const theme = useTheme();
   const anchorRef = React.useRef<HTMLLIElement | null>(null);
+  const [anchorEl, setAnchorEl] = React.useState<HTMLLIElement | null>(null);
+  const setAnchorAndState = React.useCallback((node: HTMLLIElement | null) => {
+    anchorRef.current = node;
+    setAnchorEl(node);
+  }, []);
+
+  const { ref: listItemExternalRef, ...listItemRest } = (listItemProps ??
+    {}) as Partial<ListItemProps> & {
+    ref?: React.Ref<HTMLLIElement>;
+  };
+
+  const mergedListItemRef = React.useCallback(
+    (node: HTMLLIElement | null) => {
+      setAnchorAndState(node);
+      if (typeof listItemExternalRef === "function") {
+        listItemExternalRef(node);
+      } else if (listItemExternalRef != null) {
+        (
+          listItemExternalRef as React.MutableRefObject<HTMLLIElement | null>
+        ).current = node;
+      }
+    },
+    [listItemExternalRef, setAnchorAndState],
+  );
   const buttonRef = React.useRef<HTMLDivElement | null>(null);
   const popperRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -91,13 +118,13 @@ export const ClassicResultListItem: FunctionComponent<
     <ListItem
       sx={{ p: 0 }}
       alignItems="flex-start"
-      ref={anchorRef}
-      {...(listItemProps || {})}
+      {...listItemRest}
+      ref={mergedListItemRef}
     >
       <ListItemButton
         onClick={handleSelect}
         onFocus={handleFocus}
-        onKeyUp={handleKeyUpDown}
+        onKeyDown={handleKeyUpDown}
         selected={selected}
         ref={buttonRef}
         {...rest}
@@ -130,15 +157,18 @@ export const ClassicResultListItem: FunctionComponent<
           }
         />
       </ListItemButton>
-      <ClassicResultPopperItem
-        sx={{ zIndex: 10000 }}
-        anchorEl={anchorRef.current}
-        popperRef={popperRef as any}
-        onClose={() => setClosed(true)}
-        open={selected && !closed}
-      >
-        {popperChildren}
-      </ClassicResultPopperItem>
+      {popperChildren != null ? (
+        <ClassicResultPopperItem
+          sx={{ zIndex: (theme) => theme.zIndex.tooltip }}
+          anchorEl={anchorEl}
+          popperRef={popperRef as any}
+          onClose={() => setClosed(true)}
+          open={selected && !closed}
+          disablePortal={popperDisablePortal}
+        >
+          {popperChildren}
+        </ClassicResultPopperItem>
+      ) : null}
     </ListItem>
   );
 };

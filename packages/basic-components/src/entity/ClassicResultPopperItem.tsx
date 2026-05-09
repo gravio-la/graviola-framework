@@ -31,7 +31,7 @@ const Popper = styled(MuiPopper, {
 })(({ theme }) => {
   const arrow = true;
   return {
-    zIndex: 1,
+    /* Do not set z-index here — parent passes `sx` (e.g. theme.zIndex.tooltip). */
     "& > div": {
       position: "relative",
     },
@@ -105,8 +105,9 @@ export const ClassicResultPopperItem: FunctionComponent<
     children: React.ReactNode;
     onClose?: () => void;
     popperRef?: React.MutableRefObject<HTMLDivElement | null>;
-  } & PopperProps
-> = ({ children, popperRef, onClose, ...rest }) => {
+    disablePortal?: boolean;
+  } & Omit<PopperProps, "disablePortal">
+> = ({ children, popperRef, onClose, disablePortal = false, ...rest }) => {
   const [arrowRef, setArrowRef] = React.useState<HTMLElement>(null);
 
   return (
@@ -114,7 +115,7 @@ export const ClassicResultPopperItem: FunctionComponent<
       <Popper
         {...rest}
         placement="left"
-        disablePortal={false}
+        disablePortal={disablePortal}
         modifiers={[
           {
             name: "flip",
@@ -146,7 +147,16 @@ export const ClassicResultPopperItem: FunctionComponent<
             <Close />
           </IconButton>
           <Arrow ref={setArrowRef} className="MuiPopper-arrow" />
-          <Paper sx={{ p: 2, m: 2, paddingTop: 4 }} elevation={2}>
+          <Paper
+            elevation={1}
+            sx={{
+              p: 1,
+              pt: 4,
+              m: 0,
+              overflow: "visible",
+              borderRadius: 1,
+            }}
+          >
             {children}
           </Paper>
         </Box>
