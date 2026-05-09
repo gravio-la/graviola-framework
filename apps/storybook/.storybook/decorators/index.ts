@@ -4,4 +4,4 @@
 
 export { withLocalOxigraph } from "./withLocalOxigraph";
 export { withSparqlEndpoint } from "./withSparqlEndpoint";
-export { withGraviolaProvider, useRouterMock } from "./withGraviolaProvider";
+export { withGraviolaProvider } from "./withGraviolaProvider";
