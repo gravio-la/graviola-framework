@@ -2,8 +2,9 @@ import NiceModal from "@ebay/nice-modal-react";
 import { SearchbarWithFloatingButton } from "@graviola/edb-basic-components";
 import {
   useAdbContext,
+  useFinderSlot,
   useGlobalSearch,
-  useRightDrawerState,
+  useSimilarityFinderModal,
 } from "@graviola/edb-state-hooks";
 import { SemanticJsonFormNoOpsProps } from "@graviola/semantic-jsonform-types";
 import { compileSchema } from "@graviola/json-schema-utils";
@@ -12,6 +13,7 @@ import { JsonForms } from "@jsonforms/react";
 import { Card, CardContent, Grid } from "@mui/material";
 import { merge } from "lodash-es";
 import { useTranslation } from "next-i18next";
+import type { JSONSchema7 } from "json-schema";
 import React, { FunctionComponent, useCallback, useMemo } from "react";
 
 import { OptionsModal } from "./OptionsModal";
@@ -48,6 +50,7 @@ export const SemanticJsonFormNoOps: FunctionComponent<
   wrapWithinCard,
   formsPath,
   disabled,
+  enableResultDetailPopper,
 }) => {
   const {
     createEntityIRI,
@@ -55,9 +58,9 @@ export const SemanticJsonFormNoOps: FunctionComponent<
     rendererRegistry,
     cellRendererRegistry,
     uischemata,
-    components: { SimilarityFinder },
     queryBuildOptions: { typeIRItoTypeName },
   } = useAdbContext();
+  const SimilarityFinder = useFinderSlot();
 
   const handleFormChange = useCallback(
     (state: Pick<JsonFormsCore, "data" | "errors">) => {
@@ -67,7 +70,7 @@ export const SemanticJsonFormNoOps: FunctionComponent<
     [onChange, onError],
   );
 
-  const { closeDrawer } = useRightDrawerState();
+  const { hideFinder } = useSimilarityFinderModal();
   const { t } = useTranslation();
 
   const handleMappedData = useCallback(
@@ -87,7 +90,7 @@ export const SemanticJsonFormNoOps: FunctionComponent<
           },
         ],
       }).then((decision: string) => {
-        closeDrawer();
+        hideFinder();
         onChange((data: any) => {
           if (decision === "replace") {
             return {
@@ -106,15 +109,15 @@ export const SemanticJsonFormNoOps: FunctionComponent<
         }, "mapping");
       });
     },
-    [onChange, closeDrawer, t, createEntityIRI, typeIRI],
+    [onChange, hideFinder, t, createEntityIRI, typeIRI],
   );
 
   const handleEntityIRIChange = useCallback(
     (iri) => {
       onEntityDataChange?.(iri);
-      closeDrawer();
+      hideFinder();
     },
-    [onEntityDataChange, typeIRI, closeDrawer],
+    [onEntityDataChange, typeIRI, hideFinder],
   );
 
   const {
@@ -165,7 +168,41 @@ export const SemanticJsonFormNoOps: FunctionComponent<
     () => [...(cellRendererRegistry || []), ...(jfpCells || [])],
     [cellRendererRegistry, jfpCells],
   );
-  const { path: globalPath } = useGlobalSearch();
+  const globalPath = useGlobalSearch((s) => s.path);
+  const setSearch = useGlobalSearch((s) => s.setSearch);
+
+  const handleFinderSearchChange = useCallback(
+    (value: string) => {
+      setSearch(value);
+    },
+    [setSearch],
+  );
+
+  const similarityFinderProps = useMemo(
+    () => ({
+      finderId: formsPath ?? "semantic-json-form",
+      data,
+      classIRI: typeIRI,
+      jsonSchema: schema as JSONSchema7,
+      onEntityIRIChange: handleEntityIRIChange,
+      onMappedDataAccepted: handleMappedData,
+      onSearchChange: handleFinderSearchChange,
+      hideFooter: true,
+      ...(enableResultDetailPopper === false
+        ? { enableResultDetailPopper: false }
+        : {}),
+    }),
+    [
+      formsPath,
+      data,
+      typeIRI,
+      schema,
+      handleEntityIRIChange,
+      handleMappedData,
+      handleFinderSearchChange,
+      enableResultDetailPopper,
+    ],
+  );
 
   return (
     <Grid container spacing={0}>
@@ -206,18 +243,7 @@ export const SemanticJsonFormNoOps: FunctionComponent<
       </Grid>
       {formsPath === globalPath && (
         <Grid>
-          <SearchbarWithFloatingButton>
-            <SimilarityFinder
-              finderId={formsPath}
-              search={searchText}
-              data={data}
-              classIRI={typeIRI}
-              jsonSchema={schema}
-              onEntityIRIChange={handleEntityIRIChange}
-              onMappedDataAccepted={handleMappedData}
-              hideFooter
-            />
-          </SearchbarWithFloatingButton>{" "}
+          <SearchbarWithFloatingButton finderProps={similarityFinderProps} />
         </Grid>
       )}
     </Grid>

@@ -8,10 +8,14 @@ import {
 } from "react";
 
 import {
+  MODAL_ENTITY_DETAIL,
   useAdbContext,
   useCRUDWithQueryClient,
+  useDispatchIntent,
+  useGraviolaModal,
 } from "@graviola/edb-state-hooks";
 import { SemanticJsonFormToolbar } from "./SemanticJsonFormToolbar";
+import { SemanticJsonFormNoOps } from "./SemanticJsonFormNoOps";
 import { Backdrop, Box, CircularProgress } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { GenericModal } from "@graviola/edb-basic-components";
@@ -28,13 +32,13 @@ export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
   shouldLoadInitially,
   typeIRI,
   schema,
-  jsonldContext,
   jsonFormsProps,
   hideToolbar,
   forceEditMode,
   defaultEditMode,
   toolbarChildren,
-  defaultPrefix,
+  onSaveSuccess: onSaveSuccessProp,
+  onSaveError: onSaveErrorProp,
   ...rest
 }) => {
   const { t } = useTranslation();
@@ -45,11 +49,14 @@ export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
     [managedEditMode, forceEditMode],
   );
 
-  const {
-    components: { EntityDetailModal, SemanticJsonForm },
-    useSnackbar,
-  } = useAdbContext();
-  const { enqueueSnackbar } = useSnackbar();
+  const { typeIRIToTypeName } = useAdbContext();
+  const dispatchIntent = useDispatchIntent();
+  const detailModal = useGraviolaModal(MODAL_ENTITY_DETAIL);
+
+  const typeName = useMemo(
+    () => typeIRIToTypeName(typeIRI) ?? "",
+    [typeIRIToTypeName, typeIRI],
+  );
 
   const { saveMutation, removeMutation, loadEntity } = useCRUDWithQueryClient({
     entityIRI,
@@ -107,12 +114,45 @@ export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
     });
   }, [onChange]);
 
+  const emitSaveSuccess = useCallback(
+    (payload: { entityIRI: string; created: boolean }) => {
+      if (onSaveSuccessProp) {
+        onSaveSuccessProp(payload);
+      } else {
+        dispatchIntent({
+          kind: "entity-saved",
+          typeName,
+          entityIRI: payload.entityIRI,
+          created: payload.created,
+          origin: { source: "semantic-json-form:SemanticJsonForm" },
+        });
+      }
+    },
+    [dispatchIntent, typeName, onSaveSuccessProp],
+  );
+
+  const emitSaveError = useCallback(
+    (error: Error) => {
+      if (onSaveErrorProp) {
+        onSaveErrorProp(error);
+      } else {
+        dispatchIntent({
+          kind: "entity-save-failed",
+          typeName,
+          entityIRI,
+          error,
+          origin: { source: "semantic-json-form:SemanticJsonForm" },
+        });
+      }
+    },
+    [dispatchIntent, typeName, entityIRI, onSaveErrorProp],
+  );
+
   const handleSave = useCallback(async () => {
     setIsSaving(true);
     saveMutation
       .mutateAsync(data)
       .then(async ({ mainDocument }) => {
-        //TODO should we clear and refetch? or just refetch?
         if (entityIRI) {
           loadEntity(entityIRI, typeIRI)
             .then((data) => {
@@ -121,24 +161,26 @@ export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
               }
             })
             .finally(() => {
-              enqueueSnackbar("Saved", { variant: "success" });
+              emitSaveSuccess({ entityIRI, created: false });
               setIsSaving(false);
             });
         } else {
+          const iri = mainDocument?.["@id"] as string | undefined;
           onChange(mainDocument);
-          enqueueSnackbar("Created", { variant: "success" });
+          emitSaveSuccess({
+            entityIRI: iri ?? "",
+            created: true,
+          });
           setIsSaving(false);
         }
       })
-      .catch((e) => {
+      .catch((e: Error) => {
         setIsSaving(false);
-        enqueueSnackbar("Error while saving " + e.message, {
-          variant: "error",
-        });
+        emitSaveError(e);
       });
   }, [
-    setIsSaving,
-    enqueueSnackbar,
+    emitSaveError,
+    emitSaveSuccess,
     saveMutation,
     data,
     onChange,
@@ -163,31 +205,44 @@ export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
       onChange({});
       refetch()
         .then(() => {
-          enqueueSnackbar(t("reloaded"), { variant: "success" });
+          dispatchIntent({
+            kind: "reload-completed",
+            ok: true,
+            message: t("reloaded"),
+            origin: { source: "semantic-json-form:SemanticJsonForm:reload" },
+          });
         })
-        .catch((error) => {
-          enqueueSnackbar(t("reload_failed") + ": " + error.message, {
-            variant: "error",
+        .catch((error: Error) => {
+          dispatchIntent({
+            kind: "reload-completed",
+            ok: false,
+            message: t("reload_failed") + ": " + error.message,
+            origin: { source: "semantic-json-form:SemanticJsonForm:reload" },
           });
         })
         .finally(() => {
           setIsReloading(false);
         });
     });
-  }, [refetch, onChange, setIsReloading, enqueueSnackbar, t]);
+  }, [refetch, onChange, setIsReloading, dispatchIntent, t]);
 
   const handleToggleEditMode = useCallback(() => {
     setEditMode((prev) => !prev);
   }, [setEditMode]);
 
   const handleShowEntry = useCallback(() => {
-    NiceModal.show(EntityDetailModal, {
-      typeIRI,
-      entityIRI: entityIRI,
-      readonly: true,
-      data,
-    });
-  }, [typeIRI, entityIRI, EntityDetailModal, data]);
+    detailModal.show(
+      {
+        typeIRI,
+        entityIRI: entityIRI,
+        readonly: true,
+        data,
+      },
+      {
+        origin: { source: "semantic-json-form:SemanticJsonForm:show" },
+      },
+    );
+  }, [typeIRI, entityIRI, detailModal, data]);
 
   const handleOnChange = useCallback(
     (data: any, reason: ChangeCause) => {
@@ -218,7 +273,7 @@ export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
       >
         <CircularProgress color="inherit" />
       </Backdrop>
-      <SemanticJsonForm
+      <SemanticJsonFormNoOps
         typeIRI={typeIRI}
         data={data}
         onChange={handleOnChange}
