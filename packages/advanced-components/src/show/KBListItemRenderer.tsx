@@ -1,13 +1,13 @@
 import { ClassicResultListItem } from "@graviola/edb-basic-components";
 import {
-  useAdbContext,
   useCRUDWithQueryClient,
+  useEntityFinderChrome,
   useSimilarityFinderState,
 } from "@graviola/edb-state-hooks";
 import { ListItemRendererProps } from "@graviola/semantic-jsonform-types";
 import CheckIcon from "@mui/icons-material/Check";
 import { IconButton, Stack } from "@mui/material";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect } from "react";
 
 import { EntityDetailElement } from "./EntityDetailElement";
 
@@ -19,6 +19,7 @@ export const KBListItemRenderer = ({
   onSelect,
   onAccept,
 }: ListItemRendererProps) => {
+  const { showResultDetailPopper } = useEntityFinderChrome();
   const { id, label, avatar, secondary } = data;
   const { loadEntity } = useCRUDWithQueryClient({
     entityIRI: id,
@@ -26,7 +27,9 @@ export const KBListItemRenderer = ({
     queryOptions: { enabled: false },
     loadQueryKey: "load",
   });
-  const { resetElementIndex } = useSimilarityFinderState();
+  const { resetElementIndex, acceptWishPending, setAcceptWishPending } =
+    useSimilarityFinderState();
+
   const handleAccept = useCallback(async () => {
     const finalData = (await loadEntity(id, typeIRI))?.document;
     if (!finalData) {
@@ -36,8 +39,7 @@ export const KBListItemRenderer = ({
     resetElementIndex();
     onAccept?.(id, finalData);
   }, [onAccept, id, loadEntity, typeIRI, resetElementIndex]);
-  const { acceptWishPending, setAcceptWishPending } =
-    useSimilarityFinderState();
+
   useEffect(() => {
     if (selected && handleAccept && acceptWishPending) {
       setAcceptWishPending(false);
@@ -67,18 +69,21 @@ export const KBListItemRenderer = ({
         ),
       }}
       popperChildren={
-        <EntityDetailElement
-          sx={{
-            maxWidth: "30em",
-            maxHeight: "80vh",
-            overflow: "auto",
-          }}
-          entityIRI={id}
-          typeIRI={typeIRI}
-          data={undefined}
-          cardActionChildren={null}
-          readonly
-        />
+        showResultDetailPopper ? (
+          <EntityDetailElement
+            compactPreview
+            sx={{
+              maxWidth: "30em",
+              maxHeight: "80vh",
+              overflow: "auto",
+            }}
+            entityIRI={id}
+            typeIRI={typeIRI}
+            data={undefined}
+            cardActionChildren={null}
+            readonly
+          />
+        ) : null
       }
     />
   );

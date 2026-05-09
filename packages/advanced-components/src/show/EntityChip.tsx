@@ -1,11 +1,15 @@
-import NiceModal from "@ebay/nice-modal-react";
 import { PrimaryFieldResults } from "@graviola/edb-core-types";
 import { ellipsis } from "@graviola/edb-core-utils";
 import {
   applyToEachField,
   extractFieldIfString,
 } from "@graviola/edb-data-mapping";
-import { useAdbContext, useTypeIRIFromEntity } from "@graviola/edb-state-hooks";
+import {
+  MODAL_ENTITY_DETAIL,
+  useAdbContext,
+  useGraviolaModal,
+  useTypeIRIFromEntity,
+} from "@graviola/edb-state-hooks";
 import { useCRUDWithQueryClient } from "@graviola/edb-state-hooks";
 import { queryOptionMixinBasedOnEntity } from "@graviola/edb-ui-utils";
 import { Avatar, Chip, ChipProps, Tooltip } from "@mui/material";
@@ -30,8 +34,8 @@ export const EntityChip = ({
   const {
     queryBuildOptions: { primaryFieldExtracts, primaryFields },
     typeIRIToTypeName,
-    components: { EntityDetailModal },
   } = useAdbContext();
+  const detailModal = useGraviolaModal(MODAL_ENTITY_DETAIL);
   const typeName = useMemo(
     () => typeIRIToTypeName(classIRI),
     [classIRI, typeIRIToTypeName],
@@ -75,13 +79,18 @@ export const EntityChip = ({
   const showDetailModal = useCallback(
     (e: MouseEvent) => {
       e.preventDefault();
-      NiceModal.show(EntityDetailModal, {
-        entityIRI,
-        typeIRI: classIRI,
-        data,
-      });
+      detailModal.show(
+        {
+          entityIRI,
+          typeIRI: classIRI,
+          data,
+        },
+        {
+          origin: { source: "advanced-components:EntityChip" },
+        },
+      );
     },
-    [entityIRI, classIRI, EntityDetailModal, data],
+    [entityIRI, classIRI, data, detailModal],
   );
   const handleShouldShow = useCallback(
     (e: MouseEvent<Element>) => {

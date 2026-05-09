@@ -91,6 +91,7 @@ export const DiscoverSearchTable: FunctionComponent<
             selected={selectedIndex === idx}
             popperChildren={
               <EntityDetailElement
+                compactPreview
                 sx={{
                   maxWidth: "30em",
                   maxHeight: "80vh",

@@ -1,5 +1,10 @@
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
-import { useAdbContext, useTypeIRIFromEntity } from "@graviola/edb-state-hooks";
+import {
+  useAdbContext,
+  useDispatchIntent,
+  useSemanticFormSlot,
+  useTypeIRIFromEntity,
+} from "@graviola/edb-state-hooks";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   useCRUDWithQueryClient,
@@ -40,6 +45,8 @@ const EditEntityModalContent = ({
   onErrorsChange,
   preventSaveOnError = false,
   disableErrorBadge = false,
+  onSaveSuccess: onSaveSuccessProp,
+  onSaveError: onSaveErrorProp,
 }: {
   classIRI: string;
   entityIRI: string;
@@ -51,15 +58,17 @@ const EditEntityModalContent = ({
   onErrorsChange?: (errors: ErrorObject[]) => void;
   preventSaveOnError?: boolean;
   disableErrorBadge?: boolean;
+  onSaveSuccess?: () => void;
+  onSaveError?: (error: Error) => void;
 }) => {
   const {
     jsonLDConfig,
     typeIRIToTypeName,
     queryBuildOptions: { primaryFieldExtracts },
     uischemata,
-    components: { SemanticJsonForm },
-    useSnackbar,
   } = useAdbContext();
+  const SemanticJsonForm = useSemanticFormSlot();
+  const dispatchIntent = useDispatchIntent();
   const { t } = useTranslation();
 
   const typeName = useMemo(
@@ -103,7 +112,6 @@ const EditEntityModalContent = ({
   }, [data, setFormData]);
 
   const uischema = useMemo(() => uischemata?.[typeName], [typeName]);
-  const { enqueueSnackbar } = useSnackbar();
 
   const handleSaveSuccess = useCallback(() => {
     setFirstTimeSaved(true);
@@ -115,18 +123,46 @@ const EditEntityModalContent = ({
       saveMutation
         .mutateAsync(formData)
         .then(async (skipLoading?: boolean) => {
-          enqueueSnackbar("Saved", { variant: "success" });
+          if (onSaveSuccessProp) {
+            onSaveSuccessProp();
+          } else {
+            dispatchIntent({
+              kind: "entity-saved",
+              typeName,
+              entityIRI,
+              created: false,
+              origin: { source: "advanced-components:EditEntityModal" },
+            });
+          }
           !skipLoading && (await loadQuery.refetch());
           handleSaveSuccess();
           typeof saveSuccess === "function" && saveSuccess();
         })
-        .catch((e) => {
-          enqueueSnackbar("Error while saving " + e.message, {
-            variant: "error",
-          });
+        .catch((e: Error) => {
+          if (onSaveErrorProp) {
+            onSaveErrorProp(e);
+          } else {
+            dispatchIntent({
+              kind: "entity-save-failed",
+              typeName,
+              entityIRI,
+              error: e,
+              origin: { source: "advanced-components:EditEntityModal" },
+            });
+          }
         });
     },
-    [enqueueSnackbar, saveMutation, loadQuery, formData, handleSaveSuccess],
+    [
+      dispatchIntent,
+      onSaveErrorProp,
+      onSaveSuccessProp,
+      saveMutation,
+      loadQuery,
+      formData,
+      handleSaveSuccess,
+      typeName,
+      entityIRI,
+    ],
   );
 
   const handleAccept = useCallback(() => {
@@ -272,6 +308,8 @@ export const EditEntityModal = NiceModal.create(
     onErrorsChange,
     preventSaveOnError = false,
     disableErrorBadge = false,
+    onSaveSuccess,
+    onSaveError,
   }: EditEntityModalProps) => {
     const modal = useModal();
     const { t } = useTranslation();
@@ -328,6 +366,8 @@ export const EditEntityModal = NiceModal.create(
         onErrorsChange={onErrorsChange}
         preventSaveOnError={preventSaveOnError}
         disableErrorBadge={disableErrorBadge}
+        onSaveSuccess={onSaveSuccess}
+        onSaveError={onSaveError}
       />
     );
   },

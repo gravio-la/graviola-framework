@@ -163,7 +163,7 @@ export const DiscoverAutocompleteInput: FunctionComponent<
   );
 
   const { data: basicFields } = useQuery({
-    queryKey: ["entity", selected?.value, typeIRI, "load"],
+    queryKey: ["entity", typeIRI, selected?.value, "data", "load"],
     queryFn: async () => {
       const value = selected?.value;
       if (value && typeIRI) {
@@ -178,7 +178,7 @@ export const DiscoverAutocompleteInput: FunctionComponent<
     },
     enabled: Boolean(
       typeof selected?.value === "string" &&
-        (!selected?.label || selected?.label?.length === 0),
+      (!selected?.label || selected?.label?.length === 0),
     ),
   });
 

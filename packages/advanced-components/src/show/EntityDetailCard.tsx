@@ -38,12 +38,13 @@ export const EntityDetailCard: FunctionComponent<EntityDetailCardProps> = ({
           <CardMedia
             component="img"
             sx={{
-              maxHeight: "24em",
+              width: "100%",
+              maxHeight: "14em",
               objectFit: "cover",
-              display: { md: "none", xs: "block" },
+              display: "block",
             }}
             image={cardInfo.image}
-            alt={cardInfo.label}
+            alt={cardInfo.label ?? ""}
           />
         )}
         <CardContent>

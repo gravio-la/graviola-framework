@@ -1,11 +1,15 @@
-import NiceModal from "@ebay/nice-modal-react";
 import { PrimaryFieldResults } from "@graviola/edb-core-types";
 import { ellipsis } from "@graviola/edb-core-utils";
 import {
   applyToEachField,
   extractFieldIfString,
 } from "@graviola/edb-data-mapping";
-import { useAdbContext, useTypeIRIFromEntity } from "@graviola/edb-state-hooks";
+import {
+  MODAL_ENTITY_DETAIL,
+  useAdbContext,
+  useGraviolaModal,
+  useTypeIRIFromEntity,
+} from "@graviola/edb-state-hooks";
 import { useCRUDWithQueryClient } from "@graviola/edb-state-hooks";
 import { queryOptionMixinBasedOnEntity } from "@graviola/edb-ui-utils";
 import { Clear, HideImage } from "@mui/icons-material";
@@ -35,8 +39,8 @@ export const EntityDetailListItem = ({
   const {
     queryBuildOptions: { primaryFields },
     typeIRIToTypeName,
-    components: { EntityDetailModal },
   } = useAdbContext();
+  const detailModal = useGraviolaModal(MODAL_ENTITY_DETAIL);
   const classIRI = useTypeIRIFromEntity(entityIRI, typeIRI);
   const typeName = useMemo(
     () => typeIRIToTypeName(classIRI),
@@ -77,12 +81,17 @@ export const EntityDetailListItem = ({
   }, [typeName, data, primaryFields]);
   const { label, image, description } = cardInfo;
   const showDetailModal = useCallback(() => {
-    NiceModal.show(EntityDetailModal, {
-      typeIRI,
-      entityIRI,
-      data,
-    });
-  }, [typeIRI, entityIRI, data, EntityDetailModal]);
+    detailModal.show(
+      {
+        typeIRI,
+        entityIRI,
+        data,
+      },
+      {
+        origin: { source: "advanced-components:EntityDetailListItem" },
+      },
+    );
+  }, [typeIRI, entityIRI, data, detailModal]);
   //Sorry for this hack, in future we will have class dependent List items
   const variant = useMemo(
     () => (typeIRI.endsWith("Person") ? "circular" : "rounded"),

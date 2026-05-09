@@ -1,6 +1,6 @@
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import { PrimaryField, PrimaryFieldResults } from "@graviola/edb-core-types";
-import { encodeIRI, filterUndefOrNull } from "@graviola/edb-core-utils";
+import { filterUndefOrNull } from "@graviola/edb-core-utils";
 import {
   applyToEachField,
   extractFieldIfString,
@@ -8,8 +8,8 @@ import {
 import {
   useAdbContext,
   useCRUDWithQueryClient,
+  useDispatchIntent,
   useModalRegistry,
-  useModifiedRouter,
 } from "@graviola/edb-state-hooks";
 import { useTypeIRIFromEntity } from "@graviola/edb-state-hooks";
 import { EntityDetailModalProps } from "@graviola/semantic-jsonform-types";
@@ -38,6 +38,7 @@ import {
 import { useTranslation } from "next-i18next";
 import { FC, useCallback, useMemo } from "react";
 
+import { EditEntityModal } from "../edit/EditEntityModal";
 import { EntityDetailCard } from "./EntityDetailCard";
 import { queryOptionMixinBasedOnEntity } from "@graviola/edb-ui-utils";
 
@@ -265,8 +266,8 @@ const EntityDetailDataWrapper: FC<{
 }) => {
   const {
     queryBuildOptions: { primaryFields },
-    components: { EditEntityModal },
   } = useAdbContext();
+  const dispatchIntent = useDispatchIntent();
   const { t } = useTranslation();
 
   // Load schema and data
@@ -286,7 +287,6 @@ const EntityDetailDataWrapper: FC<{
   const data = rawData?.document;
 
   // Setup edit functionality
-  const { push } = useModifiedRouter();
   const { registerModal } = useModalRegistry(NiceModal);
   const handleEdit = useCallback(() => {
     if (!disableInlineEditing) {
@@ -301,7 +301,14 @@ const EntityDetailDataWrapper: FC<{
         console.error(e);
       });
     } else {
-      push(`/create/${typeName}?encID=${encodeIRI(entityIRI)}`);
+      dispatchIntent({
+        kind: "edit-entity",
+        typeName,
+        entityIRI,
+        origin: {
+          source: "advanced-components:EntityDetailModal:route-edit",
+        },
+      });
     }
   }, [
     typeIRI,
@@ -310,8 +317,7 @@ const EntityDetailDataWrapper: FC<{
     typeName,
     registerModal,
     data,
-    EditEntityModal,
-    push,
+    dispatchIntent,
   ]);
 
   // Prepare card info and disabled properties

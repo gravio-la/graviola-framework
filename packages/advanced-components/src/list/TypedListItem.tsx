@@ -1,9 +1,12 @@
-import NiceModal from "@ebay/nice-modal-react";
 import {
   applyToEachField,
   extractFieldIfString,
 } from "@graviola/edb-data-mapping";
-import { useAdbContext } from "@graviola/edb-state-hooks";
+import {
+  MODAL_ENTITY_DETAIL,
+  useAdbContext,
+  useGraviolaModal,
+} from "@graviola/edb-state-hooks";
 import {
   Avatar,
   ListItem,
@@ -31,8 +34,8 @@ export const TypedListItem: FunctionComponent<Props> = ({
   const {
     typeIRIToTypeName,
     queryBuildOptions: { primaryFieldExtracts },
-    components: { EntityDetailModal },
   } = useAdbContext();
+  const detailModal = useGraviolaModal(MODAL_ENTITY_DETAIL);
   const typeIRI = data["@type"] as string;
   const entityIRI = data["@id"] as string;
   const typeName = useMemo(
@@ -50,15 +53,20 @@ export const TypedListItem: FunctionComponent<Props> = ({
   );
 
   const showDetailModal = useCallback(() => {
-    NiceModal.show(EntityDetailModal, {
-      typeIRI,
-      entityIRI,
-      data,
-      disableLoad,
-      disableInlineEditing: true,
-      readonly,
-    });
-  }, [typeIRI, entityIRI, data, disableLoad, EntityDetailModal, readonly]);
+    detailModal.show(
+      {
+        typeIRI,
+        entityIRI,
+        data,
+        disableLoad,
+        disableInlineEditing: true,
+        readonly,
+      },
+      {
+        origin: { source: "advanced-components:TypedListItem" },
+      },
+    );
+  }, [typeIRI, entityIRI, data, disableLoad, readonly, detailModal]);
 
   return (
     <ListItem>
