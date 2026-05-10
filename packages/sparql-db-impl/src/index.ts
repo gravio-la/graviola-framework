@@ -1,4 +1,4 @@
-export * from "./SPARQLDataStoreConfig";
+export type { SPARQLDataStoreConfig } from "./SPARQLDataStoreConfig";
 export {
   initSPARQLStore,
   initSPARQLAbstractDatastore,
