@@ -10,6 +10,7 @@ import {
   useCRUDWithQueryClient,
   useDispatchIntent,
   useModalRegistry,
+  useTypeIRIFromEntity,
 } from "@graviola/edb-state-hooks";
 import { useTypeIRIFromEntity } from "@graviola/edb-state-hooks";
 import { EntityDetailModalProps } from "@graviola/semantic-jsonform-types";
@@ -429,13 +430,18 @@ export const EntityDetailModal = NiceModal.create(
     disableLoad,
     readonly,
     disableInlineEditing,
+    onClose: onCloseFromProps,
   }: EntityDetailModalProps) => {
     const modal = useModal();
 
     const handleClose = useCallback(() => {
       //modal.reject();
-      modal.remove();
-    }, [modal]);
+      if (onCloseFromProps) {
+        onCloseFromProps();
+      } else {
+        modal.remove();
+      }
+    }, [modal, onCloseFromProps]);
 
     if (!modal.visible) {
       return null;
