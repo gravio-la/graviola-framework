@@ -162,6 +162,8 @@ export type EditEntityModalProps = {
 export type EntityDetailModalProps = EditEntityModalProps & {
   readonly?: boolean;
   disableInlineEditing?: boolean;
+  /** When set, invoked instead of `modal.remove()` (e.g. browser history `navigate(-1)`). */
+  onClose?: () => void;
 };
 
 export type SelectedEntity<SourceType extends string = string> = {
@@ -196,7 +198,7 @@ export type FinderKnowledgeBaseDescription<
   authorityIRI?: string;
   label: string;
   description: string;
-  icon: string | React.ReactNode;
+  icon: string | ReactNode;
   find: (
     searchString: string,
     typeIRI: string,
@@ -204,7 +206,7 @@ export type FinderKnowledgeBaseDescription<
     findOptions?: FindOptions,
   ) => Promise<FindResultType[]>;
   getEntity?: (id: string, typeIRI?: string) => Promise<FullEntityType>;
-  detailRenderer?: (id: string) => React.ReactNode;
+  detailRenderer?: (id: string) => ReactNode;
   listItemRenderer?: (
     entry: FindResultType,
     idx: number,
@@ -212,7 +214,7 @@ export type FinderKnowledgeBaseDescription<
     selected: boolean,
     onSelect?: (id: string, index: number) => void,
     onAccept?: (id: string, entry: FindResultType) => void,
-  ) => React.ReactNode;
+  ) => ReactNode;
 };
 
 export type MapDataFromAuthorityFn = (

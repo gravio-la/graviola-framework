@@ -42,7 +42,7 @@ const schemaWithPrimitiveRefProperties: JSONSchema7 = {
   },
 };
 
-const schemaWithNonEntityRefs: JSONSchema7 = {
+const schemaWithNonNamedEntitys: JSONSchema7 = {
   $schema: "http://json-schema.org/draft-07/schema#",
   $id: "https://example.com/plant.schema.json",
   definitions: {
@@ -143,7 +143,7 @@ describe("JSON Schema Utility Functions", () => {
   });
 
   it("should NOT create stubs for non-entity schemas (without @id)", () => {
-    const stub = prepareStubbedSchema(schemaWithNonEntityRefs);
+    const stub = prepareStubbedSchema(schemaWithNonNamedEntitys);
 
     // __schema0 should NOT have a stub because it doesn't have @id
     expect(stub.definitions).not.toHaveProperty("__schema0Stub");
