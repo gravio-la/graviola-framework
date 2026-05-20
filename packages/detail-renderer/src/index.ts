@@ -2,6 +2,20 @@ export * from "@graviola/edb-detail-renderer-core";
 
 export { DetailRenderer } from "./DetailRenderer";
 export type { DetailRendererRootProps } from "./DetailRenderer";
+export {
+  createDetailEntityModal,
+  DetailEntityModal,
+  DetailEntityModalView,
+  type DetailEntityModalHeaderActionsProps,
+  type DetailEntityModalPresentation,
+  type DetailEntityModalStaticConfig,
+  type DetailEntityModalViewProps,
+  type DetailEntityModalPaperGesture,
+  DetailEntityModalPaperGestureContext,
+  DetailEntityModalPortalContext,
+  detailEntityModalPaperGestureSx,
+  useDetailEntityModalPortalContainer,
+} from "./DetailEntityModal";
 export type { GenerateDefaultDetailUISchemaOptions as GenerateDetailUISchemaOptions } from "@graviola/edb-detail-renderer-core";
 export { EntitySummaryChip } from "./chips/EntitySummaryChip";
 export type { EntitySummaryChipProps } from "./chips/EntitySummaryChip";
@@ -20,9 +34,10 @@ export {
   DateTimeRenderer,
   UriRenderer,
   EnumRenderer,
-  EntityRefRenderer,
+  NamedEntityRenderer,
   ArrayEntityRenderer,
   ArrayPrimitiveRenderer,
+  ArrayInlineObjectRenderer,
   ObjectRenderer,
   VerticalLayoutRenderer,
   HorizontalLayoutRenderer,

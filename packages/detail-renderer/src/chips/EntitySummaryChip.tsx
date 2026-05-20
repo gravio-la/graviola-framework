@@ -8,7 +8,7 @@ import type {
   DetailTesterContext,
 } from "@graviola/edb-detail-renderer-core";
 import {
-  entityRefTester,
+  namedEntityTester,
   resolveChipRenderer,
 } from "@graviola/edb-detail-renderer-core";
 import { defaultChipsConfig } from "./defaultChips";
@@ -33,7 +33,7 @@ function wrapDefinitionShortcut(
   const isEntity = Boolean(schema.properties?.["@id"]);
   if (isEntity) {
     return {
-      tester: entityRefTester,
+      tester: namedEntityTester,
       computeDefinition: () => definition,
       renderer: EntityChipRenderer,
     };

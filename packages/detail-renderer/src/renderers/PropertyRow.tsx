@@ -3,7 +3,7 @@ import { Box, Typography } from "@mui/material";
 
 /**
  * Two-column property row: label on the left, value on the right.
- * Mirrors AllPropsTable's visual structure.
+ * With an empty or whitespace-only `label`, uses a compact single-column layout.
  */
 export function PropertyRow({
   label,
@@ -12,6 +12,12 @@ export function PropertyRow({
   label: string;
   children: React.ReactNode;
 }) {
+  const showLabelColumn = typeof label === "string" && label.trim().length > 0;
+
+  if (!showLabelColumn) {
+    return <Box sx={{ py: 0.25 }}>{children}</Box>;
+  }
+
   return (
     <Box
       sx={{

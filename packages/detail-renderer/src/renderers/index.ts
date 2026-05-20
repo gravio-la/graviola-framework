@@ -2,12 +2,13 @@ import { uiTypeIs, rankWith } from "@jsonforms/core";
 import type { DetailRendererRegistryEntry } from "@graviola/edb-detail-renderer-core";
 import {
   anyOfObjectUnionTester,
-  arrayEntityRefTester,
+  arraynamedEntityTester,
+  arrayInlineObjectTester,
   arrayPrimitiveTester,
   booleanTester,
   dateTester,
   dateTimeTester,
-  entityRefTester,
+  namedEntityTester,
   enumTester,
   inlineObjectTester,
   numberTester,
@@ -26,7 +27,8 @@ import { BooleanRenderer } from "./BooleanRenderer";
 import { DateRenderer, DateTimeRenderer } from "./DateRenderer";
 import { UriRenderer } from "./UriRenderer";
 import { EnumRenderer } from "./EnumRenderer";
-import { EntityRefRenderer } from "./EntityRefRenderer";
+import { NamedEntityRenderer } from "./NamedEntityRenderer";
+import { ArrayInlineObjectRenderer } from "./ArrayInlineObjectRenderer";
 import { ArrayEntityRenderer } from "./ArrayEntityRenderer";
 import { ArrayPrimitiveRenderer } from "./ArrayPrimitiveRenderer";
 import { ObjectRenderer } from "./ObjectRenderer";
@@ -53,12 +55,13 @@ export const defaultDetailRenderers: DetailRendererRegistryEntry[] = [
   { tester: rankWith(14, uiTypeIs("Label")), renderer: LabelRenderer },
   { tester: anyOfObjectUnionTester, renderer: AnyOfDetailRenderer },
   { tester: oneOfObjectUnionTester, renderer: OneOfDetailRenderer },
-  { tester: entityRefTester, renderer: EntityRefRenderer },
-  { tester: arrayEntityRefTester, renderer: ArrayEntityRenderer },
+  { tester: namedEntityTester, renderer: NamedEntityRenderer },
+  { tester: arraynamedEntityTester, renderer: ArrayEntityRenderer },
   { tester: dateTester, renderer: DateRenderer },
   { tester: dateTimeTester, renderer: DateTimeRenderer },
   { tester: enumTester, renderer: EnumRenderer },
   { tester: arrayPrimitiveTester, renderer: ArrayPrimitiveRenderer },
+  { tester: arrayInlineObjectTester, renderer: ArrayInlineObjectRenderer },
   { tester: booleanTester, renderer: BooleanRenderer },
   { tester: uriTester, renderer: UriRenderer },
   { tester: inlineObjectTester, renderer: ObjectRenderer },
@@ -74,9 +77,10 @@ export {
   DateTimeRenderer,
   UriRenderer,
   EnumRenderer,
-  EntityRefRenderer,
+  NamedEntityRenderer,
   ArrayEntityRenderer,
   ArrayPrimitiveRenderer,
+  ArrayInlineObjectRenderer,
   ObjectRenderer,
   VerticalLayoutRenderer,
   HorizontalLayoutRenderer,

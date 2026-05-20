@@ -11,7 +11,7 @@ import type {
   ChipRendererEntry,
   ChipsConfig,
 } from "@graviola/edb-detail-renderer-core";
-import { isEntityRef } from "@graviola/edb-detail-renderer-core";
+import { isNamedEntity } from "@graviola/edb-detail-renderer-core";
 import { EntityChipRenderer } from "./renderers/EntityChipRenderer";
 import { EnumChipRenderer } from "./renderers/EnumChipRenderer";
 import { MediaChipRenderer, IMAGE_EXT_RE } from "./renderers/MediaChipRenderer";
@@ -80,7 +80,7 @@ const simpleChipDefinition = (
 
 export const defaultChipRegistry: ChipRendererEntry[] = [
   {
-    tester: rankWith(5, isEntityRef),
+    tester: rankWith(5, isNamedEntity),
     computeDefinition: entityChipDefinition,
     renderer: EntityChipRenderer,
   },

@@ -30,7 +30,8 @@
     "@mui/icons-material": "catalog:mui",
     "@ebay/nice-modal-react": "^1.2",
     "@tanstack/react-query": "^5",
-    "react": "catalog:"
+    "react": "catalog:",
+    "react-i18next": ">=15"
   },
   "dependencies": {
     "@jsonforms/core": "catalog:jsonforms",
@@ -39,6 +40,8 @@
     "@graviola/edb-data-mapping": "workspace:*",
     "@graviola/edb-advanced-components": "workspace:*",
     "@graviola/edb-state-hooks": "workspace:*",
+    "@graviola/edb-ui-utils": "workspace:*",
+    "@graviola/semantic-jsonform-types": "workspace:*",
     "dayjs": "^1.11.18"
   },
   "devDependencies": {
@@ -47,6 +50,7 @@
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
     "eslint-config-edb": "workspace:*",
+    "react-i18next": "^15.7.4",
     "tsup": "^8.0.0",
     "typescript": "^5.8.2"
   },

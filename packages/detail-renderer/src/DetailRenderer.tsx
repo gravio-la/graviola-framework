@@ -230,6 +230,7 @@ export const DetailRenderer = React.memo(function DetailRenderer({
         resolvedConfig.alwaysShowPropertyNames ?? [],
       ),
       headerPrimaryFieldNames,
+      topLevelLayoutVariant: resolvedConfig.topLevelLayoutVariant,
     }),
     [
       schema,
@@ -247,6 +248,7 @@ export const DetailRenderer = React.memo(function DetailRenderer({
       resolvedConfig.hiddenPropertyNames,
       resolvedConfig.alwaysShowPropertyNames,
       headerPrimaryFieldNames,
+      resolvedConfig.topLevelLayoutVariant,
     ],
   );
 
