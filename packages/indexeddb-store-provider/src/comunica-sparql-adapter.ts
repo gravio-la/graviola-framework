@@ -1,5 +1,5 @@
 /**
- * Comunica SPARQL adapter for IndexedDBDataset.
+ * Comunica SPARQL adapter for RDF.js DatasetCore sources (IndexedDBDataset, N3.Store, …).
  *
  * Wraps @comunica/query-sparql-rdfjs QueryEngine to produce CRUDFunctions
  * compatible with the Graviola sparql-db-impl / initSPARQLStore API.
@@ -20,12 +20,36 @@
 
 import { QueryEngine } from "@comunica/query-sparql-rdfjs";
 import N3 from "n3";
-import type { IndexedDBDataset } from "@graviola/indexeddb-dataset";
 import type {
   CRUDFunctions,
   SelectFetchOverload,
 } from "@graviola/edb-core-types";
-import type { Term, NamedNode, Literal } from "@rdfjs/types";
+import type { DatasetCore, Literal, Term } from "@rdfjs/types";
+
+export type CreateComunicaCRUDFunctionsOptions = {
+  /**
+   * Enables adapter logs when the source has no `verboseLogging`
+   * (e.g. in-memory {@link import("n3").Store}).
+   *
+   * CONSTRUCT additionally prints the **full SPARQL** with `console.info`
+   * (still visible when Vite `esbuild.pure` drops `console.debug`).
+   */
+  debugLogging?: boolean;
+};
+
+async function quadCount(dataset: DatasetCore): Promise<number> {
+  const d = dataset as DatasetCore & {
+    getSize?: () => Promise<number>;
+  };
+  if (typeof d.getSize === "function") {
+    return d.getSize();
+  }
+  const withSize = dataset as DatasetCore & { readonly size?: number };
+  if (typeof withSize.size === "number") {
+    return withSize.size;
+  }
+  return 0;
+}
 
 /**
  * Convert an RDFJS Term to a SPARQL JSON Results term object.
@@ -65,21 +89,47 @@ function termToSparqlJson(term: Term): Record<string, string> {
 
 /**
  * Build a CRUDFunctions object backed by a Comunica QueryEngine over the
- * provided IndexedDBDataset.
+ * provided RDF.js DatasetCore (writable for SPARQL UPDATE).
  *
  * The sparqlFlavour for initSPARQLStore should be "default" (standard SPARQL 1.1),
  * not "oxigraph" — Comunica does not accept Oxigraph-specific syntax extensions.
  */
-const TAG = "[IDB:adapter]";
-const q = (query: string) => query.replace(/\s+/g, " ").trim().slice(0, 200);
+const TAG = "[Comunica:adapter]";
+
+/** One-line preview for `console.debug`; full text is logged separately via `console.info` (not stripped by typical Vite `esbuild.pure`). */
+const QUERY_PREVIEW_MAX = 420;
+
+function previewQuery(query: string): string {
+  const oneLine = query.replace(/\s+/g, " ").trim();
+  if (oneLine.length <= QUERY_PREVIEW_MAX) return oneLine;
+  return `${oneLine.slice(0, QUERY_PREVIEW_MAX)} … [${oneLine.length} chars total — see following console.info for full SPARQL]`;
+}
+
+/** @deprecated legacy alias kept for grep; use previewQuery */
+const q = previewQuery;
 
 export function createComunicaCRUDFunctions(
   engine: QueryEngine,
-  dataset: IndexedDBDataset,
+  dataset: DatasetCore,
+  options?: CreateComunicaCRUDFunctionsOptions,
 ): CRUDFunctions {
+  const verbose =
+    options?.debugLogging === true ||
+    Boolean((dataset as { verboseLogging?: boolean }).verboseLogging);
+  const log = (...args: unknown[]) => {
+    if (verbose) {
+      console.debug(...args);
+    }
+  };
+
   return {
     constructFetch: async (query: string) => {
-      console.debug(`${TAG} CONSTRUCT`, q(query));
+      log(`${TAG} CONSTRUCT (preview)`, previewQuery(query));
+      if (verbose) {
+        console.info(
+          `${TAG} CONSTRUCT — full SPARQL (${query.length} chars)\n${query}`,
+        );
+      }
       try {
         const quadsStream = await engine.queryQuads(query, {
           sources: [dataset as any],
@@ -90,7 +140,7 @@ export function createComunicaCRUDFunctions(
           quadsStream.on("end", () => resolve());
           quadsStream.on("error", reject);
         });
-        console.debug(`${TAG} CONSTRUCT → ${store.size} quads`);
+        log(`${TAG} CONSTRUCT → ${store.size} quads`);
         return store;
       } catch (err) {
         console.error(`${TAG} CONSTRUCT error`, err, "\nQuery:", query);
@@ -102,26 +152,65 @@ export function createComunicaCRUDFunctions(
       query: string,
       options?: { withHeaders?: boolean },
     ) => {
-      console.debug(
-        `${TAG} SELECT (withHeaders=${options?.withHeaders})`,
-        q(query),
-      );
+      log(`${TAG} SELECT (withHeaders=${options?.withHeaders})`, q(query));
       try {
-        // Use engine.query() so we can call metadata() on the result wrapper.
-        // queryBindings() calls result.execute() which strips the metadata() method.
-        const queryResult = (await engine.query(query, {
+        // Use queryBindings() directly — avoid engine.query()+metadata()+execute(), which can
+        // duplicate join setup / match iterators and cause unbounded work.
+        const bindingsStream = await engine.queryBindings(query, {
           sources: [dataset as any],
-        })) as any;
+        });
 
-        const meta = await queryResult.metadata();
-        const vars: string[] = (meta.variables as any[]).map(
-          (v: any) => v.value ?? String(v),
-        );
-        console.debug(`${TAG} SELECT vars:`, vars);
+        const extractVarNamesFromBinding = (b: unknown): string[] => {
+          const bk = b as { keys?: () => Iterable<unknown> };
+          const keys =
+            typeof bk.keys === "function" ? Array.from(bk.keys()) : [];
+          return keys.map((v) =>
+            typeof v === "string"
+              ? v
+              : v && typeof v === "object" && "value" in v
+                ? String((v as { value: string }).value)
+                : String(v),
+          );
+        };
 
-        const bindingsStream = await queryResult.execute();
+        const extractVarNamesFromMeta = (meta: any): string[] => {
+          const vs = (meta?.variables ?? []) as unknown[];
+          return vs.map((x) =>
+            typeof x === "string" ? x : ((x as any)?.value ?? String(x)),
+          );
+        };
+
+        /**
+         * SPARQL JSON results need `head.vars` even when `bindings` is empty.
+         * Register `getProperty("metadata")` *before* draining so Comunica can
+         * attach variables without a long post-hoc timeout.
+         */
+        const metaVarsPromise = new Promise<string[]>((resolve) => {
+          let settled = false;
+          let metaTimer: ReturnType<typeof setTimeout> | undefined;
+          const finish = (v: string[]) => {
+            if (!settled) {
+              settled = true;
+              if (metaTimer !== undefined) clearTimeout(metaTimer);
+              resolve(v);
+            }
+          };
+          metaTimer = setTimeout(() => finish([]), 500);
+          bindingsStream.getProperty("metadata", (meta: any) => {
+            finish(extractVarNamesFromMeta(meta));
+          });
+        });
+
         const rawBindings = await bindingsStream.toArray();
-        console.debug(`${TAG} SELECT → ${rawBindings.length} rows`);
+
+        const vars: string[] =
+          rawBindings.length > 0
+            ? extractVarNamesFromBinding(rawBindings[0])
+            : await metaVarsPromise;
+
+        log(`${TAG} SELECT vars:`, vars);
+
+        log(`${TAG} SELECT → ${rawBindings.length} rows`);
 
         const bindings = rawBindings.map((binding: any) => {
           const row: Record<string, Record<string, string>> = {};
@@ -143,11 +232,11 @@ export function createComunicaCRUDFunctions(
     }) as SelectFetchOverload,
 
     updateFetch: async (query: string) => {
-      console.debug(`${TAG} UPDATE`, q(query));
+      log(`${TAG} UPDATE`, q(query));
       try {
         await engine.queryVoid(query, { sources: [dataset as any] });
-        const size = await dataset.getSize();
-        console.debug(`${TAG} UPDATE done — store size now ${size}`);
+        const size = await quadCount(dataset);
+        log(`${TAG} UPDATE done — store size now ${size}`);
       } catch (err) {
         console.error(`${TAG} UPDATE error`, err, "\nQuery:", query);
         throw err;
@@ -155,12 +244,12 @@ export function createComunicaCRUDFunctions(
     },
 
     askFetch: async (query: string) => {
-      console.debug(`${TAG} ASK`, q(query));
+      log(`${TAG} ASK`, q(query));
       try {
         const result = await engine.queryBoolean(query, {
           sources: [dataset as any],
         });
-        console.debug(`${TAG} ASK → ${result}`);
+        log(`${TAG} ASK → ${result}`);
         return result;
       } catch (err) {
         console.error(`${TAG} ASK error`, err, "\nQuery:", query);

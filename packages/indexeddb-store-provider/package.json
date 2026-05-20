@@ -24,8 +24,13 @@
   },
   "dependencies": {
     "@comunica/query-sparql-rdfjs": "^4.0.0",
+    "@graviola/edb-global-types": "workspace:*",
+    "@graviola/edb-graph-traversal": "workspace:*",
     "@graviola/indexeddb-dataset": "workspace:*",
+    "@graviola/json-schema-utils": "workspace:*",
     "@graviola/sparql-db-impl": "workspace:*",
+    "@graviola/sparql-schema": "workspace:*",
+    "@graviola/store-core": "workspace:*",
     "@graviola/edb-core-utils": "workspace:*",
     "n3": "^1.17.2"
   },
@@ -38,6 +43,7 @@
   "devDependencies": {
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
+    "@types/json-schema": "catalog:",
     "fake-indexeddb": "^6.0.0",
     "typescript": "^5.8.2"
   }

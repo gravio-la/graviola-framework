@@ -343,3 +343,42 @@ describe("updateFetch", () => {
     }
   });
 });
+
+// ─── N3.Store (in-memory DatasetCore) ───────────────────────────────────────────
+
+describe("createComunicaCRUDFunctions — N3.Store source", () => {
+  function makeN3Adapter(triples: N3.Quad[]) {
+    const store = new N3.Store();
+    for (const q of triples) {
+      store.addQuad(q);
+    }
+    const fns = createComunicaCRUDFunctions(engine, store);
+    return { store, fns };
+  }
+
+  test("SELECT returns expected row count over N3.Store", async () => {
+    const { fns } = makeN3Adapter(PEOPLE);
+    const bindings = (await fns.selectFetch(
+      "SELECT ?s ?p ?o WHERE { ?s ?p ?o }",
+    )) as any[];
+    expect(bindings.length).toBe(PEOPLE.length);
+  });
+
+  test("UPDATE mutates N3.Store in place", async () => {
+    const { store, fns } = makeN3Adapter([
+      quad(ex("Alice"), ex("name"), literal("Alice"), defaultGraph()),
+    ]);
+    await fns.updateFetch(`
+      DELETE { <http://example.org/Alice> <http://example.org/name> ?old }
+      INSERT { <http://example.org/Alice> <http://example.org/name> "Renamed" }
+      WHERE { <http://example.org/Alice> <http://example.org/name> ?old }
+    `);
+
+    expect(store.size).toBe(1);
+    const bindings = (await fns.selectFetch(`
+      SELECT ?name WHERE { <http://example.org/Alice> <http://example.org/name> ?name }
+    `)) as any[];
+    expect(bindings.length).toBe(1);
+    expect(bindings[0].name.value).toBe("Renamed");
+  });
+});

@@ -16,18 +16,33 @@
  *   - No WebWorker: IndexedDB is already async by nature.
  *   - No bulk-load / persistence management (the IDB store IS the persistence).
  *   - sparqlFlavour is "default" — Comunica uses standard SPARQL 1.1.
+ *   - Optional dev reseed via {@link IndexedDBReseedStrategy} `"always-in-dev"` + fingerprint.
  */
 
 import type { FunctionComponent, ReactNode } from "react";
-import { useEffect, useMemo, useState } from "react";
-import { QueryEngine } from "@comunica/query-sparql-rdfjs";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { IndexedDBDataset } from "@graviola/indexeddb-dataset";
 import type { IndexedDBDatasetOptions } from "@graviola/indexeddb-dataset";
 import { initSPARQLStore } from "@graviola/sparql-db-impl";
 import { CrudProviderContext, useAdbContext } from "@graviola/edb-state-hooks";
 import type { SparqlEndpoint } from "@graviola/edb-core-types";
-import N3 from "n3";
+import { DEFAULT_DB_NAME } from "@graviola/indexeddb-dataset";
 import { createComunicaCRUDFunctions } from "./comunica-sparql-adapter";
+import { parseTurtle } from "./parseTurtle";
+import { getSharedComunicaEngine } from "./sharedComunicaEngine";
+import { NativeRdfDatasetContext } from "./nativeRdfDatasetContext";
+
+/** How {@link IndexedDBStoreProvider} applies {@link IndexedDBStoreProviderProps.initialData}. */
+export type IndexedDBReseedStrategy =
+  /** Seed only when the dataset has zero quads (default). */
+  | "seed-if-empty"
+  /**
+   * When {@link IndexedDBStoreProviderProps.reseedFingerprint} differs from the last
+   * stored value for this {@link IndexedDBStoreProviderProps.dbName}, destroy the DB,
+   * reopen, and import {@link IndexedDBStoreProviderProps.initialData}.
+   * Intended for dev workflows (e.g. fixture hot-reload); callers should pass this only in dev.
+   */
+  | "always-in-dev";
 
 export type IndexedDBStoreProviderProps = {
   children: ReactNode;
@@ -46,27 +61,115 @@ export type IndexedDBStoreProviderProps = {
    * Loaded once — on subsequent page loads the persisted data is used instead.
    */
   initialData?: string;
+  /**
+   * If set, only the first N quads from {@link initialData} are passed to
+   * `IndexedDBDataset.import` (parser still runs through the whole Turtle).
+   * Use this to stress-test with a fraction of a large fixture without splitting files.
+   */
+  initialDataMaxQuads?: number;
+  /**
+   * When true, `upsertDocument` runs inverse-property sync queries (`x-inverseOf`), matching
+   * {@link LocalOxigraphStoreProvider}.
+   */
+  enableInversePropertiesFeature?: boolean;
+  /** Defaults to `"seed-if-empty"`. */
+  reseedStrategy?: IndexedDBReseedStrategy;
+  /**
+   * Stable fingerprint for {@link reseedStrategy} `"always-in-dev"` (e.g. hash of fixture Turtle).
+   * If omitted while using `"always-in-dev"`, behavior falls back to seed-if-empty only.
+   */
+  reseedFingerprint?: string;
+  /**
+   * When true, logs provider lifecycle with `console.debug`. Dataset tracing uses
+   * {@link IndexedDBDatasetOptions.debugLogging} (merged from {@link datasetOptions}).
+   * Defaults to false.
+   */
+  debugLogging?: boolean;
 };
 
-/** Parse a Turtle string into an array of RDFJS quads. */
-function parseTurtle(turtle: string): Promise<N3.Quad[]> {
-  return new Promise((resolve, reject) => {
-    const quads: N3.Quad[] = [];
-    new N3.Parser().parse(turtle, (err, quad) => {
-      if (err) return reject(err);
-      if (quad) quads.push(quad);
-      else resolve(quads);
-    });
-  });
+function effectiveDbName(dbName?: string): string {
+  return dbName ?? DEFAULT_DB_NAME;
 }
 
-// Singleton engine — QueryEngine is stateless and safe to share across providers
-let sharedEngine: QueryEngine | null = null;
-function getEngine(): QueryEngine {
-  if (!sharedEngine) {
-    sharedEngine = new QueryEngine();
+function reseedFingerprintStorageKey(dbName: string): string {
+  return `graviola-indexeddb-reseed-fp:${dbName}`;
+}
+
+function readStoredReseedFingerprint(dbName: string): string | null {
+  if (typeof globalThis.localStorage === "undefined") return null;
+  try {
+    return globalThis.localStorage.getItem(reseedFingerprintStorageKey(dbName));
+  } catch {
+    return null;
   }
-  return sharedEngine;
+}
+
+function writeStoredReseedFingerprint(
+  dbName: string,
+  fingerprint: string,
+): void {
+  if (typeof globalThis.localStorage === "undefined") return;
+  try {
+    globalThis.localStorage.setItem(
+      reseedFingerprintStorageKey(dbName),
+      fingerprint,
+    );
+  } catch {
+    /* ignore quota / private mode */
+  }
+}
+
+function logDebug(enabled: boolean, ...args: unknown[]): void {
+  if (enabled) {
+    console.debug(...args);
+  }
+}
+
+async function importInitialTurtleData(
+  ds: IndexedDBDataset,
+  turtle: string,
+  args: {
+    maxQuads?: number;
+    tag: string;
+    debugLogging: boolean;
+  },
+): Promise<void> {
+  const t0 =
+    typeof performance !== "undefined" && performance.now
+      ? performance.now()
+      : Date.now();
+  const { quads, quadsInDocument, capped } = await parseTurtle(turtle, {
+    maxQuads: args.maxQuads,
+  });
+  const t1 =
+    typeof performance !== "undefined" && performance.now
+      ? performance.now()
+      : Date.now();
+  logDebug(
+    args.debugLogging,
+    `${args.tag} [import perf] parse: ${(t1 - t0).toFixed(1)}ms — kept ${quads.length} quads for import` +
+      (capped
+        ? ` (capped; parser finished whole file, ${quadsInDocument} quads total)`
+        : ` (${quadsInDocument} quads in file)`),
+  );
+  const t2 =
+    typeof performance !== "undefined" && performance.now
+      ? performance.now()
+      : Date.now();
+  await ds.import(quads);
+  const t3 =
+    typeof performance !== "undefined" && performance.now
+      ? performance.now()
+      : Date.now();
+  const sizeAfter = await ds.getSize();
+  const t4 =
+    typeof performance !== "undefined" && performance.now
+      ? performance.now()
+      : Date.now();
+  logDebug(
+    args.debugLogging,
+    `${args.tag} [import perf] persist: import+flush ${(t3 - t2).toFixed(1)}ms, getSize ${(t4 - t3).toFixed(1)}ms → store has ${sizeAfter} quads`,
+  );
 }
 
 export const IndexedDBStoreProvider: FunctionComponent<
@@ -79,58 +182,131 @@ export const IndexedDBStoreProvider: FunctionComponent<
   loader,
   datasetOptions,
   initialData,
+  initialDataMaxQuads,
+  enableInversePropertiesFeature,
+  reseedStrategy = "seed-if-empty",
+  reseedFingerprint,
+  debugLogging = false,
 }) => {
   const [dataset, setDataset] = useState<IndexedDBDataset | null>(null);
   const [dataLoaded, setDataLoaded] = useState(false);
 
-  // Open the IndexedDB database once on mount (or when dbName changes).
-  // If the store is empty and initialData is provided, seed it before signalling ready.
+  /**
+   * Always read the latest `datasetOptions` inside effects without listing it in deps.
+   * Inline `{}` from callers would change identity every render and reopen IndexedDB in a loop.
+   */
+  const datasetOptionsRef = useRef(datasetOptions);
+  datasetOptionsRef.current = datasetOptions;
+
+  /** Snapshot for IndexedDBDataset.open — merges provider debug flag with caller options. */
+  const snapshotDatasetOpenArgs = (): IndexedDBDatasetOptions => {
+    const opts = datasetOptionsRef.current;
+    const debugMerged = opts?.debugLogging ?? debugLogging ?? false;
+    return {
+      dbName,
+      ...opts,
+      debugLogging: debugMerged,
+    };
+  };
+
+  // Open the IndexedDB database once on mount (or when dbName / seed inputs change).
   useEffect(() => {
     let cancelled = false;
     let openedDataset: IndexedDBDataset | null = null;
 
-    const tag = `[IDB:provider db="${dbName ?? "graviola-rdf"}"]`;
+    const resolvedDbName = effectiveDbName(dbName);
+    const tag = `[IDB:provider db="${resolvedDbName}"]`;
+
     (async () => {
       try {
-        console.debug(`${tag} Opening database...`);
-        const ds = await IndexedDBDataset.open({ dbName, ...datasetOptions });
+        logDebug(debugLogging, `${tag} Opening database...`);
+        let ds = await IndexedDBDataset.open(snapshotDatasetOpenArgs());
         openedDataset = ds;
         if (cancelled) {
           ds.close();
           return;
         }
 
-        const sizeOnOpen = await ds.getSize();
-        console.debug(`${tag} Opened. Size on open: ${sizeOnOpen} quads`);
+        let sizeOnOpen = await ds.getSize();
+        logDebug(
+          debugLogging,
+          `${tag} Opened. Size on open: ${sizeOnOpen} quads`,
+        );
 
-        // Seed initial data when the store is empty
-        if (initialData) {
+        const trimmedInitial = initialData?.trim() ?? "";
+        const shouldFingerprintReseed =
+          reseedStrategy === "always-in-dev" &&
+          trimmedInitial.length > 0 &&
+          reseedFingerprint !== undefined &&
+          reseedFingerprint.length > 0;
+
+        if (shouldFingerprintReseed) {
+          const storedFp = readStoredReseedFingerprint(resolvedDbName);
+          const fpChanged = storedFp !== reseedFingerprint;
+
+          if (fpChanged) {
+            logDebug(
+              debugLogging,
+              `${tag} Reseed: fingerprint changed (${storedFp ?? "none"} → ${reseedFingerprint}) — destroying and re-importing...`,
+            );
+            await ds.flush();
+            await ds.destroy();
+            openedDataset = null;
+
+            ds = await IndexedDBDataset.open(snapshotDatasetOpenArgs());
+            openedDataset = ds;
+            if (cancelled) {
+              ds.close();
+              return;
+            }
+
+            try {
+              await importInitialTurtleData(ds, trimmedInitial, {
+                maxQuads: initialDataMaxQuads,
+                tag,
+                debugLogging,
+              });
+              writeStoredReseedFingerprint(resolvedDbName, reseedFingerprint);
+              logDebug(
+                debugLogging,
+                `${tag} Reseed done (fingerprint stored).`,
+              );
+            } catch (err) {
+              console.error(`${tag} Failed to import after reseed:`, err);
+            }
+          } else {
+            logDebug(
+              debugLogging,
+              `${tag} Reseed skipped — fingerprint unchanged (${reseedFingerprint})`,
+            );
+          }
+        } else if (trimmedInitial.length > 0) {
+          // seed-if-empty (default), or always-in-dev without a fingerprint
           if (sizeOnOpen === 0) {
             try {
-              console.debug(
+              logDebug(
+                debugLogging,
                 `${tag} Store is empty — parsing and seeding initial data...`,
               );
-              const quads = await parseTurtle(initialData);
-              console.debug(
-                `${tag} Parsed ${quads.length} quads — importing...`,
-              );
-              await ds.import(quads);
-              const sizeAfterSeed = await ds.getSize();
-              console.debug(
-                `${tag} Seeding done. Store size now: ${sizeAfterSeed} quads`,
-              );
+              await importInitialTurtleData(ds, trimmedInitial, {
+                maxQuads: initialDataMaxQuads,
+                tag,
+                debugLogging,
+              });
+              logDebug(debugLogging, `${tag} Seeding done.`);
             } catch (err) {
               console.error(`${tag} Failed to seed initial data:`, err);
             }
           } else {
-            console.debug(
+            logDebug(
+              debugLogging,
               `${tag} Store already has ${sizeOnOpen} quads — skipping seed`,
             );
           }
         }
 
         if (!cancelled) {
-          console.debug(`${tag} Provider ready`);
+          logDebug(debugLogging, `${tag} Provider ready`);
           setDataset(ds);
           setDataLoaded(true);
         } else {
@@ -150,7 +326,14 @@ export const IndexedDBStoreProvider: FunctionComponent<
           .catch(console.error);
       }
     };
-  }, [dbName]);
+  }, [
+    dbName,
+    reseedStrategy,
+    reseedFingerprint,
+    initialData,
+    initialDataMaxQuads,
+    debugLogging,
+  ]);
 
   const {
     schema,
@@ -161,7 +344,7 @@ export const IndexedDBStoreProvider: FunctionComponent<
 
   const crudOptions = useMemo(() => {
     if (!dataset) return null;
-    return createComunicaCRUDFunctions(getEngine(), dataset);
+    return createComunicaCRUDFunctions(getSharedComunicaEngine(), dataset);
   }, [dataset]);
 
   const dataStore = useMemo(() => {
@@ -184,6 +367,7 @@ export const IndexedDBStoreProvider: FunctionComponent<
       schema,
       defaultLimit,
       defaultUpdateGraph: endpoint?.defaultUpdateGraph,
+      enableInversePropertiesFeature,
     });
   }, [
     crudOptions,
@@ -194,19 +378,25 @@ export const IndexedDBStoreProvider: FunctionComponent<
     jsonldContext,
     defaultLimit,
     endpoint?.defaultUpdateGraph,
+    enableInversePropertiesFeature,
   ]);
 
   const isReady = Boolean(dataset && dataStore && dataLoaded);
 
+  const crudProviderValue = useMemo(
+    () => ({
+      crudOptions,
+      dataStore,
+      isReady,
+    }),
+    [crudOptions, dataStore, isReady],
+  );
+
   return (
-    <CrudProviderContext.Provider
-      value={{
-        crudOptions,
-        dataStore,
-        isReady,
-      }}
-    >
-      {!loader || isReady ? children : loader}
+    <CrudProviderContext.Provider value={crudProviderValue}>
+      <NativeRdfDatasetContext.Provider value={dataset}>
+        {!loader || isReady ? children : loader}
+      </NativeRdfDatasetContext.Provider>
     </CrudProviderContext.Provider>
   );
 };
