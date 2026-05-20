@@ -6,7 +6,7 @@ Headless **detail view** utilities: JSON Forms–compatible testers, ranked rend
 
 ## Tester API
 
-Structural testers (`isEntityRef`, `isArrayOfEntityRefs`, …) and helpers (`typeIRIIs`, `typeNameIs`, `shapeHasProperty`) mirror `@jsonforms/core` (`rankWith`, `and`, `optionIs`, `formatIs`, …).
+Structural testers (`isNamedEntity`, `isArrayOfNamedEntitys`, …) and helpers (`typeIRIIs`, `typeNameIs`, `shapeHasProperty`) mirror `@jsonforms/core` (`rankWith`, `and`, `optionIs`, `formatIs`, …).
 
 `typeIRIIs` reads `@type.const` from the JSON Schema via `extractTypeIRI`.  
 `typeNameIs` uses `config.typeIRIToTypeName` on the JSON Forms tester context (pass `DetailTesterContext` as `config`).

@@ -17,7 +17,7 @@ import {
 } from "@jsonforms/core";
 
 export type OverrideOptions = {
-  scopeOverride?: Record<string, ControlElement>;
+  scopeOverride?: Record<string, Partial<ControlElement>>;
   skipScope?: string[];
 };
 
@@ -46,7 +46,7 @@ export const createControlElement = (
     type: "Control",
     scope: ref,
     ...override,
-  };
+  } as ControlElement;
 };
 
 const wrapInLayoutIfNecessary = (

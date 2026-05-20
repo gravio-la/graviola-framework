@@ -11,10 +11,10 @@ import {
 import type { Tester } from "@jsonforms/core";
 import type { JSONSchema7 } from "json-schema";
 
-export const isEntityRef: Tester = (_uischema, schema) =>
+export const isNamedEntity: Tester = (_uischema, schema) =>
   Boolean((schema as JSONSchema7)?.properties?.["@id"]);
 
-export const isArrayOfEntityRefs: Tester = (_uischema, schema) => {
+export const isArrayOfNamedEntitys: Tester = (_uischema, schema) => {
   const s = schema as JSONSchema7;
   if (s?.type !== "array") return false;
   return Boolean((s.items as JSONSchema7 | undefined)?.properties?.["@id"]);
@@ -30,14 +30,25 @@ export const isArrayOfPrimitives: Tester = (_uischema, schema) => {
   );
 };
 
+/** Array whose items schema is object with no `@id` (embedded / anonymous structured objects). */
+export const isArrayOfInlineObjects: Tester = (_uischema, schema) => {
+  const s = schema as JSONSchema7;
+  if (s?.type !== "array") return false;
+  const items = s.items as JSONSchema7 | undefined;
+  if (!items || typeof items === "boolean") return false;
+  if (items.type !== "object") return false;
+  return !items.properties?.["@id"];
+};
+
 export const isInlineObject: Tester = (_uischema, schema) => {
   const s = schema as JSONSchema7;
   return s?.type === "object" && !s?.properties?.["@id"];
 };
 
-export const entityRefTester = rankWith(5, isEntityRef);
-export const arrayEntityRefTester = rankWith(4, isArrayOfEntityRefs);
+export const namedEntityTester = rankWith(5, isNamedEntity);
+export const arraynamedEntityTester = rankWith(4, isArrayOfNamedEntitys);
 export const arrayPrimitiveTester = rankWith(3, isArrayOfPrimitives);
+export const arrayInlineObjectTester = rankWith(3, isArrayOfInlineObjects);
 export const inlineObjectTester = rankWith(2, isInlineObject);
 export const booleanTester = rankWith(3, isBooleanControl);
 export const uriTester = rankWith(3, and(isControl, formatIs("uri")));

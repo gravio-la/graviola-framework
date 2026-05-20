@@ -4,13 +4,17 @@ export type {
   ChipRendererEntry,
   ChipRendererProps,
   ChipsConfig,
+  DetailArrayInlineControlOptions,
   DetailDispatch,
   DetailRendererProps,
   DetailRendererRegistryEntry,
   DetailTesterContext,
   DetailViewConfig,
+  DetailTopLevelLayoutVariant,
   Tester,
 } from "./types";
+
+export { DETAIL_ARRAY_INLINE_OPTIONS_KEY } from "./types";
 
 export type { GenerateDefaultDetailUISchemaOptions as GenerateDetailUISchemaOptions } from "./uischema/generateDefault";
 

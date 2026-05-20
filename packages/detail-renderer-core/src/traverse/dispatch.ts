@@ -45,17 +45,47 @@ function shouldHideProperty(
   return false;
 }
 
+/** True when schema declares JSON Schema array type */
+function schemaDeclaresArrayType(schema: JSONSchema7 | undefined): boolean {
+  const t = schema?.type;
+  return (
+    t === "array" || (Array.isArray(t) && (t as string[]).includes("array"))
+  );
+}
+
+/**
+ * Detail dispatch/testers inspect `schema.items` shapes (e.g. `properties["@id"]`).
+ * Nested `items: { $ref: "#/definitions/Event" }` must be inlined like top-level refs.
+ */
+function expandArrayItemsRef(
+  schema: JSONSchema7,
+  rootSchema: JSONSchema7,
+): JSONSchema7 {
+  if (!schemaDeclaresArrayType(schema) || schema.items == null) return schema;
+  if (Array.isArray(schema.items)) return schema;
+
+  const itemsSchema = schema.items as JSONSchema7;
+  if (typeof itemsSchema === "boolean") return schema;
+  if (!itemsSchema.$ref) return schema;
+
+  const resolvedItems = resolvePropertySchema(itemsSchema, rootSchema);
+  return { ...schema, items: resolvedItems };
+}
+
 export function resolvePropertySchema(
   propSchema: JSONSchema7,
   rootSchema: JSONSchema7,
 ): JSONSchema7 {
+  let resolved: JSONSchema7;
   if (propSchema.$ref) {
-    const resolved = resolveSchema(rootSchema, propSchema.$ref, rootSchema) as
+    const r = resolveSchema(rootSchema, propSchema.$ref, rootSchema) as
       | JSONSchema7
       | undefined;
-    return resolved ?? propSchema;
+    resolved = r ?? propSchema;
+  } else {
+    resolved = propSchema;
   }
-  return propSchema;
+  return expandArrayItemsRef(resolved, rootSchema);
 }
 
 export function buildDispatch(

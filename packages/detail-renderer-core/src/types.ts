@@ -2,6 +2,17 @@ import type { JSONSchema7 } from "json-schema";
 import type { RankedTester, UISchemaElement } from "@jsonforms/core";
 import type React from "react";
 
+/**
+ * How {@link TopLevelLayoutRenderer} orders the hero (primary fields) vs. nested property controls.
+ *
+ * - `default` — hero card (image, title, description) first, then a divider, then property rows.
+ * - `singleCardPropertiesFirst` — one unified card: full-bleed hero image with rounded top (flush to
+ *   the dialog/card edge), then headline, subtitle, divider, then property rows.
+ */
+export type DetailTopLevelLayoutVariant =
+  | "default"
+  | "singleCardPropertiesFirst";
+
 /** Per-node context for dispatch and JSON Forms–style testers. */
 export interface DetailTesterContext {
   rootSchema: JSONSchema7;
@@ -25,6 +36,8 @@ export interface DetailTesterContext {
   hiddenPropertyNames?: string[];
   alwaysShowPropertyNames?: string[];
   headerPrimaryFieldNames?: string[];
+  /** Inherited from merged {@link DetailViewConfig}; drives {@link TopLevelLayoutRenderer}. */
+  topLevelLayoutVariant?: DetailTopLevelLayoutVariant;
 }
 
 export interface DetailRendererRegistryEntry {
@@ -54,6 +67,23 @@ export type DetailDispatch = (params: {
   ctx?: DetailTesterContext;
 }) => React.ReactNode;
 
+/**
+ * JSON Forms `ControlElement.options.detailArrayInline` — presentation hints for arrays
+ * rendered by compact inline-object layouts (typically `ArrayInlineObjectRenderer`).
+ */
+export interface DetailArrayInlineControlOptions {
+  /** Omit per-item borders / extra spacing */
+  compactItems?: boolean;
+  /** Arrange items horizontally (row) like chips, or vertically (column). */
+  itemLayout?: "column" | "row";
+  /** If set, omit all other JSON properties on each item schema root when generating item UI */
+  itemIncludeProperties?: string[];
+  /** Use empty JsonForms labels on rendered item leaf controls */
+  hidePropertyLabels?: boolean;
+}
+
+export const DETAIL_ARRAY_INLINE_OPTIONS_KEY = "detailArrayInline" as const;
+
 export interface DetailViewConfig {
   maxDepth?: number;
   extraRenderers?: DetailRendererRegistryEntry[];
@@ -73,6 +103,8 @@ export interface DetailViewConfig {
   hideHeaderPrimaryFields?: boolean;
   hiddenPropertyNames?: string[];
   alwaysShowPropertyNames?: string[];
+  /** Top-level detail layout; default is `"default"`. */
+  topLevelLayoutVariant?: DetailTopLevelLayoutVariant;
 }
 
 export interface ChipDefinition {
