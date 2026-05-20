@@ -91,6 +91,7 @@ export type { NormalizedSchema, NormalizationContext } from "./types";
 export { resolveAllRefs, isRelationshipSchema } from "./resolveAllRefs";
 export {
   applyFilters,
+  referencedRootWhereFilterProperties,
   shouldIncludeProperty,
   extractPaginationOptions,
 } from "./applyFilters";

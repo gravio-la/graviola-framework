@@ -8,6 +8,72 @@ import { isRelationshipSchema } from "./resolveAllRefs";
 import { validateFilter } from "../validators/filterValidator";
 
 /**
+ * Keys that denote typed-filter *operators* / control fields — not schema property names.
+ * Prevents interpreting `{ amenities: { some: ... } }` as referencing a property literal `some`.
+ */
+const WHERE_SYNTAX_KEYS = new Set([
+  "equals",
+  "not",
+  "in",
+  "notIn",
+  "gt",
+  "gte",
+  "lt",
+  "lte",
+  "contains",
+  "startsWith",
+  "endsWith",
+  "some",
+  "every",
+  "none",
+  "mode",
+]);
+
+/**
+ * Names of JSON properties on the **root** schema that appear at the outer layer of `where`,
+ * without descending into relational filter objects (`some` / nested value shapes).
+ *
+ * Used with `select` so properties only mentioned in `where` (e.g. `amenities`) are preserved
+ * in the normalized schema, allowing downstream SPARQL CONSTRUCT generators to attach `where`
+ * clauses for those properties.
+ *
+ * Intended for `depth === 0` only; nested normalization passes an empty hint set.
+ */
+export function referencedRootWhereFilterProperties(
+  where: unknown,
+  allowedPropertyKeys: ReadonlySet<string>,
+): Set<string> {
+  const found = new Set<string>();
+
+  const walk = (node: unknown): void => {
+    if (!node || typeof node !== "object" || Array.isArray(node)) {
+      return;
+    }
+    const obj = node as Record<string, unknown>;
+    for (const [key, val] of Object.entries(obj)) {
+      if (key === "AND" || key === "OR") {
+        const branches = Array.isArray(val) ? val : [val];
+        for (const branch of branches) {
+          walk(branch);
+        }
+      } else if (key === "NOT") {
+        const branches = Array.isArray(val) ? val : [val];
+        for (const branch of branches) {
+          walk(branch);
+        }
+      } else if (WHERE_SYNTAX_KEYS.has(key)) {
+        continue;
+      } else if (allowedPropertyKeys.has(key)) {
+        found.add(key);
+      }
+    }
+  };
+
+  walk(where);
+  return found;
+}
+
+/**
  * Recursively filters JSON-LD metadata properties from a nested schema
  * @param schema The nested schema to filter
  * @param excludeJsonLd Whether to exclude @ properties
@@ -76,12 +142,14 @@ function filterJsonLdFromNestedSchema(
  * @param propertyName The name of the property
  * @param propSchema The property schema
  * @param filterOptions The filter options to apply
+ * @param rootWhereHints Property names referenced at the root entity in `filterOptions.where` (depth 0 only)
  * @returns Object with inclusion status and pagination options
  */
 export function shouldIncludeProperty<T = any>(
   propertyName: string,
   propSchema: JSONSchema7,
   filterOptions: GraphTraversalFilterOptions<T>,
+  rootWhereHints: ReadonlySet<string> = new Set<string>(),
 ): { include: boolean; pagination?: PaginationOptions } {
   const {
     select,
@@ -100,8 +168,12 @@ export function shouldIncludeProperty<T = any>(
     return { include: false };
   }
 
-  // If select is specified, only include selected properties
+  // If select is specified, only include selected properties — plus any root-only `where`
+  // refs so query builders still see relational filters (amenities.some, …).
   if (select) {
+    if (rootWhereHints.has(propertyName)) {
+      return { include: true };
+    }
     const isSelected = select[propertyName] === true;
     return { include: isSelected };
   }
@@ -215,6 +287,16 @@ export function applyFilters<T = any>(
   // Default: exclude JSON-LD metadata properties (@id, @type, @context, etc.)
   const excludeJsonLdMetadata = filterOptions.excludeJsonLdMetadata !== false;
 
+  const allowedKeys = new Set(
+    Object.keys(schema.properties!).filter(
+      (p) => !excludeJsonLdMetadata || !p.startsWith("@"),
+    ),
+  );
+  const rootWhereHints =
+    depth === 0 && filterOptions.where != null
+      ? referencedRootWhereFilterProperties(filterOptions.where, allowedKeys)
+      : new Set<string>();
+
   // Process each property
   for (const [propName, propSchema] of Object.entries(schema.properties)) {
     // Skip JSON-LD metadata properties if flag is true (default)
@@ -231,6 +313,7 @@ export function applyFilters<T = any>(
       propName,
       propSchema as JSONSchema7,
       filterOptions,
+      rootWhereHints,
     );
 
     if (include) {

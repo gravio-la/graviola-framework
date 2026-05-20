@@ -148,6 +148,55 @@ describe("normalizeSchema - integration tests", () => {
     expect(Object.keys(normalized.properties || {})).toEqual(["id", "title"]);
   });
 
+  test("select retains properties referenced only in root where (e.g. amenities.some)", () => {
+    const schema: JSONSchema7 = {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+        slug: { type: "string" },
+        amenities: {
+          type: "array",
+          items: { $ref: "#/$defs/AmenityRel" },
+        },
+      },
+      $defs: {
+        AmenityRel: {
+          type: "object",
+          properties: {
+            "@id": { type: "string" },
+            amenityType: { type: "string", enum: ["CAFE"] },
+          },
+        },
+      },
+    };
+
+    const normalized = normalizeSchema(schema, {
+      select: {
+        name: true,
+        slug: true,
+      },
+      where: {
+        amenities: {
+          some: {
+            amenityType: { equals: "CAFE" },
+          },
+        },
+      },
+      includeRelationsByDefault: false,
+    } as GraphTraversalFilterOptions);
+
+    expect(Object.keys(normalized.properties || {})).toEqual([
+      "name",
+      "slug",
+      "amenities",
+    ]);
+    const amenities = normalized.properties?.amenities as JSONSchema7;
+    const items = (
+      Array.isArray(amenities.items) ? amenities.items[0] : amenities.items
+    ) as JSONSchema7;
+    expect(items.properties?.amenityType).toBeDefined();
+  });
+
   test("realistic photo metadata schema with EXIF relationships", () => {
     const schema: JSONSchema7 = {
       type: "object",
