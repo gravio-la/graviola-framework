@@ -25,6 +25,8 @@ export type GenericPaginatedListProps = {
   onClickEntity?: (id: string) => void;
   onCreateNew?: () => void;
   onDelete?: ((id: string) => void) | null;
+  /** Passed to {@link PaginatedTypedList}: hide pagination bar when everything fits on one page. */
+  hidePaginationWhenSinglePage?: boolean;
 } & BoxProps;
 
 export const GenericPaginatedList: FunctionComponent<
@@ -41,6 +43,7 @@ export const GenericPaginatedList: FunctionComponent<
   onClickEntity,
   onCreateNew,
   onDelete,
+  hidePaginationWhenSinglePage,
   ...props
 }) => {
   const [page, setPage] = useState(1);
@@ -190,6 +193,7 @@ export const GenericPaginatedList: FunctionComponent<
         readonly={readonly}
         selectedIds={selectedIds}
         onSelect={selectable ? handleSelect : undefined}
+        hidePaginationWhenSinglePage={hidePaginationWhenSinglePage}
       />
     </Box>
   );

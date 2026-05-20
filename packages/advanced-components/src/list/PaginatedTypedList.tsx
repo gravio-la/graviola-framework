@@ -13,8 +13,13 @@ interface PaginatedTypedListProps {
   onSelect?: (id: string, selected: boolean) => void;
   onClickEntity?: (id: string) => void;
   selectedIds?: string[];
+  /** Applied to every row when {@link rowActionTools} is not set. */
   actionTools?: React.ReactNode;
+  /** Per-row secondary actions (e.g. decorative icons). Overrides {@link actionTools} for that row. */
+  rowActionTools?: (item: ListItemType) => React.ReactNode;
   readonly?: boolean;
+  /** When true, the pagination controls are omitted if there is only one page (saves vertical space). */
+  hidePaginationWhenSinglePage?: boolean;
 }
 
 export const PaginatedTypedList: FunctionComponent<PaginatedTypedListProps> = ({
@@ -28,8 +33,12 @@ export const PaginatedTypedList: FunctionComponent<PaginatedTypedListProps> = ({
   onClickEntity,
   selectedIds,
   actionTools,
+  rowActionTools,
   readonly,
+  hidePaginationWhenSinglePage,
 }) => {
+  const showPagination = !hidePaginationWhenSinglePage || totalPages > 1;
+
   return (
     <>
       <List sx={{ flexGrow: 1, overflow: "auto" }}>
@@ -46,18 +55,20 @@ export const PaginatedTypedList: FunctionComponent<PaginatedTypedListProps> = ({
             onEdit={!readonly ? onEdit : undefined}
             onDelete={!readonly ? onDelete : undefined}
             onClickEntity={onClickEntity}
-            actionTools={actionTools}
+            actionTools={rowActionTools ? rowActionTools(item) : actionTools}
           />
         ))}
       </List>
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 2, mb: 2 }}>
-        <Pagination
-          count={totalPages}
-          page={page}
-          onChange={(_, value) => onPageChange(value)}
-          color="primary"
-        />
-      </Box>
+      {showPagination && (
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 2, mb: 2 }}>
+          <Pagination
+            count={Math.max(totalPages, 1)}
+            page={page}
+            onChange={(_, value) => onPageChange(value)}
+            color="primary"
+          />
+        </Box>
+      )}
     </>
   );
 };
