@@ -7,13 +7,9 @@ export {
   DetailEntityModal,
   DetailEntityModalView,
   type DetailEntityModalHeaderActionsProps,
-  type DetailEntityModalPresentation,
   type DetailEntityModalStaticConfig,
   type DetailEntityModalViewProps,
-  type DetailEntityModalPaperGesture,
-  DetailEntityModalPaperGestureContext,
   DetailEntityModalPortalContext,
-  detailEntityModalPaperGestureSx,
   useDetailEntityModalPortalContainer,
 } from "./DetailEntityModal";
 export type { GenerateDefaultDetailUISchemaOptions as GenerateDetailUISchemaOptions } from "@graviola/edb-detail-renderer-core";

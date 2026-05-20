@@ -12,7 +12,6 @@ import {
   useModalRegistry,
   useTypeIRIFromEntity,
 } from "@graviola/edb-state-hooks";
-import { useTypeIRIFromEntity } from "@graviola/edb-state-hooks";
 import { EntityDetailModalProps } from "@graviola/semantic-jsonform-types";
 import { useSafeMediaQuery } from "@graviola/edb-basic-components";
 import { Close as CloseIcon, Edit } from "@mui/icons-material";
