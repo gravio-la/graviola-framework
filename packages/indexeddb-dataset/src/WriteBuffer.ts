@@ -29,6 +29,8 @@ import { spoKey, opsKey, psoKey } from "./keyrange";
 export type WriteBufferOptions = {
   flushThreshold?: number;
   flushIntervalMs?: number;
+  /** When true, emit verbose `console.debug` for flushes (default: false). */
+  debugLogging?: boolean;
 };
 
 export class WriteBuffer {
@@ -36,6 +38,7 @@ export class WriteBuffer {
   private pendingDeletes: Quad[] = [];
   private readonly flushThreshold: number;
   private readonly flushIntervalMs: number;
+  private readonly debugLogging: boolean;
   private flushTimer: ReturnType<typeof setInterval> | null = null;
   private flushPromise: Promise<void> | null = null;
 
@@ -46,6 +49,7 @@ export class WriteBuffer {
   ) {
     this.flushThreshold = options.flushThreshold ?? DEFAULT_FLUSH_THRESHOLD;
     this.flushIntervalMs = options.flushIntervalMs ?? DEFAULT_FLUSH_INTERVAL_MS;
+    this.debugLogging = options.debugLogging ?? false;
     this.startTimer();
   }
 
@@ -111,9 +115,11 @@ export class WriteBuffer {
   }
 
   private async _doFlush(adds: Quad[], deletes: Quad[]): Promise<void> {
-    console.debug(
-      `[IDB:buffer] _doFlush: +${adds.length} adds, -${deletes.length} deletes`,
-    );
+    if (this.debugLogging) {
+      console.debug(
+        `[IDB:buffer] _doFlush: +${adds.length} adds, -${deletes.length} deletes`,
+      );
+    }
     const tx = this.db.transaction([TERMS_STORE, ...INDEX_STORES], "readwrite");
 
     // Process adds — always creates dictionary entries
@@ -159,7 +165,9 @@ export class WriteBuffer {
     }
 
     await tx.done;
-    console.debug(`[IDB:buffer] _doFlush: transaction committed`);
+    if (this.debugLogging) {
+      console.debug(`[IDB:buffer] _doFlush: transaction committed`);
+    }
   }
 
   /** Stop the auto-flush timer (call before closing the database) */

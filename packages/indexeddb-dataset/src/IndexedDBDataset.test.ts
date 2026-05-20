@@ -343,5 +343,26 @@ describe("IndexedDBDataset", () => {
       expect(results).toHaveLength(2);
       ds.close();
     });
+
+    test("match() for-await terminates and yields exactly N quads for bound subject", async () => {
+      const ds = await IndexedDBDataset.open({ dbName: newDbName() });
+      const s = ex("Alice");
+      ds.add(quad(s, rdfType, ex("Person"), defaultGraph()));
+      ds.add(quad(s, ex("knows"), ex("Bob"), defaultGraph()));
+      ds.add(quad(s, ex("age"), literal("30"), defaultGraph()));
+      await ds.flush();
+
+      const results: unknown[] = [];
+      for await (const q of ds.match(
+        s,
+        null,
+        null,
+        defaultGraph(),
+      ) as AsyncIterable<unknown>) {
+        results.push(q);
+      }
+      expect(results).toHaveLength(3);
+      ds.close();
+    });
   });
 });

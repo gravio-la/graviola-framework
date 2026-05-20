@@ -66,30 +66,29 @@ export type IndexedDBDatasetOptions = {
   dbName?: string;
   /** Write buffer configuration */
   bufferOptions?: WriteBufferOptions;
+  /** When true, emit verbose `console.debug` tracing (default: false). */
+  debugLogging?: boolean;
 };
 
 /**
- * Result of IndexedDBDataset.match().
+ * Comunica-compatible `match()` result: a `BufferedIterator` over quads with
+ * `_read` wired to `owner.matchAsync()` so back-pressure / `for-await` terminate.
  *
- * Extends BufferedIterator<Quad> from the `asynciterator` library so that
- * Comunica's internal `asynciterator.wrap()` call recognises it as an
- * AsyncIterator instance (via `instanceof`) and returns it directly — without
- * falling through to the synchronous `Symbol.iterator` path that DatasetCore
- * requires.
- *
- * The constructor immediately starts an async pump that:
- *   1. Calls owner.matchAsync() (which flushes the write buffer first).
- *   2. Pushes every yielded quad into the BufferedIterator via `this._push()`.
- *   3. Closes the iterator when the generator is exhausted.
- *
- * The DatasetCore stub methods (add/delete/has/match/size/Symbol.iterator) are
- * still present so that TypeScript is satisfied, but they delegate to the owner
- * and are only relevant for synchronous DatasetCore consumers (not Comunica).
+ * A plain extra pump + default `_read` (no-op) caused consumers to see an empty
+ * iterator while `matchAsync` kept flushing in the background.
  */
 class MatchResult extends BufferedIterator<Quad> implements DatasetCore {
+  private asyncIter: AsyncIterator<Quad> | null = null;
+  private readonly pattern: {
+    subject?: Term | null;
+    predicate?: Term | null;
+    object?: Term | null;
+    graph?: Term | null;
+  };
+
   constructor(
     private readonly owner: IndexedDBDataset,
-    private readonly pattern: {
+    pattern: {
       subject?: Term | null;
       predicate?: Term | null;
       object?: Term | null;
@@ -97,31 +96,38 @@ class MatchResult extends BufferedIterator<Quad> implements DatasetCore {
     },
   ) {
     super({ autoStart: false });
-    // Kick off async fetching without waiting — BufferedIterator manages back-pressure.
-    this._startFetching();
+    this.pattern = pattern;
   }
 
-  private _startFetching(): void {
-    (async () => {
+  protected _read(count: number, done: () => void): void {
+    void (async () => {
       try {
-        for await (const quad of this.owner.matchAsync(
-          this.pattern.subject ?? undefined,
-          this.pattern.predicate ?? undefined,
-          this.pattern.object ?? undefined,
-          this.pattern.graph ?? undefined,
-        )) {
-          // _push returns false when the buffer is full; we ignore back-pressure
-          // here because Comunica drains the iterator faster than we fill it.
-          this._push(quad);
+        if (!this.asyncIter) {
+          const iterable = this.owner.matchAsync(
+            this.pattern.subject ?? undefined,
+            this.pattern.predicate ?? undefined,
+            this.pattern.object ?? undefined,
+            this.pattern.graph ?? undefined,
+          );
+          this.asyncIter = iterable[Symbol.asyncIterator]();
         }
-        this.close();
+        let pushed = 0;
+        while (pushed < count && !this.closed) {
+          const step = await this.asyncIter.next();
+          if (step.done) {
+            this.close();
+            break;
+          }
+          this._push(step.value);
+          pushed++;
+        }
       } catch (err) {
-        this.emit("error", err);
+        this.emit("error", err as Error);
+      } finally {
+        done();
       }
     })();
   }
-
-  // ------ DatasetCore stubs (delegate to owner) ------
 
   add(quad: Quad): this {
     this.owner.add(quad);
@@ -161,7 +167,15 @@ export class IndexedDBDataset implements DatasetCore {
     private readonly dict: TermDictionary,
     private readonly buffer: WriteBuffer,
     private readonly manager: IndexManager,
+    /** When true, emits verbose `console.debug` tracing from this dataset. */
+    readonly verboseLogging: boolean,
   ) {}
+
+  private debug(...args: unknown[]): void {
+    if (this.verboseLogging) {
+      console.debug(...args);
+    }
+  }
 
   /**
    * Open (or create) the IndexedDB hexastore database.
@@ -197,9 +211,13 @@ export class IndexedDBDataset implements DatasetCore {
 
     const dict = new TermDictionary(db);
     const manager = new IndexManager();
-    const buffer = new WriteBuffer(db, dict, options.bufferOptions);
+    const debugLogging = options.debugLogging ?? false;
+    const buffer = new WriteBuffer(db, dict, {
+      ...options.bufferOptions,
+      debugLogging,
+    });
 
-    return new IndexedDBDataset(db, dict, buffer, manager);
+    return new IndexedDBDataset(db, dict, buffer, manager, debugLogging);
   }
 
   // ---------------------------------------------------------------------------
@@ -241,9 +259,8 @@ export class IndexedDBDataset implements DatasetCore {
   }
 
   /**
-   * Returns a MatchResult that implements both DatasetCore and AsyncIterable<Quad>.
-   * The async iteration path queries IndexedDB via IndexManager.
-   * This is the interface Comunica uses via its RDFJS source adapter.
+   * Returns a `MatchResult` (BufferedIterator) so Comunica recognises an
+   * `AsyncIterator` and `_read` pulls from IndexedDB via `matchAsync`.
    */
   match(
     subject?: Term | null,
@@ -251,9 +268,6 @@ export class IndexedDBDataset implements DatasetCore {
     object?: Term | null,
     graph?: Term | null,
   ): DatasetCore & AsyncIterable<Quad> {
-    // MatchResult extends BufferedIterator<Quad> (asynciterator), which makes
-    // asynciterator.wrap() recognise it as an AsyncIterator instance and skip
-    // the synchronous Symbol.iterator path that would otherwise return 0 quads.
     return new MatchResult(this, {
       subject,
       predicate,
@@ -291,7 +305,7 @@ export class IndexedDBDataset implements DatasetCore {
   ): AsyncIterable<Quad> {
     const descTerm = (t: Term | null | undefined) =>
       t == null ? "null" : `${t.termType}(${t.value})`;
-    console.debug(
+    this.debug(
       `[IDB:dataset] matchAsync s=${descTerm(subject)} p=${descTerm(predicate)} o=${descTerm(object)} g=${descTerm(graph)}`,
     );
 
@@ -303,9 +317,7 @@ export class IndexedDBDataset implements DatasetCore {
       .transaction("spo", "readonly")
       .objectStore("spo")
       .count();
-    console.debug(
-      `[IDB:dataset] matchAsync — SPO index has ${rawCount} entries`,
-    );
+    this.debug(`[IDB:dataset] matchAsync — SPO index has ${rawCount} entries`);
 
     const pattern = await this._resolvePattern(
       subject,
@@ -313,9 +325,9 @@ export class IndexedDBDataset implements DatasetCore {
       object,
       graph,
     );
-    console.debug(`[IDB:dataset] matchAsync — resolved pattern:`, pattern);
+    this.debug(`[IDB:dataset] matchAsync — resolved pattern:`, pattern);
     if (pattern === null) {
-      console.debug(
+      this.debug(
         `[IDB:dataset] matchAsync — pattern=null (term not in dict) → 0 results`,
       );
       return;
@@ -337,7 +349,7 @@ export class IndexedDBDataset implements DatasetCore {
         g as StoredQuadGraph,
       );
     }
-    console.debug(`[IDB:dataset] matchAsync — yielded ${yielded} quads`);
+    this.debug(`[IDB:dataset] matchAsync — yielded ${yielded} quads`);
   }
 
   /**
@@ -354,7 +366,7 @@ export class IndexedDBDataset implements DatasetCore {
 
     const descTerm = (t: Term | null | undefined) =>
       t == null ? "null" : `${t.termType}(${JSON.stringify(t.value)})`;
-    console.debug(
+    this.debug(
       `[IDB:dataset] countQuads s=${descTerm(subject)} p=${descTerm(predicate)} o=${descTerm(object)} g=${descTerm(graph)}`,
     );
 
@@ -364,18 +376,18 @@ export class IndexedDBDataset implements DatasetCore {
       object,
       graph,
     );
-    console.debug(
+    this.debug(
       `[IDB:dataset] countQuads — resolved pattern:`,
       JSON.stringify(pattern),
     );
 
     if (pattern === null) {
-      console.debug(`[IDB:dataset] countQuads — pattern=null → returning 0`);
+      this.debug(`[IDB:dataset] countQuads — pattern=null → returning 0`);
       return 0;
     }
 
     const count = await this.manager.countQuads(this.db, pattern);
-    console.debug(`[IDB:dataset] countQuads → ${count}`);
+    this.debug(`[IDB:dataset] countQuads → ${count}`);
     return count;
   }
 
@@ -498,7 +510,7 @@ export class IndexedDBDataset implements DatasetCore {
     if (subject && subject.termType !== "Variable") {
       const id = await this.dict.getId(subject);
       if (id === undefined) {
-        console.debug(
+        this.debug(
           `[IDB:dataset] _resolvePattern: subject not in dict`,
           subject,
         );
@@ -509,7 +521,7 @@ export class IndexedDBDataset implements DatasetCore {
     if (predicate && predicate.termType !== "Variable") {
       const id = await this.dict.getId(predicate);
       if (id === undefined) {
-        console.debug(
+        this.debug(
           `[IDB:dataset] _resolvePattern: predicate not in dict`,
           predicate,
         );
@@ -520,10 +532,7 @@ export class IndexedDBDataset implements DatasetCore {
     if (object && object.termType !== "Variable") {
       const id = await this.dict.getId(object);
       if (id === undefined) {
-        console.debug(
-          `[IDB:dataset] _resolvePattern: object not in dict`,
-          object,
-        );
+        this.debug(`[IDB:dataset] _resolvePattern: object not in dict`, object);
         return null;
       }
       pattern.o = id;
@@ -531,14 +540,9 @@ export class IndexedDBDataset implements DatasetCore {
     if (graph && graph.termType !== "Variable") {
       const termStr = `termType=${graph.termType} value=${JSON.stringify(graph.value)}`;
       const id = await this.dict.getId(graph);
-      console.debug(
-        `[IDB:dataset] _resolvePattern: graph ${termStr} → id=${id}`,
-      );
+      this.debug(`[IDB:dataset] _resolvePattern: graph ${termStr} → id=${id}`);
       if (id === undefined) {
-        console.debug(
-          `[IDB:dataset] _resolvePattern: graph not in dict`,
-          graph,
-        );
+        this.debug(`[IDB:dataset] _resolvePattern: graph not in dict`, graph);
         return null;
       }
       pattern.g = id;
