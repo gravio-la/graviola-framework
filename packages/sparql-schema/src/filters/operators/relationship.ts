@@ -24,6 +24,125 @@ function isNodeReference(value: any): value is { "@id": string } {
   );
 }
 
+/** Match {@link ../../filters/operators/logical.ts} semantics for prefixed predicates. */
+function createPredicateFromPropertyKey(
+  propertyName: string,
+  prefixMap: Record<string, string>,
+) {
+  const defaultPrefix = prefixMap[""] || "";
+  if (defaultPrefix) {
+    return convertIRIToNode(defaultPrefix + propertyName, prefixMap);
+  }
+  return df.namedNode(propertyName);
+}
+
+function sanitizePropertyVariableName(name: string): string {
+  return name.replace(/[^a-zA-Z0-9_]/g, "_");
+}
+
+/**
+ * Build patterns for `{ field: filter, ... }` on a related RDF node (subject = `relatedVar`).
+ * Mirrors {@link ../../filters/operators/logical.ts processMultiPropertyFilter} without importing logical
+ * (would create a cyclic import graph with filterToSparql).
+ */
+function relatedEntityFieldPatterns(
+  relatedVar: any,
+  filterValue: Record<string, unknown>,
+  baseContext: FilterContext,
+): FilterResult {
+  const result: FilterResult = {
+    patterns: [],
+    filters: [],
+    optional: false,
+  };
+  const operatorKeys = new Set([
+    "equals",
+    "not",
+    "in",
+    "notIn",
+    "gt",
+    "gte",
+    "lt",
+    "lte",
+    "contains",
+    "startsWith",
+    "endsWith",
+    "some",
+    "every",
+    "none",
+    "AND",
+    "OR",
+    "NOT",
+    "mode",
+  ]);
+
+  const keys = Object.keys(filterValue);
+  if (keys.every((k) => operatorKeys.has(k))) {
+    return filterToSparql(filterValue, {
+      ...baseContext,
+      subject: relatedVar,
+    });
+  }
+
+  const prefixMapTyped = baseContext.prefixMap as Record<string, string>;
+  const schemaProps =
+    baseContext.schema &&
+    typeof baseContext.schema === "object" &&
+    baseContext.schema !== null &&
+    "properties" in baseContext.schema
+      ? (baseContext.schema.properties as Record<string, unknown>)
+      : {};
+
+  for (const [propertyName, propertyFilter] of Object.entries(filterValue)) {
+    if (propertyName === "mode") continue;
+
+    if (
+      propertyName === "AND" ||
+      propertyName === "OR" ||
+      propertyName === "NOT"
+    ) {
+      const logicalResult = filterToSparql(
+        { [propertyName]: propertyFilter },
+        { ...baseContext, subject: relatedVar },
+      );
+      result.patterns.push(...logicalResult.patterns);
+      result.filters.push(...logicalResult.filters);
+      continue;
+    }
+
+    const propSchemaRaw = schemaProps[propertyName];
+    const propSchemaType =
+      typeof propSchemaRaw === "object" &&
+      propSchemaRaw !== null &&
+      "type" in propSchemaRaw
+        ? ((propSchemaRaw as { type: string }).type as string | undefined)
+        : undefined;
+
+    const predicateNode = createPredicateFromPropertyKey(
+      propertyName,
+      prefixMapTyped,
+    );
+    const propertyVar = df.variable(sanitizePropertyVariableName(propertyName));
+
+    const propertyContext: FilterContext = {
+      ...baseContext,
+      subject: relatedVar,
+      property: propertyName,
+      propertyVar,
+      predicateNode,
+      schemaType: propSchemaType,
+      depth: baseContext.depth + 1,
+    };
+
+    const propResult = filterToSparql(propertyFilter, propertyContext);
+    result.patterns.push(...propResult.patterns);
+    result.filters.push(...propResult.filters);
+    result.optional = result.optional || propResult.optional;
+  }
+
+  return result;
+}
+
 /**
  * some: At least one related entity matches the filter
  * This is the default behavior for relationship filtering.
@@ -57,28 +176,30 @@ export function applySomeOperator(
     };
   }
 
-  // Complex case: Nested filter on related entity properties
-  // Create a variable for the related entity
+  // Nested filter / field map on the related RDF node (?place :amenities ?rel . ?rel :amenityType "CAFE" .)
   const relatedVar = df.variable(`${context.property}_rel_${context.depth}`);
-
-  // Basic triple pattern connecting subject to related entity
   const basePattern = sparql`${subject} ${predicateNode} ${relatedVar} .`;
 
-  // If filterValue has nested properties, recurse to build nested filters
-  // For now, we'll handle the @id case and defer complex nested filters
-  // TODO: Implement nested filter support for relationship properties
-  if (typeof filterValue === "object" && filterValue !== null) {
-    // For nested object filters, we would need to recursively apply filters
-    // This is a complex case that requires schema information
-    // For now, just return the base pattern
+  if (
+    typeof filterValue === "object" &&
+    filterValue !== null &&
+    !Array.isArray(filterValue)
+  ) {
+    const nestedResult = relatedEntityFieldPatterns(
+      relatedVar,
+      filterValue as Record<string, unknown>,
+      {
+        ...context,
+        schema: undefined,
+      },
+    );
     return {
-      patterns: [basePattern],
-      filters: [],
-      optional: false,
+      patterns: [basePattern, ...nestedResult.patterns],
+      filters: [...nestedResult.filters],
+      optional: nestedResult.optional,
     };
   }
 
-  // Default: just the relationship pattern
   return {
     patterns: [basePattern],
     filters: [],

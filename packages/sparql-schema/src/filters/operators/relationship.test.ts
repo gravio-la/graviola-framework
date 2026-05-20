@@ -78,16 +78,18 @@ describe("Relationship Filter Operators", () => {
       expect(patternStr).toContain("urn:uuid:12345");
     });
 
-    test("handles nested filter object (basic case)", () => {
+    test("handles nested filter object (field equality on related node)", () => {
       const context = createContext("knows");
-      const filterValue = { name: "John" };
+      const filterValue = { name: { equals: "John" } };
 
       const result = applySomeOperator(filterValue, context);
 
-      // For now, this just creates the base relationship pattern
-      // Complex nested filtering will be implemented in future iterations
-      expect(result.patterns).toHaveLength(1);
-      expect(result.filters).toHaveLength(0);
+      expect(result.filters.length).toBe(0);
+      expect(result.patterns.length).toBeGreaterThanOrEqual(2);
+
+      const full = [...result.patterns].map((p) => p.toString()).join(" ");
+      expect(full).toContain("knows_rel_0");
+      expect(full).toContain('"John"');
     });
   });
 
