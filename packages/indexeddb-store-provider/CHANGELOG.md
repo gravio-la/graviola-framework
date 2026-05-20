@@ -1,6 +1,6 @@
-# @graviola/edb-basic-renderer
+# @graviola/indexeddb-store-provider
 
-## 4.2.0
+## 1.0.0
 
 ### Minor Changes
 
@@ -35,133 +35,13 @@
 ### Patch Changes
 
 - Updated dependencies
-  - @graviola/edb-ui-utils@0.4.0
+  - @graviola/edb-core-types@1.5.0
+  - @graviola/edb-graph-traversal@1.6.0
+  - @graviola/edb-state-hooks@1.7.0
+  - @graviola/indexeddb-dataset@0.2.0
+  - @graviola/json-schema-utils@1.6.0
+  - @graviola/sparql-db-impl@1.7.0
+  - @graviola/sparql-schema@1.6.0
+  - @graviola/store-core@0.3.0
   - @graviola/edb-core-utils@1.5.7
-
-## 4.1.8
-
-### Patch Changes
-
-- @graviola/edb-ui-utils@0.3.8
-- @graviola/edb-core-utils@1.5.7
-
-## 4.1.7
-
-### Patch Changes
-
-- fixing wrong package pinning in release pipeline
-- Updated dependencies
-  - @graviola/edb-core-utils@1.5.7
-  - @graviola/edb-ui-utils@0.3.7
-
-## 4.1.2
-
-### Patch Changes
-
-- packaging fixes
-- Updated dependencies
-  - @graviola/edb-core-utils@1.5.2
-  - @graviola/edb-ui-utils@0.3.2
-
-## 4.1.1
-
-### Patch Changes
-
-- fixing catalog packaging
-- Updated dependencies
-  - @graviola/edb-core-utils@1.5.1
-  - @graviola/edb-ui-utils@0.3.1
-
-## 4.1.0
-
-### Minor Changes
-
-- typesafe filters and redesigned sparql and graph extraction architecture, bug fixes, api stabilisation, features
-
-### Patch Changes
-
-- Updated dependencies
-  - @graviola/edb-core-utils@1.5.0
-  - @graviola/edb-ui-utils@0.3.0
-
-## 4.0.0
-
-### Patch Changes
-
-- Updated dependencies
-  - @graviola/edb-state-hooks@1.5.0
-  - @graviola/edb-core-utils@1.4.0
-
-## 3.0.0
-
-### Patch Changes
-
-- Updated dependencies
-  - @graviola/edb-state-hooks@1.4.0
-
-## 2.0.0
-
-### Minor Changes
-
-- stabelize, streamline query hooks, cleanup
-
-### Patch Changes
-
-- Updated dependencies
-  - @graviola/edb-core-utils@1.4.0
-  - @graviola/edb-state-hooks@1.3.0
-
-## 1.1.5
-
-### Patch Changes
-
-- Updated dependencies
-  - @graviola/edb-core-utils@1.3.0
-  - @graviola/edb-state-hooks@1.2.5
-
-## 1.1.4
-
-### Patch Changes
-
-- make workspace depenedncies peer depenedncies
-- Updated dependencies
-  - @graviola/edb-state-hooks@1.2.4
-  - @graviola/edb-core-utils@1.2.3
-
-## 1.1.3
-
-### Patch Changes
-
-- better linked data handling
-- Updated dependencies
-  - @graviola/edb-state-hooks@1.2.3
-
-## 1.1.2
-
-### Patch Changes
-
-- cleaned up interfaces and simplified initialization of provider and initial setup
-- Updated dependencies
-  - @graviola/edb-state-hooks@1.2.2
-  - @graviola/edb-core-utils@1.2.2
-
-## 1.1.1
-
-### Patch Changes
-
-- updated to react-query version 5 and fixes
-- Updated dependencies
-  - @graviola/edb-state-hooks@1.2.1
-  - @graviola/edb-core-utils@1.2.1
-
-## 1.1.0
-
-### Minor Changes
-
-- massive refactoring due to separation of dependencies in order to publish the library for universal reuse
-
-### Patch Changes
-
-- Updated dependencies
-  - @graviola/edb-state-hooks@1.2.0
-  - @graviola/edb-core-utils@1.2.0
+  - @graviola/edb-global-types@1.3.7

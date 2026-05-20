@@ -1,6 +1,6 @@
 {
   "name": "@graviola/indexeddb-dataset",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Persistent RDF dataset backed by IndexedDB hexastore",
   "type": "module",
   "main": "./dist/index.cjs",

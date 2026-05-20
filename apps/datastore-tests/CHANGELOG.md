@@ -1,5 +1,18 @@
 # @graviola/datastore-tests
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/edb-core-types@1.5.0
+  - @graviola/json-schema-utils@1.6.0
+  - @graviola/json-schema-prisma-utils@1.4.0
+  - @graviola/prisma-db-impl@1.7.0
+  - @graviola/sparql-db-impl@1.7.0
+  - @graviola/store-core@0.3.0
+  - @graviola/remote-query-implementations@1.4.7
+
 ## 0.1.1
 
 ### Patch Changes

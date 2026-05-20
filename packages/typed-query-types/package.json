@@ -1,6 +1,6 @@
 {
   "name": "@graviola/typed-query-types",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Recursive Prisma-style query types for Graviola typed filters (Layer 1)",
   "type": "module",
   "main": "./dist/index.cjs",
