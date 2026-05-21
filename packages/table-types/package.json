@@ -15,7 +15,8 @@
   },
   "files": [
     "dist",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "README.md"
   ],
   "sideEffects": false,
   "scripts": {
@@ -23,7 +24,8 @@
     "dev": "tsup --watch",
     "lint": "eslint src/**/*.{ts,tsx}",
     "lint-fix": "eslint --fix src/**/*.{ts,tsx}",
-    "test": "bun test"
+    "test": "bun test",
+    "release": "bun publish --access public"
   },
   "dependencies": {
     "@jsonforms/core": "catalog:jsonforms",

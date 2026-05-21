@@ -1,5 +1,7 @@
 # `@graviola/edb-table-renderer-sparql-select`
 
+**Graviola role:** tissue · column registry for SPARQL SELECT result rows
+
 **Tissue** package — `TableColumnRegistry` for rows that are SPARQL SELECT result sets: each cell value is an RDF term object `{ value, type, datatype?, "xml:lang"? }`.
 
 Exports `sparqlSelectColumnRegistry`, a ranked tester/renderer array covering:

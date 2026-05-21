@@ -1,5 +1,7 @@
 # `@graviola/edb-table-renderer-jsonld`
 
+**Graviola role:** tissue · column registry for JSON-LD document rows
+
 **Tissue** package — `TableColumnRegistry` for rows that are plain JSON-LD documents (depth ≤ 2), as returned by `filterTypedDocuments` from a `Store`.
 
 Exports `jsonLdColumnRegistry`, a ranked tester/renderer array covering:

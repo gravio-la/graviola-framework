@@ -1,5 +1,7 @@
 # `@graviola/edb-table-mrt-adapter`
 
+**Graviola role:** tissue · thin adapter between spine types and material-react-table
+
 Thin **tissue** adapter that bridges `TableColumnDefFragment` (the framework-agnostic column type from `@graviola/edb-table-types`) to `Partial<MRT_ColumnDef>` from `material-react-table`.
 
 ```ts

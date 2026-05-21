@@ -1,6 +1,7 @@
 {
   "name": "@graviola/edb-virtualized-components",
   "version": "1.2.0",
+  "description": "MUI + react-virtuoso virtualized list components for Graviola apps",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -13,12 +14,18 @@
       "default": "./dist/index.js"
     }
   },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md"
+  ],
   "scripts": {
     "depcheck": "depcheck",
     "build": "tsup src/index.tsx --format esm,cjs --dts --external react",
     "dev": "tsup src/index.tsx --format esm,cjs --watch --dts --external react",
     "lint": "eslint \"**/*.ts*\"",
-    "lint-fix": "eslint --fix \"**/*.ts*\""
+    "lint-fix": "eslint --fix \"**/*.ts*\"",
+    "release": "bun publish --access public"
   },
   "dependencies": {
     "@graviola/edb-ui-utils": "workspace:*"

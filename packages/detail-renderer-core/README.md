@@ -1,5 +1,7 @@
 # `@graviola/edb-detail-renderer-core`
 
+**Graviola role:** spine · headless detail-view dispatch, no MUI
+
 Headless **detail view** utilities: JSON Forms–compatible testers, ranked renderer selection, UISchema-tree dispatch, default UISchema generation (`TopLevelLayout` root), and two-layer chip resolution (`byTypeIRI` + tester registry).
 
 **No MUI dependency** — safe for CLIs, Node, and non-React consumers that only need tester/registry logic.

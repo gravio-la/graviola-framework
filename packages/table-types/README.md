@@ -1,5 +1,7 @@
 # `@graviola/edb-table-types`
 
+**Graviola role:** spine · contracts only, no UI implementation
+
 **Spine package** for the table subsystem — interfaces and contracts only, no implementation.
 
 Defines the tester/renderer/registry pattern for schema-driven table columns, mirroring the JSON Forms dispatch model used in `@graviola/edb-detail-renderer-core`.

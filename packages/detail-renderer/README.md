@@ -1,5 +1,7 @@
 # `@graviola/edb-detail-renderer`
 
+**Graviola role:** flesh · ready-to-use MUI `DetailRenderer` for semantic entity views
+
 MUI + React bindings for semantic **detail views** on top of `@graviola/edb-detail-renderer-core`.
 
 Provides the ready-to-use `<DetailRenderer>` component, default MUI layout/control renderers, and chip renderers for linked entities/media.
