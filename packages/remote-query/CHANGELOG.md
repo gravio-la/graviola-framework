@@ -1,5 +1,11 @@
 # @slub/remote-query-implementations
 
+## 1.4.8
+
+### Patch Changes
+
+- fix version pinning issues
+
 ## 1.4.7
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@graviola/sparql-schema",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "JsonSchema to SPARQL Query converter",
   "type": "module",
   "main": "./dist/index.cjs",

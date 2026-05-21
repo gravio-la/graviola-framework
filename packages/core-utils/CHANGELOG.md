@@ -1,5 +1,11 @@
 # @slub/edb-core-utils
 
+## 1.5.8
+
+### Patch Changes
+
+- fix version pinning issues
+
 ## 1.5.7
 
 ### Patch Changes

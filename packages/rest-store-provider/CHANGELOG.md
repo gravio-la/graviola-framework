@@ -1,5 +1,14 @@
 # @graviola/rest-store-provider
 
+## 1.4.1
+
+### Patch Changes
+
+- fix version pinning issues
+- Updated dependencies
+  - @graviola/rest-store-client@0.3.1
+  - @graviola/edb-state-hooks@1.7.1
+
 ## 1.4.0
 
 ### Minor Changes

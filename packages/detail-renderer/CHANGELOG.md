@@ -1,5 +1,19 @@
 # @graviola/edb-detail-renderer
 
+## 0.4.1
+
+### Patch Changes
+
+- fix version pinning issues
+- Updated dependencies
+  - @graviola/edb-advanced-components@1.7.1
+  - @graviola/edb-data-mapping@0.4.1
+  - @graviola/edb-detail-renderer-core@0.3.1
+  - @graviola/json-schema-utils@1.6.1
+  - @graviola/semantic-jsonform-types@1.4.9
+  - @graviola/edb-state-hooks@1.7.1
+  - @graviola/edb-ui-utils@0.4.1
+
 ## 0.4.0
 
 ### Minor Changes

@@ -1,5 +1,15 @@
 # @graviola/semantic-jsonform-types
 
+## 1.4.9
+
+### Patch Changes
+
+- fix version pinning issues
+- Updated dependencies
+  - @graviola/edb-core-types@1.5.1
+  - @graviola/edb-global-types@1.3.8
+  - @graviola/edb-table-types@0.1.1
+
 ## 1.4.8
 
 ### Patch Changes

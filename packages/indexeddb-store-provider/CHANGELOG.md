@@ -1,5 +1,22 @@
 # @graviola/indexeddb-store-provider
 
+## 1.0.1
+
+### Patch Changes
+
+- fix version pinning issues
+- Updated dependencies
+  - @graviola/edb-core-types@1.5.1
+  - @graviola/edb-core-utils@1.5.8
+  - @graviola/edb-global-types@1.3.8
+  - @graviola/edb-graph-traversal@1.6.1
+  - @graviola/indexeddb-dataset@0.2.1
+  - @graviola/json-schema-utils@1.6.1
+  - @graviola/sparql-db-impl@1.7.1
+  - @graviola/sparql-schema@1.6.1
+  - @graviola/edb-state-hooks@1.7.1
+  - @graviola/store-core@0.3.1
+
 ## 1.0.0
 
 ### Minor Changes

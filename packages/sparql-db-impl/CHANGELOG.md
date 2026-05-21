@@ -1,5 +1,16 @@
 # @slub/sparql-db-impl
 
+## 1.7.1
+
+### Patch Changes
+
+- fix version pinning issues
+- Updated dependencies
+  - @graviola/json-schema-utils@1.6.1
+  - @graviola/jsonld-utils@1.6.1
+  - @graviola/sparql-schema@1.6.1
+  - @graviola/store-core@0.3.1
+
 ## 1.7.0
 
 ### Minor Changes

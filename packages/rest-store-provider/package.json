@@ -1,6 +1,6 @@
 {
   "name": "@graviola/rest-store-provider",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -14,7 +14,8 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "depcheck": "depcheck",

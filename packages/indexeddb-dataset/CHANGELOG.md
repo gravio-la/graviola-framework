@@ -1,5 +1,11 @@
 # @graviola/indexeddb-dataset
 
+## 0.2.1
+
+### Patch Changes
+
+- fix version pinning issues
+
 ## 0.2.0
 
 ### Minor Changes

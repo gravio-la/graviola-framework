@@ -1,6 +1,6 @@
 {
   "name": "@graviola/json-schema-utils",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "JsonSchema utility functions for EDB",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -15,7 +15,8 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "depcheck": "depcheck",

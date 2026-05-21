@@ -1,7 +1,7 @@
 {
   "name": "testapp",
   "private": true,
-  "version": "0.0.16",
+  "version": "0.0.17",
   "type": "module",
   "scripts": {
     "download-items": "bun scripts/download-commons-items.ts",

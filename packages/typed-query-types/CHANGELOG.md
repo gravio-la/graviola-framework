@@ -1,5 +1,11 @@
 # @graviola/typed-query-types
 
+## 0.3.1
+
+### Patch Changes
+
+- fix version pinning issues
+
 ## 0.3.0
 
 ### Minor Changes

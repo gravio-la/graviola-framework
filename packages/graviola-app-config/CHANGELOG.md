@@ -1,5 +1,23 @@
 # @graviola/graviola-app-config
 
+## 0.1.2
+
+### Patch Changes
+
+- fix version pinning issues
+- Updated dependencies
+  - @graviola/edb-advanced-components@1.7.1
+  - @graviola/edb-core-types@1.5.1
+  - @graviola/edb-core-utils@1.5.8
+  - @graviola/edb-debug-utils@1.4.1
+  - @graviola/edb-detail-renderer@0.4.1
+  - @graviola/entity-finder@1.5.1
+  - @graviola/json-schema-utils@1.6.1
+  - @graviola/semantic-json-form@1.6.1
+  - @graviola/semantic-jsonform-types@1.4.9
+  - @graviola/edb-state-hooks@1.7.1
+  - @graviola/edb-ui-utils@0.4.1
+
 ## 0.1.1
 
 ### Patch Changes

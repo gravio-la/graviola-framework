@@ -44,7 +44,7 @@
     "precommit": "lint-staged",
     "changeset:init": "changeset init",
     "changeset": "changeset",
-    "release": "turbo run release --continue --concurrency 1",
+    "release": "bun install && turbo run release --continue --concurrency 1",
     "helper:deps": "bun ./packages/build-helper/get-dependencies.js",
     "build:prisma": "turbo run build:prisma && sed -i \"s/env(\\\"DATABASE_PROVIDER\\\")/\\\"${DATABASE_PROVIDER:-sqlite}\\\"/g\" ./prisma/*.prisma",
     "purge": "rm -rf node_modules && find -maxdepth 3 -name node_modules | xargs rm -rf",

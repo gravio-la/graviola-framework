@@ -1,5 +1,11 @@
 # @graviola/edb-config-helper
 
+## 1.2.8
+
+### Patch Changes
+
+- fix version pinning issues
+
 ## 1.2.7
 
 ### Patch Changes

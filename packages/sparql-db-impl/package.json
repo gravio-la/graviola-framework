@@ -1,6 +1,6 @@
 {
   "name": "@graviola/sparql-db-impl",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "a set of store specific implementations of SPARQL query builders",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -15,7 +15,8 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "test": "bun test",

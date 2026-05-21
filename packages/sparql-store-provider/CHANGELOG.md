@@ -1,5 +1,16 @@
 # @graviola/sparql-store-provider
 
+## 6.0.1
+
+### Patch Changes
+
+- fix version pinning issues
+- Updated dependencies
+  - @graviola/edb-core-utils@1.5.8
+  - @graviola/remote-query-implementations@1.4.8
+  - @graviola/sparql-db-impl@1.7.1
+  - @graviola/edb-state-hooks@1.7.1
+
 ## 6.0.0
 
 ### Minor Changes

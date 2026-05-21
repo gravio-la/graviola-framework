@@ -1,5 +1,14 @@
 # @graviola/edb-debug-utils
 
+## 1.4.1
+
+### Patch Changes
+
+- fix version pinning issues
+- Updated dependencies
+  - @graviola/edb-core-types@1.5.1
+  - @graviola/edb-state-hooks@1.7.1
+
 ## 1.4.0
 
 ### Minor Changes

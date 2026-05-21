@@ -1,6 +1,6 @@
 {
   "name": "@graviola/rest-store-client",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "HTTP client Stores (v0 legacy + v1 wire) for Graviola Store<R>",
   "type": "module",
   "main": "./dist/index.cjs",

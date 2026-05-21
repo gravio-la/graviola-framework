@@ -1,5 +1,18 @@
 # @graviola/local-oxigraph-store-provider
 
+## 6.0.1
+
+### Patch Changes
+
+- fix version pinning issues
+- Updated dependencies
+  - @graviola/async-oxigraph@0.2.7
+  - @graviola/edb-core-utils@1.5.8
+  - @graviola/remote-query-implementations@1.4.8
+  - @graviola/sparql-db-impl@1.7.1
+  - @graviola/edb-state-hooks@1.7.1
+  - @graviola/store-core@0.3.1
+
 ## 6.0.0
 
 ### Minor Changes

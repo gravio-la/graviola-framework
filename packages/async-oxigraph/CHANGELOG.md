@@ -1,5 +1,11 @@
 # @graviola/async-oxigraph
 
+## 0.2.7
+
+### Patch Changes
+
+- fix version pinning issues
+
 ## 0.2.6
 
 ### Patch Changes

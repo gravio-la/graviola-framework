@@ -1,6 +1,6 @@
 {
   "name": "@graviola/remote-query-implementations",
-  "version": "1.4.7",
+  "version": "1.4.8",
   "description": "a set of store specific implementations of SPARQL query builders",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -15,7 +15,8 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "depcheck": "depcheck",

@@ -1,5 +1,11 @@
 # @graviola/edb-layout-renderer
 
+## 1.4.1
+
+### Patch Changes
+
+- fix version pinning issues
+
 ## 1.4.0
 
 ### Minor Changes

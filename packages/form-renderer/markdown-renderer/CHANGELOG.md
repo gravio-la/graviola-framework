@@ -1,5 +1,13 @@
 # @graviola/edb-markdown-renderer
 
+## 1.4.9
+
+### Patch Changes
+
+- fix version pinning issues
+- Updated dependencies
+  - @graviola/edb-layout-renderer@1.4.1
+
 ## 1.4.8
 
 ### Patch Changes

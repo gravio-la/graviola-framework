@@ -1,5 +1,14 @@
 # @graviola/edb-basic-renderer
 
+## 4.2.1
+
+### Patch Changes
+
+- fix version pinning issues
+- Updated dependencies
+  - @graviola/edb-core-utils@1.5.8
+  - @graviola/edb-ui-utils@0.4.1
+
 ## 4.2.0
 
 ### Minor Changes

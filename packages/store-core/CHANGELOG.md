@@ -1,5 +1,14 @@
 # @graviola/store-core
 
+## 0.3.1
+
+### Patch Changes
+
+- fix version pinning issues
+- Updated dependencies
+  - @graviola/edb-core-types@1.5.1
+  - @graviola/typed-query-types@0.3.1
+
 ## 0.3.0
 
 ### Minor Changes

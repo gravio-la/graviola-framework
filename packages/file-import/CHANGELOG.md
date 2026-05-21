@@ -1,5 +1,14 @@
 # @graviola/edb-file-import
 
+## 1.2.1
+
+### Patch Changes
+
+- fix version pinning issues
+- Updated dependencies
+  - @graviola/jsonld-utils@1.6.1
+  - @graviola/edb-maintenance-utils@1.3.1
+
 ## 1.2.0
 
 ### Minor Changes

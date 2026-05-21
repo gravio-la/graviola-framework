@@ -1,5 +1,11 @@
 # @slub/edb-build-helper
 
+## 0.4.5
+
+### Patch Changes
+
+- fix version pinning issues
+
 ## 0.4.4
 
 ### Patch Changes

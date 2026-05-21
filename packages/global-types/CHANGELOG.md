@@ -1,5 +1,11 @@
 # @slub/edb-global-types
 
+## 1.3.8
+
+### Patch Changes
+
+- fix version pinning issues
+
 ## 1.3.7
 
 ### Patch Changes

@@ -1,5 +1,20 @@
 # @graviola/semantic-json-form
 
+## 1.6.1
+
+### Patch Changes
+
+- fix version pinning issues
+- Updated dependencies
+  - @graviola/edb-advanced-components@1.7.1
+  - @graviola/edb-basic-components@1.5.1
+  - @graviola/entity-finder@1.5.1
+  - @graviola/edb-linked-data-renderer@6.0.1
+  - @graviola/json-schema-utils@1.6.1
+  - @graviola/jsonld-utils@1.6.1
+  - @graviola/semantic-jsonform-types@1.4.9
+  - @graviola/edb-state-hooks@1.7.1
+
 ## 1.6.0
 
 ### Minor Changes

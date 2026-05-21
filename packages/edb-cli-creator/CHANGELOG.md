@@ -1,5 +1,13 @@
 # @graviola/edb-cli-creator
 
+## 1.3.8
+
+### Patch Changes
+
+- fix version pinning issues
+- Updated dependencies
+  - @graviola/edb-core-utils@1.5.8
+
 ## 1.3.7
 
 ### Patch Changes

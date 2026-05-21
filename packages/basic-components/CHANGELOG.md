@@ -1,5 +1,13 @@
 # @graviola/edb-basic-components
 
+## 1.5.1
+
+### Patch Changes
+
+- fix version pinning issues
+- Updated dependencies
+  - @graviola/edb-state-hooks@1.7.1
+
 ## 1.5.0
 
 ### Minor Changes

@@ -1,5 +1,14 @@
 # @graviola/edb-maintenance-utils
 
+## 1.3.1
+
+### Patch Changes
+
+- fix version pinning issues
+- Updated dependencies
+  - @graviola/edb-graph-traversal@1.6.1
+  - @graviola/json-schema-utils@1.6.1
+
 ## 1.3.0
 
 ### Minor Changes
