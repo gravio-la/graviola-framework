@@ -1,77 +1,29 @@
-import { PrimaryFieldResults } from "@graviola/edb-core-types";
-import {
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  CardProps,
-  Typography,
-} from "@mui/material";
-import isString from "lodash-es/isString";
-import React, { FunctionComponent } from "react";
+import { SemanticCard } from "@graviola/semantic-views";
+import type { PrimaryFieldResults } from "@graviola/edb-core-types";
+import type { CardProps } from "@mui/material";
 
-import { AllPropTableProps, AllPropTable } from "./AllPropsTable";
-
-type OwnProps = {
+export type EntityDetailCardProps = {
   typeIRI: string;
   entityIRI: string;
+  data?: any;
+  cardInfo?: PrimaryFieldResults<string>;
   readonly?: boolean;
-  cardInfo: PrimaryFieldResults<string>;
-  cardActionChildren?: React.ReactNode;
-  data: any;
-  tableProps?: Partial<AllPropTableProps>;
+  tableProps?: Record<string, unknown>;
   cardProps?: CardProps;
 };
 
-export type EntityDetailCardProps = OwnProps;
-export const EntityDetailCard: FunctionComponent<EntityDetailCardProps> = ({
-  cardInfo,
+/** Convenience wrapper around {@link SemanticCard}. */
+export const EntityDetailCard = ({
+  entityIRI,
+  typeIRI,
   data,
-  cardActionChildren,
-  tableProps,
   cardProps,
-}) => {
-  return (
-    <>
-      <Card {...(cardProps ?? {})}>
-        {cardInfo.image && (
-          <CardMedia
-            component="img"
-            sx={{
-              width: "100%",
-              maxHeight: "14em",
-              objectFit: "cover",
-              display: "block",
-            }}
-            image={cardInfo.image}
-            alt={cardInfo.label ?? ""}
-          />
-        )}
-        <CardContent>
-          <Typography
-            gutterBottom
-            variant="h5"
-            component="div"
-            sx={{ fontWeight: "bold" }}
-          >
-            {cardInfo.label}
-          </Typography>
-          {isString(data?.originalTitle) ||
-            isString(data?.subtitle) ||
-            (cardInfo.description?.length < 300 && (
-              <Typography variant="body2" color="text.secondary">
-                {data?.subtitle || data?.originalTitle || cardInfo.description}
-              </Typography>
-            ))}
-        </CardContent>
-        {cardActionChildren && <CardActions>{cardActionChildren}</CardActions>}
-      </Card>
-      <AllPropTable
-        allProps={data}
-        disableContextMenu
-        inlineEditing={true}
-        {...(tableProps ?? {})}
-      />
-    </>
-  );
-};
+}: EntityDetailCardProps) => (
+  <SemanticCard
+    entityIRI={entityIRI}
+    typeIRI={typeIRI}
+    defaultData={data}
+    disableLoad={Boolean(data)}
+    {...cardProps}
+  />
+);

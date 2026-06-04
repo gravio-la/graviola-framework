@@ -36,6 +36,9 @@
     "react": "catalog:"
   },
   "dependencies": {
+    "@jsonforms/core": "catalog:jsonforms",
+    "@graviola/edb-detail-renderer-core": "workspace:*",
+    "@graviola/semantic-views": "workspace:*",
     "@graviola/edb-basic-components": "workspace:*",
     "@graviola/edb-core-utils": "workspace:*",
     "@graviola/edb-data-mapping": "workspace:*",

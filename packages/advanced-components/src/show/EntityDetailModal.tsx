@@ -39,7 +39,9 @@ import { useTranslation } from "next-i18next";
 import { FC, useCallback, useMemo } from "react";
 
 import { EditEntityModal } from "../edit/EditEntityModal";
-import { EntityDetailCard } from "./EntityDetailCard";
+import { SemanticDetailView } from "@graviola/semantic-views";
+
+import { allPropsDetailRendererEntry } from "./AllPropsDetailRenderer";
 import { queryOptionMixinBasedOnEntity } from "@graviola/edb-ui-utils";
 
 /**
@@ -209,14 +211,12 @@ const EntityDetailContent: FC<{
                 p: 2,
               }}
             >
-              <EntityDetailCard
-                typeIRI={classIRI}
+              <SemanticDetailView
                 entityIRI={entityIRI}
-                data={data}
-                cardInfo={cardInfo}
-                readonly={readonly}
-                tableProps={{ disabledProperties }}
-                cardProps={{ elevation: 0 }}
+                typeIRI={classIRI}
+                defaultData={data}
+                disableLoad
+                config={{ fallbackRenderers: [allPropsDetailRendererEntry] }}
               />
             </Box>
           </DialogContent>
@@ -249,7 +249,6 @@ const EntityDetailDataWrapper: FC<{
   typeIRI: string;
   typeName: string;
   defaultData?: any;
-  disableLoad?: boolean;
   readonly?: boolean;
   disableInlineEditing?: boolean;
   onClose: () => void;
@@ -259,7 +258,6 @@ const EntityDetailDataWrapper: FC<{
   typeIRI,
   typeName,
   defaultData,
-  disableLoad,
   readonly,
   disableInlineEditing,
   onClose,
@@ -277,14 +275,15 @@ const EntityDetailDataWrapper: FC<{
     entityIRI,
     typeIRI: classIRI,
     queryOptions: {
-      enabled: !disableLoad,
+      enabled: true,
+      refetchOnMount: "always",
       refetchOnWindowFocus: true,
       ...queryOptionMixinBasedOnEntity(defaultData),
     },
     loadQueryKey: "show",
   });
 
-  const data = rawData?.document;
+  const data = rawData?.document ?? defaultData;
 
   // Setup edit functionality
   const { registerModal } = useModalRegistry(NiceModal);
@@ -370,7 +369,6 @@ const EntityDetailClassWrapper: FC<{
   typeIRI: string;
   entityIRI: string;
   defaultData?: any;
-  disableLoad?: boolean;
   readonly?: boolean;
   disableInlineEditing?: boolean;
   onClose: () => void;
@@ -378,7 +376,6 @@ const EntityDetailClassWrapper: FC<{
   typeIRI,
   entityIRI,
   defaultData,
-  disableLoad,
   readonly,
   disableInlineEditing,
   onClose,
@@ -387,7 +384,7 @@ const EntityDetailClassWrapper: FC<{
   const { t } = useTranslation();
 
   // Get class IRI
-  const classIRI = useTypeIRIFromEntity(entityIRI, typeIRI, disableLoad);
+  const classIRI = useTypeIRIFromEntity(entityIRI, typeIRI, false);
 
   // Show loading state if classIRI is not available yet
   if (!classIRI) {
@@ -410,7 +407,6 @@ const EntityDetailClassWrapper: FC<{
       typeIRI={typeIRI}
       typeName={typeName}
       defaultData={defaultData}
-      disableLoad={disableLoad}
       readonly={readonly}
       disableInlineEditing={disableInlineEditing}
       onClose={onClose}
@@ -426,7 +422,6 @@ export const EntityDetailModal = NiceModal.create(
     typeIRI,
     entityIRI,
     data: defaultData,
-    disableLoad,
     readonly,
     disableInlineEditing,
     onClose: onCloseFromProps,
@@ -451,7 +446,6 @@ export const EntityDetailModal = NiceModal.create(
         typeIRI={typeIRI}
         entityIRI={entityIRI}
         defaultData={defaultData}
-        disableLoad={disableLoad}
         readonly={readonly}
         disableInlineEditing={disableInlineEditing}
         onClose={handleClose}

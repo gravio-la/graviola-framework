@@ -26,6 +26,7 @@ export function createLoungeIntentDispatch(opts: {
         void NiceModal.show(MODAL_ENTITY_DETAIL, {
           entityIRI: intent.entityIRI,
           typeIRI: intent.typeIRI,
+          data: intent.data,
           readonly: true,
           disableInlineEditing: true,
         });

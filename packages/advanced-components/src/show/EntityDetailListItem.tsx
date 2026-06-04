@@ -1,129 +1,67 @@
-import { PrimaryFieldResults } from "@graviola/edb-core-types";
-import { ellipsis } from "@graviola/edb-core-utils";
-import {
-  applyToEachField,
-  extractFieldIfString,
-} from "@graviola/edb-data-mapping";
+import { SemanticListItem } from "@graviola/semantic-views";
 import {
   MODAL_ENTITY_DETAIL,
-  useAdbContext,
   useGraviolaModal,
   useTypeIRIFromEntity,
 } from "@graviola/edb-state-hooks";
-import { useCRUDWithQueryClient } from "@graviola/edb-state-hooks";
-import { queryOptionMixinBasedOnEntity } from "@graviola/edb-ui-utils";
-import { Clear, HideImage } from "@mui/icons-material";
-import {
-  Avatar,
-  IconButton,
-  ListItem,
-  ListItemAvatar,
-  ListItemButton,
-  ListItemText,
-  Stack,
-} from "@mui/material";
-import React, { useCallback, useMemo } from "react";
+import ClearIcon from "@mui/icons-material/Clear";
+import { Box, IconButton, ListItemButton } from "@mui/material";
+import { MouseEvent, useCallback } from "react";
 
 export type EntityDetailListItemProps = {
   entityIRI: string;
   typeIRI?: string;
-  onClear?: () => void;
   data?: any;
+  disableLoad?: boolean;
+  onClick?: (e: MouseEvent) => void;
+  /** When a function, shows a clear control (linked-data form pickers pass `enabled && handleClear`). */
+  onClear?: false | (() => void);
 };
+
 export const EntityDetailListItem = ({
   entityIRI,
   typeIRI,
+  data,
+  disableLoad,
+  onClick,
   onClear,
-  data: defaultData,
 }: EntityDetailListItemProps) => {
-  const {
-    queryBuildOptions: { primaryFields },
-    typeIRIToTypeName,
-  } = useAdbContext();
+  const classIRI = useTypeIRIFromEntity(entityIRI, typeIRI, disableLoad);
   const detailModal = useGraviolaModal(MODAL_ENTITY_DETAIL);
-  const classIRI = useTypeIRIFromEntity(entityIRI, typeIRI);
-  const typeName = useMemo(
-    () => typeIRIToTypeName(classIRI),
-    [classIRI, typeIRIToTypeName],
-  );
-  const {
-    loadQuery: { data: rawData },
-  } = useCRUDWithQueryClient({
-    entityIRI,
-    typeIRI: classIRI,
-    queryOptions: {
-      enabled: true,
-      refetchOnWindowFocus: true,
-      ...queryOptionMixinBasedOnEntity(defaultData),
+
+  const showDetailModal = useCallback(
+    (e: MouseEvent) => {
+      e.preventDefault();
+      detailModal.show({ entityIRI, typeIRI: classIRI, data });
     },
-    loadQueryKey: "show",
-  });
-  const data = rawData?.document;
-  const cardInfo = useMemo<PrimaryFieldResults<string>>(() => {
-    const fieldDecl = primaryFields[typeName];
-    if (data && fieldDecl) {
-      const { label, image, description } = applyToEachField(
-        data,
-        fieldDecl,
-        extractFieldIfString,
-      );
-      return {
-        label: ellipsis(label, 50),
-        description: ellipsis(description, 50),
-        image,
-      };
-    }
-    return {
-      label: null,
-      description: null,
-      image: null,
-    };
-  }, [typeName, data, primaryFields]);
-  const { label, image, description } = cardInfo;
-  const showDetailModal = useCallback(() => {
-    detailModal.show(
-      {
-        typeIRI,
-        entityIRI,
-        data,
-      },
-      {
-        origin: { source: "advanced-components:EntityDetailListItem" },
-      },
-    );
-  }, [typeIRI, entityIRI, data, detailModal]);
-  //Sorry for this hack, in future we will have class dependent List items
-  const variant = useMemo(
-    () => (typeIRI.endsWith("Person") ? "circular" : "rounded"),
-    [typeIRI],
+    [entityIRI, classIRI, data, detailModal],
   );
 
   return (
-    <ListItem
-      sx={{ paddingLeft: 0 }}
-      secondaryAction={
-        onClear && (
-          <Stack>
-            <IconButton onClick={onClear}>
-              <Clear />
-            </IconButton>
-          </Stack>
-        )
-      }
-    >
-      <ListItemButton onClick={showDetailModal}>
-        <ListItemAvatar>
-          <Avatar variant={variant} aria-label="image" src={image}>
-            <HideImage />
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText
-          primaryTypographyProps={{ style: { whiteSpace: "normal" } }}
-          secondaryTypographyProps={{ style: { whiteSpace: "normal" } }}
-          primary={label}
-          secondary={description}
+    <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
+      <ListItemButton
+        onClick={onClick ?? showDetailModal}
+        sx={{ flex: 1, px: 0 }}
+      >
+        <SemanticListItem
+          entityIRI={entityIRI}
+          typeIRI={classIRI}
+          defaultData={data}
+          disableLoad={disableLoad}
         />
       </ListItemButton>
-    </ListItem>
+      {typeof onClear === "function" ? (
+        <IconButton
+          size="small"
+          aria-label="clear"
+          onClick={(e) => {
+            e.stopPropagation();
+            onClear();
+          }}
+        >
+          <ClearIcon fontSize="small" />
+        </IconButton>
+      ) : null}
+    </Box>
   );
 };
