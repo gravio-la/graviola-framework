@@ -85,6 +85,7 @@ export function useGraviolaModal(modalId: string) {
             entityIRI: props.entityIRI as string,
             typeIRI: props.typeIRI as string | undefined,
             typeName: props.typeName as string | undefined,
+            data: props.data,
             origin,
           });
           return Promise.resolve();

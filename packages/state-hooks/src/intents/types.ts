@@ -12,6 +12,7 @@ export type GraviolaIntent =
       typeName?: string;
       typeIRI?: string;
       entityIRI: string;
+      data?: unknown;
     }>
   | WithOrigin<{ kind: "create-entity"; typeName: string; entityIRI?: string }>
   | WithOrigin<{ kind: "list-entities"; typeName: string }>

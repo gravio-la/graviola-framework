@@ -8,7 +8,7 @@ import type { StringToIRIFn } from "@graviola/edb-core-types";
 import { useAdbContext } from "./provider";
 
 type UseExtendedSchemaProps = {
-  typeName: string;
+  typeName?: string;
 };
 const defaultMakeStubSchema = (
   schema: JSONSchema7,
@@ -46,6 +46,7 @@ const defaultMakeStubSchema = (
 export const useExtendedSchema = ({ typeName }: UseExtendedSchemaProps) => {
   const { schema, typeNameToTypeIRI, makeStubSchema } = useAdbContext();
   return useMemo(() => {
+    if (!typeName) return undefined;
     const defaultFn = (schema: JSONSchema7) =>
       defaultMakeStubSchema(schema, typeNameToTypeIRI);
     const prepareSchema = makeStubSchema || defaultFn;

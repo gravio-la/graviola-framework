@@ -2,6 +2,7 @@ export {
   QueryClientProvider,
   QueryClient,
   useQuery,
+  useInfiniteQuery,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
@@ -9,6 +10,10 @@ export type {
   UseQueryOptions,
   QueryClientProviderProps,
 } from "@tanstack/react-query";
+export type { JsonLdEntity, FacetFilter } from "@graviola/fulltext-search-core";
+export * from "./resultListController";
+export * from "./useInfiniteSearch";
+export * from "./usePagedSearch";
 export * from "./useFormData";
 export * from "./useFormEditor";
 export * from "./useFullscreenState";
@@ -35,6 +40,8 @@ export * from "./modal-registry/ModalRegistry";
 export * from "./uiSlots/SemanticFormSlot";
 export * from "./uiSlots/FinderSlot";
 export * from "./useExtendedSchema";
+export * from "./useEntity";
+export * from "./useEntityPreview";
 export * from "./useTypedFilterStore";
 export * from "./useAnyOfFilterStore";
 export type { CrudDatastoreStore } from "./crudDatastoreStore";
