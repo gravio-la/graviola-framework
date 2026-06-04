@@ -1,12 +1,18 @@
 import type { Preview } from "@storybook/react";
 import React from "react";
 import { CssBaseline } from "@mui/material";
+import { Buffer } from "buffer";
 
 // Define global process object for Node.js compatibility in browser
 if (typeof window !== "undefined" && !window.process) {
   (window as any).process = {
     env: {},
   };
+}
+
+// n3 -> safe-buffer expects a global Buffer in browser bundles.
+if (typeof globalThis !== "undefined" && !(globalThis as any).Buffer) {
+  (globalThis as any).Buffer = Buffer;
 }
 
 import { QueryClient, QueryClientProvider } from "@graviola/edb-state-hooks";

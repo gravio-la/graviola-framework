@@ -1,5 +1,5 @@
 import { fileURLToPath } from "node:url";
-import { dirname } from "node:path";
+import { dirname, join } from "node:path";
 import { createRequire } from "node:module";
 import type { StorybookConfig } from "@storybook/react-vite";
 import mermaid from "mdx-mermaid";
@@ -41,6 +41,9 @@ const config: StorybookConfig = {
     };
   },
   viteFinal: async (config) => {
+    const repoRoot = fileURLToPath(new URL("../../../", import.meta.url));
+    const require = createRequire(import.meta.url);
+    const bufferPath = require.resolve("buffer/");
     const basePath = process.env.STORYBOOK_BASE_PATH || "";
     const normalizedBase = basePath
       ? `${basePath.replace(/\/+$/, "")}/`
@@ -68,6 +71,7 @@ const config: StorybookConfig = {
       "process.env.NODE_ENV": JSON.stringify(
         process.env.NODE_ENV || "development",
       ),
+      global: "globalThis",
     };
 
     const existingOnWarn = config.build?.rollupOptions?.onwarn;
@@ -104,6 +108,12 @@ const config: StorybookConfig = {
           : {}),
         "~awesomplete": "awesomplete",
         "~@chenfengyuan/datepicker": "@chenfengyuan/datepicker",
+        buffer: bufferPath,
+        "node:buffer": bufferPath,
+        "@graviola/semantic-views": join(
+          repoRoot,
+          "packages/semantic-views/src/index.ts",
+        ),
       },
       dedupe: Array.from(dedupe),
     };
@@ -111,6 +121,22 @@ const config: StorybookConfig = {
     if (normalizedBase) {
       config.base = normalizedBase;
     }
+
+    config.optimizeDeps = {
+      ...config.optimizeDeps,
+      include: [...(config.optimizeDeps?.include ?? []), "buffer"],
+      exclude: [
+        ...(config.optimizeDeps?.exclude ?? []),
+        "@graviola/semantic-views",
+      ],
+    };
+
+    config.server = {
+      ...config.server,
+      fs: {
+        allow: [repoRoot, ...(config.server?.fs?.allow ?? [])],
+      },
+    };
 
     return config;
   },

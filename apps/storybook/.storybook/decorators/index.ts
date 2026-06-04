@@ -5,3 +5,5 @@
 export { withLocalOxigraph } from "./withLocalOxigraph";
 export { withSparqlEndpoint } from "./withSparqlEndpoint";
 export { withGraviolaProvider } from "./withGraviolaProvider";
+export { withSemanticViewsProvider } from "./withSemanticViewsProvider";
+export { withTypePresentation } from "./withTypePresentation";
