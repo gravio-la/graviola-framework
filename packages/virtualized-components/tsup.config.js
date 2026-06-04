@@ -2,4 +2,7 @@ import { makeConfigWithExternals } from "@graviola/edb-tsup-config/tsup.config.j
 import pkg from "./package.json";
 
 const config = makeConfigWithExternals(pkg);
-export default config;
+export default {
+  ...config,
+  entry: ["src/index.tsx"],
+};

@@ -1,7 +1,7 @@
 {
   "name": "@graviola/edb-virtualized-components",
   "version": "1.2.1",
-  "description": "MUI + react-virtuoso virtualized list components for Graviola apps",
+  "description": "MUI + react-virtuoso virtualized semantic list components for Graviola apps",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -21,17 +21,19 @@
   ],
   "scripts": {
     "depcheck": "depcheck",
-    "build": "tsup src/index.tsx --format esm,cjs --dts --external react",
-    "dev": "tsup src/index.tsx --format esm,cjs --watch --dts --external react",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "lint": "eslint \"**/*.ts*\"",
     "lint-fix": "eslint --fix \"**/*.ts*\"",
     "release": "bun publish --access public"
   },
   "dependencies": {
-    "@graviola/edb-ui-utils": "workspace:*"
+    "@graviola/edb-detail-renderer-core": "workspace:*",
+    "@graviola/edb-state-hooks": "workspace:*",
+    "@graviola/semantic-views": "workspace:*"
   },
   "devDependencies": {
-    "react-virtuoso": "^4.6.2",
+    "react-virtuoso": "catalog:",
     "@types/react": "catalog:",
     "@types/json-schema": "catalog:",
     "@graviola/edb-tsconfig": "workspace:*",
@@ -40,7 +42,7 @@
   "peerDependencies": {
     "@mui/material": "catalog:mui",
     "@mui/icons-material": "catalog:mui",
-    "react-virtuoso": "^4",
+    "react-virtuoso": "catalog:",
     "react": "catalog:"
   }
 }
