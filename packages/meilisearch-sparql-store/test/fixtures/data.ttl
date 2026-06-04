@@ -1,0 +1,38 @@
+@prefix ex: <http://example.org/ontology#> .
+@prefix ent: <http://example.org/entity/> .
+
+ent:exhibition-1 a ex:Exhibition ;
+  ex:title "Modern Masters" ;
+  ex:venue "National Gallery" ;
+  ex:year 2024 ;
+  ex:description "A survey of modern painting" .
+
+ent:exhibition-2 a ex:Exhibition ;
+  ex:title "Sculpture Today" ;
+  ex:venue "City Museum" ;
+  ex:year 2023 ;
+  ex:description "Contemporary sculpture" .
+
+ent:artist-1 a ex:Artist ;
+  ex:name "Claude Monet" ;
+  ex:bio "French impressionist painter" .
+
+ent:artist-2 a ex:Artist ;
+  ex:name "Auguste Rodin" ;
+  ex:bio "French sculptor" .
+
+ent:place-1 a ex:Place ;
+  ex:placeName "Paris" ;
+  ex:description "Capital of France" ;
+  ex:country "France" .
+
+ent:place-2 a ex:Place ;
+  ex:placeName "London" ;
+  ex:description "Capital of the UK" ;
+  ex:country "UK" .
+
+ent:curator-1 a ex:Curator ;
+  ex:curatorName "Jane Smith" .
+
+ent:curator-2 a ex:Curator ;
+  ex:curatorName "John Doe" .

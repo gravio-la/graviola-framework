@@ -1,0 +1,20 @@
+{
+  "fulltextIndex": {
+    "scopes": {
+      "#/definitions/Exhibition/properties/title": {},
+      "#/definitions/Exhibition/properties/description": {},
+      "#/definitions/Artist/properties/name": {},
+      "#/definitions/Artist/properties/bio": {}
+    },
+    "types": {
+      "Place": { "searchable": true }
+    }
+  },
+  "facets": {
+    "scopes": {
+      "#/definitions/Exhibition/properties/venue": { "facet": "filter" },
+      "#/definitions/Exhibition/properties/year": { "facet": "range" },
+      "#/definitions/Place/properties/country": { "facet": "filter" }
+    }
+  }
+}

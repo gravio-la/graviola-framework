@@ -1,0 +1,58 @@
+{
+  "name": "@graviola/meilisearch-sparql-store",
+  "version": "0.1.0",
+  "description": "Composite Meilisearch + injected primary store for Semantic Desktop full-text search (phase 2)",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "bun test",
+    "test:e2e": "MEILI_URL=http://localhost:7700 bun test test/e2e.test.ts",
+    "docker:up": "docker compose up -d --wait",
+    "docker:down": "docker compose down -v",
+    "depcheck": "depcheck",
+    "lint": "eslint src/**/*.ts",
+    "release": "bun publish --access public"
+  },
+  "dependencies": {
+    "@graviola/edb-core-types": "workspace:*",
+    "@graviola/fulltext-search-core": "workspace:*",
+    "@graviola/search-facet-schema": "workspace:*",
+    "@graviola/store-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@comunica/query-sparql-rdfjs": "^4.0.0",
+    "@graviola/edb-graph-traversal": "workspace:*",
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*",
+    "@graviola/indexeddb-store-provider": "workspace:*",
+    "@graviola/sparql-db-impl": "workspace:*",
+    "@graviola/sparql-schema": "workspace:*",
+    "@types/json-schema": "catalog:",
+    "@rdfjs/data-model": "catalog:rdf",
+    "eslint-config-edb": "workspace:*",
+    "n3": "^1.17.2",
+    "tsup": "^8.0.0",
+    "typescript": "^5.8.2"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "eslint-config-edb"
+    ]
+  }
+}
