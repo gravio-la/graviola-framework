@@ -1,0 +1,53 @@
+{
+  "name": "@graviola/semantic-views",
+  "version": "0.1.0",
+  "description": "Schema-driven entity views (chip, list item, card, detail) for Graviola",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "CHANGELOG.md", "README.md"],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint src/**/*.{ts,tsx}",
+    "lint-fix": "eslint --fix src/**/*.{ts,tsx}",
+    "release": "bun publish --access public"
+  },
+  "peerDependencies": {
+    "@mui/material": "catalog:mui",
+    "react": "catalog:"
+  },
+  "dependencies": {
+    "@graviola/edb-core-types": "workspace:*",
+    "@graviola/edb-core-utils": "workspace:*",
+    "@graviola/edb-detail-renderer": "workspace:*",
+    "@graviola/edb-detail-renderer-core": "workspace:*",
+    "@graviola/edb-state-hooks": "workspace:*",
+    "@graviola/json-schema-utils": "workspace:*",
+    "@graviola/semantic-jsonform-types": "workspace:*",
+    "@jsonforms/core": "catalog:jsonforms"
+  },
+  "devDependencies": {
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*",
+    "@types/json-schema": "catalog:",
+    "@types/react": "catalog:",
+    "eslint-config-edb": "workspace:*",
+    "tsup": "^8.0.0",
+    "typescript": "^5.8.2"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": ["eslint-config-edb"]
+  }
+}
