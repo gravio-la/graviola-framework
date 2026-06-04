@@ -31,11 +31,14 @@
     "release": "bun publish --access public",
     "pack-tarball": "bun pm pack"
   },
+  "dependencies": {
+    "@graviola/edb-core-types": "workspace:*",
+    "lodash-es": "catalog:"
+  },
   "devDependencies": {
     "@graviola/edb-build-helper": "workspace:*",
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
-    "@graviola/edb-core-types": "workspace:*",
     "eslint-config-edb": "workspace:*",
     "@types/jest": "^29.0.0",
     "jest": "^29.0.0",

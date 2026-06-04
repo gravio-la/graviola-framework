@@ -55,6 +55,94 @@ export type PrimaryFieldResults<T> = {
   image: T | null;
 };
 
+/** Props passed to app-supplied icon components (MUI SvgIcon, @mui/icons-material, etc.). */
+export type PreviewIconProps = {
+  fontSize?: number | string;
+  color?: string;
+  className?: string;
+};
+
+/**
+ * React component (incl. MUI forwardRef/memo objects), render function, or emoji string.
+ */
+export type IconComponentLike =
+  | ((props: PreviewIconProps) => unknown)
+  | Record<string, unknown>;
+
+/**
+ * Type-level or MIME-level icon: emoji/label string, component, render fn, or
+ * resolver evaluated per entity instance.
+ */
+export type IconRef = string | IconComponentLike | PreviewIconResolver;
+
+/** Resolve an icon from instance `data` (e.g. pick MIME-specific icon). */
+export type PreviewIconResolver = (
+  ctx: PreviewMediaContext,
+) => IconRef | undefined;
+
+/** Optional per-instance image URL (thumbnail service, derived URL, base64). */
+export type PreviewImageResolver = (
+  ctx: PreviewMediaContext,
+) => string | undefined;
+
+export type PreviewMediaContext = {
+  data: unknown;
+  typeName: string;
+  typeIRI?: string;
+  mimeType?: string;
+};
+
+export type MimeIconMatcherMap = Record<string, IconRef>;
+export type MimeIconMatcherFn = (
+  mimeType: string,
+  ctx: PreviewMediaContext,
+) => IconRef | undefined;
+export type MimeIconMatchers = MimeIconMatcherMap | MimeIconMatcherFn;
+
+export interface TypePresentation {
+  /** Default icon for this type (all instances unless MIME rule matches). */
+  icon?: IconRef;
+  /**
+   * Same-type shape variants (e.g. files): map MIME type → icon, or a matcher fn.
+   * Keys may be exact (`image/png`) or major (`image/*`).
+   */
+  iconByMime?: MimeIconMatchers;
+  /** Dot-path on instance data for MIME type; default `mimeType`. */
+  mimeTypePath?: string;
+  /** App-provided image URL when instance primary field is not used. */
+  image?: PreviewImageResolver;
+  color?: string;
+  backgroundPattern?: string;
+  pluralLabel?: string;
+  /** Shallow-merged on top of registry defaults after instance fields are read. */
+  override?: (data: unknown) => Partial<EntityPreview>;
+}
+
+export type TypePresentationRegistry = Record<string, TypePresentation>;
+
+export type PreviewDisplayMedia = "image" | "icon" | "initial" | "none";
+
+/** Combined label/description/image (instance) + icon/color (type-level). */
+export interface EntityPreview {
+  label?: string;
+  description?: string;
+  /** Raw instance image from `primaryFields` or override (may not be shown if icon wins). */
+  image?: string;
+  /** Type-level icon ref before display precedence is applied. */
+  icon?: IconRef;
+  color?: string;
+  backgroundPattern?: string;
+  pluralLabel?: string;
+  extras?: Record<string, unknown>;
+  /**
+   * Resolved chip/list avatar slot after precedence:
+   * MIME icon → type icon → explicit image → initial letter → none.
+   */
+  displayMedia?: PreviewDisplayMedia;
+  displayImage?: string;
+  displayIcon?: IconRef;
+}
+
 export type NamedEntityData = {
   "@id": string;
   [key: string]: any;

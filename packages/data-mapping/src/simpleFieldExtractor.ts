@@ -18,6 +18,7 @@ export const extractFieldAny = (
     return get(entry, fieldExtractDeclaration.path);
   }
 };
+/** @deprecated Use {@link extractEntityPreview} from `@graviola/edb-core-utils` for view previews. */
 export const extractFieldIfString = (
   entry: any | null,
   fieldExtractDeclaration: FieldExtractDeclaration,
@@ -34,6 +35,7 @@ export const extractFieldIfString = (
   }
 };
 
+/** @deprecated Use {@link extractEntityPreview} from `@graviola/edb-core-utils` for view previews. */
 export const applyToEachField = <R, T = any>(
   entry: T,
   fieldExtract: PrimaryFieldExtract<T>,
