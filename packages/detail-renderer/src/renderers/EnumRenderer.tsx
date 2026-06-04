@@ -1,19 +1,18 @@
-import React from "react";
-import { Chip } from "@mui/material";
-import type { JSONSchema7 } from "json-schema";
 import type { DetailRendererProps } from "@graviola/edb-detail-renderer-core";
-import { PropertyRow } from "./PropertyRow";
 
-export function EnumRenderer({ label, data, schema }: DetailRendererProps) {
-  if (data == null || data === "") return null;
-  const s = schema as JSONSchema7;
-  const match = s.oneOf?.find((e) => (e as JSONSchema7).const === data) as
-    | JSONSchema7
-    | undefined;
-  const displayLabel = match?.title ?? String(data);
+import { EnumValueRenderer } from "../value-renderers/EnumValueRenderer";
+import { renderValueWithRow } from "../value-renderers/renderValue";
+
+function enumFallback(props: DetailRendererProps) {
   return (
-    <PropertyRow label={label}>
-      <Chip label={displayLabel} size="small" />
-    </PropertyRow>
+    <EnumValueRenderer
+      value={props.data}
+      schema={props.schema}
+      ctx={props.ctx}
+    />
   );
+}
+
+export function EnumRenderer(props: DetailRendererProps) {
+  return renderValueWithRow(props, enumFallback);
 }

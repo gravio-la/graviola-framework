@@ -1,5 +1,4 @@
 import React from "react";
-import { EntityChip } from "@graviola/edb-advanced-components";
 import type { DetailRendererProps } from "@graviola/edb-detail-renderer-core";
 import type { JSONSchema7 } from "json-schema";
 import { Box, Stack, Typography } from "@mui/material";
@@ -9,6 +8,12 @@ import {
   itemVirtualRoot,
   renderDetailInlineObjectBody,
 } from "./detailInlineSubDispatch";
+import type { ControlElement } from "@jsonforms/core";
+
+import {
+  ContainedEntityView,
+  containedAsFromUiSchema,
+} from "./ContainedEntityView";
 import { PropertyRow } from "./PropertyRow";
 
 function hasStableEntityId(obj: Record<string, unknown>): boolean {
@@ -16,17 +21,26 @@ function hasStableEntityId(obj: Record<string, unknown>): boolean {
   return typeof id === "string" && id.length > 0;
 }
 
+function isEntityLikeData(obj: Record<string, unknown>): boolean {
+  return typeof obj["@type"] === "string" || hasStableEntityId(obj);
+}
+
 /**
- * Indexed entity refs as chips when every item exposes `@id`; otherwise renders a vertical
- * list where named items remain chips and anonymous items dispatch inline detail trees.
+ * Schema-typed entity arrays render as chips when items carry `@type` and/or `@id`.
+ * Named items (`@id`) are clickable via intent dispatch in {@link ContainedEntityView}.
  */
 export function ArrayEntityRenderer({
   label,
   data,
   schema,
+  uiSchema,
   ctx,
 }: DetailRendererProps) {
   const { registry, rootSchema } = useDetailRendererContext();
+  const containedAs = containedAsFromUiSchema(
+    uiSchema as ControlElement,
+    "chip",
+  );
 
   if (!Array.isArray(data) || data.length === 0) return null;
 
@@ -40,32 +54,34 @@ export function ArrayEntityRenderer({
       ? itemVirtualRoot(itemSchema, rootSchema)
       : undefined;
 
-  const exclusivelyEntityChips =
-    Array.isArray(data) &&
-    data.every(
-      (item) =>
-        item != null &&
-        typeof item === "object" &&
-        hasStableEntityId(item as Record<string, unknown>),
-    );
+  const allEntityLikeChips = data.every(
+    (item) =>
+      item != null &&
+      typeof item === "object" &&
+      isEntityLikeData(item as Record<string, unknown>),
+  );
 
-  if (exclusivelyEntityChips) {
+  const stackDirection = containedAs === "card" ? "row" : "row";
+  const stackGap = containedAs === "card" ? 1.5 : 0.5;
+
+  if (allEntityLikeChips) {
     return (
       <PropertyRow label={label}>
-        <Stack direction="row" flexWrap="wrap" gap={0.5}>
+        <Stack direction={stackDirection} flexWrap="wrap" gap={stackGap}>
           {(data as unknown[]).map((item: unknown, index: number) => {
             if (item == null || typeof item !== "object") return null;
             const d = item as Record<string, unknown>;
-            const entityIRI = d["@id"] as string;
-            const typeIRI = d["@type"];
+            const key =
+              (typeof d["@id"] === "string" && d["@id"]) ||
+              (typeof d["@type"] === "string" && `${d["@type"]}-${index}`) ||
+              `item-${index}`;
             return (
-              <EntityChip
-                key={entityIRI}
-                index={index}
-                entityIRI={entityIRI}
-                typeIRI={typeof typeIRI === "string" ? typeIRI : undefined}
-                data={item}
-                size="small"
+              <ContainedEntityView
+                key={key}
+                data={d}
+                schema={itemSchema}
+                containedAs={containedAs}
+                ctx={ctx}
               />
             );
           })}
@@ -79,16 +95,18 @@ export function ArrayEntityRenderer({
     const d = item as Record<string, unknown>;
     const typeIRI = d["@type"];
 
-    if (hasStableEntityId(d)) {
-      const entityIRI = d["@id"] as string;
+    if (isEntityLikeData(d)) {
+      const key =
+        (typeof d["@id"] === "string" && d["@id"]) ||
+        (typeof typeIRI === "string" && `${typeIRI}-${index}`) ||
+        `item-${index}`;
       return (
-        <EntityChip
-          key={entityIRI}
-          index={index}
-          entityIRI={entityIRI}
-          typeIRI={typeof typeIRI === "string" ? typeIRI : undefined}
-          data={item}
-          size="small"
+        <ContainedEntityView
+          key={key}
+          data={d}
+          schema={itemSchema}
+          containedAs={containedAs}
+          ctx={ctx}
         />
       );
     }

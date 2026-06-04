@@ -38,12 +38,12 @@
     "@jsonforms/core": "catalog:jsonforms",
     "@graviola/edb-detail-renderer-core": "workspace:*",
     "@graviola/json-schema-utils": "workspace:*",
+    "@graviola/edb-core-types": "workspace:*",
+    "@graviola/edb-core-utils": "workspace:*",
     "@graviola/edb-data-mapping": "workspace:*",
-    "@graviola/edb-advanced-components": "workspace:*",
     "@graviola/edb-state-hooks": "workspace:*",
     "@graviola/edb-ui-utils": "workspace:*",
-    "@graviola/semantic-jsonform-types": "workspace:*",
-    "dayjs": "^1.11.18"
+    "@graviola/semantic-jsonform-types": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "catalog:",

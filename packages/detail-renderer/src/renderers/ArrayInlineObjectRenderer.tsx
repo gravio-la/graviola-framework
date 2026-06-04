@@ -1,7 +1,9 @@
 import React from "react";
-import type { ControlElement } from "@jsonforms/core";
+import type { ControlElement, UISchemaElement } from "@jsonforms/core";
 import { encode } from "@jsonforms/core";
 import {
+  buildDispatch,
+  enterArrayDetailFrame,
   DETAIL_ARRAY_INLINE_OPTIONS_KEY,
   type DetailArrayInlineControlOptions,
   type DetailRendererProps,
@@ -16,6 +18,17 @@ import {
   renderDetailInlineObjectBody,
 } from "./detailInlineSubDispatch";
 import { PropertyRow } from "./PropertyRow";
+
+function readOptionsDetail(
+  uiSchema: DetailRendererProps["uiSchema"],
+): UISchemaElement | undefined {
+  const ctrl = uiSchema as ControlElement;
+  const detail = ctrl.options?.detail;
+  if (detail && typeof detail === "object" && "type" in (detail as object)) {
+    return detail as UISchemaElement;
+  }
+  return undefined;
+}
 
 function readDetailArrayInlineOpts(
   uiSchema: DetailRendererProps["uiSchema"],
@@ -87,6 +100,8 @@ export function ArrayInlineObjectRenderer({
 }: DetailRendererProps) {
   const { registry, rootSchema } = useDetailRendererContext();
   const presentOpts = readDetailArrayInlineOpts(uiSchema);
+  const optionsDetail = readOptionsDetail(uiSchema);
+  const arrayScope = (uiSchema as ControlElement).scope;
 
   if (!Array.isArray(data) || data.length === 0) return null;
 
@@ -103,13 +118,28 @@ export function ArrayInlineObjectRenderer({
 
   const rows = data.map((item: unknown, index: number) => {
     if (item == null || typeof item !== "object") return null;
-    const body = renderDetailInlineObjectBody({
-      registry,
-      virtualRootSchema: virtualRoot,
-      itemData: item as Record<string, unknown>,
-      ctx,
-      extraGenerateDetailOptions: itemGenOpts,
-    });
+
+    let body: React.ReactNode;
+    if (optionsDetail && arrayScope && ctx.frame) {
+      const itemFrame = enterArrayDetailFrame(ctx.frame, arrayScope, index);
+      if (itemFrame) {
+        const run = buildDispatch(registry, itemFrame.localRootSchema, item, {
+          ...ctx,
+          frame: itemFrame,
+          depth: ctx.depth + 1,
+        });
+        body = run(optionsDetail);
+      }
+    }
+    if (body == null) {
+      body = renderDetailInlineObjectBody({
+        registry,
+        virtualRootSchema: virtualRoot,
+        itemData: item as Record<string, unknown>,
+        ctx,
+        extraGenerateDetailOptions: itemGenOpts,
+      });
+    }
     return (
       <Box
         key={index}

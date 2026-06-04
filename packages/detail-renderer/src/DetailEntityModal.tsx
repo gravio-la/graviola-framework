@@ -2,12 +2,12 @@ import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import type { UISchemaElement } from "@jsonforms/core";
 import type { DetailViewConfig } from "@graviola/edb-detail-renderer-core";
 import { bringDefinitionToTop } from "@graviola/json-schema-utils";
-import { EditEntityModal } from "@graviola/edb-advanced-components";
 import {
+  MODAL_EDIT_ENTITY,
   useAdbContext,
   useCRUDWithQueryClient,
   useDispatchIntent,
-  useModalRegistry,
+  useGraviolaModal,
   useTypeIRIFromEntity,
 } from "@graviola/edb-state-hooks";
 import type { EntityDetailModalProps } from "@graviola/semantic-jsonform-types";
@@ -325,7 +325,6 @@ function DetailEntityDataWrapper({
   typeIRI,
   typeName,
   defaultData,
-  disableLoad,
   readonly,
   disableInlineEditing,
   staticConfig,
@@ -336,7 +335,6 @@ function DetailEntityDataWrapper({
   typeIRI: string;
   typeName: string;
   defaultData?: unknown;
-  disableLoad?: boolean;
   readonly?: boolean;
   disableInlineEditing?: boolean;
   staticConfig: DetailEntityModalStaticConfig | undefined;
@@ -352,26 +350,34 @@ function DetailEntityDataWrapper({
     entityIRI,
     typeIRI: classIRI,
     queryOptions: {
-      enabled: !disableLoad,
+      enabled: true,
+      refetchOnMount: "always",
       refetchOnWindowFocus: true,
       ...queryOptionMixinBasedOnEntity(defaultData),
     },
     loadQueryKey: "show",
   });
 
-  const data = rawData?.document as Record<string, unknown> | undefined;
+  const data = (rawData?.document ?? defaultData) as
+    | Record<string, unknown>
+    | undefined;
 
-  const { registerModal } = useModalRegistry(NiceModal);
+  const editModal = useGraviolaModal(MODAL_EDIT_ENTITY);
   const handleEdit = useCallback(() => {
     if (!disableInlineEditing) {
-      const modalID = `edit-${typeIRI}-${entityIRI}`;
-      registerModal(modalID, EditEntityModal);
-      void NiceModal.show(modalID, {
-        entityIRI,
-        typeIRI,
-        data,
-        disableLoad: true,
-      }).catch(console.error);
+      editModal.show(
+        {
+          entityIRI,
+          typeIRI,
+          data,
+          disableLoad: true,
+        },
+        {
+          origin: {
+            source: "edb-detail-renderer:DetailEntityModal:inline-edit",
+          },
+        },
+      );
     } else {
       dispatchIntent({
         kind: "edit-entity",
@@ -385,7 +391,7 @@ function DetailEntityDataWrapper({
     disableInlineEditing,
     dispatchIntent,
     entityIRI,
-    registerModal,
+    editModal,
     typeIRI,
     typeName,
   ]);
@@ -417,7 +423,6 @@ function DetailEntityClassWrapper({
   typeIRI,
   entityIRI,
   defaultData,
-  disableLoad,
   readonly,
   disableInlineEditing,
   staticConfig,
@@ -426,7 +431,6 @@ function DetailEntityClassWrapper({
   typeIRI: string;
   entityIRI: string;
   defaultData?: unknown;
-  disableLoad?: boolean;
   readonly?: boolean;
   disableInlineEditing?: boolean;
   staticConfig: DetailEntityModalStaticConfig | undefined;
@@ -435,7 +439,7 @@ function DetailEntityClassWrapper({
   const { typeIRIToTypeName } = useAdbContext();
   const { t } = useTranslation();
 
-  const classIRI = useTypeIRIFromEntity(entityIRI, typeIRI, disableLoad);
+  const classIRI = useTypeIRIFromEntity(entityIRI, typeIRI, false);
 
   if (!classIRI) {
     return (
@@ -455,7 +459,6 @@ function DetailEntityClassWrapper({
       typeIRI={typeIRI}
       typeName={typeName}
       defaultData={defaultData}
-      disableLoad={disableLoad}
       readonly={readonly}
       disableInlineEditing={disableInlineEditing}
       staticConfig={staticConfig}
@@ -476,7 +479,6 @@ export function DetailEntityModalView({
   typeIRI,
   entityIRI,
   data: defaultData,
-  disableLoad,
   readonly,
   disableInlineEditing,
   onClose,
@@ -488,7 +490,6 @@ export function DetailEntityModalView({
       typeIRI={typeIRI ?? ""}
       entityIRI={entityIRI}
       defaultData={defaultData}
-      disableLoad={disableLoad}
       readonly={readonly}
       disableInlineEditing={disableInlineEditing}
       staticConfig={staticConfig}
@@ -510,7 +511,6 @@ export function createDetailEntityModal(
       typeIRI,
       entityIRI,
       data: defaultData,
-      disableLoad,
       readonly,
       disableInlineEditing,
       onClose: onCloseFromProps,
@@ -532,7 +532,6 @@ export function createDetailEntityModal(
           typeIRI={typeIRI}
           entityIRI={entityIRI}
           data={defaultData}
-          disableLoad={disableLoad}
           readonly={readonly}
           disableInlineEditing={disableInlineEditing}
           onClose={handleClose}

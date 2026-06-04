@@ -1,27 +1,33 @@
 import React from "react";
 import { Typography } from "@mui/material";
-import dayjs from "dayjs";
 import type { DetailRendererProps } from "@graviola/edb-detail-renderer-core";
-import { PropertyRow } from "./PropertyRow";
 
-export function DateRenderer({ label, data }: DetailRendererProps) {
-  if (data == null || data === "") return null;
-  const parsed = dayjs(String(data));
-  const display = parsed.isValid() ? parsed.format("LL") : String(data);
+import {
+  formatDateTimeValue,
+  formatDateValue,
+} from "../value-renderers/DateValueRenderer";
+import { renderValueWithRow } from "../value-renderers/renderValue";
+
+function dateFallback({ data }: DetailRendererProps) {
   return (
-    <PropertyRow label={label}>
-      <Typography variant="body2">{display}</Typography>
-    </PropertyRow>
+    <Typography variant="inherit" component="span">
+      {formatDateValue(data)}
+    </Typography>
   );
 }
 
-export function DateTimeRenderer({ label, data }: DetailRendererProps) {
-  if (data == null || data === "") return null;
-  const parsed = dayjs(String(data));
-  const display = parsed.isValid() ? parsed.format("LLL") : String(data);
+export function DateRenderer(props: DetailRendererProps) {
+  return renderValueWithRow(props, dateFallback);
+}
+
+function dateTimeFallback({ data }: DetailRendererProps) {
   return (
-    <PropertyRow label={label}>
-      <Typography variant="body2">{display}</Typography>
-    </PropertyRow>
+    <Typography variant="inherit" component="span">
+      {formatDateTimeValue(data)}
+    </Typography>
   );
+}
+
+export function DateTimeRenderer(props: DetailRendererProps) {
+  return renderValueWithRow(props, dateTimeFallback);
 }

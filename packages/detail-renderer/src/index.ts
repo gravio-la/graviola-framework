@@ -13,14 +13,38 @@ export {
   useDetailEntityModalPortalContainer,
 } from "./DetailEntityModal";
 export type { GenerateDefaultDetailUISchemaOptions as GenerateDetailUISchemaOptions } from "@graviola/edb-detail-renderer-core";
-export { EntitySummaryChip } from "./chips/EntitySummaryChip";
-export type { EntitySummaryChipProps } from "./chips/EntitySummaryChip";
-export { defaultChipsConfig, defaultChipRegistry } from "./chips/defaultChips";
+export {
+  defaultChipRenderers,
+  defaultListItemRenderers,
+  defaultCardRenderers,
+} from "./renderers/registries";
+export {
+  MotionAdapterProvider,
+  NoopMotionAdapter,
+  useMotionAdapter,
+} from "./motion/MotionAdapter";
+export type { MotionAdapter } from "./motion/MotionAdapter";
 
 export { DetailRendererContext, useDetailRendererContext } from "./context";
-export type { DetailRendererContextValue } from "./context";
+export type {
+  ContainedEntityComponentProps,
+  DetailRendererContextValue,
+} from "./context";
+
+export { useEntityRefClickHandler } from "./hooks/useEntityRefClickHandler";
+
+export { previewChipAvatar, previewChipIcon } from "./preview/PreviewAvatar";
 
 export { defaultDetailRenderers } from "./renderers";
+
+export {
+  defaultValueRenderers,
+  renderValueWithRow,
+  formatCurrencyValue,
+  CurrencyValueRenderer,
+  formatHistoricalDate,
+  HistoricalDateValueRenderer,
+} from "./value-renderers";
 
 export {
   FallbackRenderer,
@@ -42,15 +66,3 @@ export {
   LabelRenderer,
   PropertyRow,
 } from "./renderers";
-
-export { EntityChipRenderer } from "./chips/renderers/EntityChipRenderer";
-export { EnumChipRenderer } from "./chips/renderers/EnumChipRenderer";
-export {
-  MediaChipRenderer,
-  IMAGE_EXT_RE,
-} from "./chips/renderers/MediaChipRenderer";
-export {
-  PlayableChipRenderer,
-  PLAYABLE_EXT_RE,
-} from "./chips/renderers/PlayableChipRenderer";
-export { SimpleLabelRenderer } from "./chips/renderers/SimpleLabelRenderer";

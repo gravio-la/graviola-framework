@@ -1,19 +1,20 @@
 import React from "react";
 import { Checkbox } from "@mui/material";
 import type { DetailRendererProps } from "@graviola/edb-detail-renderer-core";
-import { PropertyRow } from "./PropertyRow";
 
-export function BooleanRenderer({ label, data }: DetailRendererProps) {
-  if (data == null) return null;
+import { BooleanValueRenderer } from "../value-renderers/BooleanValueRenderer";
+import { renderValueWithRow } from "../value-renderers/renderValue";
+
+function booleanFallback(props: DetailRendererProps) {
   return (
-    <PropertyRow label={label}>
-      <Checkbox
-        checked={data === true || data === "true"}
-        indeterminate={data == null || data === ""}
-        disabled
-        size="small"
-        sx={{ p: 0 }}
-      />
-    </PropertyRow>
+    <BooleanValueRenderer
+      value={props.data}
+      schema={props.schema}
+      ctx={props.ctx}
+    />
   );
+}
+
+export function BooleanRenderer(props: DetailRendererProps) {
+  return renderValueWithRow(props, booleanFallback);
 }

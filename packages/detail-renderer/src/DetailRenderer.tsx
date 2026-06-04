@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import type { JSONSchema7 } from "json-schema";
 import type { JsonSchema, UISchemaElement } from "@jsonforms/core";
-import { extractTypeIRI } from "@graviola/json-schema-utils";
+import { extractTypeIRI, rootFrame } from "@graviola/json-schema-utils";
 import {
   buildDispatch,
   type DetailViewConfig,
@@ -9,12 +9,11 @@ import {
   resolveConfigForType,
   resolveEffectiveUISchemaRoot,
 } from "@graviola/edb-detail-renderer-core";
-import {
-  applyToEachField,
-  extractFieldIfString,
-} from "@graviola/edb-data-mapping";
+import { extractEntityPreview } from "@graviola/edb-core-utils";
+import type { TypePresentationRegistry } from "@graviola/edb-core-types";
 import { useAdbContext } from "@graviola/edb-state-hooks";
 import { defaultDetailRenderers } from "./renderers";
+import { defaultValueRenderers } from "./value-renderers";
 import { DetailRendererContext } from "./context";
 import type { GenerateDefaultDetailUISchemaOptions } from "@graviola/edb-detail-renderer-core";
 
@@ -162,18 +161,34 @@ export const DetailRenderer = React.memo(function DetailRenderer({
     [resolvedConfig],
   );
 
+  const valueRenderers = useMemo(
+    () => [
+      ...(resolvedConfig.overrideValueRenderers ?? []),
+      ...(resolvedConfig.valueRenderers ?? []),
+      ...defaultValueRenderers,
+    ],
+    [resolvedConfig.overrideValueRenderers, resolvedConfig.valueRenderers],
+  );
+
+  const preview = useMemo(() => {
+    if (!data || !typeName) return null;
+    return extractEntityPreview({
+      data,
+      typeName,
+      primaryFields:
+        primaryFields as import("@graviola/edb-core-types").PrimaryFieldDeclaration,
+      typePresentation: adb.typePresentation as TypePresentationRegistry,
+    });
+  }, [data, typeName, primaryFields, adb.typePresentation]);
+
   const headerPreview = useMemo(() => {
-    if (!data || !typeName || !primaryFields) return null;
-    const decl = primaryFields[typeName] as Parameters<
-      typeof applyToEachField
-    >[1];
-    if (!decl) return null;
-    return applyToEachField(data, decl, extractFieldIfString) as {
-      label: string | null;
-      description: string | null;
-      image: string | null;
+    if (!preview) return null;
+    return {
+      label: preview.label ?? null,
+      description: preview.description ?? null,
+      image: preview.image ?? null,
     };
-  }, [data, typeName, primaryFields]);
+  }, [preview]);
   const headerPrimaryFieldNames = useMemo(() => {
     if (!typeName || !primaryFields) return [];
     return getHeaderPrimaryFieldNames(primaryFields[typeName]);
@@ -219,6 +234,9 @@ export const DetailRenderer = React.memo(function DetailRenderer({
       typeName,
       typeIRIToTypeName,
       headerPreview,
+      preview,
+      viewSize: "detail" as const,
+      frame: rootFrame(schema),
       entityIRI,
       humanLabel,
       isLoading,
@@ -231,6 +249,7 @@ export const DetailRenderer = React.memo(function DetailRenderer({
       ),
       headerPrimaryFieldNames,
       topLevelLayoutVariant: resolvedConfig.topLevelLayoutVariant,
+      valueRenderers,
     }),
     [
       schema,
@@ -239,6 +258,7 @@ export const DetailRenderer = React.memo(function DetailRenderer({
       typeName,
       typeIRIToTypeName,
       headerPreview,
+      preview,
       entityIRI,
       humanLabel,
       isLoading,
@@ -249,6 +269,7 @@ export const DetailRenderer = React.memo(function DetailRenderer({
       resolvedConfig.alwaysShowPropertyNames,
       headerPrimaryFieldNames,
       resolvedConfig.topLevelLayoutVariant,
+      valueRenderers,
     ],
   );
 
@@ -262,10 +283,11 @@ export const DetailRenderer = React.memo(function DetailRenderer({
     () => ({
       registry,
       rootSchema: schema,
+      rootData: data,
       uiSchema: effectiveUISchema,
       config: resolvedConfig,
     }),
-    [registry, schema, effectiveUISchema, resolvedConfig],
+    [registry, schema, data, effectiveUISchema, resolvedConfig],
   );
 
   return (
