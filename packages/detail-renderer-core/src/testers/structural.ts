@@ -6,18 +6,39 @@ import {
   isNumberControl,
   isOneOfControl,
   isStringControl,
+  or,
   rankWith,
 } from "@jsonforms/core";
 import type { Tester } from "@jsonforms/core";
 import type { JSONSchema7 } from "json-schema";
 
+function schemaObjectProperties(
+  schema: JSONSchema7 | undefined,
+): Record<string, unknown> | undefined {
+  return schema?.properties as Record<string, unknown> | undefined;
+}
+
+/** Object schema declares RDF entity markers (`@id` and/or `@type`). */
+export function isEntityLikeObjectSchema(
+  schema: JSONSchema7 | undefined,
+): boolean {
+  if (schema?.type !== "object") return false;
+  const props = schemaObjectProperties(schema);
+  return Boolean(props?.["@id"] || props?.["@type"]);
+}
+
 export const isNamedEntity: Tester = (_uischema, schema) =>
-  Boolean((schema as JSONSchema7)?.properties?.["@id"]);
+  isEntityLikeObjectSchema(schema as JSONSchema7);
+
+/** @deprecated Prefer {@link isNamedEntity} — kept for registry export name stability. */
+export const isTypedEntity = isNamedEntity;
 
 export const isArrayOfNamedEntitys: Tester = (_uischema, schema) => {
   const s = schema as JSONSchema7;
   if (s?.type !== "array") return false;
-  return Boolean((s.items as JSONSchema7 | undefined)?.properties?.["@id"]);
+  const items = s.items as JSONSchema7 | undefined;
+  if (!items || typeof items === "boolean") return false;
+  return isEntityLikeObjectSchema(items);
 };
 
 export const isArrayOfPrimitives: Tester = (_uischema, schema) => {
@@ -30,19 +51,19 @@ export const isArrayOfPrimitives: Tester = (_uischema, schema) => {
   );
 };
 
-/** Array whose items schema is object with no `@id` (embedded / anonymous structured objects). */
+/** Array whose items schema is object with no entity markers (embedded / anonymous). */
 export const isArrayOfInlineObjects: Tester = (_uischema, schema) => {
   const s = schema as JSONSchema7;
   if (s?.type !== "array") return false;
   const items = s.items as JSONSchema7 | undefined;
   if (!items || typeof items === "boolean") return false;
   if (items.type !== "object") return false;
-  return !items.properties?.["@id"];
+  return !isEntityLikeObjectSchema(items);
 };
 
 export const isInlineObject: Tester = (_uischema, schema) => {
   const s = schema as JSONSchema7;
-  return s?.type === "object" && !s?.properties?.["@id"];
+  return s?.type === "object" && !isEntityLikeObjectSchema(s);
 };
 
 export const namedEntityTester = rankWith(5, isNamedEntity);
@@ -59,7 +80,20 @@ export const dateTimeTester = rankWith(
 );
 /** String enums / const oneOf — rank above object union oneOf (rank 6). */
 export const enumTester = rankWith(8, and(isOneOfControl, isStringControl));
-export const numberTester = rankWith(2, isNumberControl);
+
+/** JSON Schema `integer` is not matched by jsonforms `isNumberControl`. */
+export const isIntegerControl: Tester = (_uischema, schema) =>
+  (schema as JSONSchema7)?.type === "integer";
+
+export const isNumberOrIntegerControl: Tester = or(
+  isNumberControl,
+  isIntegerControl,
+);
+
+export const numberTester = rankWith(
+  2,
+  and(isControl, isNumberOrIntegerControl),
+);
 export const stringTester = rankWith(1, isStringControl);
 
 /** Discriminated union with at least one object branch — defer to AnyOfDetailRenderer */

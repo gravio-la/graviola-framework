@@ -23,6 +23,7 @@
     "pack-tarball": "bun pm pack"
   },
   "dependencies": {
+    "@graviola/edb-detail-renderer-core": "workspace:*",
     "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-global-types": "workspace:*",
     "@graviola/edb-table-types": "workspace:*",

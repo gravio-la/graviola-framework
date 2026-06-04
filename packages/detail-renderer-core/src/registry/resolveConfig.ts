@@ -36,6 +36,14 @@ function mergeConfigs(
         ...(override.extraRenderers ?? []),
         ...(acc.extraRenderers ?? []),
       ],
+      overrideValueRenderers: [
+        ...(override.overrideValueRenderers ?? []),
+        ...(acc.overrideValueRenderers ?? []),
+      ],
+      valueRenderers: [
+        ...(override.valueRenderers ?? []),
+        ...(acc.valueRenderers ?? []),
+      ],
       linkedDataPropertyNames: [
         ...(acc.linkedDataPropertyNames ?? []),
         ...(override.linkedDataPropertyNames ?? []),

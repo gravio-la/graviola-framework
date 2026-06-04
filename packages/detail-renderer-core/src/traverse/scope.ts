@@ -1,51 +1,70 @@
-/** Decode one JSON Pointer segment */
-function decodeSeg(pointerSegment: string): string {
-  return pointerSegment.replace(/~1/g, "/").replace(/~0/g, "~");
-}
+import type { SchemaScopeFrame } from "@graviola/json-schema-utils";
+import {
+  dataInFrame as dataInFrameFromWalker,
+  enterArrayDetailFrame,
+  enterPropertyFrame,
+  resolveInFrame,
+  rootFrame,
+  scopeToDataPathSegments,
+} from "@graviola/json-schema-utils";
 
-/**
- * Walk instance data using a JSON Schema scope pointer (e.g. `#/properties/foo/properties/bar`).
- */
+export {
+  enterArrayDetailFrame,
+  enterPropertyFrame,
+  resolveInFrame,
+  rootFrame,
+  scopeToDataPathSegments,
+};
+export type { SchemaScopeFrame };
+
+/** @deprecated Use {@link dataInFrame} with a {@link SchemaScopeFrame} from `@graviola/json-schema-utils`. */
 export function dataAtScope(
   rootData: unknown,
   scope: string | undefined,
+  rootSchema?: import("json-schema").JSONSchema7,
 ): unknown {
-  if (scope == null || scope === "" || scope === "#") return rootData;
-  const trimmed = scope.startsWith("#") ? scope.slice(1) : scope;
-  const segments = trimmed.split("/").filter(Boolean).map(decodeSeg);
-  const dataPath: string[] = [];
-  for (let i = 0; i < segments.length; i++) {
-    const seg = segments[i];
-    if (seg === "properties" && segments[i + 1] !== undefined) {
-      dataPath.push(segments[i + 1]);
-      i++;
-      continue;
+  if (!rootSchema) {
+    const trimmed = scope?.startsWith("#") ? scope.slice(1) : (scope ?? "");
+    const segments = trimmed.split("/").filter(Boolean);
+    const dataPath: string[] = [];
+    for (let i = 0; i < segments.length; i++) {
+      if (segments[i] === "properties" && segments[i + 1]) {
+        dataPath.push(
+          decodeURIComponent(
+            segments[i + 1].replace(/~1/g, "/").replace(/~0/g, "~"),
+          ),
+        );
+        i++;
+      }
     }
-    // `items` describes array member schema and does not advance instance path.
-    if (seg === "items") continue;
-    dataPath.push(seg);
+    let cur: unknown = rootData;
+    for (const seg of dataPath) {
+      if (cur == null || typeof cur !== "object") return undefined;
+      cur = (cur as Record<string, unknown>)[seg];
+    }
+    return cur;
   }
-  let cur: unknown = rootData;
-  for (const seg of dataPath) {
-    if (cur == null || typeof cur !== "object") return undefined;
-    cur = (cur as Record<string, unknown>)[seg];
+  const frame = rootFrame(rootSchema);
+  let current = frame;
+  const pathSegs = scopeToDataPathSegments(scope);
+  for (const seg of pathSegs) {
+    if (typeof seg === "string") {
+      current = enterPropertyFrame(current, seg);
+    }
   }
-  return cur;
+  return dataInFrameFromWalker(current, rootData);
+}
+
+export function dataInFrame(
+  frame: SchemaScopeFrame,
+  rootData: unknown,
+): unknown {
+  return dataInFrameFromWalker(frame, rootData);
 }
 
 /** Dot-path segments from scope, e.g. `["author","birthDate"]`. */
 export function pathFromScope(scope: string | undefined): string[] {
-  if (!scope || scope === "#") return [];
-  const trimmed = scope.startsWith("#") ? scope.slice(1) : scope;
-  const segments = trimmed.split("/").filter(Boolean);
-  const path: string[] = [];
-  for (let i = 0; i < segments.length; i++) {
-    if (segments[i] === "properties" && segments[i + 1] !== undefined) {
-      path.push(decodeSeg(segments[i + 1]));
-      i++;
-    }
-  }
-  return path;
+  return scopeToDataPathSegments(scope);
 }
 
 /** Append a property segment to a JSON Pointer scope. */
@@ -53,12 +72,12 @@ export function extendPropertyScope(
   parentScope: string | undefined,
   propKey: string,
 ): string {
+  const enc = propKey.replace(/~/g, "~0").replace(/\//g, "~1");
   const base =
     !parentScope || parentScope === "#"
       ? "#/properties"
       : parentScope.endsWith("/properties")
         ? parentScope
         : `${parentScope}/properties`;
-  const enc = propKey.replace(/~/g, "~0").replace(/\//g, "~1");
   return `${base}/${enc}`;
 }

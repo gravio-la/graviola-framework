@@ -1,6 +1,10 @@
+import type { EntityPreview } from "@graviola/edb-core-types";
+import type { SchemaScopeFrame } from "@graviola/json-schema-utils";
 import type { JSONSchema7 } from "json-schema";
 import type { RankedTester, UISchemaElement } from "@jsonforms/core";
 import type React from "react";
+
+export type ViewSize = "chip" | "listItem" | "card" | "detail";
 
 /**
  * How {@link TopLevelLayoutRenderer} orders the hero (primary fields) vs. nested property controls.
@@ -18,15 +22,18 @@ export interface DetailTesterContext {
   rootSchema: JSONSchema7;
   depth: number;
   maxDepth: number;
+  viewSize?: ViewSize;
+  frame?: SchemaScopeFrame;
   typeIRI?: string;
   typeName?: string;
   typeIRIToTypeName?: (iri: string) => string | undefined;
-  /** TopLevelLayout header — typically derived from adb `primaryFields` + entity data */
+  /** @deprecated Use {@link preview} */
   headerPreview?: {
     label: string | null;
     description: string | null;
     image: string | null;
   } | null;
+  preview?: EntityPreview | null;
   entityIRI?: string;
   humanLabel?: string;
   isLoading?: boolean;
@@ -38,6 +45,8 @@ export interface DetailTesterContext {
   headerPrimaryFieldNames?: string[];
   /** Inherited from merged {@link DetailViewConfig}; drives {@link TopLevelLayoutRenderer}. */
   topLevelLayoutVariant?: DetailTopLevelLayoutVariant;
+  /** Merged registry used by leaf renderers for inline value formatting. */
+  valueRenderers?: import("./value-renderers/types").ValueRendererEntry[];
 }
 
 export interface DetailRendererRegistryEntry {
@@ -87,7 +96,13 @@ export const DETAIL_ARRAY_INLINE_OPTIONS_KEY = "detailArrayInline" as const;
 export interface DetailViewConfig {
   maxDepth?: number;
   extraRenderers?: DetailRendererRegistryEntry[];
+  /** Lowest-priority entries appended after the size defaults (e.g. AllPropsTable). */
+  fallbackRenderers?: DetailRendererRegistryEntry[];
   overrideRenderers?: DetailRendererRegistryEntry[];
+  /** App value formatters; merged before framework defaults unless overridden. */
+  valueRenderers?: import("./value-renderers/types").ValueRendererEntry[];
+  /** Highest-priority value formatters (prepended to the merged registry). */
+  overrideValueRenderers?: import("./value-renderers/types").ValueRendererEntry[];
   /** Per-type-name UISchema roots */
   uiSchemata?: Record<string, UISchemaElement>;
   /** Per-type-IRI UISchema roots */

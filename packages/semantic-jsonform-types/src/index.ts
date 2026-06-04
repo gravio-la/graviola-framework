@@ -8,6 +8,7 @@ import type {
   NormDataMapping,
   SparqlBuildOptions,
   StringToIRIFn,
+  TypePresentationRegistry,
 } from "@graviola/edb-core-types";
 import type { JSONLDConfig } from "@graviola/edb-global-types";
 import type {
@@ -119,13 +120,17 @@ export type GlobalSemanticConfig = {
   queryBuildOptions: SparqlBuildOptions;
 };
 
-export type DetailViewConfigOptions = {
-  hideLinkedDataProperties?: boolean;
-  linkedDataPropertyNames?: string[];
-  hideHeaderPrimaryFields?: boolean;
-  hiddenPropertyNames?: string[];
-  alwaysShowPropertyNames?: string[];
-};
+export type {
+  DetailViewConfigOptions,
+  GenerateDefaultViewUISchemaOptions,
+  ViewConfig,
+  ViewConfigSet,
+  ViewRendererRegistryEntry,
+  ViewSize,
+} from "./viewConfig";
+
+/** @deprecated Use `viewConfig.detail.options` via {@link resolveViewConfig}. */
+export type { DetailViewConfigOptions as LegacyDetailViewConfigOptions } from "./viewConfig";
 
 export type GlobalAppConfig<DeclarativeMappingType> = GlobalSemanticConfig & {
   normDataMapping?: Record<string, NormDataMapping<DeclarativeMappingType>>;
@@ -136,7 +141,10 @@ export type GlobalAppConfig<DeclarativeMappingType> = GlobalSemanticConfig & {
   rendererRegistry?: JsonFormsRendererRegistryEntry[];
   cellRendererRegistry?: JsonFormsCellRendererRegistryEntry[];
   uischemata?: Record<string, any>;
-  detailViewConfig?: DetailViewConfigOptions;
+  viewConfig?: import("./viewConfig").ViewConfigSet;
+  typePresentation?: TypePresentationRegistry;
+  /** @deprecated Use `viewConfig.detail.options` */
+  detailViewConfig?: import("./viewConfig").DetailViewConfigOptions;
   tableColumnRegistry?: TableColumnRegistry;
   tableActionRegistry?: any[];
 };

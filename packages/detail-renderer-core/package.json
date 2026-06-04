@@ -29,6 +29,7 @@
   "dependencies": {
     "@jsonforms/core": "catalog:jsonforms",
     "@graviola/json-schema-utils": "workspace:*",
+    "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-core-utils": "workspace:*",
     "lodash-es": "catalog:",
     "react": "catalog:"

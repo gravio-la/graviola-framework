@@ -1,3 +1,9 @@
+export {
+  isEntityLikeObjectSchema,
+  isIntegerControl,
+  isNumberOrIntegerControl,
+  isTypedEntity,
+} from "./structural";
 export * from "./structural";
 export * from "./typeAware";
 export {
