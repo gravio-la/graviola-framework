@@ -18,6 +18,11 @@ import { PaginationState } from "@tanstack/table-core";
 import type { JSONSchema7 } from "json-schema";
 import { useTranslation } from "next-i18next";
 import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
+import { defaultValueRenderers } from "@graviola/edb-detail-renderer";
+import {
+  composeJsonLdColumns,
+  JsonLdTableProvider,
+} from "@graviola/edb-table-renderer-jsonld";
 import {
   computeColumns,
   type ColumnDefMatcher,
@@ -35,35 +40,6 @@ import type {
 const defaultLimit = 25;
 const upperLimit = 10000;
 
-/**
- * MRT's default body cell renders `cell.getValue()` as a React child. JSON-LD
- * rows often contain nested objects/arrays (refs, category, tags). Coerce to
- * a display string so we never pass a plain object to React.
- */
-function formatJsonLdCellValue(value: unknown): string {
-  if (value === undefined || value === null) return "";
-  const t = typeof value;
-  if (t === "string" || t === "number" || t === "boolean") {
-    return String(value);
-  }
-  if (Array.isArray(value)) {
-    return value
-      .map((v) => formatJsonLdCellValue(v))
-      .filter((s) => s !== "")
-      .join(", ");
-  }
-  if (t === "object") {
-    const o = value as Record<string, unknown>;
-    if (typeof o["@id"] === "string") return o["@id"];
-    try {
-      return JSON.stringify(value);
-    } catch {
-      return "";
-    }
-  }
-  return String(value);
-}
-
 export const SemanticTable = ({
   typeName,
   csvOptions,
@@ -73,6 +49,9 @@ export const SemanticTable = ({
   onEditEntry: onEditEntryProp,
   rowShape = "sparql-select",
   actionRegistry,
+  tableUiSchema,
+  columnRegistry,
+  jsonLdCell,
 }: SemanticTableProps) => {
   const {
     queryBuildOptions,
@@ -190,11 +169,12 @@ export const SemanticTable = ({
 
   const displayColumns = useMemo<MRT_ColumnDef<any>[]>(() => {
     if (rowShape === "jsonld") {
-      return Object.keys(loadedSchema?.properties || {}).map((key) => ({
-        id: key,
-        header: t2(key),
-        accessorFn: (row: any) => formatJsonLdCellValue(row?.[key]),
-      }));
+      return composeJsonLdColumns(loadedSchema, {
+        typeName,
+        tableUiSchema,
+        t: t2,
+        columnRegistry,
+      });
     }
     return computeColumns(
       loadedSchema,
@@ -211,6 +191,8 @@ export const SemanticTable = ({
     conf?.matcher,
     queryBuildOptions.primaryFields,
     rowShape,
+    tableUiSchema,
+    columnRegistry,
   ]);
 
   const columnOrder = useMemo(() => {
@@ -399,7 +381,27 @@ export const SemanticTable = ({
       .map((entry) => entry.build(actionContext));
   }, [resolvedActionRegistry, loadedSchema, actionContext]);
 
-  return (
+  const jsonLdProviderValue = useMemo(
+    () => ({
+      ChipComponent: jsonLdCell?.ChipComponent,
+      valueRenderers: [
+        ...(jsonLdCell?.extraValueRenderers ?? []),
+        ...defaultValueRenderers,
+      ],
+      onShowEntry: (entityIRI: string) => showEntry(entityIRI),
+      typeIRIToTypeName,
+      locale,
+    }),
+    [
+      jsonLdCell?.ChipComponent,
+      jsonLdCell?.extraValueRenderers,
+      showEntry,
+      typeIRIToTypeName,
+      locale,
+    ],
+  );
+
+  const tableView = (
     <SemanticTableView
       typeName={typeName}
       typeIRI={typeIRI}
@@ -425,4 +427,14 @@ export const SemanticTable = ({
       resetKey={typeName}
     />
   );
+
+  if (rowShape === "jsonld") {
+    return (
+      <JsonLdTableProvider value={jsonLdProviderValue}>
+        {tableView}
+      </JsonLdTableProvider>
+    );
+  }
+
+  return tableView;
 };

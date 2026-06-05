@@ -16,3 +16,11 @@ export {
   pathToString,
   urlSuffix,
 } from "@graviola/edb-table-renderer-sparql-select";
+export {
+  composeJsonLdColumns,
+  JsonLdTableProvider,
+  jsonLdColumnRegistry,
+  useJsonLdTableContext,
+  type JsonLdChipComponentProps,
+  type ComposeJsonLdColumnsOptions,
+} from "@graviola/edb-table-renderer-jsonld";

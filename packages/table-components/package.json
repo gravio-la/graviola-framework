@@ -57,6 +57,8 @@
     "@graviola/edb-ui-utils": "workspace:*",
     "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-basic-components": "workspace:*",
+    "@graviola/edb-detail-renderer": "workspace:*",
+    "@graviola/edb-detail-renderer-core": "workspace:*",
     "@graviola/json-schema-utils": "workspace:*",
     "export-to-csv": "^1.2.1",
     "next-i18next": "^15",

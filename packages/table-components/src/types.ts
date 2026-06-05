@@ -2,10 +2,13 @@ import type { PaginationState, VisibilityState } from "@tanstack/table-core";
 import type { ConfigOptions } from "export-to-csv";
 import type { MRT_ColumnDef, MRT_SortingState } from "material-react-table";
 import type { ReactNode } from "react";
+import type { ValueRendererEntry } from "@graviola/edb-detail-renderer-core";
 import type {
   TableColumnRegistry,
   TableUiSchema,
 } from "@graviola/edb-table-types";
+import type { ComponentType } from "react";
+import type { JsonLdChipComponentProps } from "@graviola/edb-table-renderer-jsonld";
 import type { ColumnDefMatcher } from "@graviola/edb-table-renderer-sparql-select";
 
 export type ListConfigType = {
@@ -112,6 +115,11 @@ export type SemanticTableViewProps = {
 
 export type SemanticTableDataMode = "sparql-select" | "jsonld";
 
+export type SemanticTableJsonLdCellOptions = {
+  ChipComponent?: ComponentType<JsonLdChipComponentProps>;
+  extraValueRenderers?: ValueRendererEntry[];
+};
+
 export type SemanticTableProps = {
   typeName: string;
   csvOptions?: ConfigOptions;
@@ -124,4 +132,6 @@ export type SemanticTableProps = {
   tableUiSchema?: TableUiSchema;
   columnRegistry?: TableColumnRegistry;
   actionRegistry?: TableActionRegistry;
+  /** Injection seam for JSON-LD row cells (chips + custom value renderers). */
+  jsonLdCell?: SemanticTableJsonLdCellOptions;
 };
