@@ -30,13 +30,10 @@ const config: StorybookConfig = {
   staticDirs: ["../public"],
   env: (config) => {
     console.log("🔍 Vite Storybook Environment Variables during build:");
-    console.log("STORYBOOK_BASE_PATH:", process.env.STORYBOOK_BASE_PATH);
     console.log("STORYBOOK_CUSTOM_VAR:", process.env.STORYBOOK_CUSTOM_VAR);
 
     return {
       ...config,
-      STORYBOOK_BASE_PATH: process.env.STORYBOOK_BASE_PATH || "",
-      VITE_BASE_PATH: process.env.STORYBOOK_BASE_PATH || "",
       STORYBOOK_CUSTOM_VAR:
         process.env.STORYBOOK_CUSTOM_VAR || "Default Custom Value",
     };
