@@ -35,6 +35,7 @@
     "react": "catalog:"
   },
   "dependencies": {
+    "@graviola/edb-basic-components": "workspace:*",
     "@graviola/edb-table-types": "workspace:*",
     "@graviola/edb-table-mrt-adapter": "workspace:*",
     "@graviola/edb-detail-renderer-core": "workspace:*",
