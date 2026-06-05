@@ -52,6 +52,7 @@
     "dayjs": "^1.11.0",
     "lodash-es": "catalog:",
     "mdx-mermaid": "^2.0.3",
+    "mermaid": "10.9.3",
     "motion": "^12.40.0",
     "notistack": "^3.0.1",
     "react": "catalog:",
@@ -77,8 +78,7 @@
     "playwright": "^1.59.1",
     "remark-gfm": "^4.0.1",
     "storybook": "^10.3.4",
-    "vitest": "^4.1.5",
-    "vscode-languageserver-protocol": "^3.18.0"
+    "vitest": "^4.1.5"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
