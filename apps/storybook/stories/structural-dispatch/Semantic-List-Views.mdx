@@ -1,0 +1,33 @@
+import { Meta, Canvas } from "@storybook/addon-docs/blocks";
+import * as ListStories from "../packages/semantic-views/SemanticListItem.stories";
+
+<Meta title="Structural Dispatch/Semantic List Views" />
+
+# Semantic list views
+
+A **list row** (`viewSize="listItem"`) is one schema-driven row in a result list. Full lists compose many rows via `@graviola/edb-virtualized-components` (`SemanticResultList`, `SemanticInfiniteList`).
+
+## Convention before configuration
+
+- Default: `generateDefaultListItemUISchema` → `ListItemLayout`.
+- Override: `viewConfig.listItem` or per-type UISchema.
+
+## Baseline renderers
+
+| Layout | Renderer |
+| ------ | -------- |
+| `ListItemLayout` | `ListItemLayoutRenderer` |
+| Scalars / refs | same field renderers as detail, ranked per control |
+
+## Live example
+
+<Canvas of={ListStories.Default} />
+
+## Full result lists
+
+For paginated search UI, wire `SemanticResultList` with a `ResultListController` and `typeMode: { kind: "known", typeName, typeIRI }`. See `apps/fulltext-sd` `listViewRegistry.tsx` for app-level list mode registration.
+
+## Related stories
+
+- [semantic-views/SemanticListItem](/story/semantic-views-semanticlistitem--default)
+- [Packages/BasicComponents/ClassicResultListItem](/story/packages-basiccomponents-classicresultlistitem--default) — legacy non-dispatch list item

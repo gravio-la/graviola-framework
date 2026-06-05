@@ -1,0 +1,53 @@
+import { Meta, Canvas } from "@storybook/addon-docs/blocks";
+import * as TableStories from "../library-docs/table/SemanticTable.stories";
+import * as CellRendererStories from "./showcases/TableCellRenderers.stories";
+
+<Meta title="Structural Dispatch/Semantic Tables" />
+
+# Semantic tables
+
+`SemanticTable` loads paginated, filterable data from the configured store. Columns are derived from JSON Schema via the same **rank-based** cell registry as other views.
+
+## Convention before configuration
+
+- Default columns from `computeColumns` + `cellConfigRegistry` (`@graviola/edb-table-renderer-sparql-select`).
+- Override: `tableConfigRegistry`, `columnRegistry`, `actionRegistry` on the table or `AdbProvider`.
+
+## JSON-LD row shape (`rowShape="jsonld"`)
+
+For in-memory JSON-LD documents, `SemanticTable` composes columns via `composeJsonLdColumns` and `@graviola/edb-table-renderer-jsonld`. Scalar cells delegate to the **value-renderer registry** (`currency`, `dateTime`, custom entries like `fiveStar`). Nested objects and arrays render **entity chips** through an injected `ChipComponent` (typically `SemanticChipNoOps`, reusing the chip registry).
+
+| Column | Renderer |
+| ------ | -------- |
+| `name` | plain string (value renderer fallback) |
+| `category` | clickable single-relation chip |
+| `rating` | custom `fiveStar` value renderer |
+| `price` | `currency` value renderer (integer minor units) |
+| `releasedAt` | `dateTime` auto-selected by `format` |
+| `tags` | m-to-m chip array (special chips reused) |
+
+<Canvas of={CellRendererStories.AllCellTypes} />
+
+## SPARQL-select baseline column testers
+
+| Shape | Typical cell |
+| ----- | ------------ |
+| Primitive string/number | text / number cell |
+| `format: "uri"` | link cell |
+| Object with `$ref` / entity | entity chip or link |
+| Enum | enum label |
+
+See `packages/table-renderer-sparql-select/src/cellConfigRegistry.tsx`.
+
+## Static table view (no store)
+
+<Canvas of={TableStories.SemanticTableViewStatic} />
+
+## Live CRUD table
+
+Use `SemanticTable` with `withLocalOxigraph` or `withGraviolaProvider` and a populated schema + store — see testapp `GenericListPage`.
+
+## Related
+
+- [Library Docs/Table/SemanticTable](/story/library-docs-table-semantictable--semantic-table-view-static)
+- [Packages/AdvancedComponents/DiscoverSearchTable](/story/packages-advancedcomponents-discoversearchtable--default) — multi-KB search table

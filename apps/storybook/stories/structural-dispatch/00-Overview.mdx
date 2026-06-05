@@ -1,0 +1,62 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Mermaid } from "mdx-mermaid/Mermaid";
+import { StorybookDocLink } from "../_shared/StorybookDocLink";
+
+<Meta title="Structural Dispatch/Overview" />
+
+# Structural dispatch
+
+Pretty much every UI you build keeps asking the same small question: I have this bit of data in front of me, so which component should draw it? Usually you answer it by hand, switch statement by switch statement, component by component. Graviola answers it in one place instead, and it decides based on the *shape* of the data rather than a class name or a type tag you assigned earlier.
+
+In practice that means you describe an entity once as a JSON Schema — what properties it has, how it links to other entities through `$ref`, what its `@id` and `@type` are. From that single description the framework already knows how to draw the entity as a form, a detail page, a chip, a card, a row in a list, or a column in a table. You write the schema; the views come along for free, and you only step in when a default isn't what you wanted.
+
+JSON Forms does exactly this for individual form fields. Graviola takes the same trick and stretches it across every surface that reads or writes data, not just forms. That generalisation is what we call **structural dispatch**.
+
+## Convention before configuration
+
+You never have to hand-build a view, and you can stop after the very first step if the defaults already look right. There are three steps, and each one is opt-in:
+
+1. **Write the schema.** Entity shapes, properties, `$ref` nesting, and `x-inverseOf` for bidirectional relations. On its own this is enough to render every view family with sensible defaults.
+2. **Add a UISchema only when a default isn't what you want.** UISchemas are JSON Forms layout trees (`TopLevelLayout`, `ChipLayout`, …) registered per `typeName` on `AdbProvider`. Leave them out and generators like `generateDefaultDetailUISchema` and `generateDefaultViewUISchema` build one for you.
+3. **Let the registry sort out the rest.** When it's time to render, every candidate renderer gets scored against the `(uischema, schema)` pair by a small **tester** function, and the highest score wins (`rankWith(rank, predicate)`). If you want different behaviour, register a more specific tester with a higher rank and it quietly takes over — nothing else in the codebase has to change.
+
+## Rank-based dispatch
+
+<Mermaid chart={`flowchart LR
+  schema[JSON Schema] --> gen[Default UISchema optional]
+  gen --> tree[UISchema tree]
+  tree --> tester[Tester registry rankWith]
+  tester --> pick[Highest rank wins]
+  pick --> renderer[Concrete renderer]
+`} />
+
+Implementation anchors:
+
+- `selectEntry` — `packages/detail-renderer-core/src/registry/select.ts`
+- Structural testers — `packages/detail-renderer-core/src/testers/structural.ts`
+- Default MUI registries — `packages/detail-renderer/src/renderers/registries.ts`
+- Table column dispatch — `packages/table-renderer-sparql-select/src/cellConfigRegistry.tsx`
+- Form renderers — JSON Forms `rendererRegistry` on `AdbProvider` (e.g. `@jsonforms/material-renderers` + `@graviola/edb-basic-renderer`)
+
+## Scope vs binding path
+
+| Concept | Points into | Example |
+| ------- | ----------- | ------- |
+| **Scope** | Schema document (TBox) | `#/properties/name` |
+| **Binding path** | Instance data (ABox) | mapping selectors, calculated fields |
+
+UISchema uses **scopes**. Do not use dot-paths into instance data in UI schema.
+
+## View families
+
+| Family | Package | Entry component |
+| ------ | ------- | ----------------- |
+| Forms | `@graviola/semantic-json-form` | `SemanticJsonForm` / `SemanticJsonFormNoOps` |
+| Chips, cards, list rows, detail | `@graviola/semantic-views` | `SemanticChip`, `SemanticCard`, `SemanticListItem`, `SemanticDetailView` (+ `*NoOps`) |
+| Tables | `@graviola/edb-table-components` | `SemanticTable` / `SemanticTableView` |
+
+Use the <StorybookDocLink storyId="welcome--docs">Welcome</StorybookDocLink> dashboard to compare all six families on the same example domain.
+
+## Store layer (later)
+
+Datastore composition (Oxigraph, remote SPARQL, Prisma, REST) is documented separately. Stories that need live CRUD declare store decorators explicitly — see `apps/storybook/.storybook/decorators/`.

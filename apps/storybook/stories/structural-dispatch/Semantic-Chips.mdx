@@ -1,0 +1,38 @@
+import { Meta, Canvas } from "@storybook/addon-docs/blocks";
+import * as ChipStories from "../packages/semantic-views/SemanticChip.stories";
+import * as RelationStories from "../packages/semantic-views/RelationChips.stories";
+
+<Meta title="Structural Dispatch/Semantic Chips" />
+
+# Semantic chips
+
+Chips are the **smallest read-only entity view** (`viewSize="chip"`). They appear standalone, inside tables, and nested in detail views via `NamedEntityRenderer` → `ContainedSemanticChip`.
+
+## Convention before configuration
+
+- Default: `generateDefaultChipUISchema` → `ChipLayout` with slots from `primaryFields` (label, image, …).
+- Override: `viewConfig.chip` on `AdbProvider`, or per-control `options.containedAs: "chip"` in detail UISchema.
+
+## Baseline renderers (detail / semantic-views)
+
+| Tester / layout | Renderer |
+| --------------- | -------- |
+| `uiTypeIs("ChipLayout")` | `ChipLayoutRenderer` |
+| `namedEntityTester` | `NamedEntityRenderer` (embeds chip) |
+| Value format options | `pickValueRenderer` (currency, historical date, …) |
+
+Registry: `packages/detail-renderer/src/renderers/registries.ts` (`defaultChipRenderers`).
+
+## Item catalog chip
+
+<Canvas of={ChipStories.Default} />
+
+## Nested relation chips (Manifestation)
+
+<Canvas of={RelationStories.ManifestationRelations} />
+
+## Related stories
+
+- [semantic-views/SemanticChip](/story/semantic-views-semanticchip--default)
+- [semantic-views/RelationChips](/story/semantic-views-relationchips--default)
+- [semantic-views/Composability](/story/semantic-views-composability--default) — detail nesting chips and cards

@@ -1,0 +1,109 @@
+import { Meta, Canvas } from "@storybook/addon-docs/blocks";
+import * as FormStories from "./showcases/ItemCatalogFormPreview.stories";
+
+<Meta title="Structural Dispatch/Semantic Forms" />
+
+# Semantic forms
+
+The editing UI sits on top of **JSON Forms**. The neat part is that there is no second schema to maintain: the exact same JSON Schema that validates your data and serialises it to RDF is also what lays out the controls, picks the layouts, and wires up the linked-data pickers.
+
+## Convention before configuration
+
+- Default edit UI comes from `generateDefaultUISchema` / `createUISchemata` on `AdbProvider`.
+- Override per type with `uischemata[typeName]` or `uiSchemaDefaultRegistry` entries ranked by `@type` const.
+- Register renderers on `AdbProvider.rendererRegistry` and `cellRendererRegistry`.
+
+## Baseline renderers (forms)
+
+| Source | Examples |
+| ------ | -------- |
+| `@jsonforms/material-renderers` | string, number, boolean, date, enum, arrays |
+| `@graviola/edb-basic-renderer` | dates, enums, auto-identifier, images |
+| `@graviola/edb-linked-data-renderer` | entity pickers, inline nested forms, array-of-links chips |
+| `@graviola/edb-layout-renderer` | vertical/horizontal layouts, anyOf |
+| `@graviola/edb-markdown-renderer` | markdown fields |
+
+## Live example (read-only NoOps, item catalog)
+
+<Canvas of={FormStories.Default} />
+
+## `NoOps` does not mean "no provider"
+
+It is tempting to read `SemanticJsonFormNoOps` as "the standalone, dependency-free form" and drop it straight into a page. It will not work that way, and the failure mode is unfriendly: you get runtime errors from deep inside the linked-data renderers rather than a clear "you forgot a provider" message. This trips people up often enough that it is worth stating plainly.
+
+`NoOps` only refers to **CRUD**: the component will not load or save anything by itself. It still expects to be mounted inside a wrapper that supplies two things:
+
+- a **React Query client**, and
+- a **CRUD provider** (`CrudProviderContext`) reachable through `AdbProvider`.
+
+The reason is **relations**. The moment a schema has a `$ref` to another entity, the form has to be able to render that linked item — show its label in a chip, expand it in a picker, fetch a bit more detail on demand. Even when the linked data is handed to the form up front, that "look up the details of a linked entity" path is, at the moment, **tightly coupled to the CRUD provider and the query client**. There is no separate, lightweight read-only seam for it yet. So a form with relations cannot mount without a provider, full stop.
+
+For a demo or a read-only preview you do **not** need a real datastore — a **stub provider** is enough. That is exactly what the dashboard and the example above do: an `AdbProvider` wrapped around a `CrudProviderContext.Provider` whose `dataStore` is `null` and whose load/save operations are no-ops. The query client is provided once globally (Storybook does this in `preview.tsx`). The relevant wiring lives in `apps/storybook/stories/_shared/DomainProvider.tsx`:
+
+```tsx
+// load/save are no-ops, but the context must exist so linked-data
+// renderers can resolve relations from the inline data.
+const STUB_CRUD_VALUE = { crudOptions: null, dataStore: null, isReady: true } as const;
+
+<AdbProvider /* schema, renderers, uischemata, typeIRI maps … */>
+  <CrudProviderContext.Provider value={STUB_CRUD_VALUE}>
+    <FinderSlotProvider Component={NoopFinder}>{children}</FinderSlotProvider>
+  </CrudProviderContext.Provider>
+</AdbProvider>
+```
+
+> This coupling is a known sharp edge, not a design goal. A future read-only seam may let relation lookups work without a CRUD provider; until then, treat "form with relations ⇒ provider required" as a hard rule.
+
+## Copy-paste pattern
+
+The form itself stays small — the part that matters is that it lives under a provider (a stub one here):
+
+```tsx
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { SemanticJsonFormNoOps } from "@graviola/semantic-json-form";
+import {
+  AdbProvider,
+  CrudProviderContext,
+  useExtendedSchema,
+} from "@graviola/edb-state-hooks";
+
+const queryClient = new QueryClient();
+
+// No real datastore: load/save are no-ops, but the context must be present
+// so relations (chips, pickers) can be resolved from the inline data.
+const STUB_CRUD_VALUE = { crudOptions: null, dataStore: null, isReady: true } as const;
+
+function EditPreview({ typeName, data, typeIRI }) {
+  const { schema } = useExtendedSchema({ typeName });
+  const [formData, setFormData] = useState(data);
+  return (
+    <SemanticJsonFormNoOps
+      data={formData}
+      onChange={setFormData}
+      typeIRI={typeIRI}
+      schema={schema}
+      disableSimilarityFinder
+    />
+  );
+}
+
+// EditPreview must be mounted underneath these providers:
+function ReadOnlyPreviewHost({ children }) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AdbProvider /* schema, renderers, uischemata, typeIRI maps … */>
+        <CrudProviderContext.Provider value={STUB_CRUD_VALUE}>
+          {children}
+        </CrudProviderContext.Provider>
+      </AdbProvider>
+    </QueryClientProvider>
+  );
+}
+```
+
+Full CRUD with real load/save: swap the stub for a store provider (`LocalOxigraphStoreProvider`, `SparqlStoreProvider`, …) and use `GenericForm` or `SemanticJsonForm`. The store provider brings its own `CrudProviderContext` value, so you no longer wire the stub yourself.
+
+## More stories
+
+- [Packages/SemanticJsonForm/SemanticJsonFormNoOps](/story/packages-semanticjsonform-semanticjsonformnoops--default) — exhibition fixtures with `withGraviolaProvider`
+- Form field renderers under **Packages/FormRenderer/**

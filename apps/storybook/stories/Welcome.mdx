@@ -1,72 +1,34 @@
 import { Meta } from "@storybook/addon-docs/blocks";
-import { Mermaid } from "mdx-mermaid/Mermaid";
+import { StructuralDispatchDashboard } from "./_dashboard/StructuralDispatchDashboard";
+import { StorybookDocLink } from "./_shared/StorybookDocLink";
 
 <Meta title="Welcome" />
 
-# Welcome to Graviola Storybook
+<StructuralDispatchDashboard />
 
-This is the component library and documentation for the Graviola Framework.
+---
 
-## What's New
+## Structural dispatch (deep dive)
 
-Comprehensive documentation for the metadata extraction pipeline has been added! Explore:
+| Topic | Page |
+| ----- | ---- |
+| Overview | <StorybookDocLink storyId="structural-dispatch-overview--docs">Structural dispatch overview</StorybookDocLink> |
+| Semantic forms | <StorybookDocLink storyId="structural-dispatch-semantic-forms--docs">Semantic forms</StorybookDocLink> |
+| Semantic chips | <StorybookDocLink storyId="structural-dispatch-semantic-chips--docs">Semantic chips</StorybookDocLink> |
+| Semantic detail views | <StorybookDocLink storyId="structural-dispatch-semantic-detail-views--docs">Semantic detail views</StorybookDocLink> |
+| Semantic cards | <StorybookDocLink storyId="structural-dispatch-semantic-cards--docs">Semantic cards</StorybookDocLink> |
+| Semantic list views | <StorybookDocLink storyId="structural-dispatch-semantic-list-views--docs">Semantic list views</StorybookDocLink> |
+| Semantic tables | <StorybookDocLink storyId="structural-dispatch-semantic-tables--docs">Semantic tables</StorybookDocLink> |
 
-### 📚 Architecture Documentation
+## Library docs (schema → query → graph)
 
-Learn how the framework transforms JSON Schema into extracted data:
+- <StorybookDocLink storyId="library-docs-sparql-schema-00-introduction--docs">@graviola/sparql-schema</StorybookDocLink> — JSON Schema to SPARQL
+- <StorybookDocLink storyId="library-docs-graph-traversal-00-introduction--docs">@graviola/edb-graph-traversal</StorybookDocLink> — RDF graph to typed JSON
 
-- [**Overview**](/docs/architecture-overview--docs) - Introduction to the 4-stage pipeline
-- [**Pipeline Stages**](/docs/architecture-pipeline-stages--docs) - Detailed breakdown of each stage
-- [**Key Concepts**](/docs/architecture-key-concepts--docs) - Prisma-style filters, pagination, blank nodes
+## Architecture (read pipeline)
 
-### 🔧 Library Documentation
+- <StorybookDocLink storyId="architecture-overview--docs">Pipeline overview</StorybookDocLink> — four-stage normalization → SPARQL → extract
 
-#### @graviola/edb-graph-traversal
+## Component catalog
 
-Schema normalization and graph extraction:
-
-- [**Introduction**](/docs/library-docs-graph-traversal-00-introduction--docs) - Package overview and quick start
-- [**Schema Normalization**](/docs/library-docs-graph-traversal-schema-normalization--docs) - Resolving $refs and applying filters
-- [**Graph Extraction**](/docs/library-docs-graph-traversal-graph-extraction--docs) - Walking RDF graphs with clownface
-
-#### @graviola/sparql-schema
-
-SPARQL query generation:
-
-- [**Introduction**](/docs/library-docs-sparql-schema-00-introduction--docs) - Package overview and quick start
-- [**Query Generation**](/docs/library-docs-sparql-schema-query-generation--docs) - Schema-to-SPARQL conversion
-- [**Pagination & ORDER BY**](/docs/library-docs-sparql-schema-pagination-orderby--docs) - Consistent pagination
-- [**SUBSELECT**](/docs/library-docs-sparql-schema-subselect--docs) - Optimized pagination queries
-
-### 🎮 Interactive Demos
-
-Try out the framework with live, editable demos:
-
-- [**Normalizer**](/docs/library-docs-graph-traversal-normalizer--basic) - See how schemas are normalized
-
-## Framework Architecture
-
-<Mermaid chart={`graph LR
-    A[JSON Schema] --> B[Stage 1:<br/>Normalize]
-    B --> C[Stage 2:<br/>SPARQL Gen]
-    C --> D[Stage 3:<br/>Execute]
-    D --> E[Stage 4:<br/>Extract]
-    E --> F[TypeScript<br/>Object]
-    
-    style A fill:#e1f5ff
-    style C fill:#ffe1f5
-    style D fill:#e1ffe1
-    style F fill:#f0e1ff
-`} />
-
-## Quick Links
-
-- **New to the framework?** Start with the [Architecture Overview](/docs/architecture-overview--docs)
-- **Ready to code?** Jump to [graph-traversal Introduction](/docs/library-docs-graph-traversal-00-introduction--docs)
-- **Need SPARQL?** Check out [sparql-schema Introduction](/docs/library-docs-sparql-schema-00-introduction--docs)
-- **Want to experiment?** Try the [Interactive Normalizer Demo](/docs/library-docs-graph-traversal-normalizer--basic)
-
-## Component Library
-
-Browse the stories in the sidebar to see the available UI components for building applications.
-
+Browse **semantic-views** and **Packages** in the sidebar for individual renderers, store providers, and experiments. Stories that need a datastore declare `withLocalOxigraph` or `withGraviolaProvider` explicitly.

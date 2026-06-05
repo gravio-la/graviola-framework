@@ -1,0 +1,31 @@
+import { Meta, Canvas } from "@storybook/addon-docs/blocks";
+import * as CardStories from "../packages/semantic-views/SemanticCard.stories";
+
+<Meta title="Structural Dispatch/Semantic Cards" />
+
+# Semantic cards
+
+Cards are the **gallery / search-hit** view size (`viewSize="card"`): image, title, description slots from `primaryFields` and optional entity preview.
+
+## Convention before configuration
+
+- Default: `generateDefaultCardUISchema` → `CardLayout`.
+- Override: `viewConfig.card` or custom `cardUiSchemata`.
+
+## Baseline renderers
+
+| Layout | Renderer |
+| ------ | -------- |
+| `CardLayout` | `CardLayoutRenderer` |
+| Nested entities | `NamedEntityRenderer` + `SemanticComponentMap` |
+
+## Live examples
+
+<Canvas of={CardStories.Default} />
+
+<Canvas of={CardStories.WithImage} />
+
+## Related
+
+- [semantic-views/SemanticCard](/story/semantic-views-semanticcard--default)
+- [semantic-views/EntityPreview](/story/semantic-views-entitypreview--default) — preview media slots

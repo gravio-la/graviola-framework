@@ -12,10 +12,10 @@
     "@graviola/edb-basic-renderer": "workspace:*",
     "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-core-utils": "workspace:*",
-    "@graviola/edb-detail-renderer": "workspace:*",
-    "@graviola/edb-detail-renderer-core": "workspace:*",
     "@graviola/edb-debug-utils": "workspace:*",
     "@graviola/edb-default-theme": "workspace:*",
+    "@graviola/edb-detail-renderer": "workspace:*",
+    "@graviola/edb-detail-renderer-core": "workspace:*",
     "@graviola/edb-graph-traversal": "workspace:*",
     "@graviola/edb-layout-renderer": "workspace:*",
     "@graviola/edb-linked-data-renderer": "workspace:*",
@@ -52,6 +52,7 @@
     "dayjs": "^1.11.0",
     "lodash-es": "catalog:",
     "mdx-mermaid": "^2.0.3",
+    "motion": "^12.40.0",
     "notistack": "^3.0.1",
     "react": "catalog:",
     "react-dom": "catalog:",
@@ -74,8 +75,10 @@
     "@vitest/browser-playwright": "^4.1.5",
     "eslint-plugin-storybook": "^10.3.4",
     "playwright": "^1.59.1",
+    "remark-gfm": "^4.0.1",
     "storybook": "^10.3.4",
-    "vitest": "^4.1.5"
+    "vitest": "^4.1.5",
+    "vscode-languageserver-protocol": "^3.18.0"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"

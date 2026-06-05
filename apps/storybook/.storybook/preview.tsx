@@ -32,6 +32,32 @@ const preview: Preview = {
         date: /Date$/,
       },
     },
+    docs: {
+      codePanel: true,
+    },
+    options: {
+      storySort: {
+        order: [
+          "Welcome",
+          "Structural Dispatch",
+          [
+            "Overview",
+            "Semantic Forms",
+            "Semantic Chips",
+            "Semantic Detail Views",
+            "Semantic Cards",
+            "Semantic List Views",
+            "Semantic Tables",
+            "Showcases",
+          ],
+          "Library Docs",
+          "Architecture",
+          "Packages",
+          "semantic-views",
+          "Example",
+        ],
+      },
+    },
   },
 };
 

@@ -3,6 +3,7 @@ import { dirname, join } from "node:path";
 import { createRequire } from "node:module";
 import type { StorybookConfig } from "@storybook/react-vite";
 import mermaid from "mdx-mermaid";
+import remarkGfm from "remark-gfm";
 
 const config: StorybookConfig = {
   stories: [
@@ -15,7 +16,7 @@ const config: StorybookConfig = {
       options: {
         mdxPluginOptions: {
           mdxCompileOptions: {
-            remarkPlugins: [mermaid],
+            remarkPlugins: [remarkGfm, mermaid],
           },
         },
       },

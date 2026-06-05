@@ -1,0 +1,40 @@
+import { Meta, Canvas } from "@storybook/addon-docs/blocks";
+import * as DetailStories from "../packages/semantic-views/SemanticDetailView.stories";
+
+<Meta title="Structural Dispatch/Semantic Detail Views" />
+
+# Semantic detail views
+
+Read-only entity pages use a **UISchema tree** separate from the edit form: `TopLevelLayout`, groups, controls, and nested entity renderers.
+
+## Convention before configuration
+
+- Default: `generateDefaultDetailUISchema` / `generateDefaultViewUISchema` with `skipScope` / `scopeOverride`.
+- Override: `detailUiSchemata[typeName]` or `viewConfig.detail` on `AdbProvider`.
+- Headless dispatch lives in `@graviola/edb-detail-renderer-core`; MUI in `@graviola/edb-detail-renderer`.
+
+## Baseline renderers
+
+| Shape | Tester (rank) | Renderer |
+| ----- | ------------- | -------- |
+| Entity (`@id` + `@type`) | `namedEntityTester` | `NamedEntityRenderer` |
+| Inline object | `inlineObjectTester` | `ObjectRenderer` |
+| Array of entities | `arraynamedEntityTester` | `ArrayEntityRenderer` |
+| Array of primitives | `arrayPrimitiveTester` | `ArrayPrimitiveRenderer` |
+| Enum | `enumTester` | `EnumRenderer` |
+| Date / date-time | `dateTester`, `dateTimeTester` | `DateRenderer` |
+| URI | `uriTester` | `UriRenderer` |
+| Layouts | `uiTypeIs("VerticalLayout")`, … | layout renderers |
+
+## Live example
+
+<Canvas of={DetailStories.Default} />
+
+## View config override
+
+<Canvas of={DetailStories.OverrideViaViewConfig} />
+
+## Packages
+
+- `@graviola/semantic-views` — `SemanticDetailView` / `SemanticDetailViewNoOps`
+- `@graviola/edb-detail-renderer` — `DetailRenderer` (MUI)
