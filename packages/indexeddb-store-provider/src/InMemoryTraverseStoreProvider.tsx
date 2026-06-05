@@ -4,7 +4,7 @@
  * and flat SELECT listings default to a narrow field set unless callers pass explicit `fields`.
  */
 
-import type { FunctionComponent } from "react";
+import type { FunctionComponent, ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
 import N3 from "n3";
 import { initSPARQLStore } from "@graviola/sparql-db-impl";
@@ -23,10 +23,10 @@ function logDebug(enabled: boolean, ...args: unknown[]): void {
 }
 
 export type InMemoryTraverseStoreProviderProps = {
-  children: React.ReactNode;
+  children: ReactNode;
   defaultLimit: number;
   endpoint?: Partial<SparqlEndpoint>;
-  loader?: React.ReactNode;
+  loader?: ReactNode;
   initialData?: string;
   /** Same semantics as {@link IndexedDBStoreProvider}'s Turtle import cap */
   initialDataMaxQuads?: number;

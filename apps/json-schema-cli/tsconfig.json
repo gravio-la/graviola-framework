@@ -4,7 +4,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": false,
+    "experimentalDecorators": false
   },
   "exclude": ["node_modules", ".build", "dist"]
 }

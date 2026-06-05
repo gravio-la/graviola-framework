@@ -70,7 +70,7 @@ export function useInfiniteSearch<
     const documents = pages.flatMap((p) => p.documents);
     const loadedCount = documents.length;
     const totalHits = pages[0]?.estimatedTotalHits ?? loadedCount;
-    const lastPage = pages.at(-1);
+    const lastPage = pages.length > 0 ? pages[pages.length - 1] : undefined;
 
     return {
       documents,
