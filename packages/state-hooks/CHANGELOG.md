@@ -1,5 +1,13 @@
 # @graviola/edb-state-hooks
 
+## 1.7.2
+
+### Patch Changes
+
+- Updated dependencies [d148ed6]
+  - @graviola/fulltext-search-core@0.2.0
+  - @graviola/semantic-jsonform-types@1.4.10
+
 ## 1.7.1
 
 ### Patch Changes

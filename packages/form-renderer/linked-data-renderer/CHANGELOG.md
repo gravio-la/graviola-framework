@@ -1,5 +1,13 @@
 # @graviola/edb-linked-data-renderer
 
+## 6.0.2
+
+### Patch Changes
+
+- @graviola/edb-state-hooks@1.7.2
+- @graviola/edb-advanced-components@1.7.2
+- @graviola/edb-basic-components@1.5.2
+
 ## 6.0.1
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@graviola/search-facet-schema",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Search/facet schema types and AJV loader (Layer 1)",
   "type": "module",
   "main": "./dist/index.cjs",
