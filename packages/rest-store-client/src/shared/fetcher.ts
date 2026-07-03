@@ -99,7 +99,11 @@ export const createRestTransport = (
 ): RestTransport => {
   const baseUrl = opts.baseUrl.replace(/\/+$/, "");
   const auth = opts.auth;
-  const fetchImpl = opts.fetchImpl ?? fetch;
+  // Wrap the global fetch so it is never invoked with a foreign `this` —
+  // passing bare `fetch` into ky throws "Illegal invocation" in browsers.
+  const fetchImpl =
+    opts.fetchImpl ??
+    ((input: RequestInfo | URL, init?: RequestInit) => fetch(input, init));
   const defaultHeaders = opts.defaultHeaders ?? {};
   const retryOpt =
     opts.retry === undefined
