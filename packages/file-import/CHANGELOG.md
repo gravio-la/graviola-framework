@@ -1,5 +1,12 @@
 # @graviola/edb-file-import
 
+## 1.2.2
+
+### Patch Changes
+
+- @graviola/edb-maintenance-utils@1.3.2
+- @graviola/jsonld-utils@1.6.2
+
 ## 1.2.1
 
 ### Patch Changes

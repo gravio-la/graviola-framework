@@ -1,5 +1,12 @@
 # @slub/edb-graph-traversal
 
+## 1.6.2
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/json-schema-utils@1.7.0
+
 ## 1.6.1
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @graviola/sparql-store-provider
 
+## 6.0.3
+
+### Patch Changes
+
+- @graviola/sparql-db-impl@1.7.2
+- @graviola/edb-state-hooks@1.7.3
+
 ## 6.0.2
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @graviola/edb-table-renderer-sparql-select
 
+## 0.1.4
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/json-schema-utils@1.7.0
+  - @graviola/edb-state-hooks@1.7.3
+  - @graviola/edb-basic-components@1.5.3
+
 ## 0.1.3
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @graviola/edb-basic-components
 
+## 1.5.3
+
+### Patch Changes
+
+- @graviola/edb-state-hooks@1.7.3
+
 ## 1.5.2
 
 ### Patch Changes

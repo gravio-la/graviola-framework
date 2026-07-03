@@ -1,5 +1,33 @@
 # @graviola/storybook
 
+## 0.0.6
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/json-schema-utils@1.7.0
+  - @graviola/edb-detail-renderer@0.5.1
+  - @graviola/edb-detail-renderer-core@0.4.1
+  - @graviola/edb-linked-data-renderer@6.0.3
+  - @graviola/edb-graph-traversal@1.6.2
+  - @graviola/graviola-app-config@0.1.4
+  - @graviola/semantic-json-form@1.6.3
+  - @graviola/semantic-views@0.1.2
+  - @graviola/sparql-schema@1.6.2
+  - @graviola/edb-state-hooks@1.7.3
+  - @graviola/edb-table-components@2.0.1
+  - @graviola/edb-table-renderer-jsonld@0.2.1
+  - @graviola/edb-table-renderer-sparql-select@0.1.4
+  - @graviola/edb-ui-utils@0.4.2
+  - @graviola/edb-advanced-components@1.7.3
+  - @graviola/semantic-jsonform-types@1.4.11
+  - @graviola/local-oxigraph-store-provider@6.0.3
+  - @graviola/sparql-store-provider@6.0.3
+  - @graviola/edb-basic-components@1.5.3
+  - @graviola/edb-debug-utils@1.4.3
+  - @graviola/entity-finder@1.5.3
+  - @graviola/edb-basic-renderer@4.2.2
+
 ## 0.0.5
 
 ### Patch Changes

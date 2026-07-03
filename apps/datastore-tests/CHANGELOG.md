@@ -1,5 +1,15 @@
 # @graviola/datastore-tests
 
+## 0.1.4
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/json-schema-utils@1.7.0
+  - @graviola/json-schema-prisma-utils@1.4.2
+  - @graviola/prisma-db-impl@1.7.2
+  - @graviola/sparql-db-impl@1.7.2
+
 ## 0.1.3
 
 ### Patch Changes

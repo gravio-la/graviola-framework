@@ -1,5 +1,16 @@
 # @graviola/indexeddb-store-provider
 
+## 1.0.3
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/json-schema-utils@1.7.0
+  - @graviola/edb-graph-traversal@1.6.2
+  - @graviola/sparql-db-impl@1.7.2
+  - @graviola/sparql-schema@1.6.2
+  - @graviola/edb-state-hooks@1.7.3
+
 ## 1.0.2
 
 ### Patch Changes

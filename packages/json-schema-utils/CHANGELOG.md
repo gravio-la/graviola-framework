@@ -1,5 +1,11 @@
 # @graviola/json-schema-utils
 
+## 1.7.0
+
+### Minor Changes
+
+- Publish the schema scope frame API (`rootFrame`, `dataInFrame`, `enterPropertyFrame`, `enterArrayDetailFrame`, `resolveInFrame`, `SchemaScopeFrame`) that detail-renderer-core 0.4.0 depends on — the previously published 1.6.1 predates these exports.
+
 ## 1.6.1
 
 ### Patch Changes

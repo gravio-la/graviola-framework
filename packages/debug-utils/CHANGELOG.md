@@ -1,5 +1,11 @@
 # @graviola/edb-debug-utils
 
+## 1.4.3
+
+### Patch Changes
+
+- @graviola/edb-state-hooks@1.7.3
+
 ## 1.4.2
 
 ### Patch Changes

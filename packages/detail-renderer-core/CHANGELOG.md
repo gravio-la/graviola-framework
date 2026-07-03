@@ -1,5 +1,12 @@
 # @graviola/edb-detail-renderer-core
 
+## 0.4.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/json-schema-utils@1.7.0
+
 ## 0.4.0
 
 ### Minor Changes

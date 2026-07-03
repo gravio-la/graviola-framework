@@ -1,5 +1,15 @@
 # @graviola/edb-state-hooks
 
+## 1.7.3
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/json-schema-utils@1.7.0
+  - @graviola/edb-ui-utils@0.4.2
+  - @graviola/semantic-jsonform-types@1.4.11
+  - @graviola/jsonld-utils@1.6.2
+
 ## 1.7.2
 
 ### Patch Changes
