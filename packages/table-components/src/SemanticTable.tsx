@@ -174,6 +174,7 @@ export const SemanticTable = ({
         tableUiSchema,
         t: t2,
         columnRegistry,
+        primaryField: queryBuildOptions.primaryFields?.[typeName],
       });
     }
     return computeColumns(
@@ -200,13 +201,17 @@ export const SemanticTable = ({
     const labelField = queryBuildOptions.primaryFields?.[typeName]?.label as
       | string
       | undefined;
-    const primaryColId = labelField ? `${labelField}_single` : undefined;
+    const primaryColId = labelField
+      ? rowShape === "jsonld"
+        ? `#/properties/${labelField}`
+        : `${labelField}_single`
+      : undefined;
     const ordered =
       primaryColId && ids.includes(primaryColId)
         ? [primaryColId, ...ids.filter((id) => id !== primaryColId)]
         : ids;
     return ["mrt-row-select", ...ordered];
-  }, [displayColumns, queryBuildOptions.primaryFields, typeName]);
+  }, [displayColumns, queryBuildOptions.primaryFields, typeName, rowShape]);
 
   const locale = useSyncExternalStore(
     (cb) => {

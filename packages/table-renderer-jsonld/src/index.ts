@@ -1,6 +1,7 @@
 export {
   mkJsonLdAccessor,
   jsonLdColumnRegistry,
+  jsonldPrimaryEntry,
   jsonldPrimitiveEntry,
   jsonldDateEntry,
   jsonldBooleanEntry,
@@ -21,6 +22,11 @@ export {
 
 export { DefaultEntityChip } from "./defaultEntityChip";
 export { JsonLdValueCell } from "./cells/JsonLdValueCell";
+export {
+  JsonLdPrimaryColumnCell,
+  JSONLD_PRIMARY_IMAGE_KEY,
+  JSONLD_PRIMARY_TYPE_NAME,
+} from "./cells/JsonLdPrimaryColumnCell";
 export { JsonLdEntityChipCell } from "./cells/JsonLdEntityChipCell";
 export { JsonLdEntityChipArrayCell } from "./cells/JsonLdEntityChipArrayCell";
 export {

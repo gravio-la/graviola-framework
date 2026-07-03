@@ -46,6 +46,12 @@ export type TableTesterContext = {
   t?: (key: string, options?: any) => string;
   rendererHint?: string;
   uiSchemaOptions?: Record<string, unknown>;
+  /** Primary field declaration for the row type (label/description/image keys). */
+  primaryField?: {
+    label?: string;
+    description?: string;
+    image?: string;
+  };
   userPrefs?: {
     columnVisibility?: Record<string, boolean>;
   };

@@ -7,6 +7,7 @@ import {
 import { bringDefinitionToTop } from "@graviola/json-schema-utils";
 
 import { composeJsonLdColumns } from "./composeJsonLdColumns";
+import { JsonLdPrimaryColumnCell } from "./cells/JsonLdPrimaryColumnCell";
 
 const schema: JSONSchema7 = {
   type: "object",
@@ -62,5 +63,21 @@ describe("composeJsonLdColumns", () => {
       "#/properties/tags",
     ]);
     expect(columns.every((c) => c.Cell)).toBe(true);
+  });
+
+  test("primary field label column uses the primary cell with image meta", () => {
+    const loaded = bringDefinitionToTop(schema, "Item");
+    const columns = composeJsonLdColumns(loaded, {
+      typeName: "Item",
+      primaryField: { label: "name", image: "image" },
+    });
+
+    const nameCol = columns.find((c) => c.id === "#/properties/name");
+    expect(nameCol?.Cell).toBe(JsonLdPrimaryColumnCell as any);
+    expect((nameCol?.meta as any)?.jsonLdPrimaryImageKey).toBe("image");
+    expect((nameCol?.meta as any)?.jsonLdPrimaryTypeName).toBe("Item");
+
+    const priceCol = columns.find((c) => c.id === "#/properties/price");
+    expect(priceCol?.Cell).not.toBe(JsonLdPrimaryColumnCell as any);
   });
 });

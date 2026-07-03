@@ -22,6 +22,8 @@ export type ComposeJsonLdColumnsOptions = {
   locale?: string;
   columnRegistry?: TableColumnRegistry;
   skipProperties?: string[];
+  /** Primary field declaration (label/description/image keys) for the type. */
+  primaryField?: TableTesterContext["primaryField"];
 };
 
 function resolvePropertySchema(
@@ -100,6 +102,7 @@ export function composeJsonLdColumns(
         t: options.t,
         rendererHint: uiColumn?.rendererHint,
         uiSchemaOptions: uiColumn?.options,
+        primaryField: options.primaryField,
       };
 
       const entry = selectTableRenderer(

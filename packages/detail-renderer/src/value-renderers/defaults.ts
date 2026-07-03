@@ -2,6 +2,7 @@ import type { ValueRendererEntry } from "@graviola/edb-detail-renderer-core";
 import {
   and,
   formatIs,
+  imageUriTester,
   isBooleanControl,
   isControl,
   isNumberOrIntegerControl,
@@ -16,6 +17,7 @@ import { DateTimeValueRenderer, DateValueRenderer } from "./DateValueRenderer";
 import { EnumValueRenderer } from "./EnumValueRenderer";
 import { FallbackStringValueRenderer } from "./FallbackStringValueRenderer";
 import { HistoricalDateValueRenderer } from "./HistoricalDateValueRenderer";
+import { ImageValueRenderer } from "./ImageValueRenderer";
 import { LocalizedNumberValueRenderer } from "./LocalizedNumberValueRenderer";
 import { UriValueRenderer } from "./UriValueRenderer";
 
@@ -46,6 +48,11 @@ export const defaultValueRenderers: ValueRendererEntry[] = [
     name: "date",
     tester: rankWith(4, and(isControl, formatIs("date"))),
     renderer: DateValueRenderer,
+  },
+  {
+    name: "image",
+    tester: imageUriTester,
+    renderer: ImageValueRenderer,
   },
   {
     name: "uri",

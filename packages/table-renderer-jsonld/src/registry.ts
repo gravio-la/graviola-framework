@@ -7,6 +7,11 @@ import type { JSONSchema7 } from "json-schema";
 
 import { JsonLdEntityChipArrayCell } from "./cells/JsonLdEntityChipArrayCell";
 import { JsonLdEntityChipCell } from "./cells/JsonLdEntityChipCell";
+import {
+  JSONLD_PRIMARY_IMAGE_KEY,
+  JSONLD_PRIMARY_TYPE_NAME,
+  JsonLdPrimaryColumnCell,
+} from "./cells/JsonLdPrimaryColumnCell";
 import { JsonLdValueCell } from "./cells/JsonLdValueCell";
 import { scopeToPropertyKey } from "./scope";
 
@@ -48,6 +53,32 @@ const columnLabel = (
   if (column?.label) return column.label;
   const key = scopeToPropertyKey(scope);
   return key && ctx.t ? ctx.t(key) : (key ?? scope);
+};
+
+/**
+ * Primary label column: matches the property declared as `primaryFields[typeName].label`.
+ * Renders avatar (primary image key) + label, clickable to open the detail view —
+ * parity with the sparql-select row shape's PrimaryColumnContent.
+ */
+const primaryEntry: TableColumnRegistryEntry = {
+  name: "jsonld:primary",
+  tester: (_schema, scope, _uiColumn, ctx) => {
+    const labelKey = ctx.primaryField?.label;
+    if (!labelKey) return -1;
+    return scopeToPropertyKey(scope) === labelKey ? 10 : -1;
+  },
+  renderer: ({ scope, column, ctx }) => ({
+    id: scope,
+    header: columnLabel(scope, column, ctx),
+    accessorFn: mkJsonLdAccessor(scope),
+    Cell: JsonLdPrimaryColumnCell,
+    meta: {
+      ...(ctx.primaryField?.image
+        ? { [JSONLD_PRIMARY_IMAGE_KEY]: ctx.primaryField.image }
+        : {}),
+      [JSONLD_PRIMARY_TYPE_NAME]: ctx.typeName,
+    },
+  }),
 };
 
 const primitiveEntry: TableColumnRegistryEntry = {
@@ -125,6 +156,7 @@ const fallbackEntry: TableColumnRegistryEntry = {
 };
 
 export const jsonLdColumnRegistry: TableColumnRegistry = [
+  primaryEntry,
   dateEntry,
   enumEntry,
   booleanEntry,
@@ -134,6 +166,7 @@ export const jsonLdColumnRegistry: TableColumnRegistry = [
   fallbackEntry,
 ];
 
+export const jsonldPrimaryEntry = primaryEntry;
 export const jsonldPrimitiveEntry = primitiveEntry;
 export const jsonldDateEntry = dateEntry;
 export const jsonldBooleanEntry = booleanEntry;

@@ -44,6 +44,7 @@ export {
   CurrencyValueRenderer,
   formatHistoricalDate,
   HistoricalDateValueRenderer,
+  ImageValueRenderer,
 } from "./value-renderers";
 
 export {

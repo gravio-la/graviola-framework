@@ -73,6 +73,23 @@ export const arrayInlineObjectTester = rankWith(3, isArrayOfInlineObjects);
 export const inlineObjectTester = rankWith(2, isInlineObject);
 export const booleanTester = rankWith(3, isBooleanControl);
 export const uriTester = rankWith(3, and(isControl, formatIs("uri")));
+
+/**
+ * String whose `contentMediaType` declares an image ("image/jpeg", "image/*", …).
+ * Combined with `format: "uri"` this marks a property holding an image URL.
+ */
+export const isImageMediaControl: Tester = (_uischema, schema) => {
+  const s = schema as JSONSchema7 | undefined;
+  return (
+    typeof s?.contentMediaType === "string" &&
+    s.contentMediaType.startsWith("image/")
+  );
+};
+
+export const imageUriTester = rankWith(
+  5,
+  and(isControl, formatIs("uri"), isImageMediaControl),
+);
 export const dateTester = rankWith(4, and(isControl, formatIs("date")));
 export const dateTimeTester = rankWith(
   4,

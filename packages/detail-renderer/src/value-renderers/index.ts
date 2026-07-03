@@ -8,3 +8,4 @@ export {
   formatHistoricalDate,
   HistoricalDateValueRenderer,
 } from "./HistoricalDateValueRenderer";
+export { ImageValueRenderer } from "./ImageValueRenderer";
