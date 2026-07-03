@@ -1,5 +1,14 @@
 # @slub/sparql-db-impl
 
+## 1.7.3
+
+### Patch Changes
+
+- @graviola/jsonld-utils@1.6.3
+- @graviola/sparql-schema@1.6.3
+- @graviola/store-core@0.3.2
+- @graviola/json-schema-utils@1.7.1
+
 ## 1.7.2
 
 ### Patch Changes

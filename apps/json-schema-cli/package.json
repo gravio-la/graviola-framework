@@ -1,7 +1,7 @@
 {
   "name": "@graviola/json-schema-cli",
   "description": "CLI tools for working with JSON Schema and generating i18n translation files",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "type": "module",
   "main": "./dist/index.js",
   "bin": {

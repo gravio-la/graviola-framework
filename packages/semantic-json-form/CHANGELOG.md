@@ -1,5 +1,18 @@
 # @graviola/semantic-json-form
 
+## 1.6.4
+
+### Patch Changes
+
+- @graviola/edb-advanced-components@1.7.4
+- @graviola/entity-finder@1.5.4
+- @graviola/edb-linked-data-renderer@6.0.4
+- @graviola/jsonld-utils@1.6.3
+- @graviola/semantic-jsonform-types@1.4.12
+- @graviola/edb-state-hooks@1.7.4
+- @graviola/json-schema-utils@1.7.1
+- @graviola/edb-basic-components@1.5.4
+
 ## 1.6.3
 
 ### Patch Changes

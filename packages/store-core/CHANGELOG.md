@@ -1,5 +1,12 @@
 # @graviola/store-core
 
+## 0.3.2
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/edb-core-types@1.6.0
+
 ## 0.3.1
 
 ### Patch Changes

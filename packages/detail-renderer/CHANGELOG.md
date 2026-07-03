@@ -1,5 +1,19 @@
 # @graviola/edb-detail-renderer
 
+## 0.5.2
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/edb-core-types@1.6.0
+  - @graviola/edb-core-utils@1.6.0
+  - @graviola/edb-data-mapping@0.4.2
+  - @graviola/edb-detail-renderer-core@0.4.2
+  - @graviola/semantic-jsonform-types@1.4.12
+  - @graviola/edb-state-hooks@1.7.4
+  - @graviola/json-schema-utils@1.7.1
+  - @graviola/edb-ui-utils@0.4.3
+
 ## 0.5.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @graviola/json-schema-cli
 
+## 1.1.5
+
+### Patch Changes
+
+- @graviola/json-schema-utils@1.7.1
+
 ## 1.1.4
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@graviola/json-schema-prisma-utils",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "JsonSchema utility functions for JSONSchema to Prisma conversion",
   "type": "module",
   "main": "./dist/index.cjs",

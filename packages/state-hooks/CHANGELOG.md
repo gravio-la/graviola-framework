@@ -1,5 +1,19 @@
 # @graviola/edb-state-hooks
 
+## 1.7.4
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/edb-core-utils@1.6.0
+  - @graviola/edb-data-mapping@0.4.2
+  - @graviola/fulltext-search-core@0.2.1
+  - @graviola/jsonld-utils@1.6.3
+  - @graviola/semantic-jsonform-types@1.4.12
+  - @graviola/store-core@0.3.2
+  - @graviola/json-schema-utils@1.7.1
+  - @graviola/edb-ui-utils@0.4.3
+
 ## 1.7.3
 
 ### Patch Changes

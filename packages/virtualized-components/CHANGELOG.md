@@ -1,5 +1,13 @@
 # @graviola/edb-virtualized-components
 
+## 1.2.4
+
+### Patch Changes
+
+- @graviola/edb-detail-renderer-core@0.4.2
+- @graviola/semantic-views@0.1.3
+- @graviola/edb-state-hooks@1.7.4
+
 ## 1.2.3
 
 ### Patch Changes

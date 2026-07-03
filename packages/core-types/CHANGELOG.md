@@ -1,5 +1,11 @@
 # @slub/edb-core-types
 
+## 1.6.0
+
+### Minor Changes
+
+- Publish the entity preview API added in "feat: add entity preview types and extraction utilities" (`extractEntityPreview`, `resolvePreviewDisplay` in core-utils; preview/card presentation types in core-types) — the feature landed without a changeset, so registry versions predate exports that already-published dependents (detail-renderer, state-hooks) import.
+
 ## 1.5.1
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @graviola/meilisearch-sparql-store
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @graviola/edb-core-types@1.6.0
+  - @graviola/fulltext-search-core@0.2.1
+  - @graviola/store-core@0.3.2
+
 ## 0.2.0
 
 ### Minor Changes
