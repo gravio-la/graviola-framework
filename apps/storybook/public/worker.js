@@ -56,6 +56,10 @@ async function init(payload, result) {
   } catch (err) {
     throw "Instantiation of Oxigraph failed: " + err.toString();
   }
+  // Create the store right away so QUERY/DUMP work even when no data
+  // is ever loaded (previously only LOAD created the store, and an empty
+  // initial dataset left every query answering "No store available").
+  if (store == undefined) store = new scripts.oxigraph.Store();
   result.message = "Initialized Oxigraph";
   return result;
 }
