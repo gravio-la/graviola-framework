@@ -1,16 +1,32 @@
 import { Meta, Canvas } from "@storybook/addon-docs/blocks";
 import * as CardStories from "../packages/semantic-views/SemanticCard.stories";
+import * as ShowcaseStories from "../packages/semantic-views/CardShowcase.stories";
 
 <Meta title="Structural Dispatch/Semantic Cards" />
 
 # Semantic cards
 
-Cards are the **gallery / search-hit** view size (`viewSize="card"`): image, title, description slots from `primaryFields` and optional entity preview.
+Cards are the **gallery / search-hit** view size (`viewSize="card"`): hero media, title, and description from `primaryFields`, secondary leaf properties via ranked value renderers, and optional actions — all driven by schema and `cardPresentation` config.
 
 ## Convention before configuration
 
-- Default: `generateDefaultCardUISchema` → `CardLayout`.
-- Override: `viewConfig.card` or custom `cardUiSchemata`.
+- Default: `generateDefaultCardUISchema` → `CardLayout` (M3 elevated / filled / outlined).
+- Per-type knobs: `AdbProvider.cardPresentation` or `viewConfig.card.options`.
+- Override: custom `CardLayout` renderer, full card component via `SemanticCardSlotProvider`, or `uiSchemata`.
+
+## Card presentation options
+
+| Option | Purpose |
+| ------ | ------- |
+| `secondaryFields` | Explicit leaf properties in the card body |
+| `secondaryDisplay` | `inline` (value renderers) or `stats` (profile-style strip) |
+| `actions` | M3 action row (`show` / `edit` / `custom` intents) |
+| `variant` | `elevated` · `filled` · `outlined` |
+| `orientation` | `vertical` · `horizontal` |
+| `size` | `compact` · `standard` · `comfortable` |
+| `expandable` | In-place expand (distinct from detail modal) |
+| `mediaOverlay` | Headline over hero image with scrim |
+| `banner` | Profile-card banner property (avatar overlaps) |
 
 ## Baseline renderers
 
@@ -19,7 +35,19 @@ Cards are the **gallery / search-hit** view size (`viewSize="card"`): image, tit
 | `CardLayout` | `CardLayoutRenderer` |
 | Nested entities | `NamedEntityRenderer` + `SemanticComponentMap` |
 
-## Live examples
+## Showcase — two domains, one architecture
+
+<Canvas of={ShowcaseStories.SideBySide} />
+
+## More examples
+
+<Canvas of={ShowcaseStories.MusicReleaseCard} />
+
+<Canvas of={ShowcaseStories.SocialProfileCard} />
+
+<Canvas of={ShowcaseStories.CardGrid} />
+
+## Legacy item-catalog cards
 
 <Canvas of={CardStories.Default} />
 
@@ -27,5 +55,5 @@ Cards are the **gallery / search-hit** view size (`viewSize="card"`): image, tit
 
 ## Related
 
+- [semantic-views/Card Showcase](?path=/story/semantic-views-card-showcase--side-by-side)
 - [semantic-views/SemanticCard](?path=/story/semantic-views-semanticcard--default)
-- [semantic-views/EntityPreview](?path=/story/semantic-views-entitypreview--default) — preview media slots

@@ -18,8 +18,12 @@ import {
   SemanticJsonFormNoOps,
   graviolaRenderers,
 } from "@graviola/semantic-json-form";
+import { MotionAdapterProvider } from "@graviola/edb-detail-renderer";
 import { createSemanticConfig } from "../../../../packages/semantic-json-form/src/helper/createSemanticConfig";
 import { createUISchemata } from "../../../../packages/semantic-json-form/src/helper/createUISchemata";
+
+import { StorybookMotionAdapter } from "../../.storybook/decorators/storybookMotionAdapter";
+import type { StoryDomain } from "./storyDomains";
 
 const dashboardRenderers = [...materialRenderers, ...graviolaRenderers];
 
@@ -35,8 +39,6 @@ const STUB_CRUD_VALUE = {
   dataStore: null,
   isReady: true,
 } as const;
-
-import type { StoryDomain } from "./storyDomains";
 
 const PUBLIC_BASE_PATH =
   (
@@ -87,6 +89,7 @@ export function DomainProvider({ domain, children }: DomainProviderProps) {
               primaryFields: domain.primaryFields,
             }}
             typePresentation={domain.typePresentation}
+            cardPresentation={domain.cardPresentation}
             rendererRegistry={dashboardRenderers}
             cellRendererRegistry={materialCells}
             uiSchemaDefaultRegistry={registry}
@@ -96,11 +99,13 @@ export function DomainProvider({ domain, children }: DomainProviderProps) {
               baseIRI: domain.baseIRI,
             }}
           >
-            <CrudProviderContext.Provider value={STUB_CRUD_VALUE}>
-              <FinderSlotProvider Component={NoopFinder}>
-                {children}
-              </FinderSlotProvider>
-            </CrudProviderContext.Provider>
+            <MotionAdapterProvider adapter={StorybookMotionAdapter}>
+              <CrudProviderContext.Provider value={STUB_CRUD_VALUE}>
+                <FinderSlotProvider Component={NoopFinder}>
+                  {children}
+                </FinderSlotProvider>
+              </CrudProviderContext.Provider>
+            </MotionAdapterProvider>
           </AdbProvider>
         </Provider>
       </SnackbarProvider>

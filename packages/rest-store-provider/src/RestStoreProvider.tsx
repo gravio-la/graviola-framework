@@ -25,6 +25,7 @@ export const RestStoreProvider: FunctionComponent<RestStoreProviderProps> = ({
   const {
     typeNameToTypeIRI,
     jsonLDConfig: { defaultPrefix },
+    queryBuildOptions: { primaryFields, primaryFieldExtracts },
   } = useAdbContext();
   const dataStore = useMemo(() => {
     return createLegacyRESTClientStore({
@@ -36,6 +37,8 @@ export const RestStoreProvider: FunctionComponent<RestStoreProviderProps> = ({
       },
       requestOptions,
       buildEndpointURL,
+      primaryFields,
+      primaryFieldExtracts,
     });
   }, [
     endpoint,
@@ -43,6 +46,8 @@ export const RestStoreProvider: FunctionComponent<RestStoreProviderProps> = ({
     typeNameToTypeIRI,
     requestOptions,
     buildEndpointURL,
+    primaryFields,
+    primaryFieldExtracts,
   ]);
   return (
     <CrudProviderContext.Provider

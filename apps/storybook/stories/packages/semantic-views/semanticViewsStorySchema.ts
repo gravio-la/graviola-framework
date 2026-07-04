@@ -1,6 +1,9 @@
 import type { JSONSchema7 } from "json-schema";
-import type { PrimaryFieldDeclaration } from "@graviola/edb-core-types";
-import type { TypePresentationRegistry } from "@graviola/edb-core-types";
+import type {
+  CardPresentationRegistry,
+  PrimaryFieldDeclaration,
+  TypePresentationRegistry,
+} from "@graviola/edb-core-types";
 
 export const SEMANTIC_VIEWS_EXAMPLE_NS = "http://www.example.org/example/";
 
@@ -54,8 +57,26 @@ export const semanticViewsPrimaryFields: PrimaryFieldDeclaration = {
 };
 
 export const semanticViewsTypePresentation: TypePresentationRegistry = {
-  Item: { icon: "🛒", color: "primary" },
+  Item: { icon: "🎸", color: "primary" },
   Tag: { icon: "🏷️", color: "secondary" },
+};
+
+export const itemCatalogCardPresentation: CardPresentationRegistry = {
+  Item: {
+    variant: "elevated",
+    orientation: "vertical",
+    size: "standard",
+    mediaAspectRatio: "4 / 3",
+    secondaryFields: ["description"],
+    hidePropertyLabels: true,
+    actions: [{ id: "show", label: "View", intent: "show", primary: true }],
+  },
+  Tag: {
+    variant: "outlined",
+    orientation: "vertical",
+    size: "compact",
+    hidePropertyLabels: true,
+  },
 };
 
 export function semanticViewsTypeNameToTypeIRI(typeName: string): string {

@@ -1,4 +1,11 @@
-import type { Entity } from "@graviola/edb-core-types";
+import type {
+  Entity,
+  PrimaryFieldExtractDeclaration,
+} from "@graviola/edb-core-types";
+import {
+  applyToEachField,
+  extractFieldIfString,
+} from "@graviola/edb-data-mapping";
 import type { QueryType } from "@graviola/edb-global-types";
 import type {
   BaseStore,
@@ -52,6 +59,8 @@ export type LegacyRESTClientStoreOptions = {
   auth?: RestAuthConfig;
   fetchImpl?: typeof fetch;
   storeId?: StoreId;
+  primaryFields?: PrimaryFieldExtractDeclaration;
+  primaryFieldExtracts?: PrimaryFieldExtractDeclaration;
 };
 
 const randomStoreId = (): StoreId => {
@@ -140,6 +149,8 @@ export const createLegacyRESTClientStore = <
   const storeId = opts.storeId ?? randomStoreId();
   const typeNameToTypeIRI = opts.identifies.typeNameToTypeIRI;
   const typeIRItoTypeName = opts.identifies.typeIRItoTypeName;
+  const primaryFields = opts.primaryFields ?? {};
+  const primaryFieldExtracts = opts.primaryFieldExtracts ?? {};
   const capabilities: CapabilityDescriptor = {
     identifies: true,
     loads: true,
@@ -385,11 +396,24 @@ export const createLegacyRESTClientStore = <
         searchString,
         limit,
       });
-      return rows.map((r) => ({
-        entityIRI: (r as Record<string, unknown>)["@id"] as string,
-        typeIRI: (r as Record<string, unknown>)["@type"] as string,
-        value: (r as Record<string, unknown>)["@id"] as string,
-      }));
+      return rows.map((r) => {
+        const doc = r as Record<string, unknown>;
+        const fieldDeclaration =
+          primaryFieldExtracts[typeName] ?? primaryFields[typeName] ?? {};
+        const { label, description, image } = applyToEachField(
+          doc,
+          fieldDeclaration,
+          extractFieldIfString,
+        );
+        return {
+          entityIRI: doc["@id"] as string,
+          typeIRI: doc["@type"] as string,
+          value: doc["@id"] as string,
+          label: label ?? undefined,
+          description: description ?? undefined,
+          image: image ?? undefined,
+        };
+      });
     },
     resolveTypes: async (entityIRI: string): Promise<string[]> => {
       const url = buildEndpointURL(

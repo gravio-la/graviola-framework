@@ -28,10 +28,6 @@ import {
 import { bringDefinitionToTop } from "@graviola/json-schema-utils";
 import type { TableUiSchema } from "@graviola/edb-table-types";
 import {
-  VALUE_RENDERER_OPTION,
-  VALUE_RENDERER_OPTIONS_KEY,
-} from "@graviola/edb-detail-renderer-core";
-import {
   SemanticTableView,
   composeJsonLdColumns,
   JsonLdTableProvider,
@@ -40,7 +36,6 @@ import {
 import {
   storyDomains,
   getStoryDomain,
-  getGalleryEntities,
   type StoryDomain,
   type StoryDomainId,
 } from "../_shared/storyDomains";
@@ -81,7 +76,7 @@ const VIEW_FAMILIES: ViewFamilyConfig[] = [
   {
     id: "cards",
     title: "Cards",
-    tagline: "Gallery and search-result tiles.",
+    tagline: "M3 gallery tiles — schema + cardPresentation, not bespoke JSX.",
     docsStoryId: "structural-dispatch-semantic-cards--docs",
   },
   {
@@ -109,60 +104,63 @@ const DASHBOARD_TABLE_UI: Partial<Record<StoryDomainId, TableUiSchema>> = {
       { scope: "#/properties/tags", label: "Tags" },
     ],
   },
-  product: {
+  music: {
     type: "Table",
     mode: "whitelist",
     columns: [
-      { scope: "#/properties/name", label: "Name" },
-      {
-        scope: "#/properties/price",
-        label: "Price",
-        options: {
-          [VALUE_RENDERER_OPTION]: "currency",
-          [VALUE_RENDERER_OPTIONS_KEY]: {
-            currency: "EUR",
-            unit: "minor",
-            locale: "de-DE",
-          },
-        },
-      },
-      { scope: "#/properties/recordedAt", label: "Recorded" },
+      { scope: "#/properties/title", label: "Title" },
+      { scope: "#/properties/bwv", label: "BWV" },
+      { scope: "#/properties/releaseYear", label: "Year" },
+      { scope: "#/properties/genre", label: "Genre" },
     ],
   },
-  relations: {
+  exhibition: {
     type: "Table",
     mode: "whitelist",
     columns: [
-      { scope: "#/properties/filePath", label: "Path" },
-      { scope: "#/properties/inRealm", label: "Realm" },
-      { scope: "#/properties/tags", label: "Related" },
+      { scope: "#/properties/title", label: "Title" },
+      { scope: "#/properties/fromDateDisplay", label: "From" },
+      { scope: "#/properties/toDateDisplay", label: "To" },
+      { scope: "#/properties/places", label: "Places" },
     ],
   },
 };
 
-function dashboardTableRows(domain: StoryDomain): Record<string, unknown>[] {
-  const primary = domain.samples[domain.defaultTypeName];
-  if (primary?.length) return primary;
-  return domain.typeNames.flatMap((tn) => domain.samples[tn] ?? []);
+function dashboardTableRows(
+  domain: StoryDomain,
+  typeName: string,
+): Record<string, unknown>[] {
+  const rows = domain.samples[typeName];
+  if (rows?.length) return rows;
+  return domain.samples[domain.defaultTypeName] ?? [];
 }
 
-function DashboardTablePreview({ domain }: { domain: StoryDomain }) {
+function DashboardTablePreview({
+  domain,
+  typeName,
+}: {
+  domain: StoryDomain;
+  typeName: string;
+}) {
   const loadedSchema = useMemo(
-    () => bringDefinitionToTop(domain.schema, domain.defaultTypeName),
-    [domain.schema, domain.defaultTypeName],
+    () => bringDefinitionToTop(domain.schema, typeName),
+    [domain.schema, typeName],
   );
 
   const columns = useMemo(
     () =>
       composeJsonLdColumns(loadedSchema, {
-        typeName: domain.defaultTypeName,
+        typeName,
         tableUiSchema: DASHBOARD_TABLE_UI[domain.id],
         t: (key) => key,
       }),
-    [loadedSchema, domain.id, domain.defaultTypeName],
+    [loadedSchema, domain.id, typeName],
   );
 
-  const rows = useMemo(() => dashboardTableRows(domain), [domain]);
+  const rows = useMemo(
+    () => dashboardTableRows(domain, typeName),
+    [domain, typeName],
+  );
 
   const columnOrder = useMemo(
     () => columns.map((col) => String(col.id ?? "")).filter(Boolean),
@@ -178,7 +176,7 @@ function DashboardTablePreview({ domain }: { domain: StoryDomain }) {
     >
       <Box sx={{ height: 320, display: "flex", width: "100%" }}>
         <SemanticTableView
-          typeName={domain.defaultTypeName}
+          typeName={typeName}
           columns={columns}
           data={rows}
           rowCount={rows.length}
@@ -225,23 +223,17 @@ function ViewFamilyPreview({
   domain: StoryDomain;
 }) {
   const entityIRI = String(sample["@id"] ?? "");
-  const gallery = getGalleryEntities(domain);
 
   switch (familyId) {
     case "forms":
       return <DashboardFormPreview typeName={typeName} data={sample} />;
     case "chips":
       return (
-        <Stack direction="row" flexWrap="wrap" gap={1.5} alignItems="center">
-          {gallery.map((entity) => (
-            <SemanticChipNoOps
-              key={entity.entityIRI}
-              typeName={entity.typeName}
-              entityIRI={entity.entityIRI}
-              data={entity.data}
-            />
-          ))}
-        </Stack>
+        <SemanticChipNoOps
+          typeName={typeName}
+          entityIRI={entityIRI}
+          data={sample}
+        />
       );
     case "detail":
       return (
@@ -263,44 +255,25 @@ function ViewFamilyPreview({
       );
     case "cards":
       return (
-        <Stack
-          direction={{ xs: "column", sm: "row" }}
-          spacing={2}
-          alignItems="stretch"
-        >
-          {gallery.map((entity) => (
-            <Box
-              key={entity.entityIRI}
-              sx={{
-                flex: 1,
-                minWidth: 0,
-                maxWidth: gallery.length > 1 ? 280 : undefined,
-              }}
-            >
-              <SemanticCardNoOps
-                typeName={entity.typeName}
-                entityIRI={entity.entityIRI}
-                data={entity.data}
-              />
-            </Box>
-          ))}
-        </Stack>
+        <Box sx={{ width: "100%", maxWidth: 340, mx: "auto" }}>
+          <SemanticCardNoOps
+            typeName={typeName}
+            entityIRI={entityIRI}
+            data={sample}
+            motionId={entityIRI}
+          />
+        </Box>
       );
     case "lists":
       return (
-        <Stack spacing={1} sx={{ width: "100%" }}>
-          {gallery.map((entity) => (
-            <SemanticListItemNoOps
-              key={entity.entityIRI}
-              typeName={entity.typeName}
-              entityIRI={entity.entityIRI}
-              data={entity.data}
-            />
-          ))}
-        </Stack>
+        <SemanticListItemNoOps
+          typeName={typeName}
+          entityIRI={entityIRI}
+          data={sample}
+        />
       );
     case "tables":
-      return <DashboardTablePreview domain={domain} />;
+      return <DashboardTablePreview domain={domain} typeName={typeName} />;
     default:
       return null;
   }
@@ -495,7 +468,7 @@ export function StructuralDispatchDashboard() {
 }
 
 function DashboardContent() {
-  const [domainId, setDomainId] = useState<StoryDomainId>("item-catalog");
+  const [domainId, setDomainId] = useState<StoryDomainId>("music");
   const domain = useMemo(() => getStoryDomain(domainId), [domainId]);
   const [typeName, setTypeName] = useState(domain.defaultTypeName);
 

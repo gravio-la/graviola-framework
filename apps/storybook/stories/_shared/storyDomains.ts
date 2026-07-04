@@ -1,5 +1,6 @@
 import type { JSONSchema7 } from "json-schema";
 import type {
+  CardPresentationRegistry,
   PrimaryFieldDeclaration,
   TypePresentationRegistry,
 } from "@graviola/edb-core-types";
@@ -9,6 +10,7 @@ import {
   semanticViewsStorySchema,
   semanticViewsPrimaryFields,
   semanticViewsTypePresentation,
+  itemCatalogCardPresentation,
   semanticViewsTypeNameToTypeIRI,
   semanticViewsTypeIRIToTypeName,
   SEMANTIC_VIEWS_EXAMPLE_NS,
@@ -17,56 +19,31 @@ import {
   sampleItem,
   sampleTag,
 } from "../packages/semantic-views/sharedFixtures";
-
-/** Richer catalog fixture for the welcome dashboard (images, tags, multiple photos). */
-const dashboardSampleItem: Record<string, unknown> = {
-  ...sampleItem,
-  name: "Fender Stratocaster '57 Reissue",
-  description: "Sunburst finish, maple neck — showroom condition.",
-  photos: [
-    "https://picsum.photos/seed/strat-main/480/360",
-    "https://picsum.photos/seed/strat-detail/480/360",
-  ],
-  tags: [
-    {
-      "@type": `${SEMANTIC_VIEWS_EXAMPLE_NS}Tag`,
-      "@id": `${SEMANTIC_VIEWS_EXAMPLE_NS}tag/vintage`,
-      name: "Vintage",
-      description: "Collectible grade",
-      image: "https://picsum.photos/seed/tag-vintage/200/150",
-    },
-    {
-      "@type": `${SEMANTIC_VIEWS_EXAMPLE_NS}Tag`,
-      "@id": `${SEMANTIC_VIEWS_EXAMPLE_NS}tag/sale`,
-      name: "On sale",
-      image: "https://picsum.photos/seed/tag-sale/200/150",
-    },
-  ],
-};
-
-const dashboardSampleTag: Record<string, unknown> = {
-  ...sampleTag,
-  name: "Handmade",
-  description: "Small-batch instruments",
-  image: "https://picsum.photos/seed/tag-handmade/400/280",
-};
+import { WIKIMEDIA } from "../packages/semantic-views/cardShowcaseAudio";
 import {
-  valueRenderersStorySchema,
-  valueRenderersPrimaryFields,
-  valueRenderersTypeNameToTypeIRI,
-  valueRenderersTypeIRIToTypeName,
-  sampleProduct,
-} from "../packages/semantic-views/valueRenderersStorySchema";
+  musicStorySchema,
+  musicPrimaryFields,
+  musicCardPresentation,
+  musicTypePresentation,
+  musicTypeNameToTypeIRI,
+  musicTypeIRIToTypeName,
+  sampleComposerBach,
+  sampleMusicalWorkFuga,
+  sampleMusicalWorkPrelude,
+} from "../packages/semantic-views/musicStorySchema";
 import {
-  relationChipsStorySchema,
-  relationChipsPrimaryFields,
-  relationChipsTypeNameToTypeIRI,
-  relationChipsTypeIRIToTypeName,
-  sampleManifestationWithRelations,
-  SEMANTIC_VIEWS_EXAMPLE_NS as RELATION_NS,
-} from "../packages/semantic-views/relationChipsStorySchema";
+  exhibitionStorySchema,
+  exhibitionPrimaryFields,
+  exhibitionCardPresentation,
+  exhibitionTypePresentation,
+  exhibitionTypeNameToTypeIRI,
+  exhibitionTypeIRIToTypeName,
+  sampleExhibition,
+  sampleExhibitionPerson,
+  sampleExhibitionPlace,
+} from "../packages/semantic-views/exhibitionStorySchema";
 
-export type StoryDomainId = "item-catalog" | "product" | "relations";
+export type StoryDomainId = "music" | "exhibition" | "item-catalog";
 
 export type StoryDomain = {
   id: StoryDomainId;
@@ -76,104 +53,135 @@ export type StoryDomain = {
   schema: JSONSchema7;
   primaryFields: PrimaryFieldDeclaration;
   typePresentation?: TypePresentationRegistry;
+  cardPresentation?: CardPresentationRegistry;
   typeNameToTypeIRI: StringToIRIFn;
   typeIRIToTypeName: IRIToStringFn;
-  /** Entity types available in this domain (definition keys). */
   typeNames: string[];
-  /** Default type for previews when the domain loads. */
   defaultTypeName: string;
-  /** Inline JSON-LD-shaped instances keyed by typeName. */
   samples: Record<string, Record<string, unknown>[]>;
-  /** Ordered types for chips/cards/lists gallery previews; defaults to typeNames. */
-  galleryTypeNames?: string[];
   typeNameLabelMap?: Record<string, string>;
 };
 
-export type GalleryEntity = {
-  typeName: string;
-  entityIRI: string;
-  data: Record<string, unknown>;
+/** Instrument shop fixtures with local photos from public/fixtures/. */
+const dashboardSampleItem: Record<string, unknown> = {
+  ...sampleItem,
+  "@id": `${SEMANTIC_VIEWS_EXAMPLE_NS}item/strat-57`,
+  name: "Fender Stratocaster '57 Reissue",
+  description: "Sunburst finish, maple neck — showroom condition.",
+  photos: [WIKIMEDIA.acousticGuitar, WIKIMEDIA.violin],
+  tags: [
+    {
+      "@type": `${SEMANTIC_VIEWS_EXAMPLE_NS}Tag`,
+      "@id": `${SEMANTIC_VIEWS_EXAMPLE_NS}tag/vintage`,
+      name: "Vintage",
+      description: "Collectible grade",
+      image: WIKIMEDIA.studentViolin,
+    },
+    {
+      "@type": `${SEMANTIC_VIEWS_EXAMPLE_NS}Tag`,
+      "@id": `${SEMANTIC_VIEWS_EXAMPLE_NS}tag/sale`,
+      name: "On sale",
+      image: WIKIMEDIA.clarinet,
+    },
+  ],
 };
 
-const sampleRealm = {
-  "@type": `${RELATION_NS}Realm`,
-  "@id": `${RELATION_NS}realm/75`,
-  realmName: "Workstation NAS",
+const dashboardSampleItemTwo: Record<string, unknown> = {
+  ...sampleItem,
+  "@id": `${SEMANTIC_VIEWS_EXAMPLE_NS}item/yamaha-p125`,
+  name: "Yamaha P-125 Digital Piano",
+  description: "Compact stage piano — lightly used, with stand.",
+  photos: [WIKIMEDIA.digitalPiano],
+  tags: [
+    {
+      "@type": `${SEMANTIC_VIEWS_EXAMPLE_NS}Tag`,
+      "@id": `${SEMANTIC_VIEWS_EXAMPLE_NS}tag/handmade`,
+      name: "Handmade",
+      description: "Small-batch instruments",
+      image: WIKIMEDIA.studentViolin,
+    },
+  ],
 };
 
-const sampleArtifact = {
-  "@type": `${RELATION_NS}Artifact`,
-  "@id": `${RELATION_NS}artifact/abc123`,
-  documentTitle: "Album cover image",
+const dashboardSampleTag: Record<string, unknown> = {
+  ...sampleTag,
+  "@id": `${SEMANTIC_VIEWS_EXAMPLE_NS}tag/handmade`,
+  name: "Handmade",
+  description: "Small-batch instruments",
+  image: WIKIMEDIA.studentViolin,
 };
 
 export const storyDomains: StoryDomain[] = [
   {
+    id: "music",
+    label: "Music",
+    description: "Bach works — schema-driven play action from audio property",
+    baseIRI: "http://www.example.org/music/",
+    schema: musicStorySchema,
+    primaryFields: musicPrimaryFields,
+    typePresentation: musicTypePresentation,
+    cardPresentation: musicCardPresentation,
+    typeNameToTypeIRI: musicTypeNameToTypeIRI,
+    typeIRIToTypeName: musicTypeIRIToTypeName,
+    typeNames: ["MusicalWork", "Composer"],
+    defaultTypeName: "MusicalWork",
+    samples: {
+      MusicalWork: [sampleMusicalWorkFuga, sampleMusicalWorkPrelude],
+      Composer: [sampleComposerBach],
+    },
+    typeNameLabelMap: { MusicalWork: "Work", Composer: "Composer" },
+  },
+  {
+    id: "exhibition",
+    label: "Historic exhibition",
+    description: "SLUB exhibition catalog — Otto Dix, Albertinum Dresden",
+    baseIRI: "http://ontologies.slub-dresden.de/exhibition/storybook/",
+    schema: exhibitionStorySchema,
+    primaryFields: exhibitionPrimaryFields,
+    typePresentation: exhibitionTypePresentation,
+    cardPresentation: exhibitionCardPresentation,
+    typeNameToTypeIRI: exhibitionTypeNameToTypeIRI,
+    typeIRIToTypeName: exhibitionTypeIRIToTypeName,
+    typeNames: ["Exhibition", "Person", "Place", "Tag"],
+    defaultTypeName: "Exhibition",
+    samples: {
+      Exhibition: [sampleExhibition],
+      Person: [sampleExhibitionPerson],
+      Place: [sampleExhibitionPlace],
+      Tag: [
+        {
+          "@id": `${exhibitionTypeNameToTypeIRI("Tag")}/ww1`,
+          "@type": exhibitionTypeNameToTypeIRI("Tag"),
+          name: "Erster Weltkrieg",
+          description: "Jubiläumsausstellung",
+        },
+      ],
+    },
+    typeNameLabelMap: {
+      Exhibition: "Exhibition",
+      Person: "Person",
+      Place: "Place",
+      Tag: "Tag",
+    },
+  },
+  {
     id: "item-catalog",
     label: "Item catalog",
-    description: "Music-instrument shop: Item, Tag",
+    description: "Music-instrument shop — Item, Tag (testapp domain)",
     baseIRI: SEMANTIC_VIEWS_EXAMPLE_NS,
     schema: semanticViewsStorySchema,
     primaryFields: semanticViewsPrimaryFields,
     typePresentation: semanticViewsTypePresentation,
+    cardPresentation: itemCatalogCardPresentation,
     typeNameToTypeIRI: semanticViewsTypeNameToTypeIRI,
     typeIRIToTypeName: semanticViewsTypeIRIToTypeName,
     typeNames: ["Item", "Tag"],
     defaultTypeName: "Item",
     samples: {
-      Item: [
-        dashboardSampleItem,
-        {
-          ...dashboardSampleItem,
-          "@id": `${SEMANTIC_VIEWS_EXAMPLE_NS}item/me80`,
-          name: "Boss ME-80 Multi-Effects",
-          description: "Gig-ready pedalboard in a box.",
-          tags: [dashboardSampleTag],
-        },
-      ],
+      Item: [dashboardSampleItem, dashboardSampleItemTwo],
       Tag: [dashboardSampleTag],
     },
     typeNameLabelMap: { Item: "Item", Tag: "Tag" },
-  },
-  {
-    id: "product",
-    label: "Product (value renderers)",
-    description: "Scalars with currency and historical date formatters",
-    baseIRI: SEMANTIC_VIEWS_EXAMPLE_NS,
-    schema: valueRenderersStorySchema,
-    primaryFields: valueRenderersPrimaryFields,
-    typeNameToTypeIRI: valueRenderersTypeNameToTypeIRI,
-    typeIRIToTypeName: valueRenderersTypeIRIToTypeName,
-    typeNames: ["Product"],
-    defaultTypeName: "Product",
-    samples: {
-      Product: [sampleProduct as Record<string, unknown>],
-    },
-    typeNameLabelMap: { Product: "Product" },
-  },
-  {
-    id: "relations",
-    label: "Realm / Artifact / Manifestation",
-    description: "Semantic desk relations and nested entity chips",
-    baseIRI: RELATION_NS,
-    schema: relationChipsStorySchema,
-    primaryFields: relationChipsPrimaryFields,
-    typeNameToTypeIRI: relationChipsTypeNameToTypeIRI,
-    typeIRIToTypeName: relationChipsTypeIRIToTypeName,
-    typeNames: ["Manifestation", "Realm", "Artifact"],
-    defaultTypeName: "Manifestation",
-    samples: {
-      Manifestation: [
-        sampleManifestationWithRelations as Record<string, unknown>,
-      ],
-      Realm: [sampleRealm as Record<string, unknown>],
-      Artifact: [sampleArtifact as Record<string, unknown>],
-    },
-    typeNameLabelMap: {
-      Manifestation: "Manifestation",
-      Realm: "Realm",
-      Artifact: "Artifact",
-    },
   },
 ];
 
@@ -183,26 +191,6 @@ export function getStoryDomain(id: StoryDomainId): StoryDomain {
     throw new Error(`Unknown story domain: ${id}`);
   }
   return domain;
-}
-
-/** Resolve gallery preview entities for chips/cards/lists on the welcome dashboard. */
-export function getGalleryEntities(
-  domain: StoryDomain,
-  max = 3,
-): GalleryEntity[] {
-  const order = domain.galleryTypeNames ?? domain.typeNames;
-  return order
-    .map((typeName) => {
-      const data = domain.samples[typeName]?.[0];
-      if (!data) return null;
-      return {
-        typeName,
-        entityIRI: String(data["@id"] ?? ""),
-        data,
-      };
-    })
-    .filter((e): e is GalleryEntity => e != null)
-    .slice(0, max);
 }
 
 /** Flat rows for SemanticTableView previews (label from primaryFields). */
