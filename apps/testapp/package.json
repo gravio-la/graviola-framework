@@ -1,7 +1,7 @@
 {
   "name": "testapp",
   "private": true,
-  "version": "0.0.17",
+  "version": "0.0.20",
   "type": "module",
   "scripts": {
     "download-items": "bun scripts/download-commons-items.ts",
@@ -17,6 +17,7 @@
     "@emotion/styled": "catalog:",
     "@graviola/edb-advanced-components": "workspace:*",
     "@graviola/edb-detail-renderer": "workspace:*",
+    "@graviola/semantic-views": "workspace:*",
     "@graviola/edb-basic-components": "workspace:*",
     "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-data-mapping": "workspace:*",

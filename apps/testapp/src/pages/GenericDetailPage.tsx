@@ -6,7 +6,7 @@ import {
   useCRUDWithQueryClient,
   useTypeIRIFromEntity,
 } from "@graviola/edb-state-hooks";
-import { DetailRenderer } from "@graviola/edb-detail-renderer";
+import { SemanticDetailView } from "@graviola/semantic-views";
 import { bringDefinitionToTop } from "@graviola/json-schema-utils";
 import { useCallback, useMemo } from "react";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
@@ -133,14 +133,12 @@ export function GenericDetailPage() {
             ))}
           </Box>
         ) : typeSchema && data ? (
-          <DetailRenderer
-            schema={typeSchema}
-            data={data}
+          <SemanticDetailView
+            entityIRI={entityIRI}
             typeIRI={classIRI}
             typeName={resolvedTypeName}
-            entityIRI={entityIRI}
-            humanLabel={humanLabel}
-            isLoading={isLoading}
+            defaultData={data}
+            disableLoad
             uiSchema={detailUiSchema}
             config={{
               primaryFields: schemaConfig.primaryFields as Record<

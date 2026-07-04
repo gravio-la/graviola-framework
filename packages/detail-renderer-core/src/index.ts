@@ -59,12 +59,14 @@ export {
   generateDefaultDetailUISchema,
 } from "./uischema/generateDefault";
 export type { GenerateDefaultDetailUISchemaOptions } from "./uischema/generateDefault";
+export type { GenerateDefaultCardUISchemaOptions } from "./uischema/generateViewLayouts";
 export {
   generateDefaultCardUISchema,
   generateDefaultChipUISchema,
   generateDefaultListItemUISchema,
   generateDefaultViewUISchema,
 } from "./uischema/generateViewLayouts";
+export { inferSecondaryFields } from "./uischema/inferSecondaryFields";
 
 // Testers
 export * from "./testers";
@@ -72,6 +74,15 @@ export * from "./testers";
 // Chips
 export { resolveChipRenderer } from "./chips/select";
 export type { ChipResolution } from "./chips/select";
+
+// Card actions
+export { declaredCardActions, selectCardActions } from "./actions/select";
+export type {
+  CardActionEntry,
+  CardActionRendererProps,
+  CardActionsConfig,
+  ResolvedCardAction,
+} from "./types";
 
 // Combinators (for custom renderers)
 export { pickAnyOfBranch, pickOneOfBranch } from "./combinators/pickBranch";

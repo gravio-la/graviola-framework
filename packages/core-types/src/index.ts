@@ -44,6 +44,59 @@ export type PrimaryFieldDeclaration<Key extends string = string> = Partial<
   Record<Key, PrimaryField>
 >;
 
+/** M3 card surface variant. */
+export type CardVariant = "elevated" | "filled" | "outlined";
+
+/** Card layout orientation — vertical (media top) or horizontal (media side). */
+export type CardOrientation = "vertical" | "horizontal";
+
+/** Density / padding scale for cards in grids vs. lists. */
+export type CardSize = "compact" | "standard" | "comfortable";
+
+/** Built-in card action intents; `custom` is dispatched via `onCardAction`. */
+export type CardActionIntent = "show" | "edit" | "custom";
+
+export interface CardActionDef {
+  id: string;
+  label: string;
+  /** Emoji or short label icon hint for storybook / simple cases. */
+  icon?: string;
+  intent: CardActionIntent;
+  /** When true, render as M3 filled button; otherwise tonal/text. */
+  primary?: boolean;
+}
+
+/** How secondary (non-primary) leaf properties are laid out on a card. */
+export type CardSecondaryDisplay = "inline" | "stats";
+
+/**
+ * Per-type card presentation — parallel to {@link PrimaryField} for hero slots.
+ * Configured on `AdbProvider.cardPresentation` or `viewConfig.card.options`.
+ */
+export interface CardPresentation {
+  /** Explicit secondary property names (leaf literals). */
+  secondaryFields?: string[];
+  /** Max secondary fields when inferring from schema (default 3). */
+  secondaryFieldLimit?: number;
+  secondaryDisplay?: CardSecondaryDisplay;
+  actions?: CardActionDef[];
+  variant?: CardVariant;
+  orientation?: CardOrientation;
+  size?: CardSize;
+  /** Reveal secondary fields in-place via expand affordance (not detail modal). */
+  expandable?: boolean;
+  /** CSS aspect-ratio for hero media (default `16 / 9`). */
+  mediaAspectRatio?: string;
+  /** Overlay headline/subhead on hero media with gradient scrim. */
+  mediaOverlay?: boolean;
+  /** Property name for a banner/header image (profile-card pattern). */
+  banner?: string;
+  /** Hide labels on secondary property rows for a cleaner card body. */
+  hidePropertyLabels?: boolean;
+}
+
+export type CardPresentationRegistry = Record<string, CardPresentation>;
+
 export type PrimaryFieldExtractDeclaration<
   T = any,
   Key extends string = string,

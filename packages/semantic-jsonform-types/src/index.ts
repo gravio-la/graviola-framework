@@ -8,6 +8,7 @@ import type {
   NormDataMapping,
   SparqlBuildOptions,
   StringToIRIFn,
+  CardPresentationRegistry,
   TypePresentationRegistry,
 } from "@graviola/edb-core-types";
 import type { JSONLDConfig } from "@graviola/edb-global-types";
@@ -122,6 +123,7 @@ export type GlobalSemanticConfig = {
 
 export type {
   DetailViewConfigOptions,
+  CardViewConfigOptions,
   GenerateDefaultViewUISchemaOptions,
   ViewConfig,
   ViewConfigSet,
@@ -143,6 +145,8 @@ export type GlobalAppConfig<DeclarativeMappingType> = GlobalSemanticConfig & {
   uischemata?: Record<string, any>;
   viewConfig?: import("./viewConfig").ViewConfigSet;
   typePresentation?: TypePresentationRegistry;
+  /** Per-type-name card layout defaults (hero is still {@link PrimaryField}). */
+  cardPresentation?: CardPresentationRegistry;
   /** @deprecated Use `viewConfig.detail.options` */
   detailViewConfig?: import("./viewConfig").DetailViewConfigOptions;
   tableColumnRegistry?: TableColumnRegistry;

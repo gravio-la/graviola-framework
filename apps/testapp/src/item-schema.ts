@@ -210,6 +210,11 @@ export const itemSchemaConfig: SchemaConfig = makeSchemaConfig({
           scope: "#/properties/isAvailable",
           label: "Verfügbar",
         },
+        "#/properties/tags": {
+          type: "Control",
+          scope: "#/properties/tags",
+          options: { containedAs: "card" },
+        },
       },
     },
     Category: {
@@ -264,6 +269,6 @@ export const itemSchemaConfig: SchemaConfig = makeSchemaConfig({
           label: "Related tags",
         },
       },
-    }
+    },
   },
 });

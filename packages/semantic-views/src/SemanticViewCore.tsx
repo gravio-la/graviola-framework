@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import type { JSONSchema7 } from "json-schema";
 import type { JsonSchema, UISchemaElement } from "@jsonforms/core";
+import type { CardPresentation } from "@graviola/edb-core-types";
 import {
   buildDispatch,
   generateDefaultViewUISchema,
@@ -27,6 +28,7 @@ import {
   useExtendedSchema,
 } from "@graviola/edb-state-hooks";
 import type {
+  CardViewConfigOptions,
   DetailViewConfigOptions,
   ViewConfig,
   ViewConfigSet,
@@ -34,6 +36,50 @@ import type {
 
 import type { SemanticViewNoOpsProps } from "./types";
 import { SemanticComponentMap } from "./semanticComponentMap";
+
+const DEFAULT_LINKED_DATA_PROPERTY_NAMES = ["@id", "@type"];
+
+function unique(items: string[]): string[] {
+  return Array.from(new Set(items));
+}
+
+function fieldNameFromPrimaryDeclarationPart(part: unknown): string | null {
+  if (typeof part === "string" && part.length > 0) {
+    return part.split(".")[0] ?? null;
+  }
+  if (
+    part &&
+    typeof part === "object" &&
+    typeof (part as { path?: unknown }).path === "string"
+  ) {
+    const path = (part as { path: string }).path;
+    return path.split(".")[0] ?? null;
+  }
+  return null;
+}
+
+function getHeaderPrimaryFieldNames(primaryDecl: unknown): string[] {
+  if (!primaryDecl || typeof primaryDecl !== "object") return [];
+  return unique(
+    Object.values(primaryDecl as Record<string, unknown>)
+      .map(fieldNameFromPrimaryDeclarationPart)
+      .filter((x): x is string => Boolean(x)),
+  );
+}
+
+function resolveCardPresentation(
+  adbCardPresentation: Record<string, CardPresentation> | undefined,
+  viewConfigSlice: ViewConfig | undefined,
+  typeName: string | undefined,
+): CardPresentation | undefined {
+  const fromRegistry =
+    typeName && adbCardPresentation ? adbCardPresentation[typeName] : undefined;
+  const fromViewConfig = (
+    viewConfigSlice?.options as CardViewConfigOptions | undefined
+  )?.cardPresentation;
+  if (!fromRegistry && !fromViewConfig) return undefined;
+  return { ...fromRegistry, ...fromViewConfig };
+}
 
 function resolveViewConfig(
   viewConfig: ViewConfigSet | undefined,
@@ -135,6 +181,29 @@ export function SemanticViewCore({
   const primaryFields =
     resolvedConfig.primaryFields ?? adb.queryBuildOptions.primaryFields;
 
+  const cardPresentation = useMemo(
+    () =>
+      viewSize === "card"
+        ? resolveCardPresentation(
+            adb.cardPresentation as
+              | Record<string, CardPresentation>
+              | undefined,
+            viewConfigSlice,
+            typeName,
+          )
+        : undefined,
+    [viewSize, adb.cardPresentation, viewConfigSlice, typeName],
+  );
+
+  const headerPrimaryFieldNames = useMemo(() => {
+    if (!typeName || !primaryFields) return [];
+    return getHeaderPrimaryFieldNames(primaryFields[typeName]);
+  }, [primaryFields, typeName]);
+
+  const cardViewOptions = viewConfigSlice?.options as
+    | CardViewConfigOptions
+    | undefined;
+
   const effectiveUISchema = useMemo((): UISchemaElement | undefined => {
     const fromConfig = resolveEffectiveUISchemaRoot(
       resolvedConfig,
@@ -149,6 +218,11 @@ export function SemanticViewCore({
       layoutType:
         viewSize === "detail" ? "TopLevelLayout" : `${viewSize}Layout`,
       rootSchema: schema as JsonSchema,
+      ...resolvedConfig.defaultGenerationOptions,
+      cardPresentation:
+        viewSize === "card"
+          ? (cardPresentation ?? resolvedConfig.cardPresentation)
+          : undefined,
     });
   }, [
     resolvedConfig,
@@ -158,6 +232,7 @@ export function SemanticViewCore({
     schema,
     viewSize,
     primaryFields,
+    cardPresentation,
   ]);
 
   const initialCtx = useMemo(
@@ -180,10 +255,29 @@ export function SemanticViewCore({
       humanLabel,
       isLoading,
       valueRenderers,
+      hideLinkedDataProperties:
+        (resolvedConfig.hideLinkedDataProperties as boolean | undefined) ??
+        viewSize !== "detail",
+      linkedDataPropertyNames: unique([
+        ...DEFAULT_LINKED_DATA_PROPERTY_NAMES,
+        ...((resolvedConfig.linkedDataPropertyNames as string[] | undefined) ??
+          []),
+      ]),
+      hideHeaderPrimaryFields:
+        viewSize === "card" ||
+        viewSize === "detail" ||
+        (resolvedConfig.hideHeaderPrimaryFields as boolean | undefined) ===
+          true,
+      headerPrimaryFieldNames,
+      topLevelLayoutVariant: resolvedConfig.topLevelLayoutVariant,
     }),
     [
       schema,
       resolvedConfig.maxDepth,
+      resolvedConfig.hideLinkedDataProperties,
+      resolvedConfig.linkedDataPropertyNames,
+      resolvedConfig.hideHeaderPrimaryFields,
+      resolvedConfig.topLevelLayoutVariant,
       viewSize,
       typeIRI,
       typeName,
@@ -194,6 +288,7 @@ export function SemanticViewCore({
       humanLabel,
       isLoading,
       valueRenderers,
+      headerPrimaryFieldNames,
     ],
   );
 
@@ -203,19 +298,34 @@ export function SemanticViewCore({
     return run(effectiveUISchema);
   }, [schema, data, registry, initialCtx, effectiveUISchema]);
 
+  const contextValue = useMemo(
+    () => ({
+      registry,
+      rootSchema: schema,
+      rootData: data,
+      config: {
+        ...resolvedConfig,
+        cardPresentation: cardPresentation ?? resolvedConfig.cardPresentation,
+        onCardAction:
+          resolvedConfig.onCardAction ?? cardViewOptions?.onCardAction,
+      },
+      containedEntityComponents: SemanticComponentMap,
+    }),
+    [
+      registry,
+      schema,
+      data,
+      resolvedConfig,
+      cardPresentation,
+      cardViewOptions?.onCardAction,
+    ],
+  );
+
   if (!schema || !body) return null;
 
   return (
     <MotionAdapterProvider adapter={NoopMotionAdapter}>
-      <DetailRendererContext.Provider
-        value={{
-          registry,
-          rootSchema: schema,
-          rootData: data,
-          config: resolvedConfig,
-          containedEntityComponents: SemanticComponentMap,
-        }}
-      >
+      <DetailRendererContext.Provider value={contextValue}>
         {body}
       </DetailRendererContext.Provider>
     </MotionAdapterProvider>

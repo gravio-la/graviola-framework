@@ -1,4 +1,4 @@
-import type { EntityPreview } from "@graviola/edb-core-types";
+import type { CardActionDef, EntityPreview } from "@graviola/edb-core-types";
 import type { SchemaScopeFrame } from "@graviola/json-schema-utils";
 import type { JSONSchema7 } from "json-schema";
 import type { RankedTester, UISchemaElement } from "@jsonforms/core";
@@ -120,6 +120,52 @@ export interface DetailViewConfig {
   alwaysShowPropertyNames?: string[];
   /** Top-level detail layout; default is `"default"`. */
   topLevelLayoutVariant?: DetailTopLevelLayoutVariant;
+  /** Per-type card presentation merged into generated CardLayout options. */
+  cardPresentation?: import("@graviola/edb-core-types").CardPresentation;
+  /** Card action callback for `custom` intents on declared actions. */
+  onCardAction?: (
+    actionId: string,
+    ctx: {
+      entityIRI?: string;
+      typeIRI?: string;
+      typeName?: string;
+      data: unknown;
+    },
+  ) => void;
+  /** Property-driven card actions (parallel to {@link ChipsConfig}). */
+  cardActions?: CardActionsConfig;
+}
+
+export interface CardActionRendererProps {
+  action: CardActionDef;
+  schema: JSONSchema7;
+  data: unknown;
+  entityIRI?: string;
+  /** Invoked for built-in `show` / `edit` intents on declared actions. */
+  onIntent?: (intent: CardActionDef["intent"]) => void;
+}
+
+export interface CardActionEntry {
+  tester: RankedTester;
+  computeAction: (
+    schema: JSONSchema7,
+    data: unknown,
+  ) => CardActionDef | undefined;
+  /** When omitted, {@link DefaultActionButton} is used (MUI package). */
+  renderer?: React.ComponentType<CardActionRendererProps>;
+}
+
+export interface CardActionsConfig {
+  registry?: CardActionEntry[];
+  /** Max actions shown before overflow menu; default 2. */
+  maxVisible?: number;
+}
+
+/** Declared or registry-resolved card action ready for rendering. */
+export interface ResolvedCardAction {
+  def: CardActionDef;
+  /** Registry entry when property-driven; null for declared actions. */
+  entry: CardActionEntry | null;
 }
 
 export interface ChipDefinition {

@@ -2,10 +2,14 @@ import type { RankedTester, UISchemaElement } from "@jsonforms/core";
 import type { JSONSchema7 } from "json-schema";
 import type React from "react";
 
-import type { TypePresentationRegistry } from "@graviola/edb-core-types";
+import type {
+  CardPresentation,
+  TypePresentationRegistry,
+} from "@graviola/edb-core-types";
 import type { ValueRendererEntry } from "@graviola/edb-detail-renderer-core";
 
 export type ViewSize = "chip" | "listItem" | "card" | "detail";
+export type ViewContext = "modal" | "page";
 
 export interface ViewRendererRegistryEntry {
   tester: RankedTester;
@@ -21,6 +25,23 @@ export interface GenerateDefaultViewUISchemaOptions {
   layoutType?: string;
   prefix?: string;
   rootSchema?: JSONSchema7;
+  /** Merged into generated `CardLayout` options when view size is `card`. */
+  cardPresentation?: CardPresentation;
+}
+
+/** Card-specific options on {@link ViewConfig.options} (merged with `cardPresentation` registry). */
+export interface CardViewConfigOptions {
+  cardPresentation?: CardPresentation;
+  /** Fired for `custom` card actions and optional telemetry. */
+  onCardAction?: (
+    actionId: string,
+    ctx: {
+      entityIRI?: string;
+      typeIRI?: string;
+      typeName?: string;
+      data: unknown;
+    },
+  ) => void;
 }
 
 export interface ViewConfig {
@@ -33,7 +54,7 @@ export interface ViewConfig {
   typeNameOverrides?: Record<string, Partial<ViewConfig>>;
   typeIRIOverrides?: Record<string, Partial<ViewConfig>>;
   defaultGenerationOptions?: GenerateDefaultViewUISchemaOptions;
-  options?: Record<string, unknown>;
+  options?: Record<string, unknown> & CardViewConfigOptions;
 }
 
 export interface ViewConfigSet {
