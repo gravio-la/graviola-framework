@@ -1,0 +1,47 @@
+{
+  "name": "@graviola/edb-import-staging",
+  "version": "0.1.0",
+  
+  "description": "StagedChangeSet collector and staging StrategyContext for import review workflows",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "tsc --noEmit",
+    "test": "bun test src",
+    "demo:staging": "bun run src/demo/runStagingDemo.ts"
+  },
+  "dependencies": {
+    "@graviola/data-mapping-hooks": "workspace:*",
+    "@graviola/edb-core-types": "workspace:*",
+    "@graviola/edb-data-mapping": "workspace:*",
+    "@graviola/edb-graph-traversal": "workspace:*",
+    "@graviola/json-schema-utils": "workspace:*",
+    "@rdfjs/types": "catalog:rdf",
+    "jsonld": "^8.3.3",
+    "n3": "^1.23.1"
+  },
+  "devDependencies": {
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*",
+    "@graviola/edb-import-demo-schema": "workspace:*",
+    "@types/json-schema": "catalog:",
+    "tsup": "^8.0.0",
+    "typescript": "5.8.2"
+  },
+  "license": "MIT"
+}

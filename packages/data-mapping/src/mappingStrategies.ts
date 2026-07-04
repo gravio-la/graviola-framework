@@ -218,7 +218,9 @@ export const createEntityWithAuthoritativeLink = async (
   if (!Array.isArray(sourceData))
     throw new Error("Source data is not an array");
 
-  const amount = authorityFields.length + 1;
+  const mainOffset = mainProperty?.offset ?? 0;
+  const authOffsets = authorityFields.map((field) => field.offset ?? 0);
+  const amount = Math.max(mainOffset, ...authOffsets, 0) + 1;
   if (sourceData.length % amount !== 0)
     logger.warn(
       `Source data length ${sourceData.length} is not a multiple of ${amount}`,
@@ -373,16 +375,11 @@ export const createEntityWithAuthoritativeLink = async (
           );
         }
       }
-      if (!targetData) {
-        logger.log(
-          `no data found for ${secondaryIRI}, will create a new entity of type ${typeIRI} with label ${sourceDataLabel}`,
+      if (!targetData?.["@id"] || !targetData?.["@type"]) {
+        logger.warn(
+          `Skipping onNewDocument: no mappable entity for ${secondaryIRI ?? sourceDataLabel}`,
         );
-        targetData = {
-          "@id": newIRI(typeIRI || ""),
-          "@type": typeIRI,
-          [labelField]: sourceDataLabel,
-          __draft: true,
-        };
+        continue;
       }
 
       const newEntity = onNewDocument
@@ -390,10 +387,8 @@ export const createEntityWithAuthoritativeLink = async (
         : targetData;
       if (newEntity) newDataElements.push(newEntity);
     }
-
-    if (single) return newDataElements[0];
   }
-  return newDataElements;
+  return single ? (newDataElements[0] ?? null) : newDataElements;
 };
 
 type CreateEntityWithReificationFromString = Strategy & {

@@ -1,0 +1,46 @@
+{
+  "name": "@graviola/edb-import-demo-schema",
+  "version": "0.1.0",
+  
+  "description": "Reduced exhibition schema with authority mappings and offline fixtures for import demos",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "tsc --noEmit",
+    "test": "bun test src",
+    "demo:map-person": "bun run src/demo/runMapPersonDemo.ts"
+  },
+  "dependencies": {
+    "@graviola/data-mapping-hooks": "workspace:*",
+    "@graviola/edb-authorities": "workspace:*",
+    "@graviola/edb-core-types": "workspace:*",
+    "@graviola/edb-data-mapping": "workspace:*",
+    "@graviola/edb-state-hooks": "workspace:*",
+    "@graviola/edb-wikidata-utils": "workspace:*",
+    "@graviola/json-schema-utils": "workspace:*",
+    "@rdfjs/namespace": "catalog:rdf"
+  },
+  "devDependencies": {
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*",
+    "@types/json-schema": "catalog:",
+    "tsup": "^8.0.0",
+    "typescript": "5.8.2"
+  },
+  "license": "MIT"
+}

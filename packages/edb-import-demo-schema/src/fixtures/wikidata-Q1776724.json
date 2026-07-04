@@ -1,0 +1,3601 @@
+{
+  "pageid": 1708673,
+  "ns": 0,
+  "title": "Q1776724",
+  "lastrevid": 2505119149,
+  "modified": "2026-06-12T15:22:53Z",
+  "type": "item",
+  "id": "Q1776724",
+  "labels": {
+    "de": {
+      "language": "de",
+      "value": "Theaterleiter"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "teaterchef"
+    },
+    "sr": {
+      "language": "sr",
+      "value": "управник позоришта"
+    },
+    "sr-ec": {
+      "language": "sr-ec",
+      "value": "управник позоришта"
+    },
+    "sr-el": {
+      "language": "sr-el",
+      "value": "upravnik pozorišta"
+    },
+    "eo": {
+      "language": "eo",
+      "value": "teatrestro"
+    },
+    "da": {
+      "language": "da",
+      "value": "teaterchef"
+    },
+    "nds": {
+      "language": "nds",
+      "value": "Theaterbaas"
+    },
+    "en": {
+      "language": "en",
+      "value": "theatre manager"
+    },
+    "hu": {
+      "language": "hu",
+      "value": "színházigazgató"
+    },
+    "es": {
+      "language": "es",
+      "value": "mánager de teatro"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "divadelní ředitel"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "directeur ou directrice de théâtre"
+    },
+    "ru": {
+      "language": "ru",
+      "value": "директор театра"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "teatterinjohtaja"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "theatermanager"
+    },
+    "ar": {
+      "language": "ar",
+      "value": "مدير مسرح"
+    },
+    "ca": {
+      "language": "ca",
+      "value": "mànager de teatre"
+    },
+    "ka": {
+      "language": "ka",
+      "value": "თეატრის დირექტორი"
+    },
+    "de-at": {
+      "language": "de-at",
+      "value": "Theaterleiter"
+    },
+    "de-ch": {
+      "language": "de-ch",
+      "value": "Theaterleiter"
+    },
+    "pl": {
+      "language": "pl",
+      "value": "manager teatralny"
+    },
+    "he": {
+      "language": "he",
+      "value": "מנהל תיאטרון"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "директор театру"
+    },
+    "tt": {
+      "language": "tt",
+      "value": "театр директоры"
+    },
+    "ast": {
+      "language": "ast",
+      "value": "mánager de teatru"
+    },
+    "cy": {
+      "language": "cy",
+      "value": "rheolwr theatr"
+    },
+    "nb": {
+      "language": "nb",
+      "value": "teatersjef"
+    },
+    "pt-br": {
+      "language": "pt-br",
+      "value": "gerente de teatro"
+    },
+    "be": {
+      "language": "be",
+      "value": "дырэктар тэатра"
+    },
+    "br": {
+      "language": "br",
+      "value": "rener c'hoariva"
+    },
+    "be-tarask": {
+      "language": "be-tarask",
+      "value": "дырэктар тэатру"
+    },
+    "hy": {
+      "language": "hy",
+      "value": "թատրոնի տնօրեն"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "劇場支配人"
+    },
+    "el": {
+      "language": "el",
+      "value": "διευθυντής θεάτρου"
+    },
+    "se": {
+      "language": "se",
+      "value": "teáhterhoavda"
+    },
+    "et": {
+      "language": "et",
+      "value": "teatrijuht"
+    },
+    "crh": {
+      "language": "crh",
+      "value": "teatr idarecisi"
+    },
+    "crh-latn": {
+      "language": "crh-latn",
+      "value": "teatr idarecisi"
+    },
+    "ms-arab": {
+      "language": "ms-arab",
+      "value": "ڤڠوروس تياتر"
+    },
+    "ms": {
+      "language": "ms",
+      "value": "pengurus teater"
+    },
+    "vec": {
+      "language": "vec",
+      "value": "diretore de teatro"
+    },
+    "gv": {
+      "language": "gv",
+      "value": "reireyder theater"
+    },
+    "pt": {
+      "language": "pt",
+      "value": "gerente de teatro"
+    },
+    "af": {
+      "language": "af",
+      "value": "teaterbestuurder"
+    },
+    "ga": {
+      "language": "ga",
+      "value": "bainisteoir amharclainne"
+    },
+    "lv": {
+      "language": "lv",
+      "value": "teātra direktors"
+    },
+    "sl": {
+      "language": "sl",
+      "value": "upravnik gledališča"
+    },
+    "mt": {
+      "language": "mt",
+      "value": "direttur tat-teatru"
+    },
+    "vi": {
+      "language": "vi",
+      "value": "quản lý rạp hát"
+    },
+    "gl": {
+      "language": "gl",
+      "value": "director de teatro"
+    },
+    "ta": {
+      "language": "ta",
+      "value": "தியேட்டர் மேலாளர்"
+    },
+    "lt": {
+      "language": "lt",
+      "value": "teatro vadovas"
+    },
+    "zh-tw": {
+      "language": "zh-tw",
+      "value": "劇院經理"
+    },
+    "zh-hant": {
+      "language": "zh-hant",
+      "value": "劇院經理"
+    },
+    "az": {
+      "language": "az",
+      "value": "teatr direktoru"
+    },
+    "it": {
+      "language": "it",
+      "value": "direttore teatrale"
+    },
+    "lb": {
+      "language": "lb",
+      "value": "Theaterdirekter"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "director de teatru"
+    },
+    "mul": {
+      "language": "mul",
+      "value": "theatre manager"
+    }
+  },
+  "descriptions": {
+    "de": {
+      "language": "de",
+      "value": "allgemeine Bezeichnung für einen verantwortlichen Leiter eines Theaters oder eines Kinos"
+    },
+    "en": {
+      "language": "en",
+      "value": "person who manages a theatre"
+    },
+    "hu": {
+      "language": "hu",
+      "value": "színház vagy színtársulat vezetője"
+    },
+    "cs": {
+      "language": "cs",
+      "value": "povolání"
+    },
+    "fi": {
+      "language": "fi",
+      "value": "henkilö, joka johtaa teatteria"
+    },
+    "ka": {
+      "language": "ka",
+      "value": "პიროვნება რომელიც ხელმძღვანელობს თეატრს"
+    },
+    "de-at": {
+      "language": "de-at",
+      "value": "allgemeine Bezeichnung für einen verantwortlichen Leiter eines Theaters oder eines Kinos"
+    },
+    "de-ch": {
+      "language": "de-ch",
+      "value": "allgemeine Bezeichnung für einen verantwortlichen Leiter eines Theaters oder eines Kinos"
+    },
+    "fr": {
+      "language": "fr",
+      "value": "personne dirigeant un théâtre"
+    },
+    "es": {
+      "language": "es",
+      "value": "persona que dirige un teatro"
+    },
+    "nl": {
+      "language": "nl",
+      "value": "beroep"
+    },
+    "sv": {
+      "language": "sv",
+      "value": "yrke från SBL"
+    },
+    "nb": {
+      "language": "nb",
+      "value": "en som bestyrer et teater"
+    },
+    "da": {
+      "language": "da",
+      "value": "leder af et teater"
+    },
+    "be-tarask": {
+      "language": "be-tarask",
+      "value": "асоба, якая кіруе тэатрам"
+    },
+    "ja": {
+      "language": "ja",
+      "value": "劇場を運営する人"
+    },
+    "mt": {
+      "language": "mt",
+      "value": "persuna li tidderiġi teatru"
+    },
+    "uk": {
+      "language": "uk",
+      "value": "загальник для менеджера, відповідального за театр або кінотеатр"
+    },
+    "ro": {
+      "language": "ro",
+      "value": "conducător de teatru"
+    }
+  },
+  "aliases": {
+    "sv": [
+      {
+        "language": "sv",
+        "value": "teaterledare"
+      },
+      {
+        "language": "sv",
+        "value": "teaterdirektör"
+      }
+    ],
+    "hu": [
+      {
+        "language": "hu",
+        "value": "színtársulat vezetője"
+      },
+      {
+        "language": "hu",
+        "value": "színtársulat-vezető"
+      },
+      {
+        "language": "hu",
+        "value": "színházvezető"
+      },
+      {
+        "language": "hu",
+        "value": "színigazgató"
+      },
+      {
+        "language": "hu",
+        "value": "színidirektor"
+      }
+    ],
+    "en": [
+      {
+        "language": "en",
+        "value": "theater manager"
+      },
+      {
+        "language": "en",
+        "value": "theatrical manager"
+      },
+      {
+        "language": "en",
+        "value": "theater director"
+      },
+      {
+        "language": "en",
+        "value": "theatre director"
+      }
+    ],
+    "de": [
+      {
+        "language": "de",
+        "value": "Theaterleiterin"
+      },
+      {
+        "language": "de",
+        "value": "Theaterdirektor"
+      },
+      {
+        "language": "de",
+        "value": "Theaterdirektorin"
+      }
+    ],
+    "fi": [
+      {
+        "language": "fi",
+        "value": "teatterin johtaja"
+      }
+    ],
+    "de-at": [
+      {
+        "language": "de-at",
+        "value": "Theaterleiterin"
+      }
+    ],
+    "de-ch": [
+      {
+        "language": "de-ch",
+        "value": "Theaterleiterin"
+      }
+    ],
+    "he": [
+      {
+        "language": "he",
+        "value": "מנהלת תיאטרון"
+      },
+      {
+        "language": "he",
+        "value": "במאי תיאטרון"
+      },
+      {
+        "language": "he",
+        "value": "במאית תיאטרון"
+      }
+    ],
+    "be-tarask": [
+      {
+        "language": "be-tarask",
+        "value": "кіраўнік тэатру"
+      },
+      {
+        "language": "be-tarask",
+        "value": "дырэктарка тэатру"
+      },
+      {
+        "language": "be-tarask",
+        "value": "кіраўніца тэатру"
+      }
+    ],
+    "be": [
+      {
+        "language": "be",
+        "value": "дырэктарка тэатра"
+      }
+    ],
+    "ja": [
+      {
+        "language": "ja",
+        "value": "シアター・マネージャー"
+      }
+    ],
+    "cs": [
+      {
+        "language": "cs",
+        "value": "ředitel divadla"
+      }
+    ],
+    "el": [
+      {
+        "language": "el",
+        "value": "θιασάρχης"
+      }
+    ],
+    "fr": [
+      {
+        "language": "fr",
+        "value": "manager de théâtre"
+      },
+      {
+        "language": "fr",
+        "value": "directrice de théâtre"
+      },
+      {
+        "language": "fr",
+        "value": "directeur de théâtre"
+      }
+    ],
+    "lv": [
+      {
+        "language": "lv",
+        "value": "teātra vadītājs"
+      }
+    ],
+    "sl": [
+      {
+        "language": "sl",
+        "value": "upravnica gledališča"
+      },
+      {
+        "language": "sl",
+        "value": "gledališki menedžer"
+      },
+      {
+        "language": "sl",
+        "value": "gledališka menedžerka"
+      },
+      {
+        "language": "sl",
+        "value": "ravnatelj gledališča"
+      },
+      {
+        "language": "sl",
+        "value": "ravnateljica gledališča"
+      },
+      {
+        "language": "sl",
+        "value": "direktor gledališča"
+      },
+      {
+        "language": "sl",
+        "value": "direktorica gledališča"
+      }
+    ],
+    "mt": [
+      {
+        "language": "mt",
+        "value": "maniġer tat-teatru"
+      }
+    ],
+    "lt": [
+      {
+        "language": "lt",
+        "value": "teatro vadovė"
+      }
+    ],
+    "uk": [
+      {
+        "language": "uk",
+        "value": "театральний директор"
+      },
+      {
+        "language": "uk",
+        "value": "театральний керівник"
+      }
+    ],
+    "nb": [
+      {
+        "language": "nb",
+        "value": "teaterdirektør"
+      }
+    ],
+    "ast": [
+      {
+        "language": "ast",
+        "value": "direutor d'un teatru"
+      }
+    ],
+    "ca": [
+      {
+        "language": "ca",
+        "value": "director de teatre"
+      }
+    ],
+    "da": [
+      {
+        "language": "da",
+        "value": "teaterdirektør"
+      }
+    ],
+    "es": [
+      {
+        "language": "es",
+        "value": "director de un teatro"
+      }
+    ],
+    "nl": [
+      {
+        "language": "nl",
+        "value": "theaterdirecteur"
+      }
+    ],
+    "pl": [
+      {
+        "language": "pl",
+        "value": "dyrektor teatru"
+      }
+    ],
+    "gl": [
+      {
+        "language": "gl",
+        "value": "directora de teatro"
+      }
+    ],
+    "it": [
+      {
+        "language": "it",
+        "value": "direttore di teatro"
+      }
+    ],
+    "ro": [
+      {
+        "language": "ro",
+        "value": "directoare de teatru"
+      }
+    ],
+    "lb": [
+      {
+        "language": "lb",
+        "value": "Theaterdirektesch"
+      }
+    ]
+  },
+  "claims": {
+    "P31": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "4636e171d4132da3a4aeeeecd2f9fab5d7f996fd",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 28640,
+              "id": "Q28640"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "q1776724$c4e5c6f8-4910-e9b1-4735-9d681670631c",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "22921a3d81e97a69bc1b06726862944caa1a093d",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 4164871,
+              "id": "Q4164871"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1776724$beaceee4-44ba-710e-4637-5b8ed852116d",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "e724ed4beb689122a6d56380868355aeef55714f",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 15839299,
+              "id": "Q15839299"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1776724$d496c472-4295-c420-568d-183d285f18ca",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P31",
+          "hash": "864f4f6124c60ed97c50d36b5a050bccc123e775",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 12737077,
+              "id": "Q12737077"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1776724$534B2080-12CB-4491-97A5-E3BEDEEB0E8B",
+        "rank": "normal"
+      }
+    ],
+    "P279": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P279",
+          "hash": "46d92e928f5e4602454fbf6005bb8f23afdc529e",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 108290315,
+              "id": "Q108290315"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1776724$5a04eb26-4269-9ce9-4222-fa9189fbb059",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P279",
+          "hash": "b30994a77844006f97a2e21b42e117ab68df247d",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 1162163,
+              "id": "Q1162163"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1776724$FC4AFF9D-F26E-4E0C-A097-BEE762D14AA7",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P279",
+          "hash": "774ca6658543596d12d5b6915c8e6a9f09ee1ea7",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 47492700,
+              "id": "Q47492700"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1776724$b9d4aecc-45c7-b983-7c9b-bd93f91db792",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "5ca112c282a65f2993e6e46c7f07ada05c000bbd",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "019a50b7de741e0068bde41c9d9955b22a5de47b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 36578,
+                      "id": "Q36578"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P227": [
+                {
+                  "snaktype": "value",
+                  "property": "P227",
+                  "hash": "8a72444d64671eacc4fe720a3a10be34ba690b50",
+                  "datavalue": {
+                    "value": "4398844-1",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P407": [
+                {
+                  "snaktype": "value",
+                  "property": "P407",
+                  "hash": "46bfd327b830f66f7061ea92d1be430c135fa91f",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 188,
+                      "id": "Q188"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "c2ae7fe1a2cac3e3aa864f4fb37b60c946a863c2",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2023-12-24T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P227",
+              "P407",
+              "P813"
+            ]
+          },
+          {
+            "hash": "fb8a7d643afd215f392b68b9d287ed0cfccecdb6",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "019a50b7de741e0068bde41c9d9955b22a5de47b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 36578,
+                      "id": "Q36578"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P227": [
+                {
+                  "snaktype": "value",
+                  "property": "P227",
+                  "hash": "059fd8aa0514c8fa01962201e4eef6feab6a7483",
+                  "datavalue": {
+                    "value": "4501736-0",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P407": [
+                {
+                  "snaktype": "value",
+                  "property": "P407",
+                  "hash": "46bfd327b830f66f7061ea92d1be430c135fa91f",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 188,
+                      "id": "Q188"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "c2ae7fe1a2cac3e3aa864f4fb37b60c946a863c2",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2023-12-24T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P227",
+              "P407",
+              "P813"
+            ]
+          }
+        ]
+      }
+    ],
+    "P910": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P910",
+          "hash": "d0c47d650719b7033c69daee6afbff1e3c2bfb33",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 9139780,
+              "id": "Q9139780"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1776724$8dfac293-4e99-d512-4d49-651ec09f2658",
+        "rank": "normal"
+      }
+    ],
+    "P952": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P952",
+          "hash": "35255f62600fb4a10f464720c9a2cefcfcb564f8",
+          "datavalue": {
+            "value": "1229",
+            "type": "string"
+          },
+          "datatype": "string"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P1480": [
+            {
+              "snaktype": "value",
+              "property": "P1480",
+              "hash": "29e1271e1e0c7e59c9eb8d55f5f8d1b82d4df766",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 28831311,
+                  "id": "Q28831311"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P1480"
+        ],
+        "id": "Q1776724$fa1d8722-4d17-b0e0-3ada-bcecb2e3cff0",
+        "rank": "deprecated"
+      }
+    ],
+    "P1889": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P1889",
+          "hash": "81b350d5e6c65b2a7a7f96303e97a40e7b368429",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 19375711,
+              "id": "Q19375711"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1776724$03437859-46bc-4b83-af4e-064b4c001f95",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P1889",
+          "hash": "574768cb7e14a864133ea6b22c82e1fdeacef6de",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 3387717,
+              "id": "Q3387717"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1776724$4EDD75D3-5BAA-4BB1-B41C-A66ED3B50432",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "2ffb13d80c4a85b188061b0848f5b7c3b0c8dda1",
+            "snaks": {
+              "P3452": [
+                {
+                  "snaktype": "value",
+                  "property": "P3452",
+                  "hash": "5fe9659d0b16b0a3e154a1ce8effd244566568e0",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 3387717,
+                      "id": "Q3387717"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P3452"
+            ]
+          }
+        ]
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P1889",
+          "hash": "78c5bbc690632bd64c5848467c297143d8967daa",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 1320883,
+              "id": "Q1320883"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1776724$6260a327-49db-e860-931b-dcd3b354f629",
+        "rank": "normal"
+      }
+    ],
+    "P4801": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P4801",
+          "hash": "ead0a1887157eea1a174804438a436a02d05b74e",
+          "datavalue": {
+            "value": "relators/stm",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "id": "Q1776724$A5FC7E4B-2577-4881-968A-3B6A707E2DCD",
+        "rank": "normal"
+      }
+    ],
+    "P425": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P425",
+          "hash": "038688c158605cb2b529f04c11cf19d0bdc29ca3",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 120280116,
+              "id": "Q120280116"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1776724$A84B6251-E112-4381-898D-56804588CA2B",
+        "rank": "normal"
+      }
+    ],
+    "P1417": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P1417",
+          "hash": "5f8b80bc39fc6a419bfe3c2dd543df8149445570",
+          "datavalue": {
+            "value": "art/stage-manager-theatre",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P1810": [
+            {
+              "snaktype": "value",
+              "property": "P1810",
+              "hash": "ba00c700c61288c236f1d5e0f3612e2510d09f0f",
+              "datavalue": {
+                "value": "stage manager",
+                "type": "string"
+              },
+              "datatype": "string"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P1810"
+        ],
+        "id": "Q1776724$A4208F96-D72C-4850-ADD9-C0A10E8B5F63",
+        "rank": "normal"
+      }
+    ],
+    "P7033": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P7033",
+          "hash": "bb7405f769648c1f39a21197244f242c325d22bf",
+          "datavalue": {
+            "value": "scot/8180",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "id": "Q1776724$B6C563BB-A1FD-4964-9324-1A0AB26D7EE2",
+        "rank": "normal"
+      }
+    ],
+    "P460": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P460",
+          "hash": "6c7158c846bdd27ad0e23675276934264724795c",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 60687737,
+              "id": "Q60687737"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1776724$0a102aad-4999-344d-5d17-742cf149662d",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P460",
+          "hash": "aa6decd6d241e0c3d27fa45ea52eda1b2704d056",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 39020112,
+              "id": "Q39020112"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1776724$9E48D347-8AB6-4DF9-AE49-3F06092259F7",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P460",
+          "hash": "266ac49d4a941a71cdcca308f5e3c1dee9d0b088",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 17092930,
+              "id": "Q17092930"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1776724$0B51A4A2-80A5-48AE-9F85-3FCCD0011961",
+        "rank": "normal"
+      }
+    ],
+    "P646": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P646",
+          "hash": "f6d0a113f7189ba5f7366c1174a22be274187a9f",
+          "datavalue": {
+            "value": "/m/062sg0_",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "id": "Q1776724$B9F33DF3-C21C-4FAE-A5BB-CE211CE31191",
+        "rank": "normal"
+      }
+    ],
+    "P2347": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2347",
+          "hash": "d9227e8378a4f5eb643bb7477ddbc6f8628cd4b5",
+          "datavalue": {
+            "value": "4935",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P14457": [
+            {
+              "snaktype": "value",
+              "property": "P14457",
+              "hash": "c38f9c2744aa12c5e0df3494d4e719489fe581dd",
+              "datavalue": {
+                "value": {
+                  "text": "theatre managers",
+                  "language": "en"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            {
+              "snaktype": "value",
+              "property": "P14457",
+              "hash": "93d488a1da8fa065f2bde807683637de05acb02c",
+              "datavalue": {
+                "value": {
+                  "text": "teatterinjohtajat",
+                  "language": "fi"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            {
+              "snaktype": "value",
+              "property": "P14457",
+              "hash": "25566790ea2e8fdcddf53710c43c44f368cdab3e",
+              "datavalue": {
+                "value": {
+                  "text": "teáhterjođiheaddjit",
+                  "language": "se"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            {
+              "snaktype": "value",
+              "property": "P14457",
+              "hash": "6c33b498a8629c5ac0ca8eeda57852dce2875058",
+              "datavalue": {
+                "value": {
+                  "text": "teaterchefer",
+                  "language": "sv"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            }
+          ],
+          "P14458": [
+            {
+              "snaktype": "value",
+              "property": "P14458",
+              "hash": "76ca3acc97f9f48aa752d3ff59ec44dfebd424d7",
+              "datavalue": {
+                "value": {
+                  "text": "teaterdirektörer",
+                  "language": "sv"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            {
+              "snaktype": "value",
+              "property": "P14458",
+              "hash": "82284a2ccc51c78ec13c8057d04391b94f3a79c9",
+              "datavalue": {
+                "value": {
+                  "text": "theater managers",
+                  "language": "en"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P14457",
+          "P14458"
+        ],
+        "id": "Q1776724$B31A9B9C-BA29-421F-AF38-9B0229297F27",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "e5fe28150ece4f5cad8ddd10a83cb85e350db185",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "7133f11674741f52cadaae6029068fad9cbb52e3",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 89345680,
+                      "id": "Q89345680"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "9b7001794325f108a52dd793e905d11557d0ae63",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2021-11-29T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P813"
+            ]
+          }
+        ]
+      }
+    ],
+    "P9466": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P9466",
+          "hash": "ad6a0a03402ddfeb82facf88600326719bc2f785",
+          "datavalue": {
+            "value": "teaterchef",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "id": "Q1776724$05CDFF8F-9FF5-4673-BB72-B59A6FAEE2E8",
+        "rank": "normal"
+      }
+    ],
+    "P691": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P691",
+          "hash": "68972657db8cff334ade93731a79f5e6cd1ac41d",
+          "datavalue": {
+            "value": "ph380386",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P1810": [
+            {
+              "snaktype": "value",
+              "property": "P1810",
+              "hash": "8cf0a87831a049c7205cb365838be97656dce31e",
+              "datavalue": {
+                "value": "divadelní ředitelé",
+                "type": "string"
+              },
+              "datatype": "string"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P1810"
+        ],
+        "id": "Q1776724$E693C555-7F49-4893-9F41-DDD436FA6E93",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P691",
+          "hash": "88230b3712e876206239d60a512070684b759997",
+          "datavalue": {
+            "value": "ph913721",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P1810": [
+            {
+              "snaktype": "value",
+              "property": "P1810",
+              "hash": "7682b2b77024727362e9cf02f37441e2ad6f67c9",
+              "datavalue": {
+                "value": "divadelní ředitelky",
+                "type": "string"
+              },
+              "datatype": "string"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P1810"
+        ],
+        "id": "Q1776724$4A934D73-22E2-462D-9C9F-4E072C426F1D",
+        "rank": "normal"
+      }
+    ],
+    "P373": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P373",
+          "hash": "d1997abff18724088da717a6919f24fb2512ac07",
+          "datavalue": {
+            "value": "Theatrical managers",
+            "type": "string"
+          },
+          "datatype": "string"
+        },
+        "type": "statement",
+        "id": "Q1776724$27539c56-44f4-c61a-c1ef-a0e616e15f4e",
+        "rank": "normal"
+      }
+    ],
+    "P2469": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2469",
+          "hash": "df6b6570059efd3a661cbac4211055f6ffa7429a",
+          "datavalue": {
+            "value": "20w6",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "id": "Q1776724$7ECA8C1F-120B-4902-A5BC-7076DC522769",
+        "rank": "normal"
+      }
+    ],
+    "P3417": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P3417",
+          "hash": "7522de19c88eb7f8b6feed0d63d6a6e338e8b4dd",
+          "datavalue": {
+            "value": "Theater-Director",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "id": "Q1776724$E6DDA1DD-0933-43AA-A474-9E2DC55FF530",
+        "rank": "normal"
+      }
+    ],
+    "P8283": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P8283",
+          "hash": "d59cbb7b3bccc148b929a44efa0688311f0d17d8",
+          "datavalue": {
+            "value": "1431",
+            "type": "string"
+          },
+          "datatype": "string"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P4390": [
+            {
+              "snaktype": "value",
+              "property": "P4390",
+              "hash": "cf2e72f259de6985120c9cce1364b7bc8c87f8d9",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 39894595,
+                  "id": "Q39894595"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            }
+          ],
+          "P4900": [
+            {
+              "snaktype": "value",
+              "property": "P4900",
+              "hash": "8ed7f06487d8fd78e2700f31e28bab48cfaa0e04",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 108290315,
+                  "id": "Q108290315"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P4390",
+          "P4900"
+        ],
+        "id": "Q1776724$69d4fb7c-49e9-df95-02ef-11ed50513423",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "1415b8c3673c7c9fe793f617c382cc50e129e5aa",
+            "snaks": {
+              "P4652": [
+                {
+                  "snaktype": "value",
+                  "property": "P4652",
+                  "hash": "229154b6e6f5abffff01204a10bfdeb8adde9cba",
+                  "datavalue": {
+                    "value": "3b6bea7d-36f4-44fb-ac73-d1cc8a198dcb",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P4652"
+            ]
+          }
+        ]
+      }
+    ],
+    "P9223": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P9223",
+          "hash": "0b3e6ca2cf3c45fa46b055b1ce743a1728e31838",
+          "datavalue": {
+            "value": "c9eb2fc3-f846-4c2e-870e-beb8bdfea77c",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "id": "Q1776724$2E728DB1-6285-44C2-BFF2-8A650DE30EDE",
+        "rank": "normal"
+      }
+    ],
+    "P3321": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P3321",
+          "hash": "818cfa0879386df092fa1a90d2c3cab0f2fcf22e",
+          "datavalue": {
+            "value": {
+              "text": "Theaterleiter",
+              "language": "de"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$1ee2cd4c-4148-8b0d-dc53-6f4ebbf8241d",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P3321",
+          "hash": "f20c4567a6a8980cb5194aec0d3601550b49e765",
+          "datavalue": {
+            "value": {
+              "text": "upravnik gledališča",
+              "language": "sl"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$c113f28f-4f99-fafd-9f1d-f0b6a030d918",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P3321",
+          "hash": "a22b05138180f5d9602927696604c08dd3888d78",
+          "datavalue": {
+            "value": {
+              "text": "teatro vadovas",
+              "language": "lt"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$0c230c00-41c7-bae0-6b91-584fc6029cd5",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P3321",
+          "hash": "5962b3825dd73a4f31e71a9cc8c9cfbdda15fcf6",
+          "datavalue": {
+            "value": {
+              "text": "directeur de théâtre",
+              "language": "fr"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$748A53D8-0597-41B1-8343-194731A9946D",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P3321",
+          "hash": "4a5ff7701502e2691449099666bea2bec65e4853",
+          "datavalue": {
+            "value": {
+              "text": "Theaterdirektor",
+              "language": "de"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$22A3D0F6-0EA2-43D3-99BD-EABB4B22BC7E",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "5ca112c282a65f2993e6e46c7f07ada05c000bbd",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "019a50b7de741e0068bde41c9d9955b22a5de47b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 36578,
+                      "id": "Q36578"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P227": [
+                {
+                  "snaktype": "value",
+                  "property": "P227",
+                  "hash": "8a72444d64671eacc4fe720a3a10be34ba690b50",
+                  "datavalue": {
+                    "value": "4398844-1",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P407": [
+                {
+                  "snaktype": "value",
+                  "property": "P407",
+                  "hash": "46bfd327b830f66f7061ea92d1be430c135fa91f",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 188,
+                      "id": "Q188"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "c2ae7fe1a2cac3e3aa864f4fb37b60c946a863c2",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2023-12-24T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P227",
+              "P407",
+              "P813"
+            ]
+          }
+        ]
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P3321",
+          "hash": "7c92b4bf91d8634bff9458c66658d8a5c4605656",
+          "datavalue": {
+            "value": {
+              "text": "direktor gledališča",
+              "language": "sl"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$49DC42E3-3D0B-4BCD-9996-BABB505E0D04",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P3321",
+          "hash": "29396043d771aa2fd9bbd1acef5572509f248026",
+          "datavalue": {
+            "value": {
+              "text": "Theaterdirekter",
+              "language": "lb"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$59DFDF20-F3C4-4A9A-8011-E92EF72CF675",
+        "rank": "normal"
+      }
+    ],
+    "P244": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P244",
+          "hash": "d30988052c97a004bd4c5a829390dba72c6a9d25",
+          "datavalue": {
+            "value": "sh85134608",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P1810": [
+            {
+              "snaktype": "value",
+              "property": "P1810",
+              "hash": "95664782a9fb7f0034b0bb01283826f33cc93fe0",
+              "datavalue": {
+                "value": "theatrical managers",
+                "type": "string"
+              },
+              "datatype": "string"
+            }
+          ],
+          "P4970": [
+            {
+              "snaktype": "value",
+              "property": "P4970",
+              "hash": "77b2646314863ee4699ff5255e2ee43160b980d2",
+              "datavalue": {
+                "value": "managers",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            {
+              "snaktype": "value",
+              "property": "P4970",
+              "hash": "298b47d1c36341bb5f58c0de5c3468962b020d4f",
+              "datavalue": {
+                "value": "theater managers",
+                "type": "string"
+              },
+              "datatype": "string"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P1810",
+          "P4970"
+        ],
+        "id": "Q1776724$5e3ba50c-4abe-84c9-4991-dfae89e8892c",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P244",
+          "hash": "98ebc5c064826aeb7abca72897a9b9c6b6d35cd7",
+          "datavalue": {
+            "value": "sh93009119",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P1810": [
+            {
+              "snaktype": "value",
+              "property": "P1810",
+              "hash": "233c8d45d5539df8faabf7020b46dc5c1fa595d8",
+              "datavalue": {
+                "value": "women theatrical managers",
+                "type": "string"
+              },
+              "datatype": "string"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P1810"
+        ],
+        "id": "Q1776724$f8b274a7-4dbc-2b0a-f955-e4b691d2aca5",
+        "rank": "normal"
+      }
+    ],
+    "P2163": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2163",
+          "hash": "8b7365fa0b0547665e7d089b1f5c02b0ab3b161b",
+          "datavalue": {
+            "value": "1149423",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P1810": [
+            {
+              "snaktype": "value",
+              "property": "P1810",
+              "hash": "95664782a9fb7f0034b0bb01283826f33cc93fe0",
+              "datavalue": {
+                "value": "theatrical managers",
+                "type": "string"
+              },
+              "datatype": "string"
+            }
+          ],
+          "P4970": [
+            {
+              "snaktype": "value",
+              "property": "P4970",
+              "hash": "77b2646314863ee4699ff5255e2ee43160b980d2",
+              "datavalue": {
+                "value": "managers",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            {
+              "snaktype": "value",
+              "property": "P4970",
+              "hash": "298b47d1c36341bb5f58c0de5c3468962b020d4f",
+              "datavalue": {
+                "value": "theater managers",
+                "type": "string"
+              },
+              "datatype": "string"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P1810",
+          "P4970"
+        ],
+        "id": "Q1776724$ce7e39b4-45e1-61d4-d8b6-9c8bf73c0ac2",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2163",
+          "hash": "dafbfb4b39e58926399d3234a9b0096467545d21",
+          "datavalue": {
+            "value": "1178629",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P1810": [
+            {
+              "snaktype": "value",
+              "property": "P1810",
+              "hash": "233c8d45d5539df8faabf7020b46dc5c1fa595d8",
+              "datavalue": {
+                "value": "women theatrical managers",
+                "type": "string"
+              },
+              "datatype": "string"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P1810"
+        ],
+        "id": "Q1776724$f329880e-404e-5914-967a-7cc2bf409ead",
+        "rank": "normal"
+      }
+    ],
+    "P227": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P227",
+          "hash": "b98a63728ec13ce39262d0d5bfe4efd8e6f97d1a",
+          "datavalue": {
+            "value": "4185044-0",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P1810": [
+            {
+              "snaktype": "value",
+              "property": "P1810",
+              "hash": "6e80f72db8546ef9f20e52f645bd145e3eb35e8f",
+              "datavalue": {
+                "value": "Theaterintendant",
+                "type": "string"
+              },
+              "datatype": "string"
+            }
+          ],
+          "P4970": [
+            {
+              "snaktype": "value",
+              "property": "P4970",
+              "hash": "f3def96911e6468fc92bc1ea421b5d8a564c2996",
+              "datavalue": {
+                "value": "Theaterleiter",
+                "type": "string"
+              },
+              "datatype": "string"
+            }
+          ],
+          "P2241": [
+            {
+              "snaktype": "value",
+              "property": "P2241",
+              "hash": "60cf1edce27f0fd9ea3da666fb4aa6d1fa657e36",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 28091153,
+                  "id": "Q28091153"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            }
+          ],
+          "P8327": [
+            {
+              "snaktype": "value",
+              "property": "P8327",
+              "hash": "d3dd88c6a0b81c4ce32184662c928d3174368012",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 39020112,
+                  "id": "Q39020112"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P1810",
+          "P4970",
+          "P2241",
+          "P8327"
+        ],
+        "id": "Q1776724$883f545a-49f0-12f2-626f-a489ca1ccae3",
+        "rank": "deprecated"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P227",
+          "hash": "60529dc3d5889c415d1e2aeb019a81e79a6daec2",
+          "datavalue": {
+            "value": "4501733-5",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P1810": [
+            {
+              "snaktype": "value",
+              "property": "P1810",
+              "hash": "ff90d35ea54976ab5e5554f47903ab6e70f39776",
+              "datavalue": {
+                "value": "Theaterintendantin",
+                "type": "string"
+              },
+              "datatype": "string"
+            }
+          ],
+          "P4970": [
+            {
+              "snaktype": "value",
+              "property": "P4970",
+              "hash": "10ce7598e3c48b47e73cbd88969ab2749a02e97a",
+              "datavalue": {
+                "value": "Theaterleiterin",
+                "type": "string"
+              },
+              "datatype": "string"
+            }
+          ],
+          "P2241": [
+            {
+              "snaktype": "value",
+              "property": "P2241",
+              "hash": "60cf1edce27f0fd9ea3da666fb4aa6d1fa657e36",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 28091153,
+                  "id": "Q28091153"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            }
+          ],
+          "P8327": [
+            {
+              "snaktype": "value",
+              "property": "P8327",
+              "hash": "d3dd88c6a0b81c4ce32184662c928d3174368012",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 39020112,
+                  "id": "Q39020112"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P1810",
+          "P4970",
+          "P2241",
+          "P8327"
+        ],
+        "id": "Q1776724$7ecc89d5-4473-5ed7-0d22-267b2bdb5c4d",
+        "rank": "deprecated"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P227",
+          "hash": "8a72444d64671eacc4fe720a3a10be34ba690b50",
+          "datavalue": {
+            "value": "4398844-1",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P1810": [
+            {
+              "snaktype": "value",
+              "property": "P1810",
+              "hash": "a2363ad3ef7e4fdb5e47f1c5545a92315e772295",
+              "datavalue": {
+                "value": "Theaterdirektor",
+                "type": "string"
+              },
+              "datatype": "string"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P1810"
+        ],
+        "id": "Q1776724$A65B553C-182F-4667-BD90-A265DD07A75C",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P227",
+          "hash": "059fd8aa0514c8fa01962201e4eef6feab6a7483",
+          "datavalue": {
+            "value": "4501736-0",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P1810": [
+            {
+              "snaktype": "value",
+              "property": "P1810",
+              "hash": "36627769c1ecd9b55270e5c116b57b01acc7b398",
+              "datavalue": {
+                "value": "Theaterdirektorin",
+                "type": "string"
+              },
+              "datatype": "string"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P1810"
+        ],
+        "id": "Q1776724$44AB1172-BE32-4699-89FD-669204B4FC43",
+        "rank": "normal"
+      }
+    ],
+    "P1036": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P1036",
+          "hash": "04e27e183c1e6a6972ef24825a07d739b2789015",
+          "datavalue": {
+            "value": "792.023092",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "id": "Q1776724$70883d55-401d-f5d7-e9fa-57d079968e3a",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "f8dc48b60459665baad33fa62a9aa778fc10cc22",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "019a50b7de741e0068bde41c9d9955b22a5de47b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 36578,
+                      "id": "Q36578"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P227": [
+                {
+                  "snaktype": "value",
+                  "property": "P227",
+                  "hash": "8a72444d64671eacc4fe720a3a10be34ba690b50",
+                  "datavalue": {
+                    "value": "4398844-1",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P407": [
+                {
+                  "snaktype": "value",
+                  "property": "P407",
+                  "hash": "46bfd327b830f66f7061ea92d1be430c135fa91f",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 188,
+                      "id": "Q188"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "284c2d8245a41b36987a7fe15ffeeb4f8006cebb",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2023-12-23T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P227",
+              "P407",
+              "P813"
+            ]
+          }
+        ]
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P1036",
+          "hash": "7c33933ce5d6d6f35b17ee79477fe817bb7d1a38",
+          "datavalue": {
+            "value": "792.0293",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "id": "Q1776724$d4abc206-434d-fea5-4ca5-456a5d975a25",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "f8dc48b60459665baad33fa62a9aa778fc10cc22",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "019a50b7de741e0068bde41c9d9955b22a5de47b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 36578,
+                      "id": "Q36578"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P227": [
+                {
+                  "snaktype": "value",
+                  "property": "P227",
+                  "hash": "8a72444d64671eacc4fe720a3a10be34ba690b50",
+                  "datavalue": {
+                    "value": "4398844-1",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P407": [
+                {
+                  "snaktype": "value",
+                  "property": "P407",
+                  "hash": "46bfd327b830f66f7061ea92d1be430c135fa91f",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 188,
+                      "id": "Q188"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "284c2d8245a41b36987a7fe15ffeeb4f8006cebb",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2023-12-23T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P227",
+              "P407",
+              "P813"
+            ]
+          }
+        ]
+      }
+    ],
+    "P5869": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P5869",
+          "hash": "48f31b9c1bc3ecbf34eb5aaa793a3cbba94f36b6",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 78006,
+              "id": "Q78006"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P11527": [
+            {
+              "snaktype": "value",
+              "property": "P11527",
+              "hash": "86d87a039249b70c1f0193afe6e8230e02a21e53",
+              "datavalue": {
+                "value": {
+                  "entity-type": "property",
+                  "numeric-id": 106,
+                  "id": "P106"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-property"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P11527"
+        ],
+        "id": "Q1776724$aeac09b8-4451-333f-31b0-194e4ddfad90",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P5869",
+          "hash": "d48b508f85030cb3a564008299d06e99218c129f",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 1687603,
+              "id": "Q1687603"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P11527": [
+            {
+              "snaktype": "value",
+              "property": "P11527",
+              "hash": "86d87a039249b70c1f0193afe6e8230e02a21e53",
+              "datavalue": {
+                "value": {
+                  "entity-type": "property",
+                  "numeric-id": 106,
+                  "id": "P106"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-property"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P11527"
+        ],
+        "id": "Q1776724$fc789f7a-4816-73de-3393-ad90c1a8065b",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P5869",
+          "hash": "6bc648da3942548e3cf153b93c7d2b61bfda8e97",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 1769895,
+              "id": "Q1769895"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P11527": [
+            {
+              "snaktype": "value",
+              "property": "P11527",
+              "hash": "86d87a039249b70c1f0193afe6e8230e02a21e53",
+              "datavalue": {
+                "value": {
+                  "entity-type": "property",
+                  "numeric-id": 106,
+                  "id": "P106"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-property"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P11527"
+        ],
+        "id": "Q1776724$3005bae6-4d3c-d113-12cc-ce3fbe08c6ca",
+        "rank": "normal"
+      }
+    ],
+    "P8189": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P8189",
+          "hash": "9e0b9c2b416c791e67a16bb1cb5dd22f0e059d2c",
+          "datavalue": {
+            "value": "987007551412405171",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P14457": [
+            {
+              "snaktype": "value",
+              "property": "P14457",
+              "hash": "112f987f42a7bb0b5491388a57a1d75b22e7f7b2",
+              "datavalue": {
+                "value": {
+                  "text": "Women theatrical managers",
+                  "language": "en"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            {
+              "snaktype": "value",
+              "property": "P14457",
+              "hash": "d557a34f12077fb085ce680affe3444c0c44771e",
+              "datavalue": {
+                "value": {
+                  "text": "נשים מנהלות תיאטרון",
+                  "language": "he"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P14457"
+        ],
+        "id": "Q1776724$DA6D75F6-3714-478B-B963-5275D766917B",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "ecb7a39cf436eb1fba419853af168ef9f2ba1dab",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "a03bb6ffe37be9554492f4eea5bd18afcb57df19",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 106509962,
+                      "id": "Q106509962"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248"
+            ]
+          }
+        ]
+      }
+    ],
+    "P18": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P18",
+          "hash": "8873915536900b76adbac362599442087c237a09",
+          "datavalue": {
+            "value": "Howard Theatre at 620 T Street NW, with inset of manager, Andrew J. Thomas (1910-1919).JPG",
+            "type": "string"
+          },
+          "datatype": "commonsMedia"
+        },
+        "type": "statement",
+        "id": "Q1776724$e8b30881-4230-9749-f3c7-d12012738411",
+        "rank": "normal"
+      }
+    ],
+    "P8168": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P8168",
+          "hash": "153f7712dad26672da8a1610b4304a6aa051db52",
+          "datavalue": {
+            "value": "Q164774",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "id": "Q1776724$A2436A86-9135-4A50-B5DD-CD7FBB7490A7",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "cb1895b3a45e6e5ed53b718028ae95421f279b92",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "e4afc4ad60f2160201385d29d076e0794f815f1e",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 90405608,
+                      "id": "Q90405608"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "538edc500badadebd9438c0d808836a806ebbab7",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-12-11T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P813"
+            ]
+          }
+        ]
+      }
+    ],
+    "P13591": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P13591",
+          "hash": "c73e1dd5bd27a1121943c0a3c949ce7a1b55c6ff",
+          "datavalue": {
+            "value": "concept/73ee70d6-855b-4305-8653-718957473c16",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "id": "Q1776724$1354153C-FF6F-429D-BD36-989B68D0A487",
+        "rank": "normal"
+      }
+    ],
+    "P2389": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2389",
+          "hash": "6b533473c56198f88f44ae5857a60e88f164f4b7",
+          "datavalue": {
+            "value": {
+              "entity-type": "item",
+              "numeric-id": 11812394,
+              "id": "Q11812394"
+            },
+            "type": "wikibase-entityid"
+          },
+          "datatype": "wikibase-item"
+        },
+        "type": "statement",
+        "id": "Q1776724$9A0FCE44-140B-4FBD-B5A5-4E6DAEB49BB3",
+        "rank": "normal"
+      }
+    ],
+    "P2521": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "6f24fb2c11451f32a7a8a17f00cad9338a2dac0d",
+          "datavalue": {
+            "value": {
+              "text": "Theaterleiterin",
+              "language": "de"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$0025649e-4590-abcf-2168-86721bec3b1e",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "9fd4a99e376c4caba08d931f124dd9abdccd80a1",
+          "datavalue": {
+            "value": {
+              "text": "managerka teatralna",
+              "language": "pl"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$89b0a939-4c3a-d452-c0ee-69b1322c5e48",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "d385137ac149a8823175adc42ac73b6da0331c87",
+          "datavalue": {
+            "value": {
+              "text": "divadelní ředitelka",
+              "language": "cs"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$E3683667-8BA2-4695-B1CE-BB0B1AD865CB",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "8fe4ce8d143e613421bd56dbae72093f46c73408",
+          "datavalue": {
+            "value": {
+              "text": "teatro vadovė",
+              "language": "lt"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$4a462f8f-45d2-b75a-d579-5f33903c2a4b",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "f70fc40e43acdba3598f9e796561f9ff8382d3d4",
+          "datavalue": {
+            "value": {
+              "text": "upravnica gledališča",
+              "language": "sl"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$5450aa0d-4dd6-6925-1613-4dd7bff635ed",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "1eaaa3b83cf1d6130b7217e49625f0619a50221c",
+          "datavalue": {
+            "value": {
+              "text": "teatrestrino",
+              "language": "eo"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$d61093c5-4734-eb17-455d-8f1f584f6912",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "bd594a061c8584b60d7508ee184117a248090b14",
+          "datavalue": {
+            "value": {
+              "text": "директорка театру",
+              "language": "uk"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$014054b4-4a3b-a0a4-43ed-748335281e25",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "179459888bcd0fd21d24118f0232194b781bd726",
+          "datavalue": {
+            "value": {
+              "text": "дырэктарка тэатра",
+              "language": "be"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$447f0102-4c5b-7684-c0d6-73ea5a1ff3ac",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "228005b784d1204f0fa9ab2c62ebc7991caba6b5",
+          "datavalue": {
+            "value": {
+              "text": "дырэктарка тэатру",
+              "language": "be-tarask"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$9808fc7a-4f9b-cd9e-179d-239b90859afa",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "02d94cc5de634d94cfbc59014e7c8ced927a98ba",
+          "datavalue": {
+            "value": {
+              "text": "mànager de teatre",
+              "language": "ca"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$accaf2dd-45de-92ba-9a06-de1a996b1cc3",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "f86df9c4e2ab9bb8425b52c16b330c0ba7f5f28e",
+          "datavalue": {
+            "value": {
+              "text": "directora de teatro",
+              "language": "gl"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$06bebd18-4035-f570-6768-c22a1c8f13e7",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "ba784cc308025e521833b398e034ac0b876eb8f6",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "33a2cfd7b0c48a93cdf9b760121771ccfff53474",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 50897150,
+                      "id": "Q50897150"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248"
+            ]
+          }
+        ]
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "695890c144f0213d969c196b2c5d8c8ad1755ec8",
+          "datavalue": {
+            "value": {
+              "text": "mánager de teatru",
+              "language": "ast"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$FBAB74A8-4038-4856-8710-5BA4F3A0569F",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "27c6d2682ed8bd91e7826df6345cb49cdfc4f8a3",
+          "datavalue": {
+            "value": {
+              "text": "مديرة مسرح",
+              "language": "ar"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$6283c065-486c-39d3-ae8c-64074f8732bd",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "7d62f123cb38a0e072d413f35cde4e89dc142c8d",
+          "datavalue": {
+            "value": {
+              "text": "מנהלת תיאטרון",
+              "language": "he"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$c81deafa-4bc2-b85c-5d96-0046bbcdd35d",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "b7a64b10c34c74b71344eac9fbb77d82a5bfdfa1",
+          "datavalue": {
+            "value": {
+              "text": "במאית תיאטרון",
+              "language": "he"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$C097497B-F1CE-4191-AB03-F83861855CFF",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "23fc054a4172eb3bb7bd2a34081bfc6e38dd9b7b",
+          "datavalue": {
+            "value": {
+              "text": "direttrice teatrale",
+              "language": "it"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P2441": [
+            {
+              "snaktype": "value",
+              "property": "P2441",
+              "hash": "549beabf7d3596ec83073558bc11a76f9dc0c6b4",
+              "datavalue": {
+                "value": {
+                  "text": "theater director",
+                  "language": "en"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P2441"
+        ],
+        "id": "Q1776724$990ef4f1-4618-3c12-8377-f66577655ac2",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "f86df9c4e2ab9bb8425b52c16b330c0ba7f5f28e",
+          "datavalue": {
+            "value": {
+              "text": "directora de teatro",
+              "language": "gl"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P2441": [
+            {
+              "snaktype": "value",
+              "property": "P2441",
+              "hash": "549beabf7d3596ec83073558bc11a76f9dc0c6b4",
+              "datavalue": {
+                "value": {
+                  "text": "theater director",
+                  "language": "en"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P2441"
+        ],
+        "id": "Q1776724$2A728404-5B80-4035-99E1-A0414FDF5FF8",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "ba784cc308025e521833b398e034ac0b876eb8f6",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "33a2cfd7b0c48a93cdf9b760121771ccfff53474",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 50897150,
+                      "id": "Q50897150"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248"
+            ]
+          }
+        ]
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "ce6ca7d9bf9d0af76acbbd33aa1b1aaad75f0251",
+          "datavalue": {
+            "value": {
+              "text": "direutora d'un teatru",
+              "language": "ast"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P2441": [
+            {
+              "snaktype": "value",
+              "property": "P2441",
+              "hash": "549beabf7d3596ec83073558bc11a76f9dc0c6b4",
+              "datavalue": {
+                "value": {
+                  "text": "theater director",
+                  "language": "en"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P2441"
+        ],
+        "id": "Q1776724$22292463-7B7A-4365-8B61-4ABB35C24C57",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "4bbc51533e86b5765739a06157fa2443660d95cc",
+          "datavalue": {
+            "value": {
+              "text": "directora de teatre",
+              "language": "ca"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P2441": [
+            {
+              "snaktype": "value",
+              "property": "P2441",
+              "hash": "549beabf7d3596ec83073558bc11a76f9dc0c6b4",
+              "datavalue": {
+                "value": {
+                  "text": "theater director",
+                  "language": "en"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P2441"
+        ],
+        "id": "Q1776724$92F82C4A-C1E0-4068-BC5F-8D2B6C13F65C",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "23fc054a4172eb3bb7bd2a34081bfc6e38dd9b7b",
+          "datavalue": {
+            "value": {
+              "text": "direttrice teatrale",
+              "language": "it"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$7BFB0F29-C55F-4ABF-9F0B-555FA958782F",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "2641b550d5ec879e57669f59d9cfd71a63cfac27",
+          "datavalue": {
+            "value": {
+              "text": "direktorica gledališča",
+              "language": "sl"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$A6CABE65-62ED-4891-8280-8EC01C835F7C",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "4bbc51533e86b5765739a06157fa2443660d95cc",
+          "datavalue": {
+            "value": {
+              "text": "directora de teatre",
+              "language": "ca"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$16846B74-06C0-4904-B834-EFAB3C67AFB6",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "ce6ca7d9bf9d0af76acbbd33aa1b1aaad75f0251",
+          "datavalue": {
+            "value": {
+              "text": "direutora d'un teatru",
+              "language": "ast"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$A41CC579-13A9-4D7D-85D6-8BF385F17427",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "3a2dc6a722dd2e111182c0884457c3ddf46e800f",
+          "datavalue": {
+            "value": {
+              "text": "directrice de théâtre",
+              "language": "fr"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$275C815D-0664-4456-B25C-B9D2E7848889",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "f80de53fb5f7f1c2374f787809422a1d8ccb14f3",
+          "datavalue": {
+            "value": {
+              "text": "Theaterdirektorin",
+              "language": "de"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$3A86A112-D9F2-491F-824B-CCF4B764B56F",
+        "rank": "normal",
+        "references": [
+          {
+            "hash": "fb8a7d643afd215f392b68b9d287ed0cfccecdb6",
+            "snaks": {
+              "P248": [
+                {
+                  "snaktype": "value",
+                  "property": "P248",
+                  "hash": "019a50b7de741e0068bde41c9d9955b22a5de47b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 36578,
+                      "id": "Q36578"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P227": [
+                {
+                  "snaktype": "value",
+                  "property": "P227",
+                  "hash": "059fd8aa0514c8fa01962201e4eef6feab6a7483",
+                  "datavalue": {
+                    "value": "4501736-0",
+                    "type": "string"
+                  },
+                  "datatype": "external-id"
+                }
+              ],
+              "P407": [
+                {
+                  "snaktype": "value",
+                  "property": "P407",
+                  "hash": "46bfd327b830f66f7061ea92d1be430c135fa91f",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 188,
+                      "id": "Q188"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P813": [
+                {
+                  "snaktype": "value",
+                  "property": "P813",
+                  "hash": "c2ae7fe1a2cac3e3aa864f4fb37b60c946a863c2",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2023-12-24T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "snaks-order": [
+              "P248",
+              "P227",
+              "P407",
+              "P813"
+            ]
+          }
+        ]
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P2521",
+          "hash": "275ea6f9d38ee19d3945575177b25d02c16d5d68",
+          "datavalue": {
+            "value": {
+              "text": "Theaterdirektesch",
+              "language": "lb"
+            },
+            "type": "monolingualtext"
+          },
+          "datatype": "monolingualtext"
+        },
+        "type": "statement",
+        "id": "Q1776724$534EC12F-2AA2-4B5B-B70F-E490C8CB953D",
+        "rank": "normal"
+      }
+    ],
+    "P14073": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P14073",
+          "hash": "2b023f8cbb60e24835189a00e8f6e70dec69a1fb",
+          "datavalue": {
+            "value": "01944076-d8dd-711a-b1f6-a2a617e8c6f5",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "id": "Q1776724$ff450489-4aef-7605-4e7c-471e7b0b84b6",
+        "rank": "normal"
+      }
+    ],
+    "P9318": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P9318",
+          "hash": "74a05dbcbe74199a8d086e04200f62a1eede26ca",
+          "datavalue": {
+            "value": "teahterhoavda",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "id": "Q1776724$d3f4a04e-460e-6f23-a50c-8d967a254efa",
+        "rank": "normal"
+      }
+    ],
+    "P6293": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P6293",
+          "hash": "cae403d1e339f049337896d7bea0a053a7f5c9a1",
+          "datavalue": {
+            "value": "Y99342",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P14457": [
+            {
+              "snaktype": "value",
+              "property": "P14457",
+              "hash": "93d488a1da8fa065f2bde807683637de05acb02c",
+              "datavalue": {
+                "value": {
+                  "text": "teatterinjohtajat",
+                  "language": "fi"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P14457"
+        ],
+        "id": "Q1776724$09940ff7-4e6d-f155-ccfd-60a81be8d40b",
+        "rank": "normal"
+      }
+    ],
+    "P8309": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P8309",
+          "hash": "2ae0f2060a3c10e545d02aed45895344cef55ac2",
+          "datavalue": {
+            "value": "18-213005",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P14457": [
+            {
+              "snaktype": "value",
+              "property": "P14457",
+              "hash": "93d488a1da8fa065f2bde807683637de05acb02c",
+              "datavalue": {
+                "value": {
+                  "text": "teatterinjohtajat",
+                  "language": "fi"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            {
+              "snaktype": "value",
+              "property": "P14457",
+              "hash": "25566790ea2e8fdcddf53710c43c44f368cdab3e",
+              "datavalue": {
+                "value": {
+                  "text": "teáhterjođiheaddjit",
+                  "language": "se"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            {
+              "snaktype": "value",
+              "property": "P14457",
+              "hash": "6c33b498a8629c5ac0ca8eeda57852dce2875058",
+              "datavalue": {
+                "value": {
+                  "text": "teaterchefer",
+                  "language": "sv"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P14457"
+        ],
+        "id": "Q1776724$0f99b295-41b2-07af-10a8-313f7c6ff936",
+        "rank": "normal"
+      }
+    ],
+    "P9322": [
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P9322",
+          "hash": "5a07f00e880d75addac7d6e37e67f24ca3d886ee",
+          "datavalue": {
+            "value": "0292238-divadelni-reditele",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P1810": [
+            {
+              "snaktype": "value",
+              "property": "P1810",
+              "hash": "8cf0a87831a049c7205cb365838be97656dce31e",
+              "datavalue": {
+                "value": "divadelní ředitelé",
+                "type": "string"
+              },
+              "datatype": "string"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P1810"
+        ],
+        "id": "Q1776724$805B9651-386B-4C41-824D-DDB73D576DBE",
+        "rank": "normal"
+      },
+      {
+        "mainsnak": {
+          "snaktype": "value",
+          "property": "P9322",
+          "hash": "9bb73653824e66ad112de6be6db0add1c5e964b9",
+          "datavalue": {
+            "value": "0417661-divadelni-reditelky",
+            "type": "string"
+          },
+          "datatype": "external-id"
+        },
+        "type": "statement",
+        "qualifiers": {
+          "P1810": [
+            {
+              "snaktype": "value",
+              "property": "P1810",
+              "hash": "7682b2b77024727362e9cf02f37441e2ad6f67c9",
+              "datavalue": {
+                "value": "divadelní ředitelky",
+                "type": "string"
+              },
+              "datatype": "string"
+            }
+          ]
+        },
+        "qualifiers-order": [
+          "P1810"
+        ],
+        "id": "Q1776724$10B498C2-7619-4D4B-A684-2821102AD29B",
+        "rank": "normal"
+      }
+    ]
+  },
+  "sitelinks": {
+    "dewiki": {
+      "site": "dewiki",
+      "title": "Theaterleiter",
+      "badges": []
+    },
+    "svwiki": {
+      "site": "svwiki",
+      "title": "Teaterchef",
+      "badges": []
+    },
+    "eowiki": {
+      "site": "eowiki",
+      "title": "Teatrestro",
+      "badges": []
+    },
+    "dawiki": {
+      "site": "dawiki",
+      "title": "Teaterchef",
+      "badges": []
+    },
+    "fiwiki": {
+      "site": "fiwiki",
+      "title": "Teatterinjohtaja",
+      "badges": []
+    },
+    "enwiki": {
+      "site": "enwiki",
+      "title": "Theater manager",
+      "badges": []
+    },
+    "frwiki": {
+      "site": "frwiki",
+      "title": "Directeur de théâtre",
+      "badges": []
+    }
+  }
+}

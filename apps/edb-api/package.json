@@ -1,0 +1,38 @@
+{
+  "name": "edb-api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Bun HTTP API: Prisma/Postgres Graviola Store over REST + staged import sessions",
+  "type": "module",
+  "scripts": {
+    "start": "bun run src/server.ts",
+    "db:setup": "bun run scripts/dbSetup.ts",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@graviola/edb-import-demo-schema": "workspace:*",
+    "@graviola/edb-import-staging": "workspace:*",
+    "@graviola/rest-store-server": "workspace:*",
+    "@graviola/edb-data-mapping": "workspace:*",
+    "@graviola/edb-global-types": "workspace:*",
+    "@graviola/json-schema-prisma-utils": "workspace:*",
+    "@graviola/json-schema-utils": "workspace:*",
+    "@graviola/prisma-db-impl": "workspace:*",
+    "@graviola/semantic-json-form": "workspace:*",
+    "@graviola/store-core": "workspace:*",
+    "@prisma/adapter-pg": "7.8.0",
+    "@prisma/client": "7.8.0",
+    "@prisma/client-runtime-utils": "7.8.0",
+    "pg": "^8.16.0",
+    "prisma": "7.8.0"
+  },
+  "devDependencies": {
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@types/bun": "latest",
+    "@types/json-schema": "catalog:",
+    "typescript": "5.8.2"
+  },
+  "license": "MIT"
+}

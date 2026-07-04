@@ -42,7 +42,11 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
+    "@graviola/edb-global-types": "workspace:*",
+    "@graviola/edb-core-types": "workspace:*",
     "@graviola/json-schema-utils": "workspace:*",
+    "@graviola/remote-query-implementations": "workspace:*",
+    "@graviola/sparql-tools": "workspace:*",
     "@graviola/sparql-schema": "workspace:*",
     "@graviola/jsonld-utils": "workspace:*",
     "@graviola/store-core": "workspace:*"

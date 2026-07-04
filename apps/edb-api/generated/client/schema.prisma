@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Occupation {
+  title                        String?
+  description                  String?
+  parent_id                    String?
+  parent                       Occupation?  @relation("parent", fields: [parent_id], references: [id])
+  idAuthority_authority        String?
+  idAuthority_id               String?
+  type                         String?
+  id                           String       @id
+  parent_to_Occupation_reverse Occupation[] @relation("parent")
+  profession_to_Person_reverse Person[]     @relation(name: "Person_profession_Occupation")
+}
+
+model Person {
+  name        String?
+  description String?
+  birthDate   Int?
+  deathDate   Int?
+  profession  Occupation[] @relation(name: "Person_profession_Occupation")
+
+  gender                String?
+  personDeceased        Boolean?      @default(false)
+  externalId            String?
+  birthPlace_id         String?
+  birthPlace            Place?        @relation("birthPlace", fields: [birthPlace_id], references: [id])
+  memberOfCorp          Corporation[] @relation(name: "Person_memberOfCorp_Corporation")
+  image                 String?
+  nameVariant           String[]
+  idAuthority_authority String?
+  idAuthority_id        String?
+  type                  String?
+  id                    String        @id
+}
+
+model Place {
+  birthPlace_to_Person_reverse Person[]  @relation("birthPlace")
+  title                        String?
+  description                  String?
+  titleVariants                String?
+  location_id                  String?
+  location                     Location? @relation("location", fields: [location_id], references: [id])
+  parent_id                    String?
+  parent                       Place?    @relation("parent", fields: [parent_id], references: [id])
+  image                        String?
+  idAuthority_authority        String?
+  idAuthority_id               String?
+  type                         String?
+  id                           String    @id
+  parent_to_Place_reverse      Place[]   @relation("parent")
+}
+
+model Corporation {
+  memberOfCorp_to_Person_reverse Person[] @relation(name: "Person_memberOfCorp_Corporation")
+  name                           String?
+  description                    String?
+
+  parent_id                     String?
+  parent                        Corporation?  @relation("parent", fields: [parent_id], references: [id])
+  location_id                   String?
+  location                      Location?     @relation("location", fields: [location_id], references: [id])
+  image                         String?
+  nameVariant                   String[]
+  idAuthority_authority         String?
+  idAuthority_id                String?
+  type                          String?
+  id                            String        @id
+  parent_to_Corporation_reverse Corporation[] @relation("parent")
+}
+
+model Location {
+  title                           String?
+  titleVariants                   String?
+  description                     String?
+  image                           String?
+  parent_id                       String?
+  parent                          Location?     @relation("parent", fields: [parent_id], references: [id])
+  idAuthority_authority           String?
+  idAuthority_id                  String?
+  type                            String?
+  id                              String        @id
+  parent_to_Location_reverse      Location[]    @relation("parent")
+  location_to_Place_reverse       Place[]       @relation("location")
+  location_to_Corporation_reverse Corporation[] @relation("location")
+}
+
+model Exhibition {
+  title                 String?
+  description           String?
+  idAuthority_authority String?
+  idAuthority_id        String?
+  type                  String?
+  id                    String  @id
+}

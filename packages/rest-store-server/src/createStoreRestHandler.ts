@@ -1,0 +1,277 @@
+import {
+  hasCapabilityInDescriptor,
+  type BaseStore,
+  type CapabilityName,
+  type SchemaRegistry,
+} from "@graviola/store-core";
+
+import {
+  commandCapability,
+  decodeStorePath,
+  enrichCommandFromBody,
+  encodeCommandResult,
+  problemResponse,
+  type CommandContext,
+  type CommandInterceptor,
+  type ExtensionRoute,
+  type HttpMiddleware,
+  type StoreCommand,
+} from "./commands.js";
+import {
+  computeHandshake,
+  DEFAULT_HANDSHAKE_PATH,
+  matchExtensionRoute,
+  normalizeBasePath,
+  stripBasePath,
+  type GraviolaAuthMode,
+  type GraviolaIriHandlingMode,
+  type GraviolaStoreHandshakeResponse,
+} from "./handshake.js";
+
+export type StoreRestHandler = (req: Request) => Promise<Response | null>;
+
+export type AuthConfig = {
+  modes: GraviolaAuthMode[];
+  apiKeyHeader?: string;
+  verify?: (
+    req: Request,
+  ) => Promise<{ ok: true; principal?: unknown } | { ok: false }>;
+};
+
+export type CreateStoreRestHandlerOptions<R extends SchemaRegistry> = {
+  store: BaseStore<R> & Record<string, unknown>;
+  /** Logical type names exposed on the wire (see Identifies.typeNameToTypeIRI). */
+  typeNames: string[];
+  basePath?: string;
+  handshakePath?: string;
+  iriHandling?: GraviolaIriHandlingMode[];
+  localIdToIri?: (typeName: string, localId: string) => string;
+  auth?: AuthConfig;
+  pagination?: { maxLimit?: number };
+  middleware?: HttpMiddleware[];
+  interceptors?: CommandInterceptor<R>[];
+  routes?: ExtensionRoute[];
+};
+
+const composeMiddleware = (
+  middlewares: HttpMiddleware[],
+  terminal: (req: Request, ctx: CommandContext) => Promise<Response>,
+): ((req: Request, ctx: CommandContext) => Promise<Response>) => {
+  return async (req: Request, ctx: CommandContext): Promise<Response> => {
+    let index = 0;
+    const dispatch = async (): Promise<Response> => {
+      if (index >= middlewares.length) return terminal(req, ctx);
+      const mw = middlewares[index++];
+      return mw(req, ctx, dispatch);
+    };
+    return dispatch();
+  };
+};
+
+const composeInterceptors = <R extends SchemaRegistry>(
+  interceptors: CommandInterceptor<R>[],
+  terminal: (cmd: StoreCommand<R>) => Promise<unknown>,
+): ((cmd: StoreCommand<R>, ctx: CommandContext) => Promise<unknown>) => {
+  return async (
+    cmd: StoreCommand<R>,
+    ctx: CommandContext,
+  ): Promise<unknown> => {
+    let index = 0;
+    const dispatch = async (c: StoreCommand<R>): Promise<unknown> => {
+      if (index >= interceptors.length) return terminal(c);
+      const interceptor = interceptors[index++];
+      return interceptor(c, ctx, dispatch);
+    };
+    return dispatch(cmd);
+  };
+};
+
+const executeOnStore = async (
+  store: Record<string, unknown>,
+  cmd: StoreCommand,
+): Promise<unknown> => {
+  switch (cmd.kind) {
+    case "loadOne":
+      if (cmd.withMeta) {
+        return (store.loadOne as Function)(cmd.typeName, cmd.entityIRI, {
+          withMeta: true,
+        });
+      }
+      return (store.loadOne as Function)(cmd.typeName, cmd.entityIRI);
+    case "exists":
+      return (store.exists as Function)(cmd.typeName, cmd.entityIRI);
+    case "list":
+      return (store.list as Function)(cmd.typeName, cmd.limit, cmd.query);
+    case "filterMany":
+      return (store.filterMany as Function)(cmd.typeName, cmd.options);
+    case "count":
+      return (store.count as Function)(cmd.typeName, {
+        search: cmd.search,
+        insensitive: cmd.insensitive,
+      });
+    case "search":
+      if (cmd.mode === "entity_rows") {
+        return (store.findEntityByTypeName as Function)(
+          cmd.typeName,
+          cmd.text,
+          cmd.limit,
+        );
+      }
+      return (store.searchByLabel as Function)(
+        cmd.typeName,
+        cmd.text,
+        cmd.limit,
+      );
+    case "upsert":
+      return (store.upsert as Function)(
+        cmd.typeName,
+        cmd.entityIRI,
+        cmd.document,
+      );
+    case "remove":
+      return (store.remove as Function)(cmd.typeName, cmd.entityIRI);
+    case "resolveTypes":
+      return (store.resolveTypes as Function)(cmd.entityIRI);
+    default:
+      throw new Error("Unhandled command");
+  }
+};
+
+const verifyAuth = async (
+  req: Request,
+  auth: AuthConfig | undefined,
+  ctx: CommandContext,
+): Promise<Response | null> => {
+  if (!auth?.verify) return null;
+  const result = await auth.verify(req);
+  if (!result.ok) {
+    return problemResponse(401, "auth_required", "Authentication required");
+  }
+  if (result.principal !== undefined) {
+    ctx.locals.principal = result.principal;
+  }
+  return null;
+};
+
+export const createStoreRestHandler = <R extends SchemaRegistry>(
+  opts: CreateStoreRestHandlerOptions<R>,
+): StoreRestHandler => {
+  const basePath = normalizeBasePath(opts.basePath ?? "/api/graviola");
+  const handshakePath = opts.handshakePath ?? DEFAULT_HANDSHAKE_PATH;
+  const iriHandling = opts.iriHandling ?? ["fullIRI"];
+  const middlewares = opts.middleware ?? [];
+  const interceptors = opts.interceptors ?? [];
+  const extensionRoutes = opts.routes ?? [];
+  const typeNames = opts.typeNames;
+  const store = opts.store;
+
+  const handshakeBody: GraviolaStoreHandshakeResponse = computeHandshake(
+    store.capabilities,
+    store,
+    {
+      basePath,
+      typeNames,
+      iriHandling,
+      auth: opts.auth
+        ? { modes: opts.auth.modes, apiKeyHeader: opts.auth.apiKeyHeader }
+        : undefined,
+      pagination: opts.pagination,
+      idempotency: { supported: true, windowSeconds: 86400 },
+    },
+  );
+
+  const runCommand = composeInterceptors(interceptors, (cmd) =>
+    executeOnStore(store as Record<string, unknown>, cmd),
+  );
+
+  const handleStoreRequest = async (
+    req: Request,
+    ctx: CommandContext,
+  ): Promise<Response> => {
+    const url = new URL(req.url);
+    const relative = stripBasePath(url.pathname, basePath);
+    if (relative == null) {
+      return problemResponse(404, "not_found", "Route not found");
+    }
+
+    const extMatch = matchExtensionRoute(req.method, relative, extensionRoutes);
+    if (extMatch) {
+      return extMatch.route.handler(req, extMatch.params, ctx);
+    }
+
+    const decoded = decodeStorePath(req.method, relative, req, {
+      typeNames,
+      iriHandling,
+      localIdToIri: opts.localIdToIri,
+      maxLimit: opts.pagination?.maxLimit,
+    });
+
+    if (decoded === null) {
+      return problemResponse(404, "not_found", "Route not found");
+    }
+    if (decoded === "unknown_type") {
+      return problemResponse(404, "unknown_type", "Unknown type name");
+    }
+
+    let cmd = decoded;
+    if (
+      cmd.kind === "filterMany" ||
+      cmd.kind === "count" ||
+      cmd.kind === "search" ||
+      cmd.kind === "upsert"
+    ) {
+      cmd = await enrichCommandFromBody(cmd, req);
+    }
+
+    const cap = commandCapability(cmd) as CapabilityName;
+    if (!hasCapabilityInDescriptor(store.capabilities, cap)) {
+      return problemResponse(
+        501,
+        "capability_not_supported",
+        `Capability ${cap} not supported`,
+      );
+    }
+
+    const result = await runCommand(cmd as StoreCommand<R>, ctx);
+    return encodeCommandResult(cmd, result);
+  };
+
+  const pipeline = composeMiddleware(middlewares, (req, ctx) =>
+    handleStoreRequest(req, ctx),
+  );
+
+  return async (req: Request): Promise<Response | null> => {
+    const url = new URL(req.url);
+    const normalizedHandshake = normalizeBasePath(handshakePath);
+
+    if (
+      req.method === "GET" &&
+      (url.pathname === normalizedHandshake ||
+        url.pathname === DEFAULT_HANDSHAKE_PATH)
+    ) {
+      return new Response(JSON.stringify(handshakeBody), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    const relative = stripBasePath(url.pathname, basePath);
+    if (relative == null && url.pathname !== normalizedHandshake) {
+      return null;
+    }
+
+    const ctx: CommandContext = {
+      request: req,
+      store,
+      basePath,
+      locals: {},
+    };
+
+    const authFailure = await verifyAuth(req, opts.auth, ctx);
+    if (authFailure) return authFailure;
+
+    if (relative == null) return null;
+
+    return pipeline(req, ctx);
+  };
+};

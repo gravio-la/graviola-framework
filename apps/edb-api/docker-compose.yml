@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: graviola
+      POSTGRES_PASSWORD: graviola
+      POSTGRES_DB: import_api
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "graviola", "-d", "import_api"]
+      interval: 3s
+      timeout: 3s
+      retries: 15
+    volumes:
+      - import_api_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  import_api_postgres_data:

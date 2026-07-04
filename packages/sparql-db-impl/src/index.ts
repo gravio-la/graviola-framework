@@ -5,3 +5,7 @@ export {
   initSPARQLDatastorePair,
   type SPARQLDatastorePair,
 } from "./initSPARQLStore";
+export {
+  initRemoteOxigraphDatastore,
+  type InitRemoteOxigraphDatastoreOptions,
+} from "./initRemoteOxigraphDatastore";

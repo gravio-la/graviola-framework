@@ -1,3 +1,4 @@
+import type { JSONSchema7 } from "json-schema";
 import type { PrimaryFieldDeclaration } from "@graviola/edb-core-types";
 import type { AbstractDatastore, QueryType } from "@graviola/edb-global-types";
 import {
@@ -5,7 +6,7 @@ import {
   jsonSchema2PrismaSelect,
 } from "@graviola/json-schema-prisma-utils";
 import { defs } from "@graviola/json-schema-utils";
-import type { JSONSchema7 } from "json-schema";
+import { extendSchemaShortcut } from "@graviola/json-schema-utils";
 import { createChangeBus } from "@graviola/store-core";
 import type {
   BaseStore,
@@ -122,6 +123,7 @@ export function initPrismaDatastorePair<
     datasourceProvider,
   }: PrismaStoreOptions,
 ): PrismaDatastorePair {
+  const effectiveSchema = extendSchemaShortcut(rootSchema, "type", "id");
   const primarySearchFilter = (
     searchString: string,
     likeInsensitive: boolean,
@@ -141,7 +143,7 @@ export function initPrismaDatastorePair<
     });
   };
   const load = async (typeName: string, entityIRI: string) => {
-    const select = jsonSchema2PrismaSelect(typeName, rootSchema, {
+    const select = jsonSchema2PrismaSelect(typeName, effectiveSchema, {
       maxRecursion: maxRecursionDepth,
     });
     const entry = await prisma[typeName].findUnique({
@@ -154,7 +156,7 @@ export function initPrismaDatastorePair<
   };
 
   const loadMany = async (typeName: string, limit?: number) => {
-    const select = jsonSchema2PrismaSelect(typeName, rootSchema, {
+    const select = jsonSchema2PrismaSelect(typeName, effectiveSchema, {
       maxRecursion: maxRecursionDepth,
     });
     const entries = await prisma[typeName].findMany({
@@ -172,7 +174,7 @@ export function initPrismaDatastorePair<
   ) => {
     const query = jsonSchema2PrismaFlatSelect(
       typeName,
-      rootSchema,
+      effectiveSchema,
       primaryFields,
       { takeLimit: innerLimit ?? limit ?? 0 },
     );
@@ -193,7 +195,7 @@ export function initPrismaDatastorePair<
     likeInsensitive: boolean,
     limit?: number,
   ) => {
-    const select = jsonSchema2PrismaSelect(typeName, rootSchema, {
+    const select = jsonSchema2PrismaSelect(typeName, effectiveSchema, {
       maxRecursion: maxRecursionDepth,
     });
     const prim = primaryFields[typeName];
@@ -270,7 +272,7 @@ export function initPrismaDatastorePair<
       };
       return await upsert(typeName, doc, {
         prisma,
-        schema: rootSchema,
+        schema: effectiveSchema,
         jsonldContext,
         defaultPrefix,
         keepContext: false,
@@ -333,7 +335,7 @@ export function initPrismaDatastorePair<
     },
     getClasses: async (entityIRI) => {
       //we will use a rather primitive way to get the classes in future we could create its own IRI<->Class index and use a prisma middleware to keep it up to date
-      const definitions = defs(rootSchema);
+      const definitions = defs(effectiveSchema);
       const allTypeNames = Object.keys(definitions);
       const classes: string[] = [];
       for (const typeName of allTypeNames) {

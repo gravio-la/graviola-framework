@@ -7,7 +7,11 @@ type CrudProviderContextValue = {
   crudOptions: CRUDFunctions | null;
   dataStore: CrudDatastoreStore | null;
   isReady: boolean;
+  /** Disambiguates TanStack Query keys when multiple stores/contexts share one QueryClient. */
+  queryCacheScope?: string;
 };
+
+export type { CrudProviderContextValue };
 
 export const CrudProviderContext =
   createContext<CrudProviderContextValue>(null);

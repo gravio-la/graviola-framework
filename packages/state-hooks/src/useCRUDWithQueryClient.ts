@@ -5,6 +5,7 @@ import type { UseCRUDHook } from "./useCrudHook";
 import { useCallback } from "react";
 import type { NamedAndTypedEntity } from "@graviola/edb-core-types";
 import type { CrudDatastoreStore } from "./crudDatastoreStore";
+import { crudQueryKey, useQueryCacheScope } from "./queryCacheKeys";
 
 type LoadResult = {
   document: any;
@@ -141,9 +142,17 @@ export const useCRUDWithQueryClient: UseCRUDHook<
   const loadQueryKey = presetLoadQueryKey || "load";
   const { enabled, ...queryOptionsRest } = queryOptions || {};
   const queryClient = useQueryClient();
+  const cacheScope = useQueryCacheScope();
 
   const loadQuery = useQuery({
-    queryKey: ["entity", typeIRI, entityIRI, "data", loadQueryKey],
+    queryKey: crudQueryKey(
+      cacheScope,
+      "entity",
+      typeIRI,
+      entityIRI,
+      "data",
+      loadQueryKey,
+    ),
     queryFn: async () => {
       if (!entityIRI || !ready) return null;
       const typeName = dataStore.typeIRItoTypeName(typeIRI);
@@ -165,8 +174,12 @@ export const useCRUDWithQueryClient: UseCRUDHook<
       return await dataStore.remove(typeName, entityIRI);
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["entity", typeIRI] });
-      await queryClient.invalidateQueries({ queryKey: ["type", typeIRI] });
+      await queryClient.invalidateQueries({
+        queryKey: crudQueryKey(cacheScope, "entity", typeIRI),
+      });
+      await queryClient.invalidateQueries({
+        queryKey: crudQueryKey(cacheScope, "type", typeIRI),
+      });
     },
   });
 
@@ -197,13 +210,17 @@ export const useCRUDWithQueryClient: UseCRUDHook<
       };
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["entity", typeIRI] });
-      await queryClient.invalidateQueries({ queryKey: ["type", typeIRI] });
+      await queryClient.invalidateQueries({
+        queryKey: crudQueryKey(cacheScope, "entity", typeIRI),
+      });
+      await queryClient.invalidateQueries({
+        queryKey: crudQueryKey(cacheScope, "type", typeIRI),
+      });
     },
   });
 
   const existsQuery = useQuery({
-    queryKey: ["entity", typeIRI, entityIRI, "exists"],
+    queryKey: crudQueryKey(cacheScope, "entity", typeIRI, entityIRI, "exists"),
     queryFn: async () => {
       if (!entityIRI || !typeIRI || !ready) return null;
       const typeName = dataStore.typeIRItoTypeName(typeIRI);
@@ -217,7 +234,14 @@ export const useCRUDWithQueryClient: UseCRUDHook<
   const loadEntity = useCallback(
     async (entityIRI: string, typeIRI: string) => {
       return queryClient.fetchQuery({
-        queryKey: ["entity", typeIRI, entityIRI, "data", loadQueryKey],
+        queryKey: crudQueryKey(
+          cacheScope,
+          "entity",
+          typeIRI,
+          entityIRI,
+          "data",
+          loadQueryKey,
+        ),
         queryFn: async () => {
           const typeName = dataStore.typeIRItoTypeName(typeIRI);
           const result = await dataStore.loadOne(typeName, entityIRI);
@@ -226,7 +250,7 @@ export const useCRUDWithQueryClient: UseCRUDHook<
         staleTime: 0,
       });
     },
-    [loadQueryKey, dataStore, queryClient],
+    [cacheScope, loadQueryKey, dataStore, queryClient],
   );
 
   return {
