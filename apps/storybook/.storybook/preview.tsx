@@ -23,7 +23,9 @@ import "@triply/yasgui/build/yasgui.min.css";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
-/** MDX links run in the preview iframe; internal ?path= links must navigate the parent shell. */
+import { resolveStorybookManagerHref } from "../stories/_shared/storybookHref";
+
+/** MDX links run in the preview iframe; internal links must navigate the manager shell. */
 function StorybookLink({
   href,
   children,
@@ -39,11 +41,16 @@ function StorybookLink({
     if (isExternal || isAnchor) return;
 
     e.preventDefault();
-    window.parent.location.href = href;
+    window.parent.location.href = resolveStorybookManagerHref(href);
   };
 
+  const resolvedHref =
+    href && !href.startsWith("#") && !/^https?:\/\//.test(href)
+      ? resolveStorybookManagerHref(href)
+      : href;
+
   return (
-    <a href={href} onClick={handleClick} {...props}>
+    <a href={resolvedHref} onClick={handleClick} {...props}>
       {children}
     </a>
   );
