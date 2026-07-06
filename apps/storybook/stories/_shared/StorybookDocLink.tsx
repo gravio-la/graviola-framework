@@ -1,6 +1,7 @@
 import React from "react";
 
 import { storybookHref } from "./storybookHref";
+import { StorybookLink } from "./StorybookLink";
 
 type StorybookDocLinkProps = {
   storyId: string;
@@ -8,11 +9,15 @@ type StorybookDocLinkProps = {
   children: React.ReactNode;
 };
 
-/** MDX-friendly anchor that uses Storybook `?path=` routing. */
+/** MDX-friendly anchor that uses Storybook `./?path=` routing. */
 export function StorybookDocLink({
   storyId,
   hash,
   children,
 }: StorybookDocLinkProps) {
-  return <a href={storybookHref(storyId, hash)}>{children}</a>;
+  return (
+    <StorybookLink href={storybookHref(storyId, hash)}>
+      {children}
+    </StorybookLink>
+  );
 }

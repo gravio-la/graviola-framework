@@ -23,38 +23,7 @@ import "@triply/yasgui/build/yasgui.min.css";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
-import { resolveStorybookManagerHref } from "../stories/_shared/storybookHref";
-
-/** MDX links run in the preview iframe; internal links must navigate the manager shell. */
-function StorybookLink({
-  href,
-  children,
-  ...props
-}: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!href) return;
-
-    const isExternal =
-      /^https?:\/\//.test(href) && !href.includes(window.location.hostname);
-    const isAnchor = href.startsWith("#");
-
-    if (isExternal || isAnchor) return;
-
-    e.preventDefault();
-    window.parent.location.href = resolveStorybookManagerHref(href);
-  };
-
-  const resolvedHref =
-    href && !href.startsWith("#") && !/^https?:\/\//.test(href)
-      ? resolveStorybookManagerHref(href)
-      : href;
-
-  return (
-    <a href={resolvedHref} onClick={handleClick} {...props}>
-      {children}
-    </a>
-  );
-}
+import { StorybookLink } from "../stories/_shared/StorybookLink";
 
 const preview: Preview = {
   parameters: {

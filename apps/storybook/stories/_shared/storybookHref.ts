@@ -1,28 +1,44 @@
 /**
- * Storybook cross-links use manager-shell `index.html?path=` URLs.
- * Relative `?path=` links inside the docs iframe resolve to `iframe.html?path=`
+ * Storybook cross-links use manager-shell `./?path=` URLs.
+ * Bare `?path=` links inside the docs iframe resolve to `iframe.html?path=`
  * and show a blank page on GitHub Pages — always target the manager shell.
  */
 export function storybookPathQuery(entryId: string, hash?: string): string {
   const segment = entryId.endsWith("--docs") ? "docs" : "story";
-  const url = `?path=/${segment}/${entryId}`;
+  const url = `./?path=/${segment}/${entryId}`;
   if (!hash) return url;
   return `${url}${hash.startsWith("#") ? hash : `#${hash}`}`;
 }
 
-/** Relative manager href (works when the current page is already index.html). */
+/** Relative manager href from the docs iframe or manager shell. */
 export function storybookHref(entryId: string, hash?: string): string {
-  return `./index.html${storybookPathQuery(entryId, hash)}`;
+  return storybookPathQuery(entryId, hash);
 }
 
 /** Alias when the target is a docs entry (`*--docs`). */
 export const storybookDocsHref = storybookHref;
 
-type LocationLike = Pick<Location, "origin" | "pathname">;
+export type LocationLike = Pick<Location, "origin" | "pathname">;
+
+/** Extract `?path=…` (and optional hash) from Storybook link href variants. */
+export function extractStorybookPathQuery(href: string): string | null {
+  if (href.startsWith("?path=")) return href;
+  const idx = href.indexOf("?path=");
+  if (idx >= 0) return href.slice(idx);
+  return null;
+}
+
+/** True when href is an internal Storybook navigation link. */
+export function isStorybookInternalHref(href: string): boolean {
+  if (!href || href.startsWith("#") || /^https?:\/\//.test(href)) {
+    return false;
+  }
+  return extractStorybookPathQuery(href) !== null;
+}
 
 /**
  * Resolve MDX / dashboard links to an absolute manager URL.
- * Accepts `./index.html?path=…`, bare `?path=…`, or legacy relative paths.
+ * Accepts `./?path=…`, `?path=…`, or legacy `./index.html?path=…`.
  */
 export function resolveStorybookManagerHref(
   href: string,
@@ -32,12 +48,7 @@ export function resolveStorybookManagerHref(
     return href;
   }
 
-  const pathQuery = href.startsWith("?path=")
-    ? href
-    : href.includes("?path=")
-      ? href.slice(href.indexOf("?path="))
-      : null;
-
+  const pathQuery = extractStorybookPathQuery(href);
   if (!pathQuery) return href;
 
   const loc =
@@ -51,5 +62,5 @@ export function resolveStorybookManagerHref(
     .replace(/\/index\.html$/, "/");
   if (!basePath.endsWith("/")) basePath += "/";
 
-  return `${loc.origin}${basePath}index.html${pathQuery}`;
+  return `${loc.origin}${basePath}${pathQuery}`;
 }

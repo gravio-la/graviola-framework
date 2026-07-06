@@ -16,6 +16,6 @@ When changing `apps/storybook/`:
 6. **Sidebar order** is controlled in `preview.tsx` `options.storySort`: Welcome → Structural Dispatch → Library Docs → Architecture → Packages → semantic-views.
 7. Keep **code panel** useful: stories embedded in MDX via `<Canvas of={…} />` should be minimal, copy-paste-friendly exports.
 8. **MDX tables** use GitHub Flavored Markdown; `remark-gfm` is already wired in `main.ts` — do not re-add `@storybook/addon-mdx-gfm`.
-9. **In-app doc links** — use relative `?path=/docs/<id>` or `?path=/story/<id>` in MDX markdown (official Storybook style), or `storybookHref()` / `<StorybookDocLink>` in React. GitHub Pages base path is handled by `config.base` in `viteFinal`; query-string links resolve against the current page URL. Story ids match `index.json` (e.g. `structural-dispatch-semantic-forms--docs`).
+9. **In-app doc links** — MDX docs render in the preview iframe; bare `?path=` resolves to `iframe.html?path=` and breaks on GitHub Pages. Use `[text](./?path=/docs/<id>)` in markdown, or `<StorybookDocLink storyId="…">` / `storybookHref()` in React (both emit `./?path=`). GitHub Pages base path is handled by `config.base` in `viteFinal`. Story ids match `index.json` (e.g. `structural-dispatch-semantic-forms--docs`).
 
 See `apps/storybook/CLAUDE.md` for full conventions.

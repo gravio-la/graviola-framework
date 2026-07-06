@@ -423,6 +423,7 @@ function PreviewCard({
             disableElevation
             endIcon={<ArrowForwardIcon />}
             href={storybookHref(family.docsStoryId)}
+            target="_parent"
             sx={{
               flexShrink: 0,
               textTransform: "none",
@@ -621,6 +622,7 @@ function DashboardContent() {
           disableElevation
           endIcon={<ArrowForwardIcon />}
           href={storybookHref("structural-dispatch-overview--docs")}
+          target="_parent"
           sx={{ textTransform: "none", borderRadius: 2 }}
         >
           How structural dispatch works
