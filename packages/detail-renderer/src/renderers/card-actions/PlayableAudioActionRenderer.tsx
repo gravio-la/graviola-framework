@@ -4,6 +4,8 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import type { CardActionRendererProps } from "@graviola/edb-detail-renderer-core";
 
+import { sameAudioUrl } from "./playableAudioUtils";
+
 function audioUrlFromAction(
   action: CardActionRendererProps["action"],
   data: unknown,
@@ -39,29 +41,45 @@ export function PlayableAudioActionRenderer({
     };
   }, []);
 
+  useEffect(() => {
+    const el = audioRef.current;
+    if (!el || !url) return;
+    if (!sameAudioUrl(el.src, url)) {
+      el.pause();
+      el.src = url;
+      setIsPlaying(false);
+    }
+  }, [url]);
+
   const toggle = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
       if (!url) return;
 
-      if (!audioRef.current) {
-        audioRef.current = new Audio(url);
-        audioRef.current.addEventListener("ended", () => setIsPlaying(false));
-        audioRef.current.addEventListener("pause", () => setIsPlaying(false));
-        audioRef.current.addEventListener("play", () => setIsPlaying(true));
-      } else if (audioRef.current.src !== url) {
-        audioRef.current.pause();
-        audioRef.current.src = url;
+      let el = audioRef.current;
+      if (!el) {
+        el = new Audio(url);
+        audioRef.current = el;
+        el.addEventListener("ended", () => setIsPlaying(false));
+        el.addEventListener("pause", () => setIsPlaying(false));
+        el.addEventListener("play", () => setIsPlaying(true));
+      } else if (!sameAudioUrl(el.src, url)) {
+        el.pause();
+        el.src = url;
       }
 
-      const el = audioRef.current;
-      if (isPlaying) {
+      if (!el.paused) {
         el.pause();
-      } else {
-        void el.play().catch(() => setIsPlaying(false));
+        setIsPlaying(false);
+        return;
       }
+
+      void el
+        .play()
+        .then(() => setIsPlaying(true))
+        .catch(() => setIsPlaying(false));
     },
-    [url, isPlaying],
+    [url],
   );
 
   if (!url) return null;
