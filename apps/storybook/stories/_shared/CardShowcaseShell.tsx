@@ -16,11 +16,9 @@ import {
   cardShowcaseTypePresentation,
 } from "../packages/semantic-views/cardShowcaseStorySchema";
 import { StorybookMotionAdapter } from "../../.storybook/decorators/storybookMotionAdapter";
+import { storybookPublicBasePath } from "./storybookPublicUrl";
 
-const PUBLIC_BASE_PATH =
-  (import.meta as any).env?.STORYBOOK_BASE_PATH ||
-  (import.meta as any).env?.VITE_BASE_PATH ||
-  "";
+const PUBLIC_BASE_PATH = storybookPublicBasePath();
 
 /**
  * Card showcase Adb + motion wiring without a Router.

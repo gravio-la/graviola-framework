@@ -1,6 +1,6 @@
 # Storybook fixtures
 
-Static assets served from `/fixtures/…` in Storybook.
+Static assets served from `/fixtures/…` in Storybook (local dev) or `{STORYBOOK_BASE_PATH}/fixtures/…` on GitHub Pages. Use `storybookPublicUrl("/fixtures/…")` in story data — never hardcode root-absolute `/fixtures/` paths.
 
 | File                     | Used by                                                                    | Source                                                                                                                 | License       |
 | ------------------------ | -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------- |

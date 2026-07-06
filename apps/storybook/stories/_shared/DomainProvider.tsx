@@ -24,6 +24,7 @@ import { createUISchemata } from "../../../../packages/semantic-json-form/src/he
 
 import { StorybookMotionAdapter } from "../../.storybook/decorators/storybookMotionAdapter";
 import type { StoryDomain } from "./storyDomains";
+import { storybookPublicBasePath } from "./storybookPublicUrl";
 
 const dashboardRenderers = [...materialRenderers, ...graviolaRenderers];
 
@@ -40,14 +41,7 @@ const STUB_CRUD_VALUE = {
   isReady: true,
 } as const;
 
-const PUBLIC_BASE_PATH =
-  (
-    import.meta as {
-      env?: { STORYBOOK_BASE_PATH?: string; VITE_BASE_PATH?: string };
-    }
-  ).env?.STORYBOOK_BASE_PATH ||
-  (import.meta as { env?: { VITE_BASE_PATH?: string } }).env?.VITE_BASE_PATH ||
-  "";
+const PUBLIC_BASE_PATH = storybookPublicBasePath();
 
 type DomainProviderProps = {
   domain: StoryDomain;

@@ -13,11 +13,9 @@ import {
   valueRenderersTypeIRIToTypeName,
   valueRenderersTypeNameToTypeIRI,
 } from "../../stories/packages/semantic-views/valueRenderersStorySchema";
+import { storybookPublicBasePath } from "../../stories/_shared/storybookPublicUrl";
 
-const PUBLIC_BASE_PATH =
-  (import.meta as any).env?.STORYBOOK_BASE_PATH ||
-  (import.meta as any).env?.VITE_BASE_PATH ||
-  "";
+const PUBLIC_BASE_PATH = storybookPublicBasePath();
 
 /** Adb for ValueRenderers stories (Product schema with price / historicalStart). */
 export const withValueRenderersProvider: Decorator = (Story) => {

@@ -13,11 +13,9 @@ import {
   relationChipsTypeIRIToTypeName,
   relationChipsTypeNameToTypeIRI,
 } from "../../stories/packages/semantic-views/relationChipsStorySchema";
+import { storybookPublicBasePath } from "../../stories/_shared/storybookPublicUrl";
 
-const PUBLIC_BASE_PATH =
-  (import.meta as any).env?.STORYBOOK_BASE_PATH ||
-  (import.meta as any).env?.VITE_BASE_PATH ||
-  "";
+const PUBLIC_BASE_PATH = storybookPublicBasePath();
 
 /** Adb for RelationChips stories (Manifestation / Realm / Artifact schema). */
 export const withRelationChipsProvider: Decorator = (Story) => {

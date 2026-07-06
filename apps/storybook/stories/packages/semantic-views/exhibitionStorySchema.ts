@@ -5,6 +5,8 @@ import type {
   TypePresentationRegistry,
 } from "@graviola/edb-core-types";
 
+import { storybookPublicUrl } from "../../_shared/storybookPublicUrl";
+
 export const EXHIBITION_STORY_NS =
   "http://ontologies.slub-dresden.de/exhibition/storybook/";
 
@@ -127,9 +129,9 @@ export function exhibitionTypeIRIToTypeName(iri: string): string | undefined {
   return iri.slice(EXHIBITION_STORY_NS.length);
 }
 
-const DRESDEN_COAT = "/fixtures/dresden-coat.png";
-const EXHIBITION_HERO = "/fixtures/otto-dix-der-krieg.jpg";
-const OTTO_DIX_PORTRAIT = "/fixtures/otto-dix-portrait.jpg";
+const DRESDEN_COAT = storybookPublicUrl("/fixtures/dresden-coat.png");
+const EXHIBITION_HERO = storybookPublicUrl("/fixtures/otto-dix-der-krieg.jpg");
+const OTTO_DIX_PORTRAIT = storybookPublicUrl("/fixtures/otto-dix-portrait.jpg");
 
 /** Otto Dix — DER KRIEG (adapted from exhibition-live EntityDetailCard.stories). */
 export const sampleExhibition = {

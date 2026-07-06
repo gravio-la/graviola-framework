@@ -30,11 +30,12 @@ const config: StorybookConfig = {
   },
   staticDirs: ["../public"],
   env: (config) => {
-    console.log("🔍 Vite Storybook Environment Variables during build:");
-    console.log("STORYBOOK_CUSTOM_VAR:", process.env.STORYBOOK_CUSTOM_VAR);
+    const basePath = process.env.STORYBOOK_BASE_PATH || "";
 
     return {
       ...config,
+      STORYBOOK_BASE_PATH: basePath,
+      VITE_BASE_PATH: basePath,
       STORYBOOK_CUSTOM_VAR:
         process.env.STORYBOOK_CUSTOM_VAR || "Default Custom Value",
     };
@@ -64,13 +65,16 @@ const config: StorybookConfig = {
       jsxImportSource: "react",
     };
 
-    // Ensure React runs in development mode
+    // Ensure React runs in development mode; inject Pages base path for static URLs.
+    const trimmedBasePath = basePath.replace(/\/+$/, "");
     config.define = {
       ...config.define,
       "process.env.NODE_ENV": JSON.stringify(
         process.env.NODE_ENV || "development",
       ),
       global: "globalThis",
+      "import.meta.env.STORYBOOK_BASE_PATH": JSON.stringify(trimmedBasePath),
+      "import.meta.env.VITE_BASE_PATH": JSON.stringify(trimmedBasePath),
     };
 
     const existingOnWarn = config.build?.rollupOptions?.onwarn;

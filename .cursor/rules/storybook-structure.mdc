@@ -17,5 +17,6 @@ When changing `apps/storybook/`:
 7. Keep **code panel** useful: stories embedded in MDX via `<Canvas of={…} />` should be minimal, copy-paste-friendly exports.
 8. **MDX tables** use GitHub Flavored Markdown; `remark-gfm` is already wired in `main.ts` — do not re-add `@storybook/addon-mdx-gfm`.
 9. **In-app doc links** — MDX docs render in the preview iframe; bare `?path=` resolves to `iframe.html?path=` and breaks on GitHub Pages. Use `[text](./?path=/docs/<id>)` in markdown, or `<StorybookDocLink storyId="…">` / `storybookHref()` in React (both emit `./?path=`). GitHub Pages base path is handled by `config.base` in `viteFinal`. Story ids match `index.json` (e.g. `structural-dispatch-semantic-forms--docs`).
+10. **Public fixtures** — files under `public/fixtures/` must be referenced via `storybookPublicUrl("/fixtures/…")` so GitHub Pages subpath deploys resolve correctly. `STORYBOOK_BASE_PATH` is injected at build time via `.storybook/main.ts` `env` + `viteFinal` `define`.
 
 See `apps/storybook/CLAUDE.md` for full conventions.

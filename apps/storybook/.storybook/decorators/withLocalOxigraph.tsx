@@ -6,10 +6,9 @@ import { LocalOxigraphStoreProvider } from "@graviola/local-oxigraph-store-provi
 //@ts-ignore
 import tbbt from "tbbt-ld/dist/tbbt.nt";
 
-const PUBLIC_BASE_PATH =
-  (import.meta as any).env?.STORYBOOK_BASE_PATH ||
-  (import.meta as any).env?.VITE_BASE_PATH ||
-  "";
+import { storybookPublicBasePath } from "../../stories/_shared/storybookPublicUrl";
+
+const PUBLIC_BASE_PATH = storybookPublicBasePath();
 
 const LocalStoreWithExampleDataProvider = ({
   children,

@@ -15,11 +15,9 @@ import {
   semanticViewsTypeNameToTypeIRI,
   semanticViewsTypePresentation,
 } from "../../stories/packages/semantic-views/semanticViewsStorySchema";
+import { storybookPublicBasePath } from "../../stories/_shared/storybookPublicUrl";
 
-const PUBLIC_BASE_PATH =
-  (import.meta as any).env?.STORYBOOK_BASE_PATH ||
-  (import.meta as any).env?.VITE_BASE_PATH ||
-  "";
+const PUBLIC_BASE_PATH = storybookPublicBasePath();
 
 /** Adb + Oxigraph for {@link @graviola/semantic-views} stories (item-catalog schema, not exhibition). */
 export const withSemanticViewsProvider: Decorator = (Story) => {

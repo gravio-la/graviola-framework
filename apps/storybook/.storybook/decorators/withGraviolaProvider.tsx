@@ -9,12 +9,10 @@ import { createSemanticConfig } from "@graviola/semantic-json-form";
 import { GraviolaLoungeProviders } from "@graviola/graviola-app-config";
 
 import { withLocalOxigraph } from "./withLocalOxigraph";
+import { storybookPublicBasePath } from "../../stories/_shared/storybookPublicUrl";
 
 const BASE_IRI = "http://ontologies.slub-dresden.de/exhibition#";
-const PUBLIC_BASE_PATH =
-  (import.meta as any).env?.STORYBOOK_BASE_PATH ||
-  (import.meta as any).env?.VITE_BASE_PATH ||
-  "";
+const PUBLIC_BASE_PATH = storybookPublicBasePath();
 
 /**
  * Wraps the story in the full Graviola application context: Redux store,
