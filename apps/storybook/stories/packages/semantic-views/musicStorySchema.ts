@@ -111,17 +111,18 @@ export const sampleComposerBach = {
   image: BACH_PORTRAIT_HAUSSMANN_URL,
 };
 
-/** Fuga c-Moll, BWV 847 — personal violin recording in fixtures/fuga.ogg. */
+/** Fuge g-Moll (4. Satz), BWV 1001 — personal violin recording in fixtures/fuga.ogg. */
 export const sampleMusicalWorkFuga = {
-  "@id": `${MUSIC_STORY_NS}MusicalWork/bwv-847-fuga`,
+  "@id": `${MUSIC_STORY_NS}MusicalWork/bwv-1001-fuge`,
   "@type": `${MUSIC_STORY_NS}MusicalWork`,
-  title: "Fuga c-Moll",
-  tagline: "Wohltemperiertes Klavier I — first subject, opening line on violin",
+  title: "Fuge g-Moll",
+  tagline:
+    "Violinsonate Nr. 1 g-Moll, BWV 1001 — 4. Satz (1720, Sei Solo Nr. 1); verwandt mit BWV 1000 (Laute)",
   coverArt: BACH_PORTRAIT_HAUSSMANN_URL,
   recording: FUGA_RECORDING_URL,
-  bwv: "BWV 847",
-  releaseYear: 1722,
-  genre: "Barock",
+  bwv: "BWV 1001",
+  releaseYear: 1720,
+  genre: "Sonate",
   composer: sampleComposerBach,
 };
 

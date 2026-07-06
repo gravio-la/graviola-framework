@@ -1,6 +1,6 @@
 import { storybookPublicUrl } from "../../_shared/storybookPublicUrl";
 
-/** Served from `apps/storybook/public/fixtures/fuga.ogg`. */
+/** Violin Sonata No. 1 in G minor, BWV 1001 — fugue (personal recording). */
 export const FUGA_RECORDING_URL = storybookPublicUrl("/fixtures/fuga.ogg");
 
 /**

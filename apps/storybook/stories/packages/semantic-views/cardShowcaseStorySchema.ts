@@ -114,22 +114,24 @@ export function cardShowcaseTypeIRIToTypeName(iri: string): string | undefined {
 }
 
 /**
- * Bach — Fuga in c-Moll from Das wohltemperierte Klavier I (BWV 847).
+ * Bach — Fuge (4. Satz) from Violin Sonata No. 1 in G minor, BWV 1001 (1720).
+ * Related lute arrangement: Fugue in G minor, BWV 1000.
  * Portrait: Elias Gottlob Haussmann, public domain (Wikimedia Commons).
  * Audio: personal violin recording — `public/fixtures/fuga.ogg`.
  */
 export const sampleMusicRelease = {
-  "@id": `${CARD_SHOWCASE_NS}work/bwv-847-fuga`,
+  "@id": `${CARD_SHOWCASE_NS}work/bwv-1001-fuge`,
   "@type": `${CARD_SHOWCASE_NS}MusicRelease`,
-  title: "Fuga c-Moll",
+  title: "Fuge g-Moll",
   artist: "Johann Sebastian Bach",
-  tagline: "Wohltemperiertes Klavier I — first subject, opening line on violin",
+  tagline:
+    "Violinsonate Nr. 1 g-Moll, BWV 1001 — 4. Satz (1720, Sei Solo Nr. 1); verwandt mit BWV 1000 (Laute)",
   coverArt: BACH_PORTRAIT_HAUSSMANN_URL,
   recording: FUGA_RECORDING_URL,
-  bwv: "BWV 847",
-  releaseYear: 1722,
-  genre: "Barock",
-  trackCount: 1,
+  bwv: "BWV 1001",
+  releaseYear: 1720,
+  genre: "Sonate",
+  trackCount: 4,
 };
 
 /** Motion-style developer profile card. */

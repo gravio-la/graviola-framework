@@ -26,7 +26,7 @@ export default meta;
 type Story = StoryObj<typeof SemanticCardNoOps>;
 
 export const MusicReleaseCard: Story = {
-  name: "Bach Fuga (violin recording)",
+  name: "Bach Fuge BWV 1001 (violin recording)",
   render: () => (
     <Box sx={{ p: 2, maxWidth: 360 }}>
       <SemanticCardNoOps
@@ -61,7 +61,7 @@ export const SideBySide: Story = {
     >
       <Box sx={{ flex: 1, maxWidth: 380 }}>
         <Typography variant="overline" color="text.secondary" sx={{ mb: 1 }}>
-          Bach · BWV 847
+          Bach · BWV 1001
         </Typography>
         <SemanticCardNoOps
           typeName="MusicRelease"
