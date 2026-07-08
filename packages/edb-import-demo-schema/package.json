@@ -1,7 +1,6 @@
 {
   "name": "@graviola/edb-import-demo-schema",
-  "version": "0.1.0",
-  
+  "version": "0.2.0",
   "description": "Reduced exhibition schema with authority mappings and offline fixtures for import demos",
   "type": "module",
   "main": "./dist/index.cjs",

@@ -1,5 +1,12 @@
 # @slub/json-schema-prisma-utils
 
+## 1.4.4
+
+### Patch Changes
+
+- @graviola/edb-core-utils@1.6.1
+- @graviola/json-schema-utils@1.7.2
+
 ## 1.4.3
 
 ### Patch Changes

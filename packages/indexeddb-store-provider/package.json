@@ -1,6 +1,6 @@
 {
   "name": "@graviola/indexeddb-store-provider",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "React store provider backed by IndexedDB hexastore + Comunica SPARQL",
   "type": "module",
   "main": "./dist/index.cjs",

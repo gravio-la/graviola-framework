@@ -1,5 +1,24 @@
 # @graviola/edb-state-hooks
 
+## 1.8.0
+
+### Minor Changes
+
+- 0c6b37a: Port experiments import infrastructure: StagedChangeSet, REST store server, SPARQL dump/load tools, context registry, query-cache scoping, import review components, edb-api reference app, and Tier A bug fixes.
+
+### Patch Changes
+
+- Updated dependencies [184c8e9]
+- Updated dependencies [0c6b37a]
+  - @graviola/semantic-jsonform-types@1.5.0
+  - @graviola/edb-data-mapping@0.4.3
+  - @graviola/edb-core-utils@1.6.1
+  - @graviola/fulltext-search-core@0.2.2
+  - @graviola/jsonld-utils@1.6.4
+  - @graviola/store-core@0.3.3
+  - @graviola/json-schema-utils@1.7.2
+  - @graviola/edb-ui-utils@0.4.4
+
 ## 1.7.4
 
 ### Patch Changes

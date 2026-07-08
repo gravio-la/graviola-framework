@@ -1,5 +1,12 @@
 # @graviola/edb-basic-renderer
 
+## 4.2.4
+
+### Patch Changes
+
+- @graviola/edb-core-utils@1.6.1
+- @graviola/edb-ui-utils@0.4.4
+
 ## 4.2.3
 
 ### Patch Changes

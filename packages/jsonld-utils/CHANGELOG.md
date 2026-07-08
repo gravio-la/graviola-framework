@@ -1,5 +1,12 @@
 # @graviola/jsonld-utils
 
+## 1.6.4
+
+### Patch Changes
+
+- @graviola/edb-core-utils@1.6.1
+- @graviola/edb-graph-traversal@1.6.4
+
 ## 1.6.3
 
 ### Patch Changes

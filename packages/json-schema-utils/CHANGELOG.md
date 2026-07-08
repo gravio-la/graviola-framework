@@ -1,5 +1,11 @@
 # @graviola/json-schema-utils
 
+## 1.7.2
+
+### Patch Changes
+
+- @graviola/edb-core-utils@1.6.1
+
 ## 1.7.1
 
 ### Patch Changes

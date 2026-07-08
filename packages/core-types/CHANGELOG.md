@@ -1,5 +1,11 @@
 # @slub/edb-core-types
 
+## 1.7.0
+
+### Minor Changes
+
+- 184c8e9: Card presentation system: `CardPresentation` registry, secondary field inference, card actions, M3 card layout variants (orientation, size, expandable, media overlay), and `SemanticViewCore` card wiring.
+
 ## 1.6.0
 
 ### Minor Changes

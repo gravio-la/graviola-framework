@@ -1,5 +1,11 @@
 # @graviola/async-oxigraph
 
+## 0.2.8
+
+### Patch Changes
+
+- 0c6b37a: Port experiments import infrastructure: StagedChangeSet, REST store server, SPARQL dump/load tools, context registry, query-cache scoping, import review components, edb-api reference app, and Tier A bug fixes.
+
 ## 0.2.7
 
 ### Patch Changes

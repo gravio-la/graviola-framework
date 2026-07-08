@@ -1,5 +1,14 @@
 # @graviola/edb-data-mapping
 
+## 0.4.3
+
+### Patch Changes
+
+- 0c6b37a: Port experiments import infrastructure: StagedChangeSet, REST store server, SPARQL dump/load tools, context registry, query-cache scoping, import review components, edb-api reference app, and Tier A bug fixes.
+- Updated dependencies [184c8e9]
+  - @graviola/edb-core-types@1.7.0
+  - @graviola/edb-core-utils@1.6.1
+
 ## 0.4.2
 
 ### Patch Changes

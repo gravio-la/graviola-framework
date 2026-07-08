@@ -1,5 +1,13 @@
 # @graviola/edb-file-import
 
+## 1.2.4
+
+### Patch Changes
+
+- 0c6b37a: Port experiments import infrastructure: StagedChangeSet, REST store server, SPARQL dump/load tools, context registry, query-cache scoping, import review components, edb-api reference app, and Tier A bug fixes.
+  - @graviola/jsonld-utils@1.6.4
+  - @graviola/edb-maintenance-utils@1.3.4
+
 ## 1.2.3
 
 ### Patch Changes

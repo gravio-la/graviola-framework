@@ -1,5 +1,16 @@
 # @slub/prisma-db-impl
 
+## 1.7.4
+
+### Patch Changes
+
+- 0c6b37a: Port experiments import infrastructure: StagedChangeSet, REST store server, SPARQL dump/load tools, context registry, query-cache scoping, import review components, edb-api reference app, and Tier A bug fixes.
+  - @graviola/edb-core-utils@1.6.1
+  - @graviola/json-schema-prisma-utils@1.4.4
+  - @graviola/jsonld-utils@1.6.4
+  - @graviola/store-core@0.3.3
+  - @graviola/json-schema-utils@1.7.2
+
 ## 1.7.3
 
 ### Patch Changes

@@ -1,5 +1,24 @@
 # @slub/sparql-db-impl
 
+## 1.8.0
+
+### Minor Changes
+
+- 0c6b37a: Port experiments import infrastructure: StagedChangeSet, REST store server, SPARQL dump/load tools, context registry, query-cache scoping, import review components, edb-api reference app, and Tier A bug fixes.
+
+### Patch Changes
+
+- Updated dependencies [184c8e9]
+- Updated dependencies [0c6b37a]
+  - @graviola/edb-core-types@1.7.0
+  - @graviola/sparql-tools@0.2.0
+  - @graviola/edb-global-types@1.3.8
+  - @graviola/jsonld-utils@1.6.4
+  - @graviola/remote-query-implementations@1.4.8
+  - @graviola/sparql-schema@1.6.4
+  - @graviola/store-core@0.3.3
+  - @graviola/json-schema-utils@1.7.2
+
 ## 1.7.3
 
 ### Patch Changes

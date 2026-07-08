@@ -1,5 +1,17 @@
 # @graviola/rest-store-client
 
+## 0.3.2
+
+### Patch Changes
+
+- 6d44d8d: Legacy REST client store accepts `primaryFields` / `primaryFieldExtracts` for search result label extraction via `edb-data-mapping`.
+- Updated dependencies [184c8e9]
+- Updated dependencies [0c6b37a]
+  - @graviola/edb-core-types@1.7.0
+  - @graviola/edb-data-mapping@0.4.3
+  - @graviola/edb-global-types@1.3.8
+  - @graviola/store-core@0.3.3
+
 ## 0.3.1
 
 ### Patch Changes

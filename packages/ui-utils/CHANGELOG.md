@@ -1,5 +1,12 @@
 # @graviola/edb-ui-utils
 
+## 0.4.4
+
+### Patch Changes
+
+- @graviola/edb-core-utils@1.6.1
+- @graviola/json-schema-utils@1.7.2
+
 ## 0.4.3
 
 ### Patch Changes

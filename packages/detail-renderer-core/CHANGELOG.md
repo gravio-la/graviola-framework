@@ -1,5 +1,18 @@
 # @graviola/edb-detail-renderer-core
 
+## 0.5.0
+
+### Minor Changes
+
+- 184c8e9: Card presentation system: `CardPresentation` registry, secondary field inference, card actions, M3 card layout variants (orientation, size, expandable, media overlay), and `SemanticViewCore` card wiring.
+
+### Patch Changes
+
+- Updated dependencies [184c8e9]
+  - @graviola/edb-core-types@1.7.0
+  - @graviola/edb-core-utils@1.6.1
+  - @graviola/json-schema-utils@1.7.2
+
 ## 0.4.2
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @slub/edb-core-utils
 
+## 1.6.1
+
+### Patch Changes
+
+- Updated dependencies [184c8e9]
+  - @graviola/edb-core-types@1.7.0
+
 ## 1.6.0
 
 ### Minor Changes

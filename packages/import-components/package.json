@@ -1,6 +1,6 @@
 {
   "name": "@graviola/edb-import-components",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Staged import review UI components (creation feed, review panels)",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -14,7 +14,9 @@
       "default": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",

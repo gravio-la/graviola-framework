@@ -1,5 +1,13 @@
 # @graviola/fulltext-search-core
 
+## 0.2.2
+
+### Patch Changes
+
+- Updated dependencies [184c8e9]
+  - @graviola/edb-core-types@1.7.0
+  - @graviola/store-core@0.3.3
+
 ## 0.2.1
 
 ### Patch Changes

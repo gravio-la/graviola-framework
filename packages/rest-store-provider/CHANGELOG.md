@@ -1,5 +1,14 @@
 # @graviola/rest-store-provider
 
+## 1.4.5
+
+### Patch Changes
+
+- Updated dependencies [0c6b37a]
+- Updated dependencies [6d44d8d]
+  - @graviola/edb-state-hooks@1.8.0
+  - @graviola/rest-store-client@0.3.2
+
 ## 1.4.4
 
 ### Patch Changes

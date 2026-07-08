@@ -1,5 +1,21 @@
 # @graviola/edb-advanced-components
 
+## 1.7.5
+
+### Patch Changes
+
+- Updated dependencies [184c8e9]
+- Updated dependencies [0c6b37a]
+  - @graviola/edb-detail-renderer-core@0.5.0
+  - @graviola/semantic-views@0.2.0
+  - @graviola/edb-state-hooks@1.8.0
+  - @graviola/edb-data-mapping@0.4.3
+  - @graviola/edb-core-utils@1.6.1
+  - @graviola/jsonld-utils@1.6.4
+  - @graviola/store-core@0.3.3
+  - @graviola/edb-basic-components@1.5.5
+  - @graviola/edb-ui-utils@0.4.4
+
 ## 1.7.4
 
 ### Patch Changes

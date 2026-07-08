@@ -1,6 +1,6 @@
 {
   "name": "@graviola/meilisearch-sparql-store",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Composite Meilisearch + injected primary store for Semantic Desktop full-text search (phase 2)",
   "type": "module",
   "main": "./dist/index.cjs",

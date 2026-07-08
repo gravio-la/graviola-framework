@@ -1,5 +1,23 @@
 # @graviola/edb-table-components
 
+## 2.0.3
+
+### Patch Changes
+
+- Updated dependencies [184c8e9]
+- Updated dependencies [0c6b37a]
+  - @graviola/edb-core-types@1.7.0
+  - @graviola/edb-detail-renderer-core@0.5.0
+  - @graviola/edb-detail-renderer@0.6.0
+  - @graviola/edb-state-hooks@1.8.0
+  - @graviola/edb-core-utils@1.6.1
+  - @graviola/store-core@0.3.3
+  - @graviola/edb-table-renderer-sparql-select@0.1.6
+  - @graviola/edb-table-renderer-jsonld@0.2.3
+  - @graviola/edb-basic-components@1.5.5
+  - @graviola/json-schema-utils@1.7.2
+  - @graviola/edb-ui-utils@0.4.4
+
 ## 2.0.2
 
 ### Patch Changes
