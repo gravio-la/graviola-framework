@@ -11,6 +11,7 @@ import { bringDefinitionToTop } from "@graviola/json-schema-utils";
 import { useCallback, useMemo } from "react";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import type { SchemaRouteOutletContext } from "../schemaOutletContext";
+import { GardenFeeComputedPanel } from "../components/GardenFeeComputedPanel";
 import { useEntityIRIFromEntityID } from "../useEntityIRIFromEntityID";
 import type { JSONSchema7 } from "json-schema";
 import { priceCentsRendererEntry } from "../detailRenderers/PriceCentsRenderer";
@@ -133,21 +134,29 @@ export function GenericDetailPage() {
             ))}
           </Box>
         ) : typeSchema && data ? (
-          <SemanticDetailView
-            entityIRI={entityIRI}
-            typeIRI={classIRI}
-            typeName={resolvedTypeName}
-            defaultData={data}
-            disableLoad
-            uiSchema={detailUiSchema}
-            config={{
-              primaryFields: schemaConfig.primaryFields as Record<
-                string,
-                unknown
-              >,
-              extraRenderers: extraDetailRenderers,
-            }}
-          />
+          <>
+            <SemanticDetailView
+              entityIRI={entityIRI}
+              typeIRI={classIRI}
+              typeName={resolvedTypeName}
+              defaultData={data}
+              disableLoad
+              uiSchema={detailUiSchema}
+              config={{
+                primaryFields: schemaConfig.primaryFields as Record<
+                  string,
+                  unknown
+                >,
+                extraRenderers: extraDetailRenderers,
+              }}
+            />
+            {schemaConfig.schemaName === "garden-fee" ? (
+              <GardenFeeComputedPanel
+                typeName={resolvedTypeName}
+                entityIRI={entityIRI}
+              />
+            ) : null}
+          </>
         ) : (
           !isLoading && (
             <Typography color="text.secondary">

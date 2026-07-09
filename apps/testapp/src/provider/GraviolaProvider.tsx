@@ -28,7 +28,7 @@ import {
 import { JSONSchema7 } from "json-schema";
 import { allRenderers } from "./config";
 import { CircularProgress } from "@mui/material";
-import { GraviolaLoungeProviders } from "@graviola/graviola-app-config";
+import type { MetaStampingConfig } from "@graviola/meta-schema";
 
 type GraviolaProviderProps = {
   baseIRI: string;
@@ -43,6 +43,10 @@ type GraviolaProviderProps = {
   uischemata?: Record<string, UISchemaElement>;
   storageKey: string;
   initialData?: string;
+  /** Schema for reads/UI (may include grafted `$meta`). Writes validate against domain shape. */
+  displaySchema?: JSONSchema7;
+  /** Opt-in entity-level $meta stamping (P1 milestone demo). */
+  metaStamping?: MetaStampingConfig;
 };
 
 export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
@@ -58,7 +62,10 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
   typeNameUiSchemaOptionsMap,
   storageKey,
   initialData,
+  displaySchema,
+  metaStamping,
 }: GraviolaProviderProps) => {
+  const schemaForUi = displaySchema ?? schema;
   const endpoint: SparqlEndpoint = useMemo(() => {
     return {
       endpoint: "urn:worker",
@@ -121,7 +128,7 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
           publicBasePath,
           baseIRI,
         }}
-        schema={schema}
+        schema={schemaForUi}
         makeStubSchema={makeStubSchema}
         uiSchemaDefaultRegistry={registry}
         rendererRegistry={rendererRegistry}
@@ -142,6 +149,7 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
               debounceMS: 5000,
               storageKey,
             }}
+            metaStamping={metaStamping}
             loader={<CircularProgress />}
           >
             <NiceModal.Provider>

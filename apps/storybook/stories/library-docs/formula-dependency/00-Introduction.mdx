@@ -1,0 +1,25 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Library Docs/formula-dependency/00 Introduction" />
+
+# @graviola/formula-dependency
+
+Calc-profile **compiler** (Layer 2). Pipeline:
+
+```
+sidecar + domain schema → IR graph (graphology) → strata → CompiledProfile JSON
+```
+
+- **Structure pass** assigns strata (auth/completeness boundary between stratum 1 and 2+).
+- **Weights pass** annotates cost/placement (never influences strata).
+- Zero graph libraries at runtime — only serialized JSON.
+
+## CLI
+
+```bash
+json-schema-cli calc explain '#/definitions/Garden/properties/annual_fee' \
+  --schema garden-fee.schema.json \
+  --sidecar garden-fee.calc-profile.json
+```
+
+See garden-fee fixture in `packages/formula-dependency/src/fixtures/`.

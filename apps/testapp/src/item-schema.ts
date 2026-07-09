@@ -1,4 +1,11 @@
 import type { JSONSchema7 } from "json-schema";
+import {
+  baseMetaSchemaProfile,
+  deriveExtendedSchema,
+  extendMetaSchema,
+  type MetaStampingConfig,
+} from "@graviola/meta-schema";
+import { schemaIdentityOfSync } from "@graviola/json-schema-utils";
 import type { SchemaConfig } from "./schemaTypes";
 import { makeSchemaConfig } from "./makeSchemaConfig";
 import { exampleDataTurtle } from "./item-fixture";
@@ -143,6 +150,27 @@ export const schema = {
 
 const itemJsonSchema = schema as unknown as JSONSchema7;
 
+const itemMetaSchema = extendMetaSchema(baseMetaSchemaProfile, {
+  type: "object",
+  properties: {
+    reviewStatus: {
+      type: "string",
+      enum: ["draft", "in_review", "approved"],
+      description: "https://example.org/reviewStatus",
+    },
+  },
+});
+
+export const itemMetaStamping: MetaStampingConfig = {
+  ...schemaIdentityOfSync(itemJsonSchema),
+  rejectClientMeta: true,
+};
+
+export const itemExtendedSchema = deriveExtendedSchema(
+  itemJsonSchema,
+  itemMetaSchema,
+);
+
 export const itemSchemaConfig: SchemaConfig = makeSchemaConfig({
   schemaName: "item-schema",
   label: "Items catalog",
@@ -157,6 +185,8 @@ export const itemSchemaConfig: SchemaConfig = makeSchemaConfig({
   baseIRI: "http://www.example.org/",
   entityBaseIRI: "http://www.example.org/example/",
   schema: itemJsonSchema,
+  extendedSchema: itemExtendedSchema,
+  metaStamping: itemMetaStamping,
   primaryFields: {
     Category: {
       label: "name",

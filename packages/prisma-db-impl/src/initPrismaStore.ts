@@ -132,7 +132,9 @@ export function initPrismaDatastorePair<
 ): PrismaDatastorePair {
   const domainSchema = extendSchemaShortcut(rootSchema, "type", "id");
   const persistenceSchema = metaStamping
-    ? deriveExtendedSchema(domainSchema)
+    ? domainSchema.definitions?.EntityMeta
+      ? domainSchema
+      : deriveExtendedSchema(domainSchema)
     : domainSchema;
   const effectiveSchema = persistenceSchema;
   const primarySearchFilter = (

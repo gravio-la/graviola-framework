@@ -2,6 +2,7 @@ import type { PrimaryFieldDeclaration } from "@graviola/edb-core-types";
 import type { GenerateDefaultDetailUISchemaOptions } from "@graviola/edb-detail-renderer";
 import type { GenerateUISchemaOptions } from "@graviola/edb-ui-utils";
 import type { UISchemaElement } from "@jsonforms/core";
+import type { MetaStampingConfig } from "@graviola/meta-schema";
 import type { JSONSchema7 } from "json-schema";
 import type { FC } from "react";
 
@@ -40,6 +41,10 @@ export type SchemaConfig = {
   uischemata?: Record<string, UISchemaElement>;
   /** Per-typeName UISchema roots for the schema-driven detail view (JSON Forms shape) */
   detailUiSchemata?: Record<string, UISchemaElement>;
+  /** Extended schema with grafted `$meta` for reads/tables (domain schema stays in `schema`). */
+  extendedSchema?: JSONSchema7;
+  /** Opt-in `$meta` stamping configuration. */
+  metaStamping?: MetaStampingConfig;
 };
 
 export type OverridableSchemaConfig = SchemaConfig & {

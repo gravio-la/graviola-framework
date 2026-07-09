@@ -233,11 +233,14 @@
         "@graviola/edb-table-renderer-jsonld": "workspace:*",
         "@graviola/edb-table-renderer-sparql-select": "workspace:*",
         "@graviola/edb-ui-utils": "workspace:*",
-        "@graviola/entity-finder": "workspace:*",
+        "@graviola/formula-dependency": "workspace:*",
+        "@graviola/formula-runtime": "workspace:*",
+        "@graviola/formula-runtime-react": "workspace:*",
         "@graviola/graviola-app-config": "workspace:*",
         "@graviola/json-schema-utils": "workspace:*",
         "@graviola/jsonld-utils": "workspace:*",
         "@graviola/local-oxigraph-store-provider": "workspace:*",
+        "@graviola/meta-schema": "workspace:*",
         "@graviola/semantic-json-form": "workspace:*",
         "@graviola/semantic-jsonform-types": "workspace:*",
         "@graviola/semantic-views": "workspace:*",
@@ -866,6 +869,23 @@
         "typescript": "^5.8.2",
       },
     },
+    "packages/formula-materialization": {
+      "name": "@graviola/formula-materialization",
+      "version": "0.1.0",
+      "dependencies": {
+        "@graviola/edb-core-types": "workspace:*",
+        "@graviola/formula-dependency": "workspace:*",
+        "@graviola/formula-runtime": "workspace:*",
+        "@graviola/store-core": "workspace:*",
+      },
+      "devDependencies": {
+        "@graviola/edb-tsconfig": "workspace:*",
+        "@graviola/edb-tsup-config": "workspace:*",
+        "eslint-config-edb": "workspace:*",
+        "tsup": "^8.0.0",
+        "typescript": "^5.8.2",
+      },
+    },
     "packages/formula-runtime": {
       "name": "@graviola/formula-runtime",
       "version": "0.1.0",
@@ -1170,6 +1190,7 @@
       "dependencies": {
         "@graviola/async-oxigraph": "workspace:*",
         "@graviola/edb-core-utils": "workspace:*",
+        "@graviola/meta-schema": "workspace:*",
         "@graviola/remote-query-implementations": "workspace:*",
         "@graviola/sparql-db-impl": "workspace:*",
         "@graviola/store-core": "workspace:*",
@@ -1251,7 +1272,6 @@
       "name": "@graviola/meta-schema",
       "version": "0.1.0",
       "dependencies": {
-        "@graviola/edb-core-types": "workspace:*",
         "@graviola/json-schema-utils": "workspace:*",
       },
       "devDependencies": {
@@ -2802,6 +2822,8 @@
     "@graviola/entity-finder": ["@graviola/entity-finder@workspace:packages/entity-finder"],
 
     "@graviola/formula-dependency": ["@graviola/formula-dependency@workspace:packages/formula-dependency"],
+
+    "@graviola/formula-materialization": ["@graviola/formula-materialization@workspace:packages/formula-materialization"],
 
     "@graviola/formula-runtime": ["@graviola/formula-runtime@workspace:packages/formula-runtime"],
 
@@ -6582,6 +6604,8 @@
     "@graviola/entity-finder/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 
     "@graviola/formula-dependency/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
+
+    "@graviola/formula-materialization/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 
     "@graviola/formula-runtime/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 

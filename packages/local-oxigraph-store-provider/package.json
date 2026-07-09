@@ -37,6 +37,7 @@
   "dependencies": {
     "@graviola/edb-core-utils": "workspace:*",
     "@graviola/remote-query-implementations": "workspace:*",
+    "@graviola/meta-schema": "workspace:*",
     "@graviola/sparql-db-impl": "workspace:*",
     "@graviola/store-core": "workspace:*",
     "@graviola/async-oxigraph": "workspace:*",

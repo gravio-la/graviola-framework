@@ -1,0 +1,37 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Library Docs/sidecar-core/00 Introduction" />
+
+# @graviola/sidecar-core
+
+Generic **scope-keyed sidecar** container (Layer 1). Orthogonal concerns travel outside the domain JSON Schema:
+
+| Instance | Concern | Package |
+|---|---|---|
+| UI schema | Rendering | JSON Forms (existing) |
+| Calc profile | Computation | `@graviola/formula-dependency` |
+| MetaSchema | Administrative `$meta` | `@graviola/meta-schema` |
+
+## Document shape
+
+```json
+{
+  "$schema": "https://graviola.top/sidecar/v1",
+  "appliesTo": {
+    "schema": "https://myapp/schema",
+    "version": "1.2.0",
+    "fingerprint": "sha256-…"
+  },
+  "slots": {
+    "#/definitions/Person/properties/fullName": { }
+  }
+}
+```
+
+`fingerprint` is the machine identity; `version` is advisory for humans and diagnostics.
+
+## API
+
+- `createSidecarDocument(appliesTo, slots)`
+- `validateSidecar(sidecar, expectedIdentity, knownScopes)`
+- `formatAppliesToLabel(appliesTo)` — e.g. `https://myapp/schema v1.2.0 (sha256-ab12…)`

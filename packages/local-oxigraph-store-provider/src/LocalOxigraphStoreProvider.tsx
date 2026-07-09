@@ -29,6 +29,7 @@ import {
   type LocalPersistenceOptions,
   setPersistedTurtle,
 } from "./localGraphPersistence";
+import type { MetaStampingConfig } from "@graviola/meta-schema";
 import { useOxigraph } from "./useOxigraph";
 
 export type LocalOxigraphStoreProviderProps = {
@@ -40,6 +41,8 @@ export type LocalOxigraphStoreProviderProps = {
   localPersistence?: LocalPersistenceOptions;
   /** When true, parent-side edits to `x-inverseOf` properties sync canonical forward triples (e.g. child.parentCategory). */
   enableInversePropertiesFeature?: boolean;
+  /** Opt-in system-asserted entity `$meta` stamping on upsert. */
+  metaStamping?: MetaStampingConfig;
 };
 
 export const LocalOxigraphStoreProvider: FunctionComponent<
@@ -52,6 +55,7 @@ export const LocalOxigraphStoreProvider: FunctionComponent<
   loader,
   localPersistence,
   enableInversePropertiesFeature,
+  metaStamping,
 }) => {
   const { oxigraph } = useOxigraph();
   const baseCrud = useAsyncLocalWorkerCrudOptions(endpoint);
@@ -142,6 +146,7 @@ export const LocalOxigraphStoreProvider: FunctionComponent<
       defaultLimit,
       defaultUpdateGraph: endpoint.defaultUpdateGraph,
       enableInversePropertiesFeature,
+      metaStamping,
     });
   }, [
     oxigraph?.ao,
@@ -154,6 +159,7 @@ export const LocalOxigraphStoreProvider: FunctionComponent<
     defaultLimit,
     endpoint.defaultUpdateGraph,
     enableInversePropertiesFeature,
+    metaStamping,
   ]);
 
   useEffect(() => {

@@ -67,16 +67,14 @@ export async function schemaIdentityOf(
   schema: JSONSchema7,
 ): Promise<SchemaIdentity> {
   const fingerprint = await schemaFingerprint(schema);
-  const version =
-    typeof schema.version === "string" ? schema.version : undefined;
+  const version = readDeclaredVersion(schema);
   const id = typeof schema.$id === "string" ? schema.$id : undefined;
   return { schema: id, version, fingerprint };
 }
 
 export function schemaIdentityOfSync(schema: JSONSchema7): SchemaIdentity {
   const fingerprint = schemaFingerprintSync(schema);
-  const version =
-    typeof schema.version === "string" ? schema.version : undefined;
+  const version = readDeclaredVersion(schema);
   const id = typeof schema.$id === "string" ? schema.$id : undefined;
   return { schema: id, version, fingerprint };
 }
@@ -122,9 +120,21 @@ async function sha256Hex(text: string): Promise<string> {
     hasher.update(text);
     return hasher.digest("hex");
   }
-  const data = new TextEncoder().encode(text);
+  const encoder =
+    typeof globalThis.TextEncoder !== "undefined"
+      ? new globalThis.TextEncoder()
+      : null;
+  if (!encoder || !globalThis.crypto?.subtle) {
+    throw new Error("Web Crypto TextEncoder unavailable");
+  }
+  const data = encoder.encode(text);
   const hash = await globalThis.crypto.subtle.digest("SHA-256", data);
   return [...new Uint8Array(hash)]
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
+}
+
+function readDeclaredVersion(schema: JSONSchema7): string | undefined {
+  const raw = (schema as JSONSchema7 & { version?: unknown }).version;
+  return typeof raw === "string" ? raw : undefined;
 }

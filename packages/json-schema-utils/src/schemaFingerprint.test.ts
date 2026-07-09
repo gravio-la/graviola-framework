@@ -82,7 +82,9 @@ describe("schemaFingerprint", () => {
   });
 
   it("excludes version from fingerprint input", () => {
-    const v2 = { ...baseSchema, version: "2.0.0" };
+    const v2 = { ...baseSchema, version: "2.0.0" } as JSONSchema7 & {
+      version: string;
+    };
     expect(schemaFingerprintSync(baseSchema)).toBe(schemaFingerprintSync(v2));
   });
 

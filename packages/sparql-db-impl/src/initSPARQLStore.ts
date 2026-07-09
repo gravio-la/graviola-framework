@@ -89,7 +89,9 @@ export function initSPARQLDatastorePair(
   } = dataStoreConfig;
 
   const persistenceSchema = metaStamping
-    ? deriveExtendedSchema(rootSchema)
+    ? rootSchema.definitions?.EntityMeta
+      ? rootSchema
+      : deriveExtendedSchema(rootSchema)
     : rootSchema;
 
   const schemaForType = (typeName: string) =>

@@ -14,6 +14,8 @@ import {
 } from "@graviola/formula-dependency";
 import { evaluateCompiledProfileDeterministic } from "@graviola/formula-runtime";
 import type { DatastoreContractStore } from "../types";
+import { entityIRI } from "../schema/testSchema";
+import { makeItem } from "../fixtures/testData";
 
 export function runFormulaPortabilitySuite(
   getStore: () => DatastoreContractStore,
@@ -37,17 +39,15 @@ export function runFormulaPortabilitySuite(
 
     test("feature-off row: store CRUD unaffected without calc profile", async () => {
       const store = getStore();
-      const raw = structuredClone(gardenFeeSampleData) as Record<
-        string,
-        unknown
-      >;
+      const itemId = entityIRI("Item", "formula-off-1");
+      const item = makeItem("formula-off-1");
 
-      await store.upsert("Garden", raw["@id"] as string, raw as never);
+      await store.upsert("Item", itemId, item as never);
 
-      const loaded = await store.loadOne("Garden", raw["@id"] as string);
+      const loaded = await store.loadOne("Item", itemId);
       expect(loaded).toBeTruthy();
-      expect(loaded?.name).toBe("Allotment North");
-      expect(loaded?.annual_fee).toBeUndefined();
+      expect(loaded?.name).toBe(item.name);
+      expect((loaded as Record<string, unknown>)?.annual_fee).toBeUndefined();
     });
 
     test("evaluation is independent of active store adapter", async () => {
@@ -57,17 +57,12 @@ export function runFormulaPortabilitySuite(
         gardenFeeSampleData,
       );
 
-      await store.upsert(
-        "Garden",
-        gardenFeeSampleData["@id"] as string,
-        gardenFeeSampleData as never,
-      );
+      const itemId = entityIRI("Item", "formula-eval-1");
+      const item = makeItem("formula-eval-1");
+      await store.upsert("Item", itemId, item as never);
 
-      const loaded = await store.loadOne(
-        "Garden",
-        gardenFeeSampleData["@id"] as string,
-      );
-      expect(loaded?.name).toBe(gardenFeeSampleData.name);
+      const loaded = await store.loadOne("Item", itemId);
+      expect(loaded?.name).toBe(item.name);
       expect(evaluated.annual_fee).toBe(gardenFeeExpected.gardenAnnualFee);
     });
   });
