@@ -1,5 +1,6 @@
 import { run, subcommands } from "cmd-ts";
 import { generateTranslationsCommand } from "./commands/generateTranslations";
+import { calcCommand } from "./commands/calc";
 
 const cli = subcommands({
   name: "json-schema-cli",
@@ -7,6 +8,7 @@ const cli = subcommands({
   description: "CLI tools for working with JSON Schema",
   cmds: {
     "generate-translations": generateTranslationsCommand,
+    calc: calcCommand,
   },
 });
 

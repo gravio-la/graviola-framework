@@ -15,6 +15,8 @@
     "docker:down": "docker compose down"
   },
   "dependencies": {
+    "@graviola/formula-dependency": "workspace:*",
+    "@graviola/formula-runtime": "workspace:*",
     "@graviola/edb-core-types": "workspace:*",
     "@graviola/json-schema-prisma-utils": "workspace:*",
     "@graviola/json-schema-utils": "workspace:*",

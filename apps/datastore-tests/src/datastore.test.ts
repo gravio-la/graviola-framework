@@ -51,6 +51,7 @@ import { runClassesSuite } from "./suites/classes.suite";
 import { runIterableSuite } from "./suites/iterable.suite";
 import { runFindByLabelSuite } from "./suites/findByLabel.suite";
 import { runTypedFilterSuite } from "./suites/typedFilter.suite";
+import { runFormulaPortabilitySuite } from "./suites/formulaPortability.suite";
 
 // ─── Adapter loop ─────────────────────────────────────────────────────────────
 // Top-level await is supported in bun:test — adapters are resolved before
@@ -86,6 +87,7 @@ for (const adapter of adapters) {
 
     runCrudSuite(() => store);
     runQuerySuite(() => store);
+    runFormulaPortabilitySuite(() => store);
 
     if (supports("counts")) {
       runCountSuite(() => store as unknown as DatastoreContractStoreWithCounts);

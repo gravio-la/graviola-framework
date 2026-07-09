@@ -6,3 +6,4 @@ export * from "./normalizer";
 export * from "./extractor";
 
 export * from "./validators";
+export * from "./cbdBoundary";
