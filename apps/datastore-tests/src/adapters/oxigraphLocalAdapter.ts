@@ -24,6 +24,10 @@ import {
   queryBuildOptions,
   BASE_IRI,
 } from "../schema/testSchema";
+import {
+  sparqlMetaStampingConfig,
+  sparqlMetaTestSchema,
+} from "../schema/metaTestConfig";
 import type { DatastoreAdapter, DatastoreContractStore } from "../types";
 
 /** Build CRUDFunctions that delegate to a synchronous Oxigraph Store. */
@@ -80,7 +84,21 @@ export function createOxigraphLocalAdapter(): DatastoreAdapter {
         defaultLimit: 100,
       });
 
-      return { store: pair.store as DatastoreContractStore };
+      const metaPair = initSPARQLDatastorePair({
+        schema: sparqlMetaTestSchema as any,
+        defaultPrefix: BASE_IRI,
+        jsonldContext: { "@vocab": BASE_IRI },
+        typeNameToTypeIRI,
+        queryBuildOptions,
+        sparqlQueryFunctions: crudFunctions,
+        defaultLimit: 100,
+        metaStamping: sparqlMetaStampingConfig,
+      });
+
+      return {
+        store: pair.store as DatastoreContractStore,
+        metaStampingStore: metaPair.store as DatastoreContractStore,
+      };
     },
 
     clearAll: async () => {

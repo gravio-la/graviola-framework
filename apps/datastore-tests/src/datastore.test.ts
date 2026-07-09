@@ -51,6 +51,7 @@ import { runClassesSuite } from "./suites/classes.suite";
 import { runIterableSuite } from "./suites/iterable.suite";
 import { runFindByLabelSuite } from "./suites/findByLabel.suite";
 import { runTypedFilterSuite } from "./suites/typedFilter.suite";
+import { runMetaSuite } from "./suites/meta.suite";
 import { runFormulaPortabilitySuite } from "./suites/formulaPortability.suite";
 
 // ─── Adapter loop ─────────────────────────────────────────────────────────────
@@ -72,6 +73,7 @@ for (const adapter of adapters) {
 
   describe(adapter.name, () => {
     const store: DatastoreContractStore = setupResult.store;
+    const metaStampingStore = setupResult.metaStampingStore;
 
     afterAll(async () => {
       await adapter.teardown();
@@ -127,6 +129,13 @@ for (const adapter of adapters) {
     if (supports("filters")) {
       runTypedFilterSuite(
         () => store as unknown as DatastoreContractStoreWithFilters,
+      );
+    }
+
+    if (supports("writes")) {
+      runMetaSuite(
+        () => store,
+        metaStampingStore ? () => metaStampingStore : undefined,
       );
     }
   });

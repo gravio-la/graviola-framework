@@ -5,6 +5,7 @@ import type {
   WalkerOptions,
 } from "@graviola/edb-core-types";
 import type { DatastoreBaseConfig } from "@graviola/edb-global-types";
+import type { MetaStampingConfig } from "@graviola/meta-schema";
 import type { JSONSchema7 } from "json-schema";
 
 export type SPARQLDataStoreConfig = {
@@ -18,4 +19,6 @@ export type SPARQLDataStoreConfig = {
   makeStubSchema?: (schema: JSONSchema7) => JSONSchema7;
   enableInversePropertiesFeature?: boolean;
   defaultUpdateGraph?: string;
+  /** Opt-in entity `$meta` stamping on upsert (default: disabled). */
+  metaStamping?: MetaStampingConfig;
 } & DatastoreBaseConfig;

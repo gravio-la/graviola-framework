@@ -7,6 +7,12 @@ import {
 } from "@graviola/json-schema-prisma-utils";
 import { defs } from "@graviola/json-schema-utils";
 import { extendSchemaShortcut } from "@graviola/json-schema-utils";
+import {
+  applyMetaStampingOnWrite,
+  deriveExtendedSchema,
+  remapEntityMetaForPersistence,
+  remapEntityMetaFromPersistence,
+} from "@graviola/meta-schema";
 import { createChangeBus } from "@graviola/store-core";
 import type {
   BaseStore,
@@ -121,9 +127,14 @@ export function initPrismaDatastorePair<
     maxRecursionDepth = 4,
     debug,
     datasourceProvider,
+    metaStamping,
   }: PrismaStoreOptions,
 ): PrismaDatastorePair {
-  const effectiveSchema = extendSchemaShortcut(rootSchema, "type", "id");
+  const domainSchema = extendSchemaShortcut(rootSchema, "type", "id");
+  const persistenceSchema = metaStamping
+    ? deriveExtendedSchema(domainSchema)
+    : domainSchema;
+  const effectiveSchema = persistenceSchema;
   const primarySearchFilter = (
     searchString: string,
     likeInsensitive: boolean,
@@ -227,7 +238,11 @@ export function initPrismaDatastorePair<
         typeIsNotIRI,
       }),
     loadDocument: async (typeName: string, entityIRI: string) => {
-      return load(typeName, IRItoId ? IRItoId(entityIRI) : entityIRI);
+      const doc = await load(
+        typeName,
+        IRItoId ? IRItoId(entityIRI) : entityIRI,
+      );
+      return metaStamping && doc ? remapEntityMetaFromPersistence(doc) : doc;
     },
     findDocuments: async (typeName, query, limit, cb) => {
       const entries =
@@ -265,11 +280,28 @@ export function initPrismaDatastorePair<
       });
     },
     upsertDocument: async (typeName: string, entityIRI, document: any) => {
-      const doc = {
+      let doc = {
         ...document,
         "@id": entityIRI,
         "@type": typeNameToTypeIRI(typeName),
       };
+
+      if (metaStamping) {
+        const previousRaw = await load(typeName, entityIRI).catch(() => null);
+        const previous =
+          previousRaw != null
+            ? remapEntityMetaFromPersistence(previousRaw)
+            : null;
+        doc = applyMetaStampingOnWrite(
+          doc,
+          typeName,
+          persistenceSchema,
+          metaStamping,
+          previous,
+        );
+        doc = remapEntityMetaForPersistence(doc);
+      }
+
       return await upsert(typeName, doc, {
         prisma,
         schema: effectiveSchema,
@@ -404,6 +436,9 @@ export function initPrismaDatastorePair<
       exists: true,
       profiles: {
         counts: { cost: "O(1)" },
+        ...(metaStamping
+          ? { entityMeta: { encoding: "column" as const } }
+          : {}),
       },
     },
     subscribe: changeBus.subscribe,

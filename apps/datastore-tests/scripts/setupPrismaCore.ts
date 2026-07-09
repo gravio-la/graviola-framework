@@ -18,6 +18,7 @@ import { writeFileSync, mkdirSync, existsSync, rmSync, readFileSync } from "fs";
 import { execSync } from "child_process";
 import { createRequire } from "node:module";
 import { join } from "path";
+import { deriveExtendedSchema } from "@graviola/meta-schema";
 import { jsonSchema2Prisma } from "@graviola/json-schema-prisma-utils";
 import { extendSchemaShortcut } from "@graviola/json-schema-utils";
 import { rawTestSchema } from "../src/schema/testSchema";
@@ -98,8 +99,9 @@ export function runPrismaSetupForUrl(databaseUrl: string): void {
     "type",
     "id",
   );
+  const persistenceSchema = deriveExtendedSchema(extendedSchema);
 
-  const modelDefinitions = jsonSchema2Prisma(extendedSchema, new WeakSet(), {
+  const modelDefinitions = jsonSchema2Prisma(persistenceSchema, new WeakSet(), {
     databaseProvider: provider,
     reverseMap: {},
   });

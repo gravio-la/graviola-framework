@@ -20,11 +20,16 @@ export type StreamsProfile = {
   style: "cursor" | "buffer";
 };
 
+export type EntityMetaProfile = {
+  encoding: "named-graph" | "triples" | "column" | "pipeline";
+};
+
 export type CapabilityProfiles = {
   searches?: SearchesProfile;
   counts?: CountsProfile;
   writes?: WritesProfile;
   streams?: StreamsProfile;
+  entityMeta?: EntityMetaProfile;
   /** e.g. `["sparql"]` for native escape hatch */
   speaksNative?: string[];
 };

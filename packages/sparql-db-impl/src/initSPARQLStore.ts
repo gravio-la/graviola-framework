@@ -27,6 +27,13 @@ import {
   getEntitiesWithClassesByFilter as getEntitiesWithClassesByFilterImpl,
 } from "@graviola/sparql-schema";
 import type { JSONSchema7 } from "json-schema";
+import {
+  applyMetaStampingOnWrite,
+  deriveExtendedSchema,
+  remapEntityMetaForPersistence,
+  remapEntityMetaFromPersistence,
+  type MetaStampingConfig,
+} from "@graviola/meta-schema";
 import type {
   EntityChangeEvent,
   SparqlStore,
@@ -78,7 +85,18 @@ export function initSPARQLDatastorePair(
     schema: rootSchema,
     enableInversePropertiesFeature,
     defaultUpdateGraph,
+    metaStamping,
   } = dataStoreConfig;
+
+  const persistenceSchema = metaStamping
+    ? deriveExtendedSchema(rootSchema)
+    : rootSchema;
+
+  const schemaForType = (typeName: string) =>
+    bringDefinitionToTop(
+      makeStubSchema ? makeStubSchema(persistenceSchema) : persistenceSchema,
+      typeName,
+    ) as JSONSchema7;
 
   const typeIRItoTypeName = queryBuildOptions.typeIRItoTypeName;
   const flavour = queryBuildOptions.sparqlFlavour ?? "default";
@@ -92,14 +110,17 @@ export function initSPARQLDatastorePair(
 
   const loadDocument = async (typeName: string, entityIRI: string) => {
     const typeIRI = typeNameToTypeIRI(typeName);
-    const schema = bringDefinitionToTop(rootSchema, typeName) as JSONSchema7;
+    const schema = schemaForType(typeName);
     const res = await load(entityIRI, typeIRI, schema, constructFetch, {
       defaultPrefix,
       queryBuildOptions,
       walkerOptions,
       maxRecursion: walkerOptions?.maxRecursion,
     });
-    return res.document;
+    const document = res.document;
+    return metaStamping && document
+      ? remapEntityMetaFromPersistence(document)
+      : document;
   };
 
   const findDocumentsInner = async (
@@ -213,15 +234,27 @@ export function initSPARQLDatastorePair(
       );
     },
     upsertDocument: async (typeName, entityIRI, document) => {
-      const schema = bringDefinitionToTop(
-        makeStubSchema ? makeStubSchema(rootSchema) : rootSchema,
-        typeName,
-      );
-      const doc = {
+      const schema = schemaForType(typeName);
+      let doc = {
         ...document,
         "@id": entityIRI,
         "@type": typeNameToTypeIRI(typeName),
       };
+
+      if (metaStamping) {
+        const previous = await loadDocument(typeName, entityIRI).catch(
+          () => null,
+        );
+        doc = applyMetaStampingOnWrite(
+          doc,
+          typeName,
+          persistenceSchema,
+          metaStamping,
+          previous,
+        );
+        doc = remapEntityMetaForPersistence(doc);
+      }
+
       const cleanData = await cleanJSONLD(doc, schema, {
         jsonldContext,
         defaultPrefix,
@@ -511,6 +544,9 @@ export function initSPARQLDatastorePair(
         searches: searchesProfile,
         counts: { cost: "O(1)" },
         speaksNative: ["sparql"],
+        ...(metaStamping
+          ? { entityMeta: { encoding: "triples" as const } }
+          : {}),
       },
     },
     subscribe: changeBus.subscribe,

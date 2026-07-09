@@ -1,4 +1,5 @@
 import type { IRIToStringFn, StringToIRIFn } from "@graviola/edb-core-types";
+import type { MetaStampingConfig } from "@graviola/meta-schema";
 
 export interface AbstractPrismaClient extends Record<string, any> {
   $transaction<T>(fn: (tx: AbstractPrismaClient) => Promise<T>): Promise<T>;
@@ -34,9 +35,10 @@ export type PrismaStoreOptions = {
   allowNonTransactionalFallback?: boolean;
   isAllowedNestedElement?: (element: any) => boolean;
   debug?: boolean;
-  /**
-   * Prisma schema `datasource db { provider = "…" }`
-   * Must match the generated client’s datasource.
+  /** Prisma schema `datasource db { provider = "…" }`
+   * Must match the generated client's datasource.
    */
   datasourceProvider: string;
+  /** Opt-in entity `$meta` stamping on upsert (default: disabled). */
+  metaStamping?: MetaStampingConfig;
 };

@@ -29,6 +29,7 @@
         "@graviola/formula-runtime": "workspace:*",
         "@graviola/json-schema-prisma-utils": "workspace:*",
         "@graviola/json-schema-utils": "workspace:*",
+        "@graviola/meta-schema": "workspace:*",
         "@graviola/prisma-db-impl": "workspace:*",
         "@graviola/remote-query-implementations": "workspace:*",
         "@graviola/sparql-db-impl": "workspace:*",
@@ -1246,6 +1247,22 @@
         "typescript": "^5.8.2",
       },
     },
+    "packages/meta-schema": {
+      "name": "@graviola/meta-schema",
+      "version": "0.1.0",
+      "dependencies": {
+        "@graviola/edb-core-types": "workspace:*",
+        "@graviola/json-schema-utils": "workspace:*",
+      },
+      "devDependencies": {
+        "@graviola/edb-tsconfig": "workspace:*",
+        "@graviola/edb-tsup-config": "workspace:*",
+        "@types/json-schema": "catalog:",
+        "eslint-config-edb": "workspace:*",
+        "tsup": "^8.0.0",
+        "typescript": "^5.8.2",
+      },
+    },
     "packages/prisma-db-impl": {
       "name": "@graviola/prisma-db-impl",
       "version": "1.7.4",
@@ -1254,6 +1271,7 @@
         "@graviola/json-schema-prisma-utils": "workspace:*",
         "@graviola/json-schema-utils": "workspace:*",
         "@graviola/jsonld-utils": "workspace:*",
+        "@graviola/meta-schema": "workspace:*",
         "@graviola/store-core": "workspace:*",
         "cli-progress": "^3.12.0",
         "lodash-es": "catalog:",
@@ -1484,6 +1502,7 @@
         "@graviola/edb-global-types": "workspace:*",
         "@graviola/json-schema-utils": "workspace:*",
         "@graviola/jsonld-utils": "workspace:*",
+        "@graviola/meta-schema": "workspace:*",
         "@graviola/remote-query-implementations": "workspace:*",
         "@graviola/sparql-schema": "workspace:*",
         "@graviola/sparql-tools": "workspace:*",
@@ -2809,6 +2828,8 @@
     "@graviola/local-oxigraph-store-provider": ["@graviola/local-oxigraph-store-provider@workspace:packages/local-oxigraph-store-provider"],
 
     "@graviola/meilisearch-sparql-store": ["@graviola/meilisearch-sparql-store@workspace:packages/meilisearch-sparql-store"],
+
+    "@graviola/meta-schema": ["@graviola/meta-schema@workspace:packages/meta-schema"],
 
     "@graviola/prisma-db-impl": ["@graviola/prisma-db-impl@workspace:packages/prisma-db-impl"],
 
@@ -6589,6 +6610,8 @@
     "@graviola/local-oxigraph-store-provider/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 
     "@graviola/meilisearch-sparql-store/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
+
+    "@graviola/meta-schema/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 
     "@graviola/prisma-db-impl/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 

@@ -33,6 +33,7 @@ import {
   BASE_IRI,
   primaryFields,
 } from "../schema/testSchema";
+import { prismaMetaStampingConfig } from "../schema/metaTestConfig";
 import type { DatastoreAdapter, DatastoreContractStore } from "../types";
 import {
   databaseUrlToProvider,
@@ -160,8 +161,23 @@ export function createPrismaAdapter(
         },
       );
 
+      const { store: metaStampingStore } = initPrismaDatastorePair(
+        prismaClient,
+        extendedSchema,
+        primaryFields,
+        {
+          jsonldContext: { "@vocab": BASE_IRI },
+          defaultPrefix: BASE_IRI,
+          typeNameToTypeIRI,
+          typeIRItoTypeName,
+          datasourceProvider: databaseUrlToProvider(databaseUrl),
+          metaStamping: prismaMetaStampingConfig,
+        },
+      );
+
       return {
         store: store as DatastoreContractStore,
+        metaStampingStore: metaStampingStore as DatastoreContractStore,
       };
     },
 

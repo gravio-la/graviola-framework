@@ -49,6 +49,7 @@
     "@graviola/sparql-tools": "workspace:*",
     "@graviola/sparql-schema": "workspace:*",
     "@graviola/jsonld-utils": "workspace:*",
+    "@graviola/meta-schema": "workspace:*",
     "@graviola/store-core": "workspace:*"
   },
   "eslintConfig": {

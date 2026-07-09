@@ -20,6 +20,7 @@
     "@graviola/edb-core-types": "workspace:*",
     "@graviola/json-schema-prisma-utils": "workspace:*",
     "@graviola/json-schema-utils": "workspace:*",
+    "@graviola/meta-schema": "workspace:*",
     "@graviola/prisma-db-impl": "workspace:*",
     "@graviola/remote-query-implementations": "workspace:*",
     "@graviola/sparql-db-impl": "workspace:*",

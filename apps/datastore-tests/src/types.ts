@@ -69,7 +69,11 @@ export type DatastoreAdapter = {
   /** Human-readable name, used in test output. */
   name: string;
   /** Initialise store — invoked once before the adapter's describe block. */
-  setup: () => Promise<{ store: DatastoreContractStore }>;
+  setup: () => Promise<{
+    store: DatastoreContractStore;
+    /** Same backing data; optional store with entity `$meta` stamping enabled. */
+    metaStampingStore?: DatastoreContractStore;
+  }>;
   /** Wipe backing data — invoked in beforeEach. */
   clearAll: () => Promise<void>;
   /** Disconnect / cleanup — invoked in afterAll. */
