@@ -60,6 +60,8 @@ export type QuerySearch = {
 
 export type QueryFields = {
   fields: string[];
+  /** UI scopes for opt-in meta annotation projection in SPARQL flat SELECT. */
+  annotationScopes?: string[];
 };
 
 export type QueryType = Partial<

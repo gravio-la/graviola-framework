@@ -15,5 +15,8 @@ export type StoreListQuery = Partial<{
   search: string;
   /** Omit or `true`: case-insensitive (default). `false`: case-sensitive. */
   insensitive: boolean;
+  /** Top-level domain property keys to include in flat SELECT (empty = all). */
   fields: string[];
+  /** UI scopes for opt-in meta annotation projection in SPARQL flat SELECT. */
+  annotationScopes: string[];
 }>;
