@@ -1,26 +1,53 @@
 import type { JSONSchema7 } from "json-schema";
-import { resolveSchema, type JsonSchema } from "./resolver";
+import { resolveSchema } from "./resolver";
 import { walkJSONSchema } from "./walkJSONSchema";
+import {
+  type EntityIdentityOptions,
+  schemaHasEntityIdentity,
+} from "./entityIdentity";
+
+export type { EntityIdentityOptions } from "./entityIdentity";
+export {
+  DEFAULT_ENTITY_IDENTITY,
+  PRISMA_ENTITY_IDENTITY,
+  PRISMA_ENTITY_ID_KEY,
+  PRISMA_ENTITY_TYPE_KEY,
+  JSONLD_ENTITY_ID_KEY,
+  JSONLD_ENTITY_TYPE_KEY,
+  entityIdentityFromIdKey,
+  resolveEntityIdentityKeys,
+  schemaHasEntityIdentity,
+  entityIdFromInstance,
+  isNamedEntityInstance,
+} from "./entityIdentity";
 
 export type CbdBoundaryScope = {
-  /** JSON Pointer scope to the sub-schema that starts a named entity (has `@id`). */
+  /** JSON Pointer scope to the sub-schema that starts a named entity. */
   scope: string;
   /** Definition name when scope is under `#/definitions/<Name>`. */
   definitionName?: string;
 };
 
 /**
- * Schema-side named-entity (CBD) boundaries: sub-schemas that declare an `@id` property
- * are treated as aggregate roots (Concise Bounded Description units).
+ * Schema-side named-entity (CBD) boundaries.
+ *
+ * Sub-schemas whose `properties` declare an identity key (default `@id`) are
+ * aggregate roots for Concise Bounded Description extraction and `$meta` grafting.
+ *
+ * Pass the same `identityKeys` as the `idKey` from {@link extendSchemaShortcut}:
+ * - SPARQL / JSON-LD: default (`@id`)
+ * - Prisma: `{ identityKeys: ["id"] }` or {@link PRISMA_ENTITY_IDENTITY}
  */
-export function cbdBoundaryScopes(schema: JSONSchema7): CbdBoundaryScope[] {
+export function cbdBoundaryScopes(
+  schema: JSONSchema7,
+  options?: EntityIdentityOptions,
+): CbdBoundaryScope[] {
   const boundaries: CbdBoundaryScope[] = [];
   const visit = (subSchema: JSONSchema7, path: string[]) => {
     walkJSONSchema(subSchema, {
       callbacks: {
         onObject: (objSchema, objPath) => {
-          const props = objSchema.properties;
-          if (props && "@id" in props) {
+          if (schemaHasEntityIdentity(objSchema.properties, options)) {
             const scope = schemaPathToPointer([...path, ...objPath].join("/"));
             const defMatch = scope.match(/^#\/definitions\/([^/]+)/);
             boundaries.push({
@@ -50,11 +77,11 @@ export function cbdBoundaryScopes(schema: JSONSchema7): CbdBoundaryScope[] {
 export function isNamedEntityBoundaryAtScope(
   schema: JSONSchema7,
   scope: string,
+  options?: EntityIdentityOptions,
 ): boolean {
   const sub = resolveSchema(schema, scope, schema);
   if (!sub || typeof sub !== "object") return false;
-  const props = (sub as JSONSchema7).properties;
-  return Boolean(props && "@id" in props);
+  return schemaHasEntityIdentity((sub as JSONSchema7).properties, options);
 }
 
 function schemaPathToPointer(schemaPath: string): string {

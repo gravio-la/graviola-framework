@@ -1,5 +1,6 @@
 import type { JSONSchema7 } from "json-schema";
 import { convertDefsToDefinitions } from "./defsToDefinitions";
+import { sha256HexSync } from "./sha256Sync";
 
 /** Fields excluded from fingerprint input (advisory / document identity, not semantic shape). */
 const FINGERPRINT_EXCLUDE = new Set(["version", "$schema"]);
@@ -45,18 +46,11 @@ export async function schemaFingerprint(schema: JSONSchema7): Promise<string> {
   return `sha256-${digest}`;
 }
 
-/** Synchronous fingerprint when a sync hash is required (uses Bun's crypto). */
+/** Synchronous fingerprint (Bun fast path + browser pure-JS SHA-256). */
 export function schemaFingerprintSync(schema: JSONSchema7): string {
   const canonical = canonicalizeSchemaForFingerprint(schema);
   const json = JSON.stringify(canonical);
-  if (typeof globalThis.Bun !== "undefined") {
-    const hasher = new globalThis.Bun.CryptoHasher("sha256");
-    hasher.update(json);
-    return `sha256-${hasher.digest("hex")}`;
-  }
-  throw new Error(
-    "schemaFingerprintSync requires Bun; use schemaFingerprint() in browser",
-  );
+  return `sha256-${sha256HexSync(json)}`;
 }
 
 /**
@@ -116,16 +110,14 @@ function sortKeysDeep(value: unknown, excludeKeys: Set<string>): unknown {
 
 async function sha256Hex(text: string): Promise<string> {
   if (typeof globalThis.Bun !== "undefined") {
-    const hasher = new globalThis.Bun.CryptoHasher("sha256");
-    hasher.update(text);
-    return hasher.digest("hex");
+    return sha256HexSync(text);
   }
   const encoder =
     typeof globalThis.TextEncoder !== "undefined"
       ? new globalThis.TextEncoder()
       : null;
   if (!encoder || !globalThis.crypto?.subtle) {
-    throw new Error("Web Crypto TextEncoder unavailable");
+    return sha256HexSync(text);
   }
   const data = encoder.encode(text);
   const hash = await globalThis.crypto.subtle.digest("SHA-256", data);

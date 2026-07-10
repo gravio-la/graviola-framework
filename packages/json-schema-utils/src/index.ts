@@ -11,4 +11,5 @@ export * from "./walkJSONSchema";
 export * from "./schemaRegistry";
 export * from "./schemaScopeFrame";
 export * from "./schemaFingerprint";
+export * from "./entityIdentity";
 export * from "./cbdBoundary";
