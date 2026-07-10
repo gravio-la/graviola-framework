@@ -48,6 +48,7 @@ export function GardenFeeListPage() {
       </Typography>
       <SemanticTable
         typeName={typeName}
+        rowShape="jsonld"
         onEditEntry={onEditEntry}
         onShowEntry={onShowEntry}
       />

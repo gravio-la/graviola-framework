@@ -23,22 +23,23 @@ export const gardenFeeDemoValues = evaluateCompiledProfileDeterministic(
 
 export const gardenFeeInitialTurtle = `@prefix ex: <https://example.org/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-ex:garden/1 a ex:Garden ;
+<https://example.org/garden/1> a ex:Garden ;
   ex:name "Allotment North" ;
-  ex:fee_rate_per_sqm "2.5"^^<http://www.w3.org/2001/XMLSchema#decimal> ;
-  ex:patch ex:patch/1 .
+  ex:fee_rate_per_sqm "2.5"^^xsd:decimal ;
+  ex:patch _:patch1 .
 
-ex:patch/1 a ex:Patch ;
-  ex:plots ex:plot/1, ex:plot/2 .
+_:patch1 a ex:Patch ;
+  ex:plots _:plot1, _:plot2 .
 
-ex:plot/1 a ex:Plot ;
-  ex:width_m "4"^^<http://www.w3.org/2001/XMLSchema#decimal> ;
-  ex:length_m "5"^^<http://www.w3.org/2001/XMLSchema#decimal> .
+_:plot1 a ex:Plot ;
+  ex:width_m "4"^^xsd:decimal ;
+  ex:length_m "5"^^xsd:decimal .
 
-ex:plot/2 a ex:Plot ;
-  ex:width_m "3"^^<http://www.w3.org/2001/XMLSchema#decimal> ;
-  ex:length_m "6"^^<http://www.w3.org/2001/XMLSchema#decimal> .
+_:plot2 a ex:Plot ;
+  ex:width_m "3"^^xsd:decimal ;
+  ex:length_m "6"^^xsd:decimal .
 `;
 
 export const gardenFeeSchemaConfig: SchemaConfig = makeSchemaConfig({
@@ -49,7 +50,7 @@ export const gardenFeeSchemaConfig: SchemaConfig = makeSchemaConfig({
   version: "1.0.0",
   color: "#558b2f",
   icon: "🌱",
-  storageKey: "testapp-garden-fee",
+  storageKey: "testapp-garden-fee-v2",
   initialData: gardenFeeInitialTurtle,
   baseIRI: "https://example.org/",
   entityBaseIRI: "https://example.org/",

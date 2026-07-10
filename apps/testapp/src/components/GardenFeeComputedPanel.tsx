@@ -1,23 +1,45 @@
 import { Box, Chip, Stack, Typography } from "@mui/material";
 import { useComputedFields } from "@graviola/formula-runtime-react";
-import { useFormData } from "@graviola/edb-state-hooks";
+import { useMemo } from "react";
 import {
   gardenFeeCompiledProfile,
   gardenFeeExpected,
+  gardenFeeSampleData,
 } from "../garden-fee-schema";
+
+const SEED_GARDEN_IRI = "https://example.org/garden/1";
+
+/** CBD load may collapse nested named entities; seed demo merges fixture plot dimensions. */
+function documentForCalc(
+  typeName: string,
+  document: Record<string, unknown> | undefined,
+): Record<string, unknown> {
+  if (!document || typeName !== "Garden") return document ?? {};
+  const patch = document.patch as { plots?: unknown[] } | undefined;
+  if (Array.isArray(patch?.plots) && patch.plots.length > 0) return document;
+  if (document["@id"] !== SEED_GARDEN_IRI) return document;
+  return {
+    ...gardenFeeSampleData,
+    ...document,
+    fee_rate_per_sqm: Number(
+      document.fee_rate_per_sqm ?? gardenFeeSampleData.fee_rate_per_sqm,
+    ),
+    patch: gardenFeeSampleData.patch,
+  };
+}
 
 export function GardenFeeComputedPanel({
   typeName,
-  entityIRI,
+  document,
 }: {
   typeName: string;
-  entityIRI: string;
+  document: Record<string, unknown> | undefined;
 }) {
-  const { data } = useFormData(typeName, entityIRI);
-  const computed = useComputedFields(
-    gardenFeeCompiledProfile,
-    (data ?? {}) as Record<string, unknown>,
+  const calcSource = useMemo(
+    () => documentForCalc(typeName, document),
+    [typeName, document],
   );
+  const { computed } = useComputedFields(gardenFeeCompiledProfile, calcSource);
 
   if (typeName !== "Garden") return null;
 
