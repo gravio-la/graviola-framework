@@ -73,4 +73,15 @@ describe("make select query", () => {
       "SELECT DISTINCT ?entity  (SAMPLE(?name) AS ?name_single)  (COUNT(DISTINCT ?knows) AS ?knows_count)  (SAMPLE(?father_name) AS ?father_name_single)  (SAMPLE(?father_description) AS ?father_description_single)  WHERE {\n?entity a <http://example.com/person> .\n?entity :name ?name .  OPTIONAL {  ?entity :knows ?knows .\n}  ?entity :father ?father .\nOPTIONAL {  ?father :name ?father_name .  }  OPTIONAL {  ?father :description ?father_description .  }\n}",
     );
   });
+
+  test("empty includedProperties does not exclude all domain properties", () => {
+    const query = jsonSchema2Select(
+      schema,
+      "http://example.com/person",
+      [],
+      [],
+    );
+    expect(query).toContain("?name_single");
+    expect(query).toContain("?father_name_single");
+  });
 });

@@ -12,6 +12,8 @@ import {
 } from "@graviola/json-schema-utils";
 import { JSONSchema7, JSONSchema7Definition } from "json-schema";
 
+import type { AnnotationSelectFragments } from "./annotationProjectionsToSparql";
+
 const makeWherePart = (queryClause: string, required: boolean) =>
   required ? queryClause : ` OPTIONAL { ${queryClause} } `;
 const makePrefixedProperty = (property: string, prefix: string = "") =>
@@ -45,7 +47,7 @@ const propertiesToSPARQLSelectPatterns = (
       if (
         excludedProperties?.includes(property) ||
         property.startsWith("@") ||
-        (includedProperties && !includedProperties.includes(property))
+        (includedProperties?.length && !includedProperties.includes(property))
       )
         return;
       const subPath = [...path, property],
@@ -291,6 +293,7 @@ export const jsonSchema2Select = (
   countResults?: boolean,
   flavour?: SPARQLFlavour,
   minimal?: boolean,
+  annotation?: AnnotationSelectFragments,
 ) => {
   if (!rootSchema.properties) return "";
   const variable = "?entity";
@@ -313,10 +316,11 @@ export const jsonSchema2Select = (
       : "";
   const finalSelect = countResults
     ? `(COUNT(DISTINCT ${variable}) AS ?entity_count)`
-    : `DISTINCT ${variable} ${select}`;
+    : `DISTINCT ${variable} ${select}${annotation?.select ?? ""}`;
   const query = `SELECT ${finalSelect} WHERE {
     ${matchType}
     ${where}
+    ${annotation?.where ?? ""}
 }
 ${sparqlFinish}`;
 
