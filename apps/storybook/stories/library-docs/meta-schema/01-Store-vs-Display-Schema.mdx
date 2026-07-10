@@ -19,6 +19,22 @@ P1 entity metadata requires two schema layers in apps that stamp `$meta`:
 UI scopes use `$meta`; SPARQL SELECT column ids use the persistence alias utilities in
 `@graviola/meta-schema`.
 
+## Demand-driven flat SELECT projection
+
+`SemanticTable` (SPARQL `sparql-select` row shape) passes `annotationScopes` on list
+queries. Scopes are derived from visible meta columns, active sort, and `defaultSort`
+in `TableUiSchema` — toggling **Created** or **Modified** in the column picker changes
+the query and refetches.
+
+- **Default list:** no `entityMeta_*` vars in SELECT (lean queries).
+- **Opt-in:** store merges a separate annotation projection channel
+  (`annotationProjectionsToSparql`) — domain walk excludes `entityMeta` to avoid
+  container columns like `$meta_entity`.
+- **Collision rule:** domain `created` → `created_single`; meta `created` →
+  `entityMeta_created_single`.
+- **Seed data:** entities without a save after meta stamping have no `entityMeta`
+  triples; meta cells stay empty until the first stamped write.
+
 ## Provider wiring
 
 ```tsx
