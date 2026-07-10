@@ -138,6 +138,74 @@ function nestedAnnotationScopes(
     .filter((scope) => isNestedScope(scope) || isMetaAnnotationScope(scope));
 }
 
+function parentKeysWithNestedScopes(
+  tableUiSchema: TableUiSchema | undefined,
+): Set<string> {
+  const parents = new Set<string>();
+  for (const scope of nestedAnnotationScopes(tableUiSchema)) {
+    const [rootKey] = parsePropertyScopeSegments(scope);
+    if (rootKey) parents.add(rootKey);
+  }
+  return parents;
+}
+
+function resolveJsonLdColumnScopes(
+  schema: JSONSchema7,
+  tableUiSchema: TableUiSchema | undefined,
+  skip: Set<string>,
+): string[] {
+  if (tableUiSchema?.mode === "whitelist" && tableUiSchema.columns.length > 0) {
+    return tableUiSchema.columns.map((col) => col.scope);
+  }
+
+  const skipNestedParents = parentKeysWithNestedScopes(tableUiSchema);
+  const topLevelScopes = topLevelPropertyKeys(schema, tableUiSchema, skip)
+    .filter((key) => !skipNestedParents.has(key))
+    .map((key) => `#/properties/${key}`);
+  const nestedScopes = nestedAnnotationScopes(tableUiSchema);
+
+  if (!tableUiSchema?.columns?.length) {
+    return [...topLevelScopes, ...nestedScopes];
+  }
+
+  const topLevelSet = new Set(topLevelScopes);
+  const nestedSet = new Set(nestedScopes);
+  const ordered: string[] = [];
+  const seen = new Set<string>();
+
+  const pushScope = (scope: string) => {
+    if (seen.has(scope)) return;
+    seen.add(scope);
+    ordered.push(scope);
+  };
+
+  for (const col of tableUiSchema.columns) {
+    if (col.visibility === "forbidden") continue;
+
+    const { scope } = col;
+    if (nestedSet.has(scope)) {
+      pushScope(scope);
+      continue;
+    }
+
+    const rootKey = scopeToPropertyKey(scope);
+    if (!rootKey || isNestedScope(scope)) continue;
+    const topScope = `#/properties/${rootKey}`;
+    if (topLevelSet.has(topScope)) {
+      pushScope(topScope);
+    }
+  }
+
+  for (const scope of topLevelScopes) {
+    pushScope(scope);
+  }
+  for (const scope of nestedScopes) {
+    pushScope(scope);
+  }
+
+  return ordered;
+}
+
 function buildColumnFromScope(
   schema: JSONSchema7,
   scope: string,
@@ -208,28 +276,9 @@ export function composeJsonLdColumns(
   const registry = options.columnRegistry ?? jsonLdColumnRegistry;
   const skip = new Set([...DEFAULT_HIDDEN, ...(options.skipProperties ?? [])]);
 
-  const scopes = new Set<string>();
-  if (
-    options.tableUiSchema?.mode === "whitelist" &&
-    options.tableUiSchema.columns.length > 0
-  ) {
-    for (const col of options.tableUiSchema.columns) {
-      scopes.add(col.scope);
-    }
-  } else {
-    for (const key of topLevelPropertyKeys(
-      schema,
-      options.tableUiSchema,
-      skip,
-    )) {
-      scopes.add(`#/properties/${key}`);
-    }
-    for (const scope of nestedAnnotationScopes(options.tableUiSchema)) {
-      scopes.add(scope);
-    }
-  }
+  const scopes = resolveJsonLdColumnScopes(schema, options.tableUiSchema, skip);
 
-  const columns = [...scopes]
+  const columns = scopes
     .map((scope) => buildColumnFromScope(schema, scope, options, registry))
     .filter(
       (col): col is MRT_ColumnDef<Record<string, unknown>> => col != null,
