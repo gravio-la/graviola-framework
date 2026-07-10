@@ -1,5 +1,8 @@
 import type { JSONSchema7 } from "json-schema";
-import { isNamedEntityBoundaryAtScope } from "@graviola/json-schema-utils";
+import {
+  isNamedEntityBoundaryAtScope,
+  type EntityIdentityOptions,
+} from "@graviola/json-schema-utils";
 
 export type CbdExtractionOptions = {
   /** Halt recursion into named IRIs when depth > 0 (default true). */
@@ -39,12 +42,14 @@ export function isStubEntitySchema(schema: JSONSchema7): boolean {
 
 /**
  * Named CBD boundary check for a schema scope (TBox view).
+ * Pass {@link EntityIdentityOptions} when the schema uses non-default identity keys (e.g. Prisma `id`).
  */
 export function cbdBoundaryOfScope(
   rootSchema: JSONSchema7,
   scope: string,
+  options?: EntityIdentityOptions,
 ): boolean {
-  return isNamedEntityBoundaryAtScope(rootSchema, scope);
+  return isNamedEntityBoundaryAtScope(rootSchema, scope, options);
 }
 
 export { shouldHaltAtNamedEntityBoundary as extractCBDShouldHalt };
