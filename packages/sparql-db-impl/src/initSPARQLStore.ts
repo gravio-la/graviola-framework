@@ -15,6 +15,7 @@ import {
   findEntityByAuthorityIRI,
   findEntityByClass,
   getClasses,
+  annotationProjectionsToSparql,
   jsonSchema2Select,
   load,
   makeSPARQLInverseSyncQuery,
@@ -29,9 +30,13 @@ import {
 import type { JSONSchema7 } from "json-schema";
 import {
   applyMetaStampingOnWrite,
+  buildMetaAnnotationProjections,
   deriveExtendedSchema,
   deriveMetaProfileForStamping,
+  ENTITY_META_JSON_KEY,
+  ENTITY_META_PERSISTENCE_KEY,
   lifecycleTimestampsEnabled,
+  mergeMetaAnnotationScopes,
   remapEntityMetaForPersistence,
   remapEntityMetaFromPersistence,
   resolveEntityMetaProfile,
@@ -376,13 +381,41 @@ export function initSPARQLDatastorePair(
     findDocumentsAsFlatResultSet: async (typeName, query, limit) => {
       const typeIRI = typeNameToTypeIRI(typeName);
       const loadedSchema = listSchemaForType(typeName);
-      const { sorting, pagination, fields } = query;
+      const { sorting, pagination, fields, annotationScopes } = query;
+
+      const excludeProperties = effectiveMetaStamping
+        ? [ENTITY_META_PERSISTENCE_KEY, ENTITY_META_JSON_KEY]
+        : [];
+
+      let annotationFragments:
+        | ReturnType<typeof annotationProjectionsToSparql>
+        | undefined;
+
+      if (effectiveMetaStamping) {
+        const mergedScopes = mergeMetaAnnotationScopes(
+          annotationScopes,
+          sorting?.map((entry) => entry.id),
+        );
+        if (mergedScopes.length > 0) {
+          const metaProfile = deriveMetaProfileForStamping(
+            effectiveMetaStamping,
+          );
+          const projections = buildMetaAnnotationProjections(
+            metaProfile,
+            mergedScopes,
+          );
+          if (projections.length > 0) {
+            annotationFragments = annotationProjectionsToSparql(projections);
+          }
+        }
+      }
+
       const queryString = withDefaultPrefix(
         defaultPrefix,
         jsonSchema2Select(
           loadedSchema,
           typeIRI,
-          [],
+          excludeProperties,
           fields,
           {
             primaryFields: queryBuildOptions.primaryFields,
@@ -404,6 +437,8 @@ export function initSPARQLDatastorePair(
           },
           undefined,
           queryBuildOptions.sparqlFlavour,
+          undefined,
+          annotationFragments,
         ),
       );
       const res = await selectFetch(queryString, {
