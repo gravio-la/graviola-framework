@@ -30,6 +30,7 @@ import {
   setPersistedTurtle,
 } from "./localGraphPersistence";
 import type { MetaStampingConfig } from "@graviola/meta-schema";
+import type { JSONSchema7 } from "json-schema";
 import { useOxigraph } from "./useOxigraph";
 
 export type LocalOxigraphStoreProviderProps = {
@@ -43,6 +44,12 @@ export type LocalOxigraphStoreProviderProps = {
   enableInversePropertiesFeature?: boolean;
   /** Opt-in system-asserted entity `$meta` stamping on upsert. */
   metaStamping?: MetaStampingConfig;
+  /**
+   * Schema for store init (writes + persistence). Defaults to {@link useAdbContext} `schema`.
+   * Use the domain schema when UI reads use a pre-grafted `displaySchema` so `$meta` survives
+   * the cleanJSONLD round-trip (see initSPARQLStore persistence derivation).
+   */
+  storeSchema?: JSONSchema7;
 };
 
 export const LocalOxigraphStoreProvider: FunctionComponent<
@@ -56,6 +63,7 @@ export const LocalOxigraphStoreProvider: FunctionComponent<
   localPersistence,
   enableInversePropertiesFeature,
   metaStamping,
+  storeSchema: storeSchemaOverride,
 }) => {
   const { oxigraph } = useOxigraph();
   const baseCrud = useAsyncLocalWorkerCrudOptions(endpoint);
@@ -117,11 +125,12 @@ export const LocalOxigraphStoreProvider: FunctionComponent<
   }, [crudWithLogging, localPersistence, debouncedPersist]);
 
   const {
-    schema,
+    schema: contextSchema,
     typeNameToTypeIRI,
     queryBuildOptions,
     jsonLDConfig: { defaultPrefix, jsonldContext },
   } = useAdbContext();
+  const schema = storeSchemaOverride ?? contextSchema;
   const [dataLoaded, setDataLoaded] = useState(false);
 
   const dataStore = useMemo(() => {
