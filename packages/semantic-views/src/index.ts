@@ -12,6 +12,8 @@ export {
   SemanticDetailView,
   SemanticDetailViewNoOps,
 } from "./SemanticDetailView";
+export { SemanticAnnotationsView } from "./SemanticAnnotationsView";
+export type { SemanticAnnotationsViewProps } from "./SemanticAnnotationsView";
 
 export { useEntity } from "@graviola/edb-state-hooks";
 export {

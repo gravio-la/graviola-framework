@@ -38,6 +38,7 @@
     "@graviola/edb-detail-renderer-core": "workspace:*",
     "@graviola/edb-state-hooks": "workspace:*",
     "@graviola/json-schema-utils": "workspace:*",
+    "@graviola/meta-schema": "workspace:*",
     "@graviola/semantic-jsonform-types": "workspace:*",
     "@jsonforms/core": "catalog:jsonforms"
   },
