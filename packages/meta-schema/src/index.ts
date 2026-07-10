@@ -107,6 +107,92 @@ export function resolveMetaSparqlOrderBy(
   return metaScopeToSparqlColumnId(scope);
 }
 
+/** Demand-driven SPARQL SELECT projection for one meta annotation leaf field. */
+export type MetaAnnotationProjection = {
+  scope: string;
+  persistenceSegments: string[];
+  sparqlVar: string;
+  leafKey: string;
+  format?: string;
+};
+
+/** Inverse of {@link metaScopeToSparqlColumnId} for leaf meta columns (`entityMeta_modified_single`). */
+export function metaSparqlColumnIdToScope(
+  columnId: string,
+): string | undefined {
+  const prefix = `${ENTITY_META_PERSISTENCE_KEY}_`;
+  if (!columnId.startsWith(prefix) || !columnId.endsWith("_single")) {
+    return undefined;
+  }
+  const leafKey = columnId.slice(prefix.length, -"_single".length);
+  if (!leafKey) return undefined;
+  return `#/properties/${ENTITY_META_JSON_KEY}/properties/${leafKey}`;
+}
+
+/** Build annotation projections for opt-in flat SELECT fetches. */
+export function buildMetaAnnotationProjections(
+  metaProfile: JSONSchema7,
+  scopes: string[],
+): MetaAnnotationProjection[] {
+  const flat = flattenMetaSchemaProfile(metaProfile);
+  const projections: MetaAnnotationProjection[] = [];
+  const seen = new Set<string>();
+
+  for (const scope of scopes) {
+    if (!isMetaAnnotationScope(scope)) continue;
+    const segments = parsePropertyScopeSegments(scope);
+    if (segments.length < 2) continue;
+
+    const sparqlVar = metaScopeToSparqlColumnId(scope);
+    if (!sparqlVar || seen.has(sparqlVar)) continue;
+
+    const leafKey = segments[segments.length - 1]!;
+    const rawProp = flat.properties?.[leafKey];
+    const format =
+      rawProp &&
+      typeof rawProp === "object" &&
+      !Array.isArray(rawProp) &&
+      typeof (rawProp as JSONSchema7).format === "string"
+        ? (rawProp as JSONSchema7).format
+        : undefined;
+
+    seen.add(sparqlVar);
+    projections.push({
+      scope,
+      persistenceSegments: metaScopeSegmentsToPersistence(segments),
+      sparqlVar,
+      leafKey,
+      ...(format ? { format } : {}),
+    });
+  }
+
+  return projections;
+}
+
+/** Merge explicit annotation scopes with scopes implied by SPARQL sort column ids. */
+export function mergeMetaAnnotationScopes(
+  scopes: string[] | undefined,
+  sortingColumnIds: string[] | undefined,
+): string[] {
+  const merged: string[] = [];
+  const seen = new Set<string>();
+
+  for (const scope of scopes ?? []) {
+    if (seen.has(scope)) continue;
+    seen.add(scope);
+    merged.push(scope);
+  }
+
+  for (const columnId of sortingColumnIds ?? []) {
+    const scope = metaSparqlColumnIdToScope(columnId);
+    if (!scope || seen.has(scope)) continue;
+    seen.add(scope);
+    merged.push(scope);
+  }
+
+  return merged;
+}
+
 function cloneJson<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T;
 }
