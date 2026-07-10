@@ -4,19 +4,21 @@ import { Meta } from "@storybook/blocks";
 
 # @graviola/sidecar-core
 
-Generic **scope-keyed sidecar** container (Layer 1). Orthogonal concerns travel outside the domain JSON Schema:
+Shared utilities for **scope-keyed companion documents** (Layer 1). Fingerprint
+binding, dangling-scope diagnostics, payload-agnostic validation — not a global
+document schema.
 
-| Instance | Concern | Package |
+| Concern | `$schema` | Package |
 |---|---|---|
-| UI schema | Rendering | JSON Forms (existing) |
-| Calc profile | Computation | `@graviola/formula-dependency` |
-| MetaSchema | Administrative `$meta` | `@graviola/meta-schema` |
+| Calc profile | `calc-profile/v1` | `@graviola/formula-dependency` |
+| Meta profile | `meta/v1` | `@graviola/meta-schema` |
+| UI / display | app-specific side-schema | JSON Forms + LinkML |
 
-## Document shape
+## Calc-profile envelope (uses this package)
 
 ```json
 {
-  "$schema": "https://graviola.top/sidecar/v1",
+  "$schema": "https://graviola.gra.one/calc-profile/v1",
   "appliesTo": {
     "schema": "https://myapp/schema",
     "version": "1.2.0",
@@ -32,6 +34,6 @@ Generic **scope-keyed sidecar** container (Layer 1). Orthogonal concerns travel 
 
 ## API
 
-- `createSidecarDocument(appliesTo, slots)`
+- `createSidecarDocument(documentSchema, appliesTo, slots)` — caller supplies the concern-specific `$schema` IRI
 - `validateSidecar(sidecar, expectedIdentity, knownScopes)`
 - `formatAppliesToLabel(appliesTo)` — e.g. `https://myapp/schema v1.2.0 (sha256-ab12…)`

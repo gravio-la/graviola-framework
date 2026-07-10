@@ -1,0 +1,47 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Library Docs/meta-schema/00 Lifecycle Timestamps" />
+
+# Lifecycle timestamps (`$meta.created` / `$meta.modified`)
+
+P1 extension to `@graviola/meta-schema`: lifecycle fields are **optional** and **independently**
+configurable from schema fingerprint stamping.
+
+## Configuration
+
+```typescript
+type MetaStampingConfig = {
+  schemaFingerprint: string;
+  schemaVersion?: string;
+  /** Omit or false: no created/modified */
+  lifecycleTimestamps?: false | "application" | "database-native";
+};
+```
+
+| Mode | Write path | Read path |
+|------|------------|-----------|
+| omitted / `false` | No lifecycle keys stamped or persisted | `$meta` has fingerprint only |
+| `"application"` | Store layer sets `created` / `modified` (SPARQL default) | From stamped persistence |
+| `"database-native"` | Prisma SQL: ORM manages columns; app strips lifecycle on write | Merged from DB columns after load |
+
+## TBox vs ABox
+
+- **TBox:** `composeMetaSchemaProfile({ includeLifecycle })` and `deriveExtendedSchema(…, { includeLifecycle })` control whether lifecycle properties are grafted at CBD boundaries.
+- **ABox:** `$meta.created` / `$meta.modified` on entity documents; RDF uses `dct:created` / `dct:modified` descriptions on the meta profile.
+
+## Store descriptor
+
+`capabilities.profiles.entityMeta.lifecycleTimestamps` advertises the effective mode.
+SPARQL stores **downgrade** `"database-native"` to `"application"` (no DB primitives).
+
+## Prisma mapping
+
+When `lifecycleTimestamps: "database-native"` is enabled for a SQL Prisma backend,
+`setupPrismaCore` post-processes the generated schema: framework inline-meta columns
+`entityMeta_created` / `entityMeta_modified` receive `@default(now())` and `@updatedAt`.
+No JSON Schema `x-*` extensions — mapping is build/store configuration only.
+
+## Application extensions
+
+Deployment-specific audit (editor, agent, sync state) stays in application MetaSchema `allOf`
+extensions — not in the framework lifecycle slice.

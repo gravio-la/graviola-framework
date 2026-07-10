@@ -1,0 +1,90 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Library Docs/json-schema-utils/00 Entity identity and CBD" />
+
+# Entity identity and CBD boundaries
+
+**Layer 1** — `@graviola/json-schema-utils` (`entityIdentity`, `cbdBoundary`, `extendSchemaShortcut`).
+
+Named entities in Graviola are identified by a **configurable property key** on both the schema (TBox) and instance data (ABox). That key defines **Concise Bounded Description (CBD)** roots: where graph extraction stops, where `$meta` is grafted, and which objects receive system metadata on write.
+
+## TBox vs ABox
+
+| Layer | Question | API |
+|---|---|---|
+| **TBox (schema)** | Does this sub-schema declare an identity property? | `cbdBoundaryScopes(schema, options)` |
+| **ABox (instance)** | Does this object carry an identity value? | `isNamedEntityInstance(value, options)` |
+
+CBD detection runs on the **schema artifact** after `extendSchemaShortcut` — **before** JSON-LD `@id` appears on instance documents. Prisma persistence schemas use plain `id`; SPARQL schemas use `@id`.
+
+## Defaults and presets
+
+```typescript
+import {
+  JSONLD_SCHEMA_IDENTITY,   // { typeKey: "@type", idKey: "@id" }
+  PRISMA_SCHEMA_IDENTITY,   // { typeKey: "type",  idKey: "id"  }
+  entityIdentityFromIdKey,
+  DEFAULT_ENTITY_IDENTITY,  // { identityKeys: ["@id"] }
+  PRISMA_ENTITY_IDENTITY,   // { identityKeys: ["id"] }
+} from "@graviola/json-schema-utils";
+```
+
+| Backend | `extendSchemaShortcut` | CBD / `$meta` graft |
+|---|---|---|
+| SPARQL / JSON-LD | defaults or `JSONLD_SCHEMA_IDENTITY` | defaults (`@id`) |
+| Prisma | `PRISMA_SCHEMA_IDENTITY` | `entityIdentityFromIdKey("id")` |
+
+Always pass the **same `idKey`** to both `extendSchemaShortcut` and CBD/meta options.
+
+## Example — Prisma path
+
+```typescript
+import {
+  extendSchemaShortcut,
+  entityIdentityFromIdKey,
+  PRISMA_SCHEMA_IDENTITY,
+  cbdBoundaryScopes,
+} from "@graviola/json-schema-utils";
+import { deriveExtendedSchema } from "@graviola/meta-schema";
+
+const domain = extendSchemaShortcut(
+  rawSchema,
+  PRISMA_SCHEMA_IDENTITY.typeKey,
+  PRISMA_SCHEMA_IDENTITY.idKey,
+);
+
+const prismaIdentity = entityIdentityFromIdKey(PRISMA_SCHEMA_IDENTITY.idKey);
+
+cbdBoundaryScopes(domain, prismaIdentity);
+// → [{ scope: "#/definitions/Category", … }, …]
+
+const persistenceSchema = deriveExtendedSchema(domain, undefined, {
+  inlineMetaSchema: true, // flatten meta columns for Prisma
+  ...prismaIdentity,
+});
+```
+
+## Example — SPARQL path
+
+```typescript
+const domain = extendSchemaShortcut(rawSchema); // adds @type, @id
+deriveExtendedSchema(domain); // default identityKeys: ["@id"]
+```
+
+## Custom identity keys
+
+For application-specific primary keys, pass the same key everywhere:
+
+```typescript
+const idKey = "entityId";
+const domain = extendSchemaShortcut(schema, "entityType", idKey);
+const identity = entityIdentityFromIdKey(idKey);
+deriveExtendedSchema(domain, undefined, identity);
+```
+
+## Related packages
+
+- **`@graviola/meta-schema`** — `deriveExtendedSchema`, `$meta` stamping (`MetaStampingConfig.identityKeys` for instance walks)
+- **`@graviola/graph-traversal`** — runtime CBD halt rules; `cbdBoundaryOfScope(schema, scope, options)` for TBox checks
+
+See also: [sidecar-core / Introduction](../sidecar-core/00-Introduction.mdx) for how MetaSchema sidecars relate to domain schemas.

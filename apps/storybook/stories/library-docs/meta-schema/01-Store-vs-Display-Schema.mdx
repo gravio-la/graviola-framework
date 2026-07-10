@@ -1,0 +1,37 @@
+import { Meta } from "@storybook/blocks";
+
+<Meta title="Library Docs/meta-schema/01 Store vs Display Schema" />
+
+# Store schema vs display schema
+
+P1 entity metadata requires two schema layers in apps that stamp `$meta`:
+
+| Layer | Artifact | Used for |
+|-------|----------|----------|
+| Domain | `itemJsonSchema` | Forms, write validation, `storeSchema` on `LocalOxigraphStoreProvider` |
+| Read / UI | `deriveExtendedSchema(domain, profile, { graftPropertyKey: "$meta" })` | `AdbProvider.schema`, detail views, table column scopes |
+
+## Persistence vs JSON keys
+
+- **RDF / SPARQL:** `entityMeta` predicate and variables such as `?entityMeta_modified_single`
+- **Loaded JSON:** `$meta.created`, `$meta.modified` (via `remapEntityMetaFromPersistence`)
+
+UI scopes use `$meta`; SPARQL SELECT column ids use the persistence alias utilities in
+`@graviola/meta-schema`.
+
+## Provider wiring
+
+```tsx
+<LocalOxigraphStoreProvider
+  storeSchema={domainSchema}
+  metaStamping={metaStampingConfig}
+>
+```
+
+Pass the extended schema only to `AdbProvider` — never as the store root when
+`makeStubSchema` is active.
+
+## Regression
+
+`apps/datastore-tests` meta suite includes a **pre-grafted store root** case that
+documents the failure mode when this contract is violated.
