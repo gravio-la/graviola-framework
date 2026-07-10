@@ -129,6 +129,8 @@ export {
   applyTableUiSchemaToColumns,
   buildColumnVisibilityFromTableUiSchema,
   filterForbiddenColumns,
+  normalizeTableUiSchemaForRowShape,
+  resolveActiveMetaAnnotationScopes,
   resolveColumnIdForScope,
   resolveDefaultSortingFromTableUiSchema,
   scopeToJsonLdColumnId,

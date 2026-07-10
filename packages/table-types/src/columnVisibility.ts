@@ -1,4 +1,5 @@
 import {
+  isMetaAnnotationScope,
   metaScopeToSparqlColumnId,
   parsePropertyScopeSegments,
 } from "@graviola/meta-schema";
@@ -112,4 +113,67 @@ export function resolveDefaultSortingFromTableUiSchema(
 
   const id = resolveColumnIdForScope(defaultSort.scope, rowShape);
   return [{ id, desc: defaultSort.desc ?? false }];
+}
+
+/**
+ * JSON-LD lists load full documents via CONSTRUCT — meta fields are already in memory.
+ * Show lifecycle annotation columns by default (SPARQL flat SELECT keeps them opt-in).
+ */
+export function normalizeTableUiSchemaForRowShape(
+  tableUiSchema: TableUiSchema | undefined,
+  rowShape: "sparql-select" | "jsonld" | string,
+): TableUiSchema | undefined {
+  if (rowShape !== "jsonld" || !tableUiSchema?.columns?.length) {
+    return tableUiSchema;
+  }
+
+  return {
+    ...tableUiSchema,
+    columns: tableUiSchema.columns.map((column) => {
+      if (
+        column.visibility !== "hiddenByDefault" ||
+        !isMetaAnnotationScope(column.scope) ||
+        parsePropertyScopeSegments(column.scope).length < 2
+      ) {
+        return column;
+      }
+      return { ...column, visibility: "visible" as const };
+    }),
+  };
+}
+
+/** Demand-driven meta annotation scopes for SPARQL flat SELECT projection. */
+export function resolveActiveMetaAnnotationScopes(
+  tableUiSchema: TableUiSchema | undefined,
+  visibleColumnIds: Set<string>,
+  sortingColumnIds: string[],
+  rowShape: "sparql-select" | "jsonld" | string,
+): string[] {
+  if (rowShape !== "sparql-select" || !tableUiSchema?.columns?.length) {
+    return [];
+  }
+
+  const defaultSortScope = tableUiSchema.options?.defaultSort?.scope;
+  const sortingIds = new Set(sortingColumnIds);
+  const scopes: string[] = [];
+  const seen = new Set<string>();
+
+  for (const uiColumn of tableUiSchema.columns) {
+    if (uiColumn.visibility === "forbidden") continue;
+    const scope = uiColumn.scope;
+    if (!isMetaAnnotationScope(scope)) continue;
+    if (parsePropertyScopeSegments(scope).length < 2) continue;
+
+    const columnId = resolveColumnIdForScope(scope, rowShape);
+    const visible = visibleColumnIds.has(columnId);
+    const sorted = sortingIds.has(columnId);
+    const defaultSorted = scope === defaultSortScope;
+
+    if (!visible && !sorted && !defaultSorted) continue;
+    if (seen.has(scope)) continue;
+    seen.add(scope);
+    scopes.push(scope);
+  }
+
+  return scopes;
 }
