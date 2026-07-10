@@ -13,14 +13,23 @@ export type TableUiSchemaColumn = {
   sortable?: boolean;
   filterable?: boolean;
   rendererHint?: string;
+  /** SPARQL SELECT variable name without `?` (defaults from scope for meta columns). */
+  sparqlOrderBy?: string;
   options?: Record<string, unknown>;
+};
+
+export type TableUiSchemaDefaultSort = {
+  scope: TableScope;
+  desc?: boolean;
 };
 
 export type TableUiSchema = {
   type: "Table";
   mode: "whitelist" | "blacklist";
   columns: TableUiSchemaColumn[];
-  options?: Record<string, unknown>;
+  options?: Record<string, unknown> & {
+    defaultSort?: TableUiSchemaDefaultSort;
+  };
 };
 
 export type TableColumnDefFragment<TRow = unknown> = {
@@ -115,3 +124,12 @@ export const selectTableRenderer = <TRow>(
   const rank = best.tester(schema, scope, uiOptions, context);
   return rank >= 0 ? best : null;
 };
+
+export {
+  applyTableUiSchemaToColumns,
+  buildColumnVisibilityFromTableUiSchema,
+  filterForbiddenColumns,
+  resolveColumnIdForScope,
+  resolveDefaultSortingFromTableUiSchema,
+  scopeToJsonLdColumnId,
+} from "./columnVisibility";

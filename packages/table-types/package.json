@@ -28,6 +28,7 @@
     "release": "bun publish --access public"
   },
   "dependencies": {
+    "@graviola/meta-schema": "workspace:*",
     "@jsonforms/core": "catalog:jsonforms",
     "@types/json-schema": "catalog:",
     "lodash-es": "catalog:"

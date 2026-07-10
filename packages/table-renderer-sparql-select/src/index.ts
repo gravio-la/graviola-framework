@@ -1,3 +1,4 @@
+export * from "./composeSparqlSelectColumns";
 export * from "./tableRegistryHelper";
 export * from "./listHelper";
 export * from "./cellConfigRegistry";

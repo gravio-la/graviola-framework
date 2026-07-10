@@ -1,6 +1,10 @@
 import type { PaginationState, VisibilityState } from "@tanstack/table-core";
 import type { ConfigOptions } from "export-to-csv";
-import type { MRT_ColumnDef, MRT_SortingState } from "material-react-table";
+import type {
+  MRT_ColumnDef,
+  MRT_SortingState,
+  MRT_VisibilityState,
+} from "material-react-table";
 import type { ReactNode } from "react";
 import type { ValueRendererEntry } from "@graviola/edb-detail-renderer-core";
 import type {
@@ -111,6 +115,8 @@ export type SemanticTableViewProps = {
   resetKey?: string;
   rowActions?: TableAction[];
   bulkActions?: TableAction[];
+  /** Optional visibility map from TableUiSchema (hiddenByDefault columns). */
+  tableColumnVisibility?: MRT_VisibilityState;
 };
 
 export type SemanticTableDataMode = "sparql-select" | "jsonld";

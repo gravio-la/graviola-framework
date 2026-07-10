@@ -1,8 +1,14 @@
 import type { JSONSchema7 } from "json-schema";
 import type { MRT_ColumnDef } from "material-react-table";
+import {
+  isMetaAnnotationScope,
+  parsePropertyScopeSegments,
+} from "@graviola/meta-schema";
 import { resolveSchema, isJSONSchema } from "@graviola/json-schema-utils";
 import { adaptColumnFragmentToMrt } from "@graviola/edb-table-mrt-adapter";
 import {
+  applyTableUiSchemaToColumns,
+  filterForbiddenColumns,
   selectTableRenderer,
   type TableColumnRegistry,
   type TableTesterContext,
@@ -11,7 +17,7 @@ import {
 } from "@graviola/edb-table-types";
 
 import { jsonLdColumnRegistry } from "./registry";
-import { scopeToPropertyKey } from "./scope";
+import { isNestedScope, scopeToPropertyKey } from "./scope";
 
 const DEFAULT_HIDDEN = new Set(["@id", "@type"]);
 
@@ -34,11 +40,50 @@ function resolvePropertySchema(
   if (!raw || !isJSONSchema(raw)) return null;
   const propSchema = raw as JSONSchema7;
   if (!propSchema.$ref) return propSchema;
-  const resolved = resolveSchema(propSchema, propSchema.$ref, rootSchema);
+  const resolved = resolveSchema(rootSchema, propSchema.$ref, rootSchema);
   if (!resolved || typeof resolved !== "object" || Array.isArray(resolved)) {
     return null;
   }
   return resolved as JSONSchema7;
+}
+
+function resolvePropertySchemaAtScope(
+  rootSchema: JSONSchema7,
+  scope: string,
+): JSONSchema7 | null {
+  const keys = parsePropertyScopeSegments(scope);
+  if (!keys.length) return null;
+
+  let current: JSONSchema7 = rootSchema;
+  for (let index = 0; index < keys.length; index += 1) {
+    const key = keys[index];
+    const raw = current.properties?.[key];
+    if (!raw || !isJSONSchema(raw)) return null;
+
+    let propSchema = raw as JSONSchema7;
+    if (propSchema.$ref) {
+      const resolved = resolveSchema(rootSchema, propSchema.$ref, rootSchema);
+      if (
+        !resolved ||
+        typeof resolved !== "object" ||
+        Array.isArray(resolved)
+      ) {
+        return null;
+      }
+      propSchema = resolved as JSONSchema7;
+    }
+
+    if (index === keys.length - 1) {
+      return propSchema;
+    }
+
+    if (propSchema.type !== "object" && !propSchema.properties) {
+      return null;
+    }
+    current = propSchema;
+  }
+
+  return null;
 }
 
 function findUiColumn(
@@ -48,20 +93,27 @@ function findUiColumn(
   return tableUiSchema?.columns?.find((col) => col.scope === scope);
 }
 
-function propertyKeys(
+function topLevelPropertyKeys(
   schema: JSONSchema7,
   tableUiSchema: TableUiSchema | undefined,
   skip: Set<string>,
 ): string[] {
   if (tableUiSchema?.mode === "whitelist" && tableUiSchema.columns.length > 0) {
     return tableUiSchema.columns
-      .map((col) => scopeToPropertyKey(col.scope))
-      .filter((key) => key && !skip.has(key)) as string[];
+      .filter(
+        (col) =>
+          scopeToPropertyKey(col.scope) &&
+          !skip.has(scopeToPropertyKey(col.scope)!) &&
+          !isNestedScope(col.scope),
+      )
+      .map((col) => scopeToPropertyKey(col.scope)!);
   }
 
   const ordered = tableUiSchema?.columns
-    ?.map((col) => scopeToPropertyKey(col.scope))
-    .filter(Boolean) as string[] | undefined;
+    ?.filter(
+      (col) => scopeToPropertyKey(col.scope) && !isNestedScope(col.scope),
+    )
+    .map((col) => scopeToPropertyKey(col.scope)!);
 
   const fromSchema = Object.keys(schema.properties ?? {}).filter(
     (key) => !skip.has(key),
@@ -77,6 +129,75 @@ function propertyKeys(
   });
 }
 
+function nestedAnnotationScopes(
+  tableUiSchema: TableUiSchema | undefined,
+): string[] {
+  if (!tableUiSchema?.columns?.length) return [];
+  return tableUiSchema.columns
+    .map((col) => col.scope)
+    .filter((scope) => isNestedScope(scope) || isMetaAnnotationScope(scope));
+}
+
+function buildColumnFromScope(
+  schema: JSONSchema7,
+  scope: string,
+  options: ComposeJsonLdColumnsOptions,
+  registry: TableColumnRegistry,
+): MRT_ColumnDef<Record<string, unknown>> | null {
+  const propSchema = isNestedScope(scope)
+    ? resolvePropertySchemaAtScope(schema, scope)
+    : resolvePropertySchema(schema, scopeToPropertyKey(scope) ?? "");
+  if (!propSchema) return null;
+
+  const uiColumn = findUiColumn(options.tableUiSchema, scope);
+  const ctx: TableTesterContext = {
+    rootSchema: schema,
+    typeName: options.typeName,
+    rowShape: "jsonld",
+    t: options.t,
+    rendererHint: uiColumn?.rendererHint,
+    uiSchemaOptions: uiColumn?.options,
+    primaryField: options.primaryField,
+  };
+
+  const entry = selectTableRenderer(registry, propSchema, scope, uiColumn, ctx);
+  if (!entry) return null;
+
+  const fragment = entry.renderer({
+    schema: propSchema,
+    scope,
+    column: uiColumn ?? {
+      scope,
+      label: options.t?.(scopeToPropertyKey(scope) ?? scope) ?? scope,
+    },
+    ctx,
+  });
+
+  if (!fragment.id && !fragment.accessorKey && !fragment.accessorFn) {
+    return null;
+  }
+
+  const header =
+    fragment.header ??
+    uiColumn?.label ??
+    options.t?.(scopeToPropertyKey(scope) ?? scope) ??
+    scope;
+
+  return adaptColumnFragmentToMrt({
+    ...fragment,
+    id: fragment.id ?? scope,
+    header,
+    enableSorting: uiColumn?.sortable === true ? true : false,
+    meta: {
+      ...(fragment.meta ?? {}),
+      jsonLdScope: scope,
+      jsonLdPropSchema: propSchema,
+      jsonLdRootSchema: schema,
+      jsonLdColumnOptions: uiColumn?.options,
+    },
+  }) as MRT_ColumnDef<Record<string, unknown>>;
+}
+
 /**
  * Build MRT column definitions from a JSON-LD entity schema via structural dispatch.
  */
@@ -86,66 +207,39 @@ export function composeJsonLdColumns(
 ): MRT_ColumnDef<Record<string, unknown>>[] {
   const registry = options.columnRegistry ?? jsonLdColumnRegistry;
   const skip = new Set([...DEFAULT_HIDDEN, ...(options.skipProperties ?? [])]);
-  const keys = propertyKeys(schema, options.tableUiSchema, skip);
 
-  return keys
-    .map((key) => {
-      const scope = `#/properties/${key}`;
-      const propSchema = resolvePropertySchema(schema, key);
-      if (!propSchema) return null;
+  const scopes = new Set<string>();
+  if (
+    options.tableUiSchema?.mode === "whitelist" &&
+    options.tableUiSchema.columns.length > 0
+  ) {
+    for (const col of options.tableUiSchema.columns) {
+      scopes.add(col.scope);
+    }
+  } else {
+    for (const key of topLevelPropertyKeys(
+      schema,
+      options.tableUiSchema,
+      skip,
+    )) {
+      scopes.add(`#/properties/${key}`);
+    }
+    for (const scope of nestedAnnotationScopes(options.tableUiSchema)) {
+      scopes.add(scope);
+    }
+  }
 
-      const uiColumn = findUiColumn(options.tableUiSchema, scope);
-      const ctx: TableTesterContext = {
-        rootSchema: schema,
-        typeName: options.typeName,
-        rowShape: "jsonld",
-        t: options.t,
-        rendererHint: uiColumn?.rendererHint,
-        uiSchemaOptions: uiColumn?.options,
-        primaryField: options.primaryField,
-      };
-
-      const entry = selectTableRenderer(
-        registry,
-        propSchema,
-        scope,
-        uiColumn,
-        ctx,
-      );
-      if (!entry) return null;
-
-      const fragment = entry.renderer({
-        schema: propSchema,
-        scope,
-        column: uiColumn ?? {
-          scope,
-          label: options.t?.(key) ?? key,
-          options: uiColumn?.options,
-        },
-        ctx,
-      });
-
-      if (!fragment.id && !fragment.accessorKey && !fragment.accessorFn) {
-        return null;
-      }
-
-      const header =
-        fragment.header ?? uiColumn?.label ?? options.t?.(key) ?? key;
-
-      return adaptColumnFragmentToMrt({
-        ...fragment,
-        id: fragment.id ?? scope,
-        header,
-        meta: {
-          ...(fragment.meta ?? {}),
-          jsonLdScope: scope,
-          jsonLdPropSchema: propSchema,
-          jsonLdRootSchema: schema,
-          jsonLdColumnOptions: uiColumn?.options,
-        },
-      }) as MRT_ColumnDef<Record<string, unknown>>;
-    })
+  const columns = [...scopes]
+    .map((scope) => buildColumnFromScope(schema, scope, options, registry))
     .filter(
       (col): col is MRT_ColumnDef<Record<string, unknown>> => col != null,
     );
+
+  const filtered = filterForbiddenColumns(
+    columns,
+    options.tableUiSchema,
+    "jsonld",
+  );
+
+  return applyTableUiSchemaToColumns(filtered, options.tableUiSchema, "jsonld");
 }

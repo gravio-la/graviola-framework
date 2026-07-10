@@ -69,11 +69,13 @@ const DEFAULT_SEMANTIC_TABLE_COLUMN_VISIBILITY: MRT_VisibilityState = {
 function resolveInitialColumnVisibility(
   conf: Partial<ListConfigType> | undefined,
   tableConfig: TableConfigRegistry | undefined,
+  tableColumnVisibility?: MRT_VisibilityState,
 ): MRT_VisibilityState {
   return {
     ...DEFAULT_SEMANTIC_TABLE_COLUMN_VISIBILITY,
     ...tableConfig?.default?.columnVisibility,
     ...conf?.columnVisibility,
+    ...tableColumnVisibility,
   };
 }
 
@@ -108,6 +110,7 @@ export function SemanticTableView({
   bulkActions = [],
   locale = "en",
   resetKey,
+  tableColumnVisibility,
 }: SemanticTableViewProps) {
   const {
     onShowEntry,
@@ -191,7 +194,8 @@ export function SemanticTableView({
   );
 
   const [columnVisibility, setColumnVisibility] = useState<MRT_VisibilityState>(
-    () => resolveInitialColumnVisibility(conf, tableConfig),
+    () =>
+      resolveInitialColumnVisibility(conf, tableConfig, tableColumnVisibility),
   );
 
   const handleChangeColumnVisibility = useCallback(
@@ -287,7 +291,11 @@ export function SemanticTableView({
     },
     columnFilterDisplayMode: "popover",
     initialState: {
-      columnVisibility: resolveInitialColumnVisibility(conf, tableConfig),
+      columnVisibility: resolveInitialColumnVisibility(
+        conf,
+        tableConfig,
+        tableColumnVisibility,
+      ),
       pagination: { pageIndex: 0, pageSize: defaultLimit },
     },
     localization,

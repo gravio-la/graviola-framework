@@ -24,9 +24,14 @@ import {
   JsonLdTableProvider,
 } from "@graviola/edb-table-renderer-jsonld";
 import {
-  computeColumns,
+  composeSparqlSelectColumns,
+  resolveSparqlSortColumnId,
   type ColumnDefMatcher,
 } from "@graviola/edb-table-renderer-sparql-select";
+import {
+  buildColumnVisibilityFromTableUiSchema,
+  resolveDefaultSortingFromTableUiSchema,
+} from "@graviola/edb-table-types";
 
 import { SemanticTableView } from "./SemanticTableView";
 import type {
@@ -83,7 +88,9 @@ export const SemanticTable = ({
     [typeName, schema],
   );
 
-  const [sorting, setSorting] = useState<MRT_SortingState>([]);
+  const [sorting, setSorting] = useState<MRT_SortingState>(() =>
+    resolveDefaultSortingFromTableUiSchema(tableUiSchema, rowShape),
+  );
 
   const handleSortingChange = useCallback((s: MRT_SortingState) => {
     setSorting(s);
@@ -145,7 +152,13 @@ export const SemanticTable = ({
       return dataStore.findDocumentsAsFlatResultSet?.(
         tn,
         {
-          sorting,
+          sorting:
+            rowShape === "sparql-select"
+              ? sorting.map((entry) => ({
+                  id: resolveSparqlSortColumnId(entry.id, tableUiSchema),
+                  desc: entry.desc,
+                }))
+              : sorting,
           pagination: loadAllAtOnce ? undefined : pagination,
         },
         loadAllAtOnce ? upperLimit : defaultLimit,
@@ -177,14 +190,13 @@ export const SemanticTable = ({
         primaryField: queryBuildOptions.primaryFields?.[typeName],
       });
     }
-    return computeColumns(
-      loadedSchema,
+    return composeSparqlSelectColumns(loadedSchema, {
       typeName,
-      t2,
-      conf?.matcher as ColumnDefMatcher | undefined,
-      [],
-      queryBuildOptions.primaryFields,
-    );
+      tableUiSchema,
+      t: t2,
+      matcher: conf?.matcher as ColumnDefMatcher | undefined,
+      primaryFields: queryBuildOptions.primaryFields,
+    });
   }, [
     loadedSchema,
     typeName,
@@ -195,6 +207,16 @@ export const SemanticTable = ({
     tableUiSchema,
     columnRegistry,
   ]);
+
+  const tableColumnVisibility = useMemo(
+    () =>
+      buildColumnVisibilityFromTableUiSchema(
+        tableUiSchema,
+        displayColumns,
+        rowShape,
+      ),
+    [tableUiSchema, displayColumns, rowShape],
+  );
 
   const columnOrder = useMemo(() => {
     const ids = displayColumns.map((col) => col.id);
@@ -430,6 +452,7 @@ export const SemanticTable = ({
       bulkActions={bulkActions}
       locale={locale}
       resetKey={typeName}
+      tableColumnVisibility={tableColumnVisibility}
     />
   );
 

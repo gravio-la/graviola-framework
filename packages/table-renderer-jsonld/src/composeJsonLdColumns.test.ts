@@ -65,6 +65,43 @@ describe("composeJsonLdColumns", () => {
     expect(columns.every((c) => c.Cell)).toBe(true);
   });
 
+  test("supports nested $meta lifecycle scopes in blacklist mode", () => {
+    const extended = {
+      ...bringDefinitionToTop(schema, "Item"),
+      properties: {
+        ...bringDefinitionToTop(schema, "Item").properties,
+        $meta: {
+          type: "object",
+          properties: {
+            created: { type: "string", format: "date-time" },
+            modified: { type: "string", format: "date-time" },
+          },
+        },
+      },
+    } as JSONSchema7;
+
+    const columns = composeJsonLdColumns(extended, {
+      typeName: "Item",
+      tableUiSchema: {
+        type: "Table",
+        mode: "blacklist",
+        columns: [
+          {
+            scope: "#/properties/$meta/properties/modified",
+            label: "Modified",
+            sortable: false,
+          },
+        ],
+      },
+    });
+
+    const modified = columns.find(
+      (col) => col.id === "#/properties/$meta/properties/modified",
+    );
+    expect(modified).toBeDefined();
+    expect(modified?.enableSorting).toBe(false);
+  });
+
   test("primary field label column uses the primary cell with image meta", () => {
     const loaded = bringDefinitionToTop(schema, "Item");
     const columns = composeJsonLdColumns(loaded, {

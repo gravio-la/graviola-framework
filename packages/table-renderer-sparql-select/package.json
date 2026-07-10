@@ -36,6 +36,7 @@
     "@ebay/nice-modal-react": "^1.2"
   },
   "dependencies": {
+    "@graviola/meta-schema": "workspace:*",
     "@graviola/edb-table-types": "workspace:*",
     "@graviola/edb-table-mrt-adapter": "workspace:*",
     "@graviola/edb-basic-components": "workspace:*",
