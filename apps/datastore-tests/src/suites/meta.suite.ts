@@ -120,6 +120,24 @@ export function runMetaSuite(
         );
       });
 
+      test("flat result set omits entityMeta vars without annotationScopes", async () => {
+        const store = getMetaStore() as DatastoreContractStoreWithFlat;
+        const catId = entityIRI("Category", "meta-flat-no-projection");
+        await store.upsert(
+          "Category",
+          catId,
+          makeCategory("meta-flat-no-projection") as never,
+        );
+
+        const resultSet = await store.findDocumentsAsFlatResultSet(
+          "Category",
+          {},
+        );
+        const vars = resultSet.head?.vars ?? [];
+        expect(vars).not.toContain("entityMeta_created_single");
+        expect(vars).not.toContain("entityMeta_modified_single");
+      });
+
       test("flat result set includes entityMeta lifecycle bindings", async () => {
         const store = getMetaStore() as DatastoreContractStoreWithFlat;
         const catId = entityIRI("Category", "meta-flat-bindings");
@@ -129,10 +147,12 @@ export function runMetaSuite(
           makeCategory("meta-flat-bindings") as never,
         );
 
-        const resultSet = await store.findDocumentsAsFlatResultSet(
-          "Category",
-          {},
-        );
+        const resultSet = await store.findDocumentsAsFlatResultSet("Category", {
+          annotationScopes: [
+            "#/properties/$meta/properties/created",
+            "#/properties/$meta/properties/modified",
+          ],
+        });
         const vars = resultSet.head?.vars ?? [];
         expect(vars).toContain("entityMeta_created_single");
         expect(vars).toContain("entityMeta_modified_single");
