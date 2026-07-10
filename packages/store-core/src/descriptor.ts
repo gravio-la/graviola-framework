@@ -22,6 +22,7 @@ export type StreamsProfile = {
 
 export type EntityMetaProfile = {
   encoding: "named-graph" | "triples" | "column" | "pipeline";
+  lifecycleTimestamps?: false | "application" | "database-native";
 };
 
 export type CapabilityProfiles = {

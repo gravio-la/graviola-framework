@@ -30,8 +30,12 @@ import type { JSONSchema7 } from "json-schema";
 import {
   applyMetaStampingOnWrite,
   deriveExtendedSchema,
+  deriveMetaProfileForStamping,
+  lifecycleTimestampsEnabled,
   remapEntityMetaForPersistence,
   remapEntityMetaFromPersistence,
+  resolveEntityMetaProfile,
+  resolveSparqlMetaStamping,
   type MetaStampingConfig,
 } from "@graviola/meta-schema";
 import type {
@@ -88,10 +92,20 @@ export function initSPARQLDatastorePair(
     metaStamping,
   } = dataStoreConfig;
 
-  const persistenceSchema = metaStamping
+  const effectiveMetaStamping = metaStamping
+    ? resolveSparqlMetaStamping(metaStamping)
+    : undefined;
+
+  const persistenceSchema = effectiveMetaStamping
     ? rootSchema.definitions?.EntityMeta
       ? rootSchema
-      : deriveExtendedSchema(rootSchema)
+      : deriveExtendedSchema(
+          rootSchema,
+          deriveMetaProfileForStamping(effectiveMetaStamping),
+          {
+            includeLifecycle: lifecycleTimestampsEnabled(effectiveMetaStamping),
+          },
+        )
     : rootSchema;
 
   const schemaForType = (typeName: string) =>
@@ -99,6 +113,8 @@ export function initSPARQLDatastorePair(
       makeStubSchema ? makeStubSchema(persistenceSchema) : persistenceSchema,
       typeName,
     ) as JSONSchema7;
+
+  const listSchemaForType = (typeName: string) => schemaForType(typeName);
 
   const typeIRItoTypeName = queryBuildOptions.typeIRItoTypeName;
   const flavour = queryBuildOptions.sparqlFlavour ?? "default";
@@ -120,7 +136,7 @@ export function initSPARQLDatastorePair(
       maxRecursion: walkerOptions?.maxRecursion,
     });
     const document = res.document;
-    return metaStamping && document
+    return effectiveMetaStamping && document
       ? remapEntityMetaFromPersistence(document)
       : document;
   };
@@ -243,7 +259,7 @@ export function initSPARQLDatastorePair(
         "@type": typeNameToTypeIRI(typeName),
       };
 
-      if (metaStamping) {
+      if (effectiveMetaStamping) {
         const previous = await loadDocument(typeName, entityIRI).catch(
           () => null,
         );
@@ -251,7 +267,7 @@ export function initSPARQLDatastorePair(
           doc,
           typeName,
           persistenceSchema,
-          metaStamping,
+          effectiveMetaStamping,
           previous,
         );
         doc = remapEntityMetaForPersistence(doc);
@@ -359,7 +375,7 @@ export function initSPARQLDatastorePair(
     },
     findDocumentsAsFlatResultSet: async (typeName, query, limit) => {
       const typeIRI = typeNameToTypeIRI(typeName);
-      const loadedSchema = bringDefinitionToTop(rootSchema, typeName);
+      const loadedSchema = listSchemaForType(typeName);
       const { sorting, pagination, fields } = query;
       const queryString = withDefaultPrefix(
         defaultPrefix,
@@ -398,7 +414,7 @@ export function initSPARQLDatastorePair(
     },
     countDocuments: async (typeName, query) => {
       const typeIRI = typeNameToTypeIRI(typeName);
-      const loadedSchema = bringDefinitionToTop(rootSchema, typeName);
+      const loadedSchema = listSchemaForType(typeName);
       const queryString = withDefaultPrefix(
         defaultPrefix,
         jsonSchema2Select(
@@ -447,7 +463,7 @@ export function initSPARQLDatastorePair(
       options: TypedDocumentFilterOptions<T> = {},
     ): Promise<T | null> => {
       const typeIRI = typeNameToTypeIRI(typeName);
-      const schema = bringDefinitionToTop(rootSchema, typeName) as JSONSchema7;
+      const schema = listSchemaForType(typeName);
 
       const sparqlOptions: TypedFilterOptions<T> = {
         ...options,
@@ -469,7 +485,10 @@ export function initSPARQLDatastorePair(
       if (result.length > 1) {
         throw new Error("Multiple documents found for entityIRI");
       } else if (result.length === 1) {
-        return result[0];
+        const document = result[0];
+        return effectiveMetaStamping && document
+          ? (remapEntityMetaFromPersistence(document) as T)
+          : document;
       } else {
         return null;
       }
@@ -479,7 +498,7 @@ export function initSPARQLDatastorePair(
       options: TypedDocumentsSearchOptions<T> = {},
     ): Promise<T[]> => {
       const typeIRI = typeNameToTypeIRI(typeName);
-      const schema = bringDefinitionToTop(rootSchema, typeName) as JSONSchema7;
+      const schema = listSchemaForType(typeName);
 
       const sparqlOptions: TypedFilterOptions<T> = {
         ...options,
@@ -491,13 +510,18 @@ export function initSPARQLDatastorePair(
         },
       };
 
-      return await filterTypedDocuments<T>(
+      const results = await filterTypedDocuments<T>(
         undefined,
         typeIRI,
         schema,
         constructFetch,
         sparqlOptions,
       );
+      return effectiveMetaStamping
+        ? results.map(
+            (document) => remapEntityMetaFromPersistence(document) as T,
+          )
+        : results;
     },
     iterableImplementation: {
       listDocuments: (typeName, limit) => {
@@ -546,8 +570,14 @@ export function initSPARQLDatastorePair(
         searches: searchesProfile,
         counts: { cost: "O(1)" },
         speaksNative: ["sparql"],
-        ...(metaStamping
-          ? { entityMeta: { encoding: "triples" as const } }
+        ...(effectiveMetaStamping
+          ? {
+              entityMeta: resolveEntityMetaProfile(
+                effectiveMetaStamping,
+                "triples",
+                "sparql",
+              ),
+            }
           : {}),
       },
     },

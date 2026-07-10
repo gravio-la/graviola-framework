@@ -6,12 +6,21 @@ import {
   jsonSchema2PrismaSelect,
 } from "@graviola/json-schema-prisma-utils";
 import { defs } from "@graviola/json-schema-utils";
-import { extendSchemaShortcut } from "@graviola/json-schema-utils";
+import {
+  extendSchemaShortcut,
+  entityIdentityFromIdKey,
+  PRISMA_SCHEMA_IDENTITY,
+} from "@graviola/json-schema-utils";
 import {
   applyMetaStampingOnWrite,
   deriveExtendedSchema,
+  deriveMetaProfileForStamping,
+  lifecycleTimestampsEnabled,
   remapEntityMetaForPersistence,
   remapEntityMetaFromPersistence,
+  resolveEntityMetaProfile,
+  resolvePrismaMetaStamping,
+  stripLifecycleFromPersistenceMeta,
 } from "@graviola/meta-schema";
 import { createChangeBus } from "@graviola/store-core";
 import type {
@@ -130,11 +139,28 @@ export function initPrismaDatastorePair<
     metaStamping,
   }: PrismaStoreOptions,
 ): PrismaDatastorePair {
-  const domainSchema = extendSchemaShortcut(rootSchema, "type", "id");
-  const persistenceSchema = metaStamping
-    ? domainSchema.definitions?.EntityMeta
-      ? domainSchema
-      : deriveExtendedSchema(domainSchema)
+  const domainSchema = extendSchemaShortcut(
+    rootSchema,
+    PRISMA_SCHEMA_IDENTITY.typeKey,
+    PRISMA_SCHEMA_IDENTITY.idKey,
+  );
+  const prismaEntityIdentity = entityIdentityFromIdKey(
+    PRISMA_SCHEMA_IDENTITY.idKey,
+  );
+  const effectiveMetaStamping =
+    metaStamping && datasourceProvider
+      ? resolvePrismaMetaStamping(metaStamping, datasourceProvider)
+      : metaStamping;
+  const persistenceSchema = effectiveMetaStamping
+    ? deriveExtendedSchema(
+        domainSchema,
+        deriveMetaProfileForStamping(effectiveMetaStamping),
+        {
+          inlineMetaSchema: true,
+          includeLifecycle: lifecycleTimestampsEnabled(effectiveMetaStamping),
+          ...prismaEntityIdentity,
+        },
+      )
     : domainSchema;
   const effectiveSchema = persistenceSchema;
   const primarySearchFilter = (
@@ -288,7 +314,7 @@ export function initPrismaDatastorePair<
         "@type": typeNameToTypeIRI(typeName),
       };
 
-      if (metaStamping) {
+      if (effectiveMetaStamping) {
         const previousRaw = await load(typeName, entityIRI).catch(() => null);
         const previous =
           previousRaw != null
@@ -298,10 +324,13 @@ export function initPrismaDatastorePair<
           doc,
           typeName,
           persistenceSchema,
-          metaStamping,
+          effectiveMetaStamping,
           previous,
         );
         doc = remapEntityMetaForPersistence(doc);
+        if (effectiveMetaStamping.lifecycleTimestamps === "database-native") {
+          doc = stripLifecycleFromPersistenceMeta(doc);
+        }
       }
 
       return await upsert(typeName, doc, {
@@ -438,8 +467,14 @@ export function initPrismaDatastorePair<
       exists: true,
       profiles: {
         counts: { cost: "O(1)" },
-        ...(metaStamping
-          ? { entityMeta: { encoding: "column" as const } }
+        ...(effectiveMetaStamping
+          ? {
+              entityMeta: resolveEntityMetaProfile(
+                effectiveMetaStamping,
+                "column",
+                "prisma",
+              ),
+            }
           : {}),
       },
     },
