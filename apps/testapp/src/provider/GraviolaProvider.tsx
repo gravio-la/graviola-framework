@@ -29,6 +29,7 @@ import { JSONSchema7 } from "json-schema";
 import { allRenderers } from "./config";
 import { CircularProgress } from "@mui/material";
 import type { MetaStampingConfig } from "@graviola/meta-schema";
+import { GraviolaLoungeProviders } from "@graviola/graviola-app-config";
 
 type GraviolaProviderProps = {
   baseIRI: string;
@@ -150,6 +151,7 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
               storageKey,
             }}
             metaStamping={metaStamping}
+            storeSchema={schema}
             loader={<CircularProgress />}
           >
             <NiceModal.Provider>

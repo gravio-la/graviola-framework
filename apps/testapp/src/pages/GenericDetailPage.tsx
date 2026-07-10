@@ -6,7 +6,10 @@ import {
   useCRUDWithQueryClient,
   useTypeIRIFromEntity,
 } from "@graviola/edb-state-hooks";
-import { SemanticDetailView } from "@graviola/semantic-views";
+import {
+  SemanticAnnotationsView,
+  SemanticDetailView,
+} from "@graviola/semantic-views";
 import { bringDefinitionToTop } from "@graviola/json-schema-utils";
 import { useCallback, useMemo } from "react";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
@@ -153,7 +156,21 @@ export function GenericDetailPage() {
             {schemaConfig.schemaName === "garden-fee" ? (
               <GardenFeeComputedPanel
                 typeName={resolvedTypeName}
-                entityIRI={entityIRI}
+                document={data as Record<string, unknown>}
+              />
+            ) : null}
+            {schemaConfig.metaStamping && schemaConfig.annotationMetaSchema ? (
+              <SemanticAnnotationsView
+                meta={(data as { $meta?: unknown })?.$meta}
+                metaSchema={schemaConfig.annotationMetaSchema}
+                uiSchema={
+                  resolvedTypeName
+                    ? schemaConfig.annotationDetailUiSchemata?.[
+                        resolvedTypeName
+                      ]
+                    : undefined
+                }
+                title="Metadaten"
               />
             ) : null}
           </>

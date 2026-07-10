@@ -93,6 +93,7 @@ export function GenericListPage() {
       ) : null}
       <SemanticTable
         typeName={typeName}
+        tableUiSchema={schemaConfig.tableUiSchema}
         onEditEntry={onEditEntry}
         onShowEntry={onShowEntry}
       />

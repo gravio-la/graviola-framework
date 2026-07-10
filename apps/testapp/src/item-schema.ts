@@ -2,10 +2,12 @@ import type { JSONSchema7 } from "json-schema";
 import {
   baseMetaSchemaProfile,
   deriveExtendedSchema,
+  ENTITY_META_JSON_KEY,
   extendMetaSchema,
   type MetaStampingConfig,
 } from "@graviola/meta-schema";
 import { schemaIdentityOfSync } from "@graviola/json-schema-utils";
+import type { TableUiSchema } from "@graviola/edb-table-types";
 import type { SchemaConfig } from "./schemaTypes";
 import { makeSchemaConfig } from "./makeSchemaConfig";
 import { exampleDataTurtle } from "./item-fixture";
@@ -150,7 +152,7 @@ export const schema = {
 
 const itemJsonSchema = schema as unknown as JSONSchema7;
 
-const itemMetaSchema = extendMetaSchema(baseMetaSchemaProfile, {
+export const itemMetaSchema = extendMetaSchema(baseMetaSchemaProfile, {
   type: "object",
   properties: {
     reviewStatus: {
@@ -161,15 +163,42 @@ const itemMetaSchema = extendMetaSchema(baseMetaSchemaProfile, {
   },
 });
 
+const itemSchemaIdentity = schemaIdentityOfSync(itemJsonSchema);
+
 export const itemMetaStamping: MetaStampingConfig = {
-  ...schemaIdentityOfSync(itemJsonSchema),
+  schemaVersion: itemSchemaIdentity.version,
+  schemaFingerprint: itemSchemaIdentity.fingerprint,
   rejectClientMeta: true,
+  lifecycleTimestamps: "application",
 };
 
 export const itemExtendedSchema = deriveExtendedSchema(
   itemJsonSchema,
   itemMetaSchema,
+  { includeLifecycle: true, graftPropertyKey: ENTITY_META_JSON_KEY },
 );
+
+const itemLifecycleTableUiSchema: TableUiSchema = {
+  type: "Table",
+  mode: "blacklist",
+  columns: [
+    {
+      scope: "#/properties/$meta",
+      visibility: "forbidden",
+    },
+    {
+      scope: "#/properties/$meta/properties/created",
+      label: "Created",
+      visibility: "hiddenByDefault",
+    },
+    {
+      scope: "#/properties/$meta/properties/modified",
+      label: "Modified",
+      visibility: "hiddenByDefault",
+      sortable: true,
+    },
+  ],
+};
 
 export const itemSchemaConfig: SchemaConfig = makeSchemaConfig({
   schemaName: "item-schema",
@@ -187,6 +216,34 @@ export const itemSchemaConfig: SchemaConfig = makeSchemaConfig({
   schema: itemJsonSchema,
   extendedSchema: itemExtendedSchema,
   metaStamping: itemMetaStamping,
+  annotationMetaSchema: itemMetaSchema,
+  tableUiSchema: itemLifecycleTableUiSchema,
+  annotationDetailUiSchemaScopeOverrides: {
+    Item: {
+      scopeOverride: {
+        "#/properties/created": {
+          type: "Control",
+          scope: "#/properties/created",
+          label: "Erstellt",
+        },
+        "#/properties/modified": {
+          type: "Control",
+          scope: "#/properties/modified",
+          label: "Geändert",
+        },
+        "#/properties/schemaFingerprint": {
+          type: "Control",
+          scope: "#/properties/schemaFingerprint",
+          label: "Schema-Fingerprint",
+        },
+        "#/properties/reviewStatus": {
+          type: "Control",
+          scope: "#/properties/reviewStatus",
+          label: "Review-Status",
+        },
+      },
+    },
+  },
   primaryFields: {
     Category: {
       label: "name",
@@ -228,7 +285,7 @@ export const itemSchemaConfig: SchemaConfig = makeSchemaConfig({
   },
   detailUiSchemaScopeOverrides: {
     Item: {
-      skipScope: ["#/properties/photos"],
+      skipScope: ["#/properties/photos", "#/properties/$meta"],
       scopeOverride: {
         "#/properties/basePrice": {
           type: "Control",

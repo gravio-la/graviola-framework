@@ -3,6 +3,7 @@ import type { GenerateDefaultDetailUISchemaOptions } from "@graviola/edb-detail-
 import type { GenerateUISchemaOptions } from "@graviola/edb-ui-utils";
 import type { UISchemaElement } from "@jsonforms/core";
 import type { MetaStampingConfig } from "@graviola/meta-schema";
+import type { TableUiSchema } from "@graviola/edb-table-types";
 import type { JSONSchema7 } from "json-schema";
 import type { FC } from "react";
 
@@ -15,6 +16,10 @@ export type FormUiSchemaScopeOverrides = Record<
   GenerateUISchemaOptions
 >;
 export type DetailUiSchemaScopeOverrides = Record<
+  string,
+  GenerateDefaultDetailUISchemaOptions
+>;
+export type AnnotationDetailUiSchemaScopeOverrides = Record<
   string,
   GenerateDefaultDetailUISchemaOptions
 >;
@@ -41,13 +46,20 @@ export type SchemaConfig = {
   uischemata?: Record<string, UISchemaElement>;
   /** Per-typeName UISchema roots for the schema-driven detail view (JSON Forms shape) */
   detailUiSchemata?: Record<string, UISchemaElement>;
+  /** Per-type annotation detail UI (meta profile fragment, not domain entity). */
+  annotationDetailUiSchemata?: Record<string, UISchemaElement>;
+  /** Meta profile schema used to generate annotation detail UI schemata. */
+  annotationMetaSchema?: JSONSchema7;
   /** Extended schema with grafted `$meta` for reads/tables (domain schema stays in `schema`). */
   extendedSchema?: JSONSchema7;
   /** Opt-in `$meta` stamping configuration. */
   metaStamping?: MetaStampingConfig;
+  /** Optional SemanticTable column overrides (e.g. hidden lifecycle columns). */
+  tableUiSchema?: TableUiSchema;
 };
 
 export type OverridableSchemaConfig = SchemaConfig & {
   uischemaScopeOverrides?: FormUiSchemaScopeOverrides;
   detailUiSchemaScopeOverrides?: DetailUiSchemaScopeOverrides;
+  annotationDetailUiSchemaScopeOverrides?: AnnotationDetailUiSchemaScopeOverrides;
 };

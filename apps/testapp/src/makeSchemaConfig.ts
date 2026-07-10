@@ -5,6 +5,7 @@ import {
   generateDefaultDetailUISchema,
   type GenerateDefaultDetailUISchemaOptions,
 } from "@graviola/edb-detail-renderer";
+import { flattenMetaSchemaProfile } from "@graviola/meta-schema";
 import {
   generateDefaultUISchema,
   type GenerateUISchemaOptions,
@@ -39,13 +40,28 @@ export function uiSchemaForDefinition(
   );
 }
 
+export function annotationDetailUiSchemaForMetaProfile(
+  metaSchema: JSONSchema7,
+  options?: GenerateDefaultDetailUISchemaOptions,
+) {
+  return generateDefaultDetailUISchema(
+    flattenMetaSchemaProfile(metaSchema) as never,
+    {
+      layoutType: "VerticalLayout",
+      ...options,
+    },
+  );
+}
+
 export function makeSchemaConfig(
   config: OverridableSchemaConfig,
 ): SchemaConfig {
   const {
     uischemaScopeOverrides,
     detailUiSchemaScopeOverrides,
+    annotationDetailUiSchemaScopeOverrides,
     detailUiSchemata: explicitDetailUiSchemata,
+    annotationDetailUiSchemata: explicitAnnotationDetailUiSchemata,
     uischemata: explicitUischemata,
     ...rest
   } = config;
@@ -71,6 +87,31 @@ export function makeSchemaConfig(
     detailUiSchemata = explicitDetailUiSchemata;
   }
 
+  let annotationDetailUiSchemata: SchemaConfig["annotationDetailUiSchemata"];
+
+  if (config.annotationMetaSchema) {
+    const generated: NonNullable<SchemaConfig["annotationDetailUiSchemata"]> =
+      {};
+    const typeNames =
+      annotationDetailUiSchemaScopeOverrides &&
+      Object.keys(annotationDetailUiSchemaScopeOverrides).length > 0
+        ? Object.keys(annotationDetailUiSchemaScopeOverrides)
+        : Object.keys(config.typeNameLabelMap);
+
+    for (const typeName of typeNames) {
+      generated[typeName] = annotationDetailUiSchemaForMetaProfile(
+        config.annotationMetaSchema,
+        annotationDetailUiSchemaScopeOverrides?.[typeName],
+      );
+    }
+    annotationDetailUiSchemata = {
+      ...generated,
+      ...explicitAnnotationDetailUiSchemata,
+    };
+  } else {
+    annotationDetailUiSchemata = explicitAnnotationDetailUiSchemata;
+  }
+
   let uischemata: SchemaConfig["uischemata"];
 
   if (
@@ -94,5 +135,6 @@ export function makeSchemaConfig(
     ...rest,
     uischemata,
     detailUiSchemata,
+    annotationDetailUiSchemata,
   };
 }

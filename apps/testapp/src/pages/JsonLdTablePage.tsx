@@ -96,6 +96,7 @@ export function JsonLdTablePage() {
               scope: "#/properties/@type",
               visibility: "forbidden",
             },
+            ...(schemaConfig.tableUiSchema?.columns ?? []),
           ],
         }}
         onEditEntry={onEditEntry}
