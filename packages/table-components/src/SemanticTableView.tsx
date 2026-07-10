@@ -103,6 +103,7 @@ export function SemanticTableView({
   sorting,
   onSortingChange,
   manualPagination,
+  manualSorting = true,
   csvOptions,
   tableConfigRegistry: tableConfig,
   callbacks = {},
@@ -111,6 +112,8 @@ export function SemanticTableView({
   locale = "en",
   resetKey,
   tableColumnVisibility,
+  columnVisibility: columnVisibilityProp,
+  onColumnVisibilityChange: onColumnVisibilityChangeProp,
 }: SemanticTableViewProps) {
   const {
     onShowEntry,
@@ -193,16 +196,44 @@ export function SemanticTableView({
     [setColumnFilters],
   );
 
-  const [columnVisibility, setColumnVisibility] = useState<MRT_VisibilityState>(
-    () =>
+  const isControlledVisibility =
+    columnVisibilityProp !== undefined &&
+    onColumnVisibilityChangeProp !== undefined;
+
+  const [internalColumnVisibility, setInternalColumnVisibility] =
+    useState<MRT_VisibilityState>(() =>
       resolveInitialColumnVisibility(conf, tableConfig, tableColumnVisibility),
-  );
+    );
+
+  const columnVisibility = isControlledVisibility
+    ? columnVisibilityProp
+    : internalColumnVisibility;
 
   const handleChangeColumnVisibility = useCallback(
-    (s: any) => {
-      setColumnVisibility(s);
+    (
+      updater:
+        | MRT_VisibilityState
+        | ((old: MRT_VisibilityState) => MRT_VisibilityState),
+    ) => {
+      const apply = (old: MRT_VisibilityState, next: MRT_VisibilityState) => {
+        const keys = new Set([...Object.keys(old), ...Object.keys(next)]);
+        for (const key of keys) {
+          if (old[key] !== next[key]) return next;
+        }
+        return old;
+      };
+
+      if (isControlledVisibility) {
+        onColumnVisibilityChangeProp!((old) =>
+          apply(old, typeof updater === "function" ? updater(old) : updater),
+        );
+      } else {
+        setInternalColumnVisibility((old) =>
+          apply(old, typeof updater === "function" ? updater(old) : updater),
+        );
+      }
     },
-    [setColumnVisibility],
+    [isControlledVisibility, onColumnVisibilityChangeProp],
   );
 
   const handleBulkRemove = useCallback(
@@ -282,7 +313,7 @@ export function SemanticTableView({
     },
     onRowSelectionChange: handleRowSelectionChange,
     manualPagination,
-    manualSorting: true,
+    manualSorting,
     onPaginationChange: onPaginationChange,
     onSortingChange: onSortingChange,
     onColumnVisibilityChange: handleChangeColumnVisibility,
@@ -291,11 +322,15 @@ export function SemanticTableView({
     },
     columnFilterDisplayMode: "popover",
     initialState: {
-      columnVisibility: resolveInitialColumnVisibility(
-        conf,
-        tableConfig,
-        tableColumnVisibility,
-      ),
+      ...(isControlledVisibility
+        ? {}
+        : {
+            columnVisibility: resolveInitialColumnVisibility(
+              conf,
+              tableConfig,
+              tableColumnVisibility,
+            ),
+          }),
       pagination: { pageIndex: 0, pageSize: defaultLimit },
     },
     localization,

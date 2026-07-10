@@ -103,6 +103,8 @@ export type SemanticTableViewProps = {
   sorting: MRT_SortingState;
   onSortingChange: (s: MRT_SortingState) => void;
   manualPagination: boolean;
+  /** Server-side sort (SPARQL SELECT). JSON-LD sorts client-side on loaded documents. */
+  manualSorting?: boolean;
 
   csvOptions?: ConfigOptions;
   tableConfigRegistry?: TableConfigRegistry;
@@ -117,6 +119,13 @@ export type SemanticTableViewProps = {
   bulkActions?: TableAction[];
   /** Optional visibility map from TableUiSchema (hiddenByDefault columns). */
   tableColumnVisibility?: MRT_VisibilityState;
+  /** Controlled column visibility (lifted from SemanticTable for query refetch). */
+  columnVisibility?: MRT_VisibilityState;
+  onColumnVisibilityChange?: (
+    updater:
+      | MRT_VisibilityState
+      | ((old: MRT_VisibilityState) => MRT_VisibilityState),
+  ) => void;
 };
 
 export type SemanticTableDataMode = "sparql-select" | "jsonld";

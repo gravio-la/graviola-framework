@@ -13,11 +13,22 @@ import {
 } from "@graviola/edb-state-hooks";
 import { bringDefinitionToTop } from "@graviola/json-schema-utils";
 import { hasCapability } from "@graviola/store-core";
-import type { MRT_ColumnDef, MRT_SortingState } from "material-react-table";
+import type {
+  MRT_ColumnDef,
+  MRT_SortingState,
+  MRT_VisibilityState,
+} from "material-react-table";
 import { PaginationState } from "@tanstack/table-core";
 import type { JSONSchema7 } from "json-schema";
 import { useTranslation } from "next-i18next";
-import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { defaultValueRenderers } from "@graviola/edb-detail-renderer";
 import {
   composeJsonLdColumns,
@@ -30,6 +41,8 @@ import {
 } from "@graviola/edb-table-renderer-sparql-select";
 import {
   buildColumnVisibilityFromTableUiSchema,
+  normalizeTableUiSchemaForRowShape,
+  resolveActiveMetaAnnotationScopes,
   resolveDefaultSortingFromTableUiSchema,
 } from "@graviola/edb-table-types";
 
@@ -58,6 +71,11 @@ export const SemanticTable = ({
   columnRegistry,
   jsonLdCell,
 }: SemanticTableProps) => {
+  const effectiveTableUiSchema = useMemo(
+    () => normalizeTableUiSchemaForRowShape(tableUiSchema, rowShape),
+    [tableUiSchema, rowShape],
+  );
+
   const {
     queryBuildOptions,
     typeNameToTypeIRI,
@@ -89,7 +107,7 @@ export const SemanticTable = ({
   );
 
   const [sorting, setSorting] = useState<MRT_SortingState>(() =>
-    resolveDefaultSortingFromTableUiSchema(tableUiSchema, rowShape),
+    resolveDefaultSortingFromTableUiSchema(effectiveTableUiSchema, rowShape),
   );
 
   const handleSortingChange = useCallback((s: MRT_SortingState) => {
@@ -128,6 +146,109 @@ export const SemanticTable = ({
     setPagination(p);
   }, []);
 
+  const conf = useMemo(
+    () => tableConfig?.[typeName] || tableConfig?.default,
+    [tableConfig, typeName],
+  );
+
+  const displayColumns = useMemo<MRT_ColumnDef<any>[]>(() => {
+    if (rowShape === "jsonld") {
+      return composeJsonLdColumns(loadedSchema, {
+        typeName,
+        tableUiSchema: effectiveTableUiSchema,
+        t: t2,
+        columnRegistry,
+        primaryField: queryBuildOptions.primaryFields?.[typeName],
+      });
+    }
+    return composeSparqlSelectColumns(loadedSchema, {
+      typeName,
+      tableUiSchema: effectiveTableUiSchema,
+      t: t2,
+      matcher: conf?.matcher as ColumnDefMatcher | undefined,
+      primaryFields: queryBuildOptions.primaryFields,
+    });
+  }, [
+    loadedSchema,
+    typeName,
+    t2,
+    conf?.matcher,
+    queryBuildOptions.primaryFields,
+    rowShape,
+    effectiveTableUiSchema,
+    columnRegistry,
+  ]);
+
+  const tableColumnVisibility = useMemo(
+    () =>
+      buildColumnVisibilityFromTableUiSchema(
+        effectiveTableUiSchema,
+        displayColumns,
+        rowShape,
+      ),
+    [effectiveTableUiSchema, displayColumns, rowShape],
+  );
+
+  const initialColumnVisibility = useMemo(
+    () => ({
+      "@id_single": false,
+      "@type_single": false,
+      ...tableColumnVisibility,
+    }),
+    [tableColumnVisibility],
+  );
+
+  const [columnVisibility, setColumnVisibility] = useState<MRT_VisibilityState>(
+    initialColumnVisibility,
+  );
+
+  const prevTypeNameRef = useRef(typeName);
+  useEffect(() => {
+    if (prevTypeNameRef.current === typeName) return;
+    prevTypeNameRef.current = typeName;
+    setColumnVisibility(initialColumnVisibility);
+  }, [typeName, initialColumnVisibility]);
+
+  const visibleColumnIds = useMemo(() => {
+    const ids = new Set<string>();
+    for (const column of displayColumns) {
+      if (!column.id) continue;
+      if (columnVisibility[column.id] !== false) {
+        ids.add(column.id);
+      }
+    }
+    return ids;
+  }, [displayColumns, columnVisibility]);
+
+  const annotationScopes = useMemo(() => {
+    if (rowShape !== "sparql-select") return undefined;
+    const scopes = resolveActiveMetaAnnotationScopes(
+      effectiveTableUiSchema,
+      visibleColumnIds,
+      sorting.map((entry) => entry.id),
+      rowShape,
+    );
+    return scopes.length > 0 ? scopes : undefined;
+  }, [rowShape, effectiveTableUiSchema, visibleColumnIds, sorting]);
+
+  const handleColumnVisibilityChange = useCallback(
+    (
+      updater:
+        | MRT_VisibilityState
+        | ((old: MRT_VisibilityState) => MRT_VisibilityState),
+    ) => {
+      setColumnVisibility((old) => {
+        const next = typeof updater === "function" ? updater(old) : updater;
+        const keys = new Set([...Object.keys(old), ...Object.keys(next)]);
+        for (const key of keys) {
+          if (old[key] !== next[key]) return next;
+        }
+        return old;
+      });
+    },
+    [],
+  );
+
   const { data: resultListData, isLoading } = useQuery({
     queryKey: [
       "type",
@@ -135,6 +256,7 @@ export const SemanticTable = ({
       "list",
       rowShape,
       sorting,
+      annotationScopes,
       loadAllAtOnce ? undefined : pagination,
     ],
     queryFn: async () => {
@@ -155,11 +277,15 @@ export const SemanticTable = ({
           sorting:
             rowShape === "sparql-select"
               ? sorting.map((entry) => ({
-                  id: resolveSparqlSortColumnId(entry.id, tableUiSchema),
+                  id: resolveSparqlSortColumnId(
+                    entry.id,
+                    effectiveTableUiSchema,
+                  ),
                   desc: entry.desc,
                 }))
               : sorting,
           pagination: loadAllAtOnce ? undefined : pagination,
+          annotationScopes,
         },
         loadAllAtOnce ? upperLimit : defaultLimit,
       );
@@ -174,49 +300,6 @@ export const SemanticTable = ({
     }
     return (resultListData as any)?.results?.bindings ?? [];
   }, [resultListData]);
-
-  const conf = useMemo(
-    () => tableConfig?.[typeName] || tableConfig?.default,
-    [tableConfig, typeName],
-  );
-
-  const displayColumns = useMemo<MRT_ColumnDef<any>[]>(() => {
-    if (rowShape === "jsonld") {
-      return composeJsonLdColumns(loadedSchema, {
-        typeName,
-        tableUiSchema,
-        t: t2,
-        columnRegistry,
-        primaryField: queryBuildOptions.primaryFields?.[typeName],
-      });
-    }
-    return composeSparqlSelectColumns(loadedSchema, {
-      typeName,
-      tableUiSchema,
-      t: t2,
-      matcher: conf?.matcher as ColumnDefMatcher | undefined,
-      primaryFields: queryBuildOptions.primaryFields,
-    });
-  }, [
-    loadedSchema,
-    typeName,
-    t2,
-    conf?.matcher,
-    queryBuildOptions.primaryFields,
-    rowShape,
-    tableUiSchema,
-    columnRegistry,
-  ]);
-
-  const tableColumnVisibility = useMemo(
-    () =>
-      buildColumnVisibilityFromTableUiSchema(
-        tableUiSchema,
-        displayColumns,
-        rowShape,
-      ),
-    [tableUiSchema, displayColumns, rowShape],
-  );
 
   const columnOrder = useMemo(() => {
     const ids = displayColumns.map((col) => col.id);
@@ -445,6 +528,7 @@ export const SemanticTable = ({
       sorting={sorting}
       onSortingChange={handleSortingChange}
       manualPagination={manualPagination}
+      manualSorting={rowShape === "sparql-select"}
       csvOptions={csvOptions}
       tableConfigRegistry={tableConfig}
       callbacks={mergedCallbacks}
@@ -452,7 +536,8 @@ export const SemanticTable = ({
       bulkActions={bulkActions}
       locale={locale}
       resetKey={typeName}
-      tableColumnVisibility={tableColumnVisibility}
+      columnVisibility={columnVisibility}
+      onColumnVisibilityChange={handleColumnVisibilityChange}
     />
   );
 
