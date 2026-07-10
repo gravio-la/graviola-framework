@@ -24,7 +24,11 @@
  * `capabilities` descriptor does not expose the corresponding flags.
  */
 import { initPrismaDatastorePair } from "@graviola/prisma-db-impl";
-import { extendSchemaShortcut } from "@graviola/json-schema-utils";
+import {
+  extendSchemaShortcut,
+  JSONLD_SCHEMA_IDENTITY,
+  PRISMA_SCHEMA_IDENTITY,
+} from "@graviola/json-schema-utils";
 import type { JSONSchema7 } from "json-schema";
 import {
   rawTestSchema,
@@ -33,7 +37,12 @@ import {
   BASE_IRI,
   primaryFields,
 } from "../schema/testSchema";
-import { prismaMetaStampingConfig } from "../schema/metaTestConfig";
+import {
+  prismaMetaStampingApplication,
+  prismaMetaStampingConfig,
+  prismaMetaStampingLifecycleOff,
+} from "../schema/metaTestConfig";
+import type { MetaStampingConfig } from "@graviola/meta-schema";
 import type { DatastoreAdapter, DatastoreContractStore } from "../types";
 import {
   databaseUrlToProvider,
@@ -132,8 +141,8 @@ export function createPrismaAdapter(
   // Extend schema to add `id` and `type` fields, matching the generated Prisma schema
   const extendedSchema = extendSchemaShortcut(
     rawTestSchema as unknown as JSONSchema7,
-    "type",
-    "id",
+    PRISMA_SCHEMA_IDENTITY.typeKey,
+    PRISMA_SCHEMA_IDENTITY.idKey,
   );
 
   return {
@@ -148,36 +157,42 @@ export function createPrismaAdapter(
 
       await prismaClient.$connect();
 
+      const pairOptions = {
+        jsonldContext: { "@vocab": BASE_IRI },
+        defaultPrefix: BASE_IRI,
+        typeNameToTypeIRI,
+        typeIRItoTypeName,
+        datasourceProvider: databaseUrlToProvider(databaseUrl),
+      };
+
       const { store } = initPrismaDatastorePair(
         prismaClient,
         extendedSchema,
         primaryFields,
-        {
-          jsonldContext: { "@vocab": BASE_IRI },
-          defaultPrefix: BASE_IRI,
-          typeNameToTypeIRI,
-          typeIRItoTypeName,
-          datasourceProvider: databaseUrlToProvider(databaseUrl),
-        },
+        pairOptions,
       );
 
-      const { store: metaStampingStore } = initPrismaDatastorePair(
-        prismaClient,
-        extendedSchema,
-        primaryFields,
-        {
-          jsonldContext: { "@vocab": BASE_IRI },
-          defaultPrefix: BASE_IRI,
-          typeNameToTypeIRI,
-          typeIRItoTypeName,
-          datasourceProvider: databaseUrlToProvider(databaseUrl),
-          metaStamping: prismaMetaStampingConfig,
-        },
+      const metaPair = (config: MetaStampingConfig) =>
+        initPrismaDatastorePair(prismaClient, extendedSchema, primaryFields, {
+          ...pairOptions,
+          metaStamping: config,
+        });
+
+      const { store: metaStampingStore } = metaPair(prismaMetaStampingConfig);
+      const { store: lifecycleOffStore } = metaPair(
+        prismaMetaStampingLifecycleOff,
+      );
+      const { store: applicationStore } = metaPair(
+        prismaMetaStampingApplication,
       );
 
       return {
         store: store as DatastoreContractStore,
         metaStampingStore: metaStampingStore as DatastoreContractStore,
+        metaStampingStores: {
+          lifecycleOff: lifecycleOffStore as DatastoreContractStore,
+          application: applicationStore as DatastoreContractStore,
+        },
       };
     },
 

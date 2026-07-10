@@ -136,6 +136,7 @@ for (const adapter of adapters) {
       runMetaSuite(
         () => store,
         metaStampingStore ? () => metaStampingStore : undefined,
+        setupResult.metaStampingStores,
       );
     }
   });

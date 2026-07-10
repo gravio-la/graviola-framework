@@ -26,6 +26,8 @@ import {
 } from "../schema/testSchema";
 import {
   sparqlMetaStampingConfig,
+  sparqlMetaStampingDatabaseNativeConfig,
+  sparqlMetaStampingLifecycleOff,
   sparqlMetaTestSchema,
 } from "../schema/metaTestConfig";
 import type { DatastoreAdapter, DatastoreContractStore } from "../types";
@@ -84,20 +86,33 @@ export function createOxigraphLocalAdapter(): DatastoreAdapter {
         defaultLimit: 100,
       });
 
-      const metaPair = initSPARQLDatastorePair({
-        schema: sparqlMetaTestSchema as any,
-        defaultPrefix: BASE_IRI,
-        jsonldContext: { "@vocab": BASE_IRI },
-        typeNameToTypeIRI,
-        queryBuildOptions,
-        sparqlQueryFunctions: crudFunctions,
-        defaultLimit: 100,
-        metaStamping: sparqlMetaStampingConfig,
-      });
+      const metaPair = (config: typeof sparqlMetaStampingConfig) =>
+        initSPARQLDatastorePair({
+          schema: sparqlMetaTestSchema as any,
+          defaultPrefix: BASE_IRI,
+          jsonldContext: { "@vocab": BASE_IRI },
+          typeNameToTypeIRI,
+          queryBuildOptions,
+          sparqlQueryFunctions: crudFunctions,
+          defaultLimit: 100,
+          metaStamping: config,
+        });
+
+      const { store: metaStampingStore } = metaPair(sparqlMetaStampingConfig);
+      const { store: lifecycleOffStore } = metaPair(
+        sparqlMetaStampingLifecycleOff,
+      );
+      const { store: sparqlNativeConfigStore } = metaPair(
+        sparqlMetaStampingDatabaseNativeConfig,
+      );
 
       return {
         store: pair.store as DatastoreContractStore,
-        metaStampingStore: metaPair.store as DatastoreContractStore,
+        metaStampingStore: metaStampingStore as DatastoreContractStore,
+        metaStampingStores: {
+          lifecycleOff: lifecycleOffStore as DatastoreContractStore,
+          sparqlNativeConfig: sparqlNativeConfigStore as DatastoreContractStore,
+        },
       };
     },
 

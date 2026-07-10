@@ -18,13 +18,43 @@ import { writeFileSync, mkdirSync, existsSync, rmSync, readFileSync } from "fs";
 import { execSync } from "child_process";
 import { createRequire } from "node:module";
 import { join } from "path";
-import { deriveExtendedSchema } from "@graviola/meta-schema";
+import {
+  composeMetaSchemaProfile,
+  deriveExtendedSchema,
+  ENTITY_META_PERSISTENCE_KEY,
+} from "@graviola/meta-schema";
 import { jsonSchema2Prisma } from "@graviola/json-schema-prisma-utils";
-import { extendSchemaShortcut } from "@graviola/json-schema-utils";
+import {
+  extendSchemaShortcut,
+  entityIdentityFromIdKey,
+  PRISMA_SCHEMA_IDENTITY,
+} from "@graviola/json-schema-utils";
 import { rawTestSchema } from "../src/schema/testSchema";
 import type { JSONSchema7 } from "json-schema";
 
 export type PrismaProvider = "sqlite" | "postgresql" | "mysql" | "mongodb";
+
+/**
+ * Post-process generated Prisma models: framework inline `entityMeta` lifecycle
+ * columns get `@default(now())` / `@updatedAt`. Store/build config only — no JSON Schema extensions.
+ */
+export function applyFrameworkNativeLifecycleColumns(
+  prismaModels: string,
+  persistenceKey: string = ENTITY_META_PERSISTENCE_KEY,
+): string {
+  const created = `${persistenceKey}_created`;
+  const modified = `${persistenceKey}_modified`;
+  const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return prismaModels
+    .replace(
+      new RegExp(`^(\\s*)${esc(created)}\\s+DateTime\\??$`, "gm"),
+      `$1${created} DateTime @default(now())`,
+    )
+    .replace(
+      new RegExp(`^(\\s*)${esc(modified)}\\s+DateTime\\??$`, "gm"),
+      `$1${modified} DateTime @updatedAt`,
+    );
+}
 
 /** Derive Prisma `datasource provider` from a connection URL (not from env). */
 export function databaseUrlToProvider(url: string): PrismaProvider {
@@ -96,15 +126,27 @@ export function runPrismaSetupForUrl(databaseUrl: string): void {
 
   const extendedSchema = extendSchemaShortcut(
     rawTestSchema as unknown as JSONSchema7,
-    "type",
-    "id",
+    PRISMA_SCHEMA_IDENTITY.typeKey,
+    PRISMA_SCHEMA_IDENTITY.idKey,
   );
-  const persistenceSchema = deriveExtendedSchema(extendedSchema);
+  const persistenceSchema = deriveExtendedSchema(
+    extendedSchema,
+    composeMetaSchemaProfile({ includeLifecycle: true }),
+    {
+      inlineMetaSchema: true,
+      includeLifecycle: true,
+      ...entityIdentityFromIdKey(PRISMA_SCHEMA_IDENTITY.idKey),
+    },
+  );
 
-  const modelDefinitions = jsonSchema2Prisma(persistenceSchema, new WeakSet(), {
+  let modelDefinitions = jsonSchema2Prisma(persistenceSchema, new WeakSet(), {
     databaseProvider: provider,
     reverseMap: {},
   });
+
+  if (provider !== "mongodb") {
+    modelDefinitions = applyFrameworkNativeLifecycleColumns(modelDefinitions);
+  }
 
   const prismaMajor = getInstalledPrismaMajorVersion();
   console.log(

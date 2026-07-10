@@ -63,6 +63,16 @@ export type DatastoreContractStoreWithImports = DatastoreContractStore &
 export type ImportSeedStore = DatastoreContractStore;
 
 /**
+ * Optional meta-stamping store variants for lifecycle contract tests.
+ */
+export type MetaStampingStoreVariants = {
+  lifecycleOff?: DatastoreContractStore;
+  application?: DatastoreContractStore;
+  /** SPARQL store with database-native config (descriptor should downgrade). */
+  sparqlNativeConfig?: DatastoreContractStore;
+};
+
+/**
  * Adapter wraps one Store implementation for contract tests.
  */
 export type DatastoreAdapter = {
@@ -73,6 +83,7 @@ export type DatastoreAdapter = {
     store: DatastoreContractStore;
     /** Same backing data; optional store with entity `$meta` stamping enabled. */
     metaStampingStore?: DatastoreContractStore;
+    metaStampingStores?: MetaStampingStoreVariants;
   }>;
   /** Wipe backing data — invoked in beforeEach. */
   clearAll: () => Promise<void>;
