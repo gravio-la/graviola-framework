@@ -30,9 +30,9 @@ export const DCT = {
 } as const;
 
 export const GRA = {
-  schemaVersion: "https://graviola.top/ns/schemaVersion",
-  schemaFingerprint: "https://graviola.top/ns/schemaFingerprint",
-  metaSchemaVersion: "https://graviola.top/ns/metaSchemaVersion",
+  schemaVersion: "https://graviola.gra.one/ns/schemaVersion",
+  schemaFingerprint: "https://graviola.gra.one/ns/schemaFingerprint",
+  metaSchemaVersion: "https://graviola.gra.one/ns/metaSchemaVersion",
 } as const;
 
 /** Map a {@link GenerationActivity} to RDF predicate → literal/object pairs. */

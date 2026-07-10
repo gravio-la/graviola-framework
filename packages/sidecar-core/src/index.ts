@@ -1,13 +1,18 @@
 import type { SchemaIdentity } from "@graviola/json-schema-utils";
 
-export const SIDECAR_SCHEMA_IRI = "https://graviola.top/sidecar/v1";
+export type SidecarAppliesTo = SchemaIdentity;
 
-export type SidecarAppliesTo = SchemaIdentity & {
-  /** Sidecar format version IRI (document `$schema`). */
-  sidecarSchema?: string;
-};
-
+/**
+ * Scope-keyed companion envelope shared by calc profiles, lens sets, and similar
+ * artifacts. Each concern defines its own `$schema` IRI and slot payload shape
+ * (e.g. `calc-profile/v1`, `lens/v1`) — there is no global sidecar schema.
+ *
+ * UI schema (JSON Forms) and MetaSchema profiles are different document families;
+ * they are orthogonal companions in the architectural sense but do not use this
+ * envelope.
+ */
 export type SidecarDocument<TPayload = unknown> = {
+  /** Concern-specific document schema IRI, set by the owning package. */
   $schema?: string;
   appliesTo: SidecarAppliesTo;
   slots: Record<string, TPayload>;
@@ -22,6 +27,11 @@ export type SidecarValidationIssue =
     }
   | {
       kind: "dangling-scope";
+      scope: string;
+      message: string;
+    }
+  | {
+      kind: "invalid-payload";
       scope: string;
       message: string;
     }
@@ -69,24 +79,25 @@ export function validateSidecar<TPayload>(
   const issues: SidecarValidationIssue[] = [];
   const known = new Set(knownScopes);
 
-  if (sidecar.appliesTo.fingerprint !== expectedIdentity.fingerprint) {
+  const fingerprintMismatch =
+    sidecar.appliesTo.fingerprint !== expectedIdentity.fingerprint;
+  const versionContentDrift =
+    fingerprintMismatch &&
+    sidecar.appliesTo.version &&
+    expectedIdentity.version &&
+    sidecar.appliesTo.version === expectedIdentity.version;
+
+  if (versionContentDrift) {
+    issues.push({
+      kind: "version-content-drift",
+      message: `Sidecar targets version ${sidecar.appliesTo.version} but fingerprint does not match ${formatAppliesToLabel(expectedIdentity)}`,
+    });
+  } else if (fingerprintMismatch) {
     issues.push({
       kind: "fingerprint-mismatch",
       expected: expectedIdentity.fingerprint,
       actual: sidecar.appliesTo.fingerprint,
       version: sidecar.appliesTo.version,
-    });
-  }
-
-  if (
-    sidecar.appliesTo.version &&
-    expectedIdentity.version &&
-    sidecar.appliesTo.version === expectedIdentity.version &&
-    sidecar.appliesTo.fingerprint !== expectedIdentity.fingerprint
-  ) {
-    issues.push({
-      kind: "version-content-drift",
-      message: `Sidecar targets version ${sidecar.appliesTo.version} but fingerprint does not match ${formatAppliesToLabel(expectedIdentity)}`,
     });
   }
 
@@ -102,7 +113,7 @@ export function validateSidecar<TPayload>(
       const err = validatePayload(scope, sidecar.slots[scope]);
       if (err) {
         issues.push({
-          kind: "dangling-scope",
+          kind: "invalid-payload",
           scope,
           message: err,
         });
@@ -113,12 +124,17 @@ export function validateSidecar<TPayload>(
   return { valid: issues.length === 0, issues };
 }
 
+/**
+ * Build a scope-keyed companion document. The caller must supply the
+ * concern-specific `$schema` IRI (from the owning package, not from here).
+ */
 export function createSidecarDocument<TPayload>(
+  documentSchema: string,
   appliesTo: SchemaIdentity,
   slots: Record<string, TPayload> = {},
 ): SidecarDocument<TPayload> {
   return {
-    $schema: SIDECAR_SCHEMA_IRI,
+    $schema: documentSchema,
     appliesTo,
     slots,
   };

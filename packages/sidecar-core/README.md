@@ -1,20 +1,26 @@
 # @graviola/sidecar-core
 
-Generic **scope-keyed sidecar** document format for Graviola extensions.
+Shared utilities for **scope-keyed companion documents** (Layer 1): fingerprint
+binding, dangling-scope diagnostics, and payload-agnostic validation.
 
-Sidecars carry orthogonal concerns outside the domain JSON Schema. Known instances:
+This package does **not** define a global `$schema`. Each orthogonal concern owns
+its document type and schema IRI:
 
-1. **UISchema** (rendering) — existing JSON Forms pattern, not migrated here
-2. **MetaSchema** (administrative metadata) — `@graviola/meta-schema`
-3. **Calc profile** (computation) — `@graviola/formula-dependency`
+| Concern            | `$schema`                                  | Package                         |
+| ------------------ | ------------------------------------------ | ------------------------------- |
+| Calc profile       | `https://graviola.gra.one/calc-profile/v1` | `@graviola/formula-dependency`  |
+| Meta profile       | `https://graviola.gra.one/meta/v1`         | `@graviola/meta-schema`         |
+| UI / display hints | _(app-specific; no shared envelope)_       | JSON Forms + LinkML side-schema |
 
-All dispatch identically: TBox **scope** on the outside, concern-specific payload on the inside.
+Calc profiles (and future lens sets) share the `{ appliesTo, slots }` envelope
+validated here. UI schema and MetaSchema are orthogonal companions in the
+architectural sense but use different document shapes.
 
-## Document shape
+## Calc-profile envelope (example)
 
 ```json
 {
-  "$schema": "https://graviola.top/sidecar/v1",
+  "$schema": "https://graviola.gra.one/calc-profile/v1",
   "appliesTo": {
     "schema": "https://myapp/schema",
     "version": "1.2.0",

@@ -1,7 +1,6 @@
 import type { JSONSchema7 } from "json-schema";
-import { createSidecarDocument } from "@graviola/sidecar-core";
 import { schemaIdentityOfSync } from "@graviola/json-schema-utils";
-import type { CalcProfileSlot } from "../types";
+import { createCalcProfileSidecar, type CalcProfileSlot } from "../types";
 
 export const gardenFeeSchema = {
   $id: "https://example.org/garden-fee/v1",
@@ -43,23 +42,20 @@ export const gardenFeeSchema = {
 
 const identity = schemaIdentityOfSync(gardenFeeSchema);
 
-export const gardenFeeSidecar = createSidecarDocument<CalcProfileSlot>(
-  identity,
-  {
-    "#/definitions/Plot/properties/billable_area": {
-      formula: "width_m * length_m",
-    },
-    "#/definitions/Patch/properties/billable_area_total": {
-      aggregate: { type: "sum", over: "plots", field: "billable_area" },
-    },
-    "#/definitions/Garden/properties/total_billable": {
-      formula: "patch.billable_area_total",
-    },
-    "#/definitions/Garden/properties/annual_fee": {
-      formula: "total_billable * fee_rate_per_sqm",
-    },
+export const gardenFeeSidecar = createCalcProfileSidecar(identity, {
+  "#/definitions/Plot/properties/billable_area": {
+    formula: "width_m * length_m",
   },
-);
+  "#/definitions/Patch/properties/billable_area_total": {
+    aggregate: { type: "sum", over: "plots", field: "billable_area" },
+  },
+  "#/definitions/Garden/properties/total_billable": {
+    formula: "patch.billable_area_total",
+  },
+  "#/definitions/Garden/properties/annual_fee": {
+    formula: "total_billable * fee_rate_per_sqm",
+  },
+});
 
 export const gardenFeeSampleData = {
   "@id": "https://example.org/garden/1",

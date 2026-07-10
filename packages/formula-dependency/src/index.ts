@@ -4,6 +4,7 @@ export {
   formatCompileIssues,
   CalcProfileCompileError,
   CALC_PROFILE_SCHEMA_IRI,
+  createCalcProfileSidecar,
 } from "./types";
 export type {
   BoundaryProfile,

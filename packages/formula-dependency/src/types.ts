@@ -1,6 +1,7 @@
 import type { SchemaIdentity } from "@graviola/json-schema-utils";
 
-export const CALC_PROFILE_SCHEMA_IRI = "https://graviola.top/calc-profile/v1";
+export const CALC_PROFILE_SCHEMA_IRI =
+  "https://graviola.gra.one/calc-profile/v1";
 
 export type CalcBinding = {
   path?: string;
@@ -22,10 +23,21 @@ export type CalcProfileSlot = {
 };
 
 export type CalcProfileSidecar = {
-  $schema?: string;
-  appliesTo: SchemaIdentity & { sidecarSchema?: string };
+  $schema?: typeof CALC_PROFILE_SCHEMA_IRI;
+  appliesTo: SchemaIdentity;
   slots: Record<string, CalcProfileSlot>;
 };
+
+export function createCalcProfileSidecar(
+  appliesTo: SchemaIdentity,
+  slots: Record<string, CalcProfileSlot> = {},
+): CalcProfileSidecar {
+  return {
+    $schema: CALC_PROFILE_SCHEMA_IRI,
+    appliesTo,
+    slots,
+  };
+}
 
 export type CostHint = "static" | "low" | "medium" | "high";
 
