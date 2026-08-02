@@ -47,6 +47,7 @@ Add a domain: extend `storyDomains`, reuse or add fixtures under `packages/seman
 | `withSemanticViewsProvider`  | Item/Tag semantic-views stories             |
 | `withRelationChipsProvider`  | Realm/Artifact/Manifestation                |
 | `withValueRenderersProvider` | Product value renderers                     |
+| `withGeoSampleData`          | Geo fixture + LocalOxigraph (typed filters) |
 | `withGraviolaProvider`       | Full app + exhibition RDF (legacy)          |
 | `withLocalOxigraph`          | In-browser graph without full Adb app shell |
 | `withViewConfig`             | Override chip/list/card/detail options      |

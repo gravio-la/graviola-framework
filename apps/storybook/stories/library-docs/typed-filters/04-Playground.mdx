@@ -1,0 +1,26 @@
+import { Meta, Canvas } from "@storybook/addon-docs/blocks";
+import * as Playground from "./showcases/FilterPlayground.stories";
+
+<Meta title="Library Docs/Typed Filters/Playground" />
+
+# Playground
+
+Pick **one** filter source — Controls **or** JSON — never both at once.
+
+- **Controls** — `populationLt` / `nameContains` in the Controls panel drive
+  `where`. A read-only JSON preview shows the derived filter.
+- **JSON** — edit `where` / `include` / `select` freely. Knob fields for
+  population and name are ignored (and hidden). `typeName` and `take` still
+  apply.
+
+Switching to JSON seeds the editor from the current Controls values.
+
+<Canvas of={Playground.Interactive} />
+
+## Controls-only variant
+
+<Canvas of={Playground.KnobsOnly} />
+
+## JSON-only variant
+
+<Canvas of={Playground.JsonOnly} />
