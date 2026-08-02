@@ -1,0 +1,66 @@
+import { Meta, Canvas } from "@storybook/addon-docs/blocks";
+import * as Scenarios from "./showcases/FilterScenarios.stories";
+
+<Meta title="Library Docs/Typed Filters/Pagination and Ordering" />
+
+# Pagination and Ordering
+
+## Nested children — forward `contains`
+
+The geo fixture stores **forward** child links on `contains` (materialized from
+inverted `partOf` / Wikidata P131 after mapping). Pagination of those children
+uses flavour **`lateral`** (SEP-0006):
+
+```json
+{
+  "where": { "name": { "equals": "Landkreis Görlitz" } },
+  "include": {
+    "contains": { "take": 5, "orderBy": { "name": "asc" } }
+  },
+  "flavour": "lateral"
+}
+```
+
+That emits:
+
+```sparql
+LATERAL {
+  SELECT ?subject ?contains WHERE {
+    ?subject :contains ?contains .
+    OPTIONAL { ?contains :name ?name }
+  }
+  ORDER BY ?name
+  LIMIT 5
+}
+```
+
+The correlating `?subject` **must** be projected — otherwise LIMIT is global
+again. See [`docs/sparql-lateral-windowing.md`](../../../../../docs/sparql-lateral-windowing.md).
+
+Landkreis Görlitz has **12** City children; with `take: 5` the first page by
+name is Bad Muskau → Bernstadt → Ebersbach-Neugersdorf → Herrnhut → Löbau.
+
+<Canvas of={Scenarios.PaginatedChildren} />
+
+### Flavour matrix
+
+| Flavour | Nested `take` / `orderBy` |
+| --- | --- |
+| `lateral` (Oxigraph ≥ 0.3.11, Jena ≥ 4.7) | Server-side per-parent window via LATERAL; extraction only restores JSON order |
+| `default` / `oxigraph` / `blazegraph` / … | Plain triples — **no** uncorrelated SUBSELECT; app-layer sort+slice after CONSTRUCT |
+
+Never emit a bare `{ SELECT ?child WHERE { ?subject :p ?child } LIMIT n }` —
+that is a data-leak under access guards.
+
+## Top-level result caps
+
+Datastore `limit` (story `limit` → `filterMany` options) caps how many root
+documents are returned (post-fetch slice in `sparql-db-impl` / showcase until
+CONSTRUCT emits `LIMIT`).
+
+## Still broken — inverse `parts`
+
+`where.parts.some` / `include.parts` use `x-inverseOf` and still bind
+`?subject :parts ?child` in non-LATERAL WHERE filters. Prefer `contains` for
+forward demos; LATERAL RHS does honour inverse edges when paginating
+`include.parts` with `flavour: "lateral"`.

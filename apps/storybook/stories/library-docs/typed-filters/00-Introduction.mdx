@@ -1,0 +1,85 @@
+import { Meta, Canvas } from "@storybook/addon-docs/blocks";
+import { Mermaid } from "mdx-mermaid/Mermaid";
+import * as Scenarios from "./showcases/FilterScenarios.stories";
+
+<Meta title="Library Docs/Typed Filters/Introduction" />
+
+# Typed Filters
+
+Prisma-style `where` / `include` / `select` options that compile to SPARQL **CONSTRUCT**
+queries and return typed JSON-LD documents. The live demos below load the committed
+Wikidata-derived geo fixture from [`@graviola/sample-data-geo`](https://github.com/gravio-la/graviola-framework)
+into in-browser Oxigraph — no extraction pipeline runs in Storybook or CI.
+
+## Pipeline (what each story shows)
+
+<Mermaid chart={`flowchart LR
+  A["1 Filter<br/>where + include"] --> B["2 SPARQL<br/>CONSTRUCT"]
+  B --> C["3 Raw result<br/>typed JSON-LD"]
+  C --> D["4 Table<br/>SemanticTableView"]
+`} />
+
+| Column | Source |
+| --- | --- |
+| Filter | The options object you pass to `filterMany` / `buildFilterableSPARQLQuery` |
+| Generated SPARQL | Pure function `buildFilterableSPARQLQuery` from `@graviola/sparql-schema` |
+| Raw result | `dataStore.filterMany(typeName, options)` over LocalOxigraph |
+| Table | Headless `SemanticTableView` + `composeJsonLdColumns` (`rowShape: jsonld`) |
+
+**Why JSON-LD tables (not SPARQL SELECT bindings)?** Typed filters are a CONSTRUCT →
+graph-traversal path. Nested `include`d relations only exist in the typed documents.
+SELECT flat bindings are a separate query path and cannot show those nests.
+
+## Dataset provenance
+
+| | |
+| --- | --- |
+| Generator | `apps/sample-data` (`bun run sample:geo`) |
+| Fixture package | `@graviola/sample-data-geo` (committed Turtle string) |
+| Domain | Cities & parent places in Saxony / Saxony-Anhalt / Brandenburg |
+| Counts | **127** `City`, **112** `Place`, **196** with `population`, **17+** names containing `burg` |
+| Vocab | `http://ontologies.gra.one/samples/geo#` |
+| Instances | `http://ontologies.gra.one/samples/geo/{Type}/{QID}` |
+
+After regenerating Turtle:
+
+```bash
+bun run sample:geo
+bun run --filter @graviola/sample-data-geo sync
+# update geoStats if counts changed
+```
+
+## Scope vs binding path
+
+A **scope** (`#/properties/population`) points into the schema document (TBox).
+A **binding path** / filter key (`population`, `partOf.name`) traverses instance data (ABox).
+Typed filters use binding paths; table UI schemas use scopes.
+
+## Quick API
+
+```typescript
+import { buildFilterableSPARQLQuery } from "@graviola/sparql-schema";
+import { bringDefinitionToTop } from "@graviola/json-schema-utils";
+import { geoSchema, geoTypeNameToTypeIRI } from "@graviola/sample-data-geo";
+
+const schema = bringDefinitionToTop(geoSchema, "City");
+const { query } = buildFilterableSPARQLQuery(
+  undefined,
+  geoTypeNameToTypeIRI("City"),
+  schema,
+  { where: { population: { lt: 20_000 } } },
+);
+// query → SPARQL CONSTRUCT string (no store needed)
+
+// Live:
+await dataStore.filterMany("City", { where: { population: { lt: 20_000 } } });
+```
+
+## First story
+
+<Canvas of={Scenarios.SmallCities} />
+
+Continue with [Simple Filters](./?path=/docs/library-docs-typed-filters-simple-filters--docs),
+[Relationship Filters](./?path=/docs/library-docs-typed-filters-relationship-filters--docs),
+[Pagination](./?path=/docs/library-docs-typed-filters-pagination-and-ordering--docs),
+and the [Playground](./?path=/docs/library-docs-typed-filters-playground--docs).

@@ -1,0 +1,58 @@
+import { Meta, Canvas } from "@storybook/addon-docs/blocks";
+import * as Scenarios from "./showcases/FilterScenarios.stories";
+
+<Meta title="Library Docs/Typed Filters/Relationship Filters" />
+
+# Relationship Filters
+
+Nested places use three related properties:
+
+- `partOf` — forward, stored (Wikidata P131)
+- `contains` — forward, stored (materialized inverse of `partOf` for demos)
+- `parts` — schema `x-inverseOf` → `partOf`, **not** materialised (issue #5)
+
+## Forward edge — `partOf` by `@id`
+
+Cities that belong to Landkreis Görlitz (`Place/Q6317`) — 12 City children in
+the fixture.
+
+```json
+{
+  "where": {
+    "partOf": { "@id": "http://ontologies.gra.one/samples/geo/Place/Q6317" }
+  }
+}
+```
+
+<Canvas of={Scenarios.ChildrenOfAPlace} />
+
+## Inverse edge — `parts.some` (known gap)
+
+Schema:
+
+```json
+"parts": {
+  "type": "array",
+  "items": { "$ref": "#/$defs/Place" },
+  "x-inverseOf": { "inverseOf": ["#/$defs/Place/properties/partOf"] }
+}
+```
+
+Expected filter:
+
+```json
+{
+  "where": {
+    "parts": { "some": { "name": { "contains": "burg" } } }
+  }
+}
+```
+
+The CONSTRUCT side correctly emits `?child :partOf ?subject` for loading, but the
+**filter** `some` path still emits `?subject :parts ?child`, which matches nothing
+in this dataset. Result count stays **0**.
+
+This is documented here on purpose — it is **not** fixed in this Storybook work.
+See [gravio-la/graviola-framework#5](https://github.com/gravio-la/graviola-framework/issues/5).
+
+<Canvas of={Scenarios.PlacesWithBurgChildren} />

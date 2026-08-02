@@ -1,0 +1,42 @@
+import { Meta, Canvas } from "@storybook/addon-docs/blocks";
+import * as Scenarios from "./showcases/FilterScenarios.stories";
+
+<Meta title="Library Docs/Typed Filters/Simple Filters" />
+
+# Simple Filters
+
+Scalar `where` operators against `City` in the geo fixture.
+
+## Operator cheat sheet
+
+| Schema type | Operators |
+| --- | --- |
+| string | `equals`, `not`, `in`, `notIn`, `contains`, `startsWith`, `endsWith`, `mode` |
+| number / integer | `equals`, `not`, `in`, `notIn`, `lt`, `lte`, `gt`, `gte` |
+| boolean | `equals`, `not` |
+| logical | `AND`, `OR`, `NOT` (combinators over where objects) |
+
+## All cities (baseline)
+
+No `where`. `limit: 10` keeps the table readable; the store holds 127 cities.
+
+<Canvas of={Scenarios.AllCities} />
+
+## Population threshold
+
+`{ population: { lt: 20000 } }` — verified against Oxigraph even though the Turtle
+literals are `xsd:decimal` (filter literals are `xsd:integer`; Oxigraph still
+compares them correctly here).
+
+<Canvas of={Scenarios.SmallCities} />
+
+## Name contains
+
+`CONTAINS` is **case-sensitive** by default. Prefer lowercase `"burg"` to match
+Quedlinburg, Ilsenburg, Freyburg, …
+
+<Canvas of={Scenarios.NameContainsBurg} />
+
+## AND combination
+
+<Canvas of={Scenarios.SmallAndBurg} />
