@@ -5,6 +5,7 @@
  * - buildFilterableSPARQLQuery for filterable CONSTRUCT query generation
  * - SPARQL execution via constructFetch
  * - Data extraction via traverseGraphExtractBySchema
+ * - Post-extraction orderBy / take / skip via applyIncludeOrderByAndSlice
  *
  * Features:
  * - Single and batch entity loading by IRI
@@ -21,10 +22,12 @@ import type {
   Entity,
   SparqlBuildOptions,
 } from "@graviola/edb-core-types";
-import { traverseGraphExtractBySchema } from "@graviola/edb-graph-traversal";
+import {
+  applyIncludeOrderByAndSlice,
+  traverseGraphExtractBySchema,
+} from "@graviola/edb-graph-traversal";
 import { buildFilterableSPARQLQuery } from "../schema2sparql/buildTypedSPARQLQuery";
 import type { BuildFilterableSPARQLQueryOptions } from "../schema2sparql/buildTypedSPARQLQuery";
-import df from "@rdfjs/data-model";
 import {
   OptionalStringOrStringArray,
   QUERY_RESULT_SUBJECT_IRI_NODE,
@@ -46,6 +49,24 @@ export interface TypedFilterOptions<
   queryBuildOptions?: SparqlBuildOptions;
 }
 
+function postProcessDocument<T>(
+  document: T,
+  include: BuildFilterableSPARQLQueryOptions<T>["include"],
+  flavour: BuildFilterableSPARQLQueryOptions<T>["flavour"],
+): T {
+  if (!include) return document;
+  // LATERAL already sliced at query stage — only restore array order.
+  // All other flavours must sort + slice in the app layer.
+  const slice = flavour !== "lateral";
+  return applyIncludeOrderByAndSlice(
+    document,
+    include as Record<string, unknown>,
+    {
+      slice,
+    },
+  );
+}
+
 /**
  * Load a single entity or batch of entities by IRI with type-safe filters
  *
@@ -53,40 +74,7 @@ export interface TypedFilterOptions<
  * 1. buildFilterableSPARQLQuery - generates filterable SPARQL CONSTRUCT query
  * 2. constructFetch - executes the query
  * 3. traverseGraphExtractBySchema - extracts structured data from RDF graph
- *
- * @template T - The type to derive filters from (caller-provided, e.g. your domain type)
- * @param entityIRIs - optional single IRI or array of IRIs to load
- * @param typeIRIs - optional single IRI or array of IRIs to filter by
- * @param schema - JSON Schema (should already have correct definition at top via bringDefinitionToTop)
- * @param constructFetch - Function to execute CONSTRUCT queries
- * @param options - Type-safe filter options (select, include, where, etc.)
- * @returns Single document or array of documents matching type T
- *
- * @example
- * ```typescript
- * // Single entity
- * const person = await filterTypedDocument<Person>(
- *   'http://example.com/person/1',
- *   'http://example.com/Person',
- *   personSchema,
- *   constructFetch,
- *   {
- *     select: { name: true, age: true },
- *     include: { friends: { take: 10 } },
- *     where: { age: { gte: 18 } },
- *     defaultPrefix: 'http://example.com/'
- *   }
- * );
- *
- * // Batch loading
- * const people = await filterTypedDocuments<Person>(
- *   ['http://example.com/person/1', 'http://example.com/person/2'],
- *   'http://example.com/Person',
- *   personSchema,
- *   constructFetch,
- *   { select: { name: true } }
- * );
- * ```
+ * 4. applyIncludeOrderByAndSlice - restores orderBy and applies take/skip when needed
  */
 export async function filterTypedDocuments<T = any>(
   entityIRIs: OptionalStringOrStringArray,
@@ -99,6 +87,8 @@ export async function filterTypedDocuments<T = any>(
     walkerOptions,
     defaultPrefix = "",
     prefixMap = {},
+    flavour,
+    include,
     ...buildOptions
   } = options;
 
@@ -117,6 +107,8 @@ export async function filterTypedDocuments<T = any>(
     schema,
     {
       ...buildOptions,
+      include,
+      flavour,
       prefixMap: finalPrefixMap,
     },
   );
@@ -124,28 +116,21 @@ export async function filterTypedDocuments<T = any>(
   // Step 2: Execute CONSTRUCT query
   const dataset = await constructFetch(query);
 
-  if (Array.isArray(entityIRIs) && entityIRIs.length > 0) {
-    // Batch extraction
-    const results: T[] = entityIRIs.map((iri) =>
-      traverseGraphExtractBySchema(
-        defaultPrefix,
-        iri,
-        dataset as Dataset,
-        schema,
-        walkerOptions,
-      ),
-    );
-    return results;
-  } else if (typeof entityIRIs === "string") {
-    // Single entity extraction
-    const result: T = await traverseGraphExtractBySchema(
+  const extractOne = (iri: string): T => {
+    const raw = traverseGraphExtractBySchema(
       defaultPrefix,
-      entityIRIs,
+      iri,
       dataset as Dataset,
       schema,
       walkerOptions,
-    );
-    return [result];
+    ) as T;
+    return postProcessDocument(raw, include, flavour);
+  };
+
+  if (Array.isArray(entityIRIs) && entityIRIs.length > 0) {
+    return entityIRIs.map((iri) => extractOne(iri));
+  } else if (typeof entityIRIs === "string") {
+    return [extractOne(entityIRIs)];
   }
 
   const subjectIRIs = dataset.match(
@@ -155,15 +140,7 @@ export async function filterTypedDocuments<T = any>(
   );
   const results: T[] = [];
   for (const quad of subjectIRIs) {
-    results.push(
-      traverseGraphExtractBySchema(
-        defaultPrefix,
-        quad.subject.value,
-        dataset as Dataset,
-        schema,
-        walkerOptions,
-      ),
-    );
+    results.push(extractOne(quad.subject.value));
   }
   return results;
 }

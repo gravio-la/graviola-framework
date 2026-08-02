@@ -3,7 +3,7 @@
  *
  * These tests verify that pagination metadata is correctly:
  * - Extracted from normalized schemas
- * - Marked with source: "query"
+ * - Marked with _stage: "extraction"
  * - Passed through to prevent double-pagination
  */
 
@@ -45,7 +45,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
 
       expect(pagMeta).toBeDefined();
       expect(pagMeta?.take).toBe(20);
-      expect(pagMeta?.source).toBe("query"); // Critical!
+      expect(pagMeta?._stage).toBe("extraction"); // Critical!
     }
   });
 
@@ -79,7 +79,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
       expect(pagMeta).toBeDefined();
       expect(pagMeta?.take).toBe(10);
       expect(pagMeta?.skip).toBe(5);
-      expect(pagMeta?.source).toBe("query");
+      expect(pagMeta?._stage).toBe("extraction");
     }
   });
 
@@ -146,7 +146,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
       const friendsPag = result.paginationMetadata.get("friends");
       expect(friendsPag).toBeDefined();
       expect(friendsPag?.take).toBe(10);
-      expect(friendsPag?.source).toBe("query");
+      expect(friendsPag?._stage).toBe("extraction");
     }
 
     // Check posts pagination
@@ -156,7 +156,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
       expect(postsPag).toBeDefined();
       expect(postsPag?.take).toBe(20);
       expect(postsPag?.skip).toBe(5);
-      expect(postsPag?.source).toBe("query");
+      expect(postsPag?._stage).toBe("extraction");
     }
 
     // Comments should not have pagination
@@ -193,7 +193,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
       // The CRITICAL check: source must be "query"
       // This tells the extractor that pagination was applied at query stage
       // so it should NOT paginate again (would cause double-pagination!)
-      expect(pagMeta?.source).toBe("query");
+      expect(pagMeta?._stage).toBe("extraction");
     }
   });
 
@@ -268,7 +268,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
 
       expect(pagMeta).toBeDefined();
       expect(pagMeta?.take).toBe(0);
-      expect(pagMeta?.source).toBe("query");
+      expect(pagMeta?._stage).toBe("extraction");
     }
   });
 
@@ -302,7 +302,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
       expect(pagMeta).toBeDefined();
       expect(pagMeta?.skip).toBe(1000);
       expect(pagMeta?.take).toBe(10);
-      expect(pagMeta?.source).toBe("query");
+      expect(pagMeta?._stage).toBe("extraction");
     }
   });
 
@@ -344,7 +344,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
       expect(pagMeta).toBeDefined();
       expect(pagMeta?.orderBy).toEqual({ name: "asc" });
       expect(pagMeta?.take).toBe(10);
-      expect(pagMeta?.source).toBe("query");
+      expect(pagMeta?._stage).toBe("extraction");
     }
   });
 
@@ -390,7 +390,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
         { title: "asc" },
       ]);
       expect(pagMeta?.take).toBe(20);
-      expect(pagMeta?.source).toBe("query");
+      expect(pagMeta?._stage).toBe("extraction");
     }
   });
 
@@ -433,7 +433,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
       expect(pagMeta).toBeDefined();
       expect(pagMeta?.take).toBe(10);
       expect(pagMeta?.orderBy).toBeUndefined(); // No orderBy for named nodes
-      expect(pagMeta?.source).toBe("query");
+      expect(pagMeta?._stage).toBe("extraction");
     }
   });
 

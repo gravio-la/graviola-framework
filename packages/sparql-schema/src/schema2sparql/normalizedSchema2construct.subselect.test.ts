@@ -3,64 +3,75 @@ import { JSONSchema7 } from "json-schema";
 import { normalizeSchema } from "@graviola/edb-graph-traversal";
 import { normalizedSchema2construct } from "./normalizedSchema2construct";
 
-describe("normalizedSchema2construct - SUBSELECT Generation", () => {
-  test("generates SUBSELECT with single ORDER BY", () => {
-    const schema: JSONSchema7 = {
-      type: "object",
-      properties: {
-        friends: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              name: { type: "string" },
-            },
-          },
+const friendsSchema: JSONSchema7 = {
+  type: "object",
+  properties: {
+    friends: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          name: { type: "string" },
         },
       },
-    };
+    },
+  },
+};
 
+function whereString(
+  result: ReturnType<typeof normalizedSchema2construct>,
+): string {
+  return result.wherePatterns.map((p) => p.toString()).join("\n");
+}
+
+describe("normalizedSchema2construct — pagination flavours", () => {
+  test("default flavour: no SUBSELECT / LIMIT for include.take", () => {
     const filterOptions = {
       include: {
-        friends: {
-          take: 10,
-          orderBy: { name: "asc" as const },
-        },
+        friends: { take: 10, orderBy: { name: "asc" as const } },
       },
     };
-
-    const normalized = normalizeSchema(schema, filterOptions);
-
+    const normalized = normalizeSchema(friendsSchema, filterOptions);
     const result = normalizedSchema2construct(
       "http://example.com/person1",
       undefined,
       normalized,
-      {
-        filterOptions,
-      },
+      { filterOptions, flavour: "default" },
     );
 
-    // Verify pagination metadata is collected
-    const pagMeta = result.paginationMetadata.get("friends");
-    expect(pagMeta).toBeDefined();
-    expect(pagMeta?.orderBy).toEqual({ name: "asc" });
-    expect(pagMeta?.take).toBe(10);
-
-    // Verify WHERE patterns include SUBSELECT
-    expect(result.wherePatterns.length).toBeGreaterThan(0);
-
-    // Convert WHERE patterns to string to inspect
-    const whereString = result.wherePatterns
-      .map((p) => p.toString())
-      .join("\n");
-
-    // Check for SUBSELECT keywords
-    expect(whereString).toContain("SELECT");
-    expect(whereString).toContain("ORDER BY");
-    expect(whereString).toContain("LIMIT");
+    const where = whereString(result);
+    expect(where).not.toContain("LATERAL");
+    // Plain OPTIONAL triple — no nested SELECT LIMIT
+    expect(where).not.toMatch(/SELECT[\s\S]*LIMIT/);
+    expect(result.paginationMetadata.get("friends")?._stage).toBe("extraction");
+    expect(result.paginationMetadata.get("friends")?.take).toBe(10);
   });
 
-  test("generates SUBSELECT with multiple ORDER BY criteria", () => {
+  test("lateral flavour: emits LATERAL with projected subject + LIMIT", () => {
+    const filterOptions = {
+      include: {
+        friends: { take: 10, orderBy: { name: "asc" as const } },
+      },
+    };
+    const normalized = normalizeSchema(friendsSchema, filterOptions);
+    const result = normalizedSchema2construct(
+      "http://example.com/person1",
+      undefined,
+      normalized,
+      { filterOptions, flavour: "lateral" },
+    );
+
+    const where = whereString(result);
+    expect(where).toContain("LATERAL");
+    expect(where).toContain("SELECT");
+    expect(where).toContain("ORDER BY");
+    expect(where).toContain("LIMIT");
+    // Subject must be projected (appears twice in SELECT list conceptually)
+    expect(where).toMatch(/SELECT\s+\?subject\b/);
+    expect(result.paginationMetadata.get("friends")?._stage).toBe("query");
+  });
+
+  test("lateral: multiple ORDER BY + OFFSET", () => {
     const schema: JSONSchema7 = {
       type: "object",
       properties: {
@@ -76,7 +87,6 @@ describe("normalizedSchema2construct - SUBSELECT Generation", () => {
         },
       },
     };
-
     const filterOptions = {
       include: {
         posts: {
@@ -86,246 +96,105 @@ describe("normalizedSchema2construct - SUBSELECT Generation", () => {
         },
       },
     };
-
     const normalized = normalizeSchema(schema, filterOptions);
-
     const result = normalizedSchema2construct(
       "http://example.com/blog1",
       undefined,
       normalized,
-      {
-        filterOptions,
-      },
+      { filterOptions, flavour: "lateral" },
     );
-
-    const whereString = result.wherePatterns
-      .map((p) => p.toString())
-      .join("\n");
-
-    // Should contain both ORDER BY criteria
-    expect(whereString).toContain("ORDER BY");
-    expect(whereString).toContain("LIMIT 20");
-    expect(whereString).toContain("OFFSET 5");
+    const where = whereString(result);
+    expect(where).toContain("LATERAL");
+    expect(where).toContain("LIMIT 20");
+    expect(where).toContain("OFFSET 5");
+    expect(where).toContain("ORDER BY");
   });
 
-  test("generates SUBSELECT with LIMIT only (no ORDER BY)", () => {
-    const schema: JSONSchema7 = {
-      type: "object",
-      properties: {
-        items: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              value: { type: "string" },
-            },
-          },
-        },
-      },
-    };
-
-    const filterOptions = {
-      include: {
-        items: {
-          take: 5,
-          // No orderBy
-        },
-      },
-    };
-
-    const normalized = normalizeSchema(schema, filterOptions);
-
+  test("lateral: LIMIT only (no ORDER BY)", () => {
+    const filterOptions = { include: { friends: { take: 5 } } };
+    const normalized = normalizeSchema(friendsSchema, filterOptions);
     const result = normalizedSchema2construct(
-      "http://example.com/list1",
+      "http://example.com/person1",
       undefined,
       normalized,
-      {
-        filterOptions,
-      },
+      { filterOptions, flavour: "lateral" },
     );
-
-    const whereString = result.wherePatterns
-      .map((p) => p.toString())
-      .join("\n");
-
-    // Should have SUBSELECT with LIMIT but no ORDER BY
-    expect(whereString).toContain("SELECT");
-    expect(whereString).toContain("LIMIT 5");
+    const where = whereString(result);
+    expect(where).toContain("LATERAL");
+    expect(where).toContain("LIMIT 5");
   });
 
-  test("does not generate SUBSELECT for array without pagination", () => {
-    const schema: JSONSchema7 = {
-      type: "object",
-      properties: {
-        tags: {
-          type: "array",
-          items: {
-            type: "string",
-          },
-        },
-      },
-    };
-
-    const normalized = normalizeSchema(schema, {
-      include: {
-        tags: true, // Include but no pagination
-      },
+  test("no pagination metadata without take/skip/orderBy", () => {
+    const normalized = normalizeSchema(friendsSchema, {
+      include: { friends: true },
     });
-
-    const result = normalizedSchema2construct(
-      "http://example.com/article1",
-      undefined,
-      normalized,
-    );
-
-    const whereString = result.wherePatterns
-      .map((p) => p.toString())
-      .join("\n");
-
-    // Should NOT have SUBSELECT - just regular triple pattern
-    // The string representation from sparql builder won't contain these SUBSELECT keywords
-    // in the expected format when it's a simple pattern
-    expect(result.wherePatterns).toBeDefined();
-    expect(result.paginationMetadata.has("tags")).toBe(false);
-  });
-
-  test("handles OFFSET without ORDER BY", () => {
-    const schema: JSONSchema7 = {
-      type: "object",
-      properties: {
-        items: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              id: { type: "string" },
-            },
-          },
-        },
-      },
-    };
-
-    const filterOptions = {
-      include: {
-        items: {
-          take: 10,
-          skip: 20,
-        },
-      },
-    };
-
-    const normalized = normalizeSchema(schema, filterOptions);
-
-    const result = normalizedSchema2construct(
-      "http://example.com/container1",
-      undefined,
-      normalized,
-      {
-        filterOptions,
-      },
-    );
-
-    const whereString = result.wherePatterns
-      .map((p) => p.toString())
-      .join("\n");
-
-    expect(whereString).toContain("SELECT");
-    expect(whereString).toContain("LIMIT 10");
-    expect(whereString).toContain("OFFSET 20");
-  });
-
-  test("SUBSELECT includes ORDER BY property patterns", () => {
-    const schema: JSONSchema7 = {
-      type: "object",
-      properties: {
-        friends: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              name: { type: "string" },
-              age: { type: "number" },
-            },
-          },
-        },
-      },
-    };
-
-    const filterOptions = {
-      include: {
-        friends: {
-          take: 10,
-          orderBy: { name: "asc" as const },
-        },
-      },
-    };
-
-    const normalized = normalizeSchema(schema, filterOptions);
-
     const result = normalizedSchema2construct(
       "http://example.com/person1",
       undefined,
       normalized,
-      {
-        filterOptions,
-      },
+      { filterOptions: { include: { friends: true } }, flavour: "lateral" },
     );
-
-    const whereString = result.wherePatterns
-      .map((p) => p.toString())
-      .join("\n");
-
-    // The SUBSELECT should include a pattern for the 'name' property
-    // used in ORDER BY
-    expect(whereString).toContain("SELECT");
-    expect(whereString).toContain("ORDER BY");
+    expect(result.paginationMetadata.has("friends")).toBe(false);
+    expect(whereString(result)).not.toContain("LATERAL");
   });
 
-  test("handles prefixMap in ORDER BY properties", () => {
+  test("lateral + x-inverseOf uses inverse edge inside LATERAL", () => {
     const schema: JSONSchema7 = {
       type: "object",
       properties: {
-        friends: {
+        parts: {
           type: "array",
-          items: {
-            type: "object",
-            properties: {
-              "foaf:name": { type: "string" },
+          items: { $ref: "#/$defs/Place" },
+          // @ts-expect-error Graviola extension
+          "x-inverseOf": {
+            inverseOf: ["#/$defs/Place/properties/partOf"],
+          },
+        },
+        partOf: { $ref: "#/$defs/Place" },
+      },
+      $defs: {
+        Place: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+            partOf: {
+              type: "object",
+              properties: { "@id": { type: "string" } },
             },
           },
         },
       },
     };
-
-    const filterOptions = {
-      include: {
-        friends: {
-          take: 10,
-          orderBy: { "foaf:name": "asc" as const },
+    // Bring Place to top-ish via normalize; use inline items for simplicity
+    const inline: JSONSchema7 = {
+      type: "object",
+      properties: {
+        parts: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: { name: { type: "string" } },
+          },
+          // @ts-expect-error Graviola extension
+          "x-inverseOf": {
+            inverseOf: ["#/definitions/Place/properties/partOf"],
+          },
         },
       },
     };
-
-    const normalized = normalizeSchema(schema, filterOptions);
-
+    const filterOptions = {
+      include: { parts: { take: 5, orderBy: { name: "asc" as const } } },
+    };
+    const normalized = normalizeSchema(inline, filterOptions);
     const result = normalizedSchema2construct(
-      "http://example.com/person1",
+      "http://example.com/place1",
       undefined,
       normalized,
-      {
-        prefixMap: {
-          foaf: "http://xmlns.com/foaf/0.1/",
-        },
-        filterOptions,
-      },
+      { filterOptions, flavour: "lateral", resolveInverseMaxDepth: 1 },
     );
-
-    const whereString = result.wherePatterns
-      .map((p) => p.toString())
-      .join("\n");
-
-    // Should generate valid SPARQL with prefixed name
-    expect(whereString).toContain("SELECT");
-    expect(whereString).toContain("ORDER BY");
+    const where = whereString(result);
+    expect(where).toContain("LATERAL");
+    // Inverse: ?parts … partOf ?subject (object first)
+    expect(where).toMatch(/\?parts_\d+[^}]*partOf[^}]*\?subject/);
   });
 });

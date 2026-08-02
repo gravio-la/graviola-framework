@@ -309,7 +309,22 @@ export type SparqlEndpoint = {
   defaultUpdateGraph?: string;
 };
 
-export type SPARQLFlavour = "default" | "oxigraph" | "blazegraph" | "allegro";
+/**
+ * SPARQL dialect / feature profile for query generation.
+ *
+ * - `default` / `oxigraph` / `blazegraph` / `allegro` — SPARQL 1.1 only.
+ *   Nested `include` pagination (`take`/`skip`/`orderBy`) is applied at
+ *   extraction time; CONSTRUCT never emits an uncorrelated SUBSELECT.
+ * - `lateral` — emit SEP-0006 `LATERAL { SELECT ?anchor ?item … ORDER BY … LIMIT }`
+ *   for per-parent windowing (Jena ≥ 4.7, Oxigraph ≥ 0.3.11). Not the same as
+ *   the SPARQL 1.2 Working Draft; see `docs/sparql-lateral-windowing.md`.
+ */
+export type SPARQLFlavour =
+  | "default"
+  | "oxigraph"
+  | "blazegraph"
+  | "allegro"
+  | "lateral";
 
 export type WorkerProvider = Record<
   NonNullable<SparqlEndpoint["provider"]>,
@@ -427,6 +442,11 @@ export type PaginationOptions = {
  * - Can be single object or array: { name: 'asc' } or [{ name: 'asc' }, { createdAt: 'desc' }]
  */
 export type PaginationMetadata = PaginationOptions & {
+  /**
+   * Where pagination was / should be applied:
+   * - `"extraction"` — sort+slice in graph-traversal (default for SPARQL 1.1 flavours)
+   * - `"query"` — already sliced by LATERAL SELECT LIMIT (`flavour: "lateral"`)
+   */
   _stage?: "query" | "extraction";
 };
 
