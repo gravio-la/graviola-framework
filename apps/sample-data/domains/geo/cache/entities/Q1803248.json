@@ -1,0 +1,287 @@
+{
+  "entities": {
+    "Q1803248": {
+      "pageid": 1734474,
+      "ns": 0,
+      "title": "Q1803248",
+      "lastrevid": 2333350724,
+      "modified": "2025-04-01T16:34:32Z",
+      "type": "item",
+      "id": "Q1803248",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Landkreis Jerichow I"
+        },
+        "en": {
+          "language": "en",
+          "value": "Jerichow I district"
+        },
+        "tr": {
+          "language": "tr",
+          "value": "Landkreis Jerichow I"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "Landkreis in Sachsen bzw. Sachsen-Anhalt"
+        },
+        "tr": {
+          "language": "tr",
+          "value": "Prusya'da idari bölüm"
+        },
+        "en": {
+          "language": "en",
+          "value": "Prussian district in Saxony and Saxony-Anhalt"
+        }
+      },
+      "aliases": {
+        "de": [
+          {
+            "language": "de",
+            "value": "Landkreis Ziesar"
+          }
+        ]
+      },
+      "claims": {
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "ee967983b872c1443dde10a30ce019a92f171419",
+              "datavalue": {
+                "value": "Landkreis Jerichow I",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "q1803248$CD76FA31-8F38-4D4C-8BC2-756891E6EAC4",
+            "rank": "normal"
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "f783f8b8341ca832efec939e40c52f3bcdf04d35",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 5283531,
+                  "id": "Q5283531"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1803248$CD178E7D-56FD-4087-B3B5-89B45E8AB7CB",
+            "rank": "normal"
+          }
+        ],
+        "P571": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P571",
+              "hash": "327e21dc66db962d8adbf338779faafc5ed20411",
+              "datavalue": {
+                "value": {
+                  "time": "+1817-00-00T00:00:00Z",
+                  "timezone": 0,
+                  "before": 0,
+                  "after": 0,
+                  "precision": 9,
+                  "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                },
+                "type": "time"
+              },
+              "datatype": "time"
+            },
+            "type": "statement",
+            "id": "Q1803248$E13ECA97-4921-4191-85E0-5DD8699E566D",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P576": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P576",
+              "hash": "14379f2d8cd1997d218b5497faeaaf970ce9fe44",
+              "datavalue": {
+                "value": {
+                  "time": "+1948-00-00T00:00:00Z",
+                  "timezone": 0,
+                  "before": 0,
+                  "after": 0,
+                  "precision": 9,
+                  "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                },
+                "type": "time"
+              },
+              "datatype": "time"
+            },
+            "type": "statement",
+            "id": "Q1803248$A686DD8A-8A47-48FC-B458-D625934ADADD",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "796aafb664db5aab3c24885dcbb02f0a9e5b9cc1",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 38872,
+                  "id": "Q38872"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1803248$0F6CEC52-A508-49B5-B854-4C593E6D0901",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2671": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2671",
+              "hash": "f60d56a6c296cc5271e2b45760f4cbc217d2645d",
+              "datavalue": {
+                "value": "/g/121djh21",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q1803248$718CC871-832C-4321-9AB5-22D1D193F671",
+            "rank": "normal"
+          }
+        ],
+        "P1365": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1365",
+              "hash": "3384a3cf6d96438016afb3892221565b5fdf4c1a",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1687656,
+                  "id": "Q1687656"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1803248$554fa68d-454c-b4ab-2b84-a74fd34417b5",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "commonswiki": {
+          "site": "commonswiki",
+          "title": "Category:Landkreis Jerichow I",
+          "badges": []
+        },
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Landkreis Jerichow I",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

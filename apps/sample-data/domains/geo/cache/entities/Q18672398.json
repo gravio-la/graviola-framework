@@ -1,0 +1,1235 @@
+{
+  "entities": {
+    "Q18672398": {
+      "pageid": 20202770,
+      "ns": 0,
+      "title": "Q18672398",
+      "lastrevid": 2492380077,
+      "modified": "2026-05-16T04:52:01Z",
+      "type": "item",
+      "id": "Q18672398",
+      "labels": {
+        "hsb": {
+          "language": "hsb",
+          "value": "Nowa Wjes/Sprjewja"
+        },
+        "de": {
+          "language": "de",
+          "value": "Neudorf/Spree"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Neudorf/Spree"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "Нойдорф"
+        },
+        "dsb": {
+          "language": "dsb",
+          "value": "Nowa Wjes/Sprjewja"
+        },
+        "en": {
+          "language": "en",
+          "value": "Neudorf/Spree"
+        },
+        "tr": {
+          "language": "tr",
+          "value": "Neudorf/Spree"
+        },
+        "sv": {
+          "language": "sv",
+          "value": "Neudorf/Spree"
+        },
+        "ca": {
+          "language": "ca",
+          "value": "Neudorf/Spree"
+        },
+        "nb": {
+          "language": "nb",
+          "value": "Neudorf/Spree"
+        },
+        "lld": {
+          "language": "lld",
+          "value": "Neudorf/Spree"
+        },
+        "ga": {
+          "language": "ga",
+          "value": "Neudorf/Spree"
+        }
+      },
+      "descriptions": {
+        "hsb": {
+          "language": "hsb",
+          "value": "wjes w Budyskim wokrjesu, gmejnski dźěl Malešec"
+        },
+        "de": {
+          "language": "de",
+          "value": "Ort im Landkreis Bautzen, Gemeinde Malschwitz"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "ortsteil in Malschwitz, Duitsland"
+        },
+        "en": {
+          "language": "en",
+          "value": "human settlement in Germany"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "établissement humain en Allemagne"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "серболужицкая деревня в Верхней Лужице, коммуна  Мальшвиц района Баутцен, земля Саксония"
+        },
+        "dsb": {
+          "language": "dsb",
+          "value": "wjas w Górnej Łužycy"
+        },
+        "tr": {
+          "language": "tr",
+          "value": "Almanya'da yerleşim yeri"
+        },
+        "sv": {
+          "language": "sv",
+          "value": "kommun i Tyskland"
+        },
+        "uk": {
+          "language": "uk",
+          "value": "населений пункт у Німеччині"
+        },
+        "ml": {
+          "language": "ml",
+          "value": "ജര്‍മ്മനിയിലെ ഒരു സ്ഥലം"
+        },
+        "ar": {
+          "language": "ar",
+          "value": "مستوطنة بشرية في ألمانيا"
+        },
+        "cs": {
+          "language": "cs",
+          "value": "vesnice v Horní Lužici, Sasko"
+        },
+        "hy": {
+          "language": "hy",
+          "value": "բնակավայր Գերմանիայում"
+        },
+        "lld": {
+          "language": "lld",
+          "value": "chemun de la Germania"
+        },
+        "bn": {
+          "language": "bn",
+          "value": "জার্মানির একটি গ্রাম"
+        },
+        "ary": {
+          "language": "ary",
+          "value": "دوّار ف ألمانيا"
+        },
+        "hi": {
+          "language": "hi",
+          "value": "जर्मनी का एक गाँव"
+        }
+      },
+      "aliases": {
+        "de": [
+          {
+            "language": "de",
+            "value": "Nowa Wjes/Sprjewja"
+          },
+          {
+            "language": "de",
+            "value": "Neudorf"
+          }
+        ],
+        "ru": [
+          {
+            "language": "ru",
+            "value": "Нова-Вес"
+          }
+        ],
+        "hsb": [
+          {
+            "language": "hsb",
+            "value": "Neudorf/Spree"
+          },
+          {
+            "language": "hsb",
+            "value": "Nowa Wjes"
+          }
+        ],
+        "dsb": [
+          {
+            "language": "dsb",
+            "value": "Neudorf/Spree"
+          },
+          {
+            "language": "dsb",
+            "value": "Nowa Wjes"
+          }
+        ]
+      },
+      "claims": {
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "0822324dd76b90eef8eee5e0cf38d893013ccdf3",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 253019,
+                  "id": "Q253019"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "7dc2821fe3f7d0644f5ada26fb6c7255ccd0c291",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1994-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580"
+            ],
+            "id": "Q18672398$7b9ae158-4d3e-5015-403f-7658defb48e0",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "4e6beb54b615d48c5239f20931f0d68409834ac2",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 262166,
+                  "id": "Q262166"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "c52610cf2484d0ad6653d33766c3606e3e67ec6f",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1994-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P582"
+            ],
+            "id": "Q18672398$e62d60e4-46df-1805-ea3e-8a3871b96628",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "5234088afa2cb8dd6b2b0c2f713eff1c61f34067",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 532,
+                  "id": "Q532"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q18672398$77F5D055-1070-4897-B018-D6C8A8B9E087",
+            "rank": "normal"
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "e4107f3f365eb84c5fc38fd65f4a80a2534583e7",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 93260,
+                  "id": "Q93260"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "d0a5a3621a71600cf986349352e0a6c9d33974f0",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2013-01-01T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580"
+            ],
+            "id": "Q18672398$0c5ee854-4599-5134-3047-4928b51b5404",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "588b9a74f89c975777aefb10d882ef7cd57e5beb",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 93243,
+                  "id": "Q93243"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "7dc2821fe3f7d0644f5ada26fb6c7255ccd0c291",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1994-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "058d29272a1c85dbc1939f687e89800918df6bee",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2013-01-01T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580",
+              "P582"
+            ],
+            "id": "Q18672398$1001363e-45f9-1253-4087-f3e009fe557f",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "ee397289442ab7004329a8be27e1add95aeb9068",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1787204,
+                  "id": "Q1787204"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "c52610cf2484d0ad6653d33766c3606e3e67ec6f",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1994-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P582"
+            ],
+            "id": "Q18672398$ba7ae4c1-4c6f-f72e-3f49-f81a96d98ac9",
+            "rank": "normal"
+          }
+        ],
+        "P281": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P281",
+              "hash": "55a64022893c83b45ef25c84c7d20c0950f9d164",
+              "datavalue": {
+                "value": "02694",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q18672398$B85680A1-FBAE-48AA-8796-E1025FC8C89E",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "ef7247b704f4ec0a7df39e83306bb388fea17d5f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 183,
+                  "id": "Q183"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q18672398$7A447776-8AD7-4075-AFD5-672FC1DB40DF",
+            "rank": "normal"
+          }
+        ],
+        "P206": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P206",
+              "hash": "675e920326f0253b990145caded3c0ac6a27e5a0",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1684,
+                  "id": "Q1684"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q18672398$7D601E86-4768-4025-8865-FC79208CBF5A",
+            "rank": "normal"
+          }
+        ],
+        "P361": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P361",
+              "hash": "786ab8a8c6b9eb0213974ce7f3428c83b23d7c33",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 145129,
+                  "id": "Q145129"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q18672398$2E2608DD-86D6-4997-AB2C-772AF271217D",
+            "rank": "normal"
+          }
+        ],
+        "P473": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P473",
+              "hash": "56fa5894b432fd8387d500765ab9e5f015c85f86",
+              "datavalue": {
+                "value": "035932",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q18672398$5E1D8A3B-BB86-4204-ABA7-54ADF153E5C0",
+            "rank": "normal"
+          }
+        ],
+        "P2044": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2044",
+              "hash": "1ee49c72e3ed1a74be161cbf76f2bb4493cbdede",
+              "datavalue": {
+                "value": {
+                  "amount": "+140",
+                  "unit": "http://www.wikidata.org/entity/Q11573"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "id": "Q18672398$9AD14D75-F66E-41C1-9EAF-FD0950D1E615",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "fc081220643885035e9b3db37eb38bdb99ac80af",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "d5c27a8da87a428ab6b8ede60655e9c7a555c381",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Neudorf/Spree&oldid=175751819",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1549": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "b23c0262a75fa1a749caca7f8fd0d7b18a0e541e",
+              "datavalue": {
+                "value": {
+                  "text": "Nowšan",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "e9447d28af8c5d42930d7dd10e816fc7d922f8e4",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088290,
+                      "id": "Q47088290"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q18672398$D12D0C0C-4B0C-4AC7-8D95-5ECFE13E6F93",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "481175aa2af845a5afad5d35ad099f2b1c9978e5",
+              "datavalue": {
+                "value": {
+                  "text": "Nowšanka",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "9ccfcbc8ef0cb77e854001299df9103998ab5d48",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088293,
+                      "id": "Q47088293"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q18672398$69BBD2BB-CD64-47EF-83D6-CE3460C3C004",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "e95c68146288807fdf9baf36a9c236f252289ca1",
+              "datavalue": {
+                "value": {
+                  "text": "Nowšenjo",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "7002a0d0b3dc52a703f036cc2c96b1b6c752ca25",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088292,
+                      "id": "Q47088292"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q18672398$C5174BE9-C111-4FBA-A835-3859D4160231",
+            "rank": "normal"
+          }
+        ],
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "97e8f07d88c4f1878f1da34b21e993945fc11193",
+              "datavalue": {
+                "value": "Neudorf/Spree",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q18672398$838e2a4a-40a1-dce9-80ac-80a2c7822eb5",
+            "rank": "normal"
+          }
+        ],
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "00aff097b7535979699c5bbe2695da86e712a5e6",
+              "datavalue": {
+                "value": {
+                  "latitude": 51.313206,
+                  "longitude": 14.546605,
+                  "altitude": null,
+                  "precision": 0.000001,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "Q18672398$4d15a582-41e8-da12-ea95-fdc81f087a53",
+            "rank": "normal"
+          }
+        ],
+        "P18": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P18",
+              "hash": "b9deabe0b861c7e8a1fbedab93eeb6292dac1b96",
+              "datavalue": {
+                "value": "Nowa Wjes při Sprjewi.JPG",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q18672398$6326287b-4454-b54a-e0b3-e977b169f299",
+            "rank": "normal"
+          }
+        ],
+        "P1566": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1566",
+              "hash": "21f028509da45ece739fc152d9ca5e5bb2147f49",
+              "datavalue": {
+                "value": "2865966",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q18672398$4FF3ED06-AFAB-4593-B16D-22E14E11870D",
+            "rank": "normal"
+          }
+        ],
+        "P7046": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P7046",
+              "hash": "1c6677419bc0488f592a231db0b898eac69993bb",
+              "datavalue": {
+                "value": "23188",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P1932": [
+                {
+                  "snaktype": "value",
+                  "property": "P1932",
+                  "hash": "6e9ed94f88b27359d5da891eedd95db7a1f66bc0",
+                  "datavalue": {
+                    "value": "Neudorf/Spree",
+                    "type": "string"
+                  },
+                  "datatype": "string"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P1932"
+            ],
+            "id": "Q18672398$52DE382D-3AD2-4B3E-92A8-C79CD803DD0B",
+            "rank": "normal"
+          }
+        ],
+        "P6766": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P6766",
+              "hash": "aed847374da5dc39878f78e029115e4424addf25",
+              "datavalue": {
+                "value": "1292980143",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q18672398$0CEBB584-1FCC-4F34-BF2E-504865467FA5",
+            "rank": "normal"
+          }
+        ],
+        "P1705": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1705",
+              "hash": "ec8ecf40007772f8a1b591116240abd71f1b8ca5",
+              "datavalue": {
+                "value": {
+                  "text": "Nowa Wjes/Sprjewja",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "id": "Q18672398$483E1EC2-33CE-45DC-87E7-4C3B0C512D1C",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1705",
+              "hash": "ff0eec5f9f9a2d80aea160c06bae067d21b3d83b",
+              "datavalue": {
+                "value": {
+                  "text": "Neudorf/Spree",
+                  "language": "de"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "id": "Q18672398$A9F9060F-B31B-4C6B-A527-58E18208AB46",
+            "rank": "normal"
+          }
+        ],
+        "P443": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P443",
+              "hash": "aca382277eca193ee8f629810f213fcf13bbe7fd",
+              "datavalue": {
+                "value": "Nowa Wjes.ogg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P407": [
+                {
+                  "snaktype": "value",
+                  "property": "P407",
+                  "hash": "4f306ecd64ee589e6cc27e6452796f3f27d1f0e1",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 13248,
+                      "id": "Q13248"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P407"
+            ],
+            "id": "Q18672398$e16de9e2-4a1a-5e3c-ef9a-2e37b1559415",
+            "rank": "normal"
+          }
+        ],
+        "P1082": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "625201553830cbaae0819b0ca7ca61269b223a36",
+              "datavalue": {
+                "value": {
+                  "amount": "+146",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "50e3b9c4ecacaca2ba92107b638691cbfbc9121b",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q18672398$95d4e821-47b5-bf13-0fde-b069159ea327",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "6dc1656993e15bb56aa0812cd449a701ca8d8257",
+              "datavalue": {
+                "value": {
+                  "amount": "+150",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "5f7bbb1374fc3676fe8e0452d8c818594e1baaf7",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2022-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q18672398$6655861A-810C-435E-A84B-0688CEBA9334",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "5d88e1f76fc8dc4f186f15a7062126532b0a67f9",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "3ee78167e9bff36c368f239cdad52011c970917b",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 2402143,
+                          "id": "Q2402143"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2671": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2671",
+              "hash": "edd74e571493ddd70bc07ff09a48dc40503e354f",
+              "datavalue": {
+                "value": "/g/11c75w6mhg",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q18672398$86FA7F13-0B08-4CCF-9B44-A4257C0A5A66",
+            "rank": "normal"
+          }
+        ],
+        "P8168": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P8168",
+              "hash": "c2fe513879468e1b3e20ea7b080661843ba02a4c",
+              "datavalue": {
+                "value": "Q276939",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q18672398$805C101B-AAFE-4D3B-BECB-765B7DCB92AF",
+            "rank": "normal"
+          }
+        ],
+        "P2326": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2326",
+              "hash": "0aafc52adc5eaceffce896299c319c153c6d9d71",
+              "datavalue": {
+                "value": "-1830905",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q18672398$B3C6F11D-83E4-43BB-83B0-FD492DAE0512",
+            "rank": "normal"
+          }
+        ],
+        "P227": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P227",
+              "hash": "4df9bcaf93db7aa87d2b3c77eb00cd425a5e9bc7",
+              "datavalue": {
+                "value": "1148116788",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q18672398$4F9C0AB3-2671-43AA-AC1A-15976E3F8AD8",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9efa7b913efffa0fa02bf6e1260a841063055cb4",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "54077536e9f60f3deb13585a1cf806d3bd0372c3",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Neudorf/Spree&oldid=257012878",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P214": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P214",
+              "hash": "88361778cb4ccd45f5cc1e7b78b5c7339d984180",
+              "datavalue": {
+                "value": "343151353510752720001",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q18672398$A0CF5904-E072-4D2C-8F78-1D8CDE11900B",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9efa7b913efffa0fa02bf6e1260a841063055cb4",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "54077536e9f60f3deb13585a1cf806d3bd0372c3",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Neudorf/Spree&oldid=257012878",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "sitelinks": {
+        "commonswiki": {
+          "site": "commonswiki",
+          "title": "Category:Neudorf/Spree",
+          "badges": []
+        },
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Neudorf/Spree",
+          "badges": []
+        },
+        "hsbwiki": {
+          "site": "hsbwiki",
+          "title": "Nowa Wjes/Sprjewja",
+          "badges": []
+        },
+        "ruwiki": {
+          "site": "ruwiki",
+          "title": "Нойдорф (Мальшвиц)",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

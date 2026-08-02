@@ -1,0 +1,2907 @@
+{
+  "entities": {
+    "Q153015": {
+      "pageid": 154411,
+      "ns": 0,
+      "title": "Q153015",
+      "lastrevid": 2519662108,
+      "modified": "2026-07-19T13:22:21Z",
+      "type": "item",
+      "id": "Q153015",
+      "labels": {
+        "zh-hans": {
+          "language": "zh-hans",
+          "value": "萨克森王国"
+        },
+        "zh-hant": {
+          "language": "zh-hant",
+          "value": "薩克森王國"
+        },
+        "zh-hk": {
+          "language": "zh-hk",
+          "value": "薩克森王國"
+        },
+        "zh-cn": {
+          "language": "zh-cn",
+          "value": "萨克森王国"
+        },
+        "zh-sg": {
+          "language": "zh-sg",
+          "value": "萨克森王国"
+        },
+        "zh-tw": {
+          "language": "zh-tw",
+          "value": "薩克森王國"
+        },
+        "pl": {
+          "language": "pl",
+          "value": "Królestwo Saksonii"
+        },
+        "be": {
+          "language": "be",
+          "value": "Каралеўства Саксонія"
+        },
+        "ko": {
+          "language": "ko",
+          "value": "작센 왕국"
+        },
+        "he": {
+          "language": "he",
+          "value": "ממלכת סקסוניה"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "royaume de Saxe"
+        },
+        "es": {
+          "language": "es",
+          "value": "Reino de Sajonia"
+        },
+        "ms": {
+          "language": "ms",
+          "value": "Kerajaan Sachsen"
+        },
+        "it": {
+          "language": "it",
+          "value": "Regno di Sassonia"
+        },
+        "et": {
+          "language": "et",
+          "value": "Saksimaa kuningriik"
+        },
+        "id": {
+          "language": "id",
+          "value": "Kerajaan Sachsen"
+        },
+        "de": {
+          "language": "de",
+          "value": "Königreich Sachsen"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "ザクセン王国"
+        },
+        "br": {
+          "language": "br",
+          "value": "Rouantelezh Saks"
+        },
+        "vi": {
+          "language": "vi",
+          "value": "Vương quốc Sachsen"
+        },
+        "el": {
+          "language": "el",
+          "value": "Βασίλειο της Σαξονίας"
+        },
+        "en": {
+          "language": "en",
+          "value": "Kingdom of Saxony"
+        },
+        "ga": {
+          "language": "ga",
+          "value": "Ríocht na Sacsaine"
+        },
+        "ar": {
+          "language": "ar",
+          "value": "مملكة سكسونيا"
+        },
+        "sv": {
+          "language": "sv",
+          "value": "Kungariket Sachsen"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Koninkrijk Saksen"
+        },
+        "pt": {
+          "language": "pt",
+          "value": "Reino da Saxônia"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "Королевство Саксония"
+        },
+        "tr": {
+          "language": "tr",
+          "value": "Saksonya Krallığı"
+        },
+        "th": {
+          "language": "th",
+          "value": "ราชอาณาจักรซัคเซิน"
+        },
+        "ro": {
+          "language": "ro",
+          "value": "Regatul Saxoniei"
+        },
+        "ca": {
+          "language": "ca",
+          "value": "Regne de Saxònia"
+        },
+        "uk": {
+          "language": "uk",
+          "value": "Саксонське королівство"
+        },
+        "la": {
+          "language": "la",
+          "value": "Regnum Saxoniae"
+        },
+        "sl": {
+          "language": "sl",
+          "value": "Kraljevina Saška"
+        },
+        "cs": {
+          "language": "cs",
+          "value": "Saské království"
+        },
+        "bg": {
+          "language": "bg",
+          "value": "Кралство Саксония"
+        },
+        "az": {
+          "language": "az",
+          "value": "Saksoniya"
+        },
+        "hr": {
+          "language": "hr",
+          "value": "Kraljevina Saska"
+        },
+        "tl": {
+          "language": "tl",
+          "value": "Kaharian ng Sahonya"
+        },
+        "da": {
+          "language": "da",
+          "value": "Kongeriget Sachsen"
+        },
+        "zh": {
+          "language": "zh",
+          "value": "萨克森王国"
+        },
+        "nb": {
+          "language": "nb",
+          "value": "Kongeriket Sachsen"
+        },
+        "eo": {
+          "language": "eo",
+          "value": "Reĝlando Saksio"
+        },
+        "gl": {
+          "language": "gl",
+          "value": "Reino de Saxonia"
+        },
+        "ka": {
+          "language": "ka",
+          "value": "საქსონიის სამეფო"
+        },
+        "gd": {
+          "language": "gd",
+          "value": "Rìoghachd Shagsainn"
+        },
+        "hu": {
+          "language": "hu",
+          "value": "Szász Királyság"
+        },
+        "fi": {
+          "language": "fi",
+          "value": "Saksin kuningaskunta"
+        },
+        "sr": {
+          "language": "sr",
+          "value": "Краљевина Саксонија"
+        },
+        "fa": {
+          "language": "fa",
+          "value": "پادشاهی ساکسونی"
+        },
+        "hy": {
+          "language": "hy",
+          "value": "Սաքսոնիայի թագավորություն"
+        },
+        "lv": {
+          "language": "lv",
+          "value": "Saksijas karaliste"
+        },
+        "tt": {
+          "language": "tt",
+          "value": "Саксония кыйраллыгы"
+        },
+        "tg": {
+          "language": "tg",
+          "value": "Подшоҳии Саксония"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "Kralestwo Sakska"
+        },
+        "lb": {
+          "language": "lb",
+          "value": "Kinnekräich Sachsen"
+        },
+        "lfn": {
+          "language": "lfn",
+          "value": "Rena de Sason"
+        },
+        "azb": {
+          "language": "azb",
+          "value": "ساکسونیا کراللیغی"
+        },
+        "ast": {
+          "language": "ast",
+          "value": "Reinu de Saxonia"
+        },
+        "cy": {
+          "language": "cy",
+          "value": "Teyrnas Sachsen"
+        },
+        "eu": {
+          "language": "eu",
+          "value": "Saxoniako Erresuma"
+        },
+        "be-tarask": {
+          "language": "be-tarask",
+          "value": "Каралеўства Саксоніі"
+        },
+        "mt": {
+          "language": "mt",
+          "value": "Renju tas-Sassonja"
+        },
+        "mn": {
+          "language": "mn",
+          "value": "Заксены Хант Улс"
+        },
+        "mk": {
+          "language": "mk",
+          "value": "Кралство Саксонија"
+        },
+        "vec": {
+          "language": "vec",
+          "value": "Regno de Sasònia"
+        },
+        "arz": {
+          "language": "arz",
+          "value": "مملكة ساكسونيا"
+        },
+        "os": {
+          "language": "os",
+          "value": "Саксонийы къаролад"
+        },
+        "ia": {
+          "language": "ia",
+          "value": "Regno de Saxonia"
+        },
+        "bn": {
+          "language": "bn",
+          "value": "স্যাক্সনি রাজ্য"
+        },
+        "ku": {
+          "language": "ku",
+          "value": "Keyaniya Saksonyayê"
+        },
+        "pt-br": {
+          "language": "pt-br",
+          "value": "Reino da Saxônia"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "ehemaliger deutscher Staat (1806–1918)"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "государство в 1806—1918 годах на территории современной Германии"
+        },
+        "en": {
+          "language": "en",
+          "value": "former German state (1806-1918)"
+        },
+        "hu": {
+          "language": "hu",
+          "value": "történelmi német állam (1806–1871)"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "historisch land"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "něhdyši němski stat, dźensniši Swobodny stat Sakska"
+        },
+        "es": {
+          "language": "es",
+          "value": "reino de Europa (1806-1918)"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "ancien royaume (1806-1918)"
+        },
+        "fi": {
+          "language": "fi",
+          "value": "saksalainen kuningaskunta 1806–1871, ja osa Saksan keisarikuntaa vuoteen 1871–1918"
+        },
+        "eu": {
+          "language": "eu",
+          "value": "Europako antzinako erresuma (1806-1918)"
+        },
+        "cs": {
+          "language": "cs",
+          "value": "historický státní útvar"
+        },
+        "it": {
+          "language": "it",
+          "value": "regno esistito dal 1806 al 1918, parte della Confederazione del Reno (1806-1813), della Confederazione germanica (1815-1866) e dell'Impero tedesco (1871-1918)"
+        },
+        "tr": {
+          "language": "tr",
+          "value": "1806-1918 yılları arasında var olan, Napolyon sonrası Almanyası'nda tarihî konfederasyonlara üye olan bir devlet"
+        },
+        "ca": {
+          "language": "ca",
+          "value": "antic regne del 1806 i 1918"
+        },
+        "be-tarask": {
+          "language": "be-tarask",
+          "value": "колішняя нямецкая дзяржава"
+        },
+        "ba": {
+          "language": "ba",
+          "value": "Саксония короллеге"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "ドイツに存在した王国"
+        },
+        "he": {
+          "language": "he",
+          "value": "מדינה גרמנית לשעבר"
+        },
+        "sv": {
+          "language": "sv",
+          "value": "tidigare konstitutionell monarki i centrala Europa (1806–1918)"
+        },
+        "th": {
+          "language": "th",
+          "value": "รัฐเยอรมันในอดีต (ค.ศ. 1806-1918)"
+        },
+        "uk": {
+          "language": "uk",
+          "value": "історична держава в Німеччині (1806-1918)"
+        },
+        "ar": {
+          "language": "ar",
+          "value": "دولة ألمانية سابقة  (1806-1918)"
+        },
+        "pt": {
+          "language": "pt",
+          "value": "Um reino extinto"
+        },
+        "ku": {
+          "language": "ku",
+          "value": "dewleta almanî ya xiristiyan a tarîxî (1806–1918)"
+        },
+        "pt-br": {
+          "language": "pt-br",
+          "value": "antigo estado alemão (1806-1918)"
+        },
+        "ary": {
+          "language": "ary",
+          "value": "دولة ألمانية سابقة (1806-1918)"
+        }
+      },
+      "aliases": {
+        "es": [
+          {
+            "language": "es",
+            "value": "Rey de Sajonia"
+          },
+          {
+            "language": "es",
+            "value": "Sajonia"
+          }
+        ],
+        "et": [
+          {
+            "language": "et",
+            "value": "Saksi kuningriik"
+          }
+        ],
+        "id": [
+          {
+            "language": "id",
+            "value": "Kerajaan Saxon"
+          },
+          {
+            "language": "id",
+            "value": "Königreich Sachsen"
+          }
+        ],
+        "br": [
+          {
+            "language": "br",
+            "value": "Rouanez Saks"
+          },
+          {
+            "language": "br",
+            "value": "Rouantelezh Sachsen"
+          },
+          {
+            "language": "br",
+            "value": "Roue Sachsen"
+          }
+        ],
+        "vi": [
+          {
+            "language": "vi",
+            "value": "Vương quốc Saxony"
+          }
+        ],
+        "el": [
+          {
+            "language": "el",
+            "value": "Μοναρχία της Σαξονίας"
+          },
+          {
+            "language": "el",
+            "value": "Βασίλειο της Σαξωνίας"
+          }
+        ],
+        "pt": [
+          {
+            "language": "pt",
+            "value": "Reino da Saxónia"
+          },
+          {
+            "language": "pt",
+            "value": "Reino de Saxônia"
+          }
+        ],
+        "ru": [
+          {
+            "language": "ru",
+            "value": "Саксония"
+          }
+        ],
+        "th": [
+          {
+            "language": "th",
+            "value": "ซัคเซิน"
+          },
+          {
+            "language": "th",
+            "value": "ราชอาณาจักรแซกโซนี"
+          },
+          {
+            "language": "th",
+            "value": "แซกโซนี"
+          }
+        ],
+        "ro": [
+          {
+            "language": "ro",
+            "value": "Regatul Saxonia"
+          }
+        ],
+        "uk": [
+          {
+            "language": "uk",
+            "value": "Саксонія"
+          }
+        ],
+        "sl": [
+          {
+            "language": "sl",
+            "value": "Saška"
+          }
+        ],
+        "cs": [
+          {
+            "language": "cs",
+            "value": "Království saské"
+          }
+        ],
+        "da": [
+          {
+            "language": "da",
+            "value": "Sachsiske kongerække"
+          }
+        ],
+        "nb": [
+          {
+            "language": "nb",
+            "value": "Kongedømmet Sachsen"
+          }
+        ],
+        "en": [
+          {
+            "language": "en",
+            "value": "Saxony"
+          }
+        ],
+        "de": [
+          {
+            "language": "de",
+            "value": "Sachsen"
+          },
+          {
+            "language": "de",
+            "value": "Kgr. Sachsen"
+          }
+        ],
+        "hsb": [
+          {
+            "language": "hsb",
+            "value": "Sakske kralestwo"
+          },
+          {
+            "language": "hsb",
+            "value": "Sakska"
+          }
+        ],
+        "cy": [
+          {
+            "language": "cy",
+            "value": "Teyrnas Sacsoni"
+          }
+        ],
+        "eu": [
+          {
+            "language": "eu",
+            "value": "Saxoniako erresuma"
+          },
+          {
+            "language": "eu",
+            "value": "Saxonia"
+          }
+        ],
+        "be-tarask": [
+          {
+            "language": "be-tarask",
+            "value": "Саксонія"
+          },
+          {
+            "language": "be-tarask",
+            "value": "Каралеўства Саксонія"
+          },
+          {
+            "language": "be-tarask",
+            "value": "Саксонскае каралеўства"
+          }
+        ],
+        "ba": [
+          {
+            "language": "ba",
+            "value": "Саксония"
+          }
+        ],
+        "fr": [
+          {
+            "language": "fr",
+            "value": "Saxe"
+          }
+        ],
+        "ar": [
+          {
+            "language": "ar",
+            "value": "مملكة ساكسونيا"
+          }
+        ]
+      },
+      "claims": {
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "909e1d3af9d406b6e0da2427ffcb6b63bac5b953",
+              "datavalue": {
+                "value": "Kingdom of Saxony",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "q153015$919CD7E2-B528-47EB-B860-FE578ED12D5C",
+            "rank": "normal"
+          }
+        ],
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "6d4ffb11525738090868c3caa04dcac69047676e",
+              "datavalue": {
+                "value": {
+                  "latitude": 51.05,
+                  "longitude": 13.73333333,
+                  "altitude": null,
+                  "precision": 0.016666666666667,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "Q153015$67C7CCF5-F6F2-4769-808C-36219BEC716E",
+            "rank": "normal"
+          }
+        ],
+        "P646": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P646",
+              "hash": "53b0280f62aa325c84b4686b464ff8dbcca618eb",
+              "datavalue": {
+                "value": "/m/0327rz",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q153015$77ABE959-AC11-417C-800E-911AE21468FB",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "2b00cb481cddcac7623114367489b5c194901c4a",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "a94b740202b097dd33355e0e6c00e54b9395e5e0",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 15241312,
+                          "id": "Q15241312"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P577": [
+                    {
+                      "snaktype": "value",
+                      "property": "P577",
+                      "hash": "fde79ecb015112d2f29229ccc1ec514ed3e71fa2",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2013-10-28T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P577"
+                ]
+              }
+            ]
+          }
+        ],
+        "P571": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P571",
+              "hash": "e3a6777285717a06c48d2f2a35197177070d277c",
+              "datavalue": {
+                "value": {
+                  "time": "+1806-12-20T00:00:00Z",
+                  "timezone": 0,
+                  "before": 0,
+                  "after": 0,
+                  "precision": 11,
+                  "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                },
+                "type": "time"
+              },
+              "datatype": "time"
+            },
+            "type": "statement",
+            "id": "Q153015$FE9969B2-BCBA-49FE-8E47-309CD9EE6284",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "05f50c5bdd8fe7309a1c112a73d261d9f79b9c76",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "4753cce61f17dea94a488f38a30088778f3a4f9c",
+                      "datavalue": {
+                        "value": "https://www.heraldik-wiki.de/wiki/K%C3%B6nigreich_Sachsen",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854"
+                ]
+              }
+            ]
+          }
+        ],
+        "P242": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P242",
+              "hash": "a1af06a9e2c70f72b2da0ee83a637ddad0a49380",
+              "datavalue": {
+                "value": "Saxony in the German Reich (1871).svg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q153015$7202B395-D1BD-433C-987E-6C1F22D72B7E",
+            "rank": "normal"
+          }
+        ],
+        "P576": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P576",
+              "hash": "a2e65082dd2fcf7d976b06a64b903dbb73758a4a",
+              "datavalue": {
+                "value": {
+                  "time": "+1918-11-11T00:00:00Z",
+                  "timezone": 0,
+                  "before": 0,
+                  "after": 0,
+                  "precision": 11,
+                  "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                },
+                "type": "time"
+              },
+              "datatype": "time"
+            },
+            "type": "statement",
+            "id": "Q153015$56CB7A2B-93DF-44FE-A852-BA634C9EFDD4",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "05f50c5bdd8fe7309a1c112a73d261d9f79b9c76",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "4753cce61f17dea94a488f38a30088778f3a4f9c",
+                      "datavalue": {
+                        "value": "https://www.heraldik-wiki.de/wiki/K%C3%B6nigreich_Sachsen",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854"
+                ]
+              }
+            ]
+          }
+        ],
+        "P122": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P122",
+              "hash": "dc86dff2322b0031bc1422937c9720bedf56b922",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 41614,
+                  "id": "Q41614"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$8D71A7C1-9233-4AE5-9513-02B11CAA0BD5",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P122",
+              "hash": "65e840470ecd2658517d71080460edf32d8ea33a",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 7269,
+                  "id": "Q7269"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$a3c8251e-4d25-247f-f6d0-600ac56ebaee",
+            "rank": "normal"
+          }
+        ],
+        "P38": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P38",
+              "hash": "11d976bbd4b2ce6aff0294d459f0f231e5f4accf",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 304122,
+                  "id": "Q304122"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$827E37A3-0CAF-4507-9EE0-5BBA0937BA17",
+            "rank": "normal"
+          }
+        ],
+        "P140": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P140",
+              "hash": "28458e5f7432ba53db441bbbc6f5abd586eb4a4a",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 170111,
+                  "id": "Q170111"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$21874FB6-8E51-4CB0-88E0-905FB3D59BF4",
+            "rank": "normal"
+          }
+        ],
+        "P36": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P36",
+              "hash": "cf7f846a2c8a9919c98e9506d11536413ac1269c",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1731,
+                  "id": "Q1731"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$38123876-1B5E-4338-AB46-A87A23F5D14F",
+            "rank": "normal"
+          }
+        ],
+        "P85": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P85",
+              "hash": "059cbf74369d745ed71a862f8eec778449d00753",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 476582,
+                  "id": "Q476582"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$C85E2ED2-A085-4B2C-9205-451CA7A9A499",
+            "rank": "normal"
+          }
+        ],
+        "P41": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P41",
+              "hash": "89100f649de33be10714b7cfbfa83be1fcb6f58f",
+              "datavalue": {
+                "value": "Flagge Königreich Sachsen (1815-1918).svg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q153015$07357286-7E41-41B0-87D9-F5E24987F9BE",
+            "rank": "normal"
+          }
+        ],
+        "P194": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P194",
+              "hash": "33f5f4e3ab2684fcbfdd043d6cfb8021a3dcba09",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1440358,
+                  "id": "Q1440358"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$b14b2cd3-4af9-f800-2e15-b60a9b587823",
+            "rank": "normal"
+          }
+        ],
+        "P155": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P155",
+              "hash": "4586f91506415c37766423b7cf70e7139bbd2acb",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 12548,
+                  "id": "Q12548"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$D4CDAB51-5DAE-4605-BC74-D147D644833A",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P155",
+              "hash": "9af072c0187020cf833e12bb8eb00b24e921728b",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 156199,
+                  "id": "Q156199"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$6411238D-C50D-4A00-8CE4-AA4FB0A058E1",
+            "rank": "normal"
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "8ef72935bbd0850be07948cbc1801c5af7c1e7a7",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 3024240,
+                  "id": "Q3024240"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$7068C914-8FCE-46D8-A69D-1DB9ABEE48DF",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "04bba0665ea8842bea5b3c1a0443fae87890ab54",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 26879769,
+                  "id": "Q26879769"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "c697eac7f75854e44eb1c831a71e3b756a67d6bb",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1806-12-11T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580"
+            ],
+            "id": "Q153015$4fd6a8b1-47b4-1907-65fb-121e2b9845ad",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "b5e23433a72c42f7d5c9b6ce1853d18b4afb5749",
+                "snaks": {
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "8f1d0bc90d1ecdf6933b9b318d87e50c1b967ea2",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Rheinbund&curid=57216#Mitglieder_und_ihre_milit%C3%A4rischen_Kontingente",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P4656"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "835949c65c74f310e08f60bcb16a885634566df4",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 417175,
+                  "id": "Q417175"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$319aaacc-4d97-e32d-19fc-f86109d7cbe4",
+            "rank": "normal"
+          }
+        ],
+        "P1343": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1343",
+              "hash": "8162cca1bad1bd4a401fa1c7c67f2d8593a9a9c0",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 678259,
+                  "id": "Q678259"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$6D074CB3-5D1F-4D5D-A50B-A9BE509A6178",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1343",
+              "hash": "88389772f86dcd7d415ddd029f601412e5cc894a",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 602358,
+                  "id": "Q602358"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P805": [
+                {
+                  "snaktype": "value",
+                  "property": "P805",
+                  "hash": "f5edd89dcd0eb6a0948f1c1b3c7fe1d6c8694e4e",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 24498399,
+                      "id": "Q24498399"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P805"
+            ],
+            "id": "Q153015$63a1f728-8db2-4e21-abe0-cb95506a44e1",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1343",
+              "hash": "7d6f86cef085693a10b0e0663a0960f58d0e15e2",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 4173137,
+                  "id": "Q4173137"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P805": [
+                {
+                  "snaktype": "value",
+                  "property": "P805",
+                  "hash": "648912a6f0933e6f42d4851cd55e61cb8438424b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 24917756,
+                      "id": "Q24917756"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P805"
+            ],
+            "id": "Q153015$2f33736c-4960-ea04-91c3-da180e98c098",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1343",
+              "hash": "4cfd4eb1fe49d401455df557a7d9b1154f22a725",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 3181656,
+                  "id": "Q3181656"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P1810": [
+                {
+                  "snaktype": "value",
+                  "property": "P1810",
+                  "hash": "faea3ccb006a7c4b7a1f2aff3d35c4db716c52eb",
+                  "datavalue": {
+                    "value": "Saxony",
+                    "type": "string"
+                  },
+                  "datatype": "string"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P1810"
+            ],
+            "id": "Q153015$b939bf73-4e79-ed72-4d10-e734dbe10106",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1343",
+              "hash": "1e87e0f7d2db06ab0ef5ccabd7c6275641f36553",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 867541,
+                  "id": "Q867541"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P805": [
+                {
+                  "snaktype": "value",
+                  "property": "P805",
+                  "hash": "6a89c5ca314aeff95f8b48a08a2b52b7d5b1644a",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 84653238,
+                      "id": "Q84653238"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P805"
+            ],
+            "id": "Q153015$493EF353-B386-4FE8-8595-9F3D962559DF",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1343",
+              "hash": "42346dfe9209b7359c1f5db829a368b38d407797",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 19180675,
+                  "id": "Q19180675"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P805": [
+                {
+                  "snaktype": "value",
+                  "property": "P805",
+                  "hash": "3592704ec083ecd424c51a8e6581ffb9ddd389d0",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 24738362,
+                      "id": "Q24738362"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P805"
+            ],
+            "id": "Q153015$953a4a3d-4fff-3d12-1965-c320c3bd47a2",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1343",
+              "hash": "0659bac183e6ff7047f5cf22195c8f79f1d17b0f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 14916674,
+                  "id": "Q14916674"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P805": [
+                {
+                  "snaktype": "value",
+                  "property": "P805",
+                  "hash": "7305eb42c4a8e372fd15210e5f4518d3085e9ee6",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 110801525,
+                      "id": "Q110801525"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                },
+                {
+                  "snaktype": "value",
+                  "property": "P805",
+                  "hash": "48b2e0b31d5397861048a7460c10c418ee500d38",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 119084545,
+                      "id": "Q119084545"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                },
+                {
+                  "snaktype": "value",
+                  "property": "P805",
+                  "hash": "e2f18190337ccbc0d0523f5f9c15d1a1ba0ba2b5",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 134577437,
+                      "id": "Q134577437"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P805"
+            ],
+            "id": "Q153015$18d26501-4eb0-0746-b1d1-3713f403e27f",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1343",
+              "hash": "1a73ba3f9ca1f8672ae0f3bc3474df9058b48580",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 65528751,
+                  "id": "Q65528751"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$7fc8af5b-4656-cb4f-844f-458e405c521d",
+            "rank": "normal"
+          }
+        ],
+        "P910": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P910",
+              "hash": "e7ac259bbd1405c9b5e762f69a2ef2312fe5ca7d",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 15266607,
+                  "id": "Q15266607"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$FA871150-F9C2-495F-8285-BD615BFCD1D0",
+            "rank": "normal"
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "beb5f5ce0fe9670396516e4630559b8fb4ad0749",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1206012,
+                  "id": "Q1206012"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "da4b6ddf3559cd94819e75b16a01d418a6abedd0",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1871-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "93ac21226f54574fc2f9f074273226acf3b0705e",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1918-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580",
+              "P582"
+            ],
+            "id": "Q153015$6256a68b-4f59-51d7-c656-7f7ccea6e402",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "5da68d16c181167b874e0909e2a15c565347ef08",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 151624,
+                  "id": "Q151624"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "264b52114352bc062d68e2a0a58e9854872ba594",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1866-01-01T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "00a156b6a46406ba716662fe14eb02d65d4db188",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1815-01-01T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P582",
+              "P580"
+            ],
+            "id": "Q153015$4D54D149-5C35-4746-B817-9CA0384A3C5F",
+            "rank": "normal"
+          }
+        ],
+        "P30": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P30",
+              "hash": "19a1327487d5b9576f36ab9e95214ac7aa1091ba",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 46,
+                  "id": "Q46"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$22068f45-45f3-1941-1fb2-b051e96a13c7",
+            "rank": "normal"
+          }
+        ],
+        "P3417": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P3417",
+              "hash": "a6da117e267b5dcb0013fc9fa5569b8044bf465f",
+              "datavalue": {
+                "value": "Kingdom-of-Saxony",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q153015$C45113B8-FC8E-4592-BE56-006A718EB692",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "3b0a5bb3c1f955edce73740124f7d935698092ad",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "3ac9682e789a3a3791d4fd088b265ea03abef101",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 51711,
+                          "id": "Q51711"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248"
+                ]
+              }
+            ]
+          }
+        ],
+        "P37": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P37",
+              "hash": "b8dce904caadeef339763625b903974aa4c83c6a",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 188,
+                  "id": "Q188"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$69562ee5-49b6-3b6e-7321-646efb78f373",
+            "rank": "normal"
+          }
+        ],
+        "P2046": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2046",
+              "hash": "22713de3efbd2eb218cdfbb3e3abee13d05e6588",
+              "datavalue": {
+                "value": {
+                  "amount": "+14993",
+                  "unit": "http://www.wikidata.org/entity/Q712226"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "id": "Q153015$7bf87fab-4f5b-12af-f2e1-c8516e2532a5",
+            "rank": "normal"
+          }
+        ],
+        "P1082": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "dcd8b1a93069d9dd85db9a335477587d64bbfef0",
+              "datavalue": {
+                "value": {
+                  "amount": "+4806661",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "16c3fda3344c251604c0354666e1a8f9b618e741",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1910-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q153015$194a6c4c-4ce1-b8a6-3c4f-f8d472c8f063",
+            "rank": "normal"
+          }
+        ],
+        "P2581": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2581",
+              "hash": "e90e2ebcf68c15fd02565772c66b15c1f6830f5f",
+              "datavalue": {
+                "value": "03533156n",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q153015$23C794B5-C76A-4CD0-A0B2-78449F07ADF4",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "248ac337a217a5f5eed7139a82a4e60931611af0",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "25b816aab41db18565946259c950aed6de05dd1e",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 4837690,
+                          "id": "Q4837690"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1417": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1417",
+              "hash": "d6a2b29a817472f09afc9ba9b63dc91deb8ba794",
+              "datavalue": {
+                "value": "place/Saxony-historical-region-duchy-and-kingdom-Europe",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P1810": [
+                {
+                  "snaktype": "value",
+                  "property": "P1810",
+                  "hash": "faea3ccb006a7c4b7a1f2aff3d35c4db716c52eb",
+                  "datavalue": {
+                    "value": "Saxony",
+                    "type": "string"
+                  },
+                  "datatype": "string"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P1810"
+            ],
+            "id": "Q153015$ab398836-4772-cc49-3eb5-10f533437aa6",
+            "rank": "normal"
+          }
+        ],
+        "P47": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P47",
+              "hash": "3961ca3c4f04ad0cf20ba44202b6cd725e917f81",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 28513,
+                  "id": "Q28513"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$F59D7DF5-C430-4118-A148-32A23663C6BF",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P47",
+              "hash": "69c42ea96d0429cc6cf767d0ae576186a2dddcb5",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 131964,
+                  "id": "Q131964"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$306C08AD-1F85-46AB-B76F-CDC320F146A3",
+            "rank": "normal"
+          }
+        ],
+        "P94": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P94",
+              "hash": "d9e0f58f9428d12fd4db539f5d6f95c8c14e644a",
+              "datavalue": {
+                "value": "Coat of Arms of the Kingdom of Saxony 1806-1918.svg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q153015$4D261E0A-71B5-44FE-ADCB-7A1204026517",
+            "rank": "normal"
+          }
+        ],
+        "P2936": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2936",
+              "hash": "889ad1bd2727197203c3d77f423a2de69202c339",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 704841,
+                  "id": "Q704841"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$BF7E6A36-5CA5-430A-A2B2-0ADFC05CC9F2",
+            "rank": "normal"
+          }
+        ],
+        "P463": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P463",
+              "hash": "e6dabe29cbafbb543dabce4d27d1ec5721d925f0",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 154741,
+                  "id": "Q154741"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$9FBCF7A1-2D13-4FA6-BFDE-0B4AFAAD1551",
+            "rank": "normal"
+          }
+        ],
+        "P6713": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P6713",
+              "hash": "84f15c475f8356197ef152c180d82d8aae0a0a64",
+              "datavalue": {
+                "value": "PL504739",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q153015$CC4C3DD4-F4DF-4669-A539-95FCB91E87D2",
+            "rank": "normal"
+          }
+        ],
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "5b925ba516864377a76a45a5078658f219efc784",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1206012,
+                  "id": "Q1206012"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "da4b6ddf3559cd94819e75b16a01d418a6abedd0",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1871-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "93ac21226f54574fc2f9f074273226acf3b0705e",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1918-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580",
+              "P582"
+            ],
+            "id": "Q153015$1a7d7bba-48ea-1640-a1f5-d07e1ea3835c",
+            "rank": "normal"
+          }
+        ],
+        "P1549": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "af2618ba51782c7c705180af683aebd8d80fe51a",
+              "datavalue": {
+                "value": {
+                  "text": "Sachse",
+                  "language": "de"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "e9447d28af8c5d42930d7dd10e816fc7d922f8e4",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088290,
+                      "id": "Q47088290"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q153015$44132c42-41cc-8502-79df-29f2569f59fe",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "dc48d5aab80358e715342fc462a82f528457b924",
+              "datavalue": {
+                "value": {
+                  "text": "Sächsin",
+                  "language": "de"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "9ccfcbc8ef0cb77e854001299df9103998ab5d48",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088293,
+                      "id": "Q47088293"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q153015$f7815029-4a9c-f575-2c15-d3164f5689fe",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "509925c5b0b0770400280305820c7ec60b900ea6",
+              "datavalue": {
+                "value": {
+                  "text": "saxon",
+                  "language": "fr"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "735874569aa9bd9762a6bf8dea8d3b3faae7d12b",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 499327,
+                      "id": "Q499327"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q153015$23d2653f-4871-6f26-0c64-8ba5843916ae",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "0a5550de21f6d82935ada8efd70be0bb516952f6",
+              "datavalue": {
+                "value": {
+                  "text": "saxonne",
+                  "language": "fr"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "c6a3b7c3120e0b93b2f67b2d7081beed1709d4d6",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 1775415,
+                      "id": "Q1775415"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q153015$0070242f-44fd-d55f-a71f-433a7690ff71",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "48959ad4d8aba9e9e9179aae084368599216b68e",
+              "datavalue": {
+                "value": {
+                  "text": "Sachsen",
+                  "language": "de"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "7002a0d0b3dc52a703f036cc2c96b1b6c752ca25",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088292,
+                      "id": "Q47088292"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q153015$16fc6889-480c-e5d2-4b8a-75b7ef27e169",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "1a97dc7ae24cae84c1d2137d92ebe051065e54be",
+              "datavalue": {
+                "value": {
+                  "text": "Sächsinnen",
+                  "language": "de"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "d4e4008bd95104484d366a24aed776612f249891",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088295,
+                      "id": "Q47088295"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q153015$3b0d389a-4029-2d12-6131-ceed7b0a0a53",
+            "rank": "normal"
+          }
+        ],
+        "P1705": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1705",
+              "hash": "95e4d0284bfa08adf8833490d5247b8e48b22c3c",
+              "datavalue": {
+                "value": {
+                  "text": "Königreich Sachsen",
+                  "language": "de"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "id": "Q153015$67e0b294-4452-d6e4-5a20-eb90f0eda22e",
+            "rank": "normal"
+          }
+        ],
+        "P9957": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P9957",
+              "hash": "0b35ad244ca2df800966695c08690ad2babbc238",
+              "datavalue": {
+                "value": "3162",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q153015$22A45F0C-93CD-4B66-9A5E-BC271DA593D9",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "190527dca615f4510213808b0e1cb81522b247f6",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "9d638c2b86f0a48538336421421d81e676e6a966",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 1360745,
+                          "id": "Q1360745"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1366": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1366",
+              "hash": "1430c75f488d84eb7f121a8f1fbc761e25b6e97c",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1206012,
+                  "id": "Q1206012"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$70876574-48a0-213b-63fe-2e459b127c26",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1366",
+              "hash": "a73e4da8685a859b368fd7f19ea15d830df6060a",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 41304,
+                  "id": "Q41304"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$525bfecf-4cf3-9f9b-acb9-7b6b7d2b61b9",
+            "rank": "normal"
+          }
+        ],
+        "P2388": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2388",
+              "hash": "a56269bfeafcacb78ef05ad2370111792b7bc38e",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 111594854,
+                  "id": "Q111594854"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$07305c2c-4fa7-1e2c-02c2-ba4797b70084",
+            "rank": "normal"
+          }
+        ],
+        "P1365": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1365",
+              "hash": "e32e282dde388ad7ba6259497d738aecf80834b1",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 156199,
+                  "id": "Q156199"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$0082f22c-4285-8ed4-f37c-ffe877295cc0",
+            "rank": "normal"
+          }
+        ],
+        "P12086": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P12086",
+              "hash": "c0a70acdd3d56ae3daeb2ce28ec0e4f48f52ba4a",
+              "datavalue": {
+                "value": "Koninkrijk_Saksen",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P9675": [
+                {
+                  "snaktype": "value",
+                  "property": "P9675",
+                  "hash": "f602165a139e9151ef90b0d3eef1518745e873df",
+                  "datavalue": {
+                    "value": "76753",
+                    "type": "string"
+                  },
+                  "datatype": "string"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P9675"
+            ],
+            "id": "Q153015$6E5343A7-1BBC-42CE-B7F8-93092686E9E3",
+            "rank": "normal"
+          }
+        ],
+        "P1559": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1559",
+              "hash": "1b3d27bddfbfeedb8622bcf919063f33661dbba8",
+              "datavalue": {
+                "value": {
+                  "text": "Königreich Sachsen",
+                  "language": "de"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "id": "Q153015$9a61a07d-4eee-6466-2085-ff7513407ea4",
+            "rank": "normal"
+          }
+        ],
+        "P1448": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1448",
+              "hash": "8f8b64bc2c0f53a8ea8e2d53a6478d6c86c8cdce",
+              "datavalue": {
+                "value": {
+                  "text": "Königreich Sachsen",
+                  "language": "de"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "id": "Q153015$9ff057cc-4262-2db3-2aae-c3f4349585d8",
+            "rank": "normal"
+          }
+        ],
+        "P138": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P138",
+              "hash": "ca95e90489982520f28bd5bdc8b78ed2857f0043",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 101985,
+                  "id": "Q101985"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$5cb2bc43-4d55-fe86-1910-27ef112d4b87",
+            "rank": "normal"
+          }
+        ],
+        "P8168": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P8168",
+              "hash": "77305a6bb23668fc8e56cc04424d6d03ebe1bf0c",
+              "datavalue": {
+                "value": "Q481495",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q153015$9065C98D-8E39-4F8B-956F-212C20D908DF",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "205cec87eb805862eba032251db5170eaaa49fc9",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "e4afc4ad60f2160201385d29d076e0794f815f1e",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 90405608,
+                          "id": "Q90405608"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "0a3bb137286f7a06f4ea2f543f29533c862174ca",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2024-12-10T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1464": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1464",
+              "hash": "fae500df8bdb71b04bed05cf2ab3d9de749e87f1",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 8070983,
+                  "id": "Q8070983"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$358253ea-47ff-18ec-9dfe-7413f79eecdb",
+            "rank": "normal"
+          }
+        ],
+        "P13591": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P13591",
+              "hash": "498a475cd327d30f54dcb0f5a719de303fe6e663",
+              "datavalue": {
+                "value": "place/e6681244-1294-4769-941b-62da2c87443d",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q153015$B555B10C-AC07-4BE7-941B-B44C96121677",
+            "rank": "normal"
+          }
+        ],
+        "P1792": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1792",
+              "hash": "ebbcfdbef146351c10dd3094934ddc44dbc5f5da",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 9481383,
+                  "id": "Q9481383"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153015$9d5528d1-4fbb-a209-6b26-306208036327",
+            "rank": "normal"
+          }
+        ],
+        "P8424": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P8424",
+              "hash": "53dd1d3581aba7fa185b8f9e938f3f0a3d40e381",
+              "datavalue": {
+                "value": "2693578",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q153015$07702C80-1658-488C-A0C7-CEE7836040CE",
+            "rank": "normal"
+          }
+        ],
+        "P8590": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P8590",
+              "hash": "29de973080c2253a9b7b68c0c729b5eebb2d9e5c",
+              "datavalue": {
+                "value": "13241",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q153015$11C717C1-E804-4862-B049-6661946D4A0D",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "arwiki": {
+          "site": "arwiki",
+          "title": "مملكة سكسونيا",
+          "badges": []
+        },
+        "arzwiki": {
+          "site": "arzwiki",
+          "title": "مملكة ساكسونيا",
+          "badges": []
+        },
+        "azbwiki": {
+          "site": "azbwiki",
+          "title": "ساکسونیا کراللیغی",
+          "badges": []
+        },
+        "azwiki": {
+          "site": "azwiki",
+          "title": "Saksoniya (krallıq)",
+          "badges": []
+        },
+        "bewiki": {
+          "site": "bewiki",
+          "title": "Каралеўства Саксонія",
+          "badges": []
+        },
+        "bgwiki": {
+          "site": "bgwiki",
+          "title": "Кралство Саксония",
+          "badges": []
+        },
+        "bnwiki": {
+          "site": "bnwiki",
+          "title": "স্যাক্সনি রাজ্য",
+          "badges": []
+        },
+        "brwiki": {
+          "site": "brwiki",
+          "title": "Rouantelezh Saks",
+          "badges": []
+        },
+        "cawiki": {
+          "site": "cawiki",
+          "title": "Regne de Saxònia",
+          "badges": []
+        },
+        "cswiki": {
+          "site": "cswiki",
+          "title": "Saské království",
+          "badges": []
+        },
+        "dawiki": {
+          "site": "dawiki",
+          "title": "Kongeriget Sachsen",
+          "badges": []
+        },
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Königreich Sachsen",
+          "badges": []
+        },
+        "dewikisource": {
+          "site": "dewikisource",
+          "title": "Königreich Sachsen",
+          "badges": []
+        },
+        "elwiki": {
+          "site": "elwiki",
+          "title": "Βασίλειο της Σαξονίας",
+          "badges": []
+        },
+        "enwiki": {
+          "site": "enwiki",
+          "title": "Kingdom of Saxony",
+          "badges": []
+        },
+        "eowiki": {
+          "site": "eowiki",
+          "title": "Reĝlando Saksio",
+          "badges": []
+        },
+        "eswiki": {
+          "site": "eswiki",
+          "title": "Reino de Sajonia",
+          "badges": []
+        },
+        "etwiki": {
+          "site": "etwiki",
+          "title": "Saksimaa kuningriik",
+          "badges": []
+        },
+        "euwiki": {
+          "site": "euwiki",
+          "title": "Saxoniako Erresuma",
+          "badges": []
+        },
+        "fawiki": {
+          "site": "fawiki",
+          "title": "پادشاهی ساکسونی",
+          "badges": []
+        },
+        "fiwiki": {
+          "site": "fiwiki",
+          "title": "Saksin kuningaskunta",
+          "badges": []
+        },
+        "frwiki": {
+          "site": "frwiki",
+          "title": "Royaume de Saxe",
+          "badges": []
+        },
+        "gawiki": {
+          "site": "gawiki",
+          "title": "Ríocht na Sacsaine",
+          "badges": []
+        },
+        "gdwiki": {
+          "site": "gdwiki",
+          "title": "Rìoghachd Shagsainn",
+          "badges": []
+        },
+        "glwiki": {
+          "site": "glwiki",
+          "title": "Reino de Saxonia",
+          "badges": []
+        },
+        "hewiki": {
+          "site": "hewiki",
+          "title": "ממלכת סקסוניה",
+          "badges": []
+        },
+        "hrwiki": {
+          "site": "hrwiki",
+          "title": "Kraljevina Saska",
+          "badges": []
+        },
+        "huwiki": {
+          "site": "huwiki",
+          "title": "Szász Királyság",
+          "badges": []
+        },
+        "hywiki": {
+          "site": "hywiki",
+          "title": "Սաքսոնիայի թագավորություն",
+          "badges": []
+        },
+        "idwiki": {
+          "site": "idwiki",
+          "title": "Kerajaan Sachsen",
+          "badges": []
+        },
+        "itwiki": {
+          "site": "itwiki",
+          "title": "Regno di Sassonia",
+          "badges": []
+        },
+        "jawiki": {
+          "site": "jawiki",
+          "title": "ザクセン王国",
+          "badges": []
+        },
+        "kawiki": {
+          "site": "kawiki",
+          "title": "საქსონიის სამეფო",
+          "badges": []
+        },
+        "kowiki": {
+          "site": "kowiki",
+          "title": "작센 왕국",
+          "badges": []
+        },
+        "kuwiki": {
+          "site": "kuwiki",
+          "title": "Keyaniya Saksonyayê",
+          "badges": []
+        },
+        "lawiki": {
+          "site": "lawiki",
+          "title": "Regnum Saxoniae",
+          "badges": []
+        },
+        "lvwiki": {
+          "site": "lvwiki",
+          "title": "Saksijas Karaliste",
+          "badges": []
+        },
+        "mkwiki": {
+          "site": "mkwiki",
+          "title": "Кралство Саксонија",
+          "badges": []
+        },
+        "mnwiki": {
+          "site": "mnwiki",
+          "title": "Саксоны хаант улс",
+          "badges": []
+        },
+        "mswiki": {
+          "site": "mswiki",
+          "title": "Kerajaan Sachsen",
+          "badges": []
+        },
+        "nlwiki": {
+          "site": "nlwiki",
+          "title": "Koninkrijk Saksen",
+          "badges": []
+        },
+        "nowiki": {
+          "site": "nowiki",
+          "title": "Kongeriket Sachsen",
+          "badges": []
+        },
+        "plwiki": {
+          "site": "plwiki",
+          "title": "Królestwo Saksonii",
+          "badges": []
+        },
+        "ptwiki": {
+          "site": "ptwiki",
+          "title": "Reino da Saxônia",
+          "badges": []
+        },
+        "rowiki": {
+          "site": "rowiki",
+          "title": "Regatul Saxoniei",
+          "badges": []
+        },
+        "ruwiki": {
+          "site": "ruwiki",
+          "title": "Королевство Саксония",
+          "badges": []
+        },
+        "simplewiki": {
+          "site": "simplewiki",
+          "title": "Kingdom of Saxony",
+          "badges": []
+        },
+        "slwiki": {
+          "site": "slwiki",
+          "title": "Kraljevina Saška",
+          "badges": []
+        },
+        "srwiki": {
+          "site": "srwiki",
+          "title": "Краљевина Саксонија",
+          "badges": []
+        },
+        "svwiki": {
+          "site": "svwiki",
+          "title": "Kungariket Sachsen",
+          "badges": []
+        },
+        "thwiki": {
+          "site": "thwiki",
+          "title": "ราชอาณาจักรซัคเซิน",
+          "badges": []
+        },
+        "tlwiki": {
+          "site": "tlwiki",
+          "title": "Kaharian ng Sahonya",
+          "badges": []
+        },
+        "trwiki": {
+          "site": "trwiki",
+          "title": "Saksonya Krallığı",
+          "badges": []
+        },
+        "ukwiki": {
+          "site": "ukwiki",
+          "title": "Саксонське королівство",
+          "badges": []
+        },
+        "viwiki": {
+          "site": "viwiki",
+          "title": "Vương quốc Sachsen",
+          "badges": []
+        },
+        "zhwiki": {
+          "site": "zhwiki",
+          "title": "萨克森王国",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

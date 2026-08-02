@@ -1,0 +1,137 @@
+{
+  "entities": {
+    "Q1787521": {
+      "pageid": 1719101,
+      "ns": 0,
+      "title": "Q1787521",
+      "lastrevid": 1363521478,
+      "modified": "2021-02-17T16:11:53Z",
+      "type": "item",
+      "id": "Q1787521",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Kreis Stendal"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "Kreis in der DDR"
+        }
+      },
+      "aliases": {},
+      "claims": {
+        "P36": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P36",
+              "hash": "700be089104e3fd5e6981841ba30c161e9758749",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 7082,
+                  "id": "Q7082"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787521$76dcc830-405d-70f7-5c64-33d0d944a92c",
+            "rank": "normal"
+          }
+        ],
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "69134fce674a39f3382130caf84f51e58518fb88",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 16957,
+                  "id": "Q16957"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787521$FAB265E2-C8DA-40A1-8619-85892ACC89A3",
+            "rank": "normal"
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "7c87a9d130338f4808157eaf589307f229beb96f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 15849374,
+                  "id": "Q15849374"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787521$1854CC60-551D-40AA-9426-81D7D173A6E7",
+            "rank": "normal"
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "49faa92e8f2b0cd2568dcb7ca63979b5a2a7795e",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 48083,
+                  "id": "Q48083"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787521$813A9C88-5DA4-4F76-B55C-5463C30EF517",
+            "rank": "normal"
+          }
+        ],
+        "P2671": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2671",
+              "hash": "d32e1bf5f170aa8e2182527ff3057eb0d94a5e25",
+              "datavalue": {
+                "value": "/g/121pkh16",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q1787521$79A77A7E-A9F0-4564-A211-BDE20B31A407",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Kreis Stendal",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

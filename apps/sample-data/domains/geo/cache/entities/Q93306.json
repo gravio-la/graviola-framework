@@ -1,0 +1,733 @@
+{
+  "entities": {
+    "Q93306": {
+      "pageid": 95494,
+      "ns": 0,
+      "title": "Q93306",
+      "lastrevid": 2512014621,
+      "modified": "2026-06-29T23:44:41Z",
+      "type": "item",
+      "id": "Q93306",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Verwaltungsverband Am Klosterwasser"
+        },
+        "pl": {
+          "language": "pl",
+          "value": "Związek gmin Am Klosterwasser"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "Zarjadniski zwjazk Při Klóšterskej wodźe"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "Союз общин Ам-Кростервассер"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Verwaltungsverband Am Klosterwasser"
+        },
+        "be": {
+          "language": "be",
+          "value": "саюз абшчын Ам-Кростэрвасер"
+        },
+        "ro": {
+          "language": "ro",
+          "value": "Verwaltungsverband Am Klosterwasser"
+        },
+        "cs": {
+          "language": "cs",
+          "value": "Správní sdružení U Klášterní vody"
+        },
+        "frr": {
+          "language": "frr",
+          "value": "Ferbant Am Klosterwasser"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "Verwaltungsverband im Landkreis Bautzen, Sachsen, Deutschland"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "gmejnski zwjazk w Hornjej Łužicy, Budyski wokrjes"
+        },
+        "pl": {
+          "language": "pl",
+          "value": "związek gmin w Niemczech"
+        },
+        "cs": {
+          "language": "cs",
+          "value": "správní sdružení, Německo, Horní Lužice"
+        }
+      },
+      "aliases": {
+        "hsb": [
+          {
+            "language": "hsb",
+            "value": "Při Klóšterskej wodźe"
+          }
+        ],
+        "de": [
+          {
+            "language": "de",
+            "value": "Am Klosterwasser"
+          }
+        ],
+        "cs": [
+          {
+            "language": "cs",
+            "value": "Správní sdružení Am Klosterwasser"
+          },
+          {
+            "language": "cs",
+            "value": "Verwaltungsverband Am Klosterwasser"
+          }
+        ]
+      },
+      "claims": {
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "e35d66310f2a751c4955b057536ee6877063ea70",
+              "datavalue": {
+                "value": {
+                  "latitude": 51.2333,
+                  "longitude": 14.2,
+                  "altitude": null,
+                  "precision": 0.0001,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "Q93306$5F3869C3-0869-4618-BCC2-3BD8685369B2",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "ef7247b704f4ec0a7df39e83306bb388fea17d5f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 183,
+                  "id": "Q183"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q93306$9DAA5E8D-9D44-4958-9787-F1AFFD84A0FD",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "f4d7d3122268ec92810c2d98e53b84f755be4615",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 571947,
+                  "id": "Q571947"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "55301a9cd3601b107b78b45af127d4d971b6008a",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2008-08-01T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580"
+            ],
+            "id": "Q93306$E354AC97-0DA3-45DD-B38C-EFC26950F913",
+            "rank": "preferred",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "3a19f7e7678e48c32393ee3f69beb413dc2d4c93",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 20239,
+                  "id": "Q20239"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "aba3db931918dc4a06c29848b5caa791ddd656f9",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2008-08-01T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P582"
+            ],
+            "id": "Q93306$724d895c-4447-6bf4-b38e-8a65f79cce48",
+            "rank": "normal"
+          }
+        ],
+        "P150": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "3f563d45f9f147540b3db59510ff967047c9b778",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 93223,
+                  "id": "Q93223"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q93306$7d0bbf47-4a35-73d4-e453-16bab5e82a3c",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "0effa0241e5f45e7249d3b6a2ee18a0d44c9ada2",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 93264,
+                  "id": "Q93264"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q93306$53890266-4e80-1468-3631-7cb360db5c31",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "04d3951f57c622cc887768b712add691706373d3",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 93279,
+                  "id": "Q93279"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q93306$7e74a3c9-46c2-1538-e811-6ae51bee52c8",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "f767bc9fb5c52fb61426edc229ce404ec52ea291",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 93285,
+                  "id": "Q93285"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q93306$29f5dbe0-4e67-1f8c-1305-e1833c4fff4f",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "85a8f37762725ab9febefc2d647a7ac244c94294",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 93287,
+                  "id": "Q93287"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q93306$d5f24c79-48be-b04a-b706-6603cd9456b4",
+            "rank": "normal"
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "edb8eb25e41bdd1dc8a9b36efc2d3715dbd89854",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 2520755,
+                  "id": "Q2520755"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q93306$6C962ECA-D5DA-4152-8F89-4804F5E8C003",
+            "rank": "normal"
+          }
+        ],
+        "P361": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P361",
+              "hash": "786ab8a8c6b9eb0213974ce7f3428c83b23d7c33",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 145129,
+                  "id": "Q145129"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q93306$BD357CB3-FDE5-47AA-BB05-0F4012EE153E",
+            "rank": "normal"
+          }
+        ],
+        "P856": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P856",
+              "hash": "09ffea7f5f74d2634e3990725d34d24159c4eddf",
+              "datavalue": {
+                "value": "http://www.am-klosterwasser.de/",
+                "type": "string"
+              },
+              "datatype": "url"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P407": [
+                {
+                  "snaktype": "value",
+                  "property": "P407",
+                  "hash": "4f306ecd64ee589e6cc27e6452796f3f27d1f0e1",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 13248,
+                      "id": "Q13248"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                },
+                {
+                  "snaktype": "value",
+                  "property": "P407",
+                  "hash": "46bfd327b830f66f7061ea92d1be430c135fa91f",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 188,
+                      "id": "Q188"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P407"
+            ],
+            "id": "Q93306$83BBF075-5FE9-42A8-B732-2E707B692F3F",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "aa460111bc4b110364974ef95c1eaf896dfdb508",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "a94dd41c924b1350781617588adb7a8ac56624ee",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Verwaltungsverband_Am_Klosterwasser&oldid=166969453",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P242": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P242",
+              "hash": "3e1d1834503e22b6d7993c94c4c9c781b3567059",
+              "datavalue": {
+                "value": "Verwaltungsverband Am Klosterwasser in BZ.svg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q93306$535D3DFF-07B4-48B6-B9FE-8CA8EC111052",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "aa460111bc4b110364974ef95c1eaf896dfdb508",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "a94dd41c924b1350781617588adb7a8ac56624ee",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Verwaltungsverband_Am_Klosterwasser&oldid=166969453",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P138": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P138",
+              "hash": "fbff902e499ba14c8ff4391290baa198176931a0",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 163007,
+                  "id": "Q163007"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q93306$75b13b2e-493d-7bf4-e25a-386fb7d5afd5",
+            "rank": "normal"
+          }
+        ],
+        "P1082": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "c9db4064c1170a2eca3cf40988906e7f37f5a84c",
+              "datavalue": {
+                "value": {
+                  "amount": "+7174",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "8809d0bfc6d96a7916c93c009bb688d4e2876724",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2019-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q93306$ee0c5546-4465-1554-472f-12e74f01ec80",
+            "rank": "normal"
+          }
+        ],
+        "P2046": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2046",
+              "hash": "99c2748ae47d69bc5fbc703eed79537f7d596244",
+              "datavalue": {
+                "value": {
+                  "amount": "+102.86",
+                  "unit": "http://www.wikidata.org/entity/Q712226"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "id": "Q93306$3432b36f-4b3a-4300-3e4a-ab100ec5bd97",
+            "rank": "normal"
+          }
+        ],
+        "P2671": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2671",
+              "hash": "28d0298d8546e908f740d0f4faac1a012dcde352",
+              "datavalue": {
+                "value": "/g/120j3ckk",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q93306$A840D16B-5FFF-406C-AAC9-9CC0CE8752DF",
+            "rank": "normal"
+          }
+        ],
+        "P1388": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1388",
+              "hash": "f367b6f4c961b16436d125ad5f1c855affd29365",
+              "datavalue": {
+                "value": "146255501000",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q93306$706D771E-588A-429D-B799-CB9410559B2D",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Verwaltungsverband Am Klosterwasser",
+          "badges": []
+        },
+        "hsbwiki": {
+          "site": "hsbwiki",
+          "title": "Zarjadniski zwjazk Při Klóšterskej wodźe",
+          "badges": []
+        },
+        "nlwiki": {
+          "site": "nlwiki",
+          "title": "Verwaltungsverband Am Klosterwasser",
+          "badges": []
+        },
+        "plwiki": {
+          "site": "plwiki",
+          "title": "Związek gmin Am Klosterwasser",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

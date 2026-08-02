@@ -1,0 +1,1342 @@
+{
+  "entities": {
+    "Q160393": {
+      "pageid": 161283,
+      "ns": 0,
+      "title": "Q160393",
+      "lastrevid": 2512512572,
+      "modified": "2026-07-01T07:17:27Z",
+      "type": "item",
+      "id": "Q160393",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Knappenrode"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "Hórnikecy"
+        },
+        "en": {
+          "language": "en",
+          "value": "Knappenrode"
+        },
+        "es": {
+          "language": "es",
+          "value": "Knappenrode"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Knappenrode"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "Knappenrode"
+        },
+        "pl": {
+          "language": "pl",
+          "value": "Knappenrode"
+        },
+        "dsb": {
+          "language": "dsb",
+          "value": "Hórnikecy"
+        },
+        "ca": {
+          "language": "ca",
+          "value": "Knappenrode"
+        },
+        "nb": {
+          "language": "nb",
+          "value": "Knappenrode"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "Кнаппенроде"
+        },
+        "lld": {
+          "language": "lld",
+          "value": "Knappenrode"
+        },
+        "ga": {
+          "language": "ga",
+          "value": "Knappenrode"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "Ort in Deutschland"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "commune allemande"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "plaats in Duitsland"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "wjes w Budyskim wokrjesu, gmejnski dźěl  Wojerec"
+        },
+        "el": {
+          "language": "el",
+          "value": "οικισμός της Γερμανίας"
+        },
+        "en": {
+          "language": "en",
+          "value": "human settlement in Germany"
+        },
+        "uk": {
+          "language": "uk",
+          "value": "населений пункт у Німеччині"
+        },
+        "ml": {
+          "language": "ml",
+          "value": "ജര്‍മ്മനിയിലെ ഒരു സ്ഥലം"
+        },
+        "ar": {
+          "language": "ar",
+          "value": "مستوطنة بشرية في ألمانيا"
+        },
+        "dsb": {
+          "language": "dsb",
+          "value": "sedlišćo w Górnej Łužycy; źěl Wórjejc"
+        },
+        "cs": {
+          "language": "cs",
+          "value": "vesnice v Horní Lužici, Sasko"
+        },
+        "hy": {
+          "language": "hy",
+          "value": "բնակավայր Գերմանիայում"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "Населённый пункт в статусе городского района Хойерсверды, Саксония, Германия"
+        },
+        "lld": {
+          "language": "lld",
+          "value": "chemun de la Germania"
+        },
+        "tr": {
+          "language": "tr",
+          "value": "Hoyerswerda, Almanya'da köy"
+        },
+        "ary": {
+          "language": "ary",
+          "value": "دوّار ف ألمانيا"
+        },
+        "hi": {
+          "language": "hi",
+          "value": "जर्मनी का एक गाँव"
+        }
+      },
+      "aliases": {
+        "de": [
+          {
+            "language": "de",
+            "value": "Hórnikecy"
+          },
+          {
+            "language": "de",
+            "value": "Werminghoff"
+          }
+        ],
+        "hsb": [
+          {
+            "language": "hsb",
+            "value": "Knappenrode"
+          },
+          {
+            "language": "hsb",
+            "value": "Werminghoff"
+          }
+        ],
+        "dsb": [
+          {
+            "language": "dsb",
+            "value": "Knappenrode"
+          },
+          {
+            "language": "dsb",
+            "value": "Werminghoff"
+          }
+        ],
+        "en": [
+          {
+            "language": "en",
+            "value": "Hórnikecy"
+          }
+        ],
+        "ru": [
+          {
+            "language": "ru",
+            "value": "Горникецы"
+          }
+        ]
+      },
+      "claims": {
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "ef7247b704f4ec0a7df39e83306bb388fea17d5f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 183,
+                  "id": "Q183"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "q160393$E2104244-388E-4C88-9F0B-CD5500679AD7",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "e1ffd817816ba83885edef92c61699191e5cfab1",
+              "datavalue": {
+                "value": {
+                  "latitude": 51.4028,
+                  "longitude": 14.3194,
+                  "altitude": null,
+                  "precision": 0.0001,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "Q160393$D9CBA9A0-2557-4CD7-AE53-E64FDBCEEF5B",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "5f22f159cc926e9d52dd5b7b0601ec6755ae490b",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 14904,
+                  "id": "Q14904"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "2cbbf55b82be3e143ef704861edc373c9f722490",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1994-01-01T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580"
+            ],
+            "id": "Q160393$4E4CB8FC-0A59-4240-A245-B9B933611A12",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "7057956d14923ac05944c6eec28c727fdb284c87",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1787348,
+                  "id": "Q1787348"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "adae643b70e93c48c654a203ef5fff76ad3295da",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1993-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P582"
+            ],
+            "id": "Q160393$042356c1-4492-f671-5264-30131c50eb2e",
+            "rank": "normal"
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "0822324dd76b90eef8eee5e0cf38d893013ccdf3",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 253019,
+                  "id": "Q253019"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "2cbbf55b82be3e143ef704861edc373c9f722490",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1994-01-01T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580"
+            ],
+            "id": "Q160393$3283BED1-91DB-4FFD-93FE-06F0D2C038B2",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "4e6beb54b615d48c5239f20931f0d68409834ac2",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 262166,
+                  "id": "Q262166"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "adae643b70e93c48c654a203ef5fff76ad3295da",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1993-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P582"
+            ],
+            "id": "Q160393$93f0993f-4c97-424a-5966-c1d979f18da8",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "5234088afa2cb8dd6b2b0c2f713eff1c61f34067",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 532,
+                  "id": "Q532"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q160393$5E1DB7A7-54F1-4735-90D2-F8B91BC24403",
+            "rank": "normal"
+          }
+        ],
+        "P214": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P214",
+              "hash": "a926cbd7a7b04b819b14b5ee0d26cd559a54f16d",
+              "datavalue": {
+                "value": "239281137",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160393$4D6F652B-B699-44A8-AE60-BF3365076EDF",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "ffb7008c3b41d9efd69c450e837f49eebb1b6dce",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "6b7d4330c4aac4caec4ede9de0311ce273f88ecd",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 54919,
+                          "id": "Q54919"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "76142c1ac740096f18ea230da7fb62353d1c531f",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2015-08-03T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "0eba33e9d18320ea1884264a42cb7fb529716f80",
+              "datavalue": {
+                "value": "Knappenrode/Hórnikecy",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q160393$7bdf2f58-40fc-8e20-b05f-be86a1e2f26b",
+            "rank": "normal"
+          }
+        ],
+        "P1667": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1667",
+              "hash": "9356147afda7d76024ad60b62589ab8d8c6ff043",
+              "datavalue": {
+                "value": "7146016",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160393$AF46DE87-2D0A-4A27-A2AB-7787B1E15305",
+            "rank": "normal"
+          }
+        ],
+        "P281": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P281",
+              "hash": "9867d3a0579e3f1fa00c6c574112a04caea97872",
+              "datavalue": {
+                "value": "02977",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q160393$87197A3A-4901-4BFD-B7BF-C8CA1FB313DB",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P361": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P361",
+              "hash": "786ab8a8c6b9eb0213974ce7f3428c83b23d7c33",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 145129,
+                  "id": "Q145129"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q160393$6B382F00-363C-499A-AF2E-E3B55663622F",
+            "rank": "normal"
+          }
+        ],
+        "P473": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P473",
+              "hash": "19eda0edebb8caf6f6a822bead1d2927aa0a995f",
+              "datavalue": {
+                "value": "03571",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q160393$72CB579D-27F6-44D2-945B-31C173D3D3E3",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2044": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2044",
+              "hash": "82956475197bf376802e9d9e91e681eb2a6cd919",
+              "datavalue": {
+                "value": {
+                  "amount": "+123",
+                  "unit": "http://www.wikidata.org/entity/Q11573"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "id": "Q160393$F3888841-8351-42DC-A000-83DAF39CD38B",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "b38bcdd10967ce567e13e7a0a6d4acd3f7d1f145",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "127de34a8f1f05607a7463728c769348bb797d16",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Knappenrode&oldid=176197848",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1549": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "7111c4ee13c5b88a7359251bf597935df1a7d747",
+              "datavalue": {
+                "value": {
+                  "text": "Hórnikečan",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "e9447d28af8c5d42930d7dd10e816fc7d922f8e4",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088290,
+                      "id": "Q47088290"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q160393$6AF8CD07-1329-4111-AD27-C291C737C997",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "5f94cddce9329ba2bbb4f2a0020351e859e649c2",
+              "datavalue": {
+                "value": {
+                  "text": "Hórnikečanka",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "9ccfcbc8ef0cb77e854001299df9103998ab5d48",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088293,
+                      "id": "Q47088293"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q160393$AC55534C-2E31-478C-8647-AC7640C51396",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "56e9e78ad6ad13044de14f5705c66a7c5c43880d",
+              "datavalue": {
+                "value": {
+                  "text": "Hórnikečenjo",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "7002a0d0b3dc52a703f036cc2c96b1b6c752ca25",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088292,
+                      "id": "Q47088292"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q160393$C6EDE636-D673-4C0F-95BA-8D8931A9BA08",
+            "rank": "normal"
+          }
+        ],
+        "P1566": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1566",
+              "hash": "39d652b054428c3b90cd1909684ae2381b7dab6c",
+              "datavalue": {
+                "value": "2887259",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160393$0DCA025F-324D-4D2A-B453-090351B8CCE4",
+            "rank": "normal"
+          }
+        ],
+        "P2046": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2046",
+              "hash": "9e18ea8aeb4d3d67e951c802379b7a516efd8085",
+              "datavalue": {
+                "value": {
+                  "amount": "+9.89",
+                  "unit": "http://www.wikidata.org/entity/Q712226"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "id": "Q160393$CDB1A3E1-DCA6-4FB3-BE7E-46B3928AD32C",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "7469bfb1253961fc14bf7dde107b304b42494e66",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "d3343fa186061eb41826f2bb534f3a1d53feefb0",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Knappenrode&oldid=188296107",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P7046": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P7046",
+              "hash": "cbf464be5ed362df3c400bab63447caa58b6f199",
+              "datavalue": {
+                "value": "25104",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P1932": [
+                {
+                  "snaktype": "value",
+                  "property": "P1932",
+                  "hash": "a36194e1a665ea2f0aa03d185284569600de6782",
+                  "datavalue": {
+                    "value": "Knappenrode (bis 1950 Werminghoff)",
+                    "type": "string"
+                  },
+                  "datatype": "string"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P1932"
+            ],
+            "id": "Q160393$BFAB9B4B-11B8-41FE-825C-1D66BB125102",
+            "rank": "normal"
+          }
+        ],
+        "P6766": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P6766",
+              "hash": "fccd7fb559859e5d4943f197185f60556563afed",
+              "datavalue": {
+                "value": "1360071247",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160393$ACB40B13-8959-4284-BD2B-C7B4AE01140C",
+            "rank": "normal"
+          }
+        ],
+        "P1705": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1705",
+              "hash": "8ebe2719523b4bec41eceb88a109b21f5f44f8db",
+              "datavalue": {
+                "value": {
+                  "text": "Hórnikecy",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P443": [
+                {
+                  "snaktype": "value",
+                  "property": "P443",
+                  "hash": "492ea3ad41696ffb4baf0074d25f4fc9d6e94c34",
+                  "datavalue": {
+                    "value": "Hórnikecy.ogg",
+                    "type": "string"
+                  },
+                  "datatype": "commonsMedia"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P443"
+            ],
+            "id": "Q160393$9648FB80-392E-4E60-AD41-07079179EB9B",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1705",
+              "hash": "0ae52db80a08d84ecf9b9469b328625c60bdb4a9",
+              "datavalue": {
+                "value": {
+                  "text": "Knappenrode",
+                  "language": "de"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "id": "Q160393$1E5774F8-57BA-4793-8E58-D56CBB4DF6B7",
+            "rank": "normal"
+          }
+        ],
+        "P18": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P18",
+              "hash": "ee801ca669dfe82d51b181d8f8a486c1bb6dded6",
+              "datavalue": {
+                "value": "Karl-Marx-Straße 1 Knappenrode HY 1.JPG",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q160393$d11635b5-4924-67f9-9838-409dcc50aa8a",
+            "rank": "normal"
+          }
+        ],
+        "P1082": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "728adeac4fa1725584f915c2475fe0bf91292eb3",
+              "datavalue": {
+                "value": {
+                  "amount": "+705",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "dec5f9078af35f77b6f7ea179623d4552bbb6ce1",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2015-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q160393$fcf10c5f-4f83-dc20-5e76-fd14f74ab554",
+            "rank": "normal"
+          }
+        ],
+        "P1296": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1296",
+              "hash": "cfc73e15cf56ed0a762171a8fb499a12328b1124",
+              "datavalue": {
+                "value": "0461829",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160393$CC175330-3405-46FD-BEB1-FB67EBF1819E",
+            "rank": "normal"
+          }
+        ],
+        "P1766": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1766",
+              "hash": "41f87d1aa132d3281f623ec8a25f2637f6ba07f4",
+              "datavalue": {
+                "value": "Hórnikecy – wjesna tafla.jpg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q160393$4f330cdf-4ad8-dd97-dc16-23fec03a9f99",
+            "rank": "normal"
+          }
+        ],
+        "P2671": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2671",
+              "hash": "9da1d9c6325b5d55e48e9de8b60ad4c0b74034bc",
+              "datavalue": {
+                "value": "/g/121y9ljr",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160393$FC60AD9A-3D05-4DBD-AD72-FA7364D9CEB7",
+            "rank": "normal"
+          }
+        ],
+        "P94": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P94",
+              "hash": "1fcedc106d86420f13583cde2dbfc88c371c23c0",
+              "datavalue": {
+                "value": "Wappen Knappenrode.png",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q160393$5071a6ad-4131-1e25-ba38-c83e2c3b5cbd",
+            "rank": "normal"
+          }
+        ],
+        "P227": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P227",
+              "hash": "d1c83a2e83abbd16e5f47bcc5cdc4949375c4aef",
+              "datavalue": {
+                "value": "7857377-4",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160393$E17E5A15-0D10-4F94-9EB0-E589EA2B1E21",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "ced024eb12b5fe38ed87cb5720ea18f3c54229a9",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "019a50b7de741e0068bde41c9d9955b22a5de47b",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 36578,
+                          "id": "Q36578"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248"
+                ]
+              }
+            ]
+          }
+        ],
+        "P8168": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P8168",
+              "hash": "819998475bb4fccba05923d09ec7e41d36838103",
+              "datavalue": {
+                "value": "Q277578",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160393$70C76F45-D832-4DE2-BEC0-A777F0A7089C",
+            "rank": "normal"
+          }
+        ],
+        "P9957": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P9957",
+              "hash": "92b33c281a2fa65966dad0bcca690ff05b568d3e",
+              "datavalue": {
+                "value": "77540",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160393$3E05B60D-8627-4800-84BE-A4A34F75389B",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P9957",
+              "hash": "e0c04f950cd02b72a9855a26a4f5d2aa2137929c",
+              "datavalue": {
+                "value": "31832",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160393$8728F543-CFF0-47D1-B8D6-0F61F2000FE2",
+            "rank": "normal"
+          }
+        ],
+        "P12385": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P12385",
+              "hash": "511c8be7fab0ac8fa4a7aa64d40d57dd6e3baeb9",
+              "datavalue": {
+                "value": "knappenrode",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160393$64de9979-bf34-4632-bea5-cd2e942fa85f",
+            "rank": "normal"
+          }
+        ],
+        "P2326": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2326",
+              "hash": "1ea03f9ad7fc088c7d61e009ee92360a579dd73e",
+              "datavalue": {
+                "value": "-1809542",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160393$D6A65277-7525-47C3-B087-BFD33BBD7764",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "commonswiki": {
+          "site": "commonswiki",
+          "title": "Category:Knappenrode/Hórnikecy",
+          "badges": []
+        },
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Knappenrode",
+          "badges": []
+        },
+        "hsbwiki": {
+          "site": "hsbwiki",
+          "title": "Hórnikecy",
+          "badges": []
+        },
+        "ruwiki": {
+          "site": "ruwiki",
+          "title": "Кнаппенроде",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

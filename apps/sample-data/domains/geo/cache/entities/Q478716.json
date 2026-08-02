@@ -1,0 +1,541 @@
+{
+  "entities": {
+    "Q478716": {
+      "pageid": 451206,
+      "ns": 0,
+      "title": "Q478716",
+      "lastrevid": 2512009151,
+      "modified": "2026-06-29T23:28:43Z",
+      "type": "item",
+      "id": "Q478716",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Verbandsgemeinde Elbe-Havel-Land"
+        },
+        "pl": {
+          "language": "pl",
+          "value": "Gmina związkowa Elbe-Havel-Land"
+        },
+        "en": {
+          "language": "en",
+          "value": "Elbe-Havel-Land"
+        },
+        "mk": {
+          "language": "mk",
+          "value": "Елба-Хафел-Ланд"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Verbandsgemeinde Elbe-Havel-Land"
+        },
+        "ms": {
+          "language": "ms",
+          "value": "Elbe-Havel-Land"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "Verbandsgemeinde in Sachsen-Anhalt"
+        }
+      },
+      "aliases": {
+        "pl": [
+          {
+            "language": "pl",
+            "value": "Elbe-Havel-Land"
+          }
+        ]
+      },
+      "claims": {
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "ef7247b704f4ec0a7df39e83306bb388fea17d5f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 183,
+                  "id": "Q183"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "q478716$A02B2063-BD56-4D05-B81E-496121AE4E14",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "732ec1c90a6f0694c7db9a71bf09fe7f2b674172",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "9123b0de1cc9c3954366ba797d598e4e1ea4146f",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 10000,
+                          "id": "Q10000"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "747513f97c4ba6966fba173665aea6a952394dda",
+              "datavalue": {
+                "value": {
+                  "latitude": 52.578611111111,
+                  "longitude": 12.039722222222,
+                  "altitude": null,
+                  "precision": 0.00027777777777778,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "q478716$C5DFC308-461A-4D3E-8F5F-B3CDC5C3285A",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 328,
+                          "id": "Q328"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P646": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P646",
+              "hash": "3b7eff4eff866977cfced38b2e9a03b629bd0dd8",
+              "datavalue": {
+                "value": "/m/0d4tcy",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478716$517EB7C8-1F69-4F4B-A5CB-CD32B559F4E5",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "2b00cb481cddcac7623114367489b5c194901c4a",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "a94b740202b097dd33355e0e6c00e54b9395e5e0",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 15241312,
+                          "id": "Q15241312"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P577": [
+                    {
+                      "snaktype": "value",
+                      "property": "P577",
+                      "hash": "fde79ecb015112d2f29229ccc1ec514ed3e71fa2",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2013-10-28T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P577"
+                ]
+              }
+            ]
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "68b641da063c7a716eb1e5a11cfb2cbda1c39ede",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 23006,
+                  "id": "Q23006"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q478716$EB657B0C-B36A-4313-95E8-55DE42A2726B",
+            "rank": "normal"
+          }
+        ],
+        "P227": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P227",
+              "hash": "09641349527d7325f67a528740c15693e662bbab",
+              "datavalue": {
+                "value": "7731974-6",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478716$B2858FBF-CD0B-4D48-8252-9F4ABCD95D0A",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P94": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P94",
+              "hash": "c8729281e766202667f87e5000fb63af6b4e8a08",
+              "datavalue": {
+                "value": "DE-ST 15-0-90-5003 VG Elbe-Havel-Land COA.png",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q478716$85B4B4A8-8786-4723-B24A-2770FCE80001",
+            "rank": "normal"
+          }
+        ],
+        "P242": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P242",
+              "hash": "2d1372bb6f68ffa9b35baecdb2159e06dfb45357",
+              "datavalue": {
+                "value": "Verbandsgemeinde Elbe-Havel-Land in SDL.png",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q478716$71E0DC62-4CB8-4834-8FD4-5C4ADD00F407",
+            "rank": "normal"
+          }
+        ],
+        "P41": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P41",
+              "hash": "18746d3c20479609b13ddfe07ff2dfc525e20dff",
+              "datavalue": {
+                "value": "Flagge VG Elbe-Havel-Land.png",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q478716$A0432681-2A62-446C-95E9-1FE9647E4285",
+            "rank": "normal"
+          }
+        ],
+        "P214": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P214",
+              "hash": "474f781828e1361773f5135d13d1800705c694c0",
+              "datavalue": {
+                "value": "243741558",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478716$4898B127-140B-4992-87EA-12B5D948E9D9",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "ad3713df772ae88af6a7458d084a40ad20b226d6",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "6b7d4330c4aac4caec4ede9de0311ce273f88ecd",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 54919,
+                          "id": "Q54919"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "a00cc299e508357647636e29593b8ca3e534077d",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2015-08-06T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "21848d3f677b8ad93f9c0e8f2a68cdcb2e6dc2c2",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 6057,
+                  "id": "Q6057"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q478716$59d33ff5-40bb-77c0-9ab1-8de68724473b",
+            "rank": "normal"
+          }
+        ],
+        "P856": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P856",
+              "hash": "527d0dfb1615469180e4a9f941f5877b37bae637",
+              "datavalue": {
+                "value": "http://www.elbe-havel-land.de/",
+                "type": "string"
+              },
+              "datatype": "url"
+            },
+            "type": "statement",
+            "id": "Q478716$C354819F-C227-4331-9606-1C88740C892E",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "630a13cb2e0d6c54e5db33c391a84297b20ce546",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "f3e245b72b7bed99f04aa9a5fe6e57a062aff6a1",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Verbandsgemeinde_Elbe-Havel-Land&oldid=191802051",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "857f21d3fad343df0329bc8b21e7a4adfb00d4da",
+              "datavalue": {
+                "value": "Verbandsgemeinde Elbe-Havel-Land",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q478716$322CB49C-B076-444E-8958-74C12C8E6A2E",
+            "rank": "normal"
+          }
+        ],
+        "P1388": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1388",
+              "hash": "8867f12e08be4cce8e19933da5d5056a6ed1e6c3",
+              "datavalue": {
+                "value": "150905052000",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478716$605634C3-B018-4DA7-942E-2E23A79320A7",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "commonswiki": {
+          "site": "commonswiki",
+          "title": "Category:Verbandsgemeinde Elbe-Havel-Land",
+          "badges": []
+        },
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Verbandsgemeinde Elbe-Havel-Land",
+          "badges": []
+        },
+        "enwiki": {
+          "site": "enwiki",
+          "title": "Elbe-Havel-Land",
+          "badges": []
+        },
+        "mkwiki": {
+          "site": "mkwiki",
+          "title": "Елба-Хафел-Ланд",
+          "badges": []
+        },
+        "mswiki": {
+          "site": "mswiki",
+          "title": "Elbe-Havel-Land",
+          "badges": []
+        },
+        "nlwiki": {
+          "site": "nlwiki",
+          "title": "Verbandsgemeinde Elbe-Havel-Land",
+          "badges": []
+        },
+        "plwiki": {
+          "site": "plwiki",
+          "title": "Gmina związkowa Elbe-Havel-Land",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

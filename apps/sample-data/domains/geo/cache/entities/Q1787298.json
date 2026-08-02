@@ -1,0 +1,249 @@
+{
+  "entities": {
+    "Q1787298": {
+      "pageid": 1718883,
+      "ns": 0,
+      "title": "Q1787298",
+      "lastrevid": 1854265369,
+      "modified": "2023-03-17T15:20:05Z",
+      "type": "item",
+      "id": "Q1787298",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Kreis Genthin"
+        },
+        "en": {
+          "language": "en",
+          "value": "Genthin subdistrict"
+        },
+        "cy": {
+          "language": "cy",
+          "value": "Sir Genthin"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "1994 aufgelöster Landkreis in Sachsen-Anhalt"
+        },
+        "en": {
+          "language": "en",
+          "value": "subdistrict of the former GDR"
+        }
+      },
+      "aliases": {
+        "de": [
+          {
+            "language": "de",
+            "value": "Landkreis Genthin"
+          }
+        ]
+      },
+      "claims": {
+        "P36": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P36",
+              "hash": "2f844ae38c171c41685a4019d31e23f31f221806",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 284317,
+                  "id": "Q284317"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787298$c434d60d-45ae-f9e3-6de8-b61c2326e108",
+            "rank": "normal"
+          }
+        ],
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "69134fce674a39f3382130caf84f51e58518fb88",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 16957,
+                  "id": "Q16957"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787298$8413B10C-7594-4CAB-A2B3-DF9974742A05",
+            "rank": "normal"
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "7c87a9d130338f4808157eaf589307f229beb96f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 15849374,
+                  "id": "Q15849374"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787298$AB5FE9F2-9D0F-467F-8253-9E4E3C2FA020",
+            "rank": "normal"
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "49faa92e8f2b0cd2568dcb7ca63979b5a2a7795e",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 48083,
+                  "id": "Q48083"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787298$16AADA1A-6DA2-46CE-ABAA-C4595B7C31D7",
+            "rank": "normal"
+          }
+        ],
+        "P576": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P576",
+              "hash": "26c2a60e862b0b1d63d2cb3a7a22f843da7e1463",
+              "datavalue": {
+                "value": {
+                  "time": "+1994-00-00T00:00:00Z",
+                  "timezone": 0,
+                  "before": 0,
+                  "after": 0,
+                  "precision": 9,
+                  "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                },
+                "type": "time"
+              },
+              "datatype": "time"
+            },
+            "type": "statement",
+            "id": "Q1787298$7C4C4069-1B9A-4A2C-A2F4-66AA4077C6F3",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2671": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2671",
+              "hash": "68ce0425bd8c4c49b2e9e0122e50eb849975848d",
+              "datavalue": {
+                "value": "/g/121rpjw6",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q1787298$273209DE-DFC5-4417-984A-230B203D8B55",
+            "rank": "normal"
+          }
+        ],
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "c50eb557c05ca23649c2c38dbb48a34e2e969c1c",
+              "datavalue": {
+                "value": "Kreis Genthin",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q1787298$a5e79ce4-e484-4b50-bdd8-0d84721f6ee7",
+            "rank": "normal"
+          }
+        ],
+        "P1366": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1366",
+              "hash": "ededcaabbee2596a06a765756e988738082ea6a2",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 6068,
+                  "id": "Q6068"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787298$512879e4-4d19-4262-7674-6ea373308f68",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "commonswiki": {
+          "site": "commonswiki",
+          "title": "Category:Kreis Genthin",
+          "badges": []
+        },
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Kreis Genthin",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

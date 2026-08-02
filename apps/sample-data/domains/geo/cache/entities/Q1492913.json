@@ -1,0 +1,292 @@
+{
+  "entities": {
+    "Q1492913": {
+      "pageid": 1430574,
+      "ns": 0,
+      "title": "Q1492913",
+      "lastrevid": 2452039320,
+      "modified": "2026-01-06T12:27:28Z",
+      "type": "item",
+      "id": "Q1492913",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Kreis Kamenz"
+        },
+        "nb": {
+          "language": "nb",
+          "value": "Kreis Kamenz"
+        },
+        "en": {
+          "language": "en",
+          "value": "Kreis Kamenz"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "Wokrjes Kamjenc"
+        },
+        "cs": {
+          "language": "cs",
+          "value": "okres Kamenec"
+        },
+        "sl": {
+          "language": "sl",
+          "value": "Kreis Kamenz"
+        },
+        "ca": {
+          "language": "ca",
+          "value": "districte de Kamenz"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "Kreis in der DDR"
+        },
+        "en": {
+          "language": "en",
+          "value": "rural district of East Germany"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "wokrjes w NDR"
+        },
+        "cs": {
+          "language": "cs",
+          "value": "okres v Německé demokratické repulice"
+        },
+        "sl": {
+          "language": "sl",
+          "value": "okrožje Nemške demokratične republike"
+        },
+        "ca": {
+          "language": "ca",
+          "value": "districte rural de la RDA"
+        }
+      },
+      "aliases": {
+        "hsb": [
+          {
+            "language": "hsb",
+            "value": "Kamjenski wokrjes"
+          }
+        ],
+        "sl": [
+          {
+            "language": "sl",
+            "value": "Okrožje Kamenz"
+          }
+        ]
+      },
+      "claims": {
+        "P36": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P36",
+              "hash": "56395e2a920076c9a91a6912a763c41c28af44c2",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 81722,
+                  "id": "Q81722"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1492913$985014f2-4a2e-9e6c-71b4-f39262905ea6",
+            "rank": "normal"
+          }
+        ],
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "69134fce674a39f3382130caf84f51e58518fb88",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 16957,
+                  "id": "Q16957"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1492913$605DB477-3D94-4B8E-864D-F64D9C156BC7",
+            "rank": "normal"
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "7c87a9d130338f4808157eaf589307f229beb96f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 15849374,
+                  "id": "Q15849374"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1492913$85F83388-7ABE-49D7-AD81-F2005A01EC81",
+            "rank": "normal"
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "1afc973f7d44f89c3a5da924da874acfe969eac6",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 48050,
+                  "id": "Q48050"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1492913$A8A12845-F3E3-4629-BFC7-682C6E9CA522",
+            "rank": "normal"
+          }
+        ],
+        "P214": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P214",
+              "hash": "e9eca09a63313fd7d74d918ef9fcfdb530ff5b24",
+              "datavalue": {
+                "value": "155502145",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q1492913$86C0EDCE-775A-49A1-A62D-1DE3F199BE47",
+            "rank": "normal"
+          }
+        ],
+        "P2671": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2671",
+              "hash": "f444f29773f75235608159b2a7b3c0ee62a328a5",
+              "datavalue": {
+                "value": "/g/122h5h9r",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q1492913$C942280F-703F-4D99-84F0-4397EC83FCC4",
+            "rank": "normal"
+          }
+        ],
+        "P10832": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P10832",
+              "hash": "b0fd921c17466684f17745199d08c69b3345aa3c",
+              "datavalue": {
+                "value": "E39PBJj8KkdVXG43g6fDH7hPwC",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q1492913$391AEDBB-4AB3-411E-B536-22A71320B5B1",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "7de96a7167bf29180a41532424f8d4500b6fc593",
+                "snaks": {
+                  "P11797": [
+                    {
+                      "snaktype": "value",
+                      "property": "P11797",
+                      "hash": "3b992a8b1d7f5bfbb710fb1b091cc424c4e3e7db",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 54919,
+                          "id": "Q54919"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P214": [
+                    {
+                      "snaktype": "value",
+                      "property": "P214",
+                      "hash": "e9eca09a63313fd7d74d918ef9fcfdb530ff5b24",
+                      "datavalue": {
+                        "value": "155502145",
+                        "type": "string"
+                      },
+                      "datatype": "external-id"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "226552216c7f0c684e2077704cc49ca40ddd87d1",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2024-06-06T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P11797",
+                  "P214",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "sitelinks": {
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Kreis Kamenz",
+          "badges": []
+        },
+        "nowiki": {
+          "site": "nowiki",
+          "title": "Kreis Kamenz",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

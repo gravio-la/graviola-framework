@@ -1,0 +1,762 @@
+{
+  "entities": {
+    "Q24174": {
+      "pageid": 27582,
+      "ns": 0,
+      "title": "Q24174",
+      "lastrevid": 2501832460,
+      "modified": "2026-06-04T09:40:14Z",
+      "type": "item",
+      "id": "Q24174",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Regierungsbezirk Dresden"
+        },
+        "da": {
+          "language": "da",
+          "value": "Regierungsbezirk Dresden"
+        },
+        "eo": {
+          "language": "eo",
+          "value": "Distriktaro Dresden"
+        },
+        "es": {
+          "language": "es",
+          "value": "Dresde"
+        },
+        "et": {
+          "language": "et",
+          "value": "Dresdeni ringkond"
+        },
+        "fi": {
+          "language": "fi",
+          "value": "Dresdenin hallintopiiri"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "ドレスデン県"
+        },
+        "ko": {
+          "language": "ko",
+          "value": "드레스덴현"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Regierungsbezirk Dresden"
+        },
+        "pl": {
+          "language": "pl",
+          "value": "Rejencja Drezno"
+        },
+        "pt": {
+          "language": "pt",
+          "value": "Dresden"
+        },
+        "ro": {
+          "language": "ro",
+          "value": "Dresden"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "Дрезден"
+        },
+        "zh": {
+          "language": "zh",
+          "value": "德累斯顿行政区"
+        },
+        "it": {
+          "language": "it",
+          "value": "Regione di Dresda"
+        },
+        "en": {
+          "language": "en",
+          "value": "Dresden Government Region"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "Regierungsbezirk Dresden"
+        },
+        "uk": {
+          "language": "uk",
+          "value": "Адміністративний округ Дрезден"
+        },
+        "ar": {
+          "language": "ar",
+          "value": "محافظة دريسدن"
+        },
+        "nds": {
+          "language": "nds",
+          "value": "Regerungsbezirk  Dresden"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "Knježerstwowy wobwod Drježdźany"
+        },
+        "sl": {
+          "language": "sl",
+          "value": "Regierungsbezirk Dresden"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "ehemaliger Regierungsbezirk in Sachsen, Deutschland"
+        },
+        "en": {
+          "language": "en",
+          "value": "government district of Dresden in Germany"
+        },
+        "es": {
+          "language": "es",
+          "value": "región administrativa del estado de Sajonia"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "ドイツの県"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "административный округ Германии (1991-2008)"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "něhdyši knježerstwowy wobwod w Sakskej"
+        },
+        "sl": {
+          "language": "sl",
+          "value": "nekdanji vladni okraj Saške (Nemčija)"
+        },
+        "zh": {
+          "language": "zh",
+          "value": "德国萨克森州曾经的行政区"
+        }
+      },
+      "aliases": {
+        "en": [
+          {
+            "language": "en",
+            "value": "Regierungsbezirk Dresden"
+          }
+        ],
+        "ja": [
+          {
+            "language": "ja",
+            "value": "ドレスデン行政管区"
+          }
+        ],
+        "ru": [
+          {
+            "language": "ru",
+            "value": "Административный округ Дрезден"
+          }
+        ],
+        "sl": [
+          {
+            "language": "sl",
+            "value": "Vladni okraj Dresden"
+          }
+        ]
+      },
+      "claims": {
+        "P1036": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1036",
+              "hash": "d5e9a7f7a82b4a75020d2f7ef78c66105bfa3a9f",
+              "datavalue": {
+                "value": "2--43214",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q24174$19ab590b-4d15-6e46-6ce3-55c26ade2807",
+            "rank": "normal"
+          }
+        ],
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "ef7247b704f4ec0a7df39e83306bb388fea17d5f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 183,
+                  "id": "Q183"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "q24174$3DCEF9DD-19F7-44A6-B558-102B4934FA32",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "732ec1c90a6f0694c7db9a71bf09fe7f2b674172",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "9123b0de1cc9c3954366ba797d598e4e1ea4146f",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 10000,
+                          "id": "Q10000"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "742010a558d2f2b74850ca2fbc9f1afeca1ae918",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1202,
+                  "id": "Q1202"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q24174$6da2bdaf-4cd1-54dc-dc75-2b054ebe934a",
+            "rank": "normal"
+          }
+        ],
+        "P36": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P36",
+              "hash": "cf7f846a2c8a9919c98e9506d11536413ac1269c",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1731,
+                  "id": "Q1731"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q24174$a0f80747-4e22-4355-70fd-32f9b4450b46",
+            "rank": "normal"
+          }
+        ],
+        "P571": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P571",
+              "hash": "5f1d0011375f43e2b876731c067e1e84273c63ee",
+              "datavalue": {
+                "value": {
+                  "time": "+1991-01-01T00:00:00Z",
+                  "timezone": 0,
+                  "before": 0,
+                  "after": 0,
+                  "precision": 11,
+                  "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                },
+                "type": "time"
+              },
+              "datatype": "time"
+            },
+            "type": "statement",
+            "id": "Q24174$765c0777-4631-fb75-bd53-b2267d3a9fe6",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "50ca1097801d21cb7ba1c871f5959444f02f4111",
+                "snaks": {
+                  "P1065": [
+                    {
+                      "snaktype": "value",
+                      "property": "P1065",
+                      "hash": "1f6286b6b0ac3035a9202475356b5a1eefdaa630",
+                      "datavalue": {
+                        "value": "https://web.archive.org/web/20110719081837/http://www.ldc.sachsen.de/519.htm",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "15094034f1e1170c4eb96b3f7f3a9fd90f4d49c0",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2015-10-01T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P1065",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P576": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P576",
+              "hash": "71bb0b31f2ae3f597106900c9362beb30fc524e8",
+              "datavalue": {
+                "value": {
+                  "time": "+2008-08-01T00:00:00Z",
+                  "timezone": 0,
+                  "before": 0,
+                  "after": 0,
+                  "precision": 11,
+                  "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                },
+                "type": "time"
+              },
+              "datatype": "time"
+            },
+            "type": "statement",
+            "id": "Q24174$3bfbea5a-43ae-05ff-f955-8516a34293c5",
+            "rank": "normal"
+          }
+        ],
+        "P156": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P156",
+              "hash": "709b8ea512749182122662cc4f7948f27408f2c7",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 24221,
+                  "id": "Q24221"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q24174$d692bfbf-4ed5-6003-fbbe-6017c6ec9351",
+            "rank": "normal"
+          }
+        ],
+        "P6": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P6",
+              "hash": "d0d21299a3ea8e1de80a535d9ffa7039594c5ee1",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1604302,
+                  "id": "Q1604302"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "3fd26945c26492f29d3f80beec1cb706f0f0f3f3",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1991-01-01T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "2647e0dd1c2bca1a4eaeb529b718b2ea3aa6a4c7",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2000-01-01T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580",
+              "P582"
+            ],
+            "id": "Q24174$243494f2-4d9d-bb00-6a8b-b853408d4053",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P6",
+              "hash": "3fb01b5f5dfa7f26b6f31193dbe4a8651c8d7114",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1606830,
+                  "id": "Q1606830"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "4a33b6811279a1eae466dd4b8376541d89ddc7d3",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2000-01-01T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "aba3db931918dc4a06c29848b5caa791ddd656f9",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2008-08-01T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580",
+              "P582"
+            ],
+            "id": "Q24174$bedcb101-4993-6796-e59d-b6bd0df153ef",
+            "rank": "normal"
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "2ff5cf4682093c6660ad77071e219166793afbaa",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 22721,
+                  "id": "Q22721"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q24174$6A7C1423-F0FB-4AAE-9F51-3553391D468F",
+            "rank": "normal"
+          }
+        ],
+        "P155": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P155",
+              "hash": "5ae0ec2ecbee1e51fa3e0b36c41a9a8ed161e81b",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 15621852,
+                  "id": "Q15621852"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q24174$feb818b1-433c-a2f0-7e0d-8d768472ae3a",
+            "rank": "normal"
+          }
+        ],
+        "P242": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P242",
+              "hash": "10bf3b9db88c19f5958b272b0edd15d006a631c1",
+              "datavalue": {
+                "value": "Sachsen rbdresden.png",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q24174$226c32e6-4735-dead-e372-3ee88ebe5481",
+            "rank": "normal"
+          }
+        ],
+        "P138": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P138",
+              "hash": "a9bc2b224264071a57369ba38e6cde8ef6a5debd",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1731,
+                  "id": "Q1731"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q24174$DF6DA231-862A-43AF-B59C-98EE4CA80BDC",
+            "rank": "normal"
+          }
+        ],
+        "P646": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P646",
+              "hash": "cb793d0cf2f4e7ee2b83a4e62c7ea238883799e0",
+              "datavalue": {
+                "value": "/m/010x9nz6",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q24174$BE103002-6806-469A-94B7-E81E94AE04CA",
+            "rank": "normal"
+          }
+        ],
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "e8df2a7eda815cd56c689655fad3ca622c2633bd",
+              "datavalue": {
+                "value": "Regierungsbezirk Dresden",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q24174$78bf1c4b-49fb-c287-90f6-299128639500",
+            "rank": "normal"
+          }
+        ],
+        "P10077": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P10077",
+              "hash": "6da02d7292cddfb39b5e6f9dc7443ae312d91d12",
+              "datavalue": {
+                "value": "geografico/1202248",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q24174$122a1f89-4f31-356f-e810-55ab7832db57",
+            "rank": "normal"
+          }
+        ],
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "b2cd243710374030368334b324c898a803974255",
+              "datavalue": {
+                "value": {
+                  "latitude": 51.09,
+                  "longitude": 14.03,
+                  "altitude": null,
+                  "precision": 0.01,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "Q24174$a3ef97e0-46b4-2c71-82d7-502154dbc445",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "commonswiki": {
+          "site": "commonswiki",
+          "title": "Category:Regierungsbezirk Dresden",
+          "badges": []
+        },
+        "dawiki": {
+          "site": "dawiki",
+          "title": "Regierungsbezirk Dresden",
+          "badges": []
+        },
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Regierungsbezirk Dresden",
+          "badges": []
+        },
+        "enwiki": {
+          "site": "enwiki",
+          "title": "Dresden Government Region",
+          "badges": []
+        },
+        "eowiki": {
+          "site": "eowiki",
+          "title": "Distriktaro Dresden",
+          "badges": []
+        },
+        "eswiki": {
+          "site": "eswiki",
+          "title": "Región de Dresde",
+          "badges": []
+        },
+        "etwiki": {
+          "site": "etwiki",
+          "title": "Dresdeni ringkond",
+          "badges": []
+        },
+        "fiwiki": {
+          "site": "fiwiki",
+          "title": "Dresdenin hallintopiiri",
+          "badges": []
+        },
+        "jawiki": {
+          "site": "jawiki",
+          "title": "ドレスデン行政管区",
+          "badges": []
+        },
+        "kowiki": {
+          "site": "kowiki",
+          "title": "드레스덴현",
+          "badges": []
+        },
+        "nlwiki": {
+          "site": "nlwiki",
+          "title": "Regierungsbezirk Dresden",
+          "badges": []
+        },
+        "plwiki": {
+          "site": "plwiki",
+          "title": "Rejencja Drezno",
+          "badges": []
+        },
+        "plwikivoyage": {
+          "site": "plwikivoyage",
+          "title": "Rejencja Drezno",
+          "badges": []
+        },
+        "ptwiki": {
+          "site": "ptwiki",
+          "title": "Dresden (região)",
+          "badges": []
+        },
+        "rowiki": {
+          "site": "rowiki",
+          "title": "Dresden (regiune)",
+          "badges": []
+        },
+        "ruwiki": {
+          "site": "ruwiki",
+          "title": "Дрезден (административный округ)",
+          "badges": []
+        },
+        "simplewiki": {
+          "site": "simplewiki",
+          "title": "Dresden Government Region",
+          "badges": []
+        },
+        "ukwiki": {
+          "site": "ukwiki",
+          "title": "Адміністративний округ Дрезден",
+          "badges": []
+        },
+        "zhwiki": {
+          "site": "zhwiki",
+          "title": "德累斯顿行政区",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

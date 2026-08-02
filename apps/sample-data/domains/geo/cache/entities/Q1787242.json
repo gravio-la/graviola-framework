@@ -1,0 +1,561 @@
+{
+  "entities": {
+    "Q1787242": {
+      "pageid": 1718827,
+      "ns": 0,
+      "title": "Q1787242",
+      "lastrevid": 2376742533,
+      "modified": "2025-07-09T11:51:35Z",
+      "type": "item",
+      "id": "Q1787242",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Kreis Burg"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Kreis Burg"
+        },
+        "en": {
+          "language": "en",
+          "value": "Burg (Germany : Landkreis)"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "1994 aufgelöster Landkreis in Sachsen-Anhalt"
+        }
+      },
+      "aliases": {
+        "de": [
+          {
+            "language": "de",
+            "value": "Landkreis Burg"
+          }
+        ]
+      },
+      "claims": {
+        "P36": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P36",
+              "hash": "28633a0a622c20243a1b6c9195357e30d13db5e1",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 525632,
+                  "id": "Q525632"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787242$bc698541-4e0e-ee41-7d1e-7471e4cd80a2",
+            "rank": "normal"
+          }
+        ],
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "69134fce674a39f3382130caf84f51e58518fb88",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 16957,
+                  "id": "Q16957"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787242$18D9D5F6-8AC2-4AE1-BCD4-3D7F3D07A33D",
+            "rank": "normal"
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "7c87a9d130338f4808157eaf589307f229beb96f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 15849374,
+                  "id": "Q15849374"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787242$8C8486F6-A9E0-4595-87B9-E31D3C14BCD0",
+            "rank": "normal"
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "49faa92e8f2b0cd2568dcb7ca63979b5a2a7795e",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 48083,
+                  "id": "Q48083"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787242$A84F10FC-EF25-4D9D-B8D1-E51AB35D97E8",
+            "rank": "normal"
+          }
+        ],
+        "P576": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P576",
+              "hash": "26c2a60e862b0b1d63d2cb3a7a22f843da7e1463",
+              "datavalue": {
+                "value": {
+                  "time": "+1994-00-00T00:00:00Z",
+                  "timezone": 0,
+                  "before": 0,
+                  "after": 0,
+                  "precision": 9,
+                  "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                },
+                "type": "time"
+              },
+              "datatype": "time"
+            },
+            "type": "statement",
+            "id": "Q1787242$36768257-F3FB-4F91-8E38-99FA12815646",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P227": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P227",
+              "hash": "c977d39d379612f5026b8271befbfb5a5dd65251",
+              "datavalue": {
+                "value": "6116837-3",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q1787242$C5F3A719-0B1C-4852-A964-FA4B9BA25578",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "6311d75a1a3a6f1988465bf2b4b33c7ee2b54556",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "0868561c7536bcbc45c269fd0b51e0c665589c47",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Kreis_Burg&oldid=182301064",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P214": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P214",
+              "hash": "4f1120b54a7cbd8f27926b6b7f175fe043faed6a",
+              "datavalue": {
+                "value": "158359680",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q1787242$CD5A88AA-6BC2-4F1B-92C6-717AE66017C8",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "6311d75a1a3a6f1988465bf2b4b33c7ee2b54556",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "0868561c7536bcbc45c269fd0b51e0c665589c47",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Kreis_Burg&oldid=182301064",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P244": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P244",
+              "hash": "3a648dbc98a090c4e4b4f3e5d5a92fa2b41b7bca",
+              "datavalue": {
+                "value": "n86092323",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q1787242$7BACCE8D-F89F-462D-82D7-0EC4D118EEEB",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "14fa5898ac764e0660517aa07ea0bbba505f262b",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "6b7d4330c4aac4caec4ede9de0311ce273f88ecd",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 54919,
+                          "id": "Q54919"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "e0d08f96012770600b942d5e8563b2a3499cba8e",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2019-03-06T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2671": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2671",
+              "hash": "a70862d1176e346d5c4248bb15e30b0f2db456e3",
+              "datavalue": {
+                "value": "/g/12215t42",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q1787242$9DAB0E8E-8A41-4431-9846-9AE1E5228196",
+            "rank": "normal"
+          }
+        ],
+        "P8189": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P8189",
+              "hash": "2ef3bc442328d1cbf3e9565a184843f8101c5742",
+              "datavalue": {
+                "value": "987007562439405171",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q1787242$7EF96651-A35D-4BED-BFC9-B36F0A1798DE",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "ecb7a39cf436eb1fba419853af168ef9f2ba1dab",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "a03bb6ffe37be9554492f4eea5bd18afcb57df19",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 106509962,
+                          "id": "Q106509962"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248"
+                ]
+              }
+            ]
+          }
+        ],
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "e1fe3dec4811d92099d4a6659cc47a6f6e4fe10a",
+              "datavalue": {
+                "value": "Kreis Burg",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q1787242$4ca9d114-0145-4544-9244-19ccf3f26799",
+            "rank": "normal"
+          }
+        ],
+        "P1366": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1366",
+              "hash": "ededcaabbee2596a06a765756e988738082ea6a2",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 6068,
+                  "id": "Q6068"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787242$04964c27-4e2a-ed3d-049e-d8d883558852",
+            "rank": "normal"
+          }
+        ],
+        "P10832": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P10832",
+              "hash": "1ffc0393ebde46f1bad648979263e2d1f70f207a",
+              "datavalue": {
+                "value": "E39PBJqw8HtB6Rq4FdvrQMR7pP",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q1787242$0322C399-B373-439D-8B3B-EED1C4368953",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "cd9297473367fee20b41299b341b40eeb5a44282",
+                "snaks": {
+                  "P11797": [
+                    {
+                      "snaktype": "value",
+                      "property": "P11797",
+                      "hash": "ebc61ebee105944aa63ee48264c820fab36c5571",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 13219454,
+                          "id": "Q13219454"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P244": [
+                    {
+                      "snaktype": "value",
+                      "property": "P244",
+                      "hash": "3a648dbc98a090c4e4b4f3e5d5a92fa2b41b7bca",
+                      "datavalue": {
+                        "value": "n86092323",
+                        "type": "string"
+                      },
+                      "datatype": "external-id"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "9845dfd2f2550119a1e0e681e61c3860545e06a6",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2024-04-19T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P11797",
+                  "P244",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P13591": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P13591",
+              "hash": "d8e0cddd2f2d9198cf927dfe9fcf28df89b5c904",
+              "datavalue": {
+                "value": "place/20300053-e8ba-4330-808d-421afd1276ac",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q1787242$B75284C9-401E-4561-AE67-11304DEB16F9",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "commonswiki": {
+          "site": "commonswiki",
+          "title": "Category:Kreis Burg",
+          "badges": []
+        },
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Kreis Burg",
+          "badges": []
+        },
+        "nlwiki": {
+          "site": "nlwiki",
+          "title": "Kreis Burg",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

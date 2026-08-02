@@ -1,0 +1,604 @@
+{
+  "entities": {
+    "Q51751338": {
+      "pageid": 52663996,
+      "ns": 0,
+      "title": "Q51751338",
+      "lastrevid": 2512572663,
+      "modified": "2026-07-01T10:16:57Z",
+      "type": "item",
+      "id": "Q51751338",
+      "labels": {
+        "en": {
+          "language": "en",
+          "value": "Schönefeld"
+        },
+        "it": {
+          "language": "it",
+          "value": "Schönefeld"
+        },
+        "de": {
+          "language": "de",
+          "value": "Schönefeld"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Schönefeld"
+        },
+        "ca": {
+          "language": "ca",
+          "value": "Schönefeld"
+        },
+        "zh": {
+          "language": "zh",
+          "value": "舍讷费尔德"
+        },
+        "nb": {
+          "language": "nb",
+          "value": "Schönefeld"
+        },
+        "lld": {
+          "language": "lld",
+          "value": "Schönefeld"
+        },
+        "zh-hant": {
+          "language": "zh-hant",
+          "value": "捨讷费尔德"
+        },
+        "ga": {
+          "language": "ga",
+          "value": "Schönefeld"
+        }
+      },
+      "descriptions": {
+        "en": {
+          "language": "en",
+          "value": "village in the German municipality of Nuthe-Urstromtal"
+        },
+        "it": {
+          "language": "it",
+          "value": "località (ortsteil) nel comune tedesco di Nuthe-Urstromtal"
+        },
+        "de": {
+          "language": "de",
+          "value": "Ortsteil der Gemeinde Nuthe-Urstromtal"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "ortsteil in Nuthe-Urstromtal, Duitsland"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "établissement humain en Allemagne"
+        },
+        "ar": {
+          "language": "ar",
+          "value": "بلدية في ألمانيا"
+        },
+        "lld": {
+          "language": "lld",
+          "value": "chemun de la Germania"
+        },
+        "tr": {
+          "language": "tr",
+          "value": "Nuthe-Urstromtal, Almanya'da köy"
+        },
+        "ary": {
+          "language": "ary",
+          "value": "دوّار ف ألمانيا"
+        },
+        "ig": {
+          "language": "ig",
+          "value": "obodo dị na  German Nuthe-Urstromtal"
+        },
+        "hi": {
+          "language": "hi",
+          "value": "जर्मनी का एक गाँव"
+        }
+      },
+      "aliases": {
+        "en": [
+          {
+            "language": "en",
+            "value": "Schonefeld"
+          },
+          {
+            "language": "en",
+            "value": "Schoenefeld"
+          }
+        ],
+        "it": [
+          {
+            "language": "it",
+            "value": "Schonefeld"
+          },
+          {
+            "language": "it",
+            "value": "Schoenefeld"
+          }
+        ],
+        "de": [
+          {
+            "language": "de",
+            "value": "Schonefeld"
+          },
+          {
+            "language": "de",
+            "value": "Schoenefeld"
+          }
+        ]
+      },
+      "claims": {
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "0822324dd76b90eef8eee5e0cf38d893013ccdf3",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 253019,
+                  "id": "Q253019"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "0aeab9e143c5db97d70edf13eadfbcd2920bb5db",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1993-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580"
+            ],
+            "id": "Q51751338$7435ab02-410f-3b48-b613-98273724a00f",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "4e6beb54b615d48c5239f20931f0d68409834ac2",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 262166,
+                  "id": "Q262166"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "6f4cd978fcd9a6b8d3abc927003eb785a3030bf9",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1993-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P582"
+            ],
+            "id": "Q51751338$eaa75cd0-45a3-e1cb-6f00-ec32992b87a4",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "5234088afa2cb8dd6b2b0c2f713eff1c61f34067",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 532,
+                  "id": "Q532"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q51751338$3bd4677f-46d2-d538-f2c2-faa70785bb7b",
+            "rank": "normal"
+          }
+        ],
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "ef7247b704f4ec0a7df39e83306bb388fea17d5f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 183,
+                  "id": "Q183"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q51751338$f58c9cb1-4092-0235-a84f-83fa23f278d4",
+            "rank": "normal"
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "7ca87ceb0a341409199489db3881266dffc144f8",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 622139,
+                  "id": "Q622139"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q51751338$b827975b-47a3-773a-b24c-dca8560197a4",
+            "rank": "normal"
+          }
+        ],
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "c6b7bb862f656a5af38baf5269abd132c3a5aec3",
+              "datavalue": {
+                "value": {
+                  "latitude": 52.079822,
+                  "longitude": 13.324356,
+                  "altitude": null,
+                  "precision": 0.000001,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "Q51751338$a292ef1e-4e8d-ecae-ea00-7a9e8adb3c51",
+            "rank": "normal"
+          }
+        ],
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "f2aa4ef90822267fba92304bc611f06b2d7bc093",
+              "datavalue": {
+                "value": "Schönefeld (Nuthe-Urstromtal)",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q51751338$b81e2b51-4b08-eb40-dee9-769b5b858eff",
+            "rank": "normal"
+          }
+        ],
+        "P281": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P281",
+              "hash": "7b86c08846be37697e0148c3ae39edb09f6c4c48",
+              "datavalue": {
+                "value": "14947",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q51751338$c33f390f-4c6d-1d95-f7cf-1d3ce5e1cc2f",
+            "rank": "normal"
+          }
+        ],
+        "P2046": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2046",
+              "hash": "adf0bb28078b575a809392be593cd9b233ee1cf4",
+              "datavalue": {
+                "value": {
+                  "amount": "+10.80",
+                  "unit": "http://www.wikidata.org/entity/Q712226"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "id": "Q51751338$7b75f84f-4ad5-56ca-5ad9-5531ce8a7e3b",
+            "rank": "normal"
+          }
+        ],
+        "P1082": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "dbc84f05e2b5035322fe5d60eb0e745973498963",
+              "datavalue": {
+                "value": {
+                  "amount": "+354",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "id": "Q51751338$9a488897-45c7-1bbb-86bb-e3548e0b5764",
+            "rank": "normal"
+          }
+        ],
+        "P473": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P473",
+              "hash": "94dfcae4af36d2dda323c9bf169d3b08c038a023",
+              "datavalue": {
+                "value": "03371",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q51751338$d7bf72a6-418e-8bde-171d-fad71a650e24",
+            "rank": "normal"
+          }
+        ],
+        "P910": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P910",
+              "hash": "45b38f46e29ffd2a48ff0f5a96b873720fccecac",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 51751624,
+                  "id": "Q51751624"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q51751338$6ddd55d3-43d9-c8dd-8a77-a3eb63b6d7e3",
+            "rank": "normal"
+          }
+        ],
+        "P395": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P395",
+              "hash": "029fcdd13d895c8c9373e451ffd5c784584cf3cd",
+              "datavalue": {
+                "value": "TF",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q51751338$288C64B5-8B13-48A0-8922-60F7D0557057",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "f55a048677d61f25653ce61876bb7e2d29041b43",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "5a343e7e758a4282a01316d3e959b6e653b767fc",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 11920,
+                          "id": "Q11920"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "75ee4c583eea64cc2548f32f050e1f6a3e465dec",
+                      "datavalue": {
+                        "value": "https://it.wikipedia.org/w/index.php?title=Schönefeld_(Nuthe-Urstromtal)&oldid=96556796",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1464": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1464",
+              "hash": "1716d94ddbdb0296d3483cbd33c1bee088ae12b0",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 60903824,
+                  "id": "Q60903824"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q51751338$74a22311-44c9-5111-bbf2-599d76beb5e6",
+            "rank": "normal"
+          }
+        ],
+        "P18": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P18",
+              "hash": "377acc74b51e849cf4e0e2902e1b85bbc3e4b6e6",
+              "datavalue": {
+                "value": "Nuthe-Urstromtal Schönefeld Dorfanger.jpg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q51751338$6171FC3F-7265-4820-BB21-18A1FA4F2495",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "38defc4fc933f61aa9ddf12026f5222d6c85cb94",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "ac3f45af04a1408c276500dcb6602be4ec4c9abc",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Schönefeld_(Nuthe-Urstromtal)&oldid=196595815",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2671": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2671",
+              "hash": "0878e2aa41709329b6f6ca71a605e59f1e893fe7",
+              "datavalue": {
+                "value": "/g/11gh2pzhf7",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q51751338$1D446C96-A3A3-48C0-B092-E503CE594094",
+            "rank": "normal"
+          }
+        ],
+        "P8168": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P8168",
+              "hash": "4449cf04082ac83d0186bf784f71367c0c7a1dfa",
+              "datavalue": {
+                "value": "Q280800",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q51751338$F042549C-20B8-4EDF-8CC6-FC17A03BD819",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Schönefeld (Nuthe-Urstromtal)",
+          "badges": []
+        },
+        "itwiki": {
+          "site": "itwiki",
+          "title": "Schönefeld (Nuthe-Urstromtal)",
+          "badges": []
+        },
+        "lldwiki": {
+          "site": "lldwiki",
+          "title": "Schönefeld",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

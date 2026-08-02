@@ -32,6 +32,7 @@
     "dev:api": "turbo run dev:api",
     "dev:testapp": "turbo run dev --filter='./apps/testapp'",
     "dev:storybook": "turbo run storybook --filter='./apps/storybook'",
+    "sample:geo": "bun run --filter @graviola/sample-data generate:geo",
     "dev:packages": "turbo run dev --parallel --filter='./packages/*'",
     "dev:form-renderer": "turbo run dev --parallel --filter='./packages/form-renderer/*'",
     "test": "turbo run test",

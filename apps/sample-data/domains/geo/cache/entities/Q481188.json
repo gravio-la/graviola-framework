@@ -1,0 +1,499 @@
+{
+  "entities": {
+    "Q481188": {
+      "pageid": 453258,
+      "ns": 0,
+      "title": "Q481188",
+      "lastrevid": 2317794968,
+      "modified": "2025-02-27T17:04:58Z",
+      "type": "item",
+      "id": "Q481188",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Amtshauptmannschaft Bautzen"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "Amtshauptmannschaft Bautzen"
+        },
+        "en": {
+          "language": "en",
+          "value": "Amtshauptmannschaft Bautzen"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "Hamtske hejtmanstwo Budyšin"
+        }
+      },
+      "descriptions": {
+        "hsb": {
+          "language": "hsb",
+          "value": "historiska zarjadniska jednotka w Hornjej Łužicy"
+        },
+        "de": {
+          "language": "de",
+          "value": "historische Verwaltungseinheit in der Oberlausitz"
+        },
+        "en": {
+          "language": "en",
+          "value": "administrative territorial entity in Upper Lusatia"
+        }
+      },
+      "aliases": {},
+      "claims": {
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "257203192e77804f3241af131fa81b6ffd2c891a",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1787682,
+                  "id": "Q1787682"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q481188$209B5E87-7D17-46DC-AD25-73A5A32907CD",
+            "rank": "normal"
+          }
+        ],
+        "P571": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P571",
+              "hash": "ac6c7d9c3e4cdcbe292eef82f67efaf0b947b74e",
+              "datavalue": {
+                "value": {
+                  "time": "+1835-00-00T00:00:00Z",
+                  "timezone": 0,
+                  "before": 0,
+                  "after": 0,
+                  "precision": 9,
+                  "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                },
+                "type": "time"
+              },
+              "datatype": "time"
+            },
+            "type": "statement",
+            "id": "Q481188$2E7EA3E7-1DD1-4A0A-B4B6-A9D8C34BC90D",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "a589c2f6a83fe0e8b72c4941ccccb4b9d55527f8",
+              "datavalue": {
+                "value": "Amtshauptmannschaft Bautzen",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q481188$01670847-4408-437F-8E63-99CC0C4A3B0D",
+            "rank": "normal"
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "511970db8880a85bf8800246027d061008c53d74",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 481184,
+                  "id": "Q481184"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q481188$E09587BB-0181-4333-82FB-EEE3F7D1140B",
+            "rank": "normal"
+          }
+        ],
+        "P214": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P214",
+              "hash": "0ad9879b2632269ead8e04f5fbc0c603368d6a19",
+              "datavalue": {
+                "value": "136931396",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q481188$2B63F61D-FE90-4167-8CA6-46C32625AACE",
+            "rank": "normal"
+          }
+        ],
+        "P2671": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2671",
+              "hash": "1c9cb7496a66983cfce94346b7043f531d1538a8",
+              "datavalue": {
+                "value": "/g/122qm696",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q481188$6BB5DA98-F732-487B-9A0D-A3C319BC6F86",
+            "rank": "normal"
+          }
+        ],
+        "P242": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P242",
+              "hash": "722037d30db146611a3a89f3c0ace7810e2e0485",
+              "datavalue": {
+                "value": "AHS Bautzen.jpg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P2096": [
+                {
+                  "snaktype": "value",
+                  "property": "P2096",
+                  "hash": "b920697e6a7bfa560487bb85b23ec19b0e5b4b3c",
+                  "datavalue": {
+                    "value": {
+                      "text": "Lage der Amtshauptmannschaft Bautzen 1905",
+                      "language": "de"
+                    },
+                    "type": "monolingualtext"
+                  },
+                  "datatype": "monolingualtext"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P2096"
+            ],
+            "id": "Q481188$a7e52cc6-4585-c48c-151f-a3bc763f2756",
+            "rank": "normal"
+          }
+        ],
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "b9436f08a98f2900079d2a9f5e179344f2a62b07",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 153015,
+                  "id": "Q153015"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q481188$0d55344f-4883-0929-f154-1f7414bfe857",
+            "rank": "normal"
+          }
+        ],
+        "P973": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P973",
+              "hash": "94c076df45c15fe6c84474070070a5e62e19d7a0",
+              "datavalue": {
+                "value": "https://hov.isgv.de/verwaltung/Amtshauptmannschaft_Bautzen",
+                "type": "string"
+              },
+              "datatype": "url"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P407": [
+                {
+                  "snaktype": "value",
+                  "property": "P407",
+                  "hash": "46bfd327b830f66f7061ea92d1be430c135fa91f",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 188,
+                      "id": "Q188"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P407"
+            ],
+            "id": "Q481188$add5af6b-4e2d-8766-b479-ec6fd5d23dab",
+            "rank": "normal"
+          }
+        ],
+        "P1343": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1343",
+              "hash": "760f1f2bfb453bdeb290df1cc8877e335fb16ac1",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 17024175,
+                  "id": "Q17024175"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q481188$0a358152-41a6-5137-451c-647ef0b91a76",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "febae09975f708337bc5ed74e2af3d83be4b9caa",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "b419229fafff4d91385a131c31dfa3207380d911",
+                      "datavalue": {
+                        "value": "https://hov.isgv.de/verwaltung/Amtshauptmannschaft_Bautzen",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854"
+                ]
+              }
+            ]
+          }
+        ],
+        "P227": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P227",
+              "hash": "514d1bc54436c2a25a14b19d7e7ed15291becef1",
+              "datavalue": {
+                "value": "5320448-7",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q481188$8fe107af-4e45-9e2c-6a96-faccb4bfa27c",
+            "rank": "normal"
+          }
+        ],
+        "P10832": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P10832",
+              "hash": "a1159a54a37fa3c0578c5d969fe74d183ebf55e0",
+              "datavalue": {
+                "value": "E39PBJh4vkqHqCjMKQ73hqyKh3",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q481188$427367D3-DD8B-4194-B6CC-0ED3FEB150D8",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "c04d8b8002d0cd67159947e227fe939fa2575116",
+                "snaks": {
+                  "P11797": [
+                    {
+                      "snaktype": "value",
+                      "property": "P11797",
+                      "hash": "3b992a8b1d7f5bfbb710fb1b091cc424c4e3e7db",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 54919,
+                          "id": "Q54919"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P214": [
+                    {
+                      "snaktype": "value",
+                      "property": "P214",
+                      "hash": "0ad9879b2632269ead8e04f5fbc0c603368d6a19",
+                      "datavalue": {
+                        "value": "136931396",
+                        "type": "string"
+                      },
+                      "datatype": "external-id"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "37012f06242d935d14d753b9830aa88ca7fc1b51",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2024-06-05T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P11797",
+                  "P214",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P8168": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P8168",
+              "hash": "c5e4134c41caa06a3b7a0792cc8ece7f22c59164",
+              "datavalue": {
+                "value": "Q1195212",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q481188$858E92C9-5F03-45A2-8C71-0F0732B30CF7",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "26daa281c09748bd72cce8278495583fec646366",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "e4afc4ad60f2160201385d29d076e0794f815f1e",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 90405608,
+                          "id": "Q90405608"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "93333ceb673f26911f7a533c3d35e00549519ff7",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2025-02-27T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "sitelinks": {
+        "commonswiki": {
+          "site": "commonswiki",
+          "title": "Category:Amtshauptmannschaft Bautzen",
+          "badges": []
+        },
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Amtshauptmannschaft Bautzen",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

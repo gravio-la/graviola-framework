@@ -1,0 +1,930 @@
+{
+  "entities": {
+    "Q20225": {
+      "pageid": 23506,
+      "ns": 0,
+      "title": "Q20225",
+      "lastrevid": 2516637822,
+      "modified": "2026-07-12T13:47:21Z",
+      "type": "item",
+      "id": "Q20225",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Landkreis Bautzen"
+        },
+        "eo": {
+          "language": "eo",
+          "value": "Distrikto Bautzen"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "arrondissement de Bautzen"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Bautzen"
+        },
+        "pl": {
+          "language": "pl",
+          "value": "Powiat Budziszyn"
+        },
+        "en": {
+          "language": "en",
+          "value": "Bautzen District"
+        },
+        "es": {
+          "language": "es",
+          "value": "Bautzen"
+        },
+        "nb": {
+          "language": "nb",
+          "value": "Landkreis Bautzen"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "Wokrjes Budyšin"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "Бауцен"
+        },
+        "cs": {
+          "language": "cs",
+          "value": "Zemský okres Bautzen"
+        },
+        "be": {
+          "language": "be",
+          "value": "раён Баўтцэн"
+        },
+        "ko": {
+          "language": "ko",
+          "value": "바우첸"
+        },
+        "zh": {
+          "language": "zh",
+          "value": "包岑县"
+        },
+        "ca": {
+          "language": "ca",
+          "value": "districte de Bautzen"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "ehemaliger Landkreis in Sachsen, Deutschland (1994–2008)"
+        },
+        "en": {
+          "language": "en",
+          "value": "former rural district in Saxony, Germany (1994–2008)"
+        },
+        "es": {
+          "language": "es",
+          "value": "antiguo distrito alemán en Sajonia"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "1994-2008"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "бывший район Германии"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "wokrjes w Sakskej (1994–2008)"
+        },
+        "be": {
+          "language": "be",
+          "value": "былы раён у Германіі"
+        },
+        "ko": {
+          "language": "ko",
+          "value": "독일 작센주 동쪽에 있는 언덕 꼭대기에 위치한 도시"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "ancien arrondissement de Saxe"
+        },
+        "zh": {
+          "language": "zh",
+          "value": "德国萨克森州的旧县"
+        }
+      },
+      "aliases": {
+        "hsb": [
+          {
+            "language": "hsb",
+            "value": "Budyski wokrjes"
+          }
+        ],
+        "de": [
+          {
+            "language": "de",
+            "value": "Altkreis Bautzen"
+          }
+        ],
+        "ca": [
+          {
+            "language": "ca",
+            "value": "Landkreis Bautzen"
+          }
+        ]
+      },
+      "claims": {
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "c5866bf37e5869377a1f84892baa390fe7161d5e",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 106658,
+                  "id": "Q106658"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "243c220c8068a36b3bc6c671f14c87bd16582b97",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1994-08-01T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "aba3db931918dc4a06c29848b5caa791ddd656f9",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2008-08-01T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580",
+              "P582"
+            ],
+            "id": "Q20225$ea2163dd-4624-7d17-c111-29dca08161e9",
+            "rank": "normal"
+          }
+        ],
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "6b0e4be4e1689111483888162edcfdcada6726eb",
+              "datavalue": {
+                "value": {
+                  "latitude": 51.18,
+                  "longitude": 14.43,
+                  "altitude": null,
+                  "precision": 0.00027777777777778,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "Q20225$46A9A60E-A624-4465-B644-09CDD293F390",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P156": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P156",
+              "hash": "7c8aef20a2211c16dd6e835e7cef8596f0dc4457",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 571947,
+                  "id": "Q571947"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q20225$0d500c6d-40d3-5236-fbe9-60b4037fcbf5",
+            "rank": "normal"
+          }
+        ],
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "ef7247b704f4ec0a7df39e83306bb388fea17d5f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 183,
+                  "id": "Q183"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q20225$d490ac8f-4ac0-4dff-370e-32de13241466",
+            "rank": "normal"
+          }
+        ],
+        "P94": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P94",
+              "hash": "1a2fa347542d7fe126351e77dceb5b6672bb1200",
+              "datavalue": {
+                "value": "Wappen Landkreis Bautzen.svg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q20225$dfa9c78a-41a8-de48-e859-d97ef34c9b2b",
+            "rank": "normal"
+          }
+        ],
+        "P159": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P159",
+              "hash": "0bec3685729a564172e58d644014532c232d2090",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 14835,
+                  "id": "Q14835"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q20225$9b085ac8-4f6d-112c-58e5-9199931597f8",
+            "rank": "normal"
+          }
+        ],
+        "P214": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P214",
+              "hash": "e427f8c2f7e8bcb6a226ff928cd86bf9723425e9",
+              "datavalue": {
+                "value": "248052345",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q20225$92C3DEEF-136B-477E-BF6E-EE13D729A22D",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "94cd09bdd3373d7b8eb4e3cc26e524afe7466ff7",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "6b7d4330c4aac4caec4ede9de0311ce273f88ecd",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 54919,
+                          "id": "Q54919"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "bf4494cf3e2345d75aa355a5847a72d38ca6c55d",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2015-08-02T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P910": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P910",
+              "hash": "30232f8512640749c7ff2f3dcff34bd86a256b4a",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 32436115,
+                  "id": "Q32436115"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q20225$c92ce18b-4781-a587-523b-f362bc12cfa7",
+            "rank": "normal"
+          }
+        ],
+        "P576": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P576",
+              "hash": "71bb0b31f2ae3f597106900c9362beb30fc524e8",
+              "datavalue": {
+                "value": {
+                  "time": "+2008-08-01T00:00:00Z",
+                  "timezone": 0,
+                  "before": 0,
+                  "after": 0,
+                  "precision": 11,
+                  "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                },
+                "type": "time"
+              },
+              "datatype": "time"
+            },
+            "type": "statement",
+            "id": "Q20225$e79e3f6d-4d79-35ad-46c7-d9bf02188644",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1366": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1366",
+              "hash": "83b1e1329a26bc84bcc0fe797343944dd6b5c22d",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 571947,
+                  "id": "Q571947"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q20225$1761898e-4730-19f7-60f6-f41da436f94c",
+            "rank": "normal"
+          }
+        ],
+        "P7471": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P7471",
+              "hash": "2d0d8a7ac5bf7e9256f32946abd9ece605512c86",
+              "datavalue": {
+                "value": "98623",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q20225$6eb3d0c7-43d5-cd14-d47c-7202c1d8626a",
+            "rank": "normal"
+          }
+        ],
+        "P571": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P571",
+              "hash": "7e44dac4732fc9967ad9a5c86aba5a44fa719093",
+              "datavalue": {
+                "value": {
+                  "time": "+1994-00-00T00:00:00Z",
+                  "timezone": 0,
+                  "before": 0,
+                  "after": 0,
+                  "precision": 9,
+                  "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                },
+                "type": "time"
+              },
+              "datatype": "time"
+            },
+            "type": "statement",
+            "id": "Q20225$E3FA18B1-1AD4-48FA-A64E-8AFF1AF6DABE",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "db94c3e01324d0b8fb51f58d98677b4c61bb0e9d",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "26f268743869bca5b36fe63ada192fb6de8d24db",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Landkreis_Bautzen_(1994–2008)&oldid=184982186",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2046": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2046",
+              "hash": "28298eef653c300392687d7728cd6f2bc53fe9e3",
+              "datavalue": {
+                "value": {
+                  "amount": "+961.12",
+                  "unit": "http://www.wikidata.org/entity/Q2489298"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "id": "Q20225$AAE80FF7-0F4F-4452-924D-9025934302A3",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "db94c3e01324d0b8fb51f58d98677b4c61bb0e9d",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "26f268743869bca5b36fe63ada192fb6de8d24db",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Landkreis_Bautzen_(1994–2008)&oldid=184982186",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P440": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P440",
+              "hash": "4cf4c7edb43ac7cc73fb2d3e0969567fac3d61e8",
+              "datavalue": {
+                "value": "14272",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q20225$F9FF90CB-652D-475F-8F42-377F65337AA8",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "db94c3e01324d0b8fb51f58d98677b4c61bb0e9d",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "26f268743869bca5b36fe63ada192fb6de8d24db",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Landkreis_Bautzen_(1994–2008)&oldid=184982186",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P242": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P242",
+              "hash": "3205b90e7b2c9207bccc953fd03f657bbbb12fee",
+              "datavalue": {
+                "value": "Lage des Landkreises Bautzen in Deutschland.png",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q20225$55431598-C32E-408B-AD32-2FCF5A0028C8",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "61d7541fb0b9906cb51a381eb85dd6b4f28e08b5",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "eaa09bafef9ef590e63eb81a5ea6e4d7ad45f538",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Landkreis_Bautzen_(1994–2008)&oldid=197392622",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P36": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P36",
+              "hash": "674584a1b9538c5fbf3e3ea8c1e90f8132ab375a",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 14835,
+                  "id": "Q14835"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q20225$752D956B-FC45-4BE8-88C2-BFF6E29BBF85",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "61d7541fb0b9906cb51a381eb85dd6b4f28e08b5",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "eaa09bafef9ef590e63eb81a5ea6e4d7ad45f538",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Landkreis_Bautzen_(1994–2008)&oldid=197392622",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2671": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2671",
+              "hash": "527ddccc23789f2e99d1bd1dbb0742b9b962ddcf",
+              "datavalue": {
+                "value": "/g/120vznjs",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q20225$FB32A339-EC14-4DE0-8158-116F9CE79758",
+            "rank": "normal"
+          }
+        ],
+        "P10832": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P10832",
+              "hash": "b4e8288aea16a4178c7ede889a6e0974b232eb6d",
+              "datavalue": {
+                "value": "E39PBJcr9hHD4xffKXPDhtVXBP",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q20225$CEB91EA3-AB61-48BD-8559-E330E75941D9",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "962670940fec223e286a70b10706297da3ccfa95",
+                "snaks": {
+                  "P11797": [
+                    {
+                      "snaktype": "value",
+                      "property": "P11797",
+                      "hash": "3b992a8b1d7f5bfbb710fb1b091cc424c4e3e7db",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 54919,
+                          "id": "Q54919"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P214": [
+                    {
+                      "snaktype": "value",
+                      "property": "P214",
+                      "hash": "e427f8c2f7e8bcb6a226ff928cd86bf9723425e9",
+                      "datavalue": {
+                        "value": "248052345",
+                        "type": "string"
+                      },
+                      "datatype": "external-id"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "226552216c7f0c684e2077704cc49ca40ddd87d1",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2024-06-06T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P11797",
+                  "P214",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "sitelinks": {
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Landkreis Bautzen (1994–2008)",
+          "badges": []
+        },
+        "eowiki": {
+          "site": "eowiki",
+          "title": "Distrikto Bautzen (1994-2008)",
+          "badges": []
+        },
+        "frwiki": {
+          "site": "frwiki",
+          "title": "Arrondissement de Bautzen (1994-2008)",
+          "badges": []
+        },
+        "nlwiki": {
+          "site": "nlwiki",
+          "title": "Landkreis Bautzen (1994-2008)",
+          "badges": []
+        },
+        "nowiki": {
+          "site": "nowiki",
+          "title": "Landkreis Bautzen (1994–2008)",
+          "badges": []
+        },
+        "plwiki": {
+          "site": "plwiki",
+          "title": "Powiat Budziszyn (1994–2008)",
+          "badges": []
+        },
+        "zhwiki": {
+          "site": "zhwiki",
+          "title": "包岑县 (1994年—2008年)",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

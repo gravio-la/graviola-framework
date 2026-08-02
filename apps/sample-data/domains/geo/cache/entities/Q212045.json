@@ -1,0 +1,2226 @@
+{
+  "entities": {
+    "Q212045": {
+      "pageid": 207634,
+      "ns": 0,
+      "title": "Q212045",
+      "lastrevid": 2512537949,
+      "modified": "2026-07-01T08:45:29Z",
+      "type": "item",
+      "id": "Q212045",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Markendorf"
+        },
+        "pl": {
+          "language": "pl",
+          "value": "Markendorf"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "マルケンドルフ (フランクフルト (オーダー))"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "Markendorf"
+        },
+        "en": {
+          "language": "en",
+          "value": "Markendorf"
+        },
+        "en-gb": {
+          "language": "en-gb",
+          "value": "Markendorf"
+        },
+        "uk": {
+          "language": "uk",
+          "value": "Markendorf"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Markendorf"
+        },
+        "ca": {
+          "language": "ca",
+          "value": "Markendorf"
+        },
+        "nb": {
+          "language": "nb",
+          "value": "Markendorf"
+        },
+        "lld": {
+          "language": "lld",
+          "value": "Markendorf"
+        },
+        "ga": {
+          "language": "ga",
+          "value": "Markendorf"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "Ortsteil der Stadt Frankfurt (Oder)"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "deel van Frankfurt (Oder), Duitsland"
+        },
+        "el": {
+          "language": "el",
+          "value": "οικισμός της Γερμανίας"
+        },
+        "en": {
+          "language": "en",
+          "value": "Ortsteil of Frankfurt (Oder), Brandenburg, Germany"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "établissement humain en Allemagne"
+        },
+        "uk": {
+          "language": "uk",
+          "value": "населений пункт у Німеччині"
+        },
+        "ml": {
+          "language": "ml",
+          "value": "ജര്‍മ്മനിയിലെ ഒരു സ്ഥലം"
+        },
+        "ar": {
+          "language": "ar",
+          "value": "مستوطنة بشرية في ألمانيا"
+        },
+        "hy": {
+          "language": "hy",
+          "value": "բնակավայր Գերմանիայում"
+        },
+        "lld": {
+          "language": "lld",
+          "value": "chemun de la Germania"
+        }
+      },
+      "aliases": {},
+      "claims": {
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "435dd5abc41046cd1462a26b4200fb8ea5d678f7",
+              "datavalue": {
+                "value": {
+                  "latitude": 52.2953,
+                  "longitude": 14.4711,
+                  "altitude": null,
+                  "precision": 0.0001,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "Q212045$636B4990-4AD0-4EC5-AC47-B7BB7032973F",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "ef7247b704f4ec0a7df39e83306bb388fea17d5f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 183,
+                  "id": "Q183"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q212045$FE20D52A-8037-4C53-8639-F7A488A7B237",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "0822324dd76b90eef8eee5e0cf38d893013ccdf3",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 253019,
+                  "id": "Q253019"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q212045$EDEF7467-B17E-4147-A31D-1EB25FDD45B8",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "4e6beb54b615d48c5239f20931f0d68409834ac2",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 262166,
+                  "id": "Q262166"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "d66f4e130bb96924757c1a7dd0fee0ad8741547c",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1947-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P582"
+            ],
+            "id": "Q212045$ef01356f-40a1-0ea6-791c-6b3ad0e16880",
+            "rank": "normal"
+          }
+        ],
+        "P227": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P227",
+              "hash": "4cc22eb8903c851616ad59bc0509dbcaec15d5ff",
+              "datavalue": {
+                "value": "4100526-0",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q212045$8976F764-2D40-4F2D-95D3-E38BD9A47CC1",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P214": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P214",
+              "hash": "634f6707a8231fd5cfd7cd510a78df6499afa3a7",
+              "datavalue": {
+                "value": "235054814",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q212045$59FB43A1-F16B-49B5-B50F-5CC8EE1162BC",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P910": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P910",
+              "hash": "320261d259988e0ef40df2160a1d47fbda9dfe27",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 9558534,
+                  "id": "Q9558534"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q212045$74B7637F-BDC6-4AF4-99E7-38AE3F944AED",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "14d2400e3b1d36332748dc330276f099eeaa8800",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "39224a9c2e8ce5424defbd16603d25771956c7fc",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 1551807,
+                          "id": "Q1551807"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P18": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P18",
+              "hash": "fb5cd241493083d9c54b838d494880100146df5e",
+              "datavalue": {
+                "value": "Markendorf Frankfurt Oder 001.JPG",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q212045$9D2400E5-7117-4174-A661-638AD511B803",
+            "rank": "normal"
+          }
+        ],
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "343195510f6323a5e99e6360d0ee5bc67e271929",
+              "datavalue": {
+                "value": "Markendorf",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q212045$DB98F58E-B491-410D-9698-E408D3EC6461",
+            "rank": "normal"
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "30503cbe17404825320979fce1a833718820ee79",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 28050954,
+                  "id": "Q28050954"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q212045$6d0fa184-4664-187b-3820-2def2102574c",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "a9a53a145bef02e7e6ea40cbc0144b60309590f8",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 4024,
+                  "id": "Q4024"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q212045$3747A433-1122-4775-A07F-BF7959B668CD",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "05d5107a0332ed8433cea66275c0f379be4524f7",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "867d9e1c3267b780a708784577a1426279dff489",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Markendorf_(Frankfurt_(Oder))&oldid=255391488",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P281": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P281",
+              "hash": "1b2ba77ae5a06875103bf811433666091f028be6",
+              "datavalue": {
+                "value": "15236",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q212045$7CC1D962-D0F3-4D72-882F-AD77AE706B80",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P473": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P473",
+              "hash": "b7b19cbf18f67e886627af94690b8d26addc7816",
+              "datavalue": {
+                "value": "0335",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q212045$8BC64B9F-9909-4360-9D65-5084E60607EF",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2044": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2044",
+              "hash": "29f49bb919cc009a04097878edc5033b0dd80e3e",
+              "datavalue": {
+                "value": {
+                  "amount": "+89",
+                  "unit": "http://www.wikidata.org/entity/Q11573"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "id": "Q212045$FE7760AF-5A66-4DD4-895D-748860351C6A",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "ded8037cf278121901f08d95ab88a789053284ef",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "dd03d426fc9756b751bfc07801d09cd150b1498f",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Markendorf_(Frankfurt_(Oder))&oldid=181475600",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1448": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1448",
+              "hash": "937c711d887032d8deeec8493efe1831923f01f7",
+              "datavalue": {
+                "value": {
+                  "text": "Markendorf",
+                  "language": "de"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "id": "Q212045$ab98eae2-4d37-d3e6-668c-292017d58a8c",
+            "rank": "preferred"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1448",
+              "hash": "a861daff63a0255d248bab9c7941db568dab74d0",
+              "datavalue": {
+                "value": {
+                  "text": "Marckendorff",
+                  "language": "de"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "a72956d4f22985c5b20bfc644a944cc465adfab0",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1742-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q212045$35cd14dc-489c-89e1-1dde-533736dc13aa",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "e3cfe41c6b7378fb105ba372b65f9251b7ae7e27",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "3d59999614218784f86eb8dd549ac900e3ebf29b",
+                      "datavalue": {
+                        "value": "https://www.online.uni-marburg.de/fpmr/php/thelo/gn-html.php?gnid=2887807",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "2cc948bdfc7d7f50485de14b92630cb5b94173dc",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2020-11-24T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2671": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2671",
+              "hash": "574fc9ebba5e50e53782542a52b5b7a0186163f4",
+              "datavalue": {
+                "value": "/g/11vk8t41r",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q212045$5130EC6D-6EB6-42F2-853E-C48C1C1BB612",
+            "rank": "normal"
+          }
+        ],
+        "P1082": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "a24af59e6707c240032888782c5c1f02cbcb4e03",
+              "datavalue": {
+                "value": {
+                  "amount": "+1269",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P459": [
+                {
+                  "snaktype": "value",
+                  "property": "P459",
+                  "hash": "9a17db6b8b930e6ccfe5013df9d6840428dc679d",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 52679562,
+                      "id": "Q52679562"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "b6849eb7f635c6ee36b75d8adf7e3f89c6624101",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2015-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P459",
+              "P585"
+            ],
+            "id": "Q212045$c0c9dbcc-4c4e-24c7-3218-d8cc67c520f0",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "97ac6fea303635fa96584b7a389b60bfaf3b5e7f",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "b1294825d6a7c6c5e344de8a2c0d2ff0cd0f5eb5",
+                      "datavalue": {
+                        "value": "https://www.frankfurt-oder.de/PDF/Kommunalstatistischer_Jahres_und_Demografiebericht_2020.PDF?ObjSvrID=2616&ObjID=9304&ObjLa=1&Ext=PDF&WTR=1&_ts=1613457622",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "966057c069f592437bd6f4f701ae8042c4083fd0",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2021-09-19T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854",
+                  "P813"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "d12059ff12e682c98492f8f50a610eebad9d3385",
+              "datavalue": {
+                "value": {
+                  "amount": "+1291",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P459": [
+                {
+                  "snaktype": "value",
+                  "property": "P459",
+                  "hash": "59e16663852542d613c363dbd575ca58fff3b6e7",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 791801,
+                      "id": "Q791801"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "f4e1bbc6e9b3a72c2e1fd3e6061f4c7e7f5acad9",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P459",
+              "P585"
+            ],
+            "id": "Q212045$d9437f2d-4d4d-58b4-59c6-e4d9afb56880",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "97ac6fea303635fa96584b7a389b60bfaf3b5e7f",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "b1294825d6a7c6c5e344de8a2c0d2ff0cd0f5eb5",
+                      "datavalue": {
+                        "value": "https://www.frankfurt-oder.de/PDF/Kommunalstatistischer_Jahres_und_Demografiebericht_2020.PDF?ObjSvrID=2616&ObjID=9304&ObjLa=1&Ext=PDF&WTR=1&_ts=1613457622",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "966057c069f592437bd6f4f701ae8042c4083fd0",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2021-09-19T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854",
+                  "P813"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "afc915eacc26bc294e8a8c9a87f6660e9300d9d0",
+              "datavalue": {
+                "value": {
+                  "amount": "+1354",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P459": [
+                {
+                  "snaktype": "value",
+                  "property": "P459",
+                  "hash": "9a17db6b8b930e6ccfe5013df9d6840428dc679d",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 52679562,
+                      "id": "Q52679562"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "c34a8cfb745b0cda47dffa6967839b8f92bcb653",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2017-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P459",
+              "P585"
+            ],
+            "id": "Q212045$8fe323bb-44f6-82d1-280d-9a383f6cead4",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "97ac6fea303635fa96584b7a389b60bfaf3b5e7f",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "b1294825d6a7c6c5e344de8a2c0d2ff0cd0f5eb5",
+                      "datavalue": {
+                        "value": "https://www.frankfurt-oder.de/PDF/Kommunalstatistischer_Jahres_und_Demografiebericht_2020.PDF?ObjSvrID=2616&ObjID=9304&ObjLa=1&Ext=PDF&WTR=1&_ts=1613457622",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "966057c069f592437bd6f4f701ae8042c4083fd0",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2021-09-19T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854",
+                  "P813"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "b1a9d664d62e3eedd02041f08caaceea40664004",
+              "datavalue": {
+                "value": {
+                  "amount": "+1358",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P459": [
+                {
+                  "snaktype": "value",
+                  "property": "P459",
+                  "hash": "9a17db6b8b930e6ccfe5013df9d6840428dc679d",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 52679562,
+                      "id": "Q52679562"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "6174553681261aeec411766adf691fdeec1dee47",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2018-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P459",
+              "P585"
+            ],
+            "id": "Q212045$c470c9b8-4c86-029d-d6e2-e37e59f194cb",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "97ac6fea303635fa96584b7a389b60bfaf3b5e7f",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "b1294825d6a7c6c5e344de8a2c0d2ff0cd0f5eb5",
+                      "datavalue": {
+                        "value": "https://www.frankfurt-oder.de/PDF/Kommunalstatistischer_Jahres_und_Demografiebericht_2020.PDF?ObjSvrID=2616&ObjID=9304&ObjLa=1&Ext=PDF&WTR=1&_ts=1613457622",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "966057c069f592437bd6f4f701ae8042c4083fd0",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2021-09-19T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854",
+                  "P813"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "cbf978afb56fd1523d8df5cbd7e39cef609b9439",
+              "datavalue": {
+                "value": {
+                  "amount": "+1477",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P459": [
+                {
+                  "snaktype": "value",
+                  "property": "P459",
+                  "hash": "9a17db6b8b930e6ccfe5013df9d6840428dc679d",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 52679562,
+                      "id": "Q52679562"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "77f348fcb49110a0de3c2faf4865527dc30dcbc9",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2019-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P459",
+              "P585"
+            ],
+            "id": "Q212045$8f2ea9cc-4169-d289-fffe-cfeee04ec12b",
+            "rank": "preferred",
+            "references": [
+              {
+                "hash": "97ac6fea303635fa96584b7a389b60bfaf3b5e7f",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "b1294825d6a7c6c5e344de8a2c0d2ff0cd0f5eb5",
+                      "datavalue": {
+                        "value": "https://www.frankfurt-oder.de/PDF/Kommunalstatistischer_Jahres_und_Demografiebericht_2020.PDF?ObjSvrID=2616&ObjID=9304&ObjLa=1&Ext=PDF&WTR=1&_ts=1613457622",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "966057c069f592437bd6f4f701ae8042c4083fd0",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2021-09-19T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854",
+                  "P813"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "e94dfa595798d416c19cb0b37bc3124b5d76b2e8",
+              "datavalue": {
+                "value": {
+                  "amount": "+1289",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P459": [
+                {
+                  "snaktype": "value",
+                  "property": "P459",
+                  "hash": "9a17db6b8b930e6ccfe5013df9d6840428dc679d",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 52679562,
+                      "id": "Q52679562"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "a910853afc29ee98ebd8b5f67a02ff08aea299d2",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2006-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P459",
+              "P585"
+            ],
+            "id": "Q212045$6321e11b-4367-3349-db2f-0b4c55c27387",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "62c8bb978a3e67553760a8e1be8d4e7c694f26cd",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "a469ef733a9ef85cdaab6cbb9f8703b950bf4318",
+                      "datavalue": {
+                        "value": "https://www.frankfurt-oder.de/PDF/Kommunalstaistischer_Jahres_und_Demografiebericht_2011.PDF?ObjSvrID=2616&ObjID=514&ObjLa=1&Ext=PDF&WTR=1&_ts=1568728180",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "966057c069f592437bd6f4f701ae8042c4083fd0",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2021-09-19T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854",
+                  "P813"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "a7906630d2b80377f0a188809647bb9bc96f8595",
+              "datavalue": {
+                "value": {
+                  "amount": "+1307",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P459": [
+                {
+                  "snaktype": "value",
+                  "property": "P459",
+                  "hash": "9a17db6b8b930e6ccfe5013df9d6840428dc679d",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 52679562,
+                      "id": "Q52679562"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "4b8b0672c38a4a213d3ddf5553b775988e65ace9",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2007-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P459",
+              "P585"
+            ],
+            "id": "Q212045$c6366f69-4a9a-3ae3-e444-a06bef613583",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "62c8bb978a3e67553760a8e1be8d4e7c694f26cd",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "a469ef733a9ef85cdaab6cbb9f8703b950bf4318",
+                      "datavalue": {
+                        "value": "https://www.frankfurt-oder.de/PDF/Kommunalstaistischer_Jahres_und_Demografiebericht_2011.PDF?ObjSvrID=2616&ObjID=514&ObjLa=1&Ext=PDF&WTR=1&_ts=1568728180",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "966057c069f592437bd6f4f701ae8042c4083fd0",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2021-09-19T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854",
+                  "P813"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "08b9c818e388da41200cc4747d212024afacc892",
+              "datavalue": {
+                "value": {
+                  "amount": "+1285",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P459": [
+                {
+                  "snaktype": "value",
+                  "property": "P459",
+                  "hash": "9a17db6b8b930e6ccfe5013df9d6840428dc679d",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 52679562,
+                      "id": "Q52679562"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "43bdb90ab9b607c864931ed584115ff944210c6b",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2008-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P459",
+              "P585"
+            ],
+            "id": "Q212045$0f310acd-4f2e-bda7-997f-b6c4e90fd492",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "62c8bb978a3e67553760a8e1be8d4e7c694f26cd",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "a469ef733a9ef85cdaab6cbb9f8703b950bf4318",
+                      "datavalue": {
+                        "value": "https://www.frankfurt-oder.de/PDF/Kommunalstaistischer_Jahres_und_Demografiebericht_2011.PDF?ObjSvrID=2616&ObjID=514&ObjLa=1&Ext=PDF&WTR=1&_ts=1568728180",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "966057c069f592437bd6f4f701ae8042c4083fd0",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2021-09-19T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854",
+                  "P813"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "31a541d9104f4639d04b1d06b00cfd344a0e162d",
+              "datavalue": {
+                "value": {
+                  "amount": "+1275",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P459": [
+                {
+                  "snaktype": "value",
+                  "property": "P459",
+                  "hash": "9a17db6b8b930e6ccfe5013df9d6840428dc679d",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 52679562,
+                      "id": "Q52679562"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "e4ce1ad4d6c6d0289a402c42bf392b7c735cbc30",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2009-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P459",
+              "P585"
+            ],
+            "id": "Q212045$d07ac6cb-48a3-2bc3-435f-445883aedec3",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "62c8bb978a3e67553760a8e1be8d4e7c694f26cd",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "a469ef733a9ef85cdaab6cbb9f8703b950bf4318",
+                      "datavalue": {
+                        "value": "https://www.frankfurt-oder.de/PDF/Kommunalstaistischer_Jahres_und_Demografiebericht_2011.PDF?ObjSvrID=2616&ObjID=514&ObjLa=1&Ext=PDF&WTR=1&_ts=1568728180",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "966057c069f592437bd6f4f701ae8042c4083fd0",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2021-09-19T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854",
+                  "P813"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "b329fcc7c30492a4f1530d542ea5a077a59e49e0",
+              "datavalue": {
+                "value": {
+                  "amount": "+1251",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P459": [
+                {
+                  "snaktype": "value",
+                  "property": "P459",
+                  "hash": "59e16663852542d613c363dbd575ca58fff3b6e7",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 791801,
+                      "id": "Q791801"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "3c2d510317e0fcbe8582afb1d706a4b6eb08d233",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2010-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P459",
+              "P585"
+            ],
+            "id": "Q212045$5db5e9b5-4561-5b2a-822a-6f627aaf0db5",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "62c8bb978a3e67553760a8e1be8d4e7c694f26cd",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "a469ef733a9ef85cdaab6cbb9f8703b950bf4318",
+                      "datavalue": {
+                        "value": "https://www.frankfurt-oder.de/PDF/Kommunalstaistischer_Jahres_und_Demografiebericht_2011.PDF?ObjSvrID=2616&ObjID=514&ObjLa=1&Ext=PDF&WTR=1&_ts=1568728180",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "966057c069f592437bd6f4f701ae8042c4083fd0",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2021-09-19T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854",
+                  "P813"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "917af763171957877bd251f6084fa82d9de1981b",
+              "datavalue": {
+                "value": {
+                  "amount": "+1252",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P459": [
+                {
+                  "snaktype": "value",
+                  "property": "P459",
+                  "hash": "9a17db6b8b930e6ccfe5013df9d6840428dc679d",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 52679562,
+                      "id": "Q52679562"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "1277780215cd5ca03e85ca9c50830783b4fedfe1",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2011-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P459",
+              "P585"
+            ],
+            "id": "Q212045$44a10985-4a9a-1f9e-f51d-f662cdd8b42f",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "3a34aaa8eebee1b6e5affcfc13a249c6daf6454a",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "f0f453e26a68370f345abafa2bb7397a05b12928",
+                      "datavalue": {
+                        "value": "https://www.frankfurt-oder.de/PDF/Kommunalstatistischer_Jahres_und_Demografiebericht_2015.PDF?ObjSvrID=2616&ObjID=3164&ObjLa=1&Ext=PDF&WTR=1&_ts=1556190931",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "966057c069f592437bd6f4f701ae8042c4083fd0",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2021-09-19T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854",
+                  "P813"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "4fe7db4c8537d4ef99b958f910bd8ae8e2e4205d",
+              "datavalue": {
+                "value": {
+                  "amount": "+1241",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P459": [
+                {
+                  "snaktype": "value",
+                  "property": "P459",
+                  "hash": "9a17db6b8b930e6ccfe5013df9d6840428dc679d",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 52679562,
+                      "id": "Q52679562"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "8f3565657428592dc1dd7f92da0f734724d987d7",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2012-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P459",
+              "P585"
+            ],
+            "id": "Q212045$620a8beb-4e0e-35c3-31b5-21ac0cf50342",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "3a34aaa8eebee1b6e5affcfc13a249c6daf6454a",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "f0f453e26a68370f345abafa2bb7397a05b12928",
+                      "datavalue": {
+                        "value": "https://www.frankfurt-oder.de/PDF/Kommunalstatistischer_Jahres_und_Demografiebericht_2015.PDF?ObjSvrID=2616&ObjID=3164&ObjLa=1&Ext=PDF&WTR=1&_ts=1556190931",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "966057c069f592437bd6f4f701ae8042c4083fd0",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2021-09-19T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854",
+                  "P813"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "a24af59e6707c240032888782c5c1f02cbcb4e03",
+              "datavalue": {
+                "value": {
+                  "amount": "+1269",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P459": [
+                {
+                  "snaktype": "value",
+                  "property": "P459",
+                  "hash": "9a17db6b8b930e6ccfe5013df9d6840428dc679d",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 52679562,
+                      "id": "Q52679562"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "1e2a78761fecc9e5ba1ba772d86ba7dbf29fe467",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2013-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P459",
+              "P585"
+            ],
+            "id": "Q212045$3eb2a17f-40bb-7ce9-b920-6a136041b791",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "3a34aaa8eebee1b6e5affcfc13a249c6daf6454a",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "f0f453e26a68370f345abafa2bb7397a05b12928",
+                      "datavalue": {
+                        "value": "https://www.frankfurt-oder.de/PDF/Kommunalstatistischer_Jahres_und_Demografiebericht_2015.PDF?ObjSvrID=2616&ObjID=3164&ObjLa=1&Ext=PDF&WTR=1&_ts=1556190931",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "966057c069f592437bd6f4f701ae8042c4083fd0",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2021-09-19T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854",
+                  "P813"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "ae257fd95879029364255630d05648c25a3dd4cd",
+              "datavalue": {
+                "value": {
+                  "amount": "+1262",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P459": [
+                {
+                  "snaktype": "value",
+                  "property": "P459",
+                  "hash": "9a17db6b8b930e6ccfe5013df9d6840428dc679d",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 52679562,
+                      "id": "Q52679562"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "049bd876bdfea826eaceb6f6056701b74c6d3f08",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2014-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P459",
+              "P585"
+            ],
+            "id": "Q212045$091bba0b-493c-2469-0be6-e0415d726300",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "3a34aaa8eebee1b6e5affcfc13a249c6daf6454a",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "f0f453e26a68370f345abafa2bb7397a05b12928",
+                      "datavalue": {
+                        "value": "https://www.frankfurt-oder.de/PDF/Kommunalstatistischer_Jahres_und_Demografiebericht_2015.PDF?ObjSvrID=2616&ObjID=3164&ObjLa=1&Ext=PDF&WTR=1&_ts=1556190931",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "966057c069f592437bd6f4f701ae8042c4083fd0",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2021-09-19T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P8168": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P8168",
+              "hash": "a11f6ec286497116145d2a20342db33826e0b4ee",
+              "datavalue": {
+                "value": "Q282861",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q212045$40A1A459-1614-44AE-B4C8-4DC7838D1C4B",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Markendorf (Frankfurt (Oder))",
+          "badges": []
+        },
+        "plwiki": {
+          "site": "plwiki",
+          "title": "Markendorf",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

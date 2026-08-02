@@ -1,0 +1,1125 @@
+{
+  "entities": {
+    "Q10777734": {
+      "pageid": 12051795,
+      "ns": 0,
+      "title": "Q10777734",
+      "lastrevid": 2492376548,
+      "modified": "2026-05-16T04:42:29Z",
+      "type": "item",
+      "id": "Q10777734",
+      "labels": {
+        "hsb": {
+          "language": "hsb",
+          "value": "Swinjarnja"
+        },
+        "de": {
+          "language": "de",
+          "value": "Schweinerden"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Schweinerden"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "Швайнерден"
+        },
+        "en": {
+          "language": "en",
+          "value": "Schweinerden/Swinjarnja"
+        },
+        "dsb": {
+          "language": "dsb",
+          "value": "Swinjarnja"
+        },
+        "ca": {
+          "language": "ca",
+          "value": "Schweinerden"
+        },
+        "nb": {
+          "language": "nb",
+          "value": "Schweinerden"
+        },
+        "lld": {
+          "language": "lld",
+          "value": "Schweinerden/Swinjarnja"
+        },
+        "ga": {
+          "language": "ga",
+          "value": "Schweinerden"
+        }
+      },
+      "descriptions": {
+        "hsb": {
+          "language": "hsb",
+          "value": "wjes w Budyskim wokrjesu, gmejnski dźěl Pančic-Kukowa"
+        },
+        "de": {
+          "language": "de",
+          "value": "Dorf im Landkreis Bautzen, Gemeinde Panschwitz-Kuckau"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "ortsteil in Panschwitz-Kuckau, Duitsland"
+        },
+        "en": {
+          "language": "en",
+          "value": "human settlement in Germany"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "établissement humain en Allemagne"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "деревня в Верхней Лужице, коммуна Паншвиц-Кукау района Баутцен"
+        },
+        "uk": {
+          "language": "uk",
+          "value": "населений пункт у Німеччині"
+        },
+        "ml": {
+          "language": "ml",
+          "value": "ജര്‍മ്മനിയിലെ ഒരു സ്ഥലം"
+        },
+        "ar": {
+          "language": "ar",
+          "value": "مستوطنة بشرية في ألمانيا"
+        },
+        "dsb": {
+          "language": "dsb",
+          "value": "wjas w budyšyńskem wokrejsu, gmejnski źěl Pančic-Kukowa"
+        },
+        "cs": {
+          "language": "cs",
+          "value": "vesnice v Horní Lužici, Sasko"
+        },
+        "hy": {
+          "language": "hy",
+          "value": "բնակավայր Գերմանիայում"
+        },
+        "lld": {
+          "language": "lld",
+          "value": "chemun de la Germania"
+        },
+        "bn": {
+          "language": "bn",
+          "value": "জার্মানির একটি গ্রাম"
+        },
+        "tr": {
+          "language": "tr",
+          "value": "Panschwitz-Kuckau, Almanya'da köy"
+        },
+        "ary": {
+          "language": "ary",
+          "value": "دوّار ف ألمانيا"
+        },
+        "hi": {
+          "language": "hi",
+          "value": "जर्मनी का एक गाँव"
+        }
+      },
+      "aliases": {
+        "de": [
+          {
+            "language": "de",
+            "value": "Swinjarnja"
+          }
+        ],
+        "ru": [
+          {
+            "language": "ru",
+            "value": "Свинярня"
+          }
+        ]
+      },
+      "claims": {
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "0822324dd76b90eef8eee5e0cf38d893013ccdf3",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 253019,
+                  "id": "Q253019"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "c786a8b39f62b37eb45745acf99302b5409f2e26",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1957-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P131": [
+                {
+                  "snaktype": "value",
+                  "property": "P131",
+                  "hash": "24206b4bceef06af27824e209a798591ba763ad7",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 93279,
+                      "id": "Q93279"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580",
+              "P131"
+            ],
+            "id": "Q10777734$e99f8f22-4b2e-06e9-05e2-032ce8a0d5f0",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "5234088afa2cb8dd6b2b0c2f713eff1c61f34067",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 532,
+                  "id": "Q532"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q10777734$6d683e47-45c0-f2e2-e587-a69f0ddbe52d",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "4e6beb54b615d48c5239f20931f0d68409834ac2",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 262166,
+                  "id": "Q262166"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "9994342b6bb7fad609c270eb6dbe08f0f0d2d0a0",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1957-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P582"
+            ],
+            "id": "Q10777734$9cc71111-4158-1d28-5767-6ecef44580f9",
+            "rank": "normal"
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "24206b4bceef06af27824e209a798591ba763ad7",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 93279,
+                  "id": "Q93279"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q10777734$6838f6f7-49c7-9b3a-e819-98543289a78c",
+            "rank": "normal"
+          }
+        ],
+        "P281": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P281",
+              "hash": "5ff62bdde7c95a60c8beb015621aeb963b47aca9",
+              "datavalue": {
+                "value": "01920",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q10777734$ABE112D0-B864-4A93-9A9C-814D3B50A73E",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "ef7247b704f4ec0a7df39e83306bb388fea17d5f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 183,
+                  "id": "Q183"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q10777734$B0FF5A35-4C15-4AFD-A63D-14EB9DE5B6BF",
+            "rank": "normal"
+          }
+        ],
+        "P206": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P206",
+              "hash": "848b7965273bc510ada90c69f14de2d6473987b7",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 163007,
+                  "id": "Q163007"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q10777734$3E340E24-73E0-4F9D-BE0C-521FE5781330",
+            "rank": "normal"
+          }
+        ],
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "a288a081f13adc346f3e5de9fbe210b80df457a9",
+              "datavalue": {
+                "value": "Schweinerden/Swinjarnja",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q10777734$6104c070-45b5-0594-0d72-e4cd83ee12db",
+            "rank": "normal"
+          }
+        ],
+        "P18": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P18",
+              "hash": "ff4fb391381ad3f7d79071fa86628062a004cc5b",
+              "datavalue": {
+                "value": "Panschwitz-Kuckau Schweinerden Aerial alt.jpg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q10777734$0bc14b98-4963-cd4c-e9b2-10e4d6f48a92",
+            "rank": "normal"
+          }
+        ],
+        "P361": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P361",
+              "hash": "786ab8a8c6b9eb0213974ce7f3428c83b23d7c33",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 145129,
+                  "id": "Q145129"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q10777734$AAE657FE-FAD3-44C9-A52F-F0C1AE50BB3D",
+            "rank": "normal"
+          }
+        ],
+        "P473": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P473",
+              "hash": "8ca7eb243bd5301aeb6cde35430919c4918524a0",
+              "datavalue": {
+                "value": "035796",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q10777734$630EED0B-8698-424A-BE57-F42D7919D631",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2044": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2044",
+              "hash": "8974b792e6719eadd914e9b26f09fb8aa6420cb9",
+              "datavalue": {
+                "value": {
+                  "amount": "+190",
+                  "unit": "http://www.wikidata.org/entity/Q11573"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "id": "Q10777734$C7DEFECC-78C5-4100-9630-2AED14A1AE5F",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "bdbe73b9395585ce4445f7507d0188e74f335522",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "445a12d645a1d641be23c19e3af13933a57a79e0",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Schweinerden&oldid=176954413",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1549": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "9d19995b3a40ae94160197eefe7a3f10609d0747",
+              "datavalue": {
+                "value": {
+                  "text": "Swinjarčan",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "e9447d28af8c5d42930d7dd10e816fc7d922f8e4",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088290,
+                      "id": "Q47088290"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q10777734$4F5E215B-707D-4228-B304-0C5E704D033B",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "46feb7d83468c4766c58ef9dd838680dabcb7cc7",
+              "datavalue": {
+                "value": {
+                  "text": "Swinjarčanka",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "9ccfcbc8ef0cb77e854001299df9103998ab5d48",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088293,
+                      "id": "Q47088293"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q10777734$28B221F2-E5C2-4B95-9152-192DD20E9154",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "8eff3b52166209f276a983502dabaeda46b18167",
+              "datavalue": {
+                "value": {
+                  "text": "Swinjarčenjo",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "7002a0d0b3dc52a703f036cc2c96b1b6c752ca25",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088292,
+                      "id": "Q47088292"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q10777734$C0656E08-ED79-4790-9348-1870F218D07D",
+            "rank": "normal"
+          }
+        ],
+        "P1566": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1566",
+              "hash": "025fa6b3bb2b583c4294cfa063cca9d05e41e27a",
+              "datavalue": {
+                "value": "2834504",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q10777734$4D45A0FD-D188-4BD5-AB53-F4709B4F22FD",
+            "rank": "normal"
+          }
+        ],
+        "P7046": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P7046",
+              "hash": "688c12c16c5b65381abdda7ee747939d53ff049a",
+              "datavalue": {
+                "value": "26128",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P1932": [
+                {
+                  "snaktype": "value",
+                  "property": "P1932",
+                  "hash": "f30f2a1d371caf2b5beb0bc7054a61698737d513",
+                  "datavalue": {
+                    "value": "Schweinerden",
+                    "type": "string"
+                  },
+                  "datatype": "string"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P1932"
+            ],
+            "id": "Q10777734$98340C9A-DDC4-488C-9E1D-92411912CE27",
+            "rank": "normal"
+          }
+        ],
+        "P6766": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P6766",
+              "hash": "49d8446c4b6ef7d064a1d778ed55a0f2472849b1",
+              "datavalue": {
+                "value": "1293271339",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q10777734$B7261AB4-72FB-45B0-95F1-93D69C9CDD7D",
+            "rank": "normal"
+          }
+        ],
+        "P1705": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1705",
+              "hash": "e39a1c9d9ce262e228e922eabfd6fd9a9db8cb77",
+              "datavalue": {
+                "value": {
+                  "text": "Swinjarnja",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "id": "Q10777734$510A5888-8DE6-4D77-9805-FA06B49E634A",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1705",
+              "hash": "823cd1d0c239f8c097cf23d45c0b916a226a863b",
+              "datavalue": {
+                "value": {
+                  "text": "Schweinerden",
+                  "language": "de"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "id": "Q10777734$5F95F4A8-B1CA-4906-AE1F-8234594C507B",
+            "rank": "normal"
+          }
+        ],
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "670d5c72acf5851af9a2b2a2d737f0039f7a2b26",
+              "datavalue": {
+                "value": {
+                  "latitude": 51.226025,
+                  "longitude": 14.213085,
+                  "altitude": null,
+                  "precision": 0.000001,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "Q10777734$ac385ea1-4aac-d135-34ca-c13d28ec9283",
+            "rank": "normal"
+          }
+        ],
+        "P1082": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "4fd2b63fdf3fecd1bee4946ae372af8f8c53c42c",
+              "datavalue": {
+                "value": {
+                  "amount": "+82",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "49ae60be22d4c3fc5628dc09cf76d6f4a396c58b",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2020-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q10777734$4B881CB9-CE7F-4348-A4DF-EF61DCF6B849",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "15279ee47ed9dff10b86244049070fa6b9715c88",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "41bd2456ec8ef837d082a5eff170433ec731a2ee",
+                      "datavalue": {
+                        "value": "https://am-klosterwasser.de/index.php?id=434&L=1",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P1065": [
+                    {
+                      "snaktype": "value",
+                      "property": "P1065",
+                      "hash": "219c8910efb8d56af488853e22e5667695a60f2e",
+                      "datavalue": {
+                        "value": "https://web.archive.org/web/20210519141135/https://am-klosterwasser.de/index.php?id=434&L=1",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P2960": [
+                    {
+                      "snaktype": "value",
+                      "property": "P2960",
+                      "hash": "e043ec4a7a1ef45ceb9606875236688185f3f316",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2021-05-19T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854",
+                  "P1065",
+                  "P2960"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "ab572a2da7e8660bd1a19c1833e8173141aeeb55",
+              "datavalue": {
+                "value": {
+                  "amount": "+81",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "8809d0bfc6d96a7916c93c009bb688d4e2876724",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2019-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q10777734$DD2E29CD-CCDF-41B5-A944-31686A145970",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "a1875996ac248fd065c75b484bfefbba4589fa9f",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "41bd2456ec8ef837d082a5eff170433ec731a2ee",
+                      "datavalue": {
+                        "value": "https://am-klosterwasser.de/index.php?id=434&L=1",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2671": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2671",
+              "hash": "41f5a0b6f92b7470ee33ba0ac9802428a89c1c7c",
+              "datavalue": {
+                "value": "/g/11c59v7gcs",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q10777734$1F6A8DAF-23CF-47B8-9364-6526C38F27D7",
+            "rank": "normal"
+          }
+        ],
+        "P8168": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P8168",
+              "hash": "403c01d1fb5fc0dcf3319d32db00f87043c29168",
+              "datavalue": {
+                "value": "Q274174",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q10777734$FF8E85D5-F010-4882-85D7-CD63349B96F1",
+            "rank": "normal"
+          }
+        ],
+        "P2326": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2326",
+              "hash": "4bda32356d6abd41a4adc591b880ca3fded0f2db",
+              "datavalue": {
+                "value": "-1862490",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q10777734$1A56EBD0-2BB9-4812-B571-306F02520D14",
+            "rank": "normal"
+          }
+        ],
+        "P227": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P227",
+              "hash": "5cc4ca04fc72dd73d59ea8c70007905fef13966d",
+              "datavalue": {
+                "value": "1311442553",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q10777734$5F89666F-3846-4F20-942D-AD7CB9437839",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "8258b8ff4b50e69a60fc54da12a7528180727547",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "93108e20bff88e531def2c94a19318870b510504",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Schweinerden&oldid=257013023",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P214": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P214",
+              "hash": "84c8ad20df550566f682a4ecd0790a6c8e4d468a",
+              "datavalue": {
+                "value": "2082170186290224400001",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q10777734$353640F3-E523-45D2-B224-B1930E69136D",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "8258b8ff4b50e69a60fc54da12a7528180727547",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "93108e20bff88e531def2c94a19318870b510504",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Schweinerden&oldid=257013023",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "sitelinks": {
+        "commonswiki": {
+          "site": "commonswiki",
+          "title": "Category:Schweinerden/Swinjarnja",
+          "badges": []
+        },
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Schweinerden",
+          "badges": []
+        },
+        "hsbwiki": {
+          "site": "hsbwiki",
+          "title": "Swinjarnja",
+          "badges": []
+        },
+        "ruwiki": {
+          "site": "ruwiki",
+          "title": "Швайнерден",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

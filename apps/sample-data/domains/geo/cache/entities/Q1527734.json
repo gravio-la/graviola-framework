@@ -1,0 +1,296 @@
+{
+  "entities": {
+    "Q1527734": {
+      "pageid": 1464735,
+      "ns": 0,
+      "title": "Q1527734",
+      "lastrevid": 2325017902,
+      "modified": "2025-03-15T11:30:06Z",
+      "type": "item",
+      "id": "Q1527734",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Kreis Jüterbog"
+        },
+        "it": {
+          "language": "it",
+          "value": "circondario di Jüterbog"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "ユーターボーク郡"
+        },
+        "be-tarask": {
+          "language": "be-tarask",
+          "value": "Ютэрбаг"
+        },
+        "en": {
+          "language": "en",
+          "value": "Kreis Jüterbog"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "Kreis in der DDR"
+        },
+        "en": {
+          "language": "en",
+          "value": "rural district of the former German Democratic Republic"
+        },
+        "it": {
+          "language": "it",
+          "value": "ex circondario tedesco (1952-1993)"
+        },
+        "be-tarask": {
+          "language": "be-tarask",
+          "value": "вясковы раён НДР"
+        }
+      },
+      "aliases": {
+        "de": [
+          {
+            "language": "de",
+            "value": "Landkreis Jüterbog"
+          }
+        ]
+      },
+      "claims": {
+        "P36": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P36",
+              "hash": "f19982f70b3dd11df74dba01f5bc4014b08669a3",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 486541,
+                  "id": "Q486541"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1527734$7b40af79-4682-58a6-386f-6d4e5a632a00",
+            "rank": "normal"
+          }
+        ],
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "69134fce674a39f3382130caf84f51e58518fb88",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 16957,
+                  "id": "Q16957"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1527734$9B1AF5F1-A13E-4F4C-B905-20EFB8D2D6A0",
+            "rank": "normal"
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "7c87a9d130338f4808157eaf589307f229beb96f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 15849374,
+                  "id": "Q15849374"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1527734$3C220554-8C92-48FE-9EF4-2C295A0EACF3",
+            "rank": "normal"
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "116dc7a39a196da261daa0e937a89368793cb5a9",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 48094,
+                  "id": "Q48094"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1527734$AAAD6EAA-C90A-4C2D-81B2-593636FA816E",
+            "rank": "normal"
+          }
+        ],
+        "P576": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P576",
+              "hash": "002d881c12baac1ce7ce1c4f57906fadc4abf37a",
+              "datavalue": {
+                "value": {
+                  "time": "+1993-00-00T00:00:00Z",
+                  "timezone": 0,
+                  "before": 0,
+                  "after": 0,
+                  "precision": 9,
+                  "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                },
+                "type": "time"
+              },
+              "datatype": "time"
+            },
+            "type": "statement",
+            "id": "Q1527734$833AE9B4-5203-4DFF-8021-7953D7ABD675",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2046": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2046",
+              "hash": "a78731954d279bac95f982d092fb3ac6f8202310",
+              "datavalue": {
+                "value": {
+                  "amount": "+766",
+                  "unit": "http://www.wikidata.org/entity/Q712226"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "id": "Q1527734$96195515-C1F9-4F79-BD91-A55CDFC7F77D",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "d5847b9b6032aa8b13dae3c2dfd9ed5d114d21b3",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "5a343e7e758a4282a01316d3e959b6e653b767fc",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 11920,
+                          "id": "Q11920"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2671": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2671",
+              "hash": "d06bad351d4d1c2d3fbaca007a5853ee7da1eebb",
+              "datavalue": {
+                "value": "/g/122sg3g6",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q1527734$3E9521BE-E847-4B02-ACB8-717E540B55B9",
+            "rank": "normal"
+          }
+        ],
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "4c46cee8339d9deb267ab8eceed1b70aa33da5ff",
+              "datavalue": {
+                "value": {
+                  "latitude": 51.99333333,
+                  "longitude": 13.07277778,
+                  "altitude": null,
+                  "precision": 1.458888629185824,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "Q1527734$aef5aeb8-3f76-4a78-b8a3-c0bdd9529730",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Kreis Jüterbog",
+          "badges": []
+        },
+        "itwiki": {
+          "site": "itwiki",
+          "title": "Circondario di Jüterbog",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

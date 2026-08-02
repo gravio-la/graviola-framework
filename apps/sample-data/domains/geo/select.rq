@@ -1,0 +1,22 @@
+# Cities and municipalities in Saxony / Saxony-Anhalt / Brandenburg.
+# Kept light for WDQS: no long P279* chains; types listed via VALUES.
+# Dense in "-burg" names; parents pulled via P131 during mapping.
+# Note: multiple population statements yield duplicate ?city rows — the
+# pipeline dedupes by IRI.
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+
+SELECT DISTINCT ?city ?population WHERE {
+  VALUES ?state { wd:Q1202 wd:Q1206 wd:Q1208 }
+  VALUES ?type {
+    wd:Q515        # city
+    wd:Q1549591    # big city
+    wd:Q262166     # municipality of Germany
+    wd:Q42744322   # urban municipality of Germany
+  }
+  ?city wdt:P131+ ?state ;
+        wdt:P31 ?type ;
+        wdt:P1082 ?population .
+}
+ORDER BY ?city
+LIMIT 150

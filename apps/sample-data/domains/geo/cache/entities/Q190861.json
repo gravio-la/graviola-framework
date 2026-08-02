@@ -1,0 +1,287 @@
+{
+  "entities": {
+    "Q190861": {
+      "pageid": 189225,
+      "ns": 0,
+      "title": "Q190861",
+      "lastrevid": 2277008595,
+      "modified": "2024-11-19T12:17:17Z",
+      "type": "item",
+      "id": "Q190861",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Zentralverwaltungsdepartement"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Generaal gouvernementen"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "Département central d’administration temporaire"
+        },
+        "en": {
+          "language": "en",
+          "value": "Central Administrative Department"
+        },
+        "zh": {
+          "language": "zh",
+          "value": "「中央行政議會」"
+        },
+        "es": {
+          "language": "es",
+          "value": "Departamento Central de Administración"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "Organisation der Alliierten für die Verwaltung der von Napoleon eroberten Gebiete (1813-1815)"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "organe provisoire d'administration de territoires de l'empire napoléonien occupés/libérés par les alliés de 1813 à 1815 en Belgique et Rive Gauche du Rhin"
+        },
+        "es": {
+          "language": "es",
+          "value": "organismo provisional para la administración de los territorios liberados del Primer Imperio francés en Bélgica y ribera derecha del Rin (1813-1815)"
+        }
+      },
+      "aliases": {
+        "de": [
+          {
+            "language": "de",
+            "value": "Zentralverwaltungsrat"
+          }
+        ],
+        "fr": [
+          {
+            "language": "fr",
+            "value": "Gouvernement général"
+          }
+        ],
+        "nl": [
+          {
+            "language": "nl",
+            "value": "Generaal-gouvernement (1814-1815)"
+          }
+        ]
+      },
+      "claims": {
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "c2859f311753176d6bdfa7da54ceeeac7acb52c8",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 31,
+                  "id": "Q31"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P2241": [
+                {
+                  "snaktype": "value",
+                  "property": "P2241",
+                  "hash": "04889e20f933fef9290dfede77f392dda3cfe610",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 189203,
+                      "id": "Q189203"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P2241"
+            ],
+            "id": "Q190861$FBE6F71F-01E4-4868-9EF3-00A8C3F20BF3",
+            "rank": "deprecated",
+            "references": [
+              {
+                "hash": "732ec1c90a6f0694c7db9a71bf09fe7f2b674172",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "9123b0de1cc9c3954366ba797d598e4e1ea4146f",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 10000,
+                          "id": "Q10000"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "c05db5d169c2560b9799d567a803d20a392f53e4",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 142,
+                  "id": "Q142"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q190861$f1c6d967-4068-ccb9-ae0f-d55df704c946",
+            "rank": "normal"
+          }
+        ],
+        "P6": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P6",
+              "hash": "963b89c44240f77a39ac418ea1cfcbf647610c26",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 213542,
+                  "id": "Q213542"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q190861$31ba6da7-4754-a394-e923-1e719733c200",
+            "rank": "normal"
+          }
+        ],
+        "P571": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P571",
+              "hash": "992671822e60856457378fbbfb111ba5e3abe320",
+              "datavalue": {
+                "value": {
+                  "time": "+1813-03-19T00:00:00Z",
+                  "timezone": 0,
+                  "before": 0,
+                  "after": 0,
+                  "precision": 11,
+                  "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                },
+                "type": "time"
+              },
+              "datatype": "time"
+            },
+            "type": "statement",
+            "id": "Q190861$79043878-4cf1-28f2-599b-11ff871475be",
+            "rank": "normal"
+          }
+        ],
+        "P576": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P576",
+              "hash": "eb96acd45e16bd8138398e4d2afcee714caa088a",
+              "datavalue": {
+                "value": {
+                  "time": "+1815-06-07T00:00:00Z",
+                  "timezone": 0,
+                  "before": 0,
+                  "after": 0,
+                  "precision": 11,
+                  "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                },
+                "type": "time"
+              },
+              "datatype": "time"
+            },
+            "type": "statement",
+            "id": "Q190861$86dc43ee-4624-1335-f54c-ff7dd87ad092",
+            "rank": "normal"
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "f71117d7b46495894559b65a4abe6c02fadedf3b",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 327333,
+                  "id": "Q327333"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q190861$6dae0b4e-461f-ab9e-b455-fed91467157e",
+            "rank": "normal"
+          }
+        ],
+        "P2671": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2671",
+              "hash": "a17b9dc299908be13155f5043a9db13d3257d794",
+              "datavalue": {
+                "value": "/g/121l5gdj",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q190861$AD0343B8-EB41-4FFC-976C-11C451EFD115",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Zentralverwaltungsdepartement",
+          "badges": []
+        },
+        "frwiki": {
+          "site": "frwiki",
+          "title": "Département central d'administration temporaire",
+          "badges": []
+        },
+        "nlwiki": {
+          "site": "nlwiki",
+          "title": "Generaal-gouvernement (1814-1815)",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

@@ -1,0 +1,835 @@
+{
+  "entities": {
+    "Q554963": {
+      "pageid": 522909,
+      "ns": 0,
+      "title": "Q554963",
+      "lastrevid": 2512011461,
+      "modified": "2026-06-29T23:35:42Z",
+      "type": "item",
+      "id": "Q554963",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Verbandsgemeinde An der Finne"
+        },
+        "pl": {
+          "language": "pl",
+          "value": "Gmina związkowa An der Finne"
+        },
+        "en": {
+          "language": "en",
+          "value": "An der Finne"
+        },
+        "mk": {
+          "language": "mk",
+          "value": "Ан дер Фине"
+        },
+        "it": {
+          "language": "it",
+          "value": "Verbandsgemeinde An der Finne"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Verbandsgemeinde An der Finne"
+        },
+        "ms": {
+          "language": "ms",
+          "value": "An der Finne"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "Verbandsgemeinde An der Finne"
+        },
+        "eo": {
+          "language": "eo",
+          "value": "Verbandsgemeinde An der Finne"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "アン・デア・フィンネ"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "Verbandsgemeinde in Sachsen-Anhalt"
+        },
+        "en": {
+          "language": "en",
+          "value": "Verbandsgemeinde in Saxony-Anhalt"
+        },
+        "eo": {
+          "language": "eo",
+          "value": "komunumaro en Germanio"
+        }
+      },
+      "aliases": {
+        "de": [
+          {
+            "language": "de",
+            "value": "An der Finne"
+          }
+        ],
+        "pl": [
+          {
+            "language": "pl",
+            "value": "An der Finne"
+          }
+        ],
+        "en": [
+          {
+            "language": "en",
+            "value": "Verbandsgemeinde An der Finne"
+          }
+        ],
+        "eo": [
+          {
+            "language": "eo",
+            "value": "An der Finne"
+          }
+        ]
+      },
+      "claims": {
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "ef7247b704f4ec0a7df39e83306bb388fea17d5f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 183,
+                  "id": "Q183"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "q554963$FEA0AD12-4A1F-4F5B-BC56-B0030AA86FE0",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "732ec1c90a6f0694c7db9a71bf09fe7f2b674172",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "9123b0de1cc9c3954366ba797d598e4e1ea4146f",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 10000,
+                          "id": "Q10000"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "6b6dd2aa1fc241b7cd753e41e29efee1dfbbea1f",
+              "datavalue": {
+                "value": {
+                  "latitude": 51.2,
+                  "longitude": 11.566666666667,
+                  "altitude": null,
+                  "precision": 0.016666666666667,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "q554963$434C91F6-6857-4EF8-BE9F-C0A19F9D7245",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 328,
+                          "id": "Q328"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P646": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P646",
+              "hash": "b1f6b5f0ec0cc8950a18d3a1466f656d96fd80e7",
+              "datavalue": {
+                "value": "/m/0cxtkg",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q554963$9B5E70FF-0FEB-40AB-A07E-8BCBADC498D2",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "2b00cb481cddcac7623114367489b5c194901c4a",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "a94b740202b097dd33355e0e6c00e54b9395e5e0",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 15241312,
+                          "id": "Q15241312"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P577": [
+                    {
+                      "snaktype": "value",
+                      "property": "P577",
+                      "hash": "fde79ecb015112d2f29229ccc1ec514ed3e71fa2",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2013-10-28T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P577"
+                ]
+              }
+            ]
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "5b994b9886ed9ebecf94fe2d34750fac6bb17584",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 2513989,
+                  "id": "Q2513989"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "2035b90c606a0c67627a59f54e742d702336264a",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2009-07-01T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580"
+            ],
+            "id": "Q554963$593B67C2-F3F0-4DBF-B24E-B8AF79716913",
+            "rank": "normal"
+          }
+        ],
+        "P227": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P227",
+              "hash": "722e83a2d5fd1220ebe6a845c2c6b099d1d7ffbd",
+              "datavalue": {
+                "value": "2145056-0",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q554963$FFF2C32C-D95E-4AFE-9A33-81C05EFF6F8B",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P214": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P214",
+              "hash": "c88d52475ba9144180e3577bcdf281a83d01531a",
+              "datavalue": {
+                "value": "122801455",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q554963$FBFE8622-8EFD-49D3-8C32-E6C048F6934D",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "ad3713df772ae88af6a7458d084a40ad20b226d6",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "6b7d4330c4aac4caec4ede9de0311ce273f88ecd",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 54919,
+                          "id": "Q54919"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "a00cc299e508357647636e29593b8ca3e534077d",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2015-08-06T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P856": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P856",
+              "hash": "c2fb8c5684c770a26e2de3c2c34da00c9408fb07",
+              "datavalue": {
+                "value": "http://www.vgem-finne.de/",
+                "type": "string"
+              },
+              "datatype": "url"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P407": [
+                {
+                  "snaktype": "value",
+                  "property": "P407",
+                  "hash": "46bfd327b830f66f7061ea92d1be430c135fa91f",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 188,
+                      "id": "Q188"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P407"
+            ],
+            "id": "Q554963$3B1E8556-61F0-4D16-9190-69BCF2BB5585",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "d5847b9b6032aa8b13dae3c2dfd9ed5d114d21b3",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "5a343e7e758a4282a01316d3e959b6e653b767fc",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 11920,
+                          "id": "Q11920"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2046": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2046",
+              "hash": "c6151070c0197590e63b68f92750816b779974ea",
+              "datavalue": {
+                "value": {
+                  "amount": "+270",
+                  "unit": "http://www.wikidata.org/entity/Q712226",
+                  "upperBound": "+270",
+                  "lowerBound": "+270"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "id": "Q554963$0AEEB213-15DB-49D2-A209-74EE8AF95281",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "d5847b9b6032aa8b13dae3c2dfd9ed5d114d21b3",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "5a343e7e758a4282a01316d3e959b6e653b767fc",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 11920,
+                          "id": "Q11920"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2581": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2581",
+              "hash": "ef7e0dd8bbf5e59a3ec2048979c2cc00f8d1f933",
+              "datavalue": {
+                "value": "03277801n",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q554963$8DC93C90-6F02-4EEE-AB79-6CC9C86375B7",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "248ac337a217a5f5eed7139a82a4e60931611af0",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "25b816aab41db18565946259c950aed6de05dd1e",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 4837690,
+                          "id": "Q4837690"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248"
+                ]
+              }
+            ]
+          }
+        ],
+        "P94": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P94",
+              "hash": "d34d0f073253c5d16046a955b45eb084dce8a755",
+              "datavalue": {
+                "value": "Wappen Verbandsgemeinde An der Finne.svg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q554963$303b087d-40f7-3199-9868-7e1e62f75d60",
+            "rank": "normal"
+          }
+        ],
+        "P242": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P242",
+              "hash": "4f3167de7c33979a9132440e891ed87caf509e3c",
+              "datavalue": {
+                "value": "Verbandsgemeinde An der Finne in BLK.svg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q554963$998947FE-8C4A-4870-A90F-9C9111B203E1",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "8b7ab3a53628a14a1c2f0ac0161926a8b0bfb26b",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "74c2134d6eb16d0ded8942b3b6f18e2d644737d6",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Verbandsgemeinde_An_der_Finne&oldid=197421612",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "ef50096fc4a7e1af8803fb397b6a62b4fa7f420e",
+              "datavalue": {
+                "value": "Verbandsgemeinde An der Finne",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q554963$7FE882E0-37C2-4B46-9A06-59DD1FFC5F3E",
+            "rank": "normal"
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "33e106b3c4cde48a89e4460952acc1ff1a1064c2",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 6102,
+                  "id": "Q6102"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q554963$8bb420b0-471d-0723-3a7b-94e885fbd47c",
+            "rank": "normal"
+          }
+        ],
+        "P1365": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1365",
+              "hash": "089301f5fe376fe2452d9d9236327663a5a4f334",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 884437,
+                  "id": "Q884437"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q554963$da148874-4d85-3d75-fb08-44c94af04ff5",
+            "rank": "normal"
+          }
+        ],
+        "P10832": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P10832",
+              "hash": "965bdd4e83d091db2024ae6b5d89c7a05510dbfa",
+              "datavalue": {
+                "value": "E39PBJfxbrJgprWTB7FMQ7ppT3",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q554963$C2465D01-9212-4F6A-A6C6-DF07E30FE3B5",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "6ed57fddd0236ec8e89a9810b08f1be90129bf67",
+                "snaks": {
+                  "P11797": [
+                    {
+                      "snaktype": "value",
+                      "property": "P11797",
+                      "hash": "3b992a8b1d7f5bfbb710fb1b091cc424c4e3e7db",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 54919,
+                          "id": "Q54919"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P214": [
+                    {
+                      "snaktype": "value",
+                      "property": "P214",
+                      "hash": "c88d52475ba9144180e3577bcdf281a83d01531a",
+                      "datavalue": {
+                        "value": "122801455",
+                        "type": "string"
+                      },
+                      "datatype": "external-id"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "8a01665e4876d4b89cd698aea431a4024e2f499e",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2024-06-04T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P11797",
+                  "P214",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1388": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1388",
+              "hash": "43062be75ee7332954e11c907f59f93fd386ff05",
+              "datavalue": {
+                "value": "150845051000",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q554963$AF947269-23F6-4554-AC46-F8066B79772C",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "commonswiki": {
+          "site": "commonswiki",
+          "title": "Category:Verbandsgemeinde An der Finne",
+          "badges": []
+        },
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Verbandsgemeinde An der Finne",
+          "badges": []
+        },
+        "enwiki": {
+          "site": "enwiki",
+          "title": "An der Finne",
+          "badges": []
+        },
+        "eowiki": {
+          "site": "eowiki",
+          "title": "Verbandsgemeinde An der Finne",
+          "badges": []
+        },
+        "itwiki": {
+          "site": "itwiki",
+          "title": "Verbandsgemeinde An der Finne",
+          "badges": []
+        },
+        "mkwiki": {
+          "site": "mkwiki",
+          "title": "Ан дер Фине",
+          "badges": []
+        },
+        "mswiki": {
+          "site": "mswiki",
+          "title": "An der Finne",
+          "badges": []
+        },
+        "nlwiki": {
+          "site": "nlwiki",
+          "title": "Verbandsgemeinde An der Finne",
+          "badges": []
+        },
+        "plwiki": {
+          "site": "plwiki",
+          "title": "Gmina związkowa An der Finne",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

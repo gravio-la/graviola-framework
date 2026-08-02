@@ -103,6 +103,33 @@
         "typescript": "^5.8.2",
       },
     },
+    "apps/sample-data": {
+      "name": "@graviola/sample-data",
+      "version": "0.1.0",
+      "dependencies": {
+        "@graviola/data-mapping-hooks": "workspace:*",
+        "@graviola/edb-core-types": "workspace:*",
+        "@graviola/edb-data-mapping": "workspace:*",
+        "@graviola/edb-import-staging": "workspace:*",
+        "@graviola/edb-wikidata-utils": "workspace:*",
+        "@graviola/sample-data-geo": "workspace:*",
+        "@graviola/sparql-db-impl": "workspace:*",
+        "@graviola/store-core": "workspace:*",
+        "@rdfjs/dataset": "^2.0.2",
+        "@rdfjs/namespace": "catalog:rdf",
+        "cmd-ts": "^0.13.0",
+        "n3": "^1.23.1",
+        "oxigraph": "^0.5.6",
+      },
+      "devDependencies": {
+        "@graviola/edb-tsconfig": "workspace:*",
+        "@types/bun": "^1.2.0",
+        "@types/json-schema": "catalog:",
+        "@types/n3": "^1.21.0",
+        "@types/rdfjs__namespace": "^2.0.0",
+        "typescript": "5.8.2",
+      },
+    },
     "apps/storybook": {
       "name": "@graviola/storybook",
       "version": "0.0.7",
@@ -134,6 +161,7 @@
         "@graviola/json-schema-utils": "workspace:*",
         "@graviola/local-oxigraph-store-provider": "workspace:*",
         "@graviola/meta-schema": "workspace:*",
+        "@graviola/sample-data-geo": "workspace:*",
         "@graviola/semantic-json-form": "workspace:*",
         "@graviola/semantic-jsonform-types": "workspace:*",
         "@graviola/semantic-views": "workspace:*",
@@ -1400,6 +1428,23 @@
         "@types/json-schema": "catalog:",
         "eslint-config-edb": "workspace:*",
         "typescript": "^5.8.2",
+      },
+    },
+    "packages/sample-data-geo": {
+      "name": "@graviola/sample-data-geo",
+      "version": "0.1.0",
+      "dependencies": {
+        "@graviola/edb-core-types": "workspace:*",
+      },
+      "devDependencies": {
+        "@graviola/edb-tsconfig": "workspace:*",
+        "@graviola/edb-tsup-config": "workspace:*",
+        "@types/bun": "^1.2.0",
+        "@types/json-schema": "catalog:",
+        "@types/n3": "^1.21.0",
+        "n3": "^1.23.1",
+        "tsup": "^8.0.0",
+        "typescript": "5.8.2",
       },
     },
     "packages/search-facet-schema": {
@@ -2872,6 +2917,10 @@
     "@graviola/rest-store-server": ["@graviola/rest-store-server@workspace:packages/rest-store-server"],
 
     "@graviola/restfull-fetch-db-impl": ["@graviola/restfull-fetch-db-impl@workspace:packages/restfull-fetch-db-impl"],
+
+    "@graviola/sample-data": ["@graviola/sample-data@workspace:apps/sample-data"],
+
+    "@graviola/sample-data-geo": ["@graviola/sample-data-geo@workspace:packages/sample-data-geo"],
 
     "@graviola/search-facet-schema": ["@graviola/search-facet-schema@workspace:packages/search-facet-schema"],
 

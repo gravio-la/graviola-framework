@@ -1,0 +1,561 @@
+{
+  "entities": {
+    "Q514843": {
+      "pageid": 484239,
+      "ns": 0,
+      "title": "Q514843",
+      "lastrevid": 2512010683,
+      "modified": "2026-06-29T23:33:08Z",
+      "type": "item",
+      "id": "Q514843",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Verbandsgemeinde Arneburg-Goldbeck"
+        },
+        "pl": {
+          "language": "pl",
+          "value": "Gmina związkowa Arneburg-Goldbeck"
+        },
+        "en": {
+          "language": "en",
+          "value": "Arneburg-Goldbeck"
+        },
+        "mk": {
+          "language": "mk",
+          "value": "Арнебург-Голдбек"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Verbandsgemeinde Arneburg-Goldbeck"
+        },
+        "ms": {
+          "language": "ms",
+          "value": "Arneburg-Goldbeck"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "Gemeindeverband aus mehreren selbständigen Gemeinden im Landkreis Stendal in Sachsen-Anhalt"
+        }
+      },
+      "aliases": {
+        "pl": [
+          {
+            "language": "pl",
+            "value": "Arneburg-Goldbeck"
+          }
+        ]
+      },
+      "claims": {
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "ef7247b704f4ec0a7df39e83306bb388fea17d5f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 183,
+                  "id": "Q183"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "q514843$0894D014-E9AF-445E-8C24-4CA73D207185",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "732ec1c90a6f0694c7db9a71bf09fe7f2b674172",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "9123b0de1cc9c3954366ba797d598e4e1ea4146f",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 10000,
+                          "id": "Q10000"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "c550877231172664e6ce5e1658c90e7bad2efa7c",
+              "datavalue": {
+                "value": {
+                  "latitude": 52.716666666667,
+                  "longitude": 11.849722222222,
+                  "altitude": null,
+                  "precision": 0.00027777777777778,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "q514843$13ACA482-315E-4204-9B9F-23581A41FF9E",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 328,
+                          "id": "Q328"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P646": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P646",
+              "hash": "0287c2afb8bed0e7c74ba75afe7e599833005819",
+              "datavalue": {
+                "value": "/m/0d4tbv",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q514843$AD81B1E1-AFE8-43B3-9E9F-D043E565AD95",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "2b00cb481cddcac7623114367489b5c194901c4a",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "a94b740202b097dd33355e0e6c00e54b9395e5e0",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 15241312,
+                          "id": "Q15241312"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P577": [
+                    {
+                      "snaktype": "value",
+                      "property": "P577",
+                      "hash": "fde79ecb015112d2f29229ccc1ec514ed3e71fa2",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2013-10-28T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P577"
+                ]
+              }
+            ]
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "68b641da063c7a716eb1e5a11cfb2cbda1c39ede",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 23006,
+                  "id": "Q23006"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q514843$5DD91E57-5A38-4E42-9D55-E365963F0115",
+            "rank": "normal"
+          }
+        ],
+        "P227": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P227",
+              "hash": "e1e55e291c71cd0e66d9e8937619564283a8ee23",
+              "datavalue": {
+                "value": "16061287-1",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q514843$9CFD03D6-F9FD-4287-BF04-86CDCB7C824E",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P214": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P214",
+              "hash": "cb08ff0b47c4b06708ee80482acded2f11c4639a",
+              "datavalue": {
+                "value": "153172119",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q514843$5F026E9E-19AE-4879-A93E-217B49FFA677",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "ad3713df772ae88af6a7458d084a40ad20b226d6",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "6b7d4330c4aac4caec4ede9de0311ce273f88ecd",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 54919,
+                          "id": "Q54919"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "a00cc299e508357647636e29593b8ca3e534077d",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2015-08-06T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "21848d3f677b8ad93f9c0e8f2a68cdcb2e6dc2c2",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 6057,
+                  "id": "Q6057"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q514843$0a1d7183-4b90-722c-c4aa-bb96750a8a3c",
+            "rank": "normal"
+          }
+        ],
+        "P242": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P242",
+              "hash": "39a0c97d0dc84e07472dc53fe8c62e4a594cef01",
+              "datavalue": {
+                "value": "Verbandsgemeinde Arneburg-Goldbeck in SDL.png",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q514843$f8c2ee53-4901-2836-ee3f-0c9e453349ff",
+            "rank": "normal"
+          }
+        ],
+        "P856": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P856",
+              "hash": "f634e6bbbf0633fb6ba149f8bbb6362ba0cf2245",
+              "datavalue": {
+                "value": "http://www.arneburg-goldbeck.de/",
+                "type": "string"
+              },
+              "datatype": "url"
+            },
+            "type": "statement",
+            "id": "Q514843$79871682-B774-4031-AA4C-9C9F21031B3C",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "1e86ad625136e9ac44dc395c9fee6118f42c6e7a",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "668952afbada70f152b425624db3af2a430c1e8f",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Verbandsgemeinde_Arneburg-Goldbeck&oldid=196878851",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P10832": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P10832",
+              "hash": "1f0bf09f1ea1949797eae34c60195a21af7a4f4b",
+              "datavalue": {
+                "value": "E39PBJrmf8HGFQgVDTj4PgqvpP",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q514843$E2068128-DCA7-4FEC-902C-24FF6D596F72",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "fed8abe8649cc2dcfa78cfc78364db1804db0e56",
+                "snaks": {
+                  "P11797": [
+                    {
+                      "snaktype": "value",
+                      "property": "P11797",
+                      "hash": "3b992a8b1d7f5bfbb710fb1b091cc424c4e3e7db",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 54919,
+                          "id": "Q54919"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P214": [
+                    {
+                      "snaktype": "value",
+                      "property": "P214",
+                      "hash": "cb08ff0b47c4b06708ee80482acded2f11c4639a",
+                      "datavalue": {
+                        "value": "153172119",
+                        "type": "string"
+                      },
+                      "datatype": "external-id"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "226552216c7f0c684e2077704cc49ca40ddd87d1",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2024-06-06T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P11797",
+                  "P214",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1388": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1388",
+              "hash": "e78f3e93dcdc0e3fa4939874357c90c5f55b3267",
+              "datavalue": {
+                "value": "150905051000",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q514843$414BB9AD-E936-4B2B-9C29-C847625D1D65",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Verbandsgemeinde Arneburg-Goldbeck",
+          "badges": []
+        },
+        "enwiki": {
+          "site": "enwiki",
+          "title": "Arneburg-Goldbeck",
+          "badges": []
+        },
+        "mkwiki": {
+          "site": "mkwiki",
+          "title": "Арнебург-Голдбек",
+          "badges": []
+        },
+        "mswiki": {
+          "site": "mswiki",
+          "title": "Arneburg-Goldbeck",
+          "badges": []
+        },
+        "nlwiki": {
+          "site": "nlwiki",
+          "title": "Verbandsgemeinde Arneburg-Goldbeck",
+          "badges": []
+        },
+        "plwiki": {
+          "site": "plwiki",
+          "title": "Gmina związkowa Arneburg-Goldbeck",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

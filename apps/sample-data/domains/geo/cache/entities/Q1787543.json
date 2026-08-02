@@ -1,0 +1,187 @@
+{
+  "entities": {
+    "Q1787543": {
+      "pageid": 1719124,
+      "ns": 0,
+      "title": "Q1787543",
+      "lastrevid": 1363521510,
+      "modified": "2021-02-17T16:11:55Z",
+      "type": "item",
+      "id": "Q1787543",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Kreis Tangerhütte"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "Kreis in der DDR"
+        }
+      },
+      "aliases": {},
+      "claims": {
+        "P36": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P36",
+              "hash": "bab6a2bf3954f4a80ca4929bac0666bbf2bf68c7",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 50859,
+                  "id": "Q50859"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787543$5530fd53-4ead-980d-9ff1-a4fa89cf531e",
+            "rank": "normal"
+          }
+        ],
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "69134fce674a39f3382130caf84f51e58518fb88",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 16957,
+                  "id": "Q16957"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787543$58F594EA-C83D-48D4-8EE0-734ADF68C2F3",
+            "rank": "normal"
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "7c87a9d130338f4808157eaf589307f229beb96f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 15849374,
+                  "id": "Q15849374"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787543$484CC4A8-BEBE-445B-94A3-A62249E79D1A",
+            "rank": "normal"
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "49faa92e8f2b0cd2568dcb7ca63979b5a2a7795e",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 48083,
+                  "id": "Q48083"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787543$5762DCDB-8423-490F-B472-C38D4DD7B89A",
+            "rank": "normal"
+          }
+        ],
+        "P576": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P576",
+              "hash": "8b25add22384e9a99fac9d98c610f1a9d8608adb",
+              "datavalue": {
+                "value": {
+                  "time": "+1987-00-00T00:00:00Z",
+                  "timezone": 0,
+                  "before": 0,
+                  "after": 0,
+                  "precision": 9,
+                  "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                },
+                "type": "time"
+              },
+              "datatype": "time"
+            },
+            "type": "statement",
+            "id": "Q1787543$477FA768-4DAA-44A4-90A3-176FFDC7AF6A",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2671": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2671",
+              "hash": "8d689c2adf5db3363085bb91520edbc8f362b2fc",
+              "datavalue": {
+                "value": "/g/122j3db1",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q1787543$822C6D9A-37DC-499E-9BB5-25C3D6DB6CC2",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Kreis Tangerhütte",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

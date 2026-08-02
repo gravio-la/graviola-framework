@@ -1,0 +1,12 @@
+{
+  "extends": "@graviola/edb-tsconfig/node-application.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "dist",
+    "noEmit": true,
+    "types": ["bun"],
+    "lib": ["ES2022", "DOM"]
+  },
+  "include": ["src/**/*", "domains/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

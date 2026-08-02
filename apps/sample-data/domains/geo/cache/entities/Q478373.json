@@ -1,0 +1,657 @@
+{
+  "entities": {
+    "Q478373": {
+      "pageid": 450886,
+      "ns": 0,
+      "title": "Q478373",
+      "lastrevid": 2512009099,
+      "modified": "2026-06-29T23:28:36Z",
+      "type": "item",
+      "id": "Q478373",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Verbandsgemeinde Seehausen"
+        },
+        "pl": {
+          "language": "pl",
+          "value": "Gmina związkowa Seehausen"
+        },
+        "en": {
+          "language": "en",
+          "value": "Seehausen"
+        },
+        "mk": {
+          "language": "mk",
+          "value": "Зехаузен"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Verbandsgemeinde Seehausen"
+        },
+        "ms": {
+          "language": "ms",
+          "value": "Seehausen"
+        },
+        "uk": {
+          "language": "uk",
+          "value": "Зеегаузен (об'єднана громада)"
+        }
+      },
+      "descriptions": {
+        "nl": {
+          "language": "nl",
+          "value": "Altmark"
+        },
+        "de": {
+          "language": "de",
+          "value": "Verbandsgemeinde im Landkreis Stendal in Sachsen-Anhalt"
+        },
+        "en": {
+          "language": "en",
+          "value": "municipality in Saxony-Anhalt, Germany"
+        }
+      },
+      "aliases": {
+        "en": [
+          {
+            "language": "en",
+            "value": "Seehausen (Altmark)"
+          }
+        ],
+        "de": [
+          {
+            "language": "de",
+            "value": "Verbandsgemeinde Seehausen (Altmark)"
+          }
+        ]
+      },
+      "claims": {
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "ef7247b704f4ec0a7df39e83306bb388fea17d5f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 183,
+                  "id": "Q183"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "q478373$5DE6BA26-7A88-46AA-B551-94E6AFEC318F",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "732ec1c90a6f0694c7db9a71bf09fe7f2b674172",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "9123b0de1cc9c3954366ba797d598e4e1ea4146f",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 10000,
+                          "id": "Q10000"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "6b6de288e7e5f85f9ecd73ca54979e565b5f1931",
+              "datavalue": {
+                "value": {
+                  "latitude": 52.88333333333333,
+                  "longitude": 11.75,
+                  "altitude": null,
+                  "precision": 0.016666666666666666,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "Q478373$5637996B-2C1E-425C-A5B0-5B0D3495EE7A",
+            "rank": "normal"
+          }
+        ],
+        "P646": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P646",
+              "hash": "62f2d0db3d15151068c4ad4c83ffcad2c6183bd5",
+              "datavalue": {
+                "value": "/m/03c2ww0",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478373$074E894B-7DBF-4F89-9321-CB02B48530C8",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "2b00cb481cddcac7623114367489b5c194901c4a",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "a94b740202b097dd33355e0e6c00e54b9395e5e0",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 15241312,
+                          "id": "Q15241312"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P577": [
+                    {
+                      "snaktype": "value",
+                      "property": "P577",
+                      "hash": "fde79ecb015112d2f29229ccc1ec514ed3e71fa2",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2013-10-28T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P577"
+                ]
+              }
+            ]
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "5b994b9886ed9ebecf94fe2d34750fac6bb17584",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 2513989,
+                  "id": "Q2513989"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q478373$2D39A9B1-3AB0-4081-A127-B93D9E37AF4B",
+            "rank": "normal"
+          }
+        ],
+        "P227": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P227",
+              "hash": "daeed45771fe28d7804ffdd402c3c8900355fc2b",
+              "datavalue": {
+                "value": "1037330838",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478373$DEF14105-3FF7-4900-A6EC-CA5B3D6EC739",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P214": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P214",
+              "hash": "c0695b5a2065a23054ef9d312ce1b9d4f3cce2e9",
+              "datavalue": {
+                "value": "304937100",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478373$591AA565-5A44-4400-93D2-5DD26F13B1ED",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "ad3713df772ae88af6a7458d084a40ad20b226d6",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "6b7d4330c4aac4caec4ede9de0311ce273f88ecd",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 54919,
+                          "id": "Q54919"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "a00cc299e508357647636e29593b8ca3e534077d",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2015-08-06T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P94": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P94",
+              "hash": "fef43be3b7358d0a53fe5d330cbba68cb8ccb932",
+              "datavalue": {
+                "value": "DE-ST 15-0-90-5053 VG Seehausen (Altmark) COA.png",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q478373$4BCE9293-1792-4E89-861B-1DC7ED93482D",
+            "rank": "normal"
+          }
+        ],
+        "P242": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P242",
+              "hash": "3c8898532eae2de61783a40132f4bee2127772ab",
+              "datavalue": {
+                "value": "Verbandsgemeinde Seehausen (Altmark) in SDL.png",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q478373$28C385DD-890D-4772-AEBF-CA459FAFD248",
+            "rank": "normal"
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "21848d3f677b8ad93f9c0e8f2a68cdcb2e6dc2c2",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 6057,
+                  "id": "Q6057"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q478373$7edc7f0b-4ad8-f0b1-3787-51bc30f1f19e",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P856": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P856",
+              "hash": "e3ed811d2b9f716a1a098f3656e7a31a51ed2e7d",
+              "datavalue": {
+                "value": "https://www.seehausen-altmark.de/content-pages/verwaltung-wirtschaft/verbandsgemeinde/",
+                "type": "string"
+              },
+              "datatype": "url"
+            },
+            "type": "statement",
+            "id": "Q478373$064459AB-589C-4086-B389-417115B26FFD",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "3970acbe1a259524b0ea4ef985c6abd3bf2bf5eb",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "df74066f12075f06ae07a343ef8658596b8c9c6c",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Verbandsgemeinde_Seehausen_(Altmark)&oldid=195186533",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "7d0259d8d81b53c7d217feb7936ebd5689e34a11",
+              "datavalue": {
+                "value": "Verbandsgemeinde Seehausen (Altmark)",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q478373$B951F1AE-5C57-40DD-BB0C-23121F6A2D8D",
+            "rank": "normal"
+          }
+        ],
+        "P1667": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1667",
+              "hash": "a674cf0d2689a079f48c605feb63769698d06d61",
+              "datavalue": {
+                "value": "1136869",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478373$20CCF9A4-C27A-485F-824F-3209BB1AEB72",
+            "rank": "normal"
+          }
+        ],
+        "P7197": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P7197",
+              "hash": "5216b00294d8bcbd06a4a19380c425702cdc0d5f",
+              "datavalue": {
+                "value": "2833800",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478373$AF523CEC-BB4C-4436-8DC0-C988EC7CF1D3",
+            "rank": "normal"
+          }
+        ],
+        "P10832": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P10832",
+              "hash": "78ac5bdd809f289f28d2208e34c5eb7fe514e3bf",
+              "datavalue": {
+                "value": "E39PBJvCT3prrXTbCW87YgmWXd",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478373$3DE647E2-662D-4B63-9941-E83275430BE6",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "7f9317460155d1cec00bc8ba42f4bfea9711ab6e",
+                "snaks": {
+                  "P11797": [
+                    {
+                      "snaktype": "value",
+                      "property": "P11797",
+                      "hash": "3b992a8b1d7f5bfbb710fb1b091cc424c4e3e7db",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 54919,
+                          "id": "Q54919"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P214": [
+                    {
+                      "snaktype": "value",
+                      "property": "P214",
+                      "hash": "c0695b5a2065a23054ef9d312ce1b9d4f3cce2e9",
+                      "datavalue": {
+                        "value": "304937100",
+                        "type": "string"
+                      },
+                      "datatype": "external-id"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "8a01665e4876d4b89cd698aea431a4024e2f499e",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2024-06-04T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P11797",
+                  "P214",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1388": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1388",
+              "hash": "8bcba2fc2cd8b463eaef093a4615adc1cd798aff",
+              "datavalue": {
+                "value": "150905053000",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478373$41D26533-A331-4D62-9254-6BC61B0613F4",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "commonswiki": {
+          "site": "commonswiki",
+          "title": "Category:Verbandsgemeinde Seehausen (Altmark)",
+          "badges": []
+        },
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Verbandsgemeinde Seehausen (Altmark)",
+          "badges": []
+        },
+        "enwiki": {
+          "site": "enwiki",
+          "title": "Seehausen (Verbandsgemeinde)",
+          "badges": []
+        },
+        "mkwiki": {
+          "site": "mkwiki",
+          "title": "Зехаузен (општинска заедница)",
+          "badges": []
+        },
+        "mswiki": {
+          "site": "mswiki",
+          "title": "Seehausen (Verbandsgemeinde)",
+          "badges": []
+        },
+        "nlwiki": {
+          "site": "nlwiki",
+          "title": "Verbandsgemeinde Seehausen (Altmark)",
+          "badges": []
+        },
+        "plwiki": {
+          "site": "plwiki",
+          "title": "Gmina związkowa Seehausen (Altmark)",
+          "badges": []
+        },
+        "ukwiki": {
+          "site": "ukwiki",
+          "title": "Зеегаузен (об'єднана громада)",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

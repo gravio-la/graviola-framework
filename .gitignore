@@ -65,6 +65,10 @@ yalc.lock
 coverage
 
 out
+# Committed Turtle outputs for sample-data domains (overrides root `out`)
+!apps/sample-data/**/out/
+!apps/sample-data/**/out/**
+
 apps/exhibition-live/exhibition-live
 
 packages/icons/src/assets/svgs

@@ -1,0 +1,1199 @@
+{
+  "entities": {
+    "Q160856": {
+      "pageid": 161727,
+      "ns": 0,
+      "title": "Q160856",
+      "lastrevid": 2517913571,
+      "modified": "2026-07-15T21:42:28Z",
+      "type": "item",
+      "id": "Q160856",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Buchwalde"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "Bukojna"
+        },
+        "en": {
+          "language": "en",
+          "value": "Buchwalde"
+        },
+        "es": {
+          "language": "es",
+          "value": "Buchwalde"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Buchwalde"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "Buchwalde"
+        },
+        "pl": {
+          "language": "pl",
+          "value": "Buchwalde"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "Бухвальде"
+        },
+        "dsb": {
+          "language": "dsb",
+          "value": "Bukojna"
+        },
+        "ca": {
+          "language": "ca",
+          "value": "Buchwalde"
+        },
+        "nb": {
+          "language": "nb",
+          "value": "Buchwalde"
+        },
+        "lld": {
+          "language": "lld",
+          "value": "Buchwalde"
+        },
+        "ga": {
+          "language": "ga",
+          "value": "Buchwalde"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "Ortsteil von Malschwitz"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "plaats in Duitsland"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "wjes w Budyskim wokrjesu, gmejnski dźěl Malešec"
+        },
+        "el": {
+          "language": "el",
+          "value": "οικισμός της Γερμανίας"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "établissement humain en Allemagne"
+        },
+        "en": {
+          "language": "en",
+          "value": "human settlement in Germany"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "серболужицкая деревня в Верхней Лужице, коммуна  Мальшвиц района Баутцен, земля Саксония"
+        },
+        "dsb": {
+          "language": "dsb",
+          "value": "wjas w Górnej Łužycy"
+        },
+        "uk": {
+          "language": "uk",
+          "value": "населений пункт у Німеччині"
+        },
+        "ml": {
+          "language": "ml",
+          "value": "ജര്‍മ്മനിയിലെ ഒരു സ്ഥലം"
+        },
+        "ar": {
+          "language": "ar",
+          "value": "مستوطنة بشرية في ألمانيا"
+        },
+        "cs": {
+          "language": "cs",
+          "value": "vesnice v Horní Lužici, část obce Malschwitz/Malešecy"
+        },
+        "hy": {
+          "language": "hy",
+          "value": "բնակավայր Գերմանիայում"
+        },
+        "lld": {
+          "language": "lld",
+          "value": "chemun de la Germania"
+        },
+        "ary": {
+          "language": "ary",
+          "value": "مستوطنة بشرية في ألمانيا"
+        }
+      },
+      "aliases": {
+        "de": [
+          {
+            "language": "de",
+            "value": "Bukojna"
+          }
+        ],
+        "ru": [
+          {
+            "language": "ru",
+            "value": "Букойна"
+          }
+        ],
+        "hsb": [
+          {
+            "language": "hsb",
+            "value": "Buchwalde"
+          }
+        ],
+        "dsb": [
+          {
+            "language": "dsb",
+            "value": "Buchwalde"
+          }
+        ]
+      },
+      "claims": {
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "ef7247b704f4ec0a7df39e83306bb388fea17d5f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 183,
+                  "id": "Q183"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "q160856$58247437-7E1C-4C9C-AFB3-0B920AB77134",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "a66bb06a64aa9534b6b15e3a946f7aebae1a2f06",
+              "datavalue": {
+                "value": {
+                  "latitude": 51.2411,
+                  "longitude": 14.5778,
+                  "altitude": null,
+                  "precision": 0.0001,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "Q160856$D9EA0563-3CFA-454C-ADAC-C8A53F38BB8E",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "e4107f3f365eb84c5fc38fd65f4a80a2534583e7",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 93260,
+                  "id": "Q93260"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "7dc2821fe3f7d0644f5ada26fb6c7255ccd0c291",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1994-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580"
+            ],
+            "id": "Q160856$92CA1BBB-3DA8-412B-8779-9CF4E3B5F103",
+            "rank": "preferred",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "52731afaa85cccc88e701b4b6d6682099bba7fcc",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 160679,
+                  "id": "Q160679"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "ec3fad5617d6ec89ebe0e606278f737d999b5450",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1974-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "c52610cf2484d0ad6653d33766c3606e3e67ec6f",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1994-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580",
+              "P582"
+            ],
+            "id": "Q160856$9cbd32ae-4ee5-ea18-18d6-a5431da59ae6",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "ee397289442ab7004329a8be27e1add95aeb9068",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1787204,
+                  "id": "Q1787204"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "7de1eaa04f86eb94bfe7cc9080716a0eed0ffd39",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1974-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P582"
+            ],
+            "id": "Q160856$0557ee21-49bd-1343-1205-9245dd365932",
+            "rank": "normal"
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "0822324dd76b90eef8eee5e0cf38d893013ccdf3",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 253019,
+                  "id": "Q253019"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "ec3fad5617d6ec89ebe0e606278f737d999b5450",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1974-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580"
+            ],
+            "id": "Q160856$8CAB79CD-D219-40CC-B7EE-B9FD85E6659C",
+            "rank": "preferred"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "4e6beb54b615d48c5239f20931f0d68409834ac2",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 262166,
+                  "id": "Q262166"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "7de1eaa04f86eb94bfe7cc9080716a0eed0ffd39",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1974-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P582"
+            ],
+            "id": "Q160856$463dd9ae-404d-7f4b-879e-3232308f3b5e",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "5234088afa2cb8dd6b2b0c2f713eff1c61f34067",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 532,
+                  "id": "Q532"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q160856$8C9F7C3C-31EE-4FD4-B277-C9869D9F33A0",
+            "rank": "normal"
+          }
+        ],
+        "P281": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P281",
+              "hash": "55a64022893c83b45ef25c84c7d20c0950f9d164",
+              "datavalue": {
+                "value": "02694",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q160856$E45F294E-F745-4BCA-824F-A8A6F00E59FD",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P361": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P361",
+              "hash": "786ab8a8c6b9eb0213974ce7f3428c83b23d7c33",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 145129,
+                  "id": "Q145129"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q160856$067FC016-D717-4E98-9653-B75360AFB93E",
+            "rank": "normal"
+          }
+        ],
+        "P473": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P473",
+              "hash": "56fa5894b432fd8387d500765ab9e5f015c85f86",
+              "datavalue": {
+                "value": "035932",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q160856$7E020E82-6C8A-4473-87BB-0960CE5B4D8C",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "990b91816694a34473f7091b7b0cd3d70f461ace",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "e79a8b061eb82009372a7c6d5f90b40d14c503cc",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Buchwalde_(Malschwitz)&oldid=178810410",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2044": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2044",
+              "hash": "ab46db0e17a70e22f37af2e363d6f254b032efb6",
+              "datavalue": {
+                "value": {
+                  "amount": "+147",
+                  "unit": "http://www.wikidata.org/entity/Q11573"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "id": "Q160856$87868179-8D97-4038-A2C2-F58411B551A0",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "990b91816694a34473f7091b7b0cd3d70f461ace",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "e79a8b061eb82009372a7c6d5f90b40d14c503cc",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Buchwalde_(Malschwitz)&oldid=178810410",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1549": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "26a3c126911c1ff7024db60b2bf35500cf3fdb96",
+              "datavalue": {
+                "value": {
+                  "text": "Bukojnjan",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "e9447d28af8c5d42930d7dd10e816fc7d922f8e4",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088290,
+                      "id": "Q47088290"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q160856$063696AC-33AE-462E-84E8-1BC6DB30F648",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "e427a69e8176de6b53e2fc00840052d17783ff16",
+              "datavalue": {
+                "value": {
+                  "text": "Bukojnjanka",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "9ccfcbc8ef0cb77e854001299df9103998ab5d48",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088293,
+                      "id": "Q47088293"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q160856$499F1335-38BC-4B66-8399-16AE129DE438",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "1f208d726c5c431d4d0967715f811fbd8a0e7e23",
+              "datavalue": {
+                "value": {
+                  "text": "Bukojnjenjo",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "7002a0d0b3dc52a703f036cc2c96b1b6c752ca25",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088292,
+                      "id": "Q47088292"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q160856$AADCE2F1-A400-408A-A888-37B463671600",
+            "rank": "normal"
+          }
+        ],
+        "P1464": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1464",
+              "hash": "9c54ebc9f54891295a8026fde209e4d15df94eb1",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 55822389,
+                  "id": "Q55822389"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q160856$8b30e1a8-4e6e-3d7c-e60e-da34323e2eda",
+            "rank": "normal"
+          }
+        ],
+        "P1566": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1566",
+              "hash": "8fc07e7116fdc4464a9e172230379e25ad1542de",
+              "datavalue": {
+                "value": "2942182",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160856$1C814568-12C0-49D9-88AE-EEA80F360984",
+            "rank": "normal"
+          }
+        ],
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "444fecae74a7467a348f8b8eed7cca8d5d7f58c1",
+              "datavalue": {
+                "value": "Buchwalde/Bukojna",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q160856$e6f6c29e-4093-827e-991c-65fe3c715c5d",
+            "rank": "normal"
+          }
+        ],
+        "P6766": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P6766",
+              "hash": "b417688d7980b798a24eee586c23388afa5b9def",
+              "datavalue": {
+                "value": "1292972171",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160856$F130DA1A-535C-49A8-864A-1645301C1391",
+            "rank": "normal"
+          }
+        ],
+        "P1705": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1705",
+              "hash": "1c8029f0f689625f445c52b95a7916eb2b4532cb",
+              "datavalue": {
+                "value": {
+                  "text": "Bukojna",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P443": [
+                {
+                  "snaktype": "value",
+                  "property": "P443",
+                  "hash": "4c8eddca115471247bbb9633a45d2fc55bc89af6",
+                  "datavalue": {
+                    "value": "Hsb-Bukojna.ogg",
+                    "type": "string"
+                  },
+                  "datatype": "commonsMedia"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P443"
+            ],
+            "id": "Q160856$09F4F7FB-5E7D-4696-9A84-79BFC546BADE",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1705",
+              "hash": "d2610789555cb67f305f963f1e7a0241491dbfcd",
+              "datavalue": {
+                "value": {
+                  "text": "Buchwalde",
+                  "language": "de"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "id": "Q160856$90887435-9F2D-4533-B6BE-4C7A4F4B4AAB",
+            "rank": "normal"
+          }
+        ],
+        "P18": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P18",
+              "hash": "bb2a8f95e6ef42be3ee8222e0a87af4a2cc1311f",
+              "datavalue": {
+                "value": "Malschwitz Buchwalde Aerial.jpg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q160856$28234cf9-42bf-219c-0bac-2c41ba02b64f",
+            "rank": "normal"
+          }
+        ],
+        "P1082": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "b23dd039378982a5970d7c74524ad357c5d03ddf",
+              "datavalue": {
+                "value": {
+                  "amount": "+142",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "50e3b9c4ecacaca2ba92107b638691cbfbc9121b",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q160856$66b1738b-4af1-4298-9223-77cdc34a69df",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "494165163bb8558a53a1331aa7554bc7a47a172d",
+              "datavalue": {
+                "value": {
+                  "amount": "+151",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "5f7bbb1374fc3676fe8e0452d8c818594e1baaf7",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2022-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q160856$EC14B5D4-BD24-4C07-9469-24F7FA22DC88",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "5d88e1f76fc8dc4f186f15a7062126532b0a67f9",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "3ee78167e9bff36c368f239cdad52011c970917b",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 2402143,
+                          "id": "Q2402143"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P7046": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P7046",
+              "hash": "8b085871d87142b0bdeca41d173b6e5537da9a86",
+              "datavalue": {
+                "value": "23035",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160856$DA2F8572-4282-4A9D-A057-6155A82985FC",
+            "rank": "normal"
+          }
+        ],
+        "P2671": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2671",
+              "hash": "6400b414ab39a53f8444df0e50aef3d33be4bdbe",
+              "datavalue": {
+                "value": "/g/120ht8l0",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160856$2927D81A-2F22-41E9-986A-1D9A65B834B6",
+            "rank": "normal"
+          }
+        ],
+        "P8168": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P8168",
+              "hash": "b65b1b5faaabfa1f3b5b30eaf0ffa8d18686e310",
+              "datavalue": {
+                "value": "Q295392",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160856$59963ADD-3994-47A5-8EA8-AC1B3500A569",
+            "rank": "normal"
+          }
+        ],
+        "P2326": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2326",
+              "hash": "a18ea1b0bd8543e42b325a973362cc0e2a07d602",
+              "datavalue": {
+                "value": "-1754443",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160856$5A02B178-1EBE-432C-B639-6E783F2DF42D",
+            "rank": "normal"
+          }
+        ],
+        "P227": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P227",
+              "hash": "c138b1f318e99ba4205afe1f70d1ac25d7c34baa",
+              "datavalue": {
+                "value": "1208031422",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160856$e9151638-4137-6a2e-f6c0-1ef0a030326c",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "commonswiki": {
+          "site": "commonswiki",
+          "title": "Category:Buchwalde/Bukojna",
+          "badges": []
+        },
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Buchwalde (Malschwitz)",
+          "badges": []
+        },
+        "hsbwiki": {
+          "site": "hsbwiki",
+          "title": "Bukojna (Malešecy)",
+          "badges": []
+        },
+        "ruwiki": {
+          "site": "ruwiki",
+          "title": "Бухвальде (Мальшвиц)",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

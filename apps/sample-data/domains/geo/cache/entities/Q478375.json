@@ -1,0 +1,737 @@
+{
+  "entities": {
+    "Q478375": {
+      "pageid": 450888,
+      "ns": 0,
+      "title": "Q478375",
+      "lastrevid": 2512009115,
+      "modified": "2026-06-29T23:28:38Z",
+      "type": "item",
+      "id": "Q478375",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Verbandsgemeinde Egelner Mulde"
+        },
+        "pl": {
+          "language": "pl",
+          "value": "Gmina związkowa Egelner Mulde"
+        },
+        "en": {
+          "language": "en",
+          "value": "Egelner Mulde"
+        },
+        "mk": {
+          "language": "mk",
+          "value": "Егелнер Мулде"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Verbandsgemeinde Egelner Mulde"
+        },
+        "ms": {
+          "language": "ms",
+          "value": "Egelner Mulde"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "Verbandsgemeinde in Sachsen-Anhalt"
+        },
+        "en": {
+          "language": "en",
+          "value": "Verbandsgemeinde in Saxony-Anhalt"
+        }
+      },
+      "aliases": {
+        "pl": [
+          {
+            "language": "pl",
+            "value": "Egelner Mulde"
+          }
+        ],
+        "de": [
+          {
+            "language": "de",
+            "value": "VG Egelner Mulde"
+          }
+        ],
+        "en": [
+          {
+            "language": "en",
+            "value": "Verbandsgemeinde Egelner Mulde"
+          }
+        ]
+      },
+      "claims": {
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "ef7247b704f4ec0a7df39e83306bb388fea17d5f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 183,
+                  "id": "Q183"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "q478375$2E96E5FB-51D3-4A99-81C8-F5A0FB567D39",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "732ec1c90a6f0694c7db9a71bf09fe7f2b674172",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "9123b0de1cc9c3954366ba797d598e4e1ea4146f",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 10000,
+                          "id": "Q10000"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "069eb8e455a0b95b500cd7505d630ec786723c90",
+              "datavalue": {
+                "value": {
+                  "latitude": 51.95,
+                  "longitude": 11.433,
+                  "altitude": null,
+                  "precision": 0.00027777777777778,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "q478375$DCE2C3DF-A2F5-437D-BF4C-FC135E7BA333",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 328,
+                          "id": "Q328"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P646": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P646",
+              "hash": "9bff16268880913e5e944076edefee740b7a1328",
+              "datavalue": {
+                "value": "/m/03c1dj5",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478375$66071503-ECBA-43FF-9426-A2091A812C58",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "2b00cb481cddcac7623114367489b5c194901c4a",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "a94b740202b097dd33355e0e6c00e54b9395e5e0",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 15241312,
+                          "id": "Q15241312"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P577": [
+                    {
+                      "snaktype": "value",
+                      "property": "P577",
+                      "hash": "fde79ecb015112d2f29229ccc1ec514ed3e71fa2",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2013-10-28T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P577"
+                ]
+              }
+            ]
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "5b994b9886ed9ebecf94fe2d34750fac6bb17584",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 2513989,
+                  "id": "Q2513989"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "4eb3c244806b2c6770306cec440e23a73a64b739",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2010-01-01T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580"
+            ],
+            "id": "Q478375$C45305FD-8CD8-46ED-9BB0-FB41212F67E9",
+            "rank": "normal"
+          }
+        ],
+        "P227": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P227",
+              "hash": "79e8a2c3b3dbcbb93a2c0b2ed5d6cdc3c9ddc012",
+              "datavalue": {
+                "value": "16062576-2",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478375$FA2498D9-FBB4-46E2-BE73-65D892EF13EC",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P214": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P214",
+              "hash": "109b54109e7f9bd76070eb9e3ea55ada4b5f7d9b",
+              "datavalue": {
+                "value": "134430147",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478375$0D785759-9A61-40BE-A864-873454596071",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "ad3713df772ae88af6a7458d084a40ad20b226d6",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "6b7d4330c4aac4caec4ede9de0311ce273f88ecd",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 54919,
+                          "id": "Q54919"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "a00cc299e508357647636e29593b8ca3e534077d",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2015-08-06T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P94": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P94",
+              "hash": "d141273c0214a0445a3fb2c167c00ed9ed5d5db6",
+              "datavalue": {
+                "value": "Wappen Egelner Mulde.png",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q478375$99144868-24DA-46A2-AE15-2747CAA03724",
+            "rank": "normal"
+          }
+        ],
+        "P242": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P242",
+              "hash": "06d2beb1f14c7a6ec00967d07fb22da23c3e2c3f",
+              "datavalue": {
+                "value": "VG Egelner Mulde in SLK.png",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q478375$CB002193-7657-4420-B6E6-B144B59F355E",
+            "rank": "normal"
+          }
+        ],
+        "P150": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "a24ddac48bcef2ed43ad5742c06e9b44ee148034",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 634521,
+                  "id": "Q634521"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q478375$9b135ddd-4cda-b42e-e529-8b454c5da7d9",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "579d646b692286a4d67b4bebd288d0d2b5038a09",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 690259,
+                  "id": "Q690259"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q478375$a748d553-480b-914c-bdd6-201a5e4da5c5",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "76452dd2281e55f84ef639c94ceb9f5818931bfb",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 695609,
+                  "id": "Q695609"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q478375$8443fd7c-4bd9-15dd-1c86-85655bbd55cd",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "ef6fd091588fc358d0fd6de344074c94292e79dd",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 518194,
+                  "id": "Q518194"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q478375$e7f3127c-4792-bbf9-0349-0a52ac140417",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "de770c311eb7fd257783489921e47af7c4f0cd1d",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 554743,
+                  "id": "Q554743"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q478375$88a95f7a-4728-b199-f22b-260b1c0409e1",
+            "rank": "normal"
+          }
+        ],
+        "P856": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P856",
+              "hash": "1be7fc347e529972660896adf9dff8efd1d38c3c",
+              "datavalue": {
+                "value": "https://www.egelnermulde.de/",
+                "type": "string"
+              },
+              "datatype": "url"
+            },
+            "type": "statement",
+            "id": "Q478375$6D2861E6-9C2B-475A-8ECC-C3C5D3D46B68",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "555d793444f1962653acb45a7773d8a4c15cb1bb",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "1ce2bf9d6004b2ea36c54cbe8e33a8167eb0133c",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Verbandsgemeinde_Egelner_Mulde&oldid=195721607",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "99d229157c22d30d6bd137e0052de49f1cad18c6",
+              "datavalue": {
+                "value": "Verbandsgemeinde Egelner Mulde",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q478375$102BCA77-4290-4C4B-A63C-2CDC36FAFE8D",
+            "rank": "normal"
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "ef4990dd42aeb90b4630c48f13e5259af1213346",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 6081,
+                  "id": "Q6081"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q478375$84904ca0-44e1-8907-e22f-6bf4b8728fe7",
+            "rank": "normal"
+          }
+        ],
+        "P10832": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P10832",
+              "hash": "5fd6d8c6546efca5fd5809118ba083dc51f34950",
+              "datavalue": {
+                "value": "E39PBJvMDvWMT4xbpQ8J6CCPcP",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478375$E3FF5096-1A8E-4A3C-BBE8-559A2AA2420B",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "c4b5070ab2c3039e57d14bc61c2ca12acc197174",
+                "snaks": {
+                  "P11797": [
+                    {
+                      "snaktype": "value",
+                      "property": "P11797",
+                      "hash": "3b992a8b1d7f5bfbb710fb1b091cc424c4e3e7db",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 54919,
+                          "id": "Q54919"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P214": [
+                    {
+                      "snaktype": "value",
+                      "property": "P214",
+                      "hash": "109b54109e7f9bd76070eb9e3ea55ada4b5f7d9b",
+                      "datavalue": {
+                        "value": "134430147",
+                        "type": "string"
+                      },
+                      "datatype": "external-id"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "37012f06242d935d14d753b9830aa88ca7fc1b51",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2024-06-05T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P11797",
+                  "P214",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1388": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1388",
+              "hash": "da322443330c9b805795785ffd01f958b51bb9cf",
+              "datavalue": {
+                "value": "150895051000",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478375$BB4D2DF2-5B96-4CFA-B1C9-1216A33DC16C",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "commonswiki": {
+          "site": "commonswiki",
+          "title": "Category:Verbandsgemeinde Egelner Mulde",
+          "badges": []
+        },
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Verbandsgemeinde Egelner Mulde",
+          "badges": []
+        },
+        "enwiki": {
+          "site": "enwiki",
+          "title": "Egelner Mulde",
+          "badges": []
+        },
+        "mkwiki": {
+          "site": "mkwiki",
+          "title": "Егелнер Мулде",
+          "badges": []
+        },
+        "mswiki": {
+          "site": "mswiki",
+          "title": "Egelner Mulde",
+          "badges": []
+        },
+        "nlwiki": {
+          "site": "nlwiki",
+          "title": "Verbandsgemeinde Egelner Mulde",
+          "badges": []
+        },
+        "plwiki": {
+          "site": "plwiki",
+          "title": "Gmina związkowa Egelner Mulde",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

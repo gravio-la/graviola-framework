@@ -1,0 +1,1249 @@
+{
+  "entities": {
+    "Q160812": {
+      "pageid": 161684,
+      "ns": 0,
+      "title": "Q160812",
+      "lastrevid": 2512513184,
+      "modified": "2026-07-01T07:19:39Z",
+      "type": "item",
+      "id": "Q160812",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Schönau"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "Šunow"
+        },
+        "en": {
+          "language": "en",
+          "value": "Schönau"
+        },
+        "es": {
+          "language": "es",
+          "value": "Schönau"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Schönau"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "Schönau"
+        },
+        "pl": {
+          "language": "pl",
+          "value": "Schönau"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "Шёнау"
+        },
+        "dsb": {
+          "language": "dsb",
+          "value": "Šunow"
+        },
+        "ca": {
+          "language": "ca",
+          "value": "Schönau"
+        },
+        "nb": {
+          "language": "nb",
+          "value": "Schönau"
+        },
+        "lld": {
+          "language": "lld",
+          "value": "Schönau"
+        },
+        "ga": {
+          "language": "ga",
+          "value": "Schönau"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "Ortsteil der Gemeinde Ralbitz-Rosenthal"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "plaats in Duitsland"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "wjes w Budyskim wokrjesu, gmejnski dźěl Ralbic-Róžanta"
+        },
+        "el": {
+          "language": "el",
+          "value": "οικισμός της Γερμανίας"
+        },
+        "en": {
+          "language": "en",
+          "value": "suburb of Ralbitz-Rosenthal"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "деревня в Верхней Лужице, Германия"
+        },
+        "ar": {
+          "language": "ar",
+          "value": "بلدية في ألمانيا"
+        },
+        "dsb": {
+          "language": "dsb",
+          "value": "wjas w budyšyńskem wokrejsu, gmejnski źěl Ralbic-Róžanta"
+        },
+        "cs": {
+          "language": "cs",
+          "value": "vesnice v Horní Lužici, Sasko"
+        },
+        "tr": {
+          "language": "tr",
+          "value": "Kreis Kamenz, Almanya'da köy"
+        },
+        "ary": {
+          "language": "ary",
+          "value": "دوّار ف ألمانيا"
+        },
+        "hi": {
+          "language": "hi",
+          "value": "जर्मनी का एक गाँव"
+        }
+      },
+      "aliases": {
+        "de": [
+          {
+            "language": "de",
+            "value": "Sunow"
+          },
+          {
+            "language": "de",
+            "value": "Šunow"
+          }
+        ],
+        "ru": [
+          {
+            "language": "ru",
+            "value": "Шунов"
+          }
+        ]
+      },
+      "claims": {
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "ef7247b704f4ec0a7df39e83306bb388fea17d5f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 183,
+                  "id": "Q183"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "q160812$0DD594A0-8C6B-49CF-A484-2FEDF3CD363E",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "d2b84d8b7f412e3f214a8b32759b82613c2f41ba",
+              "datavalue": {
+                "value": {
+                  "latitude": 51.3228,
+                  "longitude": 14.2267,
+                  "altitude": null,
+                  "precision": 0.0001,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "Q160812$834B2D6A-C39F-4CF0-8261-6F68E4EA1E6A",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "c8c97e191bb40d360ae7014c150c3c9deec18b63",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 93287,
+                  "id": "Q93287"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "7dc2821fe3f7d0644f5ada26fb6c7255ccd0c291",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1994-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580"
+            ],
+            "id": "Q160812$373EE336-14B1-47ED-8081-284E4A61C855",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "d763ebe073e822c94de1c59037c1ec88a3b51faf",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 160588,
+                  "id": "Q160588"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "ec3fad5617d6ec89ebe0e606278f737d999b5450",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1974-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "c52610cf2484d0ad6653d33766c3606e3e67ec6f",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1994-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580",
+              "P582"
+            ],
+            "id": "Q160812$51ae29b5-4e61-0095-fc00-ad095a648d9a",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "449001b0cb95b3224aa45c309888e6cdd6c885f5",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1492913,
+                  "id": "Q1492913"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "7de1eaa04f86eb94bfe7cc9080716a0eed0ffd39",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1974-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P582"
+            ],
+            "id": "Q160812$fea2ae54-45f7-0cbf-71d1-505f8031e725",
+            "rank": "normal"
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "0822324dd76b90eef8eee5e0cf38d893013ccdf3",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 253019,
+                  "id": "Q253019"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "7dc2821fe3f7d0644f5ada26fb6c7255ccd0c291",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1994-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P131": [
+                {
+                  "snaktype": "value",
+                  "property": "P131",
+                  "hash": "c8c97e191bb40d360ae7014c150c3c9deec18b63",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 93287,
+                      "id": "Q93287"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580",
+              "P131"
+            ],
+            "id": "Q160812$33360F0D-79BD-4065-A4FD-4A4BD77ED71F",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "4e6beb54b615d48c5239f20931f0d68409834ac2",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 262166,
+                  "id": "Q262166"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "7de1eaa04f86eb94bfe7cc9080716a0eed0ffd39",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1974-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P582"
+            ],
+            "id": "Q160812$e62fd120-4878-d648-8c05-baa9d293423a",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "5234088afa2cb8dd6b2b0c2f713eff1c61f34067",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 532,
+                  "id": "Q532"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q160812$9cb753b5-4b7d-33d4-aa85-85666094ccbb",
+            "rank": "normal"
+          }
+        ],
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "5ca80a7f4fc4f4a6a389ff57d16968af0fe9241d",
+              "datavalue": {
+                "value": "Schönau/Šunow",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q160812$73367A6D-1CD7-4863-821E-CADA61CDE507",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "288ab581e7d2d02995a26dfa8b091d96e78457fc",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "6a164248fc96bfa583bbb495cb63ae6401ec203c",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 206855,
+                          "id": "Q206855"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P281": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P281",
+              "hash": "5ff62bdde7c95a60c8beb015621aeb963b47aca9",
+              "datavalue": {
+                "value": "01920",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q160812$61CF68B5-2924-49E4-AD89-3B617B3D1F27",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P206": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P206",
+              "hash": "848b7965273bc510ada90c69f14de2d6473987b7",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 163007,
+                  "id": "Q163007"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q160812$FA89DD56-8CD4-4A22-BC7E-D3056BD03882",
+            "rank": "normal"
+          }
+        ],
+        "P361": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P361",
+              "hash": "786ab8a8c6b9eb0213974ce7f3428c83b23d7c33",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 145129,
+                  "id": "Q145129"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q160812$6DCEB5F9-8B27-477C-84C3-C1EB3F7AB410",
+            "rank": "normal"
+          }
+        ],
+        "P473": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P473",
+              "hash": "1760b18f2d487815afe0da5c71bd632b4dbd37c1",
+              "datavalue": {
+                "value": "035792",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q160812$D961D787-FBFD-4FF5-AA53-E3FAAF00F0BE",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2044": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2044",
+              "hash": "d2e362bbcd8d2bed313b4da128d02f840cd1b189",
+              "datavalue": {
+                "value": {
+                  "amount": "+136",
+                  "unit": "http://www.wikidata.org/entity/Q11573"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "id": "Q160812$EEEE6FC1-238E-468A-ACEB-92FE090890E5",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "dbca4a53fa165b2c961765b791c52e47d71cecf9",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "54b837c8c9e20b0e293844eee5d64162054f22db",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Schönau_(Ralbitz-Rosenthal)&oldid=175769758",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1549": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "0c352c616e87b0489e26043ad34159361f38513d",
+              "datavalue": {
+                "value": {
+                  "text": "Šunowčan",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "e9447d28af8c5d42930d7dd10e816fc7d922f8e4",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088290,
+                      "id": "Q47088290"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q160812$FAE075E0-41D7-407E-9AC1-AB4DF92C0DF4",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "97a227417fe86fb3211d70a9799cfca87f1f3919",
+              "datavalue": {
+                "value": {
+                  "text": "Šunowčanka",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "9ccfcbc8ef0cb77e854001299df9103998ab5d48",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088293,
+                      "id": "Q47088293"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q160812$967007BC-61A4-4DEE-A835-3987B211ACB9",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "6a476b64ea319521d12cdd096d55fdbf94bb6361",
+              "datavalue": {
+                "value": {
+                  "text": "Šunowčenjo",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "7002a0d0b3dc52a703f036cc2c96b1b6c752ca25",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088292,
+                      "id": "Q47088292"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q160812$16F7B743-CBFA-4505-BA36-6C9CCA472884",
+            "rank": "normal"
+          }
+        ],
+        "P1566": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1566",
+              "hash": "726def794dca6658b8911970ffe1ac173be9dd23",
+              "datavalue": {
+                "value": "2837053",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160812$CC533767-546A-471F-A4CE-B579F8A25982",
+            "rank": "normal"
+          }
+        ],
+        "P6766": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P6766",
+              "hash": "f33127368fabfc8d66ced8a2320ffa3e59eb097e",
+              "datavalue": {
+                "value": "1276949141",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160812$FFA18A46-2734-44AB-B3C2-5079832B31A5",
+            "rank": "normal"
+          }
+        ],
+        "P1705": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1705",
+              "hash": "0d776b4e445b727b778c10d2b123f36bc75964f7",
+              "datavalue": {
+                "value": {
+                  "text": "Šunow",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "id": "Q160812$3A86872F-C528-4C87-81EB-5EB37EE50DD3",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1705",
+              "hash": "c9c6da28089df3c80e66571941f4324c27d9f250",
+              "datavalue": {
+                "value": {
+                  "text": "Schönau",
+                  "language": "de"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "id": "Q160812$4E5D06A7-DF6B-4588-9461-0F8BF393AE84",
+            "rank": "normal"
+          }
+        ],
+        "P18": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P18",
+              "hash": "07d93c432d0f4731aed856fbcb551ecd1e83f7f9",
+              "datavalue": {
+                "value": "Ralbitz-Rosenthal Schönau Aerial.jpg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q160812$5B0CDDC9-969F-469F-814E-6F32B3794DDF",
+            "rank": "normal"
+          }
+        ],
+        "P1766": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1766",
+              "hash": "817079dcad7ef234026d7a89a9b2c8078882561c",
+              "datavalue": {
+                "value": "Šunow – wjesna tafla.jpg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q160812$30711d66-4839-fe8d-14ec-a284100c33d0",
+            "rank": "normal"
+          }
+        ],
+        "P7046": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P7046",
+              "hash": "5460b6c21caba3ab013752a8d8311624522c0d45",
+              "datavalue": {
+                "value": "26125",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P1932": [
+                {
+                  "snaktype": "value",
+                  "property": "P1932",
+                  "hash": "f67766f92f0468d668cea9a75ce64e6a71b4f406",
+                  "datavalue": {
+                    "value": "Schönau (3)",
+                    "type": "string"
+                  },
+                  "datatype": "string"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P1932"
+            ],
+            "id": "Q160812$5C953936-05B8-4A20-B7BF-945D7535B3BA",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "09d552215cf85bbeb28aaf72216524aab19c00c8",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "1904445ea38ea6dabca6c0ad664704b7a83c090b",
+                      "datavalue": {
+                        "value": "https://hov.isgv.de/Sch%C3%B6nau_(3)",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1082": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "9048d9dbbfb31a24512c383aee63c2638f8839e9",
+              "datavalue": {
+                "value": {
+                  "amount": "+265",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "49ae60be22d4c3fc5628dc09cf76d6f4a396c58b",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2020-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q160812$F1B69CD6-33FE-432A-8480-9D39A5CAA1DB",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "60234bce23dd1e229eb94c13b0a6b206bddc5907",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "81f37d734ab9ed43718f1194c08a5595481c3dcf",
+                      "datavalue": {
+                        "value": "https://am-klosterwasser.de/index.php?id=435&L=1",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "68797f31521f368be0e07813f9c8f896c1358dcb",
+              "datavalue": {
+                "value": {
+                  "amount": "+270",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "8809d0bfc6d96a7916c93c009bb688d4e2876724",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2019-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q160812$A1FEADC1-36A2-4750-A671-CFECC42677E2",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "60234bce23dd1e229eb94c13b0a6b206bddc5907",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "81f37d734ab9ed43718f1194c08a5595481c3dcf",
+                      "datavalue": {
+                        "value": "https://am-klosterwasser.de/index.php?id=435&L=1",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2671": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2671",
+              "hash": "f1fb52d9b232dbcbf3fca7b72da7e45b317d40ea",
+              "datavalue": {
+                "value": "/g/1211j9qv",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160812$C58D9694-9A6E-4550-AEFE-BB8BDDABD399",
+            "rank": "normal"
+          }
+        ],
+        "P8168": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P8168",
+              "hash": "84ebdc76d2fd4837dbf4ddd4d8ae9785e95a1f16",
+              "datavalue": {
+                "value": "Q280962",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160812$F13F5045-2261-49B6-BCE7-2D4CFA5A5EE8",
+            "rank": "normal"
+          }
+        ],
+        "P2326": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2326",
+              "hash": "79b9fa872cdc815fefded9d628131722e9186377",
+              "datavalue": {
+                "value": "-1859936",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160812$F6C86F5B-2D2F-4281-95DB-A1CF7B58726C",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "commonswiki": {
+          "site": "commonswiki",
+          "title": "Category:Schönau/Šunow",
+          "badges": []
+        },
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Schönau (Ralbitz-Rosenthal)",
+          "badges": []
+        },
+        "hsbwiki": {
+          "site": "hsbwiki",
+          "title": "Šunow",
+          "badges": []
+        },
+        "ruwiki": {
+          "site": "ruwiki",
+          "title": "Шёнау (Ральбиц-Розенталь)",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

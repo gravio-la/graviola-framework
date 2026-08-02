@@ -1,0 +1,1196 @@
+{
+  "entities": {
+    "Q18672393": {
+      "pageid": 20202765,
+      "ns": 0,
+      "title": "Q18672393",
+      "lastrevid": 2512527151,
+      "modified": "2026-07-01T08:06:46Z",
+      "type": "item",
+      "id": "Q18672393",
+      "labels": {
+        "hsb": {
+          "language": "hsb",
+          "value": "Droždźij"
+        },
+        "de": {
+          "language": "de",
+          "value": "Drehsa"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Drehsa"
+        },
+        "dsb": {
+          "language": "dsb",
+          "value": "Droždźij"
+        },
+        "en": {
+          "language": "en",
+          "value": "Drehsa/Droždźij"
+        },
+        "ca": {
+          "language": "ca",
+          "value": "Drehsa"
+        },
+        "nb": {
+          "language": "nb",
+          "value": "Drehsa"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "Дреза"
+        },
+        "lld": {
+          "language": "lld",
+          "value": "Drehsa/Droždźij"
+        },
+        "ga": {
+          "language": "ga",
+          "value": "Drehsa"
+        }
+      },
+      "descriptions": {
+        "hsb": {
+          "language": "hsb",
+          "value": "wjes w Budyskim wokrjesu, gmejnski dźěl Wósporka"
+        },
+        "el": {
+          "language": "el",
+          "value": "οικισμός της Γερμανίας"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "ortsteil in Weißenberg, Duitsland"
+        },
+        "en": {
+          "language": "en",
+          "value": "human settlement in Germany"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "établissement humain en Allemagne"
+        },
+        "dsb": {
+          "language": "dsb",
+          "value": "wjas w Górnej Łužycy"
+        },
+        "de": {
+          "language": "de",
+          "value": "Ort im Landkreis Bautzen; Ortsteil von Weißenberg"
+        },
+        "uk": {
+          "language": "uk",
+          "value": "населений пункт у Німеччині"
+        },
+        "ml": {
+          "language": "ml",
+          "value": "ജര്‍മ്മനിയിലെ ഒരു സ്ഥലം"
+        },
+        "ar": {
+          "language": "ar",
+          "value": "مستوطنة بشرية في ألمانيا"
+        },
+        "hy": {
+          "language": "hy",
+          "value": "բնակավայր Գերմանիայում"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "Сельский населённый пункт в городских границах Вайсенберга, Саксония, Германия"
+        },
+        "lld": {
+          "language": "lld",
+          "value": "chemun de la Germania"
+        }
+      },
+      "aliases": {
+        "de": [
+          {
+            "language": "de",
+            "value": "Droždźij"
+          }
+        ],
+        "hsb": [
+          {
+            "language": "hsb",
+            "value": "Drehsa"
+          }
+        ],
+        "dsb": [
+          {
+            "language": "dsb",
+            "value": "Drehsa"
+          }
+        ],
+        "ru": [
+          {
+            "language": "ru",
+            "value": "Дрожджий"
+          }
+        ]
+      },
+      "claims": {
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "41af24fb95f4108f034a453d9d3c66f0d2e72888",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 81753,
+                  "id": "Q81753"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "7dc2821fe3f7d0644f5ada26fb6c7255ccd0c291",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1994-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580"
+            ],
+            "id": "Q18672393$4faee9a9-4902-5506-8b11-53b283d2fc9e",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "f039de5abd63c827a6ba45a85130bfb1723978ba",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 160434,
+                  "id": "Q160434"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "0aeab9e143c5db97d70edf13eadfbcd2920bb5db",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1993-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "c52610cf2484d0ad6653d33766c3606e3e67ec6f",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1994-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580",
+              "P582"
+            ],
+            "id": "Q18672393$94ebb0b1-4c47-ba1c-b070-27208a473838",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "ee397289442ab7004329a8be27e1add95aeb9068",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1787204,
+                  "id": "Q1787204"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "6f4cd978fcd9a6b8d3abc927003eb785a3030bf9",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1993-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P582"
+            ],
+            "id": "Q18672393$b342dff4-4a43-85eb-d7b3-a5726dd7382a",
+            "rank": "normal"
+          }
+        ],
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "ef7247b704f4ec0a7df39e83306bb388fea17d5f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 183,
+                  "id": "Q183"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q18672393$ca4974b7-4cb9-a935-48bf-bc1f9c1e2b06",
+            "rank": "normal"
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "0822324dd76b90eef8eee5e0cf38d893013ccdf3",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 253019,
+                  "id": "Q253019"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "0aeab9e143c5db97d70edf13eadfbcd2920bb5db",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1993-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580"
+            ],
+            "id": "Q18672393$daf0fdd8-4bb1-a88c-8cc0-8198a1edbad9",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "4e6beb54b615d48c5239f20931f0d68409834ac2",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 262166,
+                  "id": "Q262166"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "6f4cd978fcd9a6b8d3abc927003eb785a3030bf9",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1993-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P582"
+            ],
+            "id": "Q18672393$571f5d68-4a61-7527-4872-9dda3ab6396b",
+            "rank": "normal"
+          }
+        ],
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "fa936fe99224da00f0b57cf683197f258437ab6e",
+              "datavalue": {
+                "value": "Drehsa/Droždźij",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q18672393$c6cc6557-4ddb-045b-ed4f-f08e0b62c988",
+            "rank": "normal"
+          }
+        ],
+        "P361": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P361",
+              "hash": "786ab8a8c6b9eb0213974ce7f3428c83b23d7c33",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 145129,
+                  "id": "Q145129"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q18672393$E09D9B17-D989-4148-8E35-98A8C5BDB04D",
+            "rank": "normal"
+          }
+        ],
+        "P1766": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1766",
+              "hash": "0de37aa956a8f046a93191b3de53d9a1ac3264c7",
+              "datavalue": {
+                "value": "Weißenberg Drehsa - Oberdrehsa 01 ies.jpg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q18672393$2f53a829-40c7-2de7-2e48-2bbf5e0dd804",
+            "rank": "normal"
+          }
+        ],
+        "P1549": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "ab3bcd62df30ba7a5e0cbfc5a1f2e251e0829c55",
+              "datavalue": {
+                "value": {
+                  "text": "Droždźijčan",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "e9447d28af8c5d42930d7dd10e816fc7d922f8e4",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088290,
+                      "id": "Q47088290"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q18672393$068BFA76-9E68-4533-8E7C-4576825155CC",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "7a5d876c84b1bd1c37aa84491c777aa095cb9813",
+              "datavalue": {
+                "value": {
+                  "text": "Droždźijčanka",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "9ccfcbc8ef0cb77e854001299df9103998ab5d48",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088293,
+                      "id": "Q47088293"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q18672393$8E1E61B1-56B9-4441-93C6-04D989133660",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "2d8359548ce6f78c116ffbf27cef46fb56a1cdf1",
+              "datavalue": {
+                "value": {
+                  "text": "Droždźijčenjo",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "7002a0d0b3dc52a703f036cc2c96b1b6c752ca25",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088292,
+                      "id": "Q47088292"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q18672393$C0F3B95F-B4C5-417D-AED3-4F3E2ADC804C",
+            "rank": "normal"
+          }
+        ],
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "c7415dccea18ea760555cb97acb832cae2407608",
+              "datavalue": {
+                "value": {
+                  "latitude": 51.1784,
+                  "longitude": 14.56632,
+                  "altitude": null,
+                  "precision": 0.00001,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "Q18672393$d07a01c0-4ee4-3b64-6d77-174931c270bc",
+            "rank": "normal"
+          }
+        ],
+        "P18": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P18",
+              "hash": "9167cd60c74104417fe6128a0b0ef647723673b4",
+              "datavalue": {
+                "value": "Drehsa-Schmiedeberg-1-2.jpg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q18672393$6984d64e-4c2f-2e83-ccdc-3d042adf3a89",
+            "rank": "normal"
+          }
+        ],
+        "P1566": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1566",
+              "hash": "c6da927226cae7f173d72222ec2f864af492710b",
+              "datavalue": {
+                "value": "2935247",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q18672393$E2F1DE15-44BD-43AC-A269-6A27CBC5032C",
+            "rank": "normal"
+          }
+        ],
+        "P6766": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P6766",
+              "hash": "71c9cb96263b4b174a90cdc91e611049e0c47855",
+              "datavalue": {
+                "value": "1225923279",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q18672393$905AEDC5-B704-4195-A789-80641C76CD03",
+            "rank": "normal"
+          }
+        ],
+        "P1705": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1705",
+              "hash": "880b7bc5e81d7140ea8bddca37c8883b16473385",
+              "datavalue": {
+                "value": {
+                  "text": "Droždźij",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P443": [
+                {
+                  "snaktype": "value",
+                  "property": "P443",
+                  "hash": "0fdb3bc4883bb4544bca79a9fea91236c756bb12",
+                  "datavalue": {
+                    "value": "Droždźij.ogg",
+                    "type": "string"
+                  },
+                  "datatype": "commonsMedia"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P443"
+            ],
+            "id": "Q18672393$5B982FF3-A221-49B4-AA51-94A4AACC4551",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1705",
+              "hash": "13dd773e694a3c2a4d58f91c491cab9e72848d9d",
+              "datavalue": {
+                "value": {
+                  "text": "Drehsa",
+                  "language": "de"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "id": "Q18672393$4a845cf6-494b-822d-e292-684f33642e2a",
+            "rank": "normal"
+          }
+        ],
+        "P473": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P473",
+              "hash": "2644e03da89d26bf4c8da85865b2651246498575",
+              "datavalue": {
+                "value": "035939",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q18672393$C0BC3EFA-E26F-4096-BAE3-25694CABB4D1",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "dabe36a8b3bf9863d742ba3dacdef131902733c1",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "3ee78167e9bff36c368f239cdad52011c970917b",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 2402143,
+                          "id": "Q2402143"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "6fe74881749c5432c25c55101fafb43fdd2df9cb",
+                      "datavalue": {
+                        "value": "https://hsb.wikipedia.org/w/index.php?title=Droždźij&oldid=369264",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P281": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P281",
+              "hash": "d49e18f74bf43e8c2fe9dd8ddf31305f85566c82",
+              "datavalue": {
+                "value": "02627",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q18672393$992F4CFF-1D81-4796-BB96-39444FEA4792",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "dabe36a8b3bf9863d742ba3dacdef131902733c1",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "3ee78167e9bff36c368f239cdad52011c970917b",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 2402143,
+                          "id": "Q2402143"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "6fe74881749c5432c25c55101fafb43fdd2df9cb",
+                      "datavalue": {
+                        "value": "https://hsb.wikipedia.org/w/index.php?title=Droždźij&oldid=369264",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2044": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2044",
+              "hash": "4c191b144508e1f57f4db6e4c2bcc5ba193d1de3",
+              "datavalue": {
+                "value": {
+                  "amount": "+185",
+                  "unit": "http://www.wikidata.org/entity/Q11573"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "id": "Q18672393$AEE8D9E7-652D-4134-9720-7E423A91ED5D",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "dabe36a8b3bf9863d742ba3dacdef131902733c1",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "3ee78167e9bff36c368f239cdad52011c970917b",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 2402143,
+                          "id": "Q2402143"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "6fe74881749c5432c25c55101fafb43fdd2df9cb",
+                      "datavalue": {
+                        "value": "https://hsb.wikipedia.org/w/index.php?title=Droždźij&oldid=369264",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P7046": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P7046",
+              "hash": "c8e3e7308395521809de8e374df46db9b95cb1a6",
+              "datavalue": {
+                "value": "23079",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P1932": [
+                {
+                  "snaktype": "value",
+                  "property": "P1932",
+                  "hash": "3efb8abcdf674790668ca494c2f1e14bf1c5813f",
+                  "datavalue": {
+                    "value": "Drehsa_(1)",
+                    "type": "string"
+                  },
+                  "datatype": "string"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P1932"
+            ],
+            "id": "Q18672393$7AE3FA0F-C2CF-4471-A214-4D9F11630854",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "e5cd6094fc33959375a8b0c14b4734316308fc89",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "15d9ea9bcf2ab98610f047f69221e48a363c1622",
+                      "datavalue": {
+                        "value": "https://hov.isgv.de/Drehsa_(1)",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1343": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1343",
+              "hash": "2cedcc8d61f3ad32b4535f0e550fc97b5724e443",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 19125866,
+                  "id": "Q19125866"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P805": [
+                {
+                  "snaktype": "value",
+                  "property": "P805",
+                  "hash": "9b2353df42e73f9fe117db507600ccf2c1342a14",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 110604179,
+                      "id": "Q110604179"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ],
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "1f9a5775e0fb793a8e03390ee74fab78fb28aa61",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1859-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P805",
+              "P585"
+            ],
+            "id": "Q18672393$4816b873-422b-a4d1-992d-350165ae1761",
+            "rank": "normal"
+          }
+        ],
+        "P8168": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P8168",
+              "hash": "2c1b2ebc0fa0ad4250319e54b29117341fa6d321",
+              "datavalue": {
+                "value": "Q276959",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q18672393$79E29BC5-4BDA-4DE9-98B6-027F267E7C17",
+            "rank": "normal"
+          }
+        ],
+        "P227": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P227",
+              "hash": "f08a779cee100ec58c2deb4d2cecf115639a815a",
+              "datavalue": {
+                "value": "1150180110",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q18672393$84b048ef-47af-614b-d63d-8af83e14527e",
+            "rank": "normal"
+          }
+        ],
+        "P1082": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "355091840d560d503fac4b933b2d563b5e1ec4c7",
+              "datavalue": {
+                "value": {
+                  "amount": "+242",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "5f7bbb1374fc3676fe8e0452d8c818594e1baaf7",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2022-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q18672393$26D57777-19E6-43C6-8C59-1D8980604105",
+            "rank": "preferred",
+            "references": [
+              {
+                "hash": "5d88e1f76fc8dc4f186f15a7062126532b0a67f9",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "3ee78167e9bff36c368f239cdad52011c970917b",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 2402143,
+                          "id": "Q2402143"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "5bbd7a8e4345556f8a8b7f3094ad044dc3dbff52",
+              "datavalue": {
+                "value": {
+                  "amount": "+258",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "eddb54f71a5d712cdb6549762eb564cd269a78cb",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2008-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q18672393$5AA5128E-FD6A-4585-8C00-D804DC6BAA9A",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "5d88e1f76fc8dc4f186f15a7062126532b0a67f9",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "3ee78167e9bff36c368f239cdad52011c970917b",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 2402143,
+                          "id": "Q2402143"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2326": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2326",
+              "hash": "a42e79acf678981ad75a571836aaebc38739144a",
+              "datavalue": {
+                "value": "-1761393",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q18672393$5993AF64-9C49-4F6C-B3E1-FFBDD0ADC5FF",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "commonswiki": {
+          "site": "commonswiki",
+          "title": "Category:Drehsa/Droždźij",
+          "badges": []
+        },
+        "hsbwiki": {
+          "site": "hsbwiki",
+          "title": "Droždźij",
+          "badges": []
+        },
+        "ruwiki": {
+          "site": "ruwiki",
+          "title": "Дреза",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

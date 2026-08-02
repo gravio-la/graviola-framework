@@ -1,0 +1,43 @@
+{
+  "name": "@graviola/sample-data-geo",
+  "version": "0.1.0",
+  "description": "Committed Wikidata-derived geographic sample fixtures (schema + Turtle) for Storybook and tests",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "sync": "bun run scripts/sync-fixture.ts",
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "tsc --noEmit",
+    "test": "bun test src",
+    "release": "bun publish --access public"
+  },
+  "dependencies": {
+    "@graviola/edb-core-types": "workspace:*"
+  },
+  "devDependencies": {
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*",
+    "@types/bun": "^1.2.0",
+    "@types/json-schema": "catalog:",
+    "@types/n3": "^1.21.0",
+    "n3": "^1.23.1",
+    "tsup": "^8.0.0",
+    "typescript": "5.8.2"
+  },
+  "license": "MIT"
+}

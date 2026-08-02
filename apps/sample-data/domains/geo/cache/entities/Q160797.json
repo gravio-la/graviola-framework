@@ -1,0 +1,1335 @@
+{
+  "entities": {
+    "Q160797": {
+      "pageid": 161669,
+      "ns": 0,
+      "title": "Q160797",
+      "lastrevid": 2512513149,
+      "modified": "2026-07-01T07:19:34Z",
+      "type": "item",
+      "id": "Q160797",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Horka"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "Hórki"
+        },
+        "en": {
+          "language": "en",
+          "value": "Horka"
+        },
+        "es": {
+          "language": "es",
+          "value": "Horka"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Horka"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "Horka"
+        },
+        "pl": {
+          "language": "pl",
+          "value": "Horka"
+        },
+        "it": {
+          "language": "it",
+          "value": "Horka"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "Хорка"
+        },
+        "cs": {
+          "language": "cs",
+          "value": "Horka"
+        },
+        "ast": {
+          "language": "ast",
+          "value": "Horka"
+        },
+        "dsb": {
+          "language": "dsb",
+          "value": "Hórki"
+        },
+        "ceb": {
+          "language": "ceb",
+          "value": "Horka"
+        },
+        "be": {
+          "language": "be",
+          "value": "Горка"
+        },
+        "ca": {
+          "language": "ca",
+          "value": "Horka"
+        },
+        "nb": {
+          "language": "nb",
+          "value": "Horka"
+        },
+        "lld": {
+          "language": "lld",
+          "value": "Horka"
+        },
+        "ga": {
+          "language": "ga",
+          "value": "Horka"
+        },
+        "sk": {
+          "language": "sk",
+          "value": "Horka"
+        },
+        "gl": {
+          "language": "gl",
+          "value": "Horka"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "Ort in der Gemeinde Crostwitz, Sachsen"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "plaats in Duitsland"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "wjes w Budyskim wokrjesu, gmejnski dźěl Chrósćic"
+        },
+        "el": {
+          "language": "el",
+          "value": "οικισμός της Γερμανίας"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "établissement humain en Allemagne"
+        },
+        "en": {
+          "language": "en",
+          "value": "human settlement in Germany"
+        },
+        "dsb": {
+          "language": "dsb",
+          "value": "wjas w Górnej Łužycy"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "серболужицкая деревня в Верхней Лужице, коммуна  Кроствиц  района Баутцен, земля Саксония"
+        },
+        "uk": {
+          "language": "uk",
+          "value": "населений пункт у Німеччині"
+        },
+        "ml": {
+          "language": "ml",
+          "value": "ജര്‍മ്മനിയിലെ ഒരു സ്ഥലം"
+        },
+        "ar": {
+          "language": "ar",
+          "value": "مستوطنة بشرية في ألمانيا"
+        },
+        "cs": {
+          "language": "cs",
+          "value": "místní část Crostwitzu"
+        },
+        "hy": {
+          "language": "hy",
+          "value": "բնակավայր Գերմանիայում"
+        },
+        "lld": {
+          "language": "lld",
+          "value": "chemun de la Germania"
+        },
+        "pl": {
+          "language": "pl",
+          "value": "Miejscowość w gminie Crostwitz w Saksonii"
+        },
+        "tr": {
+          "language": "tr",
+          "value": "Crostwitz, Almanya'da köy"
+        },
+        "ary": {
+          "language": "ary",
+          "value": "دوّار ف ألمانيا"
+        },
+        "hi": {
+          "language": "hi",
+          "value": "जर्मनी का एक गाँव"
+        }
+      },
+      "aliases": {
+        "de": [
+          {
+            "language": "de",
+            "value": "Hórki"
+          }
+        ],
+        "hsb": [
+          {
+            "language": "hsb",
+            "value": "Horka"
+          }
+        ],
+        "dsb": [
+          {
+            "language": "dsb",
+            "value": "Horka"
+          }
+        ],
+        "ru": [
+          {
+            "language": "ru",
+            "value": "Горки"
+          }
+        ],
+        "be": [
+          {
+            "language": "be",
+            "value": "Гуркі"
+          }
+        ],
+        "cs": [
+          {
+            "language": "cs",
+            "value": "Hórki"
+          }
+        ]
+      },
+      "claims": {
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "ef7247b704f4ec0a7df39e83306bb388fea17d5f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 183,
+                  "id": "Q183"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "q160797$603B7A0F-E858-4E8B-9AFC-7901CA1C4201",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              },
+              {
+                "hash": "43a0088c51fd85e5a85d1b46412c3a635e6d4edc",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d8fbf8671e3c630db61bfac691068cfb6857f243",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 837615,
+                          "id": "Q837615"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "6f519ce6562f5e7437930f6db019e7c1a8303a4d",
+              "datavalue": {
+                "value": {
+                  "latitude": 51.26342,
+                  "longitude": 14.25523,
+                  "altitude": null,
+                  "precision": 0.00001,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "Q160797$96F8A3C1-D23B-4801-A301-C949ED0682F7",
+            "rank": "normal"
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "dd550d8baa641d0a31e958d5b97907e453d2240d",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 93223,
+                  "id": "Q93223"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q160797$C2747204-336C-455A-8CA8-79EAD61E2D9A",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "0822324dd76b90eef8eee5e0cf38d893013ccdf3",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 253019,
+                  "id": "Q253019"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "ec3fad5617d6ec89ebe0e606278f737d999b5450",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1974-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580"
+            ],
+            "id": "Q160797$C4CDF907-1CF5-4D4E-8A06-F3AA68F09723",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "5234088afa2cb8dd6b2b0c2f713eff1c61f34067",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 532,
+                  "id": "Q532"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q160797$7196ec7f-49b4-5535-2aa9-885a7664b0cc",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "4e6beb54b615d48c5239f20931f0d68409834ac2",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 262166,
+                  "id": "Q262166"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "7de1eaa04f86eb94bfe7cc9080716a0eed0ffd39",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1974-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P582"
+            ],
+            "id": "Q160797$2a374b2b-4909-a6e7-02c7-7019513c9c99",
+            "rank": "normal"
+          }
+        ],
+        "P281": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P281",
+              "hash": "5ff62bdde7c95a60c8beb015621aeb963b47aca9",
+              "datavalue": {
+                "value": "01920",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q160797$76251670-C24A-4628-8BB3-1EDDA7EDAB9E",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P361": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P361",
+              "hash": "786ab8a8c6b9eb0213974ce7f3428c83b23d7c33",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 145129,
+                  "id": "Q145129"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q160797$7EF38E9D-8882-4651-9CA7-DCCA4DF5E3ED",
+            "rank": "normal"
+          }
+        ],
+        "P473": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P473",
+              "hash": "8ca7eb243bd5301aeb6cde35430919c4918524a0",
+              "datavalue": {
+                "value": "035796",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q160797$DB442B1F-83AA-41F2-9CDC-227CA826990B",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "842f55c58a5f65770ef227c8622787fa34d8c646",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "65a45b73f479b9d9859004425c15d9dece9ae83d",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Horka_(Crostwitz)&oldid=175186306",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2044": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2044",
+              "hash": "9bad6e0c877c4bc245f80d63f77d5a959fcec31f",
+              "datavalue": {
+                "value": {
+                  "amount": "+167",
+                  "unit": "http://www.wikidata.org/entity/Q11573"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "id": "Q160797$06BC83C2-8ED4-4386-8346-9CC46188FF82",
+            "rank": "normal"
+          }
+        ],
+        "P1549": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "abd23fcb0fb69c04aa4e1abd16091281cd0e4425",
+              "datavalue": {
+                "value": {
+                  "text": "Hórčan",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "e9447d28af8c5d42930d7dd10e816fc7d922f8e4",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088290,
+                      "id": "Q47088290"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q160797$8C48FB5E-CCA3-4133-B9C0-42AB7B1661F6",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "b966b7c9b63e307045889f15e021fa1455869d81",
+              "datavalue": {
+                "value": {
+                  "text": "Hórčanka",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "9ccfcbc8ef0cb77e854001299df9103998ab5d48",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088293,
+                      "id": "Q47088293"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q160797$CB15ECCA-2F6C-408C-A461-0A478532338F",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "f78c3f1851037cb07fe72b83d5a60fb68946c014",
+              "datavalue": {
+                "value": {
+                  "text": "Hórčenjo",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "7002a0d0b3dc52a703f036cc2c96b1b6c752ca25",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088292,
+                      "id": "Q47088292"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q160797$C9CCC2F6-C9F4-4C23-95E8-3E0A5D82C106",
+            "rank": "normal"
+          }
+        ],
+        "P1766": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1766",
+              "hash": "1d7a13e8686d1786185bb44c18f08fca52615ee3",
+              "datavalue": {
+                "value": "Hórki – wjesna tafla.jpg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q160797$d31d01c4-4224-1ae1-8820-70353bdedfb7",
+            "rank": "normal"
+          }
+        ],
+        "P402": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P402",
+              "hash": "2b3bd365402aeddf1276782f06c8dfd20666366b",
+              "datavalue": {
+                "value": "9440339",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160797$f2b50b93-431f-972b-664b-fb6c03d50962",
+            "rank": "normal"
+          }
+        ],
+        "P1566": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1566",
+              "hash": "dd0a9b50a34bb0bce30b33b0d3ab96121ae93032",
+              "datavalue": {
+                "value": "2899013",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160797$0BAA7E2A-A40E-44DD-9BC3-3637ADABA104",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "43a0088c51fd85e5a85d1b46412c3a635e6d4edc",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d8fbf8671e3c630db61bfac691068cfb6857f243",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 837615,
+                          "id": "Q837615"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P6766": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P6766",
+              "hash": "cd042b33dd1b4b953e2a5cad27141e7e5d41b36b",
+              "datavalue": {
+                "value": "101822357",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160797$AC9A353D-079B-456E-9A36-0C3044747D7F",
+            "rank": "normal"
+          }
+        ],
+        "P1705": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1705",
+              "hash": "5b6ac287f7a652faf327ffe89d6dbeb3723680e9",
+              "datavalue": {
+                "value": {
+                  "text": "Hórki",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P443": [
+                {
+                  "snaktype": "value",
+                  "property": "P443",
+                  "hash": "b748443640b106113af7922cea958174db9b406c",
+                  "datavalue": {
+                    "value": "Hórki.ogg",
+                    "type": "string"
+                  },
+                  "datatype": "commonsMedia"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P443"
+            ],
+            "id": "Q160797$4094f328-4d5a-741a-26ed-45b65b24bfe1",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1705",
+              "hash": "e849bf97c8809ccbf0b9327917df5e12d68822ba",
+              "datavalue": {
+                "value": {
+                  "text": "Horka",
+                  "language": "de"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "id": "Q160797$acc4909d-429e-767e-0a81-04ac5f72b5b8",
+            "rank": "normal"
+          }
+        ],
+        "P18": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P18",
+              "hash": "832c8abf781db392825e20a0808019cfcc3dd2bd",
+              "datavalue": {
+                "value": "Hórki – napohlad wsy 1.jpg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q160797$e5737a67-4667-2068-c645-7a5509d622ba",
+            "rank": "normal"
+          }
+        ],
+        "P7046": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P7046",
+              "hash": "82d66d1fcfada3acec1e21099c83c7b9fae9c652",
+              "datavalue": {
+                "value": "26051",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160797$A40D4E75-EBC8-446F-A616-871793E232F4",
+            "rank": "normal"
+          }
+        ],
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "6221432e27bd00ad6ac9c91149396980e6e25206",
+              "datavalue": {
+                "value": "Horka/Hórki",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q160797$880ddb7c-430f-fc08-2680-2c32e1d7156c",
+            "rank": "normal"
+          }
+        ],
+        "P1082": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "abea813586d4f1f47ec0f8cd87876885a01da3b4",
+              "datavalue": {
+                "value": {
+                  "amount": "+247",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "50e3b9c4ecacaca2ba92107b638691cbfbc9121b",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q160797$f3f2ed1a-4b70-04ad-6131-85e8b90b7ea0",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "6b6b7976abc0464ef3ef070e4e6ecdb11a5efae6",
+              "datavalue": {
+                "value": {
+                  "amount": "+239",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "49ae60be22d4c3fc5628dc09cf76d6f4a396c58b",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2020-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q160797$EF7E2D4E-EEBF-466F-84BA-16C5201ACA05",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "87aa85a209efe87ad4545e7f1078769ba3f65a8b",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "25efc74fafcea16ead551a641c41e3fe8de74313",
+                      "datavalue": {
+                        "value": "https://am-klosterwasser.de/index.php?id=432&L=1",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "749bbd9f93d56d50671e6c50c8bcdae85d1a97ac",
+              "datavalue": {
+                "value": {
+                  "amount": "+235",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "8809d0bfc6d96a7916c93c009bb688d4e2876724",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2019-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q160797$B32A8A0A-A0B8-462D-9837-283F7E332D51",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "87aa85a209efe87ad4545e7f1078769ba3f65a8b",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "25efc74fafcea16ead551a641c41e3fe8de74313",
+                      "datavalue": {
+                        "value": "https://am-klosterwasser.de/index.php?id=432&L=1",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "7ca803d3656e4609a6084fafe31c0466fb0a11a2",
+              "datavalue": {
+                "value": {
+                  "amount": "+236",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "5f7bbb1374fc3676fe8e0452d8c818594e1baaf7",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2022-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q160797$c3600460-4520-1265-9cb4-1d77f0bc0b0c",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "3493473a0ab3d73efdf915fc602d7a3cb98735bf",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "fcee8709bcf07d29e2024a84163ebe406343ba2e",
+                      "datavalue": {
+                        "value": "https://www.am-klosterwasser.de/hs/zwjazk-a-wobydlerjo/statistik/wobydlerska-statistika-gmejny-chroscicy.html",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P1476": [
+                    {
+                      "snaktype": "value",
+                      "property": "P1476",
+                      "hash": "1f0f5b6edbe83b763ffab92deaa4819b9fe9975a",
+                      "datavalue": {
+                        "value": {
+                          "text": "Wobydlerska statistika gmejny Chrósćicy",
+                          "language": "hsb"
+                        },
+                        "type": "monolingualtext"
+                      },
+                      "datatype": "monolingualtext"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "e435ad1b54905a6e6e78cf104b7beb3f68f7ed3c",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2023-05-04T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854",
+                  "P1476",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2671": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2671",
+              "hash": "a3776d8ec8c198d6340271fd73d8b3888809bc10",
+              "datavalue": {
+                "value": "/g/122k5kzj",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160797$87E81FC7-60AD-4D50-A93C-2B8B2C5E86FE",
+            "rank": "normal"
+          }
+        ],
+        "P8168": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P8168",
+              "hash": "7949d137e0a1da9b55086ed7f7f4ceb47720b255",
+              "datavalue": {
+                "value": "Q277078",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160797$A46E2250-6C3A-4B21-84A4-FD611000C6DE",
+            "rank": "normal"
+          }
+        ],
+        "P2046": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2046",
+              "hash": "17287f095c478a7d48b3693cebfef92062dacaa1",
+              "datavalue": {
+                "value": {
+                  "amount": "+2.51",
+                  "unit": "http://www.wikidata.org/entity/Q712226"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "id": "Q160797$56f15277-43c5-e6ec-50b8-88b39a76e2a2",
+            "rank": "normal"
+          }
+        ],
+        "P9957": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P9957",
+              "hash": "a577490b229522181217f55b03a42a2672126d97",
+              "datavalue": {
+                "value": "83313",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160797$B1A32729-D9DC-464B-92F2-2FF814B9B0E5",
+            "rank": "normal"
+          }
+        ],
+        "P2326": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2326",
+              "hash": "2220b8c2bb1781d093c5eec0878331839c895a8d",
+              "datavalue": {
+                "value": "-1797755",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160797$4509C9A8-1A8B-4A5B-B0CD-49D4196DF8E0",
+            "rank": "normal"
+          }
+        ],
+        "P206": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P206",
+              "hash": "66979b51b97cfcc2faeba09df6d9251e16aa5470",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 140367757,
+                  "id": "Q140367757"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q160797$951003ec-4734-2bcf-d8de-f583980b4dbf",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "cebwiki": {
+          "site": "cebwiki",
+          "title": "Horka (lungsod sa Alemanya, Saxony, lat 51,26, long 14,26)",
+          "badges": []
+        },
+        "commonswiki": {
+          "site": "commonswiki",
+          "title": "Category:Horka/Hórki",
+          "badges": []
+        },
+        "cswiki": {
+          "site": "cswiki",
+          "title": "Horka (Crostwitz)",
+          "badges": []
+        },
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Horka (Crostwitz)",
+          "badges": []
+        },
+        "hsbwiki": {
+          "site": "hsbwiki",
+          "title": "Hórki",
+          "badges": []
+        },
+        "lldwiki": {
+          "site": "lldwiki",
+          "title": "Horka",
+          "badges": []
+        },
+        "ruwiki": {
+          "site": "ruwiki",
+          "title": "Хорка (Кроствиц)",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

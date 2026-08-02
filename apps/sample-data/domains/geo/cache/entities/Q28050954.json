@@ -1,0 +1,317 @@
+{
+  "entities": {
+    "Q28050954": {
+      "pageid": 29753794,
+      "ns": 0,
+      "title": "Q28050954",
+      "lastrevid": 2332750314,
+      "modified": "2025-03-31T06:23:21Z",
+      "type": "item",
+      "id": "Q28050954",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Süd"
+        },
+        "nb": {
+          "language": "nb",
+          "value": "Süd"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "Stadtteil von Frankfurt (Oder), Brandenburg, Deutschland"
+        },
+        "nb": {
+          "language": "nb",
+          "value": "bydel i Frankfurt (Oder)"
+        }
+      },
+      "aliases": {},
+      "claims": {
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "bd2aad7cc945334daf7f453bb3f2cef184c68aab",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 28050911,
+                  "id": "Q28050911"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q28050954$5f56add6-43c3-897f-17d2-beb966674154",
+            "rank": "normal"
+          }
+        ],
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "ade75f616f387ea61394ad502ac16681f80cb19a",
+              "datavalue": {
+                "value": {
+                  "latitude": 52.304754,
+                  "longitude": 14.471837,
+                  "altitude": null,
+                  "precision": 0.000001,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "Q28050954$2890450f-4f91-ea63-94ce-d2d79ef3730c",
+            "rank": "normal"
+          }
+        ],
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "ef7247b704f4ec0a7df39e83306bb388fea17d5f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 183,
+                  "id": "Q183"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q28050954$9BE45994-D63B-4D95-8738-3A2799BFF472",
+            "rank": "normal"
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "a9a53a145bef02e7e6ea40cbc0144b60309590f8",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 4024,
+                  "id": "Q4024"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q28050954$76a22296-4363-ff3f-8bce-e7a632e4fc41",
+            "rank": "normal"
+          }
+        ],
+        "P443": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P443",
+              "hash": "1078e2e0d6fc1e373167d4a90751b371fa5bb773",
+              "datavalue": {
+                "value": "LL-Q188 (deu)-Sebastian Wallroth-Süd (Frankfurt (Oder)).wav",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P407": [
+                {
+                  "snaktype": "value",
+                  "property": "P407",
+                  "hash": "46bfd327b830f66f7061ea92d1be430c135fa91f",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 188,
+                      "id": "Q188"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P407"
+            ],
+            "id": "Q28050954$daf32771-5ff2-4ba2-87f6-a8ac44f28a57",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "7e906acb5a4842e3ee755ed42702d89da09041a5",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "3cc2c819487f9922bffc85be0d3224dfdae7435a",
+                      "datavalue": {
+                        "value": "https://lingualibre.fr/wiki/Q124776",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854"
+                ]
+              }
+            ]
+          }
+        ],
+        "P150": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "0614468ec8cb7aceb5ebf4f5f0403584dea9330a",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 28056494,
+                  "id": "Q28056494"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q28050954$39977b69-4761-7857-135f-0e79a438e56e",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "5e41add870cd287f8db593032e8af29a8f0567f7",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 28056497,
+                  "id": "Q28056497"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q28050954$9b79eeba-4a4f-d5fe-665d-a61c21dc0d1e",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "6372761fe78b1001f356fdeac8ac9d99709bcb89",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 11794127,
+                  "id": "Q11794127"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q28050954$1154f6d8-4aac-f1c2-4384-e9a30d3e4b55",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "16c56da3a1e4ee3b6e95133719fe733c39b05eeb",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 212045,
+                  "id": "Q212045"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q28050954$543f8d84-4d75-f10c-e04d-f09442e4e64a",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "7a9d919ca7f17dfb8f200c4be15120c1a532be4c",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 11770334,
+                  "id": "Q11770334"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q28050954$fc55b3c5-484d-d393-a1a7-054b36520b34",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "a845a58c31fb155f78c02ec80681640bc3d0adff",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 212118,
+                  "id": "Q212118"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q28050954$8f67c421-44d5-7491-5024-708d7397fc2e",
+            "rank": "normal"
+          }
+        ],
+        "P402": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P402",
+              "hash": "da0d9c5667291d57ec6327efd6b6d6facb25dd5d",
+              "datavalue": {
+                "value": "18917797",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q28050954$d05efab7-4e1e-efc7-1425-4bf1e9a57973",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {}
+    }
+  },
+  "success": 1
+}

@@ -1,0 +1,1474 @@
+{
+  "entities": {
+    "Q160693": {
+      "pageid": 161566,
+      "ns": 0,
+      "title": "Q160693",
+      "lastrevid": 2512513032,
+      "modified": "2026-07-01T07:19:09Z",
+      "type": "item",
+      "id": "Q160693",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Caseritz"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "Kozarcy"
+        },
+        "en": {
+          "language": "en",
+          "value": "Caseritz"
+        },
+        "es": {
+          "language": "es",
+          "value": "Caseritz"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Caseritz"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "Caseritz"
+        },
+        "pl": {
+          "language": "pl",
+          "value": "Caseritz"
+        },
+        "ast": {
+          "language": "ast",
+          "value": "Caseritz"
+        },
+        "dsb": {
+          "language": "dsb",
+          "value": "Kozarcy"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "Казериц"
+        },
+        "ca": {
+          "language": "ca",
+          "value": "Caseritz"
+        },
+        "nb": {
+          "language": "nb",
+          "value": "Caseritz"
+        },
+        "lld": {
+          "language": "lld",
+          "value": "Caseritz"
+        },
+        "ga": {
+          "language": "ga",
+          "value": "Caseritz"
+        },
+        "cs": {
+          "language": "cs",
+          "value": "Caseritz"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "Ort in der Gemeinde Crostwitz, Sachsen"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "commune allemande"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "deel van Crostwitz, Duitsland"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "wjes w Budyskim wokrjesu, gmejnski dźěl Chrósćic"
+        },
+        "el": {
+          "language": "el",
+          "value": "οικισμός της Γερμανίας"
+        },
+        "en": {
+          "language": "en",
+          "value": "human settlement in Germany"
+        },
+        "dsb": {
+          "language": "dsb",
+          "value": "wjas w Górnej Łužycy"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "серболужицкая деревня в Верхней Лужице, коммуна  Кроствиц  района Баутцен, земля Саксония"
+        },
+        "uk": {
+          "language": "uk",
+          "value": "населений пункт у Німеччині"
+        },
+        "ml": {
+          "language": "ml",
+          "value": "ജര്‍മ്മനിയിലെ ഒരു സ്ഥലം"
+        },
+        "ar": {
+          "language": "ar",
+          "value": "مستوطنة بشرية في ألمانيا"
+        },
+        "cs": {
+          "language": "cs",
+          "value": "místní část Crostwitzu"
+        },
+        "hy": {
+          "language": "hy",
+          "value": "բնակավայր Գերմանիայում"
+        },
+        "lld": {
+          "language": "lld",
+          "value": "chemun de la Germania"
+        },
+        "tr": {
+          "language": "tr",
+          "value": "Crostwitz, Almanya'da köy"
+        },
+        "ary": {
+          "language": "ary",
+          "value": "دوّار ف ألمانيا"
+        },
+        "hi": {
+          "language": "hi",
+          "value": "जर्मनी का एक गाँव"
+        }
+      },
+      "aliases": {
+        "de": [
+          {
+            "language": "de",
+            "value": "Kozarcy"
+          }
+        ],
+        "dsb": [
+          {
+            "language": "dsb",
+            "value": "Caseritz"
+          }
+        ],
+        "ru": [
+          {
+            "language": "ru",
+            "value": "Козерцы"
+          }
+        ],
+        "cs": [
+          {
+            "language": "cs",
+            "value": "Kozarcy"
+          }
+        ],
+        "en": [
+          {
+            "language": "en",
+            "value": "Kozarcy"
+          }
+        ]
+      },
+      "claims": {
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "ef7247b704f4ec0a7df39e83306bb388fea17d5f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 183,
+                  "id": "Q183"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "q160693$09C42C3B-3D28-4DDC-93D8-395DE108EA2C",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "cdfd1be68feb0bbd70525a3dc3b02d75722738f4",
+              "datavalue": {
+                "value": {
+                  "latitude": 51.2475,
+                  "longitude": 14.2275,
+                  "altitude": null,
+                  "precision": 0.00027777777777778,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "q160693$92CE0634-506F-4B7F-8EA5-87E597F9C25A",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "0822324dd76b90eef8eee5e0cf38d893013ccdf3",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 253019,
+                  "id": "Q253019"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "c786a8b39f62b37eb45745acf99302b5409f2e26",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1957-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580"
+            ],
+            "id": "Q160693$461E1C8C-AAC0-43B7-89B9-22BBE29E5625",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "5234088afa2cb8dd6b2b0c2f713eff1c61f34067",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 532,
+                  "id": "Q532"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q160693$79cafdc5-43b9-955a-e994-45886f861b0a",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "4e6beb54b615d48c5239f20931f0d68409834ac2",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 262166,
+                  "id": "Q262166"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "9994342b6bb7fad609c270eb6dbe08f0f0d2d0a0",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1957-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P582"
+            ],
+            "id": "Q160693$6bf8cc4e-406f-02b1-dcc2-58e15b38d590",
+            "rank": "normal"
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "dd550d8baa641d0a31e958d5b97907e453d2240d",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 93223,
+                  "id": "Q93223"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q160693$003E3149-419B-4985-854A-1BD65E9E41D5",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P281": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P281",
+              "hash": "5ff62bdde7c95a60c8beb015621aeb963b47aca9",
+              "datavalue": {
+                "value": "01920",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q160693$1289B362-78DE-4834-8545-173FE1E7B622",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P206": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P206",
+              "hash": "848b7965273bc510ada90c69f14de2d6473987b7",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 163007,
+                  "id": "Q163007"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q160693$D120DE07-97AD-4451-90F9-83937000BC41",
+            "rank": "normal"
+          }
+        ],
+        "P361": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P361",
+              "hash": "786ab8a8c6b9eb0213974ce7f3428c83b23d7c33",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 145129,
+                  "id": "Q145129"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q160693$3780E2EC-F449-45E0-B7CD-271CB04F5097",
+            "rank": "normal"
+          }
+        ],
+        "P473": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P473",
+              "hash": "8ca7eb243bd5301aeb6cde35430919c4918524a0",
+              "datavalue": {
+                "value": "035796",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q160693$2F58BACE-D12D-4AAC-8D19-7D4D3F385F30",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "f2f03ceecb06b60c193c5f10bbf5f2ce7405654b",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "8cde7da9222655afd91372b0e4464b41fb32f778",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Caseritz&oldid=175136295",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1549": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "cee5db02522ce83209eb2fbe29cdb33f195b6ca4",
+              "datavalue": {
+                "value": {
+                  "text": "Kozarčan",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "e9447d28af8c5d42930d7dd10e816fc7d922f8e4",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088290,
+                      "id": "Q47088290"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q160693$5316B389-D565-4326-B0CD-8F365A70717C",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "9bb3eee29198c83826434e305116328977d79cc2",
+              "datavalue": {
+                "value": {
+                  "text": "Kozarčanka",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "9ccfcbc8ef0cb77e854001299df9103998ab5d48",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088293,
+                      "id": "Q47088293"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q160693$C061864F-D61E-4218-961E-915DBDA8AE50",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1549",
+              "hash": "7371002a4a12498a4e7cba19bc40e2df7a6adf47",
+              "datavalue": {
+                "value": {
+                  "text": "Kozarčenjo",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P518": [
+                {
+                  "snaktype": "value",
+                  "property": "P518",
+                  "hash": "7002a0d0b3dc52a703f036cc2c96b1b6c752ca25",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 47088292,
+                      "id": "Q47088292"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P518"
+            ],
+            "id": "Q160693$ACDBA6A0-2EB4-46B0-A723-12AA9C66D98A",
+            "rank": "normal"
+          }
+        ],
+        "P402": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P402",
+              "hash": "0fe2a22b44e8a0f6853cb756c4c9f833a259cffd",
+              "datavalue": {
+                "value": "9440262",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160693$954d822c-480a-b6b0-3dec-582b8d8d4332",
+            "rank": "normal"
+          }
+        ],
+        "P1566": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1566",
+              "hash": "51a4597db2f72eebf431b5bb892bec116e3457e5",
+              "datavalue": {
+                "value": "2940242",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160693$03C2AD9A-034B-4EF0-8594-7545D8B6F1A9",
+            "rank": "normal"
+          }
+        ],
+        "P7046": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P7046",
+              "hash": "f1b7ecd9ee5f5b83eca0b599b24c635f324131d2",
+              "datavalue": {
+                "value": "26016",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P1932": [
+                {
+                  "snaktype": "value",
+                  "property": "P1932",
+                  "hash": "5e3c7045e8c01b1534d83725e23177dfab74ca8b",
+                  "datavalue": {
+                    "value": "Caseritz",
+                    "type": "string"
+                  },
+                  "datatype": "string"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P1932"
+            ],
+            "id": "Q160693$A14C479B-8EB8-4067-95E8-9B6CF9F5FBBC",
+            "rank": "normal"
+          }
+        ],
+        "P6766": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P6766",
+              "hash": "7f8ef20523cbd6b11519f1d7f642c8f64e52fd5d",
+              "datavalue": {
+                "value": "1259562523",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160693$28D17597-C528-419C-9C28-6503E40FFAAA",
+            "rank": "normal"
+          }
+        ],
+        "P1705": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1705",
+              "hash": "b12c3bfcc96ebf16d29d4bf9386d05a5ebc41fa6",
+              "datavalue": {
+                "value": {
+                  "text": "Kozarcy",
+                  "language": "hsb"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P443": [
+                {
+                  "snaktype": "value",
+                  "property": "P443",
+                  "hash": "4773a6b64e1c25ad0a92834f1239c9d584e1b290",
+                  "datavalue": {
+                    "value": "Kozarcy.ogg",
+                    "type": "string"
+                  },
+                  "datatype": "commonsMedia"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P443"
+            ],
+            "id": "Q160693$D9E1A18C-E3D5-41DC-942F-5E1533C9A0DF",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1705",
+              "hash": "c26fef5963869574cbc2bd65ae5b0f428ff77a91",
+              "datavalue": {
+                "value": {
+                  "text": "Caseritz",
+                  "language": "de"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "id": "Q160693$38BF251D-674F-4898-AC59-18BE57D4BE1D",
+            "rank": "normal"
+          }
+        ],
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "638a6a4236efc8fb4080029316c8bbba0d702082",
+              "datavalue": {
+                "value": "Caseritz/Kozarcy",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q160693$4cc44211-43bd-9a50-3ab5-26999fa6387b",
+            "rank": "normal"
+          }
+        ],
+        "P18": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P18",
+              "hash": "cf9738af91322d61f965552913bbf9461f522767",
+              "datavalue": {
+                "value": "Crostwitz Caseritz Aerial.jpg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q160693$bd99c3b9-4870-52c4-7170-a5a96b73dd50",
+            "rank": "normal"
+          }
+        ],
+        "P1766": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1766",
+              "hash": "67e972a5f06b809788d20246beb8267d5afe41cd",
+              "datavalue": {
+                "value": "Kozarcy – wjesna tafla.jpg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q160693$7ac6e345-4ed6-c227-6d09-f42dac51a0dc",
+            "rank": "normal"
+          }
+        ],
+        "P2044": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2044",
+              "hash": "56f8e9bc2964e9d3c373d006c190c361ac37a520",
+              "datavalue": {
+                "value": {
+                  "amount": "+160",
+                  "unit": "http://www.wikidata.org/entity/Q11573"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "id": "Q160693$EAB8808B-1B1D-4DA7-8818-DCBB996B074D",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "e3fbcec3fb4d48fff587bc7fa683795b3b7a90f4",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "3ee78167e9bff36c368f239cdad52011c970917b",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 2402143,
+                          "id": "Q2402143"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "74b8ebbfab3c8c2bcbcfee33b2db9c4d5c188972",
+                      "datavalue": {
+                        "value": "https://hsb.wikipedia.org/w/index.php?title=Kozarcy&oldid=368733",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1082": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "93df9422904e2cdf31b65b68ad02dd59ac20d4f4",
+              "datavalue": {
+                "value": {
+                  "amount": "+43",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "50e3b9c4ecacaca2ba92107b638691cbfbc9121b",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2016-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q160693$2d9ae0fa-4b4f-8665-95b4-cfe92f8d15a1",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "14190580c5990ed5b90712b683c50fdd8be4869f",
+              "datavalue": {
+                "value": {
+                  "amount": "+46",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "6174553681261aeec411766adf691fdeec1dee47",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2018-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q160693$87ff3a41-4d7b-c058-9898-2d81c76eba9f",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "87aa85a209efe87ad4545e7f1078769ba3f65a8b",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "25efc74fafcea16ead551a641c41e3fe8de74313",
+                      "datavalue": {
+                        "value": "https://am-klosterwasser.de/index.php?id=432&L=1",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854"
+                ]
+              },
+              {
+                "hash": "f4f2218c24807ae4218c15a18c5ef68ac2efc55b",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "6a164248fc96bfa583bbb495cb63ae6401ec203c",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 206855,
+                          "id": "Q206855"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "7970a3baa171cdf4c51087530170392fe4a7b0db",
+                      "datavalue": {
+                        "value": "https://ru.wikipedia.org/?oldid=100208484",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "bac9ea2a45b7d0802b7e35f59a91894c6e397c7e",
+              "datavalue": {
+                "value": {
+                  "amount": "+45",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "49ae60be22d4c3fc5628dc09cf76d6f4a396c58b",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2020-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q160693$d42653d2-428e-18f0-cfd4-53ae1ed95729",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "87aa85a209efe87ad4545e7f1078769ba3f65a8b",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "25efc74fafcea16ead551a641c41e3fe8de74313",
+                      "datavalue": {
+                        "value": "https://am-klosterwasser.de/index.php?id=432&L=1",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "bac9ea2a45b7d0802b7e35f59a91894c6e397c7e",
+              "datavalue": {
+                "value": {
+                  "amount": "+45",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "8809d0bfc6d96a7916c93c009bb688d4e2876724",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2019-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q160693$29cb1cba-4770-7a40-04e8-757b33529510",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "87aa85a209efe87ad4545e7f1078769ba3f65a8b",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "25efc74fafcea16ead551a641c41e3fe8de74313",
+                      "datavalue": {
+                        "value": "https://am-klosterwasser.de/index.php?id=432&L=1",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "b69d5b1e74eb117089004dceda2ff296c4262060",
+              "datavalue": {
+                "value": {
+                  "amount": "+48",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "5f7bbb1374fc3676fe8e0452d8c818594e1baaf7",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2022-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q160693$57de960d-4949-e366-7f01-70d7791ef145",
+            "rank": "preferred",
+            "references": [
+              {
+                "hash": "c713aec7417c4f71b536f16280b96a45fb624d36",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "fcee8709bcf07d29e2024a84163ebe406343ba2e",
+                      "datavalue": {
+                        "value": "https://www.am-klosterwasser.de/hs/zwjazk-a-wobydlerjo/statistik/wobydlerska-statistika-gmejny-chroscicy.html",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P1476": [
+                    {
+                      "snaktype": "value",
+                      "property": "P1476",
+                      "hash": "1f0f5b6edbe83b763ffab92deaa4819b9fe9975a",
+                      "datavalue": {
+                        "value": {
+                          "text": "Wobydlerska statistika gmejny Chrósćicy",
+                          "language": "hsb"
+                        },
+                        "type": "monolingualtext"
+                      },
+                      "datatype": "monolingualtext"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "fe808a46d6ed3ed9a60be34ed6c8080852c9e61c",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2023-05-02T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854",
+                  "P1476",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1249": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1249",
+              "hash": "06ea632151e6ad90e3975d73c2df6fef8cf03a18",
+              "datavalue": {
+                "value": {
+                  "time": "+1327-00-00T00:00:00Z",
+                  "timezone": 0,
+                  "before": 0,
+                  "after": 0,
+                  "precision": 9,
+                  "calendarmodel": "http://www.wikidata.org/entity/Q1985786"
+                },
+                "type": "time"
+              },
+              "datatype": "time"
+            },
+            "type": "statement",
+            "id": "Q160693$18842075-4992-5990-c3cc-abd4beff010e",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "f4f2218c24807ae4218c15a18c5ef68ac2efc55b",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "6a164248fc96bfa583bbb495cb63ae6401ec203c",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 206855,
+                          "id": "Q206855"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "7970a3baa171cdf4c51087530170392fe4a7b0db",
+                      "datavalue": {
+                        "value": "https://ru.wikipedia.org/?oldid=100208484",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2671": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2671",
+              "hash": "230bc1b3e7d5eae0b6956aa3c82d000ffa7b96f7",
+              "datavalue": {
+                "value": "/g/1232j1wg",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160693$4F19E029-D5E7-4B28-96F6-658D9423E0E6",
+            "rank": "normal"
+          }
+        ],
+        "P8168": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P8168",
+              "hash": "1f0b841fda2e1da40ba4b16e4f0805a2429d4ea7",
+              "datavalue": {
+                "value": "Q277077",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160693$5302E904-4DDE-4D9A-8884-516B7882FB45",
+            "rank": "normal"
+          }
+        ],
+        "P2046": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2046",
+              "hash": "04d4d64fed60ab62a042371d0519b320a93a2670",
+              "datavalue": {
+                "value": {
+                  "amount": "+1.27",
+                  "unit": "http://www.wikidata.org/entity/Q712226"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "id": "Q160693$f79daf8d-4f16-89c4-bc1b-5e03fad36f2d",
+            "rank": "normal"
+          }
+        ],
+        "P2326": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2326",
+              "hash": "b5b4c227bdbf83b7c3b46c09fed27c10475b4d72",
+              "datavalue": {
+                "value": "-1756390",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q160693$97232AF5-20CB-4A38-ABF7-A9AC6B6D23FD",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "commonswiki": {
+          "site": "commonswiki",
+          "title": "Category:Caseritz/Kozarcy",
+          "badges": []
+        },
+        "cswiki": {
+          "site": "cswiki",
+          "title": "Caseritz",
+          "badges": []
+        },
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Caseritz",
+          "badges": []
+        },
+        "hsbwiki": {
+          "site": "hsbwiki",
+          "title": "Kozarcy",
+          "badges": []
+        },
+        "ruwiki": {
+          "site": "ruwiki",
+          "title": "Казериц",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

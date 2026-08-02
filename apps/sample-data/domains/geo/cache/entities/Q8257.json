@@ -1,0 +1,650 @@
+{
+  "entities": {
+    "Q8257": {
+      "pageid": 9551,
+      "ns": 0,
+      "title": "Q8257",
+      "lastrevid": 2512013433,
+      "modified": "2026-06-29T23:41:28Z",
+      "type": "item",
+      "id": "Q8257",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Verwaltungsgemeinschaft Altenberg"
+        },
+        "it": {
+          "language": "it",
+          "value": "comunità amministrativa di Altenberg"
+        },
+        "pl": {
+          "language": "pl",
+          "value": "Wspólnota administracyjna Altenberg"
+        },
+        "pt": {
+          "language": "pt",
+          "value": "Verwaltungsgemeinschaft Altenberg"
+        },
+        "en": {
+          "language": "en",
+          "value": "Altenberg Administrative Community"
+        },
+        "es": {
+          "language": "es",
+          "value": "Altenberg"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "communauté d'Altenberg"
+        },
+        "nb": {
+          "language": "nb",
+          "value": "Forvaltningsfellesskapet Altenberg"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Municipal association Altenberg"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "Альтенберг"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "Verwaltungsgemeinschaft in Sachsen"
+        },
+        "it": {
+          "language": "it",
+          "value": "comunità amministrativa della Sassonia"
+        },
+        "en": {
+          "language": "en",
+          "value": "management community in the Free State of Saxony, Germany"
+        },
+        "es": {
+          "language": "es",
+          "value": "comunidad administrativa de Sajonia, Alemania"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "unité administrative de Saxe"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "административная единица в Германии"
+        }
+      },
+      "aliases": {
+        "it": [
+          {
+            "language": "it",
+            "value": "Verwaltungsgemeinschaft Altenberg"
+          }
+        ],
+        "ru": [
+          {
+            "language": "ru",
+            "value": "управление Альтенберг"
+          }
+        ]
+      },
+      "claims": {
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "ac0f45577abc30b51e19c78d84013672a54723fa",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 6323,
+                  "id": "Q6323"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "55301a9cd3601b107b78b45af127d4d971b6008a",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2008-08-01T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580"
+            ],
+            "id": "q8257$579c5961-458f-78d1-6fce-d54532f0386d",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "58d0bb2d7145797c0cb4ddc3decbfe36399d8d59",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 20274,
+                  "id": "Q20274"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "aba3db931918dc4a06c29848b5caa791ddd656f9",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2008-08-01T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P582"
+            ],
+            "id": "Q8257$1344C0B3-4EBD-4F49-824A-008D4CFF3445",
+            "rank": "normal"
+          }
+        ],
+        "P150": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "dd52eeeda755413f1ec21a7b0619e38112d66319",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 436724,
+                  "id": "Q436724"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "95b5f8757e8297bbca8f42b215a79ac44f5bac0a",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1999-01-01T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580"
+            ],
+            "id": "q8257$194d2d08-4804-d3de-7845-6745b593f93d",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "a36f0c4b122cc25180608bd87d1f17909b2c71d5",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 6724,
+                  "id": "Q6724"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "95b5f8757e8297bbca8f42b215a79ac44f5bac0a",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1999-01-01T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580"
+            ],
+            "id": "q8257$f952397c-467a-d7d2-835f-40b8bddf5de9",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "72b6bca819319b4106bd895689899d8c10981394",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1019171,
+                  "id": "Q1019171"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "00cb631e3ebb6f24d1ad75cc907afd51716fbac9",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1999-09-01T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "0bf70454b052cf2935361dc3dd3863a26af6d0be",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2003-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580",
+              "P582"
+            ],
+            "id": "q8257$b40bd76f-4a53-336e-79f0-8fd2ad2079a5",
+            "rank": "normal"
+          }
+        ],
+        "P571": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P571",
+              "hash": "3b2643447cc2c0660e097fe12fb8506c270c3366",
+              "datavalue": {
+                "value": {
+                  "time": "+1999-01-01T00:00:00Z",
+                  "timezone": 0,
+                  "before": 0,
+                  "after": 0,
+                  "precision": 11,
+                  "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                },
+                "type": "time"
+              },
+              "datatype": "time"
+            },
+            "type": "statement",
+            "id": "q8257$aa814df5-4224-5096-834d-398c3495e2f5",
+            "rank": "normal"
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "26970838f2550ab8c23c0b1f9c8fbd2b565e2439",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 14455864,
+                  "id": "Q14455864"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q8257$4EABDABF-D9B1-4C48-ACC9-C15B4ECCC252",
+            "rank": "normal"
+          }
+        ],
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "ef7247b704f4ec0a7df39e83306bb388fea17d5f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 183,
+                  "id": "Q183"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q8257$C2DCC3F1-DFC8-48ED-9DB9-16A611406743",
+            "rank": "normal"
+          }
+        ],
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "ca6074b93f54b3e37a18293956554284cfebaae4",
+              "datavalue": {
+                "value": {
+                  "latitude": 50.76666667,
+                  "longitude": 13.75,
+                  "altitude": null,
+                  "precision": 0.016666666666667,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "Q8257$73E19604-4858-44EA-86E1-B812E3073CD7",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P856": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P856",
+              "hash": "b0f3c3d4ca47aebcde362729aaa87f2b4cb333a9",
+              "datavalue": {
+                "value": "http://www.allershausen.de/",
+                "type": "string"
+              },
+              "datatype": "url"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P407": [
+                {
+                  "snaktype": "value",
+                  "property": "P407",
+                  "hash": "46bfd327b830f66f7061ea92d1be430c135fa91f",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 188,
+                      "id": "Q188"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P407"
+            ],
+            "id": "Q8257$950B3DC4-F6A9-4378-AFE3-D3442C35D468",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "d5847b9b6032aa8b13dae3c2dfd9ed5d114d21b3",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "5a343e7e758a4282a01316d3e959b6e653b767fc",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 11920,
+                          "id": "Q11920"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P242": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P242",
+              "hash": "92ff5c056dcea756de2dfefb9426f6839f3ba0db",
+              "datavalue": {
+                "value": "Verwaltungsgemeinschaft Altenberg in PIR.svg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q8257$4F680EBA-413C-47ED-9970-B82C7EF1C1CB",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "535952814503d95b9666dd9cb37a22fc094a9ee1",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "8e35bff60380892acf96b63421b82f2da586e657",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Verwaltungsgemeinschaft_Altenberg&oldid=159616126",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2671": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2671",
+              "hash": "5cc8cf9e51859e5e7ad79a861be588f73e741ba9",
+              "datavalue": {
+                "value": "/g/12301zmg",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q8257$7522FCDD-5583-4537-AAA9-3FE106269E85",
+            "rank": "normal"
+          }
+        ],
+        "P13591": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P13591",
+              "hash": "720cf29848ce015cbeb4b94bac178b8abd290c71",
+              "datavalue": {
+                "value": "place/8dba3644-9292-4231-a814-6ca6f9ef4a43",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q8257$79C3B6EB-5BF8-4E10-8376-C698BB50B1DB",
+            "rank": "normal"
+          }
+        ],
+        "P1388": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1388",
+              "hash": "065fba766dae426e9d47c776df8be7d469c102a5",
+              "datavalue": {
+                "value": "146285201000",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q8257$238459DE-0182-4A79-B204-D2CB672366A8",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Verwaltungsgemeinschaft Altenberg",
+          "badges": []
+        },
+        "itwiki": {
+          "site": "itwiki",
+          "title": "Verwaltungsgemeinschaft Altenberg",
+          "badges": []
+        },
+        "nowiki": {
+          "site": "nowiki",
+          "title": "Forvaltningsfellesskapet Altenberg",
+          "badges": []
+        },
+        "plwiki": {
+          "site": "plwiki",
+          "title": "Wspólnota administracyjna Altenberg",
+          "badges": []
+        },
+        "ptwiki": {
+          "site": "ptwiki",
+          "title": "Verwaltungsgemeinschaft Altenberg",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

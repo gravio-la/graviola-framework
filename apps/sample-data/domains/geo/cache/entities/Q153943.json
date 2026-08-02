@@ -1,0 +1,2735 @@
+{
+  "entities": {
+    "Q153943": {
+      "pageid": 155314,
+      "ns": 0,
+      "title": "Q153943",
+      "lastrevid": 2485688900,
+      "modified": "2026-04-29T22:23:00Z",
+      "type": "item",
+      "id": "Q153943",
+      "labels": {
+        "zh-hans": {
+          "language": "zh-hans",
+          "value": "威斯特法伦王国"
+        },
+        "zh-hant": {
+          "language": "zh-hant",
+          "value": "威斯特法倫王國"
+        },
+        "zh-hk": {
+          "language": "zh-hk",
+          "value": "威斯特法倫王國"
+        },
+        "zh-cn": {
+          "language": "zh-cn",
+          "value": "威斯特法伦王国"
+        },
+        "zh-sg": {
+          "language": "zh-sg",
+          "value": "威斯特法伦王国"
+        },
+        "zh-tw": {
+          "language": "zh-tw",
+          "value": "威斯伐倫王國"
+        },
+        "pl": {
+          "language": "pl",
+          "value": "Królestwo Westfalii"
+        },
+        "he": {
+          "language": "he",
+          "value": "ממלכת וסטפאליה"
+        },
+        "ko": {
+          "language": "ko",
+          "value": "베스트팔렌 왕국"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "royaume de Westphalie"
+        },
+        "be": {
+          "language": "be",
+          "value": "Каралеўства Вестфалія"
+        },
+        "es": {
+          "language": "es",
+          "value": "Reino de Westfalia"
+        },
+        "it": {
+          "language": "it",
+          "value": "Regno di Vestfalia"
+        },
+        "et": {
+          "language": "et",
+          "value": "Vestfaali kuningriik"
+        },
+        "de": {
+          "language": "de",
+          "value": "Königreich Westphalen"
+        },
+        "id": {
+          "language": "id",
+          "value": "Kerajaan Westphalia"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "ヴェストファーレン王国"
+        },
+        "br": {
+          "language": "br",
+          "value": "rouantelezh Westfalen"
+        },
+        "el": {
+          "language": "el",
+          "value": "Βασίλειο της Βεστφαλίας"
+        },
+        "ar": {
+          "language": "ar",
+          "value": "مملكة فستفالن"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Koninkrijk Westfalen"
+        },
+        "pt": {
+          "language": "pt",
+          "value": "Reino da Vestfália"
+        },
+        "eo": {
+          "language": "eo",
+          "value": "Reĝlando Vestfalio"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "Королевство Вестфалия"
+        },
+        "sr-el": {
+          "language": "sr-el",
+          "value": "Kraljevina Vestfalija"
+        },
+        "sr-ec": {
+          "language": "sr-ec",
+          "value": "Краљевина Вестфалија"
+        },
+        "en": {
+          "language": "en",
+          "value": "Kingdom of Westphalia"
+        },
+        "tr": {
+          "language": "tr",
+          "value": "Vestfalya Krallığı"
+        },
+        "ro": {
+          "language": "ro",
+          "value": "Regatul Westfaliei"
+        },
+        "th": {
+          "language": "th",
+          "value": "ราชอาณาจักรเวสต์ฟาเลีย"
+        },
+        "ca": {
+          "language": "ca",
+          "value": "Regne de Westfàlia"
+        },
+        "la": {
+          "language": "la",
+          "value": "Regnum Westphaliae"
+        },
+        "cs": {
+          "language": "cs",
+          "value": "Vestfálské království"
+        },
+        "bg": {
+          "language": "bg",
+          "value": "Кралство Вестфалия"
+        },
+        "fa": {
+          "language": "fa",
+          "value": "پادشاهی وستفالیا"
+        },
+        "sr": {
+          "language": "sr",
+          "value": "Краљевина Вестфалија"
+        },
+        "zh": {
+          "language": "zh",
+          "value": "威斯特法倫王國"
+        },
+        "da": {
+          "language": "da",
+          "value": "Kongeriget Westfalen"
+        },
+        "nb": {
+          "language": "nb",
+          "value": "Kongeriket Westfalen"
+        },
+        "sv": {
+          "language": "sv",
+          "value": "Kungariket Westfalen"
+        },
+        "uk": {
+          "language": "uk",
+          "value": "Вестфальське королівство"
+        },
+        "sh": {
+          "language": "sh",
+          "value": "Kraljevina Vestfalija"
+        },
+        "gd": {
+          "language": "gd",
+          "value": "Rìoghachd Westphalen"
+        },
+        "nds": {
+          "language": "nds",
+          "value": "Königriek Westfalen"
+        },
+        "wuu": {
+          "language": "wuu",
+          "value": "威斯特法伦王国"
+        },
+        "gsw": {
+          "language": "gsw",
+          "value": "Königreich Westphalen"
+        },
+        "hu": {
+          "language": "hu",
+          "value": "Vesztfáliai Királyság"
+        },
+        "tt": {
+          "language": "tt",
+          "value": "Вестфалия кыйраллыгы"
+        },
+        "yue": {
+          "language": "yue",
+          "value": "西法倫王國"
+        },
+        "ast": {
+          "language": "ast",
+          "value": "Reinu de Westfalia"
+        },
+        "azb": {
+          "language": "azb",
+          "value": "وستفالیا کراللیغی"
+        },
+        "fi": {
+          "language": "fi",
+          "value": "Westfalenin kuningaskunta"
+        },
+        "vec": {
+          "language": "vec",
+          "value": "Regno de Westfàlia"
+        },
+        "vi": {
+          "language": "vi",
+          "value": "Vương quốc Westphalia"
+        },
+        "gv": {
+          "language": "gv",
+          "value": "Reeriaght Westphalen"
+        },
+        "mk": {
+          "language": "mk",
+          "value": "Кралство Вестфалија"
+        },
+        "ckb": {
+          "language": "ckb",
+          "value": "شانشینی وێستفالین"
+        },
+        "sl": {
+          "language": "sl",
+          "value": "Vestfalsko kraljestvo"
+        },
+        "hy": {
+          "language": "hy",
+          "value": "Վեսթֆալիա թագավորություն"
+        },
+        "ga": {
+          "language": "ga",
+          "value": "Ríocht Westphalia"
+        },
+        "krc": {
+          "language": "krc",
+          "value": "Вестфалия короллукъ"
+        },
+        "be-tarask": {
+          "language": "be-tarask",
+          "value": "Каралеўства Вэстфаліі"
+        },
+        "lv": {
+          "language": "lv",
+          "value": "Vestfālenes Karaliste"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "napoleonischer Staat (1807–1813)"
+        },
+        "en": {
+          "language": "en",
+          "value": "former country during Napoleon era (1807-1813)"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "historisch land"
+        },
+        "hu": {
+          "language": "hu",
+          "value": "német államalakulat (1807–1813)"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "германское государство, существовавшее в 1807-1814 годах"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "état-satellite du Premier empire français"
+        },
+        "cs": {
+          "language": "cs",
+          "value": "historický státní útvar"
+        },
+        "it": {
+          "language": "it",
+          "value": "regno napoleonico in Germania, parte della Confederazione del Reno (1807-1813)"
+        },
+        "fi": {
+          "language": "fi",
+          "value": "saksalainen valtio 1807–1813"
+        },
+        "pl": {
+          "language": "pl",
+          "value": "historyczne państwo niemieckie (1807–1813)"
+        },
+        "sl": {
+          "language": "sl",
+          "value": "napoleonska država"
+        },
+        "id": {
+          "language": "id",
+          "value": "bekas negara"
+        },
+        "ko": {
+          "language": "ko",
+          "value": "라인 동맹 소속 국가"
+        },
+        "krc": {
+          "language": "krc",
+          "value": "Рейн Бирликни къурамында 1807-1814 джыллада къаранчха кърал"
+        },
+        "uk": {
+          "language": "uk",
+          "value": "клієнська наполеонівська держава в Німеччині"
+        },
+        "be-tarask": {
+          "language": "be-tarask",
+          "value": "колішняя дзяржава"
+        },
+        "ro": {
+          "language": "ro",
+          "value": "fostă țară în timpul epocii Napoleonului (1807-1813)"
+        },
+        "sv": {
+          "language": "sv",
+          "value": "tidigare absolut monarki och vasallstat i centrala Europa (1807–1813)"
+        }
+      },
+      "aliases": {
+        "he": [
+          {
+            "language": "he",
+            "value": "ממלכת וסטפליה"
+          }
+        ],
+        "it": [
+          {
+            "language": "it",
+            "value": "Regno di Westfalia"
+          }
+        ],
+        "et": [
+          {
+            "language": "et",
+            "value": "Westphali kuningriik"
+          }
+        ],
+        "de": [
+          {
+            "language": "de",
+            "value": "Königreich Westfalen"
+          }
+        ],
+        "nl": [
+          {
+            "language": "nl",
+            "value": "Koninkrijk Westphalen"
+          },
+          {
+            "language": "nl",
+            "value": "Westphalen"
+          }
+        ],
+        "pt": [
+          {
+            "language": "pt",
+            "value": "Reino de Westphalia"
+          }
+        ],
+        "ru": [
+          {
+            "language": "ru",
+            "value": "Вестфалия"
+          },
+          {
+            "language": "ru",
+            "value": "Вестфальское королевство"
+          }
+        ],
+        "sr": [
+          {
+            "language": "sr",
+            "value": "Вестфалска краљевина"
+          },
+          {
+            "language": "sr",
+            "value": "Краљевство Вестфалија"
+          },
+          {
+            "language": "sr",
+            "value": "Вестфалско краљевство"
+          }
+        ],
+        "tr": [
+          {
+            "language": "tr",
+            "value": "Westphalen Krallığı"
+          },
+          {
+            "language": "tr",
+            "value": "Westphalia Krallığı"
+          },
+          {
+            "language": "tr",
+            "value": "Westfalen Krallığı"
+          }
+        ],
+        "th": [
+          {
+            "language": "th",
+            "value": "Kingdom of Westphalia"
+          }
+        ],
+        "la": [
+          {
+            "language": "la",
+            "value": "Regnum Westfaliae"
+          }
+        ],
+        "en": [
+          {
+            "language": "en",
+            "value": "Westphalian Kingdom"
+          }
+        ],
+        "sl": [
+          {
+            "language": "sl",
+            "value": "Vestfalija"
+          },
+          {
+            "language": "sl",
+            "value": "Kraljevina Vestfalija"
+          }
+        ],
+        "krc": [
+          {
+            "language": "krc",
+            "value": "Вестфалияны короллугъу"
+          }
+        ],
+        "be-tarask": [
+          {
+            "language": "be-tarask",
+            "value": "Каралеўства Вэстфалія"
+          }
+        ]
+      },
+      "claims": {
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "094c7250369db3e171e47d8d1cf1d28e01d955ac",
+              "datavalue": {
+                "value": "Kingdom of Westphalia",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "q153943$558030FD-345D-46DA-8BD6-661F2FB207A4",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "53a054c214f606be34457efcd599d3b4b7798a03",
+              "datavalue": {
+                "value": {
+                  "latitude": 51.31,
+                  "longitude": 9.5,
+                  "altitude": null,
+                  "precision": 0.0002777777777777778,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "Q153943$8E5F2D56-25C8-4668-828D-445C69C4B03F",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 328,
+                          "id": "Q328"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P646": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P646",
+              "hash": "c2cb7cb17d1d1b11a869382978281c239aeaa6da",
+              "datavalue": {
+                "value": "/m/05sn04",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q153943$CD2F551A-02AB-491D-BEED-D8CA45DCB960",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "2b00cb481cddcac7623114367489b5c194901c4a",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "a94b740202b097dd33355e0e6c00e54b9395e5e0",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 15241312,
+                          "id": "Q15241312"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P577": [
+                    {
+                      "snaktype": "value",
+                      "property": "P577",
+                      "hash": "fde79ecb015112d2f29229ccc1ec514ed3e71fa2",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2013-10-28T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P577"
+                ]
+              }
+            ]
+          }
+        ],
+        "P571": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P571",
+              "hash": "d8ecda84e134684a75a21c063a6ccfa2a46ff286",
+              "datavalue": {
+                "value": {
+                  "time": "+1807-01-01T00:00:00Z",
+                  "timezone": 0,
+                  "before": 0,
+                  "after": 0,
+                  "precision": 9,
+                  "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                },
+                "type": "time"
+              },
+              "datatype": "time"
+            },
+            "type": "statement",
+            "id": "Q153943$EBAE6C60-2EC6-4362-BC7F-3C8652C221C1",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 328,
+                          "id": "Q328"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P576": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P576",
+              "hash": "1fbaabd77352a68b2fe6ebad87800732ae93856f",
+              "datavalue": {
+                "value": {
+                  "time": "+1813-01-01T00:00:00Z",
+                  "timezone": 0,
+                  "before": 0,
+                  "after": 0,
+                  "precision": 9,
+                  "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                },
+                "type": "time"
+              },
+              "datatype": "time"
+            },
+            "type": "statement",
+            "id": "Q153943$3DE6C1F8-F4D5-45BE-A443-0ADFC137BBFA",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 328,
+                          "id": "Q328"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P242": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P242",
+              "hash": "879a5102889640c1e10e70e70ebd7f89132576b2",
+              "datavalue": {
+                "value": "Kingdom of Westphalia (1812).svg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q153943$939E832D-BCE3-4CDC-96AA-816B98DAFA94",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 328,
+                          "id": "Q328"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P94": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P94",
+              "hash": "7a407f8e59d49c5ff9f2ae8243c0118b865b9d1e",
+              "datavalue": {
+                "value": "Grandes Armes Jérôme Bonaparte (1784-1860) 2.svg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q153943$CFBC523E-1096-4AEA-B550-3D18B4EB593D",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 328,
+                          "id": "Q328"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P41": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P41",
+              "hash": "42028e25376c9322717ccf34622548e68f64c3ba",
+              "datavalue": {
+                "value": "Flag of Kingdom of Westphalia.svg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q153943$AA8FAF48-832D-4882-A1EA-D30BDE99DABF",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 328,
+                          "id": "Q328"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P140": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P140",
+              "hash": "d2c9eca604ede83ae9ca9fc525294f8456fbb5dd",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 9592,
+                  "id": "Q9592"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$C7920B48-762E-4A3E-9308-3AA31C338DE6",
+            "rank": "normal"
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "8ef72935bbd0850be07948cbc1801c5af7c1e7a7",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 3024240,
+                  "id": "Q3024240"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$544DF060-C56C-4246-A08A-565A43B0566D",
+            "rank": "preferred"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "04bba0665ea8842bea5b3c1a0443fae87890ab54",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 26879769,
+                  "id": "Q26879769"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "2617c831dbf3ac81bde5718208c3d4557ce03404",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1807-04-11T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580"
+            ],
+            "id": "Q153943$d36af9e3-4d89-2960-ddfd-33b945d2ca1c",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "835949c65c74f310e08f60bcb16a885634566df4",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 417175,
+                  "id": "Q417175"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$f3a195d4-4e3b-2e02-4fcd-646b5aedb293",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "feaa3cb744f547582102ade80aac1e93ebe80db8",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1679711,
+                  "id": "Q1679711"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$d1c8d4ca-493d-0569-ef5f-3d15558fd3f3",
+            "rank": "normal"
+          }
+        ],
+        "P1343": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1343",
+              "hash": "8162cca1bad1bd4a401fa1c7c67f2d8593a9a9c0",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 678259,
+                  "id": "Q678259"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$229E304B-184A-40D0-8956-CD6F05B37E78",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1343",
+              "hash": "18e6d3e5a4b2e8891df3becff7db1570f149a24e",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 20078554,
+                  "id": "Q20078554"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P805": [
+                {
+                  "snaktype": "value",
+                  "property": "P805",
+                  "hash": "0bf3b9ca372204bf6f0b3242acc81a95c4c832f9",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 43441818,
+                      "id": "Q43441818"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P805"
+            ],
+            "id": "Q153943$51010a4e-a109-4d44-a94f-325ce5d6a10d",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1343",
+              "hash": "88389772f86dcd7d415ddd029f601412e5cc894a",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 602358,
+                  "id": "Q602358"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P805": [
+                {
+                  "snaktype": "value",
+                  "property": "P805",
+                  "hash": "1d899934ddbeef835876a6627f139c3787128060",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 24361009,
+                      "id": "Q24361009"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P805"
+            ],
+            "id": "Q153943$44714c9a-5e91-4fa0-9332-ea63bd309425",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1343",
+              "hash": "7d6f86cef085693a10b0e0663a0960f58d0e15e2",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 4173137,
+                  "id": "Q4173137"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P805": [
+                {
+                  "snaktype": "value",
+                  "property": "P805",
+                  "hash": "1f16167290737510afc3486730d6fc9c93d6cb1c",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 24961827,
+                      "id": "Q24961827"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P805"
+            ],
+            "id": "Q153943$5668b215-4ce8-3fa2-e722-69fedb45ae2e",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1343",
+              "hash": "42346dfe9209b7359c1f5db829a368b38d407797",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 19180675,
+                  "id": "Q19180675"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P805": [
+                {
+                  "snaktype": "value",
+                  "property": "P805",
+                  "hash": "457c1b2d4106aaa079745dd8cc2662868f3b1b8a",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 24796414,
+                      "id": "Q24796414"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P805"
+            ],
+            "id": "Q153943$caae08fc-4fcb-64da-7e6d-7b882b2d740f",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1343",
+              "hash": "5520fee671a09fd4c923a052356895f10c8b608a",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1029706,
+                  "id": "Q1029706"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P805": [
+                {
+                  "snaktype": "value",
+                  "property": "P805",
+                  "hash": "a60e6ccb5f637bc297fb9cda88e103f2c1a0f36e",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 134889365,
+                      "id": "Q134889365"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P805"
+            ],
+            "id": "Q153943$BD253431-110A-4327-A82B-277F984F2C60",
+            "rank": "normal"
+          }
+        ],
+        "P910": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P910",
+              "hash": "93033681e4b0c74252425fa1840a0673d00c42fa",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 8995268,
+                  "id": "Q8995268"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$ECE5CA3B-F8C1-4B79-826F-F0C8BC48503C",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "d4bd87b862b12d99d26e86472d44f26858dee639",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "f30cbd35620c4ea6d0633aaf0210a8916130469b",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 8447,
+                          "id": "Q8447"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P214": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P214",
+              "hash": "2de2c8dd9d3623a5f0784f646428d1fccfa2e929",
+              "datavalue": {
+                "value": "139832198",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q153943$381CCCFC-AB6C-4698-B44C-8B089BAE6FA8",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P227": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P227",
+              "hash": "aec333df862143447b42da0d14c3902df9a5fb2d",
+              "datavalue": {
+                "value": "4065783-8",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q153943$171A2A24-CA02-4428-AC81-533E52D6E1F1",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P244": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P244",
+              "hash": "322ff09ef47e6f6655b63ddd16ece70b79d182ac",
+              "datavalue": {
+                "value": "no90003603",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q153943$FC087F1F-282B-43C9-B38E-A88CF4E4CBCD",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P150": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "b1bfd1dcde2463493da00fe0e5f85d4bafc0dc66",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1191346,
+                  "id": "Q1191346"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$6BED24F5-3B3C-4F5D-8FB2-7544A176039A",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "4049757177348079de9c4e9f802a315eaff18276",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1191349,
+                  "id": "Q1191349"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$C493722E-B904-4829-8166-3047F38B92C7",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "e7be7f882ce73160b903e648d7d169a5a6a294cb",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1191351,
+                  "id": "Q1191351"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$94E69E7C-B259-4467-9AF7-E07DA74EF679",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "757f0792eb1aa05fa8c95a1b0af0b9c2badf043b",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1191352,
+                  "id": "Q1191352"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$C619CD7E-3C84-4F84-819B-3751D1B01172",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "0deaf8597a839e99a5bf7f5783d7a141b5bb2b10",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1191356,
+                  "id": "Q1191356"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$07A9BFFC-9F72-4096-B41A-FC7C739ABE99",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "705645ea1ed9cf1b0692588aa45a6be5f589ba81",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1191354,
+                  "id": "Q1191354"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$6299DD5D-892E-4310-B6E0-95E0B87D35AB",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "1e68bb9fb1fa6e0c24f998276453d0d316433eb0",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1191361,
+                  "id": "Q1191361"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$D588BD53-EE8F-4941-8812-014C1034A406",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "1c255724136c895b4915895d161dba2f245331bb",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1191362,
+                  "id": "Q1191362"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$A0CB1C00-C5B6-4481-ACA1-AA07A0F9B8F6",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "9d32f81fb10652575a9b50098e96b9fdc4d2f15a",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1191369,
+                  "id": "Q1191369"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$73A2D268-4AC4-43AA-9B6A-074AF8F6742E",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "1f433b23f04d1b778b40dacf618ef9cd7933fa17",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1191365,
+                  "id": "Q1191365"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$811422f7-4299-b514-c478-98269e55806e",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P150",
+              "hash": "ed97f897a4144f12d7f72850fc894fd33b321e3c",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1191366,
+                  "id": "Q1191366"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$2c9b01f3-4227-1f50-d12a-ceae09d18320",
+            "rank": "normal"
+          }
+        ],
+        "P38": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P38",
+              "hash": "30b30d123a9e488524170dd908d6df44fa02a6e8",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 2039104,
+                  "id": "Q2039104"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "e76c90c8488082364ed59cb7997483b03250d0a8",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1808-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "bec68bc658f6996543b85b1e8e4350d9ba4a5870",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1813-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580",
+              "P582"
+            ],
+            "id": "Q153943$e54a6040-4e7a-7558-cb25-5d92e9ae451d",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P38",
+              "hash": "373c3b8be85b42cfa27b94f5fb738b6fc13df2ac",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 582812,
+                  "id": "Q582812"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "46a9029e1fbb1a28216bf0d8d1ba02f6b5a8d752",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1807-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "bec68bc658f6996543b85b1e8e4350d9ba4a5870",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1813-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580",
+              "P582"
+            ],
+            "id": "Q153943$eb0b21ef-4dd6-d998-a3b0-a4628486794a",
+            "rank": "normal"
+          }
+        ],
+        "P47": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P47",
+              "hash": "831f6f92d4ae0a299ec7b9ca8c5d8cc7df91758d",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 142,
+                  "id": "Q142"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$9a7b9f19-4c3e-64f7-a459-79bdf3e87ead",
+            "rank": "normal"
+          }
+        ],
+        "P35": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P35",
+              "hash": "8d22dd3e98926d4aba119eeb37d8be0586895892",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 151087,
+                  "id": "Q151087"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "46a9029e1fbb1a28216bf0d8d1ba02f6b5a8d752",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1807-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "bec68bc658f6996543b85b1e8e4350d9ba4a5870",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1813-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580",
+              "P582"
+            ],
+            "id": "Q153943$d0ee1e27-45b8-d05e-a90c-fc65324ad477",
+            "rank": "normal"
+          }
+        ],
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "23545740b80442c8dc487fb562ec58f97a39f632",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 153943,
+                  "id": "Q153943"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$92e980b4-4be7-efd2-293f-e18b79fadf4f",
+            "rank": "normal"
+          }
+        ],
+        "P2503": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2503",
+              "hash": "2e50a04f3e9e6d6775342b403d5748824ffae8f3",
+              "datavalue": {
+                "value": "object_275305",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q153943$2f1fbb8a-4657-5c9a-903e-67c367ff2c0b",
+            "rank": "normal"
+          }
+        ],
+        "P36": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P36",
+              "hash": "07ac2c900062c10fa85031bd85ce16860a0aa3a4",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 2865,
+                  "id": "Q2865"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$fdbdc442-4e1a-e410-44c8-ca148e4a0d7c",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "288ab581e7d2d02995a26dfa8b091d96e78457fc",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "6a164248fc96bfa583bbb495cb63ae6401ec203c",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 206855,
+                          "id": "Q206855"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P122": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P122",
+              "hash": "65e840470ecd2658517d71080460edf32d8ea33a",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 7269,
+                  "id": "Q7269"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$6138e205-421f-4a13-ab10-b0138675a066",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "e2b7e8bcd795c52aa974424b6187b1bb2adb4806",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "6a164248fc96bfa583bbb495cb63ae6401ec203c",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 206855,
+                          "id": "Q206855"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "28887ebfc1d16e19d659a78001916d873f7dfe55",
+                      "datavalue": {
+                        "value": "https://ru.wikipedia.org/?oldid=94415601",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1705": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1705",
+              "hash": "6f04294bef8674e35e527aa06fdcd07adada4149",
+              "datavalue": {
+                "value": {
+                  "text": "Königreich Westphalen",
+                  "language": "de"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "id": "Q153943$fb9abfa2-4ae5-e905-1729-04ab253a8a73",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "e2b7e8bcd795c52aa974424b6187b1bb2adb4806",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "6a164248fc96bfa583bbb495cb63ae6401ec203c",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 206855,
+                          "id": "Q206855"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "28887ebfc1d16e19d659a78001916d873f7dfe55",
+                      "datavalue": {
+                        "value": "https://ru.wikipedia.org/?oldid=94415601",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P30": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P30",
+              "hash": "19a1327487d5b9576f36ab9e95214ac7aa1091ba",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 46,
+                  "id": "Q46"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$25248B96-3441-4363-9A4D-111ABD4E324E",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "8c5dde6627594b8610254d36640280dd87478487",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 328,
+                          "id": "Q328"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "33d3f9bb53764a40ecb94ed06f31aa8ee94f8d23",
+                      "datavalue": {
+                        "value": "https://en.wikipedia.org/w/index.php?title=Kingdom_of_Westphalia&oldid=871038926",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P6814": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P6814",
+              "hash": "85b0962c4127c254099e2991a2290588110ffa53",
+              "datavalue": {
+                "value": "N76",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q153943$a882dc00-4c2b-5053-c771-00cbc77c97ea",
+            "rank": "normal"
+          }
+        ],
+        "P1296": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1296",
+              "hash": "f48b230f7b8c44c59906c720ccc56cac228c5b29",
+              "datavalue": {
+                "value": "0072064",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q153943$973575BC-F7CB-4B48-9126-5F1F8FD7014E",
+            "rank": "normal"
+          }
+        ],
+        "P7867": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P7867",
+              "hash": "90f6173d64d88edcfb3d672ec3db37a7e5a37c27",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 84105084,
+                  "id": "Q84105084"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$30e47783-bf31-46c8-83ba-11deb2455694",
+            "rank": "normal"
+          }
+        ],
+        "P463": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P463",
+              "hash": "e6dabe29cbafbb543dabce4d27d1ec5721d925f0",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 154741,
+                  "id": "Q154741"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "2617c831dbf3ac81bde5718208c3d4557ce03404",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1807-04-11T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580"
+            ],
+            "id": "Q153943$BDDEE1FB-4DCC-4AD4-85CB-952ADD737519",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "dc804989b4c5e15043d69d0c664985bc80c5e707",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "e17507043402fe54ae6c4d65cc51f46cec987de9",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 8449,
+                          "id": "Q8449"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "e2271a1fb03874af19166da178079f9de31084dc",
+                      "datavalue": {
+                        "value": "https://es.wikipedia.org/w/index.php?title=Reino_de_Westfalia&oldid=120986144",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P155": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P155",
+              "hash": "34d9d155eeb9336a05d09cdc0549e530b996937c",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 100594799,
+                  "id": "Q100594799"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$1433bc7c-4c13-3b09-fb2a-0d135a5b2f84",
+            "rank": "normal"
+          }
+        ],
+        "P8189": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P8189",
+              "hash": "1633bfaea8c67280e65ccb95b5fa74d01a5bff9c",
+              "datavalue": {
+                "value": "987007540197805171",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q153943$70CCB95F-5DF0-46EF-A5A2-A77CE09E8FDE",
+            "rank": "normal"
+          }
+        ],
+        "P9957": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P9957",
+              "hash": "fc8b978755f7ab04ad308154ac153970912d72fd",
+              "datavalue": {
+                "value": "3238",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q153943$B3E20DE5-A4BE-4111-93EC-26005E135E3A",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "190527dca615f4510213808b0e1cb81522b247f6",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "9d638c2b86f0a48538336421421d81e676e6a966",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 1360745,
+                          "id": "Q1360745"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248"
+                ]
+              }
+            ]
+          }
+        ],
+        "P8168": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P8168",
+              "hash": "b1b5f059f10772846be977494225419b4204688d",
+              "datavalue": {
+                "value": "Q386954",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q153943$E7AFFE19-252E-4942-92D7-842DBD8DE5AF",
+            "rank": "normal"
+          }
+        ],
+        "P1451": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1451",
+              "hash": "3c18228dcc75137b6a51df041efa84a375429146",
+              "datavalue": {
+                "value": {
+                  "text": "Character und Aufrichtigkeit",
+                  "language": "de"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "id": "Q153943$87fc0107-43f4-257d-15ac-61cbda305622",
+            "rank": "normal"
+          }
+        ],
+        "P12385": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P12385",
+              "hash": "ecea87e7496f461dd0911c340c4b847763c34118",
+              "datavalue": {
+                "value": "regne-de-westfalia",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q153943$1d86412f-6d26-4b61-b03e-3e7896abd64c",
+            "rank": "normal"
+          }
+        ],
+        "P10832": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P10832",
+              "hash": "9cdeae661b4bf10656d0f37331bf89fd6411a85a",
+              "datavalue": {
+                "value": "E39PBJxxhhBjtypptfJfT7ttKd",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q153943$B1AF4F5D-991A-4DED-8CB9-4DDE3426D5EA",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "2563bba00696867573b89534d5468e1ec0503b50",
+                "snaks": {
+                  "P11797": [
+                    {
+                      "snaktype": "value",
+                      "property": "P11797",
+                      "hash": "ebc61ebee105944aa63ee48264c820fab36c5571",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 13219454,
+                          "id": "Q13219454"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P244": [
+                    {
+                      "snaktype": "value",
+                      "property": "P244",
+                      "hash": "322ff09ef47e6f6655b63ddd16ece70b79d182ac",
+                      "datavalue": {
+                        "value": "no90003603",
+                        "type": "string"
+                      },
+                      "datatype": "external-id"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "b24aca38f0b7c8ead1687722b7dad83a5070d097",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2024-04-16T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P11797",
+                  "P244",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2388": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2388",
+              "hash": "651dc8476a2df138ba74acf4c8ae40e6a66a84b7",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 127257200,
+                  "id": "Q127257200"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$1db7322d-4e3a-a5ac-a0a0-55952f064c94",
+            "rank": "normal"
+          }
+        ],
+        "P13591": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P13591",
+              "hash": "2d7b07e6ffcba93374cfef615e3359babb18951b",
+              "datavalue": {
+                "value": "place/75562a39-9253-4d5d-8e31-e22139b70c1e",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q153943$E955D35E-E6CC-4B1B-AD56-1F749BAF5752",
+            "rank": "normal"
+          }
+        ],
+        "P457": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P457",
+              "hash": "cd21112e03a02103109d923d99f60dfde3a14bf6",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1128248,
+                  "id": "Q1128248"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q153943$abe2b942-4f97-8d15-7a36-eec2e93504e2",
+            "rank": "normal"
+          }
+        ],
+        "P8424": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P8424",
+              "hash": "9c6db258b739c70d320f0f649ae7abf120e84104",
+              "datavalue": {
+                "value": "2853716",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q153943$D7A0BE92-7906-4F3D-A4E5-866B30994B19",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "alswiki": {
+          "site": "alswiki",
+          "title": "Königreich Westphalen",
+          "badges": []
+        },
+        "arwiki": {
+          "site": "arwiki",
+          "title": "مملكة فستفالن",
+          "badges": []
+        },
+        "astwiki": {
+          "site": "astwiki",
+          "title": "Reinu de Westfalia",
+          "badges": []
+        },
+        "azbwiki": {
+          "site": "azbwiki",
+          "title": "وستفالیا کراللیغی",
+          "badges": []
+        },
+        "bewiki": {
+          "site": "bewiki",
+          "title": "Каралеўства Вестфалія",
+          "badges": []
+        },
+        "bgwiki": {
+          "site": "bgwiki",
+          "title": "Вестфалско кралство",
+          "badges": []
+        },
+        "brwiki": {
+          "site": "brwiki",
+          "title": "Rouantelezh Westfalen",
+          "badges": []
+        },
+        "cawiki": {
+          "site": "cawiki",
+          "title": "Regne de Westfàlia",
+          "badges": []
+        },
+        "ckbwiki": {
+          "site": "ckbwiki",
+          "title": "شانشینی وێستفالین",
+          "badges": []
+        },
+        "cswiki": {
+          "site": "cswiki",
+          "title": "Vestfálské království",
+          "badges": []
+        },
+        "dawiki": {
+          "site": "dawiki",
+          "title": "Kongeriget Westfalen",
+          "badges": []
+        },
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Königreich Westphalen",
+          "badges": []
+        },
+        "dewikisource": {
+          "site": "dewikisource",
+          "title": "Königreich Westphalen",
+          "badges": []
+        },
+        "elwiki": {
+          "site": "elwiki",
+          "title": "Βασίλειο της Βεστφαλίας",
+          "badges": []
+        },
+        "enwiki": {
+          "site": "enwiki",
+          "title": "Kingdom of Westphalia",
+          "badges": []
+        },
+        "eowiki": {
+          "site": "eowiki",
+          "title": "Reĝlando Vestfalio",
+          "badges": []
+        },
+        "eswiki": {
+          "site": "eswiki",
+          "title": "Reino de Westfalia",
+          "badges": []
+        },
+        "etwiki": {
+          "site": "etwiki",
+          "title": "Vestfaali kuningriik",
+          "badges": []
+        },
+        "fawiki": {
+          "site": "fawiki",
+          "title": "پادشاهی وستفالیا",
+          "badges": []
+        },
+        "fiwiki": {
+          "site": "fiwiki",
+          "title": "Westfalenin kuningaskunta",
+          "badges": []
+        },
+        "frwiki": {
+          "site": "frwiki",
+          "title": "Royaume de Westphalie",
+          "badges": []
+        },
+        "gdwiki": {
+          "site": "gdwiki",
+          "title": "Rìoghachd Westphalen",
+          "badges": []
+        },
+        "gvwiki": {
+          "site": "gvwiki",
+          "title": "Reeriaght Westphalen",
+          "badges": []
+        },
+        "hewiki": {
+          "site": "hewiki",
+          "title": "ממלכת וסטפאליה",
+          "badges": []
+        },
+        "huwiki": {
+          "site": "huwiki",
+          "title": "Vesztfáliai Királyság",
+          "badges": []
+        },
+        "idwiki": {
+          "site": "idwiki",
+          "title": "Kerajaan Westfalen",
+          "badges": []
+        },
+        "itwiki": {
+          "site": "itwiki",
+          "title": "Regno di Vestfalia",
+          "badges": []
+        },
+        "jawiki": {
+          "site": "jawiki",
+          "title": "ヴェストファーレン王国",
+          "badges": []
+        },
+        "kowiki": {
+          "site": "kowiki",
+          "title": "베스트팔렌 왕국",
+          "badges": []
+        },
+        "krcwiki": {
+          "site": "krcwiki",
+          "title": "Вестфалия короллукъ",
+          "badges": []
+        },
+        "lawiki": {
+          "site": "lawiki",
+          "title": "Regnum Westphaliae",
+          "badges": []
+        },
+        "lvwiki": {
+          "site": "lvwiki",
+          "title": "Vestfālenes Karaliste",
+          "badges": []
+        },
+        "mkwiki": {
+          "site": "mkwiki",
+          "title": "Кралство Вестфалија",
+          "badges": []
+        },
+        "ndswiki": {
+          "site": "ndswiki",
+          "title": "Königriek Westfalen",
+          "badges": []
+        },
+        "nlwiki": {
+          "site": "nlwiki",
+          "title": "Koninkrijk Westfalen",
+          "badges": []
+        },
+        "nowiki": {
+          "site": "nowiki",
+          "title": "Kongeriket Westfalen",
+          "badges": []
+        },
+        "plwiki": {
+          "site": "plwiki",
+          "title": "Królestwo Westfalii",
+          "badges": []
+        },
+        "ptwiki": {
+          "site": "ptwiki",
+          "title": "Reino de Vestfália",
+          "badges": []
+        },
+        "rowiki": {
+          "site": "rowiki",
+          "title": "Regatul Westfaliei",
+          "badges": []
+        },
+        "ruwiki": {
+          "site": "ruwiki",
+          "title": "Королевство Вестфалия",
+          "badges": []
+        },
+        "shwiki": {
+          "site": "shwiki",
+          "title": "Kraljevina Vestfalija",
+          "badges": []
+        },
+        "srwiki": {
+          "site": "srwiki",
+          "title": "Краљевина Вестфалија",
+          "badges": []
+        },
+        "svwiki": {
+          "site": "svwiki",
+          "title": "Kungariket Westfalen",
+          "badges": []
+        },
+        "thwiki": {
+          "site": "thwiki",
+          "title": "ราชอาณาจักรเว็สท์ฟาเลิน",
+          "badges": []
+        },
+        "trwiki": {
+          "site": "trwiki",
+          "title": "Vestfalya Krallığı",
+          "badges": []
+        },
+        "ukwiki": {
+          "site": "ukwiki",
+          "title": "Вестфальське королівство",
+          "badges": []
+        },
+        "viwiki": {
+          "site": "viwiki",
+          "title": "Vương quốc Westphalia",
+          "badges": []
+        },
+        "wuuwiki": {
+          "site": "wuuwiki",
+          "title": "威斯特法伦王国",
+          "badges": []
+        },
+        "zh_yuewiki": {
+          "site": "zh_yuewiki",
+          "title": "西法倫王國",
+          "badges": []
+        },
+        "zhwiki": {
+          "site": "zhwiki",
+          "title": "威斯特法倫王國",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

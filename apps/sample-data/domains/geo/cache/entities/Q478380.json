@@ -1,0 +1,620 @@
+{
+  "entities": {
+    "Q478380": {
+      "pageid": 450891,
+      "ns": 0,
+      "title": "Q478380",
+      "lastrevid": 2512009136,
+      "modified": "2026-06-29T23:28:41Z",
+      "type": "item",
+      "id": "Q478380",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Verbandsgemeinde Saale-Wipper"
+        },
+        "pl": {
+          "language": "pl",
+          "value": "Gmina związkowa Saale-Wipper"
+        },
+        "en": {
+          "language": "en",
+          "value": "Saale-Wipper"
+        },
+        "mk": {
+          "language": "mk",
+          "value": "Зале-Випер"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Verbandsgemeinde Saale-Wipper"
+        },
+        "ms": {
+          "language": "ms",
+          "value": "Saale-Wipper"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "Зале-Виппер"
+        }
+      },
+      "descriptions": {
+        "en": {
+          "language": "en",
+          "value": "Verbandsgemeinde in the district Salzlandkreis"
+        },
+        "de": {
+          "language": "de",
+          "value": "Verbandsgemeinde im Salzlandkreis"
+        }
+      },
+      "aliases": {
+        "pl": [
+          {
+            "language": "pl",
+            "value": "Saale-Wipper"
+          }
+        ],
+        "de": [
+          {
+            "language": "de",
+            "value": "VG Saale-Wipper"
+          }
+        ],
+        "en": [
+          {
+            "language": "en",
+            "value": "Verbandsgemeinde Saale-Wipper"
+          }
+        ]
+      },
+      "claims": {
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "ef7247b704f4ec0a7df39e83306bb388fea17d5f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 183,
+                  "id": "Q183"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "q478380$AEDF0BFC-B870-4C25-A6E8-A4CC1E913EBF",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "732ec1c90a6f0694c7db9a71bf09fe7f2b674172",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "9123b0de1cc9c3954366ba797d598e4e1ea4146f",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 10000,
+                          "id": "Q10000"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "94f50ee065b7a3b0ec8947ccd060b3eec814e15d",
+              "datavalue": {
+                "value": {
+                  "latitude": 51.8,
+                  "longitude": 11.616666666667,
+                  "altitude": null,
+                  "precision": 0.016666666666667,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "q478380$A5216136-584A-485B-91FD-805F4CC05C11",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 328,
+                          "id": "Q328"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P646": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P646",
+              "hash": "c22345f29395bbc143f0b791c8abc6567c3cfcbd",
+              "datavalue": {
+                "value": "/m/0cwy9l",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478380$890A8CC6-4314-4E66-B5FC-094E959405A6",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "2b00cb481cddcac7623114367489b5c194901c4a",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "a94b740202b097dd33355e0e6c00e54b9395e5e0",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 15241312,
+                          "id": "Q15241312"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P577": [
+                    {
+                      "snaktype": "value",
+                      "property": "P577",
+                      "hash": "fde79ecb015112d2f29229ccc1ec514ed3e71fa2",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2013-10-28T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P577"
+                ]
+              }
+            ]
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "5b994b9886ed9ebecf94fe2d34750fac6bb17584",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 2513989,
+                  "id": "Q2513989"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q478380$713C84E7-321E-4268-BE51-7CDC9054BF86",
+            "rank": "normal"
+          }
+        ],
+        "P227": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P227",
+              "hash": "b1f0009fc5b11a2ccc0469c2342ebc1ca1097ade",
+              "datavalue": {
+                "value": "16055661-2",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478380$B67B27DA-EEE9-4B1D-A849-8BD2D864BF17",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P214": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P214",
+              "hash": "acb39cc283d910039c24d960ad7989f7ead64b10",
+              "datavalue": {
+                "value": "144974616",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478380$EC5D0570-1159-47B3-A299-0C8C7C857BB6",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "ad3713df772ae88af6a7458d084a40ad20b226d6",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "6b7d4330c4aac4caec4ede9de0311ce273f88ecd",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 54919,
+                          "id": "Q54919"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "a00cc299e508357647636e29593b8ca3e534077d",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2015-08-06T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "ef4990dd42aeb90b4630c48f13e5259af1213346",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 6081,
+                  "id": "Q6081"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q478380$35fd1e4d-45a4-7750-33c5-f8a2f93ee1fa",
+            "rank": "normal"
+          }
+        ],
+        "P242": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P242",
+              "hash": "1ffc69ac3074eb3b0e9df2306340aec3f67ccd45",
+              "datavalue": {
+                "value": "VG Saale-Wipper in SLK.png",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q478380$D11343EE-0CF0-4191-9E5E-0D1644B7529F",
+            "rank": "normal"
+          }
+        ],
+        "P856": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P856",
+              "hash": "dd223c04b6bda44cdec0f7bc818b06d761ca0620",
+              "datavalue": {
+                "value": "http://www.saale-wipper.de/",
+                "type": "string"
+              },
+              "datatype": "url"
+            },
+            "type": "statement",
+            "id": "Q478380$1301120D-9BCD-4523-9BBE-3CF6CB1DD08C",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "d2af3f7179eb6015e6faa23778c16e22c5d6cc4a",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "8a3d2be7fa16586f1040638e250fa740ce5adf1e",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Verbandsgemeinde_Saale-Wipper&oldid=191802211",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "49eee79c0711ca2ccfec135b99ef3e83dd9e0757",
+              "datavalue": {
+                "value": "Verbandsgemeinde Saale-Wipper",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q478380$6704D786-93DA-409F-A5B0-1515B9E57760",
+            "rank": "normal"
+          }
+        ],
+        "P10832": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P10832",
+              "hash": "68b89f4ff80e5c917c0751dace5a8b6868df5ec3",
+              "datavalue": {
+                "value": "E39PBJxWTfg9KXDrpbD8Qvgh73",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478380$DBB423E2-245D-4992-A1E2-0C2599135E7E",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "7cd660c522baa651b3b2011464990531f74c7ebd",
+                "snaks": {
+                  "P11797": [
+                    {
+                      "snaktype": "value",
+                      "property": "P11797",
+                      "hash": "3b992a8b1d7f5bfbb710fb1b091cc424c4e3e7db",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 54919,
+                          "id": "Q54919"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P214": [
+                    {
+                      "snaktype": "value",
+                      "property": "P214",
+                      "hash": "acb39cc283d910039c24d960ad7989f7ead64b10",
+                      "datavalue": {
+                        "value": "144974616",
+                        "type": "string"
+                      },
+                      "datatype": "external-id"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "37012f06242d935d14d753b9830aa88ca7fc1b51",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2024-06-05T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P11797",
+                  "P214",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P158": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P158",
+              "hash": "1fd753f593fcc43a1dec901088a645f8e0b908ad",
+              "datavalue": {
+                "value": "Dienstsiegel Verbandsgemeinde Saale-Wipper 1 20240403.png",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q478380$4a365953-45c3-b3ef-ece8-784687ad2eda",
+            "rank": "normal"
+          }
+        ],
+        "P1388": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1388",
+              "hash": "c93be9230b1626a59512656a60e04f0cc2bd5cd5",
+              "datavalue": {
+                "value": "150895052000",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478380$E654AFA1-45D2-4375-AFC7-6F2C0D8D9227",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "commonswiki": {
+          "site": "commonswiki",
+          "title": "Category:Verbandsgemeinde Saale-Wipper",
+          "badges": []
+        },
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Verbandsgemeinde Saale-Wipper",
+          "badges": []
+        },
+        "enwiki": {
+          "site": "enwiki",
+          "title": "Saale-Wipper",
+          "badges": []
+        },
+        "mkwiki": {
+          "site": "mkwiki",
+          "title": "Зале-Випер",
+          "badges": []
+        },
+        "mswiki": {
+          "site": "mswiki",
+          "title": "Saale-Wipper",
+          "badges": []
+        },
+        "nlwiki": {
+          "site": "nlwiki",
+          "title": "Verbandsgemeinde Saale-Wipper",
+          "badges": []
+        },
+        "plwiki": {
+          "site": "plwiki",
+          "title": "Gmina związkowa Saale-Wipper",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

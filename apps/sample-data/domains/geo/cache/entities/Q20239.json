@@ -1,0 +1,1337 @@
+{
+  "entities": {
+    "Q20239": {
+      "pageid": 23520,
+      "ns": 0,
+      "title": "Q20239",
+      "lastrevid": 2488147541,
+      "modified": "2026-05-06T12:41:21Z",
+      "type": "item",
+      "id": "Q20239",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Landkreis Kamenz"
+        },
+        "en": {
+          "language": "en",
+          "value": "Kamenz"
+        },
+        "eo": {
+          "language": "eo",
+          "value": "Distrikto Kamenz"
+        },
+        "es": {
+          "language": "es",
+          "value": "Kamenz"
+        },
+        "et": {
+          "language": "et",
+          "value": "Kamenzi kreis"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "arrondissement de Kamenz"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "Wokrjes Kamjenc"
+        },
+        "id": {
+          "language": "id",
+          "value": "Kamenz"
+        },
+        "it": {
+          "language": "it",
+          "value": "circondario di Kamenz"
+        },
+        "kk": {
+          "language": "kk",
+          "value": "Каменц"
+        },
+        "mk": {
+          "language": "mk",
+          "value": "Каменц"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Landkreis Kamenz"
+        },
+        "pl": {
+          "language": "pl",
+          "value": "Powiat Kamenz"
+        },
+        "pt": {
+          "language": "pt",
+          "value": "Kamenz"
+        },
+        "ro": {
+          "language": "ro",
+          "value": "Kamenz"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "Каменц"
+        },
+        "sv": {
+          "language": "sv",
+          "value": "Landkreis Kamenz"
+        },
+        "vi": {
+          "language": "vi",
+          "value": "Kamenz"
+        },
+        "zh": {
+          "language": "zh",
+          "value": "卡门茨县"
+        },
+        "en-ca": {
+          "language": "en-ca",
+          "value": "Kamenz"
+        },
+        "en-gb": {
+          "language": "en-gb",
+          "value": "Kamenz"
+        },
+        "zh-cn": {
+          "language": "zh-cn",
+          "value": "卡门茨县"
+        },
+        "zh-hans": {
+          "language": "zh-hans",
+          "value": "卡门茨县"
+        },
+        "zh-hant": {
+          "language": "zh-hant",
+          "value": "卡门茨县"
+        },
+        "nb": {
+          "language": "nb",
+          "value": "Landkreis Kamenz"
+        },
+        "ka": {
+          "language": "ka",
+          "value": "კამენცის რაიონი"
+        },
+        "hy": {
+          "language": "hy",
+          "value": "Կամենց"
+        },
+        "fa": {
+          "language": "fa",
+          "value": "کامنتس (ناحیه)"
+        },
+        "cs": {
+          "language": "cs",
+          "value": "Zemský okres Kamenz"
+        },
+        "be": {
+          "language": "be",
+          "value": "раён Каменц"
+        },
+        "ca": {
+          "language": "ca",
+          "value": "districte de Kamenz"
+        },
+        "ur": {
+          "language": "ur",
+          "value": "کامینز (ضلع)"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "ehemaliger Landkreis in Sachsen"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "Бывший район в Германии."
+        },
+        "en": {
+          "language": "en",
+          "value": "former district of Saxony, Germany"
+        },
+        "es": {
+          "language": "es",
+          "value": "distrito de Sajonia, en Alemania"
+        },
+        "it": {
+          "language": "it",
+          "value": "circondario rurale tedesco"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "arrondissement (\"Landkreis\" en allemand) de Saxe (Allemagne), dans le district de Dresde de 1994 à 2008"
+        },
+        "he": {
+          "language": "he",
+          "value": "מחוז בסקסוניה, גרמניה"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Landkreis in Saksen, Duitsland"
+        },
+        "cs": {
+          "language": "cs",
+          "value": "okres ve spolkové zemi Sasko v Německu"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "něhdyši wokrjes w Sakskej"
+        },
+        "be": {
+          "language": "be",
+          "value": "Былы раён у Германіі"
+        },
+        "sv": {
+          "language": "sv",
+          "value": "tidigare distrikt i Sachsen, Tyskland"
+        },
+        "zh": {
+          "language": "zh",
+          "value": "德国萨克森州的旧县"
+        }
+      },
+      "aliases": {
+        "fr": [
+          {
+            "language": "fr",
+            "value": "L'arrondissement de Kamenz"
+          }
+        ],
+        "ca": [
+          {
+            "language": "ca",
+            "value": "Landkreis Kamenz"
+          }
+        ]
+      },
+      "claims": {
+        "P227": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P227",
+              "hash": "0f970580a56f56e69c3d49c2c31c4121c985c2b7",
+              "datavalue": {
+                "value": "4109981-3",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q20239$b14f427a-437a-4ff3-bf98-d6e24f0dcad7",
+            "rank": "normal"
+          }
+        ],
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "ef7247b704f4ec0a7df39e83306bb388fea17d5f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 183,
+                  "id": "Q183"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "q20239$3E313D15-06C7-4448-849B-17965B4E7EE3",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 328,
+                          "id": "Q328"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P646": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P646",
+              "hash": "4e223af5b0bd4ef18b637b99b2c333d786f222e6",
+              "datavalue": {
+                "value": "/m/01sn_b",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q20239$361F0605-C1A2-4609-9B3E-0D4850EDE585",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "2b00cb481cddcac7623114367489b5c194901c4a",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "a94b740202b097dd33355e0e6c00e54b9395e5e0",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 15241312,
+                          "id": "Q15241312"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P577": [
+                    {
+                      "snaktype": "value",
+                      "property": "P577",
+                      "hash": "fde79ecb015112d2f29229ccc1ec514ed3e71fa2",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2013-10-28T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P577"
+                ]
+              }
+            ]
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "c5866bf37e5869377a1f84892baa390fe7161d5e",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 106658,
+                  "id": "Q106658"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "aba3db931918dc4a06c29848b5caa791ddd656f9",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2008-08-01T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P582"
+            ],
+            "id": "Q20239$06DAE0CB-33CA-4320-A0AD-80103093799D",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "82b93e31dfe43fe77440c307e3c9af974565b71b",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 106517174,
+                  "id": "Q106517174"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "219d758e880e4c280846a6b4f9f6a2a8bae9af6b",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2004-09-24T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P580"
+            ],
+            "id": "Q20239$90BB3EA6-6F95-4E44-835A-5962BD497902",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "da0e7683f2d88eaf756b1c870cfb096781a1e80d",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "e16d354279df3d0aade2654feeaab266d5ea32b7",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 836156,
+                          "id": "Q836156"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P478": [
+                    {
+                      "snaktype": "value",
+                      "property": "P478",
+                      "hash": "dd71a07514aba9190d13996b3b009550536a5c66",
+                      "datavalue": {
+                        "value": "2004",
+                        "type": "string"
+                      },
+                      "datatype": "string"
+                    }
+                  ],
+                  "P433": [
+                    {
+                      "snaktype": "value",
+                      "property": "P433",
+                      "hash": "15b00f1e7312f71f1ea048ce8296ed974e16d356",
+                      "datavalue": {
+                        "value": "50",
+                        "type": "string"
+                      },
+                      "datatype": "string"
+                    }
+                  ],
+                  "P304": [
+                    {
+                      "snaktype": "value",
+                      "property": "P304",
+                      "hash": "cc416d6e176f3adde97fb2378301af5a3c3e4c40",
+                      "datavalue": {
+                        "value": "2350",
+                        "type": "string"
+                      },
+                      "datatype": "string"
+                    }
+                  ],
+                  "P577": [
+                    {
+                      "snaktype": "value",
+                      "property": "P577",
+                      "hash": "de5978c3908c25acbfbae885624e25c0227b4e1e",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2004-09-27T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P478",
+                  "P433",
+                  "P304",
+                  "P577"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1036": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1036",
+              "hash": "04addbd8d349b69bf98ea0a9c93531c5380ed70f",
+              "datavalue": {
+                "value": "2--4321",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q20239$66c6fae1-492e-47db-1ff1-055a0602d640",
+            "rank": "deprecated"
+          }
+        ],
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "9f2a2449b446e4d672e0d8c4cedb55351aeed484",
+              "datavalue": {
+                "value": {
+                  "latitude": 51.2667,
+                  "longitude": 14.1,
+                  "altitude": null,
+                  "precision": 1.4357053483299,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "Q20239$7F6D13D3-4697-4399-8C91-199411DB03DB",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "d5847b9b6032aa8b13dae3c2dfd9ed5d114d21b3",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "5a343e7e758a4282a01316d3e959b6e653b767fc",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 11920,
+                          "id": "Q11920"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P605": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P605",
+              "hash": "5bf782c5d448a14b6e3232c771cdae251037ed68",
+              "datavalue": {
+                "value": "DED2B",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "7045c9b2f5b493ff1a5c07e80764cf2fe7c3c88a",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2011-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P580": [
+                {
+                  "snaktype": "value",
+                  "property": "P580",
+                  "hash": "95b5f8757e8297bbca8f42b215a79ac44f5bac0a",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1999-01-01T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P582",
+              "P580"
+            ],
+            "id": "Q20239$55490165-E42C-46E3-AAF0-478115BE2B4C",
+            "rank": "normal"
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "742010a558d2f2b74850ca2fbc9f1afeca1ae918",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1202,
+                  "id": "Q1202"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q20239$E6608894-8FCD-4E3B-AA45-91058404269E",
+            "rank": "normal"
+          }
+        ],
+        "P214": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P214",
+              "hash": "a90bb5f85aa1bc2780d27efe55af5407fa4b31cd",
+              "datavalue": {
+                "value": "237740248",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q20239$BD3CCCD3-F8DA-41B2-8931-8A1032C4A864",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "94cd09bdd3373d7b8eb4e3cc26e524afe7466ff7",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "6b7d4330c4aac4caec4ede9de0311ce273f88ecd",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 54919,
+                          "id": "Q54919"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "bf4494cf3e2345d75aa355a5847a72d38ca6c55d",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2015-08-02T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P576": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P576",
+              "hash": "296d6527541bb89d4244fb990165fd61c4e32047",
+              "datavalue": {
+                "value": {
+                  "time": "+2008-00-00T00:00:00Z",
+                  "timezone": 0,
+                  "before": 0,
+                  "after": 0,
+                  "precision": 9,
+                  "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                },
+                "type": "time"
+              },
+              "datatype": "time"
+            },
+            "type": "statement",
+            "id": "Q20239$7B7B3CF8-C597-45DF-8E43-EA572FC183B2",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P242": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P242",
+              "hash": "5a5f8e1e578906e116324f9ba5a087171d71a2f5",
+              "datavalue": {
+                "value": "Saxony 2007 KM.svg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q20239$02867CCB-61BC-4B0B-BD32-34ADFE7B2DC0",
+            "rank": "normal"
+          }
+        ],
+        "P856": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P856",
+              "hash": "a7ae049aa1a3c8dea7b6af76b4fb4fc114c9424d",
+              "datavalue": {
+                "value": "http://www.lra-kamenz.de",
+                "type": "string"
+              },
+              "datatype": "url"
+            },
+            "type": "statement",
+            "id": "Q20239$B4B8B21C-52DE-49A0-8D30-0F9413D2C521",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 328,
+                          "id": "Q328"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P571": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P571",
+              "hash": "9dd4d7f78fbd0d3520030ee93e9b104a48693878",
+              "datavalue": {
+                "value": {
+                  "time": "+1996-00-00T00:00:00Z",
+                  "timezone": 0,
+                  "before": 0,
+                  "after": 0,
+                  "precision": 9,
+                  "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                },
+                "type": "time"
+              },
+              "datatype": "time"
+            },
+            "type": "statement",
+            "id": "Q20239$368CCADE-D38F-489B-9860-2622FBA2161B",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "8405f51cb3fd475c8261208e8ff258a3355f571a",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "24d373ae037a6a11580d01d034e0f18a3e45d6b6",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Landkreis_Kamenz&oldid=168765855",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2046": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2046",
+              "hash": "f3d44062c0d30aa02cdb3998d99524b1eefc631f",
+              "datavalue": {
+                "value": {
+                  "amount": "+1334.73",
+                  "unit": "http://www.wikidata.org/entity/Q712226"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "id": "Q20239$0BE2650E-C12D-4970-8335-79193AC201D6",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "8405f51cb3fd475c8261208e8ff258a3355f571a",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "24d373ae037a6a11580d01d034e0f18a3e45d6b6",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Landkreis_Kamenz&oldid=168765855",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P440": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P440",
+              "hash": "0ee31f6b26b94deb694246c1eb6294b92dd4c4f3",
+              "datavalue": {
+                "value": "14292",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q20239$76C1A6C7-E776-4E84-8ECE-C6E5AC385721",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "8405f51cb3fd475c8261208e8ff258a3355f571a",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "24d373ae037a6a11580d01d034e0f18a3e45d6b6",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Landkreis_Kamenz&oldid=168765855",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P94": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P94",
+              "hash": "766d3ddb708559c8c9ab2d2305a7fc4a4d9a6ad2",
+              "datavalue": {
+                "value": "Wappen Landkreis Kamenz.png",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q20239$D8F502E0-8E00-4779-AE73-F98924713FEE",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "8405f51cb3fd475c8261208e8ff258a3355f571a",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "24d373ae037a6a11580d01d034e0f18a3e45d6b6",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Landkreis_Kamenz&oldid=168765855",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P36": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P36",
+              "hash": "56395e2a920076c9a91a6912a763c41c28af44c2",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 81722,
+                  "id": "Q81722"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q20239$F167F6D4-8C61-49BD-B5FF-8F56E0BA2B30",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "db8751e2d0b8dee9ed17215321272d7933af8a9b",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "2284e300dfdc1db6bd607e468bf35a0f6f232d29",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Landkreis_Kamenz&oldid=199302766",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "1bbfa729380fde8e6492cfb11628070f9f0097e2",
+              "datavalue": {
+                "value": "Landkreis Kamenz",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q20239$695AF26D-16A4-45D1-96E3-FE8F33038682",
+            "rank": "normal"
+          }
+        ],
+        "P910": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P910",
+              "hash": "4ebf2672260ebfbfec6c57cd7eac612647c72c14",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 9756170,
+                  "id": "Q9756170"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q20239$0484c2a9-6c8e-4b7c-92f8-c08b13bdcf4f",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "394b1ccc306514935381b90ca32682a6f5e90478",
+                "snaks": {
+                  "P3452": [
+                    {
+                      "snaktype": "value",
+                      "property": "P3452",
+                      "hash": "ca165ab8400a44fa3d982d08061d9cf8f0b8f1f1",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 9756170,
+                          "id": "Q9756170"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P3452"
+                ]
+              }
+            ]
+          }
+        ],
+        "P13591": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P13591",
+              "hash": "ec7c5a7bb004f06b3edfd0a2b69969abc098fbbe",
+              "datavalue": {
+                "value": "place/1898ac57-5c38-452d-bf4a-afc945233635",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q20239$A42ACE77-D1D2-4167-91D3-DA4520B4ABB5",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Landkreis Kamenz",
+          "badges": []
+        },
+        "enwiki": {
+          "site": "enwiki",
+          "title": "Kamenz (district)",
+          "badges": []
+        },
+        "eowiki": {
+          "site": "eowiki",
+          "title": "Distrikto Kamenz",
+          "badges": []
+        },
+        "eswiki": {
+          "site": "eswiki",
+          "title": "Distrito de Kamenz",
+          "badges": []
+        },
+        "etwiki": {
+          "site": "etwiki",
+          "title": "Kamenzi kreis",
+          "badges": []
+        },
+        "fawiki": {
+          "site": "fawiki",
+          "title": "کامنتس (ناحیه)",
+          "badges": []
+        },
+        "frwiki": {
+          "site": "frwiki",
+          "title": "Arrondissement de Kamenz",
+          "badges": []
+        },
+        "hsbwiki": {
+          "site": "hsbwiki",
+          "title": "Wokrjes Kamjenc",
+          "badges": []
+        },
+        "hywiki": {
+          "site": "hywiki",
+          "title": "Կամենց (շրջան)",
+          "badges": []
+        },
+        "idwiki": {
+          "site": "idwiki",
+          "title": "Kamenz (distrik)",
+          "badges": []
+        },
+        "itwiki": {
+          "site": "itwiki",
+          "title": "Circondario di Kamenz",
+          "badges": []
+        },
+        "kawiki": {
+          "site": "kawiki",
+          "title": "კამენცის რაიონი",
+          "badges": []
+        },
+        "kkwiki": {
+          "site": "kkwiki",
+          "title": "Каменц (аудан)",
+          "badges": []
+        },
+        "mkwiki": {
+          "site": "mkwiki",
+          "title": "Каменц (округ)",
+          "badges": []
+        },
+        "nlwiki": {
+          "site": "nlwiki",
+          "title": "Landkreis Kamenz",
+          "badges": []
+        },
+        "nowiki": {
+          "site": "nowiki",
+          "title": "Landkreis Kamenz",
+          "badges": []
+        },
+        "plwiki": {
+          "site": "plwiki",
+          "title": "Powiat Kamenz",
+          "badges": []
+        },
+        "ptwiki": {
+          "site": "ptwiki",
+          "title": "Kamenz (distrito)",
+          "badges": []
+        },
+        "rowiki": {
+          "site": "rowiki",
+          "title": "Kamenz (district)",
+          "badges": []
+        },
+        "ruwiki": {
+          "site": "ruwiki",
+          "title": "Каменц (район)",
+          "badges": []
+        },
+        "simplewiki": {
+          "site": "simplewiki",
+          "title": "Kamenz (district)",
+          "badges": []
+        },
+        "svwiki": {
+          "site": "svwiki",
+          "title": "Landkreis Kamenz",
+          "badges": []
+        },
+        "urwiki": {
+          "site": "urwiki",
+          "title": "کامینز (ضلع)",
+          "badges": []
+        },
+        "viwiki": {
+          "site": "viwiki",
+          "title": "Kamenz (huyện)",
+          "badges": []
+        },
+        "zhwiki": {
+          "site": "zhwiki",
+          "title": "卡门茨县",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

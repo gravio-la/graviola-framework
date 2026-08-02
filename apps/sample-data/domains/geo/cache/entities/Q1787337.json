@@ -1,0 +1,229 @@
+{
+  "entities": {
+    "Q1787337": {
+      "pageid": 1718921,
+      "ns": 0,
+      "title": "Q1787337",
+      "lastrevid": 2357791192,
+      "modified": "2025-06-07T05:35:10Z",
+      "type": "item",
+      "id": "Q1787337",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Kreis Havelberg"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Kreis Havelberg"
+        },
+        "en": {
+          "language": "en",
+          "value": "Havelberg"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "Kreis in der DDR"
+        }
+      },
+      "aliases": {
+        "de": [
+          {
+            "language": "de",
+            "value": "Landkreis Havelberg"
+          }
+        ]
+      },
+      "claims": {
+        "P36": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P36",
+              "hash": "0b9d5c3fdd4f7d1bab4f2df23886fec547e4dd81",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 504040,
+                  "id": "Q504040"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787337$a11e2187-4a49-3c27-034a-58ef66e3c394",
+            "rank": "normal"
+          }
+        ],
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "69134fce674a39f3382130caf84f51e58518fb88",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 16957,
+                  "id": "Q16957"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787337$C5A3BF10-1DBD-4C31-B2E8-279823884266",
+            "rank": "normal"
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "7c87a9d130338f4808157eaf589307f229beb96f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 15849374,
+                  "id": "Q15849374"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787337$D0281E08-DFC5-4DB7-BDC3-664316098490",
+            "rank": "normal"
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "49faa92e8f2b0cd2568dcb7ca63979b5a2a7795e",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 48083,
+                  "id": "Q48083"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787337$9A6B196E-DD57-4C03-99C6-A083ACD990E3",
+            "rank": "normal"
+          }
+        ],
+        "P576": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P576",
+              "hash": "26c2a60e862b0b1d63d2cb3a7a22f843da7e1463",
+              "datavalue": {
+                "value": {
+                  "time": "+1994-00-00T00:00:00Z",
+                  "timezone": 0,
+                  "before": 0,
+                  "after": 0,
+                  "precision": 9,
+                  "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                },
+                "type": "time"
+              },
+              "datatype": "time"
+            },
+            "type": "statement",
+            "id": "Q1787337$47BF708D-A7A4-4B22-A9C7-77B53F49E0C3",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "99017460ce932589ae10d972e889c3d063d40b8e",
+              "datavalue": {
+                "value": "Kreis Havelberg",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q1787337$8D4D343C-C381-4F44-85C7-B9B81C2373E8",
+            "rank": "normal"
+          }
+        ],
+        "P2671": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2671",
+              "hash": "aa5278903c2a0c118b76eb57b5d4afebb2a0b33c",
+              "datavalue": {
+                "value": "/g/121251jw",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q1787337$16A9E3C3-31D8-454B-9B3D-4058955256B6",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "commonswiki": {
+          "site": "commonswiki",
+          "title": "Category:Kreis Havelberg",
+          "badges": []
+        },
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Kreis Havelberg",
+          "badges": []
+        },
+        "nlwiki": {
+          "site": "nlwiki",
+          "title": "Kreis Havelberg",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

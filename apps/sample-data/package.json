@@ -1,0 +1,38 @@
+{
+  "name": "@graviola/sample-data",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Reproducible sample-data generator: Wikidata SPARQL → entity fetch → declarative mapping → Turtle",
+  "type": "module",
+  "scripts": {
+    "generate": "bun run src/cli.ts generate",
+    "generate:geo": "bun run src/cli.ts generate geo",
+    "list": "bun run src/cli.ts list",
+    "test": "bun test src domains",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@graviola/data-mapping-hooks": "workspace:*",
+    "@graviola/edb-core-types": "workspace:*",
+    "@graviola/edb-data-mapping": "workspace:*",
+    "@graviola/edb-import-staging": "workspace:*",
+    "@graviola/edb-wikidata-utils": "workspace:*",
+    "@graviola/sample-data-geo": "workspace:*",
+    "@graviola/sparql-db-impl": "workspace:*",
+    "@graviola/store-core": "workspace:*",
+    "@rdfjs/dataset": "^2.0.2",
+    "@rdfjs/namespace": "catalog:rdf",
+    "cmd-ts": "^0.13.0",
+    "n3": "^1.23.1",
+    "oxigraph": "^0.5.6"
+  },
+  "devDependencies": {
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@types/bun": "^1.2.0",
+    "@types/json-schema": "catalog:",
+    "@types/n3": "^1.21.0",
+    "@types/rdfjs__namespace": "^2.0.0",
+    "typescript": "5.8.2"
+  },
+  "license": "MIT"
+}

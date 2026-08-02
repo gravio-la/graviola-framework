@@ -1,0 +1,4012 @@
+{
+  "entities": {
+    "Q504010": {
+      "pageid": 474002,
+      "ns": 0,
+      "title": "Q504010",
+      "lastrevid": 2516734000,
+      "modified": "2026-07-12T19:03:21Z",
+      "type": "item",
+      "id": "Q504010",
+      "labels": {
+        "zh-hans": {
+          "language": "zh-hans",
+          "value": "阿尔特马克地区奥斯特堡"
+        },
+        "zh-hant": {
+          "language": "zh-hant",
+          "value": "阿爾特馬克地區奧斯特堡"
+        },
+        "zh-hk": {
+          "language": "zh-hk",
+          "value": "阿爾特馬克地區奧斯特堡"
+        },
+        "pt": {
+          "language": "pt",
+          "value": "Osterburg"
+        },
+        "eo": {
+          "language": "eo",
+          "value": "Osterburg"
+        },
+        "pl": {
+          "language": "pl",
+          "value": "Osterburg"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "Osterburg"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "Остербург"
+        },
+        "uz": {
+          "language": "uz",
+          "value": "Osterburg"
+        },
+        "vo": {
+          "language": "vo",
+          "value": "Osterburg"
+        },
+        "sr-el": {
+          "language": "sr-el",
+          "value": "Osterburg"
+        },
+        "sr-ec": {
+          "language": "sr-ec",
+          "value": "Остербург"
+        },
+        "en": {
+          "language": "en",
+          "value": "Osterburg"
+        },
+        "ro": {
+          "language": "ro",
+          "value": "Osterburg"
+        },
+        "mk": {
+          "language": "mk",
+          "value": "Остербург"
+        },
+        "it": {
+          "language": "it",
+          "value": "Osterburg"
+        },
+        "de": {
+          "language": "de",
+          "value": "Osterburg"
+        },
+        "war": {
+          "language": "war",
+          "value": "Osterburg"
+        },
+        "vi": {
+          "language": "vi",
+          "value": "Osterburg"
+        },
+        "fa": {
+          "language": "fa",
+          "value": "استربورگ"
+        },
+        "nds": {
+          "language": "nds",
+          "value": "Osterburg"
+        },
+        "ba": {
+          "language": "ba",
+          "value": "Остербург"
+        },
+        "da": {
+          "language": "da",
+          "value": "Osterburg"
+        },
+        "kk-arab": {
+          "language": "kk-arab",
+          "value": "وستەربۋرگ"
+        },
+        "kk-cyrl": {
+          "language": "kk-cyrl",
+          "value": "Остербург"
+        },
+        "kk-latn": {
+          "language": "kk-latn",
+          "value": "Osterbwrg"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Osterburg"
+        },
+        "kk": {
+          "language": "kk",
+          "value": "Остербург"
+        },
+        "sr": {
+          "language": "sr",
+          "value": "Остербург"
+        },
+        "zh": {
+          "language": "zh",
+          "value": "阿尔特马克地区奥斯特堡"
+        },
+        "ms": {
+          "language": "ms",
+          "value": "Osterburg"
+        },
+        "sh": {
+          "language": "sh",
+          "value": "Osterburg"
+        },
+        "sco": {
+          "language": "sco",
+          "value": "Osterburg"
+        },
+        "hu": {
+          "language": "hu",
+          "value": "Osterburg"
+        },
+        "ar": {
+          "language": "ar",
+          "value": "أوستربورغ"
+        },
+        "sl": {
+          "language": "sl",
+          "value": "Osterburg"
+        },
+        "ky": {
+          "language": "ky",
+          "value": "Остербург"
+        },
+        "uk": {
+          "language": "uk",
+          "value": "Остербург"
+        },
+        "he": {
+          "language": "he",
+          "value": "אוסטרבורג"
+        },
+        "af": {
+          "language": "af",
+          "value": "Osterburg"
+        },
+        "an": {
+          "language": "an",
+          "value": "Osterburg"
+        },
+        "ast": {
+          "language": "ast",
+          "value": "Osterburg"
+        },
+        "bar": {
+          "language": "bar",
+          "value": "Osterburg"
+        },
+        "br": {
+          "language": "br",
+          "value": "Osterburg"
+        },
+        "ca": {
+          "language": "ca",
+          "value": "Osterburg"
+        },
+        "co": {
+          "language": "co",
+          "value": "Osterburg"
+        },
+        "cs": {
+          "language": "cs",
+          "value": "Osterburg"
+        },
+        "cy": {
+          "language": "cy",
+          "value": "Osterburg"
+        },
+        "de-at": {
+          "language": "de-at",
+          "value": "Osterburg"
+        },
+        "de-ch": {
+          "language": "de-ch",
+          "value": "Osterburg"
+        },
+        "en-ca": {
+          "language": "en-ca",
+          "value": "Osterburg"
+        },
+        "en-gb": {
+          "language": "en-gb",
+          "value": "Osterburg"
+        },
+        "es": {
+          "language": "es",
+          "value": "Osterburg"
+        },
+        "et": {
+          "language": "et",
+          "value": "Osterburg"
+        },
+        "eu": {
+          "language": "eu",
+          "value": "Osterburg"
+        },
+        "fi": {
+          "language": "fi",
+          "value": "Osterburg"
+        },
+        "frp": {
+          "language": "frp",
+          "value": "Osterburg"
+        },
+        "fur": {
+          "language": "fur",
+          "value": "Osterburg"
+        },
+        "ga": {
+          "language": "ga",
+          "value": "Osterburg"
+        },
+        "gd": {
+          "language": "gd",
+          "value": "Osterburg"
+        },
+        "gl": {
+          "language": "gl",
+          "value": "Osterburg"
+        },
+        "gsw": {
+          "language": "gsw",
+          "value": "Osterburg"
+        },
+        "hr": {
+          "language": "hr",
+          "value": "Osterburg"
+        },
+        "ia": {
+          "language": "ia",
+          "value": "Osterburg"
+        },
+        "id": {
+          "language": "id",
+          "value": "Osterburg"
+        },
+        "ie": {
+          "language": "ie",
+          "value": "Osterburg"
+        },
+        "io": {
+          "language": "io",
+          "value": "Osterburg"
+        },
+        "is": {
+          "language": "is",
+          "value": "Osterburg"
+        },
+        "kg": {
+          "language": "kg",
+          "value": "Osterburg"
+        },
+        "lb": {
+          "language": "lb",
+          "value": "Osterburg"
+        },
+        "li": {
+          "language": "li",
+          "value": "Osterburg"
+        },
+        "lij": {
+          "language": "lij",
+          "value": "Osterburg"
+        },
+        "mg": {
+          "language": "mg",
+          "value": "Osterburg"
+        },
+        "min": {
+          "language": "min",
+          "value": "Osterburg"
+        },
+        "nap": {
+          "language": "nap",
+          "value": "Osterburg"
+        },
+        "nb": {
+          "language": "nb",
+          "value": "Osterburg"
+        },
+        "nds-nl": {
+          "language": "nds-nl",
+          "value": "Osterburg"
+        },
+        "nn": {
+          "language": "nn",
+          "value": "Osterburg"
+        },
+        "nrm": {
+          "language": "nrm",
+          "value": "Osterburg"
+        },
+        "oc": {
+          "language": "oc",
+          "value": "Osterburg"
+        },
+        "pcd": {
+          "language": "pcd",
+          "value": "Osterburg"
+        },
+        "pms": {
+          "language": "pms",
+          "value": "Osterburg"
+        },
+        "pt-br": {
+          "language": "pt-br",
+          "value": "Osterburg"
+        },
+        "rm": {
+          "language": "rm",
+          "value": "Osterburg"
+        },
+        "sc": {
+          "language": "sc",
+          "value": "Osterburg"
+        },
+        "scn": {
+          "language": "scn",
+          "value": "Osterburg"
+        },
+        "sk": {
+          "language": "sk",
+          "value": "Osterburg"
+        },
+        "sv": {
+          "language": "sv",
+          "value": "Osterburg"
+        },
+        "sw": {
+          "language": "sw",
+          "value": "Osterburg"
+        },
+        "vec": {
+          "language": "vec",
+          "value": "Osterburg"
+        },
+        "vls": {
+          "language": "vls",
+          "value": "Osterburg"
+        },
+        "wa": {
+          "language": "wa",
+          "value": "Osterburg"
+        },
+        "wo": {
+          "language": "wo",
+          "value": "Osterburg"
+        },
+        "zu": {
+          "language": "zu",
+          "value": "Osterburg"
+        },
+        "ceb": {
+          "language": "ceb",
+          "value": "Osterburg"
+        },
+        "tt": {
+          "language": "tt",
+          "value": "Остербург (Альтмарк)"
+        },
+        "ce": {
+          "language": "ce",
+          "value": "Остербург (Альтмарк)"
+        },
+        "lld": {
+          "language": "lld",
+          "value": "Osterburg"
+        },
+        "be": {
+          "language": "be",
+          "value": "Остэрбург"
+        },
+        "tum": {
+          "language": "tum",
+          "value": "Osterburg (Altmark)"
+        }
+      },
+      "descriptions": {
+        "it": {
+          "language": "it",
+          "value": "comune tedesco"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "commune allemande"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Altmark"
+        },
+        "de": {
+          "language": "de",
+          "value": "Hansestadt im Landkreis Stendal in Sachsen-Anhalt"
+        },
+        "en": {
+          "language": "en",
+          "value": "municipality of Landkreis Stendal, Germany"
+        },
+        "uk": {
+          "language": "uk",
+          "value": "місто в Німеччині, федеральна земля Саксонія-Ангальт"
+        },
+        "sq": {
+          "language": "sq",
+          "value": "komunë në Gjermani"
+        },
+        "zh": {
+          "language": "zh",
+          "value": "德国萨克森-安哈尔特州城市"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "město w Saksko-Anhaltskej"
+        },
+        "cs": {
+          "language": "cs",
+          "value": "sídlo ve spolkové zemi Sasko-Anhaltsko v Německu"
+        },
+        "eo": {
+          "language": "eo",
+          "value": "komunumo en Saksio-Anhalto, Germanio"
+        },
+        "br": {
+          "language": "br",
+          "value": "kumun alaman"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "город в земле Саксония-Анхальт, Германия"
+        },
+        "hu": {
+          "language": "hu",
+          "value": "település Németországban"
+        },
+        "lld": {
+          "language": "lld",
+          "value": "chemun de la Germania"
+        },
+        "be": {
+          "language": "be",
+          "value": "горад у Германіі"
+        },
+        "sv": {
+          "language": "sv",
+          "value": "stad i Sachsen-Anhalt, Tyskland"
+        },
+        "ary": {
+          "language": "ary",
+          "value": "تجمع سكاني ف لمانيا"
+        }
+      },
+      "aliases": {
+        "uz": [
+          {
+            "language": "uz",
+            "value": "Остербург"
+          }
+        ],
+        "sr": [
+          {
+            "language": "sr",
+            "value": "Osterburg (Altmark)"
+          }
+        ],
+        "it": [
+          {
+            "language": "it",
+            "value": "Walsleben"
+          },
+          {
+            "language": "it",
+            "value": "Flessau"
+          },
+          {
+            "language": "it",
+            "value": "Düsedau"
+          },
+          {
+            "language": "it",
+            "value": "Krevese"
+          },
+          {
+            "language": "it",
+            "value": "Erxleben"
+          },
+          {
+            "language": "it",
+            "value": "Rossau"
+          },
+          {
+            "language": "it",
+            "value": "Königsmark"
+          },
+          {
+            "language": "it",
+            "value": "Ballerstedt"
+          },
+          {
+            "language": "it",
+            "value": "Gladigau"
+          }
+        ],
+        "de": [
+          {
+            "language": "de",
+            "value": "Hansestadt Osterburg"
+          },
+          {
+            "language": "de",
+            "value": "Osterburg/Altmark"
+          },
+          {
+            "language": "de",
+            "value": "Osterburg (Altmark)"
+          }
+        ],
+        "en": [
+          {
+            "language": "en",
+            "value": "Osterburg/Altmark"
+          }
+        ],
+        "ru": [
+          {
+            "language": "ru",
+            "value": "Остербург (Альтмарк)"
+          }
+        ],
+        "zh": [
+          {
+            "language": "zh",
+            "value": "奥斯特堡"
+          }
+        ],
+        "zh-hans": [
+          {
+            "language": "zh-hans",
+            "value": "奥斯特堡"
+          }
+        ],
+        "zh-hant": [
+          {
+            "language": "zh-hant",
+            "value": "奧斯特堡"
+          }
+        ],
+        "zh-hk": [
+          {
+            "language": "zh-hk",
+            "value": "奧斯特堡"
+          }
+        ]
+      },
+      "claims": {
+        "P1036": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1036",
+              "hash": "cc303d9878f33f3999462293960f383e566b7f79",
+              "datavalue": {
+                "value": "2--4318213",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q504010$cc286ef4-4382-55b2-1907-9291741bbd84",
+            "rank": "deprecated"
+          }
+        ],
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "ef7247b704f4ec0a7df39e83306bb388fea17d5f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 183,
+                  "id": "Q183"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "q504010$12365325-9AC8-49A4-A0FF-BB7F2757D00C",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "204b73badfa27f2896c887784696e85e81b18b66",
+                "snaks": {
+                  "P5573": [
+                    {
+                      "snaktype": "value",
+                      "property": "P5573",
+                      "hash": "9bdc9f9c84001e3a5b9f76b45ac17d17aefe515f",
+                      "datavalue": {
+                        "value": "55171",
+                        "type": "string"
+                      },
+                      "datatype": "external-id"
+                    }
+                  ],
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "c619cc6e0e5fe3733a8c4a47939343e5970e0e9d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 265049,
+                          "id": "Q265049"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "988857a6891b699cef0d0b076d8ac7c3bdd26e18",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2025-11-24T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P5573",
+                  "P248",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P439": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P439",
+              "hash": "659002dad029113e63f743ca133785954f80b9bc",
+              "datavalue": {
+                "value": "15090415",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "q504010$25085D8E-D54F-4626-9B9B-A688438621C1",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 328,
+                          "id": "Q328"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "67a3c14c31436e71e1bafb8e31baa4c5a76c11b9",
+              "datavalue": {
+                "value": "Osterburg (Altmark)",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "q504010$E9D593C3-3AAF-4065-BF22-21C6ED55FF1E",
+            "rank": "normal"
+          }
+        ],
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "a0457124c5df8bc769598474fb160d04afdea91b",
+              "datavalue": {
+                "value": {
+                  "latitude": 52.783333333333,
+                  "longitude": 11.766666666667,
+                  "altitude": null,
+                  "precision": 0.00027777777777778,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "q504010$8EA1E242-9483-4E0E-B3E3-A311DEE8FDAE",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "288ab581e7d2d02995a26dfa8b091d96e78457fc",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "6a164248fc96bfa583bbb495cb63ae6401ec203c",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 206855,
+                          "id": "Q206855"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P646": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P646",
+              "hash": "5e8443a3e2fde41c2230db66945af93091de5d1c",
+              "datavalue": {
+                "value": "/m/0d4t2r",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q504010$3EBC6B1F-59AD-4319-8A13-840F30120EF4",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "2b00cb481cddcac7623114367489b5c194901c4a",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "a94b740202b097dd33355e0e6c00e54b9395e5e0",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 15241312,
+                          "id": "Q15241312"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P577": [
+                    {
+                      "snaktype": "value",
+                      "property": "P577",
+                      "hash": "fde79ecb015112d2f29229ccc1ec514ed3e71fa2",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2013-10-28T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P577"
+                ]
+              }
+            ]
+          }
+        ],
+        "P227": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P227",
+              "hash": "392cdd4000fece57bc5d534d503167f44c56a737",
+              "datavalue": {
+                "value": "4104653-5",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q504010$1CE33F71-E91C-4484-AC88-4EF5F32B5BC1",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "bb7a0f3695a2b9c2665aa8464888fc7920b7cca6",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 707813,
+                  "id": "Q707813"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q504010$46394362-0132-4CD1-BF1A-C6FB75783D16",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "3cc6f14378f29d82a2d01b7b084ee308ef0ff76a",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 42744322,
+                  "id": "Q42744322"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q504010$018F6745-4EC9-4D44-AA9F-14C780AD867D",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "1ee56bb1c237ad187d7faf1b3f5e242d50290e8f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1307779,
+                  "id": "Q1307779"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q504010$788eb6ec-4949-df35-bac0-6671f28ecf96",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P190": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P190",
+              "hash": "7b5625d64628273da5400340d5a61fbd22a1771f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 101530,
+                  "id": "Q101530"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q504010$c700ac05-4959-48d0-68ee-ed6522e2f728",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P190",
+              "hash": "95288d9fb0aa8f836427f55c8043af1025d4af68",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 242757,
+                  "id": "Q242757"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q504010$10e50beb-4fb0-dbf7-3a6c-a61dfd8ed572",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P190",
+              "hash": "c40f55b5be3538f7cc841ed050fce82e212b2943",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 504754,
+                  "id": "Q504754"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q504010$1013fac3-42f6-4c75-b15b-89e7831b808a",
+            "rank": "normal"
+          }
+        ],
+        "P1566": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1566",
+              "hash": "2082bf6dde2cab2afa42ccad1afe44ce6256f032",
+              "datavalue": {
+                "value": "6551240",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q504010$A4327F77-CBBA-4290-9714-BA469F75D98B",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "88694a0f4d1486770c269f7db16a1982f74da69d",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "1b3ef912a2bd61e18dd43abd184337eb010b2e96",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 830106,
+                          "id": "Q830106"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248"
+                ]
+              }
+            ]
+          }
+        ],
+        "P910": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P910",
+              "hash": "931bc723faf07cf94bfa45607d4f1e43f897e71d",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 9061204,
+                  "id": "Q9061204"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q504010$B609399F-3923-4651-B7F4-83E815841F2C",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P856": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P856",
+              "hash": "cb209a45e755af00d3c44e950b8de35a0c68a733",
+              "datavalue": {
+                "value": "https://www.osterburg.de/",
+                "type": "string"
+              },
+              "datatype": "url"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P407": [
+                {
+                  "snaktype": "value",
+                  "property": "P407",
+                  "hash": "46bfd327b830f66f7061ea92d1be430c135fa91f",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 188,
+                      "id": "Q188"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P407"
+            ],
+            "id": "Q504010$57D044D3-E14A-43AE-8F20-B9258C4DB078",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              },
+              {
+                "hash": "d5847b9b6032aa8b13dae3c2dfd9ed5d114d21b3",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "5a343e7e758a4282a01316d3e959b6e653b767fc",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 11920,
+                          "id": "Q11920"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1376": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1376",
+              "hash": "260b1b05e24fe0bbd241d706738ebb52c342dd0e",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1118843,
+                  "id": "Q1118843"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P582": [
+                {
+                  "snaktype": "value",
+                  "property": "P582",
+                  "hash": "920a036187338a1996081dda20a16b9ec3af2625",
+                  "datavalue": {
+                    "value": {
+                      "time": "+1994-06-30T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P582"
+            ],
+            "id": "Q504010$A5060CD5-48CA-4D7C-AC78-E975A5F39929",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "82bf3e47bcd34024540f4d12821206396cd7500f",
+                "snaks": {
+                  "P3452": [
+                    {
+                      "snaktype": "value",
+                      "property": "P3452",
+                      "hash": "6ae93ff0de27f4dcdcc18b8daa2290c343a61f12",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 1118843,
+                          "id": "Q1118843"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P3452"
+                ]
+              }
+            ]
+          }
+        ],
+        "P242": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P242",
+              "hash": "d3e7bffb3fddb2b601a089be67d9624c59b4f501",
+              "datavalue": {
+                "value": "Osterburg (Altmark) in SDL.png",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q504010$A5688C51-A64B-4E2C-A49B-F2FF21E7DA16",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P18": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P18",
+              "hash": "f7f7767faaf3abf7c5902e646627d1dbd21ddec2",
+              "datavalue": {
+                "value": "Fachwerk Altstadt Osterburg.jpg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q504010$93F301DB-2AB0-4D0B-BD50-41E14AA23D96",
+            "rank": "normal"
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "21848d3f677b8ad93f9c0e8f2a68cdcb2e6dc2c2",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 6057,
+                  "id": "Q6057"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q504010$22A8924F-C576-48F0-A5ED-B236BF4DFB84",
+            "rank": "normal"
+          }
+        ],
+        "P281": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P281",
+              "hash": "05707e1adb912b8a68738448db944209360052dd",
+              "datavalue": {
+                "value": "39606",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q504010$A4AAE4D8-8D46-4CC6-89A0-0EC4048CC124",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P527": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P527",
+              "hash": "d258efde72192a8a46df408a67f1e095a63dd0bf",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1790153,
+                  "id": "Q1790153"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q504010$c2381ada-4d40-17d9-dbaa-bd2bd124e9ef",
+            "rank": "normal"
+          }
+        ],
+        "P2044": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2044",
+              "hash": "3b8c842992f6c722973161dab7bc268b97f03a1d",
+              "datavalue": {
+                "value": {
+                  "amount": "+26",
+                  "unit": "http://www.wikidata.org/entity/Q11573"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "id": "Q504010$25EE76BF-9471-451C-85D7-6A224B04826A",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "d5847b9b6032aa8b13dae3c2dfd9ed5d114d21b3",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "5a343e7e758a4282a01316d3e959b6e653b767fc",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 11920,
+                          "id": "Q11920"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1813": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1813",
+              "hash": "99d584eddd9dfd5f2fb4f3201d0b71f0f46e2458",
+              "datavalue": {
+                "value": {
+                  "text": "Ost",
+                  "language": "de"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P31": [
+                {
+                  "snaktype": "value",
+                  "property": "P31",
+                  "hash": "79ef508913fd30ffb0f22091b9792d4cce9e5b64",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 28758335,
+                      "id": "Q28758335"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P31"
+            ],
+            "id": "Q504010$B1C5DF17-BBB3-4A5E-B4FB-7583EA0B4F04",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "200d4df2297fe2e41a09174c0286089529764f2f",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "32f8b0abf75b653d46b1c3771eda6766affc7e05",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 28657655,
+                          "id": "Q28657655"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1813",
+              "hash": "1642dfde11f61292536ee2503528ffdef6a82dad",
+              "datavalue": {
+                "value": {
+                  "text": "Osterburg/Altmark",
+                  "language": "de"
+                },
+                "type": "monolingualtext"
+              },
+              "datatype": "monolingualtext"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P31": [
+                {
+                  "snaktype": "value",
+                  "property": "P31",
+                  "hash": "34c14acf5f8a7958888e42571a26c8156ae46d82",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 28791882,
+                      "id": "Q28791882"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P31"
+            ],
+            "id": "Q504010$D8BA8030-38F6-4B37-84EE-54628B46F40B",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "200d4df2297fe2e41a09174c0286089529764f2f",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "32f8b0abf75b653d46b1c3771eda6766affc7e05",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 28657655,
+                          "id": "Q28657655"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248"
+                ]
+              }
+            ]
+          }
+        ],
+        "P485": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P485",
+              "hash": "151005648bf903c288cb1b838216962373d55ba7",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 28720075,
+                  "id": "Q28720075"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q504010$249DCFF8-07F3-4CE2-A6B8-0F00976632B3",
+            "rank": "normal"
+          }
+        ],
+        "P402": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P402",
+              "hash": "e43a8c239b8516994ee69b505c2dfc819c900000",
+              "datavalue": {
+                "value": "1284737",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q504010$05A4164F-3517-4FC5-8D3F-81A3CCE9644F",
+            "rank": "normal"
+          }
+        ],
+        "P2046": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2046",
+              "hash": "ab71a0c39bbf695b0fc8374465c57712d30235b0",
+              "datavalue": {
+                "value": {
+                  "amount": "+229.76",
+                  "unit": "http://www.wikidata.org/entity/Q712226"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "c34a8cfb745b0cda47dffa6967839b8f92bcb653",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2017-00-00T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 9,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q504010$6E938E19-97A7-45A0-952B-BD5C0392485F",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "4aa3692de824d5b95c5742e2da8f36c1cf9b0262",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "e739d22702be3e08850cc2e1bde4cc2db87d4247",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 217659,
+                          "id": "Q217659"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2046",
+              "hash": "114391e472a12f3675ba49dd715d1e197cd4cddd",
+              "datavalue": {
+                "value": {
+                  "amount": "+229.77",
+                  "unit": "http://www.wikidata.org/entity/Q712226"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "745b29605c9c7cf8a1060810e30146ddb0260f3e",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2017-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q504010$F431CA31-6AF4-41CE-BD40-CF1A43D35E4A",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "e01b2898f64db40c9073666f5838f842bc376350",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "e6045358cacbb7c1edf78db909812f5211953e86",
+                      "datavalue": {
+                        "value": "https://www.destatis.de/DE/ZahlenFakten/LaenderRegionen/Regionales/Gemeindeverzeichnis/Administrativ/Archiv/GVAuszugQ/AuszugGV4QAktuell.html",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P1476": [
+                    {
+                      "snaktype": "value",
+                      "property": "P1476",
+                      "hash": "336a0894b79760511be6df3ca74afd27e338ad1f",
+                      "datavalue": {
+                        "value": {
+                          "text": "Alle politisch selbständigen Gemeinden mit ausgewählten Merkmalen am 31.12.2018 (4. Quartal)",
+                          "language": "de"
+                        },
+                        "type": "monolingualtext"
+                      },
+                      "datatype": "monolingualtext"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "214d6abff03532386de80a727956428c0f93e51d",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2019-03-10T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ],
+                  "P123": [
+                    {
+                      "snaktype": "value",
+                      "property": "P123",
+                      "hash": "006e4a871c1adf076c6c611dea42d0700ab67532",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 764739,
+                          "id": "Q764739"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P1065": [
+                    {
+                      "snaktype": "value",
+                      "property": "P1065",
+                      "hash": "9fa075ef58fb07978ae4cc6d475b256f92560d48",
+                      "datavalue": {
+                        "value": "https://web.archive.org/web/20190310200237/https://www.destatis.de/DE/ZahlenFakten/LaenderRegionen/Regionales/Gemeindeverzeichnis/Administrativ/Archiv/GVAuszugQ/AuszugGV4QAktuell.xlsx?__blob=publicationFile",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P2960": [
+                    {
+                      "snaktype": "value",
+                      "property": "P2960",
+                      "hash": "393a5e68f8a17d4b0971b4f81930a8712d6434b1",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2019-03-10T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854",
+                  "P1476",
+                  "P813",
+                  "P123",
+                  "P1065",
+                  "P2960"
+                ]
+              }
+            ]
+          }
+        ],
+        "P268": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P268",
+              "hash": "ac2bf51263205f2d814ac673a380b0615b6b5f5f",
+              "datavalue": {
+                "value": "12049313m",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q504010$BB98C4EA-62E9-4E8E-89DA-0E76306307C8",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "5a858a70d6ac562123c1debf25a5aed93a5c4939",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "def9f19d84b65167a2a17ce38364d264c16127fc",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 19938912,
+                          "id": "Q19938912"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "97aefaac0484eca89d5fee539362dc40c533824e",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2015-08-26T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P473": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P473",
+              "hash": "5ad4ef88e2138da36c2b66b2664cdd1625e40bb3",
+              "datavalue": {
+                "value": "039328",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q504010$55283218-0F22-47CB-A06A-76FF4AF726DA",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P473",
+              "hash": "468569c49ca3e5ed40dc036f6773033e1c65f1cf",
+              "datavalue": {
+                "value": "03937",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q504010$DB1DF798-94D4-4B46-A872-D8662FA3604C",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P473",
+              "hash": "40f0ccd96dfa3f3193278a848cf4ccbf6495c956",
+              "datavalue": {
+                "value": "039388",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q504010$A6C79C70-0ED9-44AE-BF82-12E4C05CD31D",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P473",
+              "hash": "1819ca52d1fb4100cb67be6ea2319b87d6a6c9de",
+              "datavalue": {
+                "value": "039390",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q504010$3B4627EB-93B8-4474-8388-13B18F5A3D88",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P473",
+              "hash": "230531b8ce89037ec948e96d17561c02436fcb1a",
+              "datavalue": {
+                "value": "039392",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q504010$E0D1766E-406E-4CDA-B394-C75F1209A20E",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1082": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "0344f2000cf0f2bd70012be8bb60b307d35b2729",
+              "datavalue": {
+                "value": {
+                  "amount": "+9856",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "745b29605c9c7cf8a1060810e30146ddb0260f3e",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2017-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585"
+            ],
+            "id": "Q504010$2bc38514-4531-9a8f-8e95-37a1ffdaf14e",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "e01b2898f64db40c9073666f5838f842bc376350",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "e6045358cacbb7c1edf78db909812f5211953e86",
+                      "datavalue": {
+                        "value": "https://www.destatis.de/DE/ZahlenFakten/LaenderRegionen/Regionales/Gemeindeverzeichnis/Administrativ/Archiv/GVAuszugQ/AuszugGV4QAktuell.html",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P1476": [
+                    {
+                      "snaktype": "value",
+                      "property": "P1476",
+                      "hash": "336a0894b79760511be6df3ca74afd27e338ad1f",
+                      "datavalue": {
+                        "value": {
+                          "text": "Alle politisch selbständigen Gemeinden mit ausgewählten Merkmalen am 31.12.2018 (4. Quartal)",
+                          "language": "de"
+                        },
+                        "type": "monolingualtext"
+                      },
+                      "datatype": "monolingualtext"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "214d6abff03532386de80a727956428c0f93e51d",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2019-03-10T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ],
+                  "P123": [
+                    {
+                      "snaktype": "value",
+                      "property": "P123",
+                      "hash": "006e4a871c1adf076c6c611dea42d0700ab67532",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 764739,
+                          "id": "Q764739"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P1065": [
+                    {
+                      "snaktype": "value",
+                      "property": "P1065",
+                      "hash": "9fa075ef58fb07978ae4cc6d475b256f92560d48",
+                      "datavalue": {
+                        "value": "https://web.archive.org/web/20190310200237/https://www.destatis.de/DE/ZahlenFakten/LaenderRegionen/Regionales/Gemeindeverzeichnis/Administrativ/Archiv/GVAuszugQ/AuszugGV4QAktuell.xlsx?__blob=publicationFile",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P2960": [
+                    {
+                      "snaktype": "value",
+                      "property": "P2960",
+                      "hash": "393a5e68f8a17d4b0971b4f81930a8712d6434b1",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2019-03-10T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854",
+                  "P1476",
+                  "P813",
+                  "P123",
+                  "P1065",
+                  "P2960"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "4461c79f0c75d633aa3f036845cab1d3da3544ec",
+              "datavalue": {
+                "value": {
+                  "amount": "+9782",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "62557a8db62df6f70c440636cdc0d484087c0e70",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2019-09-30T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P459": [
+                {
+                  "snaktype": "value",
+                  "property": "P459",
+                  "hash": "9a17db6b8b930e6ccfe5013df9d6840428dc679d",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 52679562,
+                      "id": "Q52679562"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P585",
+              "P459"
+            ],
+            "id": "Q504010$19E7B774-0D62-4698-B7D1-84C8DB1C60E9",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "13f97a0f62b3e42e55e62b5558ea72a70ef4d6d8",
+                "snaks": {
+                  "P123": [
+                    {
+                      "snaktype": "value",
+                      "property": "P123",
+                      "hash": "006e4a871c1adf076c6c611dea42d0700ab67532",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 764739,
+                          "id": "Q764739"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "408cff8d1a926f7486c60258dd10aefc475eb2cc",
+                      "datavalue": {
+                        "value": "https://www.statistikportal.de/de/produkte/gemeindeverzeichnis",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "5b15ffe12ab4f915b9bc730dc658853fb66d08de",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2020-03-01T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P123",
+                  "P854",
+                  "P813"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "0afb70f63e8c8ceff232bd20a9072a83b56f3353",
+              "datavalue": {
+                "value": {
+                  "amount": "+9500",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P1540": [
+                {
+                  "snaktype": "value",
+                  "property": "P1540",
+                  "hash": "4f2508b259c60078083d5df81fac007dfd571de5",
+                  "datavalue": {
+                    "value": {
+                      "amount": "+4588",
+                      "unit": "1"
+                    },
+                    "type": "quantity"
+                  },
+                  "datatype": "quantity"
+                }
+              ],
+              "P1539": [
+                {
+                  "snaktype": "value",
+                  "property": "P1539",
+                  "hash": "e5a0a8d9dee7bda1a68b7246da71c2cb35a6bf56",
+                  "datavalue": {
+                    "value": {
+                      "amount": "+4912",
+                      "unit": "1"
+                    },
+                    "type": "quantity"
+                  },
+                  "datatype": "quantity"
+                }
+              ],
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "33bd9a339157ce7b3d74cb10d73bc23529c9a7f3",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2021-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P459": [
+                {
+                  "snaktype": "value",
+                  "property": "P459",
+                  "hash": "9a17db6b8b930e6ccfe5013df9d6840428dc679d",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 52679562,
+                      "id": "Q52679562"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P1540",
+              "P1539",
+              "P585",
+              "P459"
+            ],
+            "id": "Q504010$8320BF63-2A88-4FC6-919D-5BFAC599F4F5",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "7f68dba737140df45dda00c5b75c7a934cc92c24",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "c3b670a3ad03789d8da6136e746e64b1e01031cb",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 116783074,
+                          "id": "Q116783074"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "1f7c787678209c793e427b91c8758e44b29b3250",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2023-02-12T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P813"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "98cad7b561b148c7eae757e806714712bed66a17",
+              "datavalue": {
+                "value": {
+                  "amount": "+9580",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P1540": [
+                {
+                  "snaktype": "value",
+                  "property": "P1540",
+                  "hash": "13f9720a7791391c6c1595945c5ddf451d9c0071",
+                  "datavalue": {
+                    "value": {
+                      "amount": "+4603",
+                      "unit": "1"
+                    },
+                    "type": "quantity"
+                  },
+                  "datatype": "quantity"
+                }
+              ],
+              "P1539": [
+                {
+                  "snaktype": "value",
+                  "property": "P1539",
+                  "hash": "b2457dd2b63d3dcb88a3c0fad437b908c6369c16",
+                  "datavalue": {
+                    "value": {
+                      "amount": "+4977",
+                      "unit": "1"
+                    },
+                    "type": "quantity"
+                  },
+                  "datatype": "quantity"
+                }
+              ],
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "5f7bbb1374fc3676fe8e0452d8c818594e1baaf7",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2022-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P459": [
+                {
+                  "snaktype": "value",
+                  "property": "P459",
+                  "hash": "9a17db6b8b930e6ccfe5013df9d6840428dc679d",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 52679562,
+                      "id": "Q52679562"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P1540",
+              "P1539",
+              "P585",
+              "P459"
+            ],
+            "id": "Q504010$D664A8D4-A97C-4FE6-93AA-39E695A06EA3",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "ea79d7941459e3df58384dc321384f29a852590e",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "309a07069b87df9d17d8752db093b3e4052479bd",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 122987347,
+                          "id": "Q122987347"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "4e15117f8e98301fcb453cc77c61f9843fd201e7",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2023-10-07T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P813"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "9818d8d2439d2d3fc59d2ff4698c7e346d2bc590",
+              "datavalue": {
+                "value": {
+                  "amount": "+9421",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P1540": [
+                {
+                  "snaktype": "value",
+                  "property": "P1540",
+                  "hash": "db113775a74ef2a6900491e171f8cc1efff2bc15",
+                  "datavalue": {
+                    "value": {
+                      "amount": "+4529",
+                      "unit": "1"
+                    },
+                    "type": "quantity"
+                  },
+                  "datatype": "quantity"
+                }
+              ],
+              "P1539": [
+                {
+                  "snaktype": "value",
+                  "property": "P1539",
+                  "hash": "f0cf37c682c41b30dadf98683c17831f5daa5302",
+                  "datavalue": {
+                    "value": {
+                      "amount": "+4892",
+                      "unit": "1"
+                    },
+                    "type": "quantity"
+                  },
+                  "datatype": "quantity"
+                }
+              ],
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "dcd7d58110bdaa9871a5769241079dced36b597a",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2023-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P459": [
+                {
+                  "snaktype": "value",
+                  "property": "P459",
+                  "hash": "9a17db6b8b930e6ccfe5013df9d6840428dc679d",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 52679562,
+                      "id": "Q52679562"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P1540",
+              "P1539",
+              "P585",
+              "P459"
+            ],
+            "id": "Q504010$2D5B0751-FAFF-40D8-8649-A8FE9C440AC0",
+            "rank": "preferred",
+            "references": [
+              {
+                "hash": "5002f58aa2274f87dc88b7a7ebf10ced2c93fa2a",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "3e54baa931c12ae60514702c7088e2439a29eded",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 131220759,
+                          "id": "Q131220759"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "ff233528bc7144de0ef9ee6379075b6cd0b9f21e",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2024-11-16T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P813"
+                ]
+              }
+            ]
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1082",
+              "hash": "f9125d9d1b751e94235d32d1e3979e1cdb532859",
+              "datavalue": {
+                "value": {
+                  "amount": "+9371",
+                  "unit": "1"
+                },
+                "type": "quantity"
+              },
+              "datatype": "quantity"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P1540": [
+                {
+                  "snaktype": "value",
+                  "property": "P1540",
+                  "hash": "79d4a418817c038b4a00565c476993a84660c8a7",
+                  "datavalue": {
+                    "value": {
+                      "amount": "+4645",
+                      "unit": "1"
+                    },
+                    "type": "quantity"
+                  },
+                  "datatype": "quantity"
+                }
+              ],
+              "P1539": [
+                {
+                  "snaktype": "value",
+                  "property": "P1539",
+                  "hash": "42c9328a82ea1a2aa0148d5da95fba7e35f3c2d3",
+                  "datavalue": {
+                    "value": {
+                      "amount": "+4726",
+                      "unit": "1"
+                    },
+                    "type": "quantity"
+                  },
+                  "datatype": "quantity"
+                }
+              ],
+              "P585": [
+                {
+                  "snaktype": "value",
+                  "property": "P585",
+                  "hash": "db7b80a0cf1703f7e9bbfe5c0919469fe27db170",
+                  "datavalue": {
+                    "value": {
+                      "time": "+2024-12-31T00:00:00Z",
+                      "timezone": 0,
+                      "before": 0,
+                      "after": 0,
+                      "precision": 11,
+                      "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                    },
+                    "type": "time"
+                  },
+                  "datatype": "time"
+                }
+              ],
+              "P459": [
+                {
+                  "snaktype": "value",
+                  "property": "P459",
+                  "hash": "9a17db6b8b930e6ccfe5013df9d6840428dc679d",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 52679562,
+                      "id": "Q52679562"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P1540",
+              "P1539",
+              "P585",
+              "P459"
+            ],
+            "id": "Q504010$0063D619-11A5-42E7-81E8-B3907CCCE34B",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "b7204c41da15f2852f9188e65787d1f985a21348",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "9e82734f98f333ed80124aeacc1a460b8a277594",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 137944348,
+                          "id": "Q137944348"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "ab1b4f976848c4bf19bfe9209e0c21b65f3b5d3c",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2026-06-29T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P244": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P244",
+              "hash": "7c0367731a3745a3fbaee2277c7b419292364eb2",
+              "datavalue": {
+                "value": "n93006808",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q504010$BE8ADB5F-D877-4FB2-B0EB-2C02C322C75C",
+            "rank": "normal"
+          }
+        ],
+        "P1792": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1792",
+              "hash": "f3355edfd80e2576e9e364cebd0e4c39b3066942",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 8744955,
+                  "id": "Q8744955"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q504010$1ccf09a7-4f53-24c9-4afa-91412cfd4f69",
+            "rank": "normal"
+          }
+        ],
+        "P6766": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P6766",
+              "hash": "a009fb20193f77107c105efe1ee1a2b35cde0499",
+              "datavalue": {
+                "value": "101819947",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q504010$DBF0E85A-EFA6-4F9E-97DA-42CB7D119726",
+            "rank": "normal"
+          }
+        ],
+        "P214": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P214",
+              "hash": "9400ffd767338b76463900f288e3447885a378ec",
+              "datavalue": {
+                "value": "172363994",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q504010$744F0348-EB01-44E4-95E2-B9766AFA6546",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "2f930b2ae5a10e8f3aff41674e415b6203ce568f",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "37d73c026de82638509ce0e17d824f9cf506fd52",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Osterburg_(Altmark)&oldid=193555284",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P8168": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P8168",
+              "hash": "07bf870bcc1901904eb8eb2a4c79d6838a3941b2",
+              "datavalue": {
+                "value": "Q89931",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q504010$AB5E2ED7-1855-4A29-95AF-1686DBA0A496",
+            "rank": "normal"
+          }
+        ],
+        "P1464": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1464",
+              "hash": "64213c00dbc03d3037b76dff42867871b8797eda",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 106765175,
+                  "id": "Q106765175"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q504010$19bc5ae8-4348-f229-cb16-15769e6b5387",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "d5847b9b6032aa8b13dae3c2dfd9ed5d114d21b3",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "5a343e7e758a4282a01316d3e959b6e653b767fc",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 11920,
+                          "id": "Q11920"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P94": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P94",
+              "hash": "4778941bf1388df3caea70cda8ee4ae156501b79",
+              "datavalue": {
+                "value": "DE-ST 15-0-90-415 Osterburg COA.png",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q504010$81F55B1B-FC4D-4169-9C8D-B78C16D96EFB",
+            "rank": "normal"
+          }
+        ],
+        "P1667": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1667",
+              "hash": "145b7db57781e65f72aef79759cd996d4442b4b8",
+              "datavalue": {
+                "value": "1037438",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q504010$2C72B2C9-6F97-49C7-AB4F-4707A0666BA5",
+            "rank": "normal"
+          }
+        ],
+        "P9957": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P9957",
+              "hash": "908e2ef3f09762889f362941610a82396d18bd3c",
+              "datavalue": {
+                "value": "342",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q504010$E8F550BE-8CDB-47D1-AA73-409D091CA4E4",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "190527dca615f4510213808b0e1cb81522b247f6",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "9d638c2b86f0a48538336421421d81e676e6a966",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 1360745,
+                          "id": "Q1360745"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248"
+                ]
+              }
+            ]
+          }
+        ],
+        "P982": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P982",
+              "hash": "7c0831d5c6f0bde2529c160536eefed2b0fe3a90",
+              "datavalue": {
+                "value": "7d6fd307-4893-476a-902e-f32868f16862",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q504010$4439f2b1-df2e-4e72-a8b0-c9929c567b47",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "b65d29ba782cbb567e6325269c16407eb50f2c16",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "623cc8f0e2f65afe4d66b91962d354a2f3aa9a27",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 14005,
+                          "id": "Q14005"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "5c5c5ac0fc182ee1e4e8e43eaf381416647880e5",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2022-05-03T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1343": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1343",
+              "hash": "cc623969772776f2a8b109402b0ac5fa5c123233",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 19219752,
+                  "id": "Q19219752"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P805": [
+                {
+                  "snaktype": "value",
+                  "property": "P805",
+                  "hash": "231d1071733abc3f3172ec1cca481677a37f4bcd",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 112791352,
+                      "id": "Q112791352"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P805"
+            ],
+            "id": "Q504010$6CA230C4-6D36-49A7-9285-5EBB35429741",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1343",
+              "hash": "64ffaf723c6b206ddb134c56a6dd1c37742c10e5",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 19230677,
+                  "id": "Q19230677"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "qualifiers": {
+              "P805": [
+                {
+                  "snaktype": "value",
+                  "property": "P805",
+                  "hash": "6e43b65fd4180d09204f5952ad1bdc93c6e3e878",
+                  "datavalue": {
+                    "value": {
+                      "entity-type": "item",
+                      "numeric-id": 113077265,
+                      "id": "Q113077265"
+                    },
+                    "type": "wikibase-entityid"
+                  },
+                  "datatype": "wikibase-item"
+                }
+              ]
+            },
+            "qualifiers-order": [
+              "P805"
+            ],
+            "id": "Q504010$5362F082-3F2E-4514-B7B8-8BBEF54B3C32",
+            "rank": "normal"
+          }
+        ],
+        "P8189": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P8189",
+              "hash": "3a0f4a9df00459633866e47ba53ace498ab3fde4",
+              "datavalue": {
+                "value": "987007535294605171",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q504010$E147FF63-1EA4-408D-8955-1C38A98C0D38",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "ecb7a39cf436eb1fba419853af168ef9f2ba1dab",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "a03bb6ffe37be9554492f4eea5bd18afcb57df19",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 106509962,
+                          "id": "Q106509962"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248"
+                ]
+              }
+            ]
+          }
+        ],
+        "P6": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P6",
+              "hash": "dd1f0a99c907c4217940a42c3a730cef05f92e56",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 1668425,
+                  "id": "Q1668425"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q504010$AB4C055F-313B-474D-82F1-F27936B8ABE5",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "e0216d6380faed31b5b04e65e3bdecb35925c282",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "4c5821f2bddaef7a7c4b8399674ea2ceb4912df3",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Osterburg_(Altmark)&oldid=225922046",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P7197": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P7197",
+              "hash": "3437bd6b2060e80aa8b5c4cfa2b3e03bd40817aa",
+              "datavalue": {
+                "value": "2856639",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q504010$C08C0806-594B-432D-AC5C-29C8089D5141",
+            "rank": "normal"
+          }
+        ],
+        "P1937": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1937",
+              "hash": "e595e4ced5f5e5ba06a00de6a78c3e64cd3b7654",
+              "datavalue": {
+                "value": "DEQOG",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q504010$ddcd48a8-db68-4e73-ac44-434d8135fc58",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "c27fc338efea917e678b9c7551409cbd2b0b1394",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "533a441278708b7449d1b7fa265eedf3545a6c29",
+                      "datavalue": {
+                        "value": "https://service.unece.org/trade/locode/de.htm",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854"
+                ]
+              }
+            ]
+          }
+        ],
+        "P10832": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P10832",
+              "hash": "35eb99f86dda0606c33ff41e2f2393c3661bec5a",
+              "datavalue": {
+                "value": "E39PCjHvDJb9jJTT67M7wcpqw3",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q504010$39EB1122-0F4A-4250-9844-5E9C6078F062",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "02e3ecfd18db9c4b357d88b7dcc14f83968e4aba",
+                "snaks": {
+                  "P11797": [
+                    {
+                      "snaktype": "value",
+                      "property": "P11797",
+                      "hash": "ebc61ebee105944aa63ee48264c820fab36c5571",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 13219454,
+                          "id": "Q13219454"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P244": [
+                    {
+                      "snaktype": "value",
+                      "property": "P244",
+                      "hash": "7c0367731a3745a3fbaee2277c7b419292364eb2",
+                      "datavalue": {
+                        "value": "n93006808",
+                        "type": "string"
+                      },
+                      "datatype": "external-id"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "9ccbf5b102650e62a9d51a2b55b1d368f5947df5",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2024-04-21T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P11797",
+                  "P244",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1388": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1388",
+              "hash": "e10d114ae500ba8441bc84b7c13fd204a5498a28",
+              "datavalue": {
+                "value": "150900415415",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q504010$4CEFA0C5-B0ED-45F6-B171-123CFB6AC968",
+            "rank": "normal"
+          }
+        ],
+        "P13591": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P13591",
+              "hash": "371eeb41b18c7d1c201839f200948aa44402d899",
+              "datavalue": {
+                "value": "place/6a0a1769-5377-4c10-a8bc-05274edc7464",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q504010$CD11547A-6878-4BA4-B06C-42E7A5783D80",
+            "rank": "normal"
+          }
+        ],
+        "P13659": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P13659",
+              "hash": "2842e4f713ca9123d92973694e5c3ce999fe1ca7",
+              "datavalue": {
+                "value": "23aea38a-a3af-4854-93f9-6aa279d74606",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q504010$A3CD5560-42D3-4FFB-ACB6-59CE300EB4AA",
+            "rank": "normal"
+          }
+        ],
+        "P2503": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2503",
+              "hash": "cb2e0cb9d87994f8937c3ed2ac679c71626dbc8d",
+              "datavalue": {
+                "value": "object_318691",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q504010$264B79CC-158B-400A-8146-48F89EE92169",
+            "rank": "normal"
+          }
+        ],
+        "P5573": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P5573",
+              "hash": "9bdc9f9c84001e3a5b9f76b45ac17d17aefe515f",
+              "datavalue": {
+                "value": "55171",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q504010$A7AF4714-0932-4ED0-98E1-83697D1887D8",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "0c3371961251680a3c310ea59340574a3423b8fa",
+                "snaks": {
+                  "P854": [
+                    {
+                      "snaktype": "value",
+                      "property": "P854",
+                      "hash": "d845f4eb775982fb2055473e0463f4a17a2cfa54",
+                      "datavalue": {
+                        "value": "https://www.archinform.net/service/wd_aiort.php",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ],
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "c619cc6e0e5fe3733a8c4a47939343e5970e0e9d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 265049,
+                          "id": "Q265049"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "988857a6891b699cef0d0b076d8ac7c3bdd26e18",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2025-11-24T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P854",
+                  "P248",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P2572": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2572",
+              "hash": "15172898860ea1cb33a72ac2ebf2cba6d95fbd6b",
+              "datavalue": {
+                "value": "OsterburgAltmark",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q504010$967061ED-7563-4331-8145-99AD218445ED",
+            "rank": "normal"
+          }
+        ],
+        "P14586": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P14586",
+              "hash": "4977a57e635e4afb8eab5c5f347c3134fbb55afb",
+              "datavalue": {
+                "value": "90890",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q504010$033ECC4F-1737-417E-8A15-90F4A2D3C726",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "arwiki": {
+          "site": "arwiki",
+          "title": "أوستربورغ",
+          "badges": []
+        },
+        "bawiki": {
+          "site": "bawiki",
+          "title": "Остербург (Альтмарк)",
+          "badges": []
+        },
+        "cebwiki": {
+          "site": "cebwiki",
+          "title": "Osterburg (munisipyo)",
+          "badges": []
+        },
+        "cewiki": {
+          "site": "cewiki",
+          "title": "Остербург (Альтмарк)",
+          "badges": []
+        },
+        "dawiki": {
+          "site": "dawiki",
+          "title": "Osterburg (Altmark)",
+          "badges": []
+        },
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Osterburg (Altmark)",
+          "badges": []
+        },
+        "dewikivoyage": {
+          "site": "dewikivoyage",
+          "title": "Osterburg (Altmark)",
+          "badges": []
+        },
+        "enwiki": {
+          "site": "enwiki",
+          "title": "Osterburg (Altmark)",
+          "badges": []
+        },
+        "eowiki": {
+          "site": "eowiki",
+          "title": "Osterburg (Altmark)",
+          "badges": []
+        },
+        "eswiki": {
+          "site": "eswiki",
+          "title": "Osterburg",
+          "badges": []
+        },
+        "euwiki": {
+          "site": "euwiki",
+          "title": "Osterburg",
+          "badges": []
+        },
+        "fawiki": {
+          "site": "fawiki",
+          "title": "استربورگ (آلتمارک)",
+          "badges": []
+        },
+        "frwiki": {
+          "site": "frwiki",
+          "title": "Osterburg",
+          "badges": []
+        },
+        "huwiki": {
+          "site": "huwiki",
+          "title": "Osterburg (Altmark)",
+          "badges": []
+        },
+        "itwiki": {
+          "site": "itwiki",
+          "title": "Osterburg (Altmark)",
+          "badges": []
+        },
+        "kkwiki": {
+          "site": "kkwiki",
+          "title": "Остербург (Альтмарк)",
+          "badges": []
+        },
+        "kywiki": {
+          "site": "kywiki",
+          "title": "Остербург (Альтмарк)",
+          "badges": []
+        },
+        "lldwiki": {
+          "site": "lldwiki",
+          "title": "Osterburg (Altmark)",
+          "badges": []
+        },
+        "mkwiki": {
+          "site": "mkwiki",
+          "title": "Остербург (Алтмарк)",
+          "badges": []
+        },
+        "mswiki": {
+          "site": "mswiki",
+          "title": "Osterburg (Altmark)",
+          "badges": []
+        },
+        "ndswiki": {
+          "site": "ndswiki",
+          "title": "Osterburg",
+          "badges": []
+        },
+        "nlwiki": {
+          "site": "nlwiki",
+          "title": "Osterburg (Altmark)",
+          "badges": []
+        },
+        "plwiki": {
+          "site": "plwiki",
+          "title": "Osterburg (Altmark)",
+          "badges": []
+        },
+        "ptwiki": {
+          "site": "ptwiki",
+          "title": "Osterburg (Stendal)",
+          "badges": []
+        },
+        "rowiki": {
+          "site": "rowiki",
+          "title": "Osterburg (Altmark)",
+          "badges": []
+        },
+        "ruwiki": {
+          "site": "ruwiki",
+          "title": "Остербург (Альтмарк)",
+          "badges": []
+        },
+        "shwiki": {
+          "site": "shwiki",
+          "title": "Osterburg",
+          "badges": []
+        },
+        "srwiki": {
+          "site": "srwiki",
+          "title": "Остербург (Алтмарк)",
+          "badges": []
+        },
+        "svwiki": {
+          "site": "svwiki",
+          "title": "Osterburg",
+          "badges": []
+        },
+        "ttwiki": {
+          "site": "ttwiki",
+          "title": "Остербург (Альтмарк)",
+          "badges": []
+        },
+        "tumwiki": {
+          "site": "tumwiki",
+          "title": "Osterburg (Altmark)",
+          "badges": []
+        },
+        "ukwiki": {
+          "site": "ukwiki",
+          "title": "Остербург (Альтмарк)",
+          "badges": []
+        },
+        "uzwiki": {
+          "site": "uzwiki",
+          "title": "Osterburg (Altmark)",
+          "badges": []
+        },
+        "viwiki": {
+          "site": "viwiki",
+          "title": "Osterburg, Stendal",
+          "badges": []
+        },
+        "warwiki": {
+          "site": "warwiki",
+          "title": "Osterburg (Altmark)",
+          "badges": []
+        },
+        "zhwiki": {
+          "site": "zhwiki",
+          "title": "阿尔特马克地区奥斯特堡",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

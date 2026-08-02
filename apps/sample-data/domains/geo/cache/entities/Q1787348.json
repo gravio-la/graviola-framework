@@ -1,0 +1,286 @@
+{
+  "entities": {
+    "Q1787348": {
+      "pageid": 1718931,
+      "ns": 0,
+      "title": "Q1787348",
+      "lastrevid": 2268691222,
+      "modified": "2024-11-01T15:11:03Z",
+      "type": "item",
+      "id": "Q1787348",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Kreis Hoyerswerda"
+        },
+        "nb": {
+          "language": "nb",
+          "value": "Kreis Hoyerswerda"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "Район Хойерсверда"
+        },
+        "en": {
+          "language": "en",
+          "value": "Kreis Hoyerswerda"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "Wokrjes Wojerecy"
+        },
+        "sl": {
+          "language": "sl",
+          "value": "Kreis Hoyerswerda"
+        }
+      },
+      "descriptions": {
+        "de": {
+          "language": "de",
+          "value": "Kreis in der DDR"
+        },
+        "en": {
+          "language": "en",
+          "value": "district of Hoyerswerda (GDR)"
+        },
+        "hsb": {
+          "language": "hsb",
+          "value": "wokrjes w NDR"
+        },
+        "sl": {
+          "language": "sl",
+          "value": "okrožje Nemške demokratične republike"
+        }
+      },
+      "aliases": {
+        "hsb": [
+          {
+            "language": "hsb",
+            "value": "Wojerowski wokrjes"
+          }
+        ],
+        "sl": [
+          {
+            "language": "sl",
+            "value": "Okrožje Hoyerswerda"
+          }
+        ]
+      },
+      "claims": {
+        "P36": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P36",
+              "hash": "e8b6cc8d2124c603b406ca0baa6bcb4a377b3a4b",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 14904,
+                  "id": "Q14904"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787348$4cf73783-4ccc-a964-5d9b-1ac20effb186",
+            "rank": "normal"
+          }
+        ],
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "69134fce674a39f3382130caf84f51e58518fb88",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 16957,
+                  "id": "Q16957"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787348$A029EACC-33B9-4265-9E0C-9906D9574DFD",
+            "rank": "normal"
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "7c87a9d130338f4808157eaf589307f229beb96f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 15849374,
+                  "id": "Q15849374"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787348$A81AFBB0-4503-4D02-81A8-E9DC1DDF7B32",
+            "rank": "normal"
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "780c957abc50013d7fe49ff3a625b2d7585d13be",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 48046,
+                  "id": "Q48046"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q1787348$60D38866-0309-471A-9E15-2107E8952F8C",
+            "rank": "normal"
+          }
+        ],
+        "P576": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P576",
+              "hash": "90071385397ec2bb99561d7a0ca1b71fb9943958",
+              "datavalue": {
+                "value": {
+                  "time": "+1995-12-31T00:00:00Z",
+                  "timezone": 0,
+                  "before": 0,
+                  "after": 0,
+                  "precision": 11,
+                  "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                },
+                "type": "time"
+              },
+              "datatype": "time"
+            },
+            "type": "statement",
+            "id": "Q1787348$7FED47A9-BA86-408D-A5AF-34B42B0816D9",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P242": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P242",
+              "hash": "cb277694807424337b77e384f0dc80f6a5ea95d8",
+              "datavalue": {
+                "value": "Kreis Hoyerswerda im Bezirk Cottbus.PNG",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q1787348$A613FB97-08D4-4F7C-AC28-C33497CC2791",
+            "rank": "normal"
+          }
+        ],
+        "P94": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P94",
+              "hash": "8baaaaf1ca52a3703ca9cb2727f8ef25199f5909",
+              "datavalue": {
+                "value": "Wappen Landkreis Hoyerswerda.jpg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q1787348$EF6EC887-A53F-4EEF-855A-F3D22E08592B",
+            "rank": "normal"
+          },
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P94",
+              "hash": "014375a2c64ecc7f4ba298d125318f10e4ce0e6b",
+              "datavalue": {
+                "value": "Wappen Landkreis Hoyerswerda (1995).jpg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q1787348$070E39F9-4D91-447A-BEC5-BF1144E35B2A",
+            "rank": "normal"
+          }
+        ],
+        "P2671": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P2671",
+              "hash": "f3f1c7d2e15b7e5a9fd5f590d0a1752b5e8dbdd5",
+              "datavalue": {
+                "value": "/g/1214fd14",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q1787348$38058315-6BEF-4E15-9425-95A395033486",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Kreis Hoyerswerda",
+          "badges": []
+        },
+        "nowiki": {
+          "site": "nowiki",
+          "title": "Kreis Hoyerswerda",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}

@@ -1,0 +1,678 @@
+{
+  "entities": {
+    "Q478740": {
+      "pageid": 451226,
+      "ns": 0,
+      "title": "Q478740",
+      "lastrevid": 2512009244,
+      "modified": "2026-06-29T23:28:57Z",
+      "type": "item",
+      "id": "Q478740",
+      "labels": {
+        "de": {
+          "language": "de",
+          "value": "Verbandsgemeinde Unstruttal"
+        },
+        "pl": {
+          "language": "pl",
+          "value": "Gmina związkowa Unstruttal"
+        },
+        "en": {
+          "language": "en",
+          "value": "Unstruttal"
+        },
+        "mk": {
+          "language": "mk",
+          "value": "Унштрутал"
+        },
+        "nl": {
+          "language": "nl",
+          "value": "Verbandsgemeinde Unstruttal"
+        },
+        "ms": {
+          "language": "ms",
+          "value": "Unstruttal"
+        },
+        "ru": {
+          "language": "ru",
+          "value": "Унструтталь"
+        },
+        "es": {
+          "language": "es",
+          "value": "Verbandsgemeinde Unstruttal"
+        },
+        "ja": {
+          "language": "ja",
+          "value": "ウンシュトルタル"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "Unstruttal"
+        },
+        "hu": {
+          "language": "hu",
+          "value": "Unstruttal"
+        }
+      },
+      "descriptions": {
+        "en": {
+          "language": "en",
+          "value": "Collective municipality in Saxony-Anhalt, Germany"
+        },
+        "es": {
+          "language": "es",
+          "value": "mancomunidad de municipios en el distrito de Burgenland, en el estado de Sajonia-Anhalt, Alemania"
+        },
+        "fr": {
+          "language": "fr",
+          "value": "union de communes (Verbandsgemeinde) de Saxe-Anhalt (Allemagne)"
+        },
+        "hu": {
+          "language": "hu",
+          "value": "községtársulás Rajna-vidék-Pfalz tartományban"
+        }
+      },
+      "aliases": {},
+      "claims": {
+        "P17": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P17",
+              "hash": "ef7247b704f4ec0a7df39e83306bb388fea17d5f",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 183,
+                  "id": "Q183"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "q478740$2F460D72-4901-46B2-ACDE-EBBE4921D1BD",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "732ec1c90a6f0694c7db9a71bf09fe7f2b674172",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "9123b0de1cc9c3954366ba797d598e4e1ea4146f",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 10000,
+                          "id": "Q10000"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P625": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P625",
+              "hash": "97d79612141fec14fbcbdd6f5fade98bce423285",
+              "datavalue": {
+                "value": {
+                  "latitude": 51.2,
+                  "longitude": 11.56667,
+                  "altitude": null,
+                  "precision": 0.0001,
+                  "globe": "http://www.wikidata.org/entity/Q2"
+                },
+                "type": "globecoordinate"
+              },
+              "datatype": "globe-coordinate"
+            },
+            "type": "statement",
+            "id": "Q478740$9927FF1C-1EE0-4033-B872-F4684BE242A2",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "732ec1c90a6f0694c7db9a71bf09fe7f2b674172",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "9123b0de1cc9c3954366ba797d598e4e1ea4146f",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 10000,
+                          "id": "Q10000"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P646": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P646",
+              "hash": "9854a633202bb28e31ccf15f6b0aca4e7ffa8fac",
+              "datavalue": {
+                "value": "/m/02r_b81",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478740$E60C855E-6DDD-476D-809C-80F9BD4C1879",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "2b00cb481cddcac7623114367489b5c194901c4a",
+                "snaks": {
+                  "P248": [
+                    {
+                      "snaktype": "value",
+                      "property": "P248",
+                      "hash": "a94b740202b097dd33355e0e6c00e54b9395e5e0",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 15241312,
+                          "id": "Q15241312"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P577": [
+                    {
+                      "snaktype": "value",
+                      "property": "P577",
+                      "hash": "fde79ecb015112d2f29229ccc1ec514ed3e71fa2",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2013-10-28T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P248",
+                  "P577"
+                ]
+              }
+            ]
+          }
+        ],
+        "P31": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P31",
+              "hash": "68b641da063c7a716eb1e5a11cfb2cbda1c39ede",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 23006,
+                  "id": "Q23006"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q478740$B6DE06F6-C8B5-4796-A878-B4AB7F3A5237",
+            "rank": "normal"
+          }
+        ],
+        "P227": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P227",
+              "hash": "f848d66b8872e02ec542c27e81c14d616d979121",
+              "datavalue": {
+                "value": "7732913-2",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478740$1505498D-1392-498F-A033-EDB029786097",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "9a24f7c0208b05d6be97077d855671d1dfdbc0dd",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143"
+                ]
+              }
+            ]
+          }
+        ],
+        "P131": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P131",
+              "hash": "33e106b3c4cde48a89e4460952acc1ff1a1064c2",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 6102,
+                  "id": "Q6102"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q478740$084bf028-4338-87d3-9320-a09c90adb391",
+            "rank": "normal"
+          }
+        ],
+        "P373": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P373",
+              "hash": "ec1318cb22cb4eba484f30428ef533e0254b7013",
+              "datavalue": {
+                "value": "Unstruttal",
+                "type": "string"
+              },
+              "datatype": "string"
+            },
+            "type": "statement",
+            "id": "Q478740$3A8D856B-D1E9-455E-A432-E1B9B08CD30D",
+            "rank": "normal"
+          }
+        ],
+        "P94": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P94",
+              "hash": "8f8986c695b38f1f8fbf59215defb28c0645424d",
+              "datavalue": {
+                "value": "Wappen VG Unstruttal.png",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q478740$14680275-0BBF-416F-88BD-152B90D71A17",
+            "rank": "normal"
+          }
+        ],
+        "P214": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P214",
+              "hash": "4c9622d19da5524af46044d904504bac4dd6595a",
+              "datavalue": {
+                "value": "242807106",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478740$22B3E0D2-3979-41F9-BD2A-DA7E95867300",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "4adabe1ec5e35efc45f1817b341d8ff63653ac42",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "0c63dfcae7c405e733b39d2c6bc9a94969530da8",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Verbandsgemeinde_Unstruttal&oldid=191801471",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P856": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P856",
+              "hash": "bc2cca2b4f51236bb9d53fce90edb7534029d4dd",
+              "datavalue": {
+                "value": "http://www.verbgem-unstruttal.de/",
+                "type": "string"
+              },
+              "datatype": "url"
+            },
+            "type": "statement",
+            "id": "Q478740$CA99053D-C614-487B-8F79-CE5B970FA1E4",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "313e4e26f8fd88885373e2eb534534055d4a3e22",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "eb5a7cffd9717f5738901c329c458687ba1d95ae",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Verbandsgemeinde_Unstruttal&oldid=194988659",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P242": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P242",
+              "hash": "f2100dfe0fd2e372e8b97fb9e75cfb47bd438a3c",
+              "datavalue": {
+                "value": "Verbandsgemeinde Unstruttal in BLK.svg",
+                "type": "string"
+              },
+              "datatype": "commonsMedia"
+            },
+            "type": "statement",
+            "id": "Q478740$C9FB34B5-090F-4BD4-BB7D-D0CABCD51003",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "313e4e26f8fd88885373e2eb534534055d4a3e22",
+                "snaks": {
+                  "P143": [
+                    {
+                      "snaktype": "value",
+                      "property": "P143",
+                      "hash": "d38375ffe6fe142663ff55cd783aa4df4301d83d",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 48183,
+                          "id": "Q48183"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P4656": [
+                    {
+                      "snaktype": "value",
+                      "property": "P4656",
+                      "hash": "eb5a7cffd9717f5738901c329c458687ba1d95ae",
+                      "datavalue": {
+                        "value": "https://de.wikipedia.org/w/index.php?title=Verbandsgemeinde_Unstruttal&oldid=194988659",
+                        "type": "string"
+                      },
+                      "datatype": "url"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P143",
+                  "P4656"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1365": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1365",
+              "hash": "4a8bfe3c64029148eb7e9ce845ad2196c8f27f13",
+              "datavalue": {
+                "value": {
+                  "entity-type": "item",
+                  "numeric-id": 884430,
+                  "id": "Q884430"
+                },
+                "type": "wikibase-entityid"
+              },
+              "datatype": "wikibase-item"
+            },
+            "type": "statement",
+            "id": "Q478740$eff00daa-4da5-3378-1c45-7455e78582f3",
+            "rank": "normal"
+          }
+        ],
+        "P10832": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P10832",
+              "hash": "61446c84d30c46802779c5e5ed69ac0f3479b55c",
+              "datavalue": {
+                "value": "E39PBJpdVVb3rMxybg9kQmfyVC",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478740$FFE3F000-8172-436A-BCEB-4D17C97BD33B",
+            "rank": "normal",
+            "references": [
+              {
+                "hash": "2a1b4f5b90e3e03313d681b580ca6c2688829dbc",
+                "snaks": {
+                  "P11797": [
+                    {
+                      "snaktype": "value",
+                      "property": "P11797",
+                      "hash": "3b992a8b1d7f5bfbb710fb1b091cc424c4e3e7db",
+                      "datavalue": {
+                        "value": {
+                          "entity-type": "item",
+                          "numeric-id": 54919,
+                          "id": "Q54919"
+                        },
+                        "type": "wikibase-entityid"
+                      },
+                      "datatype": "wikibase-item"
+                    }
+                  ],
+                  "P214": [
+                    {
+                      "snaktype": "value",
+                      "property": "P214",
+                      "hash": "4c9622d19da5524af46044d904504bac4dd6595a",
+                      "datavalue": {
+                        "value": "242807106",
+                        "type": "string"
+                      },
+                      "datatype": "external-id"
+                    }
+                  ],
+                  "P813": [
+                    {
+                      "snaktype": "value",
+                      "property": "P813",
+                      "hash": "51fdf56b7e0fc7fa09a6d0f553960d0b1e3f3c3d",
+                      "datavalue": {
+                        "value": {
+                          "time": "+2024-06-07T00:00:00Z",
+                          "timezone": 0,
+                          "before": 0,
+                          "after": 0,
+                          "precision": 11,
+                          "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+                        },
+                        "type": "time"
+                      },
+                      "datatype": "time"
+                    }
+                  ]
+                },
+                "snaks-order": [
+                  "P11797",
+                  "P214",
+                  "P813"
+                ]
+              }
+            ]
+          }
+        ],
+        "P1388": [
+          {
+            "mainsnak": {
+              "snaktype": "value",
+              "property": "P1388",
+              "hash": "9f462eb671919721f9c9934fce8e5ec2cece076a",
+              "datavalue": {
+                "value": "150845053000",
+                "type": "string"
+              },
+              "datatype": "external-id"
+            },
+            "type": "statement",
+            "id": "Q478740$A7ADEDEE-0C42-453E-B28D-69C61C028A5F",
+            "rank": "normal"
+          }
+        ]
+      },
+      "sitelinks": {
+        "dewiki": {
+          "site": "dewiki",
+          "title": "Verbandsgemeinde Unstruttal",
+          "badges": []
+        },
+        "enwiki": {
+          "site": "enwiki",
+          "title": "Unstruttal (Verbandsgemeinde)",
+          "badges": []
+        },
+        "eswiki": {
+          "site": "eswiki",
+          "title": "Verbandsgemeinde Unstruttal",
+          "badges": []
+        },
+        "mkwiki": {
+          "site": "mkwiki",
+          "title": "Унштрутал (општинска заедница)",
+          "badges": []
+        },
+        "mswiki": {
+          "site": "mswiki",
+          "title": "Unstruttal (Verbandsgemeinde)",
+          "badges": []
+        },
+        "nlwiki": {
+          "site": "nlwiki",
+          "title": "Verbandsgemeinde Unstruttal",
+          "badges": []
+        },
+        "plwiki": {
+          "site": "plwiki",
+          "title": "Gmina związkowa Unstruttal",
+          "badges": []
+        }
+      }
+    }
+  },
+  "success": 1
+}
