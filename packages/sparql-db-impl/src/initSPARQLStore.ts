@@ -504,6 +504,7 @@ export function initSPARQLDatastorePair(
         ...options,
         defaultPrefix,
         queryBuildOptions,
+        flavour: options.flavour ?? queryBuildOptions.sparqlFlavour,
         walkerOptions: {
           ...walkerOptions,
           ...options.walkerOptions,
@@ -539,6 +540,7 @@ export function initSPARQLDatastorePair(
         ...options,
         defaultPrefix,
         queryBuildOptions,
+        flavour: options.flavour ?? queryBuildOptions.sparqlFlavour,
         walkerOptions: {
           ...walkerOptions,
           ...options.walkerOptions,
@@ -552,11 +554,17 @@ export function initSPARQLDatastorePair(
         constructFetch,
         sparqlOptions,
       );
+      // CONSTRUCT has no LIMIT yet; honour TypedDocumentsSearchOptions.limit
+      // with a post-fetch cap so filterMany({ limit }) matches the Store API.
+      const capped =
+        typeof options.limit === "number"
+          ? results.slice(0, options.limit)
+          : results;
       return effectiveMetaStamping
-        ? results.map(
+        ? capped.map(
             (document) => remapEntityMetaFromPersistence(document) as T,
           )
-        : results;
+        : capped;
     },
     iterableImplementation: {
       listDocuments: (typeName, limit) => {

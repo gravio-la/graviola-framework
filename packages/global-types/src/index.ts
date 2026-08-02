@@ -5,6 +5,7 @@ import type {
   WalkerOptions,
   Entity,
   TypedGraphTraversalFilterOptions,
+  SPARQLFlavour,
 } from "@graviola/edb-core-types";
 import type { NamespaceBuilder } from "@rdfjs/namespace";
 import type { JsonLdContext } from "jsonld-context-parser";
@@ -92,6 +93,11 @@ export type TypedDocumentFilterOptions<T = any> =
     walkerOptions?: Partial<WalkerOptions>;
     /** Maximum recursion depth for nested objects */
     maxRecursion?: number;
+    /**
+     * SPARQL dialect for CONSTRUCT generation. Use `"lateral"` for
+     * SEP-0006 per-parent windowing on include take/skip/orderBy.
+     */
+    flavour?: SPARQLFlavour;
   };
 
 /**

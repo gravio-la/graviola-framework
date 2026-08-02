@@ -4,6 +4,7 @@ export * from "./traverseGraphExtractBySchema";
 export * from "./findFirstInProps";
 export * from "./normalizer";
 export * from "./extractor";
+export * from "./applyOrderBy";
 
 export * from "./validators";
 export * from "./cbdBoundary";

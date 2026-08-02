@@ -76,10 +76,10 @@ export type ConstructResult = {
   /** WHERE clause patterns */
   wherePatterns: SparqlTemplateResult[];
   /**
-   * Pagination metadata for arrays with source marked as "query"
-   * This indicates pagination was applied at the SPARQL query stage
+   * Pagination metadata for arrays. `_stage` is `"query"` when LATERAL
+   * already sliced; `"extraction"` when the app layer must sort+slice.
    */
-  paginationMetadata: Map<string, PaginationMetadata & { source: "query" }>;
+  paginationMetadata: Map<string, PaginationMetadata>;
 };
 
 /**
@@ -402,8 +402,10 @@ function createNestedContext(
   return {
     ...ctx,
     schema: nestedSchema || ctx.schema,
+    // Do NOT spread parent include/select/omit/where — otherwise
+    // include.contains { take } incorrectly paginates nested Place.contains
+    // under partOf (LATERAL inside OPTIONAL → empty/wrong results).
     filterOptions: {
-      ...ctx.filterOptions,
       ...nestedFilterOptions,
     },
     depth: ctx.depth + 1,
@@ -433,49 +435,27 @@ function hasOrderBy(paginationMeta: PaginationOptions | undefined): boolean {
 }
 
 /**
- * Create a paginated SUBSELECT with ORDER BY for array relationships
+ * Build the inner SELECT for a LATERAL per-parent window.
  *
- * Uses the SPARQL query builder's SELECT to build a proper SUBSELECT.
- * The SUBSELECT:
- * 1. Selects the array items with proper ordering
- * 2. Applies LIMIT and OFFSET for pagination
- * 3. Includes necessary properties for ORDER BY
+ * Critical: project both the correlating anchor (`subject`) and the item
+ * (`objectVar`). Non-projected anchors are renamed before LATERAL inject and
+ * become unbound — the same global-LIMIT failure as a plain SUBSELECT.
  *
- * Example output:
- * {
- *   SELECT ?friend WHERE {
- *     <subject> :friends ?friend .
- *     OPTIONAL { ?friend :name ?name }
- *   }
- *   ORDER BY ?name
- *   LIMIT 10
- *   OFFSET 5
- * }
- *
- * @param subject - The subject node
- * @param predicate - The property predicate
- * @param objectVar - Variable for the array items
- * @param itemSchema - Schema for array items
- * @param paginationMeta - Pagination metadata with orderBy, take, skip
- * @param ctx - Query construction context
- * @returns SPARQL SUBSELECT query using SELECT builder
+ * @see docs/sparql-lateral-windowing.md
  */
-function createPaginatedSubselect(
+function createPaginatedLateralSelect(
   subject: Variable,
-  predicate: string | NamedNode,
   objectVar: Variable,
-  itemSchema: JSONSchema7,
+  edgePattern: SparqlTemplateResult,
   paginationMeta: PaginationOptions | undefined,
   ctx: QueryConstructionContext,
 ): SparqlTemplateResult {
-  // Start with SELECT builder - select the object variable (dots required by SPARQL syntax)
-  let query = SELECT`${objectVar}`
-    .WHERE`${subject} ${predicate} ${objectVar} .`;
+  // Project anchor + item so LATERAL inject scopes LIMIT per outer row
+  let query = SELECT`${subject} ${objectVar}`.WHERE`${edgePattern}`;
 
-  // Track ORDER BY property variables so we can reuse them between WHERE and ORDER BY
   const orderByVars = new Map<string, Variable>();
 
-  if (paginationMeta.orderBy) {
+  if (paginationMeta?.orderBy) {
     const normalized = normalizeOrderBy(paginationMeta.orderBy);
 
     for (const clause of normalized) {
@@ -483,14 +463,9 @@ function createPaginatedSubselect(
         const propPredicate = createPredicate(property, ctx.prefixMap);
         const propVar = createUniqueVar(property, ctx);
         orderByVars.set(property, propVar);
-
         query = query.WHERE`OPTIONAL { ${objectVar} ${propPredicate} ${propVar} . }`;
       }
     }
-  }
-
-  if (paginationMeta.orderBy) {
-    const normalized = normalizeOrderBy(paginationMeta.orderBy);
 
     const orderEntries: Array<{ propVar: Variable; isDesc: boolean }> = [];
     for (const clause of normalized) {
@@ -516,17 +491,14 @@ function createPaginatedSubselect(
     }
   }
 
-  // Apply LIMIT if specified
-  if (paginationMeta.take !== undefined) {
+  if (paginationMeta?.take !== undefined) {
     query = query.LIMIT(paginationMeta.take);
   }
 
-  // Apply OFFSET if specified
-  if (paginationMeta.skip !== undefined && paginationMeta.skip > 0) {
+  if (paginationMeta?.skip !== undefined && paginationMeta.skip > 0) {
     query = query.OFFSET(paginationMeta.skip);
   }
 
-  // Return the query - when used in a WHERE clause, it will automatically be wrapped in { }
   return sparql`${query}`;
 }
 
@@ -568,15 +540,7 @@ export function normalizedSchema2construct(
 
   const constructPatterns: SparqlTemplateResult[] = [];
   const whereParts: WherePart[] = [];
-  const paginationMetadata = new Map<
-    string,
-    {
-      skip?: number;
-      take?: number;
-      orderBy?: OrderByClause | OrderByClause[];
-      source: "query";
-    }
-  >();
+  const paginationMetadata = new Map<string, PaginationMetadata>();
 
   // Create subject variable
   const subjectVar = df.variable("subject");
@@ -733,11 +697,7 @@ export function normalizedSchema2construct(
 
         // Collect pagination metadata if present
         if (propertyPatterns.pagination) {
-          // Mark with source: "query" to tell extractor not to paginate again
-          paginationMetadata.set(propertyName, {
-            ...propertyPatterns.pagination,
-            source: "query", // Critical: prevents double-pagination!
-          });
+          paginationMetadata.set(propertyName, propertyPatterns.pagination);
         }
       },
     );
@@ -787,7 +747,7 @@ function createPropertyPatterns(
 ): {
   construct: SparqlTemplateResult[];
   whereParts: WherePart[];
-  pagination?: PaginationOptions;
+  pagination?: PaginationMetadata;
   objectVar?: Variable;
 } {
   const construct: SparqlTemplateResult[] = [];
@@ -852,27 +812,33 @@ function createPropertyPatterns(
       ? propertySchema.items[0]
       : propertySchema.items;
 
-    // Check if we need a SUBSELECT for pagination with ORDER BY
-    const needsSubselect =
-      paginationMeta &&
-      (paginationMeta.take !== undefined || hasOrderBy(paginationMeta));
+    // Check if we need LATERAL pagination (flavour: "lateral" only).
+    // Never emit an uncorrelated SPARQL 1.1 SUBSELECT — LIMIT would be global.
+    const wantsPagination =
+      paginationMeta !== undefined &&
+      (paginationMeta.take !== undefined ||
+        (paginationMeta.skip !== undefined && paginationMeta.skip > 0) ||
+        hasOrderBy(paginationMeta));
+
+    const useLateral = ctx.flavour === "lateral" && wantsPagination === true;
 
     const isRequired = ctx.schema.required?.includes(propertyName) || false;
     const relationshipPatterns: SparqlTemplateResult[] = [];
 
-    if (needsSubselect) {
-      // Use SUBSELECT for pagination with ORDER BY
-      const subselect = createPaginatedSubselect(
+    if (useLateral) {
+      // LATERAL { SELECT ?subject ?item WHERE { <edge> } ORDER BY … LIMIT }
+      // Edge uses inverse WHERE when x-inverseOf is set.
+      // Must be a required WherePart — OPTIONAL { LATERAL } has empty LHS.
+      const lateralSelect = createPaginatedLateralSelect(
         subject,
-        predicate,
         objectVar,
-        itemSchema as JSONSchema7,
+        whereTriplePattern,
         paginationMeta,
         ctx,
       );
-      relationshipPatterns.push(subselect);
+      relationshipPatterns.push(sparql`LATERAL { ${lateralSelect} }`);
     } else {
-      // Regular pattern without pagination (use inverse WHERE when x-inverseOf)
+      // Plain triple (or inverse). take/skip/orderBy handled at extraction.
       relationshipPatterns.push(whereTriplePattern);
     }
 
@@ -933,17 +899,24 @@ function createPropertyPatterns(
     const hasFilterAnywhere =
       whereClause !== undefined || hasFilterInSubtree(includeValue);
 
-    // Create WHERE part with proper nesting
+    // LATERAL must not be wrapped in OPTIONAL (empty LHS → global LIMIT).
     const wherePart: WherePart = {
-      required: isRequired || hasFilterAnywhere,
+      required: useLateral || isRequired || hasFilterAnywhere,
       whereTemplates: relationshipPatterns,
       children: nestedWhereParts.length > 0 ? nestedWhereParts : undefined,
     };
 
+    const paginationWithStage: PaginationMetadata | undefined = paginationMeta
+      ? {
+          ...paginationMeta,
+          _stage: useLateral ? "query" : "extraction",
+        }
+      : undefined;
+
     return {
       construct,
       whereParts: [wherePart],
-      pagination: paginationMeta,
+      pagination: paginationWithStage,
       objectVar,
     };
   } else if (propertySchema.type === "object" && propertySchema.properties) {

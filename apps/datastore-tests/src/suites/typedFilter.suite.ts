@@ -405,7 +405,7 @@ export function runTypedFilterSuite(
 
         expect(result.length).toBe(1);
         const names = result[0].tags.map((t: { name: string }) => t.name);
-        expect(new Set(names)).toEqual(new Set(LAPTOP_TAG_NAMES));
+        expect(names).toEqual(["Featured", "New", "Sale"]);
       });
 
       test("include: { tags: { orderBy: { name: 'desc' } } } — returns all Laptop tags", async () => {
@@ -417,7 +417,7 @@ export function runTypedFilterSuite(
 
         expect(result.length).toBe(1);
         const names = result[0].tags.map((t: { name: string }) => t.name);
-        expect(new Set(names)).toEqual(new Set(LAPTOP_TAG_NAMES));
+        expect(names).toEqual(["Sale", "New", "Featured"]);
       });
 
       test("include: { tags: { orderBy: [ { name: 'asc' }, { description: 'asc' } ] } } — multiplicity", async () => {
@@ -451,7 +451,7 @@ export function runTypedFilterSuite(
         expect(new Set(names)).toEqual(new Set(LAPTOP_TAG_NAMES));
       });
 
-      test("include: { tags: { take: 2, orderBy: { name: 'asc' } } } — limits tag array length", async () => {
+      test("include: { tags: { take: 2, orderBy: { name: 'asc' } } } — windowed page", async () => {
         const store = getStore();
         const result = await store.filterMany("Item", {
           where: { name: { equals: "Laptop" } },
@@ -466,11 +466,29 @@ export function runTypedFilterSuite(
         expect(result.length).toBe(1);
         expect(result[0].tags.length).toBe(2);
         const names = result[0].tags.map((t: { name: string }) => t.name);
-        names.forEach((n) =>
-          expect((LAPTOP_TAG_NAMES as readonly string[]).includes(n)).toBe(
-            true,
-          ),
-        );
+        // Featured, New, Sale — first two ascending
+        expect(names).toEqual(["Featured", "New"]);
+      });
+
+      test("include tags take+orderBy with flavour lateral", async () => {
+        const store = getStore();
+        const result = await store.filterMany("Item", {
+          where: { name: { equals: "Laptop" } },
+          include: {
+            tags: {
+              take: 2,
+              orderBy: { name: "asc" as const },
+            },
+          },
+          flavour: "lateral",
+        } as any);
+
+        expect(result.length).toBe(1);
+        expect(result[0].tags.length).toBe(2);
+        expect(result[0].tags.map((t: { name: string }) => t.name)).toEqual([
+          "Featured",
+          "New",
+        ]);
       });
 
       test("filterOne — include tags with multi-key orderBy — multiplicity", async () => {

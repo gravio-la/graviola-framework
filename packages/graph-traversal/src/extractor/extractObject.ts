@@ -5,6 +5,7 @@ import type clownface from "clownface";
 import type { ExtractionContext } from "./types";
 import { expandPropertyName } from "./expandPropertyName";
 import { extractLiteral } from "./extractLiteral";
+import { sortObjectArrayByOrderBy } from "../applyOrderBy";
 
 /**
  * Type guard to check if a value is a nested filter options object (not boolean)
@@ -236,44 +237,28 @@ function extractArrayProperty(
     ? (includeValue as any)
     : undefined;
 
-  // Determine if we should apply pagination at extraction stage
-  const shouldPaginate =
-    paginationOptions &&
-    (paginationOptions.take !== undefined ||
-      paginationOptions.skip !== undefined) &&
-    (!paginationOptions._stage || paginationOptions._stage === "extraction");
-
-  let itemsToExtract: clownface.GraphPointer[];
-
-  // Collect all pointers
+  // Always collect all pointers first. Slice only after extract+sort —
+  // RDF dataset iteration order is arbitrary, so take/skip on unsorted
+  // pointers would return an arbitrary window.
   const allPointers: clownface.GraphPointer[] = [];
   node.forEach((pointer) => {
     allPointers.push(pointer);
   });
 
-  if (shouldPaginate) {
-    const { skip = 0, take } = paginationOptions;
+  const shouldSliceHere =
+    paginationOptions &&
+    (paginationOptions.take !== undefined ||
+      paginationOptions.skip !== undefined) &&
+    (!paginationOptions._stage || paginationOptions._stage === "extraction");
 
-    itemsToExtract = allPointers.slice(skip, take ? skip + take : undefined);
-
-    logger.debug("Applying pagination at extraction stage", {
-      total: allPointers.length,
-      skip,
-      take,
-      processing: itemsToExtract.length,
-    });
-  } else {
-    if (paginationOptions?._stage === "query") {
-      logger.debug(
-        "Pagination already applied at query stage, skipping extraction pagination",
-        {
-          total: node.values.length,
-        },
-      );
-    }
-
-    itemsToExtract = allPointers;
+  if (paginationOptions?._stage === "query") {
+    logger.debug(
+      "Pagination already applied at query stage, skipping extraction pagination",
+      { total: allPointers.length },
+    );
   }
+
+  const itemsToExtract = allPointers;
 
   // Determine item schema
   if (!schema.items || typeof schema.items === "boolean") {
@@ -294,7 +279,7 @@ function extractArrayProperty(
 
   // Extract each item according to its schema
   // Each pointer maintains the clownface dataset context
-  const items = itemsToExtract
+  let items = itemsToExtract
     .map((itemPointer) => {
       if (
         (itemSchema as JSONSchema7).type === "object" ||
@@ -312,6 +297,28 @@ function extractArrayProperty(
       }
     })
     .filter((item) => item !== undefined);
+
+  // CONSTRUCT destroys triple order — restore Prisma orderBy after extraction
+  if (paginationOptions?.orderBy && items.length > 1) {
+    items = sortObjectArrayByOrderBy(
+      items as Record<string, unknown>[],
+      paginationOptions.orderBy,
+    );
+  }
+
+  if (shouldSliceHere) {
+    const skip = paginationOptions.skip ?? 0;
+    const end =
+      paginationOptions.take !== undefined
+        ? skip + paginationOptions.take
+        : undefined;
+    logger.debug("Applying pagination at extraction stage (after sort)", {
+      total: items.length,
+      skip,
+      take: paginationOptions.take,
+    });
+    items = items.slice(skip, end);
+  }
 
   return options.omitEmptyArrays && items.length === 0 ? undefined : items;
 }

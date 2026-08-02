@@ -46,7 +46,7 @@ describe("createPaginatedSubselect - ORDER BY", () => {
       "http://example.com/s",
       undefined,
       normalized,
-      { filterOptions },
+      { filterOptions, flavour: "lateral" },
     );
 
     const where = getWhereString(result);
@@ -84,7 +84,7 @@ describe("createPaginatedSubselect - ORDER BY", () => {
       "http://example.com/s",
       undefined,
       normalized,
-      { filterOptions },
+      { filterOptions, flavour: "lateral" },
     );
 
     const where = getWhereString(result);
@@ -124,7 +124,7 @@ describe("createPaginatedSubselect - ORDER BY", () => {
       "http://example.com/s",
       undefined,
       normalized,
-      { filterOptions },
+      { filterOptions, flavour: "lateral" },
     );
 
     const where = getWhereString(result);
@@ -170,7 +170,7 @@ describe("createPaginatedSubselect - ORDER BY", () => {
       "http://example.com/s",
       undefined,
       normalized,
-      { filterOptions },
+      { filterOptions, flavour: "lateral" },
     );
 
     const where = getWhereString(result);
@@ -211,7 +211,7 @@ describe("createPaginatedSubselect - ORDER BY", () => {
       "http://example.com/s",
       undefined,
       normalized,
-      { filterOptions },
+      { filterOptions, flavour: "lateral" },
     );
 
     const where = getWhereString(result);
@@ -250,7 +250,7 @@ describe("createPaginatedSubselect - ORDER BY", () => {
       "http://example.com/s",
       undefined,
       normalized,
-      { filterOptions },
+      { filterOptions, flavour: "lateral" },
     );
 
     const where = getWhereString(result);
@@ -287,7 +287,7 @@ describe("createPaginatedSubselect - ORDER BY", () => {
       "http://example.com/s",
       undefined,
       normalized,
-      { filterOptions },
+      { filterOptions, flavour: "lateral" },
     );
 
     const where = getWhereString(result);
@@ -335,6 +335,7 @@ describe("createPaginatedSubselect - ORDER BY", () => {
           schema: "http://schema.org/",
         },
         filterOptions,
+        flavour: "lateral",
       },
     );
 
@@ -374,7 +375,7 @@ describe("createPaginatedSubselect - ORDER BY", () => {
       "http://example.com/s",
       undefined,
       normalized,
-      { filterOptions },
+      { filterOptions, flavour: "lateral" },
     );
 
     const where = getWhereString(result);

@@ -307,10 +307,10 @@ describe("normalizedSchema2construct - Step 3: Pagination with Query-Stage Marki
     // Check if pagination was detected (normalizer adds x-pagination)
     const friendsProperty = normalized.properties?.friends as JSONSchema7;
     if (friendsProperty && (friendsProperty as any)["x-pagination"]) {
-      // Pagination metadata should be marked with source: "query"
+      // Pagination metadata should be marked with _stage: "extraction"
       const pagMeta = result.paginationMetadata.get("friends");
       expect(pagMeta).toBeDefined();
-      expect(pagMeta?.source).toBe("query");
+      expect(pagMeta?._stage).toBe("extraction");
     }
   });
 
@@ -344,7 +344,7 @@ describe("normalizedSchema2construct - Step 3: Pagination with Query-Stage Marki
 
       if (pagMeta) {
         // CRITICAL: source must be "query" so extractor skips pagination
-        expect(pagMeta.source).toBe("query");
+        expect(pagMeta._stage).toBe("extraction");
         expect(pagMeta.take).toBe(20);
       }
     }
