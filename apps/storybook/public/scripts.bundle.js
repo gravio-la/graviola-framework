@@ -7181,12 +7181,12 @@ var scripts = (function (exports) {
 
     // Appends the item to the array and returns the array
     function appendTo(array, item) {
-      return array.push(item), array;
+      return (array.push(item), array);
     }
 
     // Appends the items to the array and returns the array
     function appendAllTo(array, items) {
-      return array.push.apply(array, items), array;
+      return (array.push.apply(array, items), array);
     }
 
     // Extends a base object with properties of other objects
@@ -7418,9 +7418,8 @@ var scripts = (function (exports) {
       for (
         var i = 0, j = 0, l = listItems.length, listTriples = Array(l * 2);
         i < l;
-
       )
-        (listTriples[j++] = triple(
+        ((listTriples[j++] = triple(
           head,
           Parser.factory.namedNode(RDF_FIRST),
           listItems[i],
@@ -7429,7 +7428,7 @@ var scripts = (function (exports) {
             head,
             Parser.factory.namedNode(RDF_REST),
             (head = ++i < l ? blank() : Parser.factory.namedNode(RDF_NIL)),
-          ));
+          )));
 
       // Return the list's identifier, its triples, and the triples associated with its items
       return { entity: list, triples: appendAllTo(listTriples, triples) };
@@ -9405,15 +9404,35 @@ var scripts = (function (exports) {
     try {
       return parser.parse(query);
     } catch (err) {
-      if (err.toString().indexOf("SPARQL*") != -1) {
+      var errStr = err.toString();
+      if (errStr.indexOf("SPARQL*") != -1) {
         return {
           type: "query",
           queryType: "CONSTRUCT",
           sparqlStar: true,
         };
-      } else {
-        throw "Couldn't get query details: " + err.toString();
       }
+      // sparql.js does not know SEP-0006 LATERAL; Oxigraph ≥0.3.11 executes it natively.
+      // Infer queryType so processQueryResponse still serializes results correctly.
+      if (/\bLATERAL\b/i.test(query) || /\bLATERAL\b/i.test(errStr)) {
+        var stripped = query.replace(/#[^\n]*/g, "");
+        if (
+          /\b(INSERT|DELETE|LOAD|CLEAR|CREATE|DROP|COPY|MOVE|ADD)\b/i.test(
+            stripped,
+          )
+        ) {
+          return { type: "update" };
+        }
+        var queryType = "SELECT";
+        if (/\bCONSTRUCT\b/i.test(stripped)) queryType = "CONSTRUCT";
+        else if (/\bASK\b/i.test(stripped)) queryType = "ASK";
+        return {
+          type: "query",
+          queryType: queryType,
+          lateral: true,
+        };
+      }
+      throw "Couldn't get query details: " + errStr;
     }
   }
   /**

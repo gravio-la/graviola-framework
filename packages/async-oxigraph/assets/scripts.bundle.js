@@ -9404,15 +9404,35 @@ var scripts = (function (exports) {
     try {
       return parser.parse(query);
     } catch (err) {
-      if (err.toString().indexOf("SPARQL*") != -1) {
+      var errStr = err.toString();
+      if (errStr.indexOf("SPARQL*") != -1) {
         return {
           type: "query",
           queryType: "CONSTRUCT",
           sparqlStar: true,
         };
-      } else {
-        throw "Couldn't get query details: " + err.toString();
       }
+      // sparql.js does not know SEP-0006 LATERAL; Oxigraph ≥0.3.11 executes it natively.
+      // Infer queryType so processQueryResponse still serializes results correctly.
+      if (/\bLATERAL\b/i.test(query) || /\bLATERAL\b/i.test(errStr)) {
+        var stripped = query.replace(/#[^\n]*/g, "");
+        if (
+          /\b(INSERT|DELETE|LOAD|CLEAR|CREATE|DROP|COPY|MOVE|ADD)\b/i.test(
+            stripped,
+          )
+        ) {
+          return { type: "update" };
+        }
+        var queryType = "SELECT";
+        if (/\bCONSTRUCT\b/i.test(stripped)) queryType = "CONSTRUCT";
+        else if (/\bASK\b/i.test(stripped)) queryType = "ASK";
+        return {
+          type: "query",
+          queryType: queryType,
+          lateral: true,
+        };
+      }
+      throw "Couldn't get query details: " + errStr;
     }
   }
   /**
