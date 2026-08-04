@@ -1,5 +1,9 @@
 import { Variable } from "@rdfjs/types";
-import { SPARQLFlavour } from "@graviola/edb-core-types";
+import type {
+  SPARQLFlavour,
+  ResolvedSparqlFeatureFlags,
+} from "@graviola/edb-core-types";
+import { resolveSparqlFeatures } from "@graviola/edb-core-utils";
 import { WITH } from "@tpluscode/sparql-builder";
 import type { DeleteInsertQuery } from "@tpluscode/sparql-builder/lib/DeleteBuilder.js";
 import type { InsertQuery } from "@tpluscode/sparql-builder/lib/InsertBuilder.js";
@@ -7,6 +11,7 @@ import type { InsertQuery } from "@tpluscode/sparql-builder/lib/InsertBuilder.js
 type SPARQLWherePartOptions = {
   useBind?: boolean;
   flavour?: SPARQLFlavour;
+  features?: ResolvedSparqlFeatureFlags;
 };
 
 export const makeSPARQLWherePart = (
@@ -20,8 +25,8 @@ export const makeSPARQLWherePart = (
   if (entityIRIList.length === 0) {
     throw new Error("entityIRIList is empty, would result in invalid SPARQL");
   }
-  // Determine whether to use BIND or VALUES based on flavour and options
-  const shouldUseBind = options?.useBind ?? options?.flavour === "oxigraph";
+  const features = options?.features ?? resolveSparqlFeatures(options?.flavour);
+  const shouldUseBind = options?.useBind ?? features.bindSingleSubject;
 
   if (entityIRIList.length === 1 && shouldUseBind) {
     // Use BIND for single entity IRI (better performance for Oxigraph)
@@ -30,8 +35,7 @@ export const makeSPARQLWherePart = (
       ? ` BIND(${entityIRIValue} AS ${s}) . ${s} a <${typeIRI}> . `
       : ` BIND(${entityIRIValue} AS ${s}) . ${s} a ?type . `;
   } else {
-    // Use VALUES for multiple entity IRIs or when flavour is not oxigraph
-    // VALUES avoids SP031 error in Virtuoso and works well for all implementations
+    // Use VALUES for multiple entity IRIs or when BIND is not enabled
     const entityIRIValueString = `<${entityIRIList.join("> <")}>`;
     return typeIRI
       ? ` VALUES ${s} { ${entityIRIValueString} } ${s} a <${typeIRI}> . `

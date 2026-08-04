@@ -213,7 +213,10 @@ export interface SparqlBuildOptions {
   typeIRItoTypeName: IRIToStringFn;
   primaryFields: PrimaryFieldDeclaration;
   primaryFieldExtracts: PrimaryFieldExtractDeclaration;
+  /** Engine/vendor profile id — resolved to {@link SparqlFeatureFlags} via resolveSparqlFeatures */
   sparqlFlavour?: SPARQLFlavour;
+  /** Partial overrides merged on top of the flavour’s default feature bag */
+  sparqlFeatures?: Partial<SparqlFeatureFlags>;
 }
 export interface SelectFetchOptions {
   withHeaders?: boolean;
@@ -303,6 +306,7 @@ export type SparqlEndpoint = {
     | "oxigraph"
     | "worker"
     | "blazegraph"
+    | "fuseki"
     | "virtuoso"
     | "qlever"
     | "rest";
@@ -310,21 +314,38 @@ export type SparqlEndpoint = {
 };
 
 /**
- * SPARQL dialect / feature profile for query generation.
+ * Additive SPARQL engine capabilities. Resolved from {@link SPARQLFlavour}
+ * via `resolveSparqlFeatures` (in `@graviola/edb-core-utils` / remote-query);
+ * query code branches on these flags, not on the flavour string.
+ */
+export type SparqlFeatureFlags = {
+  /** SEP-0006 LATERAL nested include take/skip/orderBy (Oxigraph ≥ 0.3.11, Jena ≥ 4.7) */
+  lateralNestedPagination?: boolean;
+  /** Single-IRI subject via BIND (Oxigraph) */
+  bindSingleSubject?: boolean;
+  /** Oxigraph empty-group COUNT workaround */
+  oxigraphEmptyGroupCount?: boolean;
+  /** Blazegraph FTS search profile hint */
+  blazegraphFulltextSearch?: boolean;
+};
+
+export type ResolvedSparqlFeatureFlags = Required<SparqlFeatureFlags>;
+
+/**
+ * Engine/vendor profile id for SPARQL query generation.
+ * Maps to a {@link SparqlFeatureFlags} bag — not a single feature name.
  *
- * - `default` / `oxigraph` / `blazegraph` / `allegro` — SPARQL 1.1 only.
- *   Nested `include` pagination (`take`/`skip`/`orderBy`) is applied at
- *   extraction time; CONSTRUCT never emits an uncorrelated SUBSELECT.
- * - `lateral` — emit SEP-0006 `LATERAL { SELECT ?anchor ?item … ORDER BY … LIMIT }`
- *   for per-parent windowing (Jena ≥ 4.7, Oxigraph ≥ 0.3.11). Not the same as
- *   the SPARQL 1.2 Working Draft; see `docs/sparql-lateral-windowing.md`.
+ * - `default` / `allegro` — SPARQL 1.1; nested pagination at extraction
+ * - `oxigraph` — BIND + COUNT quirk + LATERAL nested pagination
+ * - `jena` — LATERAL nested pagination (Fuseki ≥ 4.7)
+ * - `blazegraph` — FTS search profile; nested pagination at extraction
  */
 export type SPARQLFlavour =
   | "default"
   | "oxigraph"
   | "blazegraph"
   | "allegro"
-  | "lateral";
+  | "jena";
 
 export type WorkerProvider = Record<
   NonNullable<SparqlEndpoint["provider"]>,
@@ -444,8 +465,8 @@ export type PaginationOptions = {
 export type PaginationMetadata = PaginationOptions & {
   /**
    * Where pagination was / should be applied:
-   * - `"extraction"` — sort+slice in graph-traversal (default for SPARQL 1.1 flavours)
-   * - `"query"` — already sliced by LATERAL SELECT LIMIT (`flavour: "lateral"`)
+   * - `"extraction"` — sort+slice in graph-traversal (default when LATERAL is off)
+   * - `"query"` — already sliced by LATERAL SELECT LIMIT (`lateralNestedPagination`)
    */
   _stage?: "query" | "extraction";
 };

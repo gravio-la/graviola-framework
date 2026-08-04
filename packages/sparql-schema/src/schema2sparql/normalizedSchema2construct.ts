@@ -25,7 +25,10 @@ import type {
   GraphTraversalFilterOptions,
   SPARQLFlavour,
   PaginationOptions,
+  ResolvedSparqlFeatureFlags,
+  SparqlFeatureFlags,
 } from "@graviola/edb-core-types";
+import { resolveSparqlFeatures } from "@graviola/edb-core-utils";
 import df from "@rdfjs/data-model";
 import type { NamedNode, Variable } from "@rdfjs/types";
 import get from "lodash-es/get";
@@ -48,8 +51,10 @@ export type QueryConstructionContext = {
   schema: NormalizedSchema;
   /** Filter options (select, include, omit, where) carried through recursion */
   filterOptions: GraphTraversalFilterOptions;
-  /** SPARQL dialect for BIND/VALUES and filter generation */
+  /** SPARQL engine profile id (for FilterContext / diagnostics) */
   flavour: SPARQLFlavour;
+  /** Resolved dialect features — branch on these, not flavour */
+  features: ResolvedSparqlFeatureFlags;
   /** Prefix mappings for property names */
   prefixMap: Prefixes;
   /** Current recursion depth */
@@ -399,6 +404,21 @@ function createNestedContext(
   const nestedFilterOptions: Partial<GraphTraversalFilterOptions> =
     extractNestedFilterOptions(includeValue);
 
+  const branchMaxRecursion =
+    typeof includeValue === "object" &&
+    includeValue !== null &&
+    typeof (includeValue as { maxRecursion?: number }).maxRecursion === "number"
+      ? (includeValue as { maxRecursion: number }).maxRecursion
+      : undefined;
+
+  // Cap remaining walk depth for this include branch (relative to parent depth).
+  // Always allow at least one level so the related entity's own scalars / orderBy
+  // keys can be projected; `0` means no further named-entity expansion.
+  const maxRecursion =
+    branchMaxRecursion !== undefined
+      ? Math.min(ctx.maxRecursion, ctx.depth + Math.max(branchMaxRecursion, 1))
+      : ctx.maxRecursion;
+
   return {
     ...ctx,
     schema: nestedSchema || ctx.schema,
@@ -407,8 +427,10 @@ function createNestedContext(
     // under partOf (LATERAL inside OPTIONAL → empty/wrong results).
     filterOptions: {
       ...nestedFilterOptions,
+      ...(branchMaxRecursion === 0 ? { includeRelationsByDefault: false } : {}),
     },
     depth: ctx.depth + 1,
+    maxRecursion,
   };
 }
 
@@ -522,14 +544,18 @@ export function normalizedSchema2construct(
     resolveInverseMaxDepth?: number;
     prefixMap?: Prefixes; // Prefix mappings (e.g., { "foaf": "http://xmlns.com/foaf/0.1/" })
     filterOptions?: GraphTraversalFilterOptions; // Filter options for nested queries
-    flavour?: SPARQLFlavour; // SPARQL flavour for BIND vs VALUES optimization
+    flavour?: SPARQLFlavour; // Engine profile — resolved to features unless sparqlFeatures given
+    sparqlFeatures?: Partial<SparqlFeatureFlags>;
   },
 ): ConstructResult {
   // Create query construction context
+  const flavour = options?.flavour || "default";
+  const features = resolveSparqlFeatures(flavour, options?.sparqlFeatures);
   const ctx: QueryConstructionContext = {
     schema: normalizedSchema,
     filterOptions: options?.filterOptions || {},
-    flavour: options?.flavour || "default",
+    flavour,
+    features,
     prefixMap: options?.prefixMap || {},
     depth: 0,
     maxRecursion: options?.maxRecursion || 4,
@@ -552,7 +578,7 @@ export function normalizedSchema2construct(
       subjectIRI,
       subjectVar,
       {
-        flavour: options?.flavour,
+        features,
         prefixMap: options?.prefixMap,
       },
     );
@@ -573,7 +599,7 @@ export function normalizedSchema2construct(
 
   if (!isNilOrEmpty(typeIRIs)) {
     const typeBindPattern = createBindOrValuesPattern(typeIRIs, typeVar, {
-      flavour: options?.flavour,
+      features,
       prefixMap: options?.prefixMap,
     });
     // Type with VALUES is required
@@ -812,7 +838,7 @@ function createPropertyPatterns(
       ? propertySchema.items[0]
       : propertySchema.items;
 
-    // Check if we need LATERAL pagination (flavour: "lateral" only).
+    // Check if we need LATERAL pagination (SEP-0006 feature).
     // Never emit an uncorrelated SPARQL 1.1 SUBSELECT — LIMIT would be global.
     const wantsPagination =
       paginationMeta !== undefined &&
@@ -820,7 +846,8 @@ function createPropertyPatterns(
         (paginationMeta.skip !== undefined && paginationMeta.skip > 0) ||
         hasOrderBy(paginationMeta));
 
-    const useLateral = ctx.flavour === "lateral" && wantsPagination === true;
+    const useLateral =
+      ctx.features.lateralNestedPagination && wantsPagination === true;
 
     const isRequired = ctx.schema.required?.includes(propertyName) || false;
     const relationshipPatterns: SparqlTemplateResult[] = [];

@@ -226,6 +226,7 @@ describe("normalizedSchema2construct - Multiple Subjects", () => {
       undefined,
       schema,
       {
+        flavour: "oxigraph",
         filterOptions: {
           include: {
             friends: { take: 10, orderBy: { name: "asc" } },
@@ -236,10 +237,11 @@ describe("normalizedSchema2construct - Multiple Subjects", () => {
 
     const whereQuery = result.wherePatterns.map((p) => p.toString()).join(" ");
 
-    // Should handle arrays with pagination for multiple subjects
+    // Multi-subject VALUES + LATERAL per-parent window (oxigraph profile)
     expect(whereQuery).toContain("VALUES");
     expect(whereQuery).toContain("?subject");
     expect(whereQuery).toMatch(/\?friends_\d+/);
+    expect(whereQuery).toContain("LATERAL");
     expect(whereQuery).toContain("SELECT");
     expect(whereQuery).toContain("LIMIT 10");
   });

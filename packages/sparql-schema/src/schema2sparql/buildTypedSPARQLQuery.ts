@@ -18,6 +18,7 @@ import type {
   Prefixes,
   FilterValidationMode,
   SPARQLFlavour,
+  SparqlFeatureFlags,
 } from "@graviola/edb-core-types";
 import { normalizeSchema } from "@graviola/edb-graph-traversal";
 import { normalizedSchema2construct } from "./normalizedSchema2construct";
@@ -42,8 +43,10 @@ export interface BuildFilterableSPARQLQueryOptions<
   excludedProperties?: string[];
   /** Runtime validation mode for filters (from core-types) */
   filterValidationMode?: FilterValidationMode;
-  /** SPARQL flavour for optimization (e.g., 'oxigraph' uses BIND for single subjects) */
+  /** Engine profile id (resolved to features via resolveSparqlFeatures) */
   flavour?: SPARQLFlavour;
+  /** Partial feature overrides merged on top of the flavour defaults */
+  sparqlFeatures?: Partial<SparqlFeatureFlags>;
 }
 
 /**
@@ -115,6 +118,7 @@ export function buildFilterableSPARQLQuery<T = any>(
     excludedProperties = [],
     filterValidationMode,
     flavour,
+    sparqlFeatures,
     ...filterOptions
   } = options;
 
@@ -137,6 +141,7 @@ export function buildFilterableSPARQLQuery<T = any>(
       excludedProperties,
       filterOptions,
       flavour,
+      sparqlFeatures,
     },
   );
 

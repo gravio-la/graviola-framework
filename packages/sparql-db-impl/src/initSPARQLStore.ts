@@ -50,6 +50,7 @@ import type {
   StoreListQuery,
 } from "@graviola/store-core";
 import { createChangeBus } from "@graviola/store-core";
+import { resolveSparqlFeatures } from "@graviola/edb-core-utils";
 
 import type { SPARQLDataStoreConfig } from "./SPARQLDataStoreConfig";
 
@@ -95,6 +96,7 @@ export function initSPARQLDatastorePair(
     enableInversePropertiesFeature,
     defaultUpdateGraph,
     metaStamping,
+    defaultFilterOptions,
   } = dataStoreConfig;
 
   const effectiveMetaStamping = metaStamping
@@ -123,6 +125,13 @@ export function initSPARQLDatastorePair(
 
   const typeIRItoTypeName = queryBuildOptions.typeIRItoTypeName;
   const flavour = queryBuildOptions.sparqlFlavour ?? "default";
+  const features = resolveSparqlFeatures(
+    flavour,
+    queryBuildOptions.sparqlFeatures,
+  );
+  const nestedPaginationStage = features.lateralNestedPagination
+    ? ("query" as const)
+    : ("extraction" as const);
 
   const changeBus = createChangeBus();
   const storeId = `sparql:${flavour}` as StoreId;
@@ -501,10 +510,14 @@ export function initSPARQLDatastorePair(
       const schema = listSchemaForType(typeName);
 
       const sparqlOptions: TypedFilterOptions<T> = {
+        ...defaultFilterOptions,
         ...options,
         defaultPrefix,
         queryBuildOptions,
         flavour: options.flavour ?? queryBuildOptions.sparqlFlavour,
+        sparqlFeatures: queryBuildOptions.sparqlFeatures,
+        maxRecursion:
+          options.maxRecursion ?? defaultFilterOptions?.maxRecursion,
         walkerOptions: {
           ...walkerOptions,
           ...options.walkerOptions,
@@ -537,10 +550,14 @@ export function initSPARQLDatastorePair(
       const schema = listSchemaForType(typeName);
 
       const sparqlOptions: TypedFilterOptions<T> = {
+        ...defaultFilterOptions,
         ...options,
         defaultPrefix,
         queryBuildOptions,
         flavour: options.flavour ?? queryBuildOptions.sparqlFlavour,
+        sparqlFeatures: queryBuildOptions.sparqlFeatures,
+        maxRecursion:
+          options.maxRecursion ?? defaultFilterOptions?.maxRecursion,
         walkerOptions: {
           ...walkerOptions,
           ...options.walkerOptions,
@@ -580,16 +597,15 @@ export function initSPARQLDatastorePair(
     },
   };
 
-  const searchesProfile =
-    flavour === "blazegraph"
-      ? ({
-          mode: "fulltext",
-          ranked: true,
-        } as const)
-      : ({
-          mode: "substring",
-          ranked: false,
-        } as const);
+  const searchesProfile = features.blazegraphFulltextSearch
+    ? ({
+        mode: "fulltext",
+        ranked: true,
+      } as const)
+    : ({
+        mode: "substring",
+        ranked: false,
+      } as const);
 
   const store: SparqlStore<Record<string, unknown>> = {
     typeNameToTypeIRI,
@@ -612,6 +628,8 @@ export function initSPARQLDatastorePair(
       profiles: {
         searches: searchesProfile,
         counts: { cost: "O(1)" },
+        nestedPagination: { stage: nestedPaginationStage },
+        sparqlFeatures: features,
         speaksNative: ["sparql"],
         ...(effectiveMetaStamping
           ? {

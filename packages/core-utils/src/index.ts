@@ -24,3 +24,4 @@ export * from "./resolvePreviewDisplay";
 export * from "./logger";
 export * from "./sparqLoggingWrapper";
 export * from "./sparqAsyncQueryKey";
+export * from "./resolveSparqlFeatures";

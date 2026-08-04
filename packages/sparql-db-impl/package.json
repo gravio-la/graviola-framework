@@ -44,6 +44,7 @@
   "dependencies": {
     "@graviola/edb-global-types": "workspace:*",
     "@graviola/edb-core-types": "workspace:*",
+    "@graviola/edb-core-utils": "workspace:*",
     "@graviola/json-schema-utils": "workspace:*",
     "@graviola/remote-query-implementations": "workspace:*",
     "@graviola/sparql-tools": "workspace:*",

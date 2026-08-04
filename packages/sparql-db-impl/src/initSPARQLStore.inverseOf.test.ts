@@ -9,7 +9,7 @@ import type { Quad } from "@rdfjs/types";
 import type { JSONSchema7 } from "json-schema";
 import { Store } from "oxigraph";
 
-import { initSPARQLStore } from "./initSPARQLStore";
+import { initSPARQLAbstractDatastore } from "./initSPARQLStore";
 
 const BASE_IRI = "http://example.org/test/";
 const typeNameToTypeIRI = (typeName: string): string =>
@@ -92,7 +92,7 @@ describe("initSPARQLStore x-inverseOf", () => {
   });
 
   function createDatastore(enableInversePropertiesFeature: boolean) {
-    return initSPARQLStore({
+    return initSPARQLAbstractDatastore({
       schema: inverseCategorySchema as JSONSchema7,
       defaultPrefix: BASE_IRI,
       jsonldContext: { "@vocab": BASE_IRI },

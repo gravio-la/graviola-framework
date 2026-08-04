@@ -57,7 +57,7 @@ describe("buildCompleteSPARQLQuery", () => {
     expect(query).toMatch(/OPTIONAL \{ \?subject :name \?name_\d+ \. \}/);
   });
 
-  it("should handle pagination with SUBSELECT correctly", () => {
+  it("should handle pagination with LATERAL correctly", () => {
     const schema: JSONSchema7 = {
       type: "object",
       properties: {
@@ -93,6 +93,7 @@ describe("buildCompleteSPARQLQuery", () => {
       undefined,
       normalized,
       {
+        flavour: "oxigraph",
         filterOptions,
       },
     );
@@ -100,14 +101,13 @@ describe("buildCompleteSPARQLQuery", () => {
       "": "http://example.com/",
     });
 
-    // Check for SUBSELECT with pagination
+    // LATERAL SELECT with pagination (oxigraph: BIND + LATERAL)
+    expect(query).toContain("LATERAL");
     expect(query).toContain("SELECT");
     expect(query).toContain("ORDER BY");
     expect(query).toContain("LIMIT 10");
 
-    // SUBSELECT should have dots inside its WHERE clause
-    // Subject is now a variable with VALUES clause binding it to the IRI
-    expect(query).toContain("VALUES ?subject");
+    expect(query).toContain("BIND(");
     expect(query).toContain("<http://example.com/person/1>");
     expect(query).toMatch(/\?subject :friends \?friends_\d+ \./);
     expect(query).toMatch(/OPTIONAL \{ \?friends_\d+ :name \?name_\d+ \. \}/);
