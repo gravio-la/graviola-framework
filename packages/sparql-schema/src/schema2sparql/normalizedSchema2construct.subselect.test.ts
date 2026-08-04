@@ -47,7 +47,7 @@ describe("normalizedSchema2construct — pagination flavours", () => {
     expect(result.paginationMetadata.get("friends")?.take).toBe(10);
   });
 
-  test("lateral flavour: emits LATERAL with projected subject + LIMIT", () => {
+  test("oxigraph profile: emits LATERAL with projected subject + LIMIT", () => {
     const filterOptions = {
       include: {
         friends: { take: 10, orderBy: { name: "asc" as const } },
@@ -58,7 +58,7 @@ describe("normalizedSchema2construct — pagination flavours", () => {
       "http://example.com/person1",
       undefined,
       normalized,
-      { filterOptions, flavour: "lateral" },
+      { filterOptions, flavour: "oxigraph" },
     );
 
     const where = whereString(result);
@@ -69,6 +69,70 @@ describe("normalizedSchema2construct — pagination flavours", () => {
     // Subject must be projected (appears twice in SELECT list conceptually)
     expect(where).toMatch(/SELECT\s+\?subject\b/);
     expect(result.paginationMetadata.get("friends")?._stage).toBe("query");
+  });
+
+  test("oxigraph profile: combines BIND for single subject with LATERAL pagination", () => {
+    const filterOptions = {
+      include: {
+        friends: { take: 5, orderBy: { name: "asc" as const } },
+      },
+    };
+    const normalized = normalizeSchema(friendsSchema, filterOptions);
+    const result = normalizedSchema2construct(
+      "http://example.com/person1",
+      undefined,
+      normalized,
+      { filterOptions, flavour: "oxigraph" },
+    );
+
+    const where = whereString(result);
+    expect(where).toContain("BIND(");
+    expect(where).toContain("LATERAL");
+    expect(where).not.toMatch(/VALUES\s+\?subject/);
+  });
+
+  test("jena profile: LATERAL without BIND", () => {
+    const filterOptions = {
+      include: {
+        friends: { take: 5 },
+      },
+    };
+    const normalized = normalizeSchema(friendsSchema, filterOptions);
+    const result = normalizedSchema2construct(
+      "http://example.com/person1",
+      undefined,
+      normalized,
+      { filterOptions, flavour: "jena" },
+    );
+
+    const where = whereString(result);
+    expect(where).toContain("LATERAL");
+    expect(where).toContain("VALUES");
+    expect(where).not.toContain("BIND(");
+  });
+
+  test("oxigraph override: can disable LATERAL while keeping BIND", () => {
+    const filterOptions = {
+      include: {
+        friends: { take: 5 },
+      },
+    };
+    const normalized = normalizeSchema(friendsSchema, filterOptions);
+    const result = normalizedSchema2construct(
+      "http://example.com/person1",
+      undefined,
+      normalized,
+      {
+        filterOptions,
+        flavour: "oxigraph",
+        sparqlFeatures: { lateralNestedPagination: false },
+      },
+    );
+
+    const where = whereString(result);
+    expect(where).toContain("BIND(");
+    expect(where).not.toContain("LATERAL");
+    expect(result.paginationMetadata.get("friends")?._stage).toBe("extraction");
   });
 
   test("lateral: multiple ORDER BY + OFFSET", () => {
@@ -101,7 +165,7 @@ describe("normalizedSchema2construct — pagination flavours", () => {
       "http://example.com/blog1",
       undefined,
       normalized,
-      { filterOptions, flavour: "lateral" },
+      { filterOptions, flavour: "oxigraph" },
     );
     const where = whereString(result);
     expect(where).toContain("LATERAL");
@@ -117,7 +181,7 @@ describe("normalizedSchema2construct — pagination flavours", () => {
       "http://example.com/person1",
       undefined,
       normalized,
-      { filterOptions, flavour: "lateral" },
+      { filterOptions, flavour: "oxigraph" },
     );
     const where = whereString(result);
     expect(where).toContain("LATERAL");
@@ -132,7 +196,7 @@ describe("normalizedSchema2construct — pagination flavours", () => {
       "http://example.com/person1",
       undefined,
       normalized,
-      { filterOptions: { include: { friends: true } }, flavour: "lateral" },
+      { filterOptions: { include: { friends: true } }, flavour: "oxigraph" },
     );
     expect(result.paginationMetadata.has("friends")).toBe(false);
     expect(whereString(result)).not.toContain("LATERAL");
@@ -190,7 +254,7 @@ describe("normalizedSchema2construct — pagination flavours", () => {
       "http://example.com/place1",
       undefined,
       normalized,
-      { filterOptions, flavour: "lateral", resolveInverseMaxDepth: 1 },
+      { filterOptions, flavour: "oxigraph", resolveInverseMaxDepth: 1 },
     );
     const where = whereString(result);
     expect(where).toContain("LATERAL");

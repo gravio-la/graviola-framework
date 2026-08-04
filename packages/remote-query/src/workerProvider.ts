@@ -10,6 +10,7 @@ const workerProvider: WorkerProvider = {
   qlever: qleverCrudOptions,
   virtuoso: oxigraphCrudOptions,
   blazegraph: oxigraphCrudOptions,
+  fuseki: oxigraphCrudOptions,
   worker: null,
   rest: null,
 };

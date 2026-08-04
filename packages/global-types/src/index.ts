@@ -94,8 +94,8 @@ export type TypedDocumentFilterOptions<T = any> =
     /** Maximum recursion depth for nested objects */
     maxRecursion?: number;
     /**
-     * SPARQL dialect for CONSTRUCT generation. Use `"lateral"` for
-     * SEP-0006 per-parent windowing on include take/skip/orderBy.
+     * SPARQL engine profile for CONSTRUCT generation. Profiles resolve to
+     * feature flags (e.g. `oxigraph` / `jena` enable LATERAL nested pagination).
      */
     flavour?: SPARQLFlavour;
   };

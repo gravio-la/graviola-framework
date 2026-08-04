@@ -25,12 +25,29 @@ export type EntityMetaProfile = {
   lifecycleTimestamps?: false | "application" | "database-native";
 };
 
+/**
+ * Where nested `include.take` / `skip` / `orderBy` are applied.
+ * - `"query"` — SEP-0006 LATERAL windowing (`lateralNestedPagination`)
+ * - `"extraction"` — full edges in CONSTRUCT, then sort+slice in graph-traversal
+ */
+export type NestedPaginationProfile = {
+  stage: "query" | "extraction";
+};
+
 export type CapabilityProfiles = {
   searches?: SearchesProfile;
   counts?: CountsProfile;
   writes?: WritesProfile;
   streams?: StreamsProfile;
   entityMeta?: EntityMetaProfile;
+  nestedPagination?: NestedPaginationProfile;
+  /** Resolved SPARQL dialect features (from engine profile + overrides) */
+  sparqlFeatures?: {
+    lateralNestedPagination: boolean;
+    bindSingleSubject: boolean;
+    oxigraphEmptyGroupCount: boolean;
+    blazegraphFulltextSearch: boolean;
+  };
   /** e.g. `["sparql"]` for native escape hatch */
   speaksNative?: string[];
 };

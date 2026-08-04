@@ -532,6 +532,7 @@ describe("normalizedSchema2construct - Relationship Filtering", () => {
         undefined,
         normalized,
         {
+          flavour: "oxigraph",
           filterOptions,
         },
       );
@@ -540,8 +541,8 @@ describe("normalizedSchema2construct - Relationship Filtering", () => {
         "": "http://example.com/",
       });
 
-      // Should have SUBSELECT with LIMIT for pagination (use full query; wherePatterns
-      // templates may not stringify via .toString() when emitted as required spine)
+      // LATERAL SELECT with LIMIT for pagination (oxigraph profile)
+      expect(query).toContain("LATERAL");
       expect(query).toContain("SELECT");
       expect(query).toContain("LIMIT 10");
       expect(query).toContain("ORDER BY");

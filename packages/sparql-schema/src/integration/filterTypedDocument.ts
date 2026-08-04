@@ -19,9 +19,10 @@ import type { DatasetCore } from "@rdfjs/types";
 import type { Dataset } from "@rdfjs/types";
 import type {
   WalkerOptions,
-  Entity,
   SparqlBuildOptions,
+  ResolvedSparqlFeatureFlags,
 } from "@graviola/edb-core-types";
+import { resolveSparqlFeatures } from "@graviola/edb-core-utils";
 import {
   applyIncludeOrderByAndSlice,
   traverseGraphExtractBySchema,
@@ -52,12 +53,12 @@ export interface TypedFilterOptions<
 function postProcessDocument<T>(
   document: T,
   include: BuildFilterableSPARQLQueryOptions<T>["include"],
-  flavour: BuildFilterableSPARQLQueryOptions<T>["flavour"],
+  features: ResolvedSparqlFeatureFlags,
 ): T {
   if (!include) return document;
   // LATERAL already sliced at query stage — only restore array order.
-  // All other flavours must sort + slice in the app layer.
-  const slice = flavour !== "lateral";
+  // Otherwise sort + slice in the app layer.
+  const slice = !features.lateralNestedPagination;
   return applyIncludeOrderByAndSlice(
     document,
     include as Record<string, unknown>,
@@ -88,6 +89,7 @@ export async function filterTypedDocuments<T = any>(
     defaultPrefix = "",
     prefixMap = {},
     flavour,
+    sparqlFeatures,
     include,
     ...buildOptions
   } = options;
@@ -100,8 +102,10 @@ export async function filterTypedDocuments<T = any>(
         ? { "": defaultPrefix }
         : {};
 
+  const features = resolveSparqlFeatures(flavour, sparqlFeatures);
+
   // Step 1: Build type-safe SPARQL query
-  const { query } = buildFilterableSPARQLQuery<T>(
+  const { query, normalizedSchema } = buildFilterableSPARQLQuery<T>(
     entityIRIs,
     typeIRIs,
     schema,
@@ -109,6 +113,7 @@ export async function filterTypedDocuments<T = any>(
       ...buildOptions,
       include,
       flavour,
+      sparqlFeatures,
       prefixMap: finalPrefixMap,
     },
   );
@@ -116,15 +121,19 @@ export async function filterTypedDocuments<T = any>(
   // Step 2: Execute CONSTRUCT query
   const dataset = await constructFetch(query);
 
+  // Extract against the normalized schema so omitted relations / select
+  // projections match CONSTRUCT (Prisma-like includeRelationsByDefault: false).
+  const extractSchema = (normalizedSchema as JSONSchema7) || schema;
+
   const extractOne = (iri: string): T => {
     const raw = traverseGraphExtractBySchema(
       defaultPrefix,
       iri,
       dataset as Dataset,
-      schema,
+      extractSchema,
       walkerOptions,
     ) as T;
-    return postProcessDocument(raw, include, flavour);
+    return postProcessDocument(raw, include, features);
   };
 
   if (Array.isArray(entityIRIs) && entityIRIs.length > 0) {

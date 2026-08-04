@@ -37,6 +37,7 @@ export type {
   WritesProfile,
   StreamsProfile,
   EntityMetaProfile,
+  NestedPaginationProfile,
 } from "./descriptor";
 export type {
   WriteDocumentContext,

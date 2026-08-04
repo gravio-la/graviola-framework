@@ -1,4 +1,7 @@
-export type { SPARQLDataStoreConfig } from "./SPARQLDataStoreConfig";
+export type {
+  SPARQLDataStoreConfig,
+  SPARQLDefaultFilterOptions,
+} from "./SPARQLDataStoreConfig";
 export {
   initSPARQLStore,
   initSPARQLAbstractDatastore,

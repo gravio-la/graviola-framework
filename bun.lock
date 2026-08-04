@@ -1344,6 +1344,7 @@
       "name": "@graviola/remote-query-implementations",
       "version": "1.4.8",
       "dependencies": {
+        "@graviola/edb-core-utils": "workspace:*",
         "@rdfjs/dataset": "^2.0.2",
         "lodash-es": "catalog:",
         "n3": "^1.17.2",
@@ -1568,6 +1569,7 @@
       "version": "1.8.0",
       "dependencies": {
         "@graviola/edb-core-types": "workspace:*",
+        "@graviola/edb-core-utils": "workspace:*",
         "@graviola/edb-global-types": "workspace:*",
         "@graviola/json-schema-utils": "workspace:*",
         "@graviola/jsonld-utils": "workspace:*",

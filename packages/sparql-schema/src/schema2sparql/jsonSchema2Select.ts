@@ -2,7 +2,9 @@ import {
   PrimaryField,
   PrimaryFieldDeclaration,
   SPARQLFlavour,
+  type ResolvedSparqlFeatureFlags,
 } from "@graviola/edb-core-types";
+import { resolveSparqlFeatures } from "@graviola/edb-core-utils";
 import {
   isJSONSchema,
   isJSONSchemaDefinition,
@@ -33,7 +35,7 @@ const propertiesToSPARQLSelectPatterns = (
   path?: string[],
   level: number = 0,
   primaryFields?: PrimaryFieldDeclaration,
-  flavour?: SPARQLFlavour,
+  features?: ResolvedSparqlFeatureFlags,
   minimal?: boolean,
 ) => {
   let where = "";
@@ -94,8 +96,8 @@ const propertiesToSPARQLSelectPatterns = (
             }
           }
         }
-        if (flavour === "oxigraph") {
-          //check if empty by comparing aggregated string length then 0 otherwise count
+        if (features?.oxigraphEmptyGroupCount) {
+          // Oxigraph empty-group COUNT quirk: compare aggregated string length
           select += ` (IF(STRLEN(GROUP_CONCAT(DISTINCT STR(${variable}); SEPARATOR=",")) = 0, 0, COUNT(DISTINCT ${variable})) AS ${variable}_count) `;
         } else {
           select += ` (COUNT(DISTINCT ${variable}) AS ${variable}_count) `;
@@ -146,7 +148,7 @@ const propertiesToSPARQLSelectPatterns = (
             subPath,
             level + 1,
             primaryFields,
-            flavour,
+            features,
             minimal,
           );
         where += makeWherePart(
@@ -171,7 +173,7 @@ const propertiesToSPARQLSelectPatterns = (
               subPath,
               level + 1,
               primaryFields,
-              flavour,
+              features,
               true,
             );
           const typeVariable = makeVariable([...subPath, "type"]);
@@ -297,6 +299,7 @@ export const jsonSchema2Select = (
 ) => {
   if (!rootSchema.properties) return "";
   const variable = "?entity";
+  const features = resolveSparqlFeatures(flavour);
   const { where, select } = propertiesToSPARQLSelectPatterns(
     rootSchema,
     rootSchema,
@@ -306,7 +309,7 @@ export const jsonSchema2Select = (
     [],
     0,
     sparqlSelectOptions?.primaryFields,
-    flavour,
+    features,
     minimal,
   );
   const matchType = typeIRI ? `?entity a <${typeIRI}> .` : "";
