@@ -225,7 +225,15 @@ export type TypedFilterPattern<
  * @template T - The element type (array types are already unwrapped)
  */
 export type NestedFilterOptions<T> = PaginationMetadata &
-  Pick<TypedFilterPattern<T>, "select" | "include" | "omit" | "where">;
+  Pick<TypedFilterPattern<T>, "select" | "include" | "omit" | "where"> & {
+    /**
+     * Cap how deep this include branch walks (relative to the parent depth).
+     * `0` = related entity as `@id` stub only; `1` = scalars of the related
+     * entity, no further named-entity expansion. Combined with the global
+     * query `maxRecursion` via `min`.
+     */
+    maxRecursion?: number;
+  };
 
 /**
  * Type-safe include pattern with support for nested includes, pagination, and filtering
@@ -250,6 +258,10 @@ export type TypedGraphTraversalFilterOptions<
   T = any,
   F extends "default" | "blazegraph" | "oxigraph" | "allegro" = "default",
 > = TypedFilterPattern<T, F> & {
+  /**
+   * When true, named-entity relations are walked without an explicit `include`.
+   * Defaults to **false** (Prisma-like: relations only when listed in `include`).
+   */
   includeRelationsByDefault?: boolean;
   defaultPaginationLimit?: number;
   /**

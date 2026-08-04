@@ -23,7 +23,9 @@ describe("normalizeSchema - integration tests", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema);
+    const normalized = normalizeSchema(schema, {
+      includeRelationsByDefault: true,
+    });
 
     expect(normalized._normalized).toBe(true);
     expect((normalized.properties?.author as JSONSchema7).$ref).toBeUndefined();
@@ -315,7 +317,9 @@ describe("normalizeSchema - integration tests", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema);
+    const normalized = normalizeSchema(schema, {
+      includeRelationsByDefault: true,
+    });
 
     expect(normalized._normalized).toBe(true);
     expect(normalized.properties?.author).toBeDefined();
@@ -727,5 +731,95 @@ describe("normalizeSchema - integration tests", () => {
     expect(level3Knows).toBeDefined();
 
     // Note: Pagination is no longer stored in schema, it's passed through context
+  });
+
+  test("defaults to Prisma-like: relations omitted without include", () => {
+    const schema: JSONSchema7 = {
+      type: "object",
+      properties: {
+        title: { type: "string" },
+        author: { $ref: "#/$defs/Person" },
+      },
+      $defs: {
+        Person: {
+          type: "object",
+          properties: {
+            "@id": { type: "string" },
+            name: { type: "string" },
+          },
+        },
+      },
+    };
+
+    const normalized = normalizeSchema(schema);
+    expect(normalized.properties).toHaveProperty("title");
+    expect(normalized.properties).not.toHaveProperty("author");
+  });
+
+  test("include maxRecursion: 0 keeps orderBy scalars as stubs", () => {
+    const schema: JSONSchema7 = {
+      type: "object",
+      properties: {
+        title: { type: "string" },
+        tags: {
+          type: "array",
+          items: { $ref: "#/$defs/Tag" },
+        },
+      },
+      $defs: {
+        Tag: {
+          type: "object",
+          properties: {
+            "@id": { type: "string" },
+            name: { type: "string" },
+            description: { type: "string" },
+            parent: { $ref: "#/$defs/Tag" },
+          },
+        },
+      },
+    };
+
+    const normalized = normalizeSchema(schema, {
+      include: {
+        tags: {
+          take: 2,
+          orderBy: { name: "asc" },
+          maxRecursion: 0,
+        },
+      },
+    });
+
+    expect(normalized.properties).toHaveProperty("tags");
+    const tags = normalized.properties?.tags as JSONSchema7;
+    const items = tags.items as JSONSchema7;
+    expect(items.properties).toHaveProperty("name");
+    expect(items.properties).not.toHaveProperty("description");
+    expect(items.properties).not.toHaveProperty("parent");
+  });
+
+  test("root where keeps relationship for filtering without include", () => {
+    const schema: JSONSchema7 = {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+        partOf: { $ref: "#/$defs/Place" },
+      },
+      $defs: {
+        Place: {
+          type: "object",
+          properties: {
+            "@id": { type: "string" },
+            name: { type: "string" },
+          },
+        },
+      },
+    };
+
+    const normalized = normalizeSchema(schema, {
+      where: { partOf: { "@id": "http://example.org/p1" } },
+    });
+
+    expect(normalized.properties).toHaveProperty("name");
+    expect(normalized.properties).toHaveProperty("partOf");
   });
 });

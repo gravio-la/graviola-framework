@@ -155,7 +155,7 @@ export function shouldIncludeProperty<T = any>(
     select,
     include,
     omit,
-    includeRelationsByDefault = true,
+    includeRelationsByDefault = false,
   } = filterOptions;
 
   // Special properties are always included
@@ -168,12 +168,15 @@ export function shouldIncludeProperty<T = any>(
     return { include: false };
   }
 
+  // Root `where` always keeps the property so SPARQL filters can bind it
+  // (even when includeRelationsByDefault is false / Prisma-like).
+  if (rootWhereHints.has(propertyName)) {
+    return { include: true };
+  }
+
   // If select is specified, only include selected properties — plus any root-only `where`
   // refs so query builders still see relational filters (amenities.some, …).
   if (select) {
-    if (rootWhereHints.has(propertyName)) {
-      return { include: true };
-    }
     const isSelected = select[propertyName] === true;
     return { include: isSelected };
   }
@@ -254,6 +257,56 @@ function applyNestedFilters<T = any>(
 }
 
 /**
+ * Collect property names referenced by Prisma-style `orderBy` so CONSTRUCT /
+ * extraction always materialize sort keys (needed for extraction-stage pagination).
+ */
+export function orderByPropertyKeys(
+  orderBy: PaginationOptions["orderBy"],
+): string[] {
+  if (!orderBy) return [];
+  const clauses = Array.isArray(orderBy) ? orderBy : [orderBy];
+  const keys: string[] = [];
+  for (const clause of clauses) {
+    if (clause && typeof clause === "object") {
+      const record = clause as Record<string, unknown>;
+      for (const key of Object.keys(record)) {
+        if (record[key]) keys.push(key);
+      }
+    }
+  }
+  return keys;
+}
+
+/**
+ * Merge `orderBy` property keys into a nested `select` so sort fields are not
+ * dropped when the caller projects a subset of columns.
+ */
+function mergeOrderByIntoSelect<T>(
+  includeValue: unknown,
+): GraphTraversalFilterOptions<T>["select"] | undefined {
+  if (typeof includeValue !== "object" || includeValue === null) {
+    return undefined;
+  }
+  const nested = includeValue as {
+    select?: Record<string, boolean>;
+    orderBy?: PaginationOptions["orderBy"];
+  };
+  const orderKeys = orderByPropertyKeys(nested.orderBy);
+  if (!nested.select && orderKeys.length === 0) {
+    return undefined;
+  }
+  if (!nested.select) {
+    // No select — full scalar projection; orderBy keys already present.
+    return undefined;
+  }
+  const merged = { ...nested.select };
+  for (const key of orderKeys) {
+    merged[key] = true;
+  }
+  return merged as GraphTraversalFilterOptions<T>["select"];
+}
+
+/**
  * Applies filter options to a schema's properties
  * @template T - The type to derive filter patterns from
  * @param schema The schema to filter
@@ -325,9 +378,47 @@ export function applyFilters<T = any>(
         typeof includeValue === "object" && includeValue !== null
           ? includeValue.include
           : undefined;
+      const nestedSelect =
+        typeof includeValue === "object" && includeValue !== null
+          ? (mergeOrderByIntoSelect(includeValue) ?? includeValue.select)
+          : undefined;
+      const nestedOmit =
+        typeof includeValue === "object" && includeValue !== null
+          ? includeValue.omit
+          : undefined;
+      const nestedWhere =
+        typeof includeValue === "object" && includeValue !== null
+          ? includeValue.where
+          : undefined;
+      const nestedMaxRecursion =
+        typeof includeValue === "object" &&
+        includeValue !== null &&
+        typeof (includeValue as { maxRecursion?: number }).maxRecursion ===
+          "number"
+          ? (includeValue as { maxRecursion: number }).maxRecursion
+          : undefined;
 
       // Note: pagination is extracted but NOT added to schema
       // It will be passed through context during extraction/query building
+
+      const hasNestedFilterOptions =
+        nestedInclude != null ||
+        nestedSelect != null ||
+        nestedOmit != null ||
+        nestedWhere != null ||
+        nestedMaxRecursion !== undefined;
+
+      const nestedFilterPayload = {
+        ...filterOptions,
+        include: nestedInclude,
+        select: nestedSelect,
+        omit: nestedOmit,
+        where: nestedWhere,
+        // Branch maxRecursion: 0 → stub relations of related entity
+        ...(nestedMaxRecursion === 0
+          ? { includeRelationsByDefault: false }
+          : {}),
+      } as GraphTraversalFilterOptions<T>;
 
       // Recursively filter @ properties from nested objects
       if (
@@ -341,13 +432,14 @@ export function applyFilters<T = any>(
         );
 
         // Apply nested filters if present (recursively)
-        if (nestedInclude && processedSchema.properties && rootSchema) {
+        if (
+          hasNestedFilterOptions &&
+          processedSchema.properties &&
+          rootSchema
+        ) {
           processedSchema = applyNestedFilters(
             processedSchema,
-            {
-              ...filterOptions,
-              include: nestedInclude,
-            } as any,
+            nestedFilterPayload,
             rootSchema,
             depth,
           );
@@ -375,16 +467,42 @@ export function applyFilters<T = any>(
           );
 
           // Apply nested filters to array items if present (recursively)
-          if (nestedInclude && filteredItems.properties && rootSchema) {
+          if (
+            hasNestedFilterOptions &&
+            filteredItems.properties &&
+            rootSchema
+          ) {
             filteredItems = applyNestedFilters(
               filteredItems,
-              {
-                ...filterOptions,
-                include: nestedInclude,
-              } as any,
+              nestedFilterPayload,
               rootSchema,
               depth,
             );
+          }
+
+          // maxRecursion: 0 → keep only identity on related entities
+          if (nestedMaxRecursion === 0 && filteredItems.properties) {
+            const stubProps: Record<string, JSONSchema7> = {};
+            if (filteredItems.properties["@id"]) {
+              stubProps["@id"] = filteredItems.properties["@id"] as JSONSchema7;
+            }
+            // Keep orderBy scalars so extraction-stage sort still works
+            for (const key of orderByPropertyKeys(
+              typeof includeValue === "object" && includeValue !== null
+                ? (includeValue as PaginationOptions).orderBy
+                : undefined,
+            )) {
+              if (filteredItems.properties[key]) {
+                stubProps[key] = filteredItems.properties[key] as JSONSchema7;
+              }
+            }
+            if (Object.keys(stubProps).length > 0) {
+              filteredItems = {
+                ...filteredItems,
+                properties: stubProps,
+                required: filteredItems.required?.filter((r) => r in stubProps),
+              };
+            }
           }
 
           processedSchema = {

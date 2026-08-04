@@ -94,4 +94,5 @@ export {
   referencedRootWhereFilterProperties,
   shouldIncludeProperty,
   extractPaginationOptions,
+  orderByPropertyKeys,
 } from "./applyFilters";
