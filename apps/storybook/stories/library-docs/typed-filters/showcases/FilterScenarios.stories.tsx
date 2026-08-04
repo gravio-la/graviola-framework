@@ -137,13 +137,13 @@ export const PlacesWithBurgChildren: Story = {
  * Forward child links via stored `contains` (not `parts` / x-inverseOf).
  * Landkreis Görlitz has 12 City children in the fixture.
  *
- * Pagination uses flavour `lateral` (SEP-0006) so `take`/`orderBy` window
- * per parent. Non-lateral engines fall back to extraction-stage sort+slice.
+ * Pagination uses flavour `oxigraph` (LATERAL via `lateralNestedPagination`)
+ * so `take`/`orderBy` window per parent at query stage.
  */
 export const PaginatedChildren: Story = {
   args: {
     description:
-      "Landkreis Görlitz — contains take:5 orderBy name asc (LATERAL)",
+      "Landkreis Görlitz — contains take:5 orderBy name asc (LATERAL / query-stage)",
     typeName: "Place",
     filterOptions: {
       where: {
@@ -155,15 +155,49 @@ export const PaginatedChildren: Story = {
           orderBy: { name: "asc" as const },
         },
       },
-      flavour: "lateral",
+      flavour: "oxigraph",
     },
     expectedCount: 1,
     note: [
       "Forward `contains` is materialized from inverted `partOf`.",
-      "With flavour `lateral`, CONSTRUCT emits",
+      "With flavour `oxigraph`, CONSTRUCT emits",
       "LATERAL { SELECT ?subject ?contains … ORDER BY ?name LIMIT 5 }",
       "so the first five children by name are Bad Muskau … Löbau.",
-      "Expand `contains` in the raw JSON / table. Inverse `parts` remains issue #5.",
+      "Compare PaginatedChildrenExtraction — same page via extraction-stage sort+slice.",
+    ].join(" "),
+  },
+  play: async ({ canvasElement }) => {
+    await assertResultCount(canvasElement, 1);
+  },
+};
+
+/**
+ * Same include window as PaginatedChildren, but without LATERAL — proves
+ * Blazegraph-class stores get identical results via extraction-stage sort+slice.
+ */
+export const PaginatedChildrenExtraction: Story = {
+  args: {
+    description:
+      "Landkreis Görlitz — contains take:5 orderBy name asc (extraction-stage)",
+    typeName: "Place",
+    filterOptions: {
+      where: {
+        name: { equals: "Landkreis Görlitz" },
+      },
+      include: {
+        contains: {
+          take: 5,
+          orderBy: { name: "asc" as const },
+        },
+      },
+      flavour: "default",
+    },
+    expectedCount: 1,
+    note: [
+      "Same filter as PaginatedChildren, flavour `default` (no LATERAL).",
+      "CONSTRUCT loads all `contains` edges; graph-traversal sorts by name and",
+      "slices take:5. Results must match the LATERAL page (Bad Muskau … Löbau).",
+      "This is the Blazegraph / SPARQL 1.1 strategy.",
     ].join(" "),
   },
   play: async ({ canvasElement }) => {

@@ -179,7 +179,7 @@ describe("geo typed-filter smoke (Oxigraph)", () => {
         contains: { take: 5, orderBy: { name: "asc" as const } },
       },
       maxRecursion: 1,
-      flavour: "lateral",
+      flavour: "oxigraph",
     } as any);
     expect(result.length).toBe(1);
     const kids = (result[0] as { contains?: { name?: string }[] }).contains;
