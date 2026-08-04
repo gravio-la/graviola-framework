@@ -81,7 +81,11 @@ export function createOxigraphLocalAdapter(): DatastoreAdapter {
         defaultPrefix: BASE_IRI,
         jsonldContext: { "@vocab": BASE_IRI },
         typeNameToTypeIRI,
-        queryBuildOptions,
+        queryBuildOptions: {
+          ...queryBuildOptions,
+          // Oxigraph ≥ 0.3.11 — nested include pagination via LATERAL
+          sparqlFlavour: "oxigraph",
+        },
         sparqlQueryFunctions: crudFunctions,
         defaultLimit: 100,
       });
@@ -92,7 +96,10 @@ export function createOxigraphLocalAdapter(): DatastoreAdapter {
           defaultPrefix: BASE_IRI,
           jsonldContext: { "@vocab": BASE_IRI },
           typeNameToTypeIRI,
-          queryBuildOptions,
+          queryBuildOptions: {
+            ...queryBuildOptions,
+            sparqlFlavour: "oxigraph",
+          },
           sparqlQueryFunctions: crudFunctions,
           defaultLimit: 100,
           metaStamping: config,

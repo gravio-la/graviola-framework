@@ -480,7 +480,7 @@ export function runTypedFilterSuite(
               orderBy: { name: "asc" as const },
             },
           },
-          flavour: "lateral",
+          flavour: "oxigraph",
         } as any);
 
         expect(result.length).toBe(1);
@@ -489,6 +489,82 @@ export function runTypedFilterSuite(
           "Featured",
           "New",
         ]);
+      });
+
+      test("extraction vs lateral parity — same take+orderBy page", async () => {
+        const store = getStore();
+        const include = {
+          tags: {
+            take: 2,
+            orderBy: { name: "asc" as const },
+          },
+        };
+        const where = { name: { equals: "Laptop" } };
+
+        // Explicit SPARQL 1.1 flavour → extraction-stage sort+slice
+        const extraction = await store.filterMany("Item", {
+          where,
+          include,
+          flavour: "default",
+        } as any);
+
+        expect(extraction.length).toBe(1);
+        const extractionNames = extraction[0].tags.map(
+          (t: { name: string }) => t.name,
+        );
+        expect(extractionNames).toEqual(["Featured", "New"]);
+
+        const stage = store.capabilities?.profiles?.nestedPagination?.stage;
+        // When the store defaults to query-stage (Oxigraph/Fuseki + lateral),
+        // also prove LATERAL returns the same page. Skip on Blazegraph-class
+        // stores that cannot execute LATERAL.
+        if (stage === "query") {
+          const lateral = await store.filterMany("Item", {
+            where,
+            include,
+            flavour: "oxigraph",
+          } as any);
+          expect(lateral.length).toBe(1);
+          expect(lateral[0].tags.map((t: { name: string }) => t.name)).toEqual(
+            extractionNames,
+          );
+        }
+      });
+
+      test("no include — relations omitted (Prisma default)", async () => {
+        const store = getStore();
+        const result = await store.filterMany("Item", {
+          where: { name: { equals: "Laptop" } },
+        });
+        expect(result.length).toBe(1);
+        expect(result[0].name).toBe("Laptop");
+        expect(result[0].category).toBeUndefined();
+        expect(result[0].tags).toBeUndefined();
+      });
+
+      test("include tags maxRecursion: 0 — stub / orderBy scalars only", async () => {
+        const store = getStore();
+        const result = await store.filterMany("Item", {
+          where: { name: { equals: "Laptop" } },
+          include: {
+            tags: {
+              take: 2,
+              orderBy: { name: "asc" as const },
+              maxRecursion: 0,
+            },
+          },
+        } as any);
+
+        expect(result.length).toBe(1);
+        expect(result[0].tags.length).toBe(2);
+        expect(result[0].tags.map((t: { name: string }) => t.name)).toEqual([
+          "Featured",
+          "New",
+        ]);
+        // Stub path still carries orderBy scalars; no nested relations on Tag
+        for (const tag of result[0].tags) {
+          expect(tag.name).toBeTruthy();
+        }
       });
 
       test("filterOne — include tags with multi-key orderBy — multiplicity", async () => {

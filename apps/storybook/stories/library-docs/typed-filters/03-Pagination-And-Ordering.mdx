@@ -9,7 +9,9 @@ import * as Scenarios from "./showcases/FilterScenarios.stories";
 
 The geo fixture stores **forward** child links on `contains` (materialized from
 inverted `partOf` / Wikidata P131 after mapping). Pagination of those children
-uses flavour **`lateral`** (SEP-0006):
+uses either query-stage LATERAL or extraction-stage sort+slice — **same page**.
+
+### Query stage (`flavour: "oxigraph"` / `"jena"`)
 
 ```json
 {
@@ -17,11 +19,11 @@ uses flavour **`lateral`** (SEP-0006):
   "include": {
     "contains": { "take": 5, "orderBy": { "name": "asc" } }
   },
-  "flavour": "lateral"
+  "flavour": "oxigraph"
 }
 ```
 
-That emits:
+That emits (when `lateralNestedPagination` is on):
 
 ```sparql
 LATERAL {
@@ -42,12 +44,23 @@ name is Bad Muskau → Bernstadt → Ebersbach-Neugersdorf → Herrnhut → Löb
 
 <Canvas of={Scenarios.PaginatedChildren} />
 
-### Flavour matrix
+### Extraction stage (Blazegraph / SPARQL 1.1)
 
-| Flavour | Nested `take` / `orderBy` |
-| --- | --- |
-| `lateral` (Oxigraph ≥ 0.3.11, Jena ≥ 4.7) | Server-side per-parent window via LATERAL; extraction only restores JSON order |
-| `default` / `oxigraph` / `blazegraph` / … | Plain triples — **no** uncorrelated SUBSELECT; app-layer sort+slice after CONSTRUCT |
+Same `include` without LATERAL — CONSTRUCT loads all matching edges, then
+`applyIncludeOrderByAndSlice` sorts and applies `take`/`skip`. Results match
+the LATERAL canvas above.
+
+<Canvas of={Scenarios.PaginatedChildrenExtraction} />
+
+### Profile → features matrix
+
+| Profile | Nested `take` / `orderBy` | `capabilities.profiles.nestedPagination.stage` |
+| --- | --- | --- |
+| `oxigraph` / `jena` (`lateralNestedPagination`) | Server-side per-parent window via LATERAL; extraction only restores JSON order | `"query"` |
+| `default` / `blazegraph` / `allegro` | Plain triples — **no** uncorrelated SUBSELECT; app-layer sort+slice after CONSTRUCT | `"extraction"` |
+
+`oxigraph` also enables `bindSingleSubject` and `oxigraphEmptyGroupCount`.
+Override with `sparqlFeatures` when needed.
 
 Never emit a bare `{ SELECT ?child WHERE { ?subject :p ?child } LIMIT n }` —
 that is a data-leak under access guards.
@@ -63,4 +76,4 @@ CONSTRUCT emits `LIMIT`).
 `where.parts.some` / `include.parts` use `x-inverseOf` and still bind
 `?subject :parts ?child` in non-LATERAL WHERE filters. Prefer `contains` for
 forward demos; LATERAL RHS does honour inverse edges when paginating
-`include.parts` with `flavour: "lateral"`.
+`include.parts` with `flavour: "oxigraph"` or `"jena"`.

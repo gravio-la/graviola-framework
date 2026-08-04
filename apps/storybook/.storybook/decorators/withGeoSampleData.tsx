@@ -49,7 +49,7 @@ export const withGeoSampleData: Decorator = (Story) => {
               ...config.queryBuildOptions,
               primaryFields: geoPrimaryFields,
               // Oxigraph supports SEP-0006 LATERAL — use it for nested take/orderBy
-              sparqlFlavour: "lateral",
+              sparqlFlavour: "oxigraph",
             }}
             env={{
               publicBasePath: PUBLIC_BASE_PATH,

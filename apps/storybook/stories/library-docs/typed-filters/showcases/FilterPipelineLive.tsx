@@ -69,7 +69,7 @@ export const FilterPipelineLive: React.FC<FilterPipelineLiveProps> = ({
 
   const sparqlQuery = useMemo(() => {
     const flavour =
-      (filterOptions as { flavour?: string })?.flavour ?? "lateral";
+      (filterOptions as { flavour?: string })?.flavour ?? "oxigraph";
     const { query } = buildFilterableSPARQLQuery(
       undefined,
       typeIRI,

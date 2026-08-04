@@ -29,6 +29,7 @@ export const rawTestSchema = {
     Category: {
       type: "object",
       properties: {
+        "@id": { type: "string" },
         name: { type: "string" },
         description: { type: "string" },
       },
@@ -37,6 +38,7 @@ export const rawTestSchema = {
     Tag: {
       type: "object",
       properties: {
+        "@id": { type: "string" },
         name: { type: "string" },
         description: { type: "string" },
       },
@@ -45,6 +47,7 @@ export const rawTestSchema = {
     Item: {
       type: "object",
       properties: {
+        "@id": { type: "string" },
         name: { type: "string" },
         description: { type: "string" },
         price: { type: "number" },

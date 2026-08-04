@@ -53,12 +53,14 @@ function buildEndpointConfig(
     return {
       queryUrl: `${base}/sparql`,
       updateUrl: `${base}/update`,
-      flavour: "default",
+      // Jena ≥ 4.7 — LATERAL nested pagination (jena profile)
+      flavour: "jena",
     };
   }
   return {
     queryUrl: `${base}/query`,
     updateUrl: `${base}/update`,
+    // Oxigraph ≥ 0.3.11 — BIND + LATERAL (oxigraph profile)
     flavour: "oxigraph",
   };
 }
