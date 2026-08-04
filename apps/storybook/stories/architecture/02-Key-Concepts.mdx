@@ -409,26 +409,24 @@ await update(person);
 
 Controls whether relationships are automatically included.
 
-### Default Behavior (true)
+### Default Behavior (false — Prisma-like)
 
 ```typescript
 {
-  includeRelationsByDefault: true  // default
+  includeRelationsByDefault: false  // default (Prisma-like)
 }
 ```
 
-**Result**: All relationships are included unless explicitly excluded.
+**Result**: Relationships are omitted unless listed in `include`.
 
 ```typescript
 {
-  name: "John",
-  friends: [/* all friends */],
-  posts: [/* all posts */],
-  employer: {/* employer data */}
+  name: "John"
+  // friends / posts / employer not loaded
 }
 ```
 
-### Explicit Mode (false)
+### Explicit Mode (false) with include
 
 ```typescript
 {
