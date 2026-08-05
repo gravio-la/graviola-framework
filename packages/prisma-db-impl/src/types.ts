@@ -1,4 +1,5 @@
 import type { IRIToStringFn, StringToIRIFn } from "@graviola/edb-core-types";
+import type { PersistenceManifest } from "@graviola/json-schema-prisma-utils";
 import type { MetaStampingConfig } from "@graviola/meta-schema";
 
 export interface AbstractPrismaClient extends Record<string, any> {
@@ -41,4 +42,9 @@ export type PrismaStoreOptions = {
   datasourceProvider: string;
   /** Opt-in entity `$meta` stamping on upsert (default: disabled). */
   metaStamping?: MetaStampingConfig;
+  /**
+   * Generated alongside the Prisma schema by `jsonSchema2PrismaWithManifest`.
+   * Drives multi-value list write/read/filter representation.
+   */
+  persistenceManifest?: PersistenceManifest;
 };

@@ -1,8 +1,16 @@
 import { IRIToStringFn, StringToIRIFn } from "@graviola/edb-core-types";
 import { AbstractDatastore } from "@graviola/edb-global-types";
+import type { PersistenceManifest } from "@graviola/json-schema-prisma-utils";
 
 import { getPropertiesAndConnects } from "../helper";
 import type { AbstractPrismaClient } from "../types";
+
+export type ImportDocumentOptions = {
+  IRItoId?: IRIToStringFn;
+  typeNameToTypeIRI?: StringToIRIFn;
+  typeIsNotIRI?: boolean;
+  persistenceManifest?: PersistenceManifest;
+};
 
 /**
  * Import a document into the prisma store and connect it to other documents
@@ -24,11 +32,7 @@ export const importDocument = async <
   prisma: TPrisma,
   visited: Set<any>,
   importError: Set<string>,
-  options?: {
-    IRItoId?: IRIToStringFn;
-    typeNameToTypeIRI?: StringToIRIFn;
-    typeIsNotIRI?: boolean;
-  },
+  options?: ImportDocumentOptions,
 ) => {
   if (visited.has(document["@id"]) || importError.has(document["@id"])) {
     return;
@@ -40,7 +44,11 @@ export const importDocument = async <
     prisma,
     importError,
     "",
-    options ?? {},
+    {
+      ...(options ?? {}),
+      rootEntityIRI:
+        typeof document["@id"] === "string" ? document["@id"] : undefined,
+    },
     async (
       typeIRI: string | undefined,
       entityIRI: string,
@@ -96,6 +104,32 @@ export const importDocument = async <
     ? options.typeNameToTypeIRI(typeNameOrigin)
     : typeNameOrigin;
   try {
+    const withNestedReplace = (
+      props: Record<string, any>,
+      forUpdate: boolean,
+    ) =>
+      Object.fromEntries(
+        Object.entries(props).map(([key, value]) => {
+          if (
+            forUpdate &&
+            value &&
+            typeof value === "object" &&
+            !Array.isArray(value) &&
+            "create" in value &&
+            Array.isArray((value as { create: unknown }).create)
+          ) {
+            return [
+              key,
+              {
+                deleteMany: {},
+                create: (value as { create: unknown }).create,
+              },
+            ];
+          }
+          return [key, value];
+        }),
+      );
+
     const upsertResult = await prisma[typeNameOrigin].upsert({
       where: {
         id,
@@ -103,10 +137,10 @@ export const importDocument = async <
       create: {
         id,
         type,
-        ...properties,
+        ...withNestedReplace(properties, false),
       },
       update: {
-        ...properties,
+        ...withNestedReplace(properties, true),
       },
     });
     const connectKeys = Object.keys(connects);
@@ -143,11 +177,7 @@ export const importSingleDocument = <
   entityIRI: string,
   importStore: AbstractDatastore,
   prisma: TPrisma,
-  options?: {
-    IRItoId?: IRIToStringFn;
-    typeNameToTypeIRI?: StringToIRIFn;
-    typeIsNotIRI?: boolean;
-  },
+  options?: ImportDocumentOptions,
 ) =>
   importStore
     .loadDocument(typeName, entityIRI)

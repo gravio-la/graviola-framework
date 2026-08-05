@@ -30,6 +30,7 @@ export const startBulkImport = async <
     IRItoId?: IRIToStringFn;
     typeNameToTypeIRI?: StringToIRIFn;
     typeIsNotIRI?: boolean;
+    persistenceManifest?: import("@graviola/json-schema-prisma-utils").PersistenceManifest;
   } = {},
 ) => {
   const visited = new Set<string>();

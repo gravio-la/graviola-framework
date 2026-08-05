@@ -25,6 +25,7 @@ export const importAllDocuments = async <
     IRItoId?: IRIToStringFn;
     typeNameToTypeIRI?: StringToIRIFn;
     typeIsNotIRI?: boolean;
+    persistenceManifest?: import("@graviola/json-schema-prisma-utils").PersistenceManifest;
   } = {},
 ): Promise<any> =>
   importStore.iterableImplementation

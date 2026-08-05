@@ -1,4 +1,5 @@
-import { StringToIRIFn } from "@graviola/edb-core-types";
+import { IRIToStringFn, StringToIRIFn } from "@graviola/edb-core-types";
+import type { PersistenceManifest } from "@graviola/json-schema-prisma-utils";
 
 import { getPropertiesAndConnects } from "./helper";
 import type { AbstractPrismaClient } from "./types";
@@ -13,9 +14,11 @@ export const save = async <
   options: {
     allowNonTransactionalFallback?: boolean;
     idToIRI?: StringToIRIFn;
+    IRItoId?: IRIToStringFn;
     typeNameToTypeIRI?: StringToIRIFn;
     typeIsNotIRI?: boolean;
     debug?: boolean;
+    persistenceManifest?: PersistenceManifest;
   },
 ) => {
   const { id, properties, connects } = await getPropertiesAndConnects(
@@ -24,7 +27,15 @@ export const save = async <
     prisma,
     importError,
     "",
-    options,
+    {
+      IRItoId: options.IRItoId,
+      typeNameToTypeIRI: options.typeNameToTypeIRI,
+      typeIsNotIRI: options.typeIsNotIRI,
+      debug: options.debug,
+      persistenceManifest: options.persistenceManifest,
+      rootEntityIRI:
+        typeof document["@id"] === "string" ? document["@id"] : undefined,
+    },
   );
 
   if (!id) {
@@ -35,6 +46,36 @@ export const save = async <
     ? options.typeNameToTypeIRI(typeNameOrigin)
     : typeNameOrigin;
 
+  /** Nested child-table writes: create-only on create; replace on update. */
+  const withNestedReplace = (props: Record<string, any>, forUpdate: boolean) =>
+    Object.fromEntries(
+      Object.entries(props).map(([key, value]) => {
+        if (
+          forUpdate &&
+          value &&
+          typeof value === "object" &&
+          !Array.isArray(value) &&
+          "create" in value &&
+          Array.isArray((value as { create: unknown }).create)
+        ) {
+          return [
+            key,
+            { deleteMany: {}, create: (value as { create: unknown }).create },
+          ];
+        }
+        return [key, value];
+      }),
+    );
+
+  const connectEntries = Object.fromEntries(
+    Object.entries(connects).map(([key, connect]) => [
+      key,
+      {
+        connect,
+      },
+    ]),
+  );
+
   const upsertArgs = {
     where: {
       id,
@@ -42,28 +83,12 @@ export const save = async <
     create: {
       id,
       type,
-      ...properties,
-      // Include all connections in the create operation
-      ...Object.fromEntries(
-        Object.entries(connects).map(([key, connect]) => [
-          key,
-          {
-            connect,
-          },
-        ]),
-      ),
+      ...withNestedReplace(properties, false),
+      ...connectEntries,
     },
     update: {
-      ...properties,
-      // Include all connections in the update operation
-      ...Object.fromEntries(
-        Object.entries(connects).map(([key, connect]) => [
-          key,
-          {
-            connect,
-          },
-        ]),
-      ),
+      ...withNestedReplace(properties, true),
+      ...connectEntries,
     },
     include: Object.fromEntries(
       Object.keys(connects).map((key) => [key, true]),
@@ -74,7 +99,6 @@ export const save = async <
   let needsNonTransactionalFallback = false;
 
   try {
-    // Combine upsert and connect operations into a single transaction
     const result = await prisma.$transaction(async (tx) => {
       const upsertResult = await runUpsert(tx);
 
@@ -93,7 +117,6 @@ export const save = async <
 
   if (needsNonTransactionalFallback && options.allowNonTransactionalFallback) {
     try {
-      // MongoDB without replica-set cannot run transactions; execute the upsert directly.
       const upsertResult = await runUpsert(prisma);
       return { upsertResult };
     } catch (error) {

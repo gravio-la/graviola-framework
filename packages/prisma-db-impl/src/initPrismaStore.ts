@@ -28,6 +28,7 @@ import type {
   Counts,
   EntityChangeEvent,
   Exists,
+  Filters,
   FlatResultSet,
   Imports,
   Lists,
@@ -35,11 +36,13 @@ import type {
   ReadableImportSource,
   Removes,
   Resolves,
+  StoreDocumentsSearchOptions,
   StoreId,
   Writes,
 } from "@graviola/store-core";
 
-import { toJSONLD } from "./helper";
+import { filterManyPrisma, filterOnePrisma } from "./filters";
+import { expandSelectWithManifest, toJSONLD } from "./helper";
 import { bindings2RDFResultSet } from "./helper/bindings2RDFResultSet";
 import { importAllDocuments, importSingleDocument } from "./import";
 import { toImportDatastoreAdapter } from "./import/toImportDatastoreAdapter";
@@ -51,6 +54,7 @@ type PrismaStore = BaseStore<PrismaSchemaRegistry> &
   Loads<PrismaSchemaRegistry> &
   Lists<PrismaSchemaRegistry> &
   FlatResultSet<PrismaSchemaRegistry> &
+  Filters<PrismaSchemaRegistry> &
   Counts<PrismaSchemaRegistry> &
   Writes<PrismaSchemaRegistry> &
   Removes<PrismaSchemaRegistry> &
@@ -137,6 +141,7 @@ export function initPrismaDatastorePair<
     debug,
     datasourceProvider,
     metaStamping,
+    persistenceManifest,
   }: PrismaStoreOptions,
 ): PrismaDatastorePair {
   const domainSchema = extendSchemaShortcut(
@@ -175,34 +180,46 @@ export function initPrismaDatastorePair<
         //TODO: decide what to do here (warn/throw/ignore)
       },
     );
-  const toJSONLDWithOptions = (entry: any) => {
+  const toJSONLDWithOptions = (entry: any, typeName?: string) => {
     return toJSONLD(entry, new WeakSet(), {
       idToIRI,
       ...(typeIsNotIRI ? { typeNameToTypeIRI } : {}),
+      persistenceManifest,
+      typeName,
     });
   };
   const load = async (typeName: string, entityIRI: string) => {
-    const select = jsonSchema2PrismaSelect(typeName, effectiveSchema, {
+    const baseSelect = jsonSchema2PrismaSelect(typeName, effectiveSchema, {
       maxRecursion: maxRecursionDepth,
-    });
+    }) as Record<string, unknown>;
+    const select = expandSelectWithManifest(
+      baseSelect ?? { id: true, type: true },
+      typeName,
+      persistenceManifest,
+    );
     const entry = await prisma[typeName].findUnique({
       where: {
         id: entityIRI,
       },
       select,
     });
-    return toJSONLDWithOptions(entry);
+    return toJSONLDWithOptions(entry, typeName);
   };
 
   const loadMany = async (typeName: string, limit?: number) => {
-    const select = jsonSchema2PrismaSelect(typeName, effectiveSchema, {
+    const baseSelect = jsonSchema2PrismaSelect(typeName, effectiveSchema, {
       maxRecursion: maxRecursionDepth,
-    });
+    }) as Record<string, unknown>;
+    const select = expandSelectWithManifest(
+      baseSelect ?? { id: true, type: true },
+      typeName,
+      persistenceManifest,
+    );
     const entries = await prisma[typeName].findMany({
       take: limit,
       select,
     });
-    return entries.map(toJSONLDWithOptions);
+    return entries.map((e: unknown) => toJSONLDWithOptions(e, typeName));
   };
 
   const loadManyFlat = async (
@@ -234,9 +251,14 @@ export function initPrismaDatastorePair<
     likeInsensitive: boolean,
     limit?: number,
   ) => {
-    const select = jsonSchema2PrismaSelect(typeName, effectiveSchema, {
+    const baseSelect = jsonSchema2PrismaSelect(typeName, effectiveSchema, {
       maxRecursion: maxRecursionDepth,
-    });
+    }) as Record<string, unknown>;
+    const select = expandSelectWithManifest(
+      baseSelect ?? { id: true, type: true },
+      typeName,
+      persistenceManifest,
+    );
     const prim = primaryFields[typeName];
     if (!prim?.label) {
       throw new Error("No primary field found for type " + typeName);
@@ -248,7 +270,7 @@ export function initPrismaDatastorePair<
       take: limit,
       select,
     });
-    return entries.map(toJSONLDWithOptions);
+    return entries.map((e: unknown) => toJSONLDWithOptions(e, typeName));
   };
   const abstractDatastore: AbstractDatastore = {
     typeNameToTypeIRI: typeNameToTypeIRI,
@@ -258,12 +280,14 @@ export function initPrismaDatastorePair<
         IRItoId,
         typeNameToTypeIRI,
         typeIsNotIRI,
+        persistenceManifest,
       }),
     importDocuments: (typeName, importStore, limit) =>
       importAllDocuments(typeName, importStore, prisma, limit, {
         IRItoId,
         typeNameToTypeIRI,
         typeIsNotIRI,
+        persistenceManifest,
       }),
     loadDocument: async (typeName: string, entityIRI: string) => {
       const doc = await load(
@@ -343,10 +367,12 @@ export function initPrismaDatastorePair<
         allowNonTransactionalFallback,
         isAllowedNestedElement,
         idToIRI,
+        IRItoId,
         typeNameToTypeIRI,
         typeIRItoTypeName,
         typeIsNotIRI,
         debug,
+        persistenceManifest,
       });
     },
     listDocuments: async (typeName: string, limit: number = 10, cb) => {
@@ -459,6 +485,7 @@ export function initPrismaDatastorePair<
       loads: true,
       lists: true,
       flatResultSet: true,
+      filters: true,
       counts: true,
       writes: true,
       removes: true,
@@ -467,6 +494,8 @@ export function initPrismaDatastorePair<
       exists: true,
       profiles: {
         counts: { cost: "O(1)" },
+        // Prisma applies nested take/skip/orderBy in one query (no extraction stage).
+        nestedPagination: { stage: "query" },
         ...(effectiveMetaStamping
           ? {
               entityMeta: resolveEntityMetaProfile(
@@ -501,6 +530,83 @@ export function initPrismaDatastorePair<
     },
     list: async (typeName: string, limit?: number, query?: QueryType) =>
       abstractDatastore.findDocuments(typeName, query ?? {}, limit),
+    filterOne: async (typeName, entityIRI, options) => {
+      const filterCtx = {
+        prisma,
+        schema: effectiveSchema,
+        IRItoId,
+        idToIRI,
+        typeNameToTypeIRI,
+        typeIRItoTypeName,
+        supportsStringMode:
+          prismaDatasourceSupportsStringMode(datasourceProvider),
+        maxRecursionDepth,
+        persistenceManifest,
+        typeName,
+      };
+      return filterOnePrisma(
+        typeName,
+        entityIRI,
+        options as StoreDocumentsSearchOptions<unknown> | undefined,
+        filterCtx,
+      );
+    },
+    filterMany: async (typeName, options) => {
+      const filterCtx = {
+        prisma,
+        schema: effectiveSchema,
+        IRItoId,
+        idToIRI,
+        typeNameToTypeIRI,
+        typeIRItoTypeName,
+        supportsStringMode:
+          prismaDatasourceSupportsStringMode(datasourceProvider),
+        maxRecursionDepth,
+        persistenceManifest,
+        typeName,
+      };
+      return filterManyPrisma(
+        typeName,
+        options as StoreDocumentsSearchOptions<unknown> | undefined,
+        filterCtx,
+      );
+    },
+    getEntitiesWithClassesByFilter: async (options) => {
+      // Resolve matching entity IRIs via filterMany, then map each to its type IRIs.
+      const typeNames = Object.keys(defs(effectiveSchema));
+      const result = new Map<string, string[]>();
+      for (const typeName of typeNames) {
+        const rows = await filterManyPrisma(
+          typeName,
+          {
+            ...(options as StoreDocumentsSearchOptions<unknown>),
+            select: { "@id": true } as never,
+          },
+          {
+            prisma,
+            schema: effectiveSchema,
+            IRItoId,
+            idToIRI,
+            typeNameToTypeIRI,
+            typeIRItoTypeName,
+            supportsStringMode:
+              prismaDatasourceSupportsStringMode(datasourceProvider),
+            maxRecursionDepth: 0,
+            persistenceManifest,
+            typeName,
+          },
+        );
+        for (const row of rows) {
+          const iri = row["@id"];
+          if (typeof iri !== "string") continue;
+          const typeIri = typeNameToTypeIRI(typeName);
+          const existing = result.get(iri) ?? [];
+          if (!existing.includes(typeIri)) existing.push(typeIri);
+          result.set(iri, existing);
+        }
+      }
+      return result;
+    },
     findDocumentsAsFlatResultSet: async (
       typeName: string,
       query?: QueryType,
@@ -566,6 +672,7 @@ export function initPrismaDatastorePair<
         IRItoId,
         typeNameToTypeIRI,
         typeIsNotIRI,
+        persistenceManifest,
       });
       const loaded = await abstractDatastore.loadDocument(typeName, entityIRI);
       if (!loaded) {
@@ -589,6 +696,7 @@ export function initPrismaDatastorePair<
         IRItoId,
         typeNameToTypeIRI,
         typeIsNotIRI,
+        persistenceManifest,
       });
       return (await abstractDatastore.listDocuments(typeName, limit)) as Record<
         string,

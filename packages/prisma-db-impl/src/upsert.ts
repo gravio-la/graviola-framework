@@ -28,10 +28,12 @@ export interface UpsertOptions<
   allowUnknownNestedElementCreation?: boolean;
   isAllowedNestedElement?: (element: any) => boolean;
   idToIRI?: StringToIRIFn;
+  IRItoId?: IRIToStringFn;
   typeNameToTypeIRI: StringToIRIFn;
   typeIsNotIRI?: boolean;
   typeIRItoTypeName: IRIToStringFn;
   debug?: boolean;
+  persistenceManifest?: import("@graviola/json-schema-prisma-utils").PersistenceManifest;
 }
 
 interface NestedElement {
@@ -52,9 +54,12 @@ async function cleanAndSave<
     jsonldContext?: any;
     keepContext?: boolean;
     idToIRI?: StringToIRIFn;
+    IRItoId?: IRIToStringFn;
     typeNameToTypeIRI?: StringToIRIFn;
     typeIsNotIRI?: boolean;
     allowNonTransactionalFallback?: boolean;
+    persistenceManifest?: import("@graviola/json-schema-prisma-utils").PersistenceManifest;
+    debug?: boolean;
   },
 ) {
   const { schema: rootSchema } = options;
@@ -73,15 +78,21 @@ async function cleanAndSave<
   const {
     allowNonTransactionalFallback,
     idToIRI,
+    IRItoId,
     typeNameToTypeIRI,
     typeIsNotIRI,
+    persistenceManifest,
+    debug,
   } = options;
 
   await save(typeName, cleanData, prisma, error, {
     idToIRI,
+    IRItoId,
     typeNameToTypeIRI,
     typeIsNotIRI,
     allowNonTransactionalFallback,
+    persistenceManifest,
+    debug,
   });
 
   return cleanData;
@@ -209,6 +220,7 @@ export async function upsert<
     defaultPrefix,
     keepContext = false,
     idToIRI,
+    IRItoId,
     typeNameToTypeIRI,
     typeIRItoTypeName,
     typeIsNotIRI,
@@ -216,6 +228,7 @@ export async function upsert<
     allowUnknownNestedElementCreation,
     isAllowedNestedElement,
     debug = false,
+    persistenceManifest,
   } = options;
 
   const error = new Set<string>();
@@ -231,12 +244,14 @@ export async function upsert<
       jsonldContext,
       keepContext,
       idToIRI,
+      IRItoId,
       typeNameToTypeIRI,
       typeIRItoTypeName,
       typeIsNotIRI,
       isAllowedNestedElement,
       debug,
       allowNonTransactionalFallback,
+      persistenceManifest,
     });
   }
 
@@ -248,9 +263,12 @@ export async function upsert<
     jsonldContext,
     keepContext,
     idToIRI,
+    IRItoId,
     typeNameToTypeIRI,
     typeIsNotIRI,
     allowNonTransactionalFallback,
+    persistenceManifest,
+    debug,
   });
 
   if (error.size > 0) {
