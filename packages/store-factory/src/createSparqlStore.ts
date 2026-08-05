@@ -45,6 +45,7 @@ export async function createSparqlStore(
     typeNameToTypeIRI,
     queryBuildOptions: {
       primaryFields,
+      primaryFieldExtracts: {},
       typeIRItoTypeName,
       propertyToIRI: typeNameToTypeIRI,
       sparqlFlavour: flavour,
@@ -55,7 +56,7 @@ export async function createSparqlStore(
   });
 
   return {
-    store: store as CreateStoreResult["store"],
+    store: store as unknown as CreateStoreResult["store"],
     typeNames: typeNamesFromSchema(opts.schema),
   };
 }

@@ -167,12 +167,14 @@ async function createNestedElements<
     jsonldContext?: any;
     keepContext?: boolean;
     idToIRI?: StringToIRIFn;
+    IRItoId?: IRIToStringFn;
     typeNameToTypeIRI: StringToIRIFn;
     typeIRItoTypeName: IRIToStringFn;
     typeIsNotIRI?: boolean;
     isAllowedNestedElement?: (element: any) => boolean;
     debug: boolean;
     allowNonTransactionalFallback?: boolean;
+    persistenceManifest?: import("@graviola/json-schema-prisma-utils").PersistenceManifest;
   },
 ) {
   const { typeIRItoTypeName, debug } = options;

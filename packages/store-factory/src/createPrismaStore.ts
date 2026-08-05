@@ -11,14 +11,19 @@ import type {
   PrismaBackendSpec,
 } from "./types.js";
 
+type PrismaLikeClient = Record<string, unknown> & {
+  $disconnect?: () => Promise<void>;
+};
+
 async function resolvePrismaClient(
   backend: PrismaBackendSpec,
-): Promise<{ client: Record<string, unknown>; dispose?: () => Promise<void> }> {
+): Promise<{ client: PrismaLikeClient; dispose?: () => Promise<void> }> {
   if (backend.prisma) {
-    const client = backend.prisma;
+    const client = backend.prisma as PrismaLikeClient;
+    const disconnect = client.$disconnect;
     const dispose =
-      typeof client.$disconnect === "function"
-        ? () => client.$disconnect() as Promise<void>
+      typeof disconnect === "function"
+        ? () => disconnect.call(client)
         : undefined;
     return { client, dispose };
   }
@@ -26,11 +31,11 @@ async function resolvePrismaClient(
   const { PrismaClient } = await import("@prisma/client");
   const client = new PrismaClient({
     datasources: { db: { url: backend.datasourceUrl } },
-  }) as unknown as Record<string, unknown>;
+  }) as unknown as PrismaLikeClient;
   return {
     client,
     dispose: () =>
-      (client.$disconnect as () => Promise<void>)().catch(() => undefined),
+      (client.$disconnect?.() ?? Promise.resolve()).catch(() => undefined),
   };
 }
 
@@ -66,7 +71,7 @@ export async function createPrismaStore(
   );
 
   return {
-    store: store as CreateStoreResult["store"],
+    store: store as unknown as CreateStoreResult["store"],
     typeNames: typeNamesFromSchema(opts.schema),
     dispose,
   };
