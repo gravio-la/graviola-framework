@@ -130,7 +130,7 @@ export function createRestAdapter(): DatastoreAdapter {
           fetch: (req) => app.fetch(req),
         });
         stopServer = async () => {
-          server.stop(true);
+          server.stop();
         };
 
         const baseUrl = `http://127.0.0.1:${server.port}`;

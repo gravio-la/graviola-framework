@@ -1,5 +1,4 @@
 import type { CRUDFunctions } from "@graviola/edb-core-types";
-import type { Quad } from "@rdfjs/types";
 
 import {
   defaultTypeIRItoTypeName,
@@ -23,8 +22,8 @@ function makeSyncStoreCRUDFunctions(store: {
     },
     constructFetch: async (query: string) => {
       const { default: datasetFactory } = await import("@rdfjs/dataset");
-      const quads = (store.query(query) as Quad[]) ?? [];
-      return datasetFactory.dataset(quads);
+      const quads = (store.query(query) as unknown[]) ?? [];
+      return datasetFactory.dataset(quads as never);
     },
     updateFetch: async (query: string) => {
       store.update(query);
@@ -71,6 +70,7 @@ export async function createOxigraphStore(
     typeNameToTypeIRI,
     queryBuildOptions: {
       primaryFields,
+      primaryFieldExtracts: {},
       typeIRItoTypeName,
       propertyToIRI: typeNameToTypeIRI,
       sparqlFlavour: "oxigraph",
@@ -81,7 +81,7 @@ export async function createOxigraphStore(
   });
 
   return {
-    store: store as CreateStoreResult["store"],
+    store: store as unknown as CreateStoreResult["store"],
     typeNames: typeNamesFromSchema(opts.schema),
   };
 }
