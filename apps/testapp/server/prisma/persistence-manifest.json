@@ -1,0 +1,158 @@
+{
+  "databaseProvider": "sqlite",
+  "types": {
+    "Category": {
+      "id": {
+        "representation": "scalar"
+      },
+      "type": {
+        "representation": "scalar"
+      },
+      "name": {
+        "representation": "scalar"
+      },
+      "image": {
+        "representation": "scalar"
+      },
+      "description": {
+        "representation": "scalar"
+      },
+      "basePrice": {
+        "representation": "scalar"
+      },
+      "subCategories": {
+        "representation": "relationM2M"
+      },
+      "parentCategory": {
+        "representation": "relationToOne"
+      }
+    },
+    "Item": {
+      "id": {
+        "representation": "scalar"
+      },
+      "type": {
+        "representation": "scalar"
+      },
+      "name": {
+        "representation": "scalar"
+      },
+      "description": {
+        "representation": "scalar"
+      },
+      "parent": {
+        "representation": "relationToOne"
+      },
+      "photos": {
+        "representation": "childTable",
+        "childModel": "Item_photos",
+        "valueType": "String",
+        "parentFk": "Item_id",
+        "parentRelation": "Item"
+      },
+      "yearCodes": {
+        "representation": "childTable",
+        "childModel": "Item_yearCodes",
+        "valueType": "Int",
+        "parentFk": "Item_id",
+        "parentRelation": "Item"
+      },
+      "media": {
+        "representation": "childTable",
+        "childModel": "Item_media",
+        "parentFk": "Item_id",
+        "parentRelation": "Item",
+        "properties": {
+          "url": {
+            "representation": "scalar"
+          },
+          "author": {
+            "representation": "scalar"
+          },
+          "encryption": {
+            "representation": "scalar"
+          },
+          "copyright": {
+            "representation": "flattened",
+            "properties": {
+              "year": {
+                "representation": "scalar"
+              },
+              "notes": {
+                "representation": "childTable",
+                "childModel": "Item_media_copyright_notes",
+                "valueType": "String",
+                "parentFk": "Item_media_id",
+                "parentRelation": "Item_media"
+              }
+            }
+          }
+        }
+      },
+      "condition": {
+        "representation": "scalar"
+      },
+      "category": {
+        "representation": "relationToOne"
+      },
+      "vendor": {
+        "representation": "relationToOne"
+      },
+      "tags": {
+        "representation": "relationM2M"
+      },
+      "basePrice": {
+        "representation": "scalar"
+      },
+      "isAvailable": {
+        "representation": "scalar"
+      }
+    },
+    "Tag": {
+      "id": {
+        "representation": "scalar"
+      },
+      "type": {
+        "representation": "scalar"
+      },
+      "name": {
+        "representation": "scalar"
+      },
+      "description": {
+        "representation": "scalar"
+      },
+      "image": {
+        "representation": "scalar"
+      },
+      "relatedTags": {
+        "representation": "relationM2M"
+      }
+    },
+    "Vendor": {
+      "id": {
+        "representation": "scalar"
+      },
+      "type": {
+        "representation": "scalar"
+      },
+      "name": {
+        "representation": "scalar"
+      },
+      "description": {
+        "representation": "scalar"
+      },
+      "website": {
+        "representation": "scalar"
+      },
+      "email": {
+        "representation": "scalar"
+      },
+      "address": {
+        "representation": "scalar"
+      },
+      "logo": {
+        "representation": "scalar"
+      }
+    }
+  }
+}

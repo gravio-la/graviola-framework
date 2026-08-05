@@ -16,12 +16,17 @@ import type { SchemaRouteOutletContext } from "../schemaOutletContext";
 
 const ITEM_SCHEMA = "item-schema";
 
+/** REST has no SPARQL SELECT flat rows — default the table to Store/JSON-LD mode. */
+const useRestStore =
+  (import.meta.env.VITE_STORE as string | undefined)?.toLowerCase() === "rest";
+
 export function GenericListPage() {
   const { typeName } = useParams<{ typeName: string }>();
   const { schemaConfig } = useOutletContext<SchemaRouteOutletContext>();
   const navigate = useNavigate();
 
   const basePath = `/${schemaConfig.schemaName}`;
+  const rowShape = useRestStore ? "jsonld" : "sparql-select";
 
   const toEntitySegment = useCallback(
     (id: string) =>
@@ -73,11 +78,12 @@ export function GenericListPage() {
             flexShrink: 0,
           }}
         >
-          <ToggleButtonGroup exclusive value="sparql-select" size="small">
+          <ToggleButtonGroup exclusive value={rowShape} size="small">
             <ToggleButton
               value="sparql-select"
               component={Link}
               to={`${basePath}/list/${typeName}`}
+              disabled={useRestStore}
             >
               SPARQL SELECT
             </ToggleButton>
@@ -93,6 +99,7 @@ export function GenericListPage() {
       ) : null}
       <SemanticTable
         typeName={typeName}
+        rowShape={rowShape}
         tableUiSchema={schemaConfig.tableUiSchema}
         onEditEntry={onEditEntry}
         onShowEntry={onShowEntry}
