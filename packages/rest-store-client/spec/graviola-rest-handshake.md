@@ -20,7 +20,7 @@ OpenAPI describes routes and schemas; this descriptor describes **honest Store c
 
 Servers implementing **v0** typically **do not** expose this document; clients fall back to **static configuration** and use `LegacyRESTClientStore`.
 
-## Response envelope
+## Response envelopeGraviolaRestError
 
 Top-level key **`graviolaStore`** — fixed shape for each protocol version.
 

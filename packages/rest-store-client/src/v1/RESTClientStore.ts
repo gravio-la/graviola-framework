@@ -296,16 +296,24 @@ export const createRESTClientStoreClient = <
       options?: StoreFilterTraversalOptions<EntityOf<R, T>>,
     ): Promise<EntityOf<R, T> | null> => {
       capOrThrow(capabilities, "filters");
-      const merged: StoreDocumentsSearchOptions<EntityOf<R, T>> = {
-        ...options,
-        where: {
-          ...(options?.where as object),
-          "@id": entityIRI,
-        } as unknown as StoreDocumentsSearchOptions<EntityOf<R, T>>["where"],
-        limit: 1,
-      };
-      const rows = await store.filterMany(typeName, merged);
-      return rows[0] ?? null;
+      // Dedicated wire route so the server can call store.filterOne (subject bind).
+      const entityRel = entityRelativePath(
+        typeName,
+        entityIRI,
+        opts.iriHandling,
+        opts.localIdFromIri,
+      );
+      const queryPath = rel(`${entityRel}/_query`);
+      try {
+        const res = await opts.transport.postJson(queryPath, options ?? {});
+        const json: unknown = await res.json();
+        return json as EntityOf<R, T>;
+      } catch (err) {
+        if (err instanceof GraviolaRestError && err.status === 404) {
+          return null;
+        }
+        throw err;
+      }
     },
     filterMany: async <T extends keyof R & string>(
       typeName: T,
@@ -322,6 +330,28 @@ export const createRESTClientStoreClient = <
       } else items = [];
       return items as EntityOf<R, T>[];
     },
+    getEntitiesWithClassesByFilter: async <T = unknown>(
+      options: StoreDocumentsSearchOptions<T>,
+    ): Promise<Map<string, string[]>> => {
+      capOrThrow(capabilities, "filters");
+      const path = rel("_entities-with-classes");
+      const res = await opts.transport.postJson(path, options ?? {});
+      const json: unknown = await res.json();
+      const map = new Map<string, string[]>();
+      if (json && typeof json === "object" && !Array.isArray(json)) {
+        for (const [iri, classes] of Object.entries(
+          json as Record<string, unknown>,
+        )) {
+          if (Array.isArray(classes)) {
+            map.set(
+              iri,
+              classes.filter((c): c is string => typeof c === "string"),
+            );
+          }
+        }
+      }
+      return map;
+    },
     count: async (
       typeName: string,
       query?: Pick<StoreListQuery, "search" | "insensitive">,
@@ -329,7 +359,6 @@ export const createRESTClientStoreClient = <
       capOrThrow(capabilities, "counts");
       const path = rel(`${encodeURIComponent(typeName)}/_count`);
       const body = {
-        where: {},
         searchString: query?.search,
         insensitive: query?.insensitive,
       };
