@@ -8,6 +8,7 @@ import {
   SparqlEndpoint,
 } from "@graviola/edb-core-types";
 import { LocalOxigraphStoreProvider } from "@graviola/local-oxigraph-store-provider";
+import { V1RestStoreProvider } from "@graviola/rest-store-provider";
 import { Provider } from "react-redux";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
@@ -30,6 +31,15 @@ import { allRenderers } from "./config";
 import { CircularProgress } from "@mui/material";
 import type { MetaStampingConfig } from "@graviola/meta-schema";
 import { GraviolaLoungeProviders } from "@graviola/graviola-app-config";
+
+/** `local` (default) = in-browser Oxigraph; `rest` = V1RestStoreProvider. */
+const storeMode = (
+  import.meta.env.VITE_STORE as string | undefined
+)?.toLowerCase();
+const useRestStore = storeMode === "rest";
+const restApiBaseUrl =
+  (import.meta.env.VITE_GRAVIOLA_API as string | undefined) ??
+  "http://localhost:3010";
 
 type GraviolaProviderProps = {
   baseIRI: string;
@@ -138,30 +148,45 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
         tableActionRegistry={tableActionRegistry}
       >
         <GraviolaLoungeProviders>
-          <LocalOxigraphStoreProvider
-            key={storageKey}
-            endpoint={endpoint}
-            defaultLimit={10}
-            enableInversePropertiesFeature={true}
-            initialData={initialData ?? ""}
-            localPersistence={{
-              enabled: true,
-              restoreOnLoad: true,
-              debounceMS: 5000,
-              storageKey,
-            }}
-            metaStamping={metaStamping}
-            storeSchema={schema}
-            loader={<CircularProgress />}
-          >
-            <NiceModal.Provider>
-              {import.meta.env.DEV ? (
-                <SPARQLQueryDevtools initialIsOpen={false} />
-              ) : null}
-              {children}
-              <ReactQueryDevtools initialIsOpen={true} />
-            </NiceModal.Provider>
-          </LocalOxigraphStoreProvider>
+          {useRestStore ? (
+            <V1RestStoreProvider
+              key={`rest-${storageKey}`}
+              baseUrl={restApiBaseUrl}
+              auth={{ mode: "none" }}
+              handshakePath="/.well-known/graviola-store"
+              queryCacheScope="rest"
+            >
+              <NiceModal.Provider>
+                {children}
+                <ReactQueryDevtools initialIsOpen={true} />
+              </NiceModal.Provider>
+            </V1RestStoreProvider>
+          ) : (
+            <LocalOxigraphStoreProvider
+              key={storageKey}
+              endpoint={endpoint}
+              defaultLimit={10}
+              enableInversePropertiesFeature={true}
+              initialData={initialData ?? ""}
+              localPersistence={{
+                enabled: true,
+                restoreOnLoad: true,
+                debounceMS: 5000,
+                storageKey,
+              }}
+              metaStamping={metaStamping}
+              storeSchema={schema}
+              loader={<CircularProgress />}
+            >
+              <NiceModal.Provider>
+                {import.meta.env.DEV ? (
+                  <SPARQLQueryDevtools initialIsOpen={false} />
+                ) : null}
+                {children}
+                <ReactQueryDevtools initialIsOpen={true} />
+              </NiceModal.Provider>
+            </LocalOxigraphStoreProvider>
+          )}
         </GraviolaLoungeProviders>
       </AdbProvider>
     </Provider>

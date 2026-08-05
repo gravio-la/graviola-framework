@@ -73,6 +73,33 @@ export const schema = {
             type: "string",
           },
         },
+        yearCodes: {
+          type: "array",
+          items: {
+            type: "integer",
+          },
+        },
+        media: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              url: { type: "string" },
+              author: { type: "string" },
+              encryption: { type: "string" },
+              copyright: {
+                type: "object",
+                properties: {
+                  year: { type: "integer" },
+                  notes: {
+                    type: "array",
+                    items: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+        },
         condition: {
           type: "string",
         },

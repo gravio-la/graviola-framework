@@ -6,12 +6,19 @@
   "scripts": {
     "download-items": "bun scripts/download-commons-items.ts",
     "dev": "vite",
+    "dev:api": "bun run server/index.ts",
+    "dev:rest": "VITE_STORE=rest VITE_GRAVIOLA_API=http://localhost:3010 vite",
+    "setup:prisma": "bun run server/setup-prisma.ts",
+    "seed:api": "bun run server/seed.ts",
     "build": "tsc -b && vite build",
     "build:pages": "tsc -b && vite build --outDir ../../_site/testapp",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@graviola/rest-server-hono": "workspace:*",
+    "@graviola/rest-store-provider": "workspace:*",
+    "@graviola/store-factory": "workspace:*",
     "@ebay/nice-modal-react": "^1.2.11",
     "@emotion/react": "catalog:",
     "@emotion/styled": "catalog:",
@@ -59,6 +66,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
+    "@graviola/json-schema-prisma-utils": "workspace:*",
+    "@prisma/client": "catalog:prisma",
     "@types/json-schema": "catalog:",
     "@types/lodash-es": "^4.17.12",
     "@types/react": "catalog:",
@@ -69,6 +78,7 @@
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
+    "prisma": "catalog:prisma",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.0"

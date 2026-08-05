@@ -1,4 +1,5 @@
 import { publicAssetUrl } from "./publicAssetUrl";
+import { assignSkolemIris } from "@graviola/json-schema-utils";
 
 /** Seed Turtle for the item schema Oxigraph store when localStorage is empty. */
 const rawItemFixtureTurtle = `
@@ -53,12 +54,6 @@ const rawItemFixtureTurtle = `
 
     # ═══════════════════════════════════════════════════════════════════════════
     # Kategorien — Hierarchie unter „Instrumente und Instrumentenbedarf“
-    #   Instrumente und Instrumentenbedarf
-    #   ├── Streichinstrumente → Violinen & Bratschen
-    #   ├── Blasinstrumente → Holzblasinstrumente
-    #   ├── Tasteninstrumente
-    #   ├── Schlagwerk & Becken
-    #   └── Zubehör → Saiten & Pflege · Notenpulte & Ständer
     # ═══════════════════════════════════════════════════════════════════════════
 
     ex:cat-instrumente-root a :Category ;
@@ -132,7 +127,7 @@ const rawItemFixtureTurtle = `
       :parentCategory ex:cat-zubehoer .
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # Artikel — Beispiele mit Bezug zu Instrumenten & Zubehör
+    # Artikel — repeated properties (not RDF lists) for multi-valued literals/links
     # ═══════════════════════════════════════════════════════════════════════════
 
     ex:item-violine-mudenthaler-4-4 a :Item ;
@@ -143,16 +138,14 @@ const rawItemFixtureTurtle = `
       :basePrice "184900"^^xsd:integer ;
       :isAvailable "true"^^xsd:boolean ;
       :category ex:cat-violinen-bratschen ;
-      :photos (
-        "/items/violin-vl100.jpg"
-        "/items/violin-alexander-met.jpg"
-      ) ;
-      :tags (
-        ex:tag-gebraucht
-        ex:tag-profi
-        ex:tag-akustik
-        ex:tag-hamburg
-      ) .
+      :photos "/items/violin-vl100.jpg" ;
+      :photos "/items/violin-alexander-met.jpg" ;
+      :yearCodes "2020"^^xsd:integer ;
+      :yearCodes "2024"^^xsd:integer ;
+      :tags ex:tag-gebraucht ;
+      :tags ex:tag-profi ;
+      :tags ex:tag-akustik ;
+      :tags ex:tag-hamburg .
 
     ex:item-klarinette-buffet-e12 a :Item ;
       :name "Klarinette in B, Buffet Crampon E12" ;
@@ -162,13 +155,12 @@ const rawItemFixtureTurtle = `
       :basePrice "129900"^^xsd:integer ;
       :isAvailable "true"^^xsd:boolean ;
       :category ex:cat-holzblas ;
-      :photos ( "/items/clarinet-001.jpg" ) ;
-      :tags (
-        ex:tag-neu
-        ex:tag-einsteiger
-        ex:tag-akustik
-        ex:tag-versand-frei
-      ) .
+      :photos "/items/clarinet-001.jpg" ;
+      :yearCodes "2023"^^xsd:integer ;
+      :tags ex:tag-neu ;
+      :tags ex:tag-einsteiger ;
+      :tags ex:tag-akustik ;
+      :tags ex:tag-versand-frei .
 
     ex:item-epiano-yamaha-p45 a :Item ;
       :name "Digitalpiano Yamaha P-45" ;
@@ -178,16 +170,13 @@ const rawItemFixtureTurtle = `
       :basePrice "51900"^^xsd:integer ;
       :isAvailable "true"^^xsd:boolean ;
       :category ex:cat-tasteninstrumente ;
-      :photos (
-        <http://www.example.org/example/media/p45-frontal.webp>
-        <http://www.example.org/example/media/p45-anschluesse.webp>
-      ) ;
-      :tags (
-        ex:tag-neu
-        ex:tag-einsteiger
-        ex:tag-digital
-        ex:tag-versand-frei
-      ) .
+      :photos "/items/yamaha-p125.jpg" ;
+      :photos "/items/digital-piano-clavinova.jpg" ;
+      :yearCodes "2024"^^xsd:integer ;
+      :tags ex:tag-neu ;
+      :tags ex:tag-einsteiger ;
+      :tags ex:tag-digital ;
+      :tags ex:tag-versand-frei .
 
     ex:item-becken-zildjian-a-crash-16 a :Item ;
       :name "Crash-Becken 16″, Zildjian A Custom" ;
@@ -197,12 +186,11 @@ const rawItemFixtureTurtle = `
       :basePrice "18900"^^xsd:integer ;
       :isAvailable "true"^^xsd:boolean ;
       :category ex:cat-schlagwerk ;
-      :photos ( "/items/crash-zildjian-14.jpg" ) ;
-      :tags (
-        ex:tag-gebraucht
-        ex:tag-profi
-        ex:tag-hamburg
-      ) .
+      :photos "/items/crash-zildjian-14.jpg" ;
+      :yearCodes "2019"^^xsd:integer ;
+      :tags ex:tag-gebraucht ;
+      :tags ex:tag-profi ;
+      :tags ex:tag-hamburg .
 
     ex:item-saitensatz-pirastro-oliv a :Item ;
       :name "Saitensatz Violine Pirastro Oliv" ;
@@ -212,12 +200,11 @@ const rawItemFixtureTurtle = `
       :isAvailable "true"^^xsd:boolean ;
       :parent ex:item-violine-mudenthaler-4-4 ;
       :category ex:cat-saiten-pflege ;
-      :photos ( "/items/violin-strings-closeup.jpg" ) ;
-      :tags (
-        ex:tag-neu
-        ex:tag-profi
-        ex:tag-akustik
-      ) .
+      :photos "/items/violin-strings-closeup.jpg" ;
+      :yearCodes "2025"^^xsd:integer ;
+      :tags ex:tag-neu ;
+      :tags ex:tag-profi ;
+      :tags ex:tag-akustik .
 
     ex:item-kolofonium-andrea a :Item ;
       :name "Kolofonium Andrea Solo" ;
@@ -227,12 +214,11 @@ const rawItemFixtureTurtle = `
       :basePrice "2490"^^xsd:integer ;
       :isAvailable "true"^^xsd:boolean ;
       :category ex:cat-saiten-pflege ;
-      :photos ( "/items/violin-rosin.jpg" ) ;
-      :tags (
-        ex:tag-neu
-        ex:tag-einsteiger
-        ex:tag-akustik
-      ) .
+      :photos "/items/violin-rosin.jpg" ;
+      :yearCodes "2022"^^xsd:integer ;
+      :tags ex:tag-neu ;
+      :tags ex:tag-einsteiger ;
+      :tags ex:tag-akustik .
 
     ex:item-notenpult-konig-meyer-10065 a :Item ;
       :name "Notenpult schwarz, König & Meyer 10065" ;
@@ -242,16 +228,93 @@ const rawItemFixtureTurtle = `
       :basePrice "7900"^^xsd:integer ;
       :isAvailable "false"^^xsd:boolean ;
       :category ex:cat-notenpulte ;
-      :photos ( "/items/music-stand-metal.jpg" ) ;
-      :tags (
-        ex:tag-neu
-        ex:tag-versand-frei
-      ) .
+      :photos "/items/music-stand-metal.jpg" ;
+      :yearCodes "2021"^^xsd:integer ;
+      :tags ex:tag-neu ;
+      :tags ex:tag-versand-frei .
 
 `;
 
+type MediaMember = {
+  url: string;
+  author: string;
+  encryption: string;
+  copyright: { year: number; notes: string[] };
+};
+
+function asset(path: string): string {
+  return publicAssetUrl(path.replace(/^\//, ""));
+}
+
+function turtleEscape(s: string): string {
+  return s.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+}
+
+/**
+ * Emit media as skolem-IRI nodes (same scheme Prisma uses for child rows).
+ * Singular copyright stays a blank node (underscore-flattened in Prisma);
+ * notes are repeated literals on that blank node.
+ */
+function mediaTurtle(itemLocalName: string, members: MediaMember[]): string {
+  const rootIri = `http://www.example.org/example/${itemLocalName}`;
+  const assigned = assignSkolemIris(rootIri, "media", members);
+  const blocks: string[] = [];
+
+  for (const { member, iri } of assigned) {
+    const noteTriples = member.copyright.notes
+      .map((n) => `\n        :notes "${turtleEscape(n)}" ;`)
+      .join("");
+    blocks.push(`ex:${itemLocalName} :media <${iri}> .
+
+    <${iri}> :url "${turtleEscape(member.url)}" ;
+      :author "${turtleEscape(member.author)}" ;
+      :encryption "${turtleEscape(member.encryption)}" ;
+      :copyright [
+        :year "${member.copyright.year}"^^xsd:integer ;${noteTriples}
+      ] .`);
+  }
+  return blocks.join("\n\n    ");
+}
+
+const mediaFixtureTurtle = `
+    ${mediaTurtle("item-violine-mudenthaler-4-4", [
+      {
+        url: asset("items/violin-vl100.jpg"),
+        author: "Atelier Mudenthaler",
+        encryption: "none",
+        copyright: {
+          year: 2020,
+          notes: ["studio photo", "no commercial reuse"],
+        },
+      },
+      {
+        url: asset("items/violin-alexander-met.jpg"),
+        author: "Museum photo",
+        encryption: "none",
+        copyright: {
+          year: 2018,
+          notes: ["public domain candidate"],
+        },
+      },
+    ])}
+
+    ${mediaTurtle("item-epiano-yamaha-p45", [
+      {
+        url: asset("items/yamaha-p125.jpg"),
+        author: "Yamaha",
+        encryption: "none",
+        copyright: {
+          year: 2024,
+          notes: ["product shot"],
+        },
+      },
+    ])}
+`;
+
 /** Rewrite `/items/...` paths so they work when the app is deployed under a subpath. */
-export const exampleDataTurtle = rawItemFixtureTurtle.replace(
+const baseTurtle = rawItemFixtureTurtle.replace(
   /"(\/items\/[^"]+)"/g,
   (_, path: string) => `"${publicAssetUrl(path.replace(/^\//, ""))}"`,
 );
+
+export const exampleDataTurtle = `${baseTurtle}\n${mediaFixtureTurtle}\n`;
