@@ -1,0 +1,57 @@
+{
+  "name": "@graviola/store-factory",
+  "version": "0.1.0",
+  "description": "Declarative Store factory — oxigraph / SPARQL / Prisma backends via lazy imports",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "tsc --noEmit",
+    "test": "bun test src"
+  },
+  "dependencies": {
+    "@graviola/edb-core-types": "workspace:*",
+    "@graviola/store-core": "workspace:*"
+  },
+  "peerDependencies": {
+    "@graviola/sparql-db-impl": "workspace:*",
+    "@graviola/prisma-db-impl": "workspace:*",
+    "@graviola/remote-query-implementations": "workspace:*",
+    "@graviola/sparql-tools": "workspace:*",
+    "@prisma/client": "^6.0.0 || ^7.0.0",
+    "@rdfjs/dataset": "^2.0.0",
+    "oxigraph": "^0.5.0"
+  },
+  "peerDependenciesMeta": {
+    "@graviola/sparql-db-impl": { "optional": true },
+    "@graviola/prisma-db-impl": { "optional": true },
+    "@graviola/remote-query-implementations": { "optional": true },
+    "@graviola/sparql-tools": { "optional": true },
+    "@prisma/client": { "optional": true },
+    "@rdfjs/dataset": { "optional": true },
+    "oxigraph": { "optional": true }
+  },
+  "devDependencies": {
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*",
+    "@types/json-schema": "catalog:",
+    "tsup": "^8.0.0",
+    "typescript": "5.8.2"
+  },
+  "license": "MIT"
+}
