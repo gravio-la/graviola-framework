@@ -13,3 +13,4 @@ export * from "./schemaScopeFrame";
 export * from "./schemaFingerprint";
 export * from "./entityIdentity";
 export * from "./cbdBoundary";
+export * from "./skolem";
