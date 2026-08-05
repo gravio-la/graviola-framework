@@ -3,9 +3,14 @@ import pkg from "./package.json";
 
 const config = {
   ...makeConfigWithExternals(pkg),
-  // Bun adapter as separate entry: keeps `Bun`-global code out of the main
-  // WinterCG bundle, consumed via the "./bun" subpath export.
-  entry: ["src/index.ts", "src/adapters/bun.ts"],
+  // Bun adapter and testing double as separate entries: keep `Bun`-global
+  // code and the in-memory test scaffolding out of the main WinterCG
+  // bundle (consumed via "./bun" / "./testing" subpath exports).
+  entry: [
+    "src/index.ts",
+    "src/adapters/bun.ts",
+    "src/testing/inMemoryStore.ts",
+  ],
   dts: true,
 };
 export default config;

@@ -18,6 +18,12 @@
       "import": "./dist/adapters/bun.js",
       "require": "./dist/adapters/bun.cjs",
       "default": "./dist/adapters/bun.js"
+    },
+    "./testing": {
+      "types": "./dist/testing/inMemoryStore.d.ts",
+      "import": "./dist/testing/inMemoryStore.js",
+      "require": "./dist/testing/inMemoryStore.cjs",
+      "default": "./dist/testing/inMemoryStore.js"
     }
   },
   "files": [

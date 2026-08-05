@@ -17,7 +17,7 @@ import { loggingMiddleware } from "./middleware/logging.js";
 import {
   createInMemoryStore,
   createReadOnlyInMemoryStore,
-} from "./inMemoryStore.js";
+} from "./testing/inMemoryStore.js";
 import type { StoreRestHandler } from "./createStoreRestHandler.js";
 
 type DemoSchema = {
