@@ -1,0 +1,44 @@
+{
+  "name": "@graviola/rest-server-hono",
+  "version": "0.1.0",
+  "description": "Hono binding for Graviola REST Store — one-call serveGraviolaRest",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "graviola-rest-serve": "./dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "tsc --noEmit",
+    "test": "bun test src"
+  },
+  "dependencies": {
+    "@graviola/rest-store-server": "workspace:*",
+    "@graviola/store-core": "workspace:*",
+    "@graviola/store-factory": "workspace:*",
+    "hono": "^4.7.0"
+  },
+  "devDependencies": {
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*",
+    "@types/json-schema": "catalog:",
+    "tsup": "^8.0.0",
+    "typescript": "5.8.2"
+  },
+  "license": "MIT"
+}
