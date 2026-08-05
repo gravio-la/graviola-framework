@@ -30,6 +30,12 @@ export type StoreCommand<R extends SchemaRegistry = SchemaRegistry> =
       options: StoreDocumentsSearchOptions<unknown>;
     }
   | {
+      kind: "filterOne";
+      typeName: string;
+      entityIRI: string;
+      options: StoreDocumentsSearchOptions<unknown>;
+    }
+  | {
       kind: "count";
       typeName: string;
       search?: string;
@@ -44,7 +50,11 @@ export type StoreCommand<R extends SchemaRegistry = SchemaRegistry> =
     }
   | { kind: "upsert"; typeName: string; entityIRI: string; document: unknown }
   | { kind: "remove"; typeName: string; entityIRI: string }
-  | { kind: "resolveTypes"; entityIRI: string };
+  | { kind: "resolveTypes"; entityIRI: string }
+  | {
+      kind: "entitiesWithClasses";
+      options: StoreDocumentsSearchOptions<unknown>;
+    };
 
 export type CommandContext = {
   request: Request;
@@ -146,6 +156,14 @@ export const decodeStorePath = (
     return { kind: "resolveTypes", entityIRI };
   }
 
+  if (
+    segments[0] === "_entities-with-classes" &&
+    method === "POST" &&
+    segments.length === 1
+  ) {
+    return { kind: "entitiesWithClasses", options: {} };
+  }
+
   const typeName = decodePathSegment(segments[0]);
   if (!isKnownType(typeName, ctx.typeNames)) {
     return "unknown_type";
@@ -153,6 +171,12 @@ export const decodeStorePath = (
 
   if (segments.length === 2 && segments[1] === "_query" && method === "POST") {
     return { kind: "filterMany", typeName, options: {} };
+  }
+
+  // POST /{typeName}/{id}/_query → filterOne
+  if (segments.length === 3 && segments[2] === "_query" && method === "POST") {
+    const entityIRI = decodeEntityIri(typeName, segments[1], ctx);
+    return { kind: "filterOne", typeName, entityIRI, options: {} };
   }
 
   if (segments.length === 2 && segments[1] === "_count" && method === "POST") {
@@ -232,8 +256,10 @@ export const enrichCommandFromBody = async (
 ): Promise<StoreCommand> => {
   if (
     cmd.kind === "filterMany" ||
+    cmd.kind === "filterOne" ||
     cmd.kind === "count" ||
-    cmd.kind === "search"
+    cmd.kind === "search" ||
+    cmd.kind === "entitiesWithClasses"
   ) {
     let body: unknown = {};
     try {
@@ -241,7 +267,11 @@ export const enrichCommandFromBody = async (
     } catch {
       body = {};
     }
-    if (cmd.kind === "filterMany") {
+    if (
+      cmd.kind === "filterMany" ||
+      cmd.kind === "filterOne" ||
+      cmd.kind === "entitiesWithClasses"
+    ) {
       return {
         ...cmd,
         options: (body && typeof body === "object"
@@ -254,6 +284,7 @@ export const enrichCommandFromBody = async (
         body && typeof body === "object"
           ? (body as Record<string, unknown>)
           : {};
+      // Counts capability only honours search/insensitive (not typed where).
       return {
         ...cmd,
         search:
@@ -326,6 +357,10 @@ export const encodeCommandResult = (
       const items = Array.isArray(result) ? result : [];
       return jsonResponse({ items });
     }
+    case "filterOne":
+      return result == null
+        ? problemResponse(404, "entity_not_found", "Entity not found")
+        : jsonResponse(result);
     case "count":
       return jsonResponse({ count: typeof result === "number" ? result : 0 });
     case "search": {
@@ -334,6 +369,16 @@ export const encodeCommandResult = (
     }
     case "resolveTypes":
       return jsonResponse(Array.isArray(result) ? result : []);
+    case "entitiesWithClasses": {
+      // Map → plain object for JSON wire
+      if (result instanceof Map) {
+        return jsonResponse(Object.fromEntries(result));
+      }
+      if (result && typeof result === "object") {
+        return jsonResponse(result);
+      }
+      return jsonResponse({});
+    }
     default:
       return problemResponse(500, "internal_error", "Unhandled command");
   }
@@ -386,6 +431,8 @@ export const commandCapability = (cmd: StoreCommand): CommandCapability => {
     case "list":
       return "lists";
     case "filterMany":
+    case "filterOne":
+    case "entitiesWithClasses":
       return "filters";
     case "count":
       return "counts";

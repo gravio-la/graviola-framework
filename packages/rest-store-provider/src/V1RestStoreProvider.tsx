@@ -1,6 +1,5 @@
 import { CrudProviderContext, useAdbContext } from "@graviola/edb-state-hooks";
 import {
-  abstractDatastoreFromRestStore,
   createRESTClientStore,
   type RestAuthConfig,
 } from "@graviola/rest-store-client";
@@ -12,6 +11,8 @@ import {
   useState,
 } from "react";
 
+type V1RestDataStore = Awaited<ReturnType<typeof createRESTClientStore>>;
+
 export type V1RestStoreProviderProps = {
   children: ReactNode;
   baseUrl: string;
@@ -21,7 +22,11 @@ export type V1RestStoreProviderProps = {
   queryCacheScope?: string;
 };
 
-/** REST store provider using v1 handshake + {@link createRESTClientStore}. */
+/**
+ * REST store provider using v1 handshake + {@link createRESTClientStore}.
+ * Puts the Store (with `filterMany` / `list` / …) into {@link CrudProviderContext}
+ * — not the legacy AbstractDatastore shim, so SemanticTable JSON-LD mode works.
+ */
 export const V1RestStoreProvider: FunctionComponent<
   V1RestStoreProviderProps
 > = ({
@@ -36,9 +41,7 @@ export const V1RestStoreProvider: FunctionComponent<
     typeNameToTypeIRI,
     jsonLDConfig: { defaultPrefix },
   } = useAdbContext();
-  const [dataStore, setDataStore] = useState<ReturnType<
-    typeof abstractDatastoreFromRestStore
-  > | null>(null);
+  const [dataStore, setDataStore] = useState<V1RestDataStore | null>(null);
 
   const identifies = useMemo(
     () => ({
@@ -59,7 +62,7 @@ export const V1RestStoreProvider: FunctionComponent<
       fetchImpl,
     }).then((store) => {
       if (!cancelled) {
-        setDataStore(abstractDatastoreFromRestStore(store));
+        setDataStore(store);
       }
     });
     return () => {

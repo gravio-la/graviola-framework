@@ -104,6 +104,22 @@ const executeOnStore = async (
       return (store.list as Function)(cmd.typeName, cmd.limit, cmd.query);
     case "filterMany":
       return (store.filterMany as Function)(cmd.typeName, cmd.options);
+    case "filterOne": {
+      const filterOne = store.filterOne as Function | undefined;
+      if (typeof filterOne === "function") {
+        return filterOne(cmd.typeName, cmd.entityIRI, cmd.options);
+      }
+      // Fallback: filterMany with @id equals + limit 1
+      const rows = await (store.filterMany as Function)(cmd.typeName, {
+        ...cmd.options,
+        where: {
+          ...((cmd.options?.where as object) ?? {}),
+          "@id": { equals: cmd.entityIRI },
+        },
+        limit: 1,
+      });
+      return Array.isArray(rows) ? (rows[0] ?? null) : null;
+    }
     case "count":
       return (store.count as Function)(cmd.typeName, {
         search: cmd.search,
@@ -132,6 +148,16 @@ const executeOnStore = async (
       return (store.remove as Function)(cmd.typeName, cmd.entityIRI);
     case "resolveTypes":
       return (store.resolveTypes as Function)(cmd.entityIRI);
+    case "entitiesWithClasses": {
+      const fn = store.getEntitiesWithClassesByFilter;
+      if (typeof fn !== "function") {
+        throw Object.assign(
+          new Error("getEntitiesWithClassesByFilter not implemented"),
+          { status: 501, code: "capability_not_supported" },
+        );
+      }
+      return (fn as Function)(cmd.options);
+    }
     default:
       throw new Error("Unhandled command");
   }
@@ -216,9 +242,11 @@ export const createStoreRestHandler = <R extends SchemaRegistry>(
     let cmd = decoded;
     if (
       cmd.kind === "filterMany" ||
+      cmd.kind === "filterOne" ||
       cmd.kind === "count" ||
       cmd.kind === "search" ||
-      cmd.kind === "upsert"
+      cmd.kind === "upsert" ||
+      cmd.kind === "entitiesWithClasses"
     ) {
       cmd = await enrichCommandFromBody(cmd, req);
     }
@@ -232,8 +260,20 @@ export const createStoreRestHandler = <R extends SchemaRegistry>(
       );
     }
 
-    const result = await runCommand(cmd as StoreCommand<R>, ctx);
-    return encodeCommandResult(cmd, result);
+    try {
+      const result = await runCommand(cmd as StoreCommand<R>, ctx);
+      return encodeCommandResult(cmd, result);
+    } catch (err) {
+      const e = err as { status?: number; code?: string; message?: string };
+      if (e?.status === 501) {
+        return problemResponse(
+          501,
+          e.code ?? "capability_not_supported",
+          e.message ?? "Capability not supported",
+        );
+      }
+      throw err;
+    }
   };
 
   const pipeline = composeMiddleware(middlewares, (req, ctx) =>

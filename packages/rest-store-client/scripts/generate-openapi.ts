@@ -40,6 +40,14 @@ const spec = {
           { name: "limit", in: "query", schema: { type: "integer" } },
           { name: "offset", in: "query", schema: { type: "integer" } },
           { name: "cursor", in: "query", schema: { type: "string" } },
+          { name: "search", in: "query", schema: { type: "string" } },
+          { name: "insensitive", in: "query", schema: { type: "boolean" } },
+          {
+            name: "sort",
+            in: "query",
+            description: "Comma-separated `field:asc|desc` pairs",
+            schema: { type: "string" },
+          },
         ],
         responses: {
           "200": {
@@ -135,7 +143,7 @@ const spec = {
     },
     "/{typeName}/_query": {
       post: {
-        summary: "Typed filter query",
+        summary: "Typed filter query (filterMany)",
         parameters: [{ $ref: "#/components/parameters/TypeName" }],
         requestBody: {
           required: true,
@@ -153,6 +161,36 @@ const spec = {
               },
             },
           },
+        },
+      },
+    },
+    "/{typeName}/{id}/_query": {
+      post: {
+        summary: "Typed filter for a single entity (filterOne) — subject-bound",
+        parameters: [
+          { $ref: "#/components/parameters/TypeName" },
+          {
+            name: "id",
+            in: "path",
+            required: true,
+            schema: { type: "string" },
+          },
+        ],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/QueryBody" },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "Entity JSON-LD document",
+            content: {
+              "application/json": { schema: { type: "object" } },
+            },
+          },
+          "404": { $ref: "#/components/responses/Problem" },
         },
       },
     },
@@ -227,6 +265,37 @@ const spec = {
         },
       },
     },
+    "/_entities-with-classes": {
+      post: {
+        summary:
+          "Entity IRI → RDF class IRIs for entities matching a typed filter",
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/QueryBody" },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description:
+              "Object map of entityIRI → class IRI arrays (JSON encoding of Map)",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  additionalProperties: {
+                    type: "array",
+                    items: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+          "501": { $ref: "#/components/responses/Problem" },
+        },
+      },
+    },
   },
   components: {
     parameters: {
@@ -286,20 +355,62 @@ const spec = {
       },
       QueryBody: {
         type: "object",
+        description:
+          "Prisma-style typed filter options. Passed through to store.filterMany. " +
+          "Client-side filterOne is emulated as where.{'@id'}=iri + limit:1.",
         properties: {
           where: { type: "object" },
           include: { type: "object" },
           select: { type: "object" },
-          omit: { type: "object" },
-          pagination: { type: "object" },
+          omit: {
+            oneOf: [
+              { type: "array", items: { type: "string" } },
+              { type: "object" },
+            ],
+          },
+          pagination: { $ref: "#/components/schemas/PaginationOptions" },
+          take: { type: "integer" },
+          skip: { type: "integer" },
+          orderBy: {
+            oneOf: [
+              { type: "object" },
+              { type: "array", items: { type: "object" } },
+            ],
+          },
+          limit: { type: "integer" },
           searchString: { type: ["string", "null"] },
+          flavour: {
+            type: "string",
+            enum: ["default", "oxigraph", "blazegraph", "allegro", "jena"],
+          },
+          includeRelationsByDefault: { type: "boolean" },
+          maxRecursion: { type: "integer" },
+          filterValidationMode: {
+            type: "string",
+            enum: ["throw", "warn", "ignore"],
+          },
+        },
+      },
+      PaginationOptions: {
+        type: "object",
+        properties: {
+          take: { type: "integer" },
+          skip: { type: "integer" },
+          orderBy: {
+            oneOf: [
+              { type: "object" },
+              { type: "array", items: { type: "object" } },
+            ],
+          },
         },
       },
       CountBody: {
         type: "object",
+        description:
+          "Count uses Store Counts capability (search/insensitive only). Typed where is not supported.",
         properties: {
-          where: { type: "object" },
           searchString: { type: "string" },
+          search: { type: "string" },
           insensitive: { type: "boolean" },
         },
       },
