@@ -43,9 +43,3 @@ export {
   shortCircuitUpsertInterceptor,
   type ProvenanceStampOptions,
 } from "./interceptors/provenanceStamp.js";
-export {
-  createInMemoryStore,
-  createReadOnlyInMemoryStore,
-  type InMemoryEntity,
-  type InMemoryStoreOptions,
-} from "./inMemoryStore.js";
