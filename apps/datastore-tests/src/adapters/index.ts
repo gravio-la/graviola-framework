@@ -2,6 +2,7 @@ import type { DatastoreAdapter, ImportSeedStore } from "../types";
 import { createOxigraphLocalAdapter } from "./oxigraphLocalAdapter";
 import { createSparqlAdapter } from "./sparqlAdapter";
 import { createPrismaAdapter } from "./prismaAdapter";
+import { createRestAdapter } from "./restAdapter";
 
 /** True when SKIP_DEFAULT_ADAPTER is set to a truthy value (1, true, yes; not 0/false/no). */
 function skipDefaultAdaptersEnv(): boolean {
@@ -15,6 +16,8 @@ function skipDefaultAdaptersEnv(): boolean {
  *
  * Always-on (no env var needed), unless SKIP_DEFAULT_ADAPTER=1:
  *   - SPARQL/Oxigraph (in-process) — uses oxigraph npm Store directly
+ *   - Prisma/SQLite
+ *   - REST/Oxigraph (in-process handler; set REST_HTTP=1 for real Hono port)
  *
  * Opt-in via env vars:
  *   - OXIGRAPH_URL    → SPARQL/Oxigraph (Docker HTTP)
@@ -24,8 +27,10 @@ function skipDefaultAdaptersEnv(): boolean {
  *   - POSTGRES_URL    → Prisma/PostgreSQL
  *   - MARIADB_URL     → Prisma/MariaDB
  *   - MONGODB_URL     → Prisma/MongoDB
+ *   - REST_HTTP=1     → REST adapter uses a real Hono HTTP port
+ *   - SKIP_REST=1     → omit the REST adapter
  *
- * SKIP_DEFAULT_ADAPTER=1 — omit the default in-process Oxigraph and default Prisma/SQLite.
+ * SKIP_DEFAULT_ADAPTER=1 — omit the default in-process Oxigraph, REST, and default Prisma/SQLite.
  *   Only backends you select with env vars run (e.g. MARIADB_URL=… bun test).
  *   To include Prisma/SQLite in that mode, set SQLITE_URL explicitly.
  *
@@ -45,6 +50,11 @@ export async function getActiveAdapters(): Promise<DatastoreAdapter[]> {
   // ─── Always-on: local Oxigraph in-process ────────────────────────────────
   if (!skipDefault) {
     adapters.push(createOxigraphLocalAdapter());
+  }
+
+  // ─── Always-on: REST over Oxigraph (in-process unless REST_HTTP=1) ────────
+  if (!skipDefault && !process.env.SKIP_REST) {
+    adapters.push(createRestAdapter());
   }
 
   // ─── SPARQL HTTP endpoints ────────────────────────────────────────────────
