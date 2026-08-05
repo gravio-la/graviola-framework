@@ -24,12 +24,10 @@
  * `capabilities` descriptor does not expose the corresponding flags.
  */
 import { initPrismaDatastorePair } from "@graviola/prisma-db-impl";
-import {
-  extendSchemaShortcut,
-  JSONLD_SCHEMA_IDENTITY,
-  PRISMA_SCHEMA_IDENTITY,
-} from "@graviola/json-schema-utils";
+import type { PersistenceManifest } from "@graviola/json-schema-prisma-utils";
 import type { JSONSchema7 } from "json-schema";
+import { readFileSync, existsSync } from "fs";
+import { join } from "path";
 import {
   rawTestSchema,
   typeNameToTypeIRI,
@@ -48,8 +46,15 @@ import {
   databaseUrlToProvider,
   getInstalledPrismaMajorVersion,
   invalidateGeneratedPrismaClientCache,
+  jsonLdSchemaToPrismaIdentity,
   runPrismaSetupForUrl,
 } from "../../scripts/setupPrismaCore";
+
+function loadPersistenceManifest(): PersistenceManifest | undefined {
+  const path = join(import.meta.dir, "../../prisma/persistence-manifest.json");
+  if (!existsSync(path)) return undefined;
+  return JSON.parse(readFileSync(path, "utf-8")) as PersistenceManifest;
+}
 
 async function createPrismaClientForUrl(databaseUrl: string): Promise<any> {
   invalidateGeneratedPrismaClientCache();
@@ -114,7 +119,23 @@ async function createPrismaClientForUrl(databaseUrl: string): Promise<any> {
  * avoid FK constraint violations.
  */
 async function clearPrismaData(prisma: any): Promise<void> {
-  // Item references Category and has M2M with Tag — delete first
+  // Child tables first (multi-value lists), then entities
+  for (const model of [
+    "item_media_copyright_notes",
+    "item_media",
+    "item_photos",
+    "item_yearCodes",
+    "Item_media_copyright_notes",
+    "Item_media",
+    "Item_photos",
+    "Item_yearCodes",
+  ]) {
+    try {
+      await prisma[model]?.deleteMany?.();
+    } catch {
+      /* model may not exist */
+    }
+  }
   try {
     await prisma.item.deleteMany();
   } catch {
@@ -138,11 +159,9 @@ export function createPrismaAdapter(
 ): DatastoreAdapter {
   let prismaClient: any = null;
 
-  // Extend schema to add `id` and `type` fields, matching the generated Prisma schema
-  const extendedSchema = extendSchemaShortcut(
+  // Match generated Prisma models: `id` / `type` (not `@id` / `@type`).
+  const extendedSchema = jsonLdSchemaToPrismaIdentity(
     rawTestSchema as unknown as JSONSchema7,
-    PRISMA_SCHEMA_IDENTITY.typeKey,
-    PRISMA_SCHEMA_IDENTITY.idKey,
   );
 
   return {
@@ -163,6 +182,7 @@ export function createPrismaAdapter(
         typeNameToTypeIRI,
         typeIRItoTypeName,
         datasourceProvider: databaseUrlToProvider(databaseUrl),
+        persistenceManifest: loadPersistenceManifest(),
       };
 
       const { store } = initPrismaDatastorePair(

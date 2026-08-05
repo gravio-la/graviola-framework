@@ -1,19 +1,23 @@
 /**
  * Typed filter pipeline integration tests.
  *
- * Tests the full data pipeline:
- *   buildTypedSPARQLQuery → constructFetch → traverseGraphExtractBySchema → JSON
+ * Verifies Prisma-style where/include/select/orderBy against any Store that
+ * advertises `filters: true` (SPARQL, Prisma, REST-over-*).
  *
- * These tests verify that the filterTypedDocument/filterTypedDocuments API
- * (Prisma-style where/include/select) produces correct results end-to-end,
- * not just correct SPARQL strings.
+ * SPARQL-specific flavour / LATERAL parity cases are gated on
+ * `capabilities.speaksNative` + `profiles.sparqlFeatures`.
  *
- * Capability-gated: runs only on adapters with filterTyped: true.
+ * Capability-gated: runs only when `supports("filters")`.
  */
 import { describe, test, expect, beforeEach } from "bun:test";
 import type { DatastoreContractStoreWithFilters } from "../types";
 import { entityIRI } from "../schema/testSchema";
 import { makeCategory, makeItem, makeTag } from "../fixtures/testData";
+
+function speaksSparql(store: DatastoreContractStoreWithFilters): boolean {
+  const langs = store.capabilities?.profiles?.speaksNative;
+  return Array.isArray(langs) && langs.includes("sparql");
+}
 
 export function runTypedFilterSuite(
   getStore: () => DatastoreContractStoreWithFilters,
@@ -104,11 +108,6 @@ export function runTypedFilterSuite(
       test("no where — returns all Items", async () => {
         const store = getStore();
         const result = await store.filterMany("Item", {});
-        console.log(
-          "[typedFilter] no where:\n",
-          JSON.stringify(result, null, 2),
-        );
-
         expect(result.length).toBe(3);
       });
 
@@ -117,11 +116,6 @@ export function runTypedFilterSuite(
         const result = await store.filterMany("Item", {
           where: { name: { equals: "Laptop" } },
         });
-        console.log(
-          "[typedFilter] name equals Laptop:\n",
-          JSON.stringify(result, null, 2),
-        );
-
         expect(result.length).toBe(1);
         expect(result[0].name).toBe("Laptop");
       });
@@ -131,11 +125,6 @@ export function runTypedFilterSuite(
         const result = await store.filterMany("Item", {
           where: { name: { contains: "book", mode: "insensitive" } },
         });
-        console.log(
-          "[typedFilter] name contains book:\n",
-          JSON.stringify(result, null, 2),
-        );
-
         expect(result.length).toBe(1);
         expect(result[0].name).toBe("TypeScript Handbook");
       });
@@ -145,11 +134,6 @@ export function runTypedFilterSuite(
         const result = await store.filterMany("Item", {
           where: { price: { gte: 50 } },
         });
-        console.log(
-          "[typedFilter] price gte 50:\n",
-          JSON.stringify(result, null, 2),
-        );
-
         expect(result.length).toBe(1);
         expect(result[0].name).toBe("Laptop");
         expect(result[0].price).toBe(999.99);
@@ -160,11 +144,6 @@ export function runTypedFilterSuite(
         const result = await store.filterMany("Item", {
           where: { price: { gte: 10, lte: 30 } },
         });
-        console.log(
-          "[typedFilter] price range 10-30:\n",
-          JSON.stringify(result, null, 2),
-        );
-
         expect(result.length).toBe(2);
         const names = result.map((r: any) => r.name).sort();
         expect(names).toEqual(["Football", "TypeScript Handbook"]);
@@ -175,11 +154,6 @@ export function runTypedFilterSuite(
         const result = await store.filterMany("Item", {
           where: { isAvailable: { equals: true } },
         });
-        console.log(
-          "[typedFilter] isAvailable true:\n",
-          JSON.stringify(result, null, 2),
-        );
-
         expect(result.length).toBe(2);
         const names = result.map((r: any) => r.name).sort();
         expect(names).toEqual(["Laptop", "TypeScript Handbook"]);
@@ -190,11 +164,6 @@ export function runTypedFilterSuite(
         const result = await store.filterMany("Item", {
           where: { name: { in: ["Laptop", "Football"] } },
         });
-        console.log(
-          "[typedFilter] name in array:\n",
-          JSON.stringify(result, null, 2),
-        );
-
         expect(result.length).toBe(2);
         const names = result.map((r: any) => r.name).sort();
         expect(names).toEqual(["Football", "Laptop"]);
@@ -207,11 +176,6 @@ export function runTypedFilterSuite(
             AND: [{ price: { gte: 10 } }, { isAvailable: { equals: true } }],
           },
         });
-        console.log(
-          "[typedFilter] AND compound:\n",
-          JSON.stringify(result, null, 2),
-        );
-
         expect(result.length).toBe(2);
         const names = result.map((r: any) => r.name).sort();
         expect(names).toEqual(["Laptop", "TypeScript Handbook"]);
@@ -224,12 +188,6 @@ export function runTypedFilterSuite(
             NOT: { isAvailable: { equals: true } },
           },
         });
-        console.log(
-          "[typedFilter] NOT compound:\n",
-          JSON.stringify(result, null, 2),
-        );
-
-        // Should return items where isAvailable is NOT true (i.e., false)
         expect(result.length).toBe(1);
         expect(result[0].name).toBe("Football");
         expect(result[0].isAvailable).toBe(false);
@@ -244,19 +202,11 @@ export function runTypedFilterSuite(
             },
           },
         });
-        console.log(
-          "[typedFilter] NOT with AND:\n",
-          JSON.stringify(result, null, 2),
-        );
-
-        // Should return items that don't match (price < 20 AND available)
-        // Laptop (1299.99), TypeScript Handbook (29.99), Football (19.99, not available)
         expect(result.length).toBe(3);
         const names = result.map((r: any) => r.name).sort();
         expect(names).toEqual(["Football", "Laptop", "TypeScript Handbook"]);
       });
 
-      // Test OR with only string/numeric filters (avoiding boolean)
       test("OR — price lte 25 OR name contains 'Lap'", async () => {
         const store = getStore();
         const result = await store.filterMany("Item", {
@@ -264,26 +214,12 @@ export function runTypedFilterSuite(
             OR: [{ price: { lte: 25 } }, { name: { contains: "Lap" } }],
           },
         });
-        console.log(
-          "[typedFilter] OR compound:\n",
-          JSON.stringify(result, null, 2),
+        expect(result.length).toBeGreaterThan(0);
+        const names = result.map((r: any) => r.name);
+        const hasMatches = names.some((name) =>
+          ["Football", "Laptop"].includes(name),
         );
-
-        // Adjust expectation based on actual behavior
-        // If OR filter has issues, log but don't fail the suite
-        if (result.length === 0) {
-          console.log(
-            "NOTE: OR compound filter returned empty (possible issue with OR implementation)",
-          );
-        } else {
-          expect(result.length).toBeGreaterThan(0);
-          const names = result.map((r: any) => r.name);
-          // At least one of the OR conditions should match
-          const hasMatches = names.some((name) =>
-            ["Football", "Laptop"].includes(name),
-          );
-          expect(hasMatches).toBe(true);
-        }
+        expect(hasMatches).toBe(true);
       });
 
       test("empty where {} — returns all", async () => {
@@ -291,11 +227,6 @@ export function runTypedFilterSuite(
         const result = await store.filterMany("Item", {
           where: {},
         });
-        console.log(
-          "[typedFilter] empty where:\n",
-          JSON.stringify(result, null, 2),
-        );
-
         expect(result.length).toBe(3);
       });
     });
@@ -306,17 +237,9 @@ export function runTypedFilterSuite(
         const result = await store.filterMany("Item", {
           select: { name: true, price: true },
         });
-        console.log(
-          "[typedFilter] select name+price:\n",
-          JSON.stringify(result, null, 2),
-        );
-
         expect(result.length).toBe(3);
-        // Check first result has selected fields
         expect(result[0]).toHaveProperty("name");
         expect(result[0]).toHaveProperty("price");
-        // Description should not be present (not selected)
-        // Note: @id and @type may still be present as metadata
       });
     });
 
@@ -327,11 +250,6 @@ export function runTypedFilterSuite(
           where: { name: { equals: "Laptop" } },
           include: { category: true },
         });
-        console.log(
-          "[typedFilter] include category:\n",
-          JSON.stringify(result, null, 2),
-        );
-
         expect(result.length).toBe(1);
         expect(result[0].category).toBeTruthy();
         expect(result[0].category.name).toBe("Electronics");
@@ -343,11 +261,6 @@ export function runTypedFilterSuite(
           where: { name: { equals: "Laptop" } },
           include: { tags: true },
         });
-        console.log(
-          "[typedFilter] include tags:\n",
-          JSON.stringify(result, null, 2),
-        );
-
         expect(result.length).toBe(1);
         expect(Array.isArray(result[0].tags)).toBe(true);
         expect(result[0].tags.length).toBe(3);
@@ -361,11 +274,6 @@ export function runTypedFilterSuite(
           where: { name: { equals: "Laptop" } },
           include: { tags: { take: 2 } },
         });
-        console.log(
-          "[typedFilter] include tags take 2:\n",
-          JSON.stringify(result, null, 2),
-        );
-
         expect(result.length).toBe(1);
         expect(Array.isArray(result[0].tags)).toBe(true);
         expect(result[0].tags.length).toBeLessThanOrEqual(2);
@@ -377,11 +285,6 @@ export function runTypedFilterSuite(
           where: { name: { equals: "Laptop" } },
           include: { tags: { take: 2, skip: 1 } },
         });
-        console.log(
-          "[typedFilter] include tags take 2 skip 1:\n",
-          JSON.stringify(result, null, 2),
-        );
-
         expect(result.length).toBe(1);
         expect(Array.isArray(result[0].tags)).toBe(true);
         expect(result[0].tags.length).toBeLessThanOrEqual(2);
@@ -472,6 +375,8 @@ export function runTypedFilterSuite(
 
       test("include tags take+orderBy with flavour lateral", async () => {
         const store = getStore();
+        if (!speaksSparql(store)) return;
+
         const result = await store.filterMany("Item", {
           where: { name: { equals: "Laptop" } },
           include: {
@@ -493,6 +398,8 @@ export function runTypedFilterSuite(
 
       test("extraction vs lateral parity — same take+orderBy page", async () => {
         const store = getStore();
+        if (!speaksSparql(store)) return;
+
         const include = {
           tags: {
             take: 2,
@@ -501,7 +408,6 @@ export function runTypedFilterSuite(
         };
         const where = { name: { equals: "Laptop" } };
 
-        // Explicit SPARQL 1.1 flavour → extraction-stage sort+slice
         const extraction = await store.filterMany("Item", {
           where,
           include,
@@ -515,9 +421,6 @@ export function runTypedFilterSuite(
         expect(extractionNames).toEqual(["Featured", "New"]);
 
         const stage = store.capabilities?.profiles?.nestedPagination?.stage;
-        // When the store defaults to query-stage (Oxigraph/Fuseki + lateral),
-        // also prove LATERAL returns the same page. Skip on Blazegraph-class
-        // stores that cannot execute LATERAL.
         if (stage === "query") {
           const lateral = await store.filterMany("Item", {
             where,
@@ -593,30 +496,18 @@ export function runTypedFilterSuite(
           where: { price: { gte: 50 } },
           select: { name: true, price: true },
         });
-        console.log(
-          "[typedFilter] where + select:\n",
-          JSON.stringify(result, null, 2),
-        );
-
         expect(result.length).toBe(1);
         expect(result[0].name).toBe("Laptop");
         expect(result[0].price).toBe(999.99);
       });
 
-      // Use a string filter instead of boolean to test where + include
       test("where + include category", async () => {
         const store = getStore();
         const result = await store.filterMany("Item", {
           where: { name: { in: ["Laptop", "TypeScript Handbook"] } },
           include: { category: true },
         });
-        console.log(
-          "[typedFilter] where + include category:\n",
-          JSON.stringify(result, null, 2),
-        );
-
         expect(result.length).toBe(2);
-        // Both results should have expanded category
         expect(result[0].category).toBeTruthy();
         expect(result[0].category.name).toBeTruthy();
         expect(result[1].category).toBeTruthy();
@@ -629,11 +520,6 @@ export function runTypedFilterSuite(
           where: { name: { equals: "Laptop" } },
           include: { tags: { take: 2 } },
         });
-        console.log(
-          "[typedFilter] where + include paginated tags:\n",
-          JSON.stringify(result, null, 2),
-        );
-
         expect(result.length).toBe(1);
         expect(result[0].name).toBe("Laptop");
         expect(Array.isArray(result[0].tags)).toBe(true);
@@ -645,11 +531,6 @@ export function runTypedFilterSuite(
       test("load by IRI, no options", async () => {
         const store = getStore();
         const result = await store.filterOne("Item", item1, {});
-        console.log(
-          "[typedFilter] single entity no options:\n",
-          JSON.stringify(result, null, 2),
-        );
-
         expect(result).toBeTruthy();
         expect(result?.name).toBe("Laptop");
         expect(result?.price).toBe(999.99);
@@ -660,11 +541,6 @@ export function runTypedFilterSuite(
         const result = await store.filterOne("Item", item1, {
           select: { name: true, price: true },
         });
-        console.log(
-          "[typedFilter] single entity with select:\n",
-          JSON.stringify(result, null, 2),
-        );
-
         expect(result).toBeTruthy();
         expect(result?.name).toBe("Laptop");
         expect(result?.price).toBe(999.99);
@@ -675,11 +551,6 @@ export function runTypedFilterSuite(
         const result = await store.filterOne("Item", item1, {
           include: { category: true, tags: true },
         });
-        console.log(
-          "[typedFilter] single entity with includes:\n",
-          JSON.stringify(result, null, 2),
-        );
-
         expect(result).toBeTruthy();
         expect(result?.category).toBeTruthy();
         expect(result?.category?.name).toBe("Electronics");
@@ -691,19 +562,10 @@ export function runTypedFilterSuite(
         const store = getStore();
         const nonExistentIRI = entityIRI("Item", "does-not-exist");
         const result = await store.filterOne("Item", nonExistentIRI, {});
-        console.log(
-          "[typedFilter] non-existent IRI:\n",
-          JSON.stringify(result, null, 2),
-        );
-
-        // NOTE: Current implementation returns an object with @id and empty relations
-        // rather than null. This documents the actual behavior.
         if (result === null) {
           expect(result).toBeNull();
         } else {
-          // Empty entity with just @id and empty relations
           expect(result?.["@id"]).toBe(nonExistentIRI);
-          // Should not have actual field values
           expect(result?.name).toBeUndefined();
         }
       });

@@ -23,9 +23,8 @@ import {
   deriveExtendedSchema,
   ENTITY_META_PERSISTENCE_KEY,
 } from "@graviola/meta-schema";
-import { jsonSchema2Prisma } from "@graviola/json-schema-prisma-utils";
+import { jsonSchema2PrismaWithManifest } from "@graviola/json-schema-prisma-utils";
 import {
-  extendSchemaShortcut,
   entityIdentityFromIdKey,
   PRISMA_SCHEMA_IDENTITY,
 } from "@graviola/json-schema-utils";
@@ -115,6 +114,45 @@ export function invalidateGeneratedPrismaClientCache(): void {
 }
 
 /**
+ * Map JSON-LD `@id`/`@type` on every definition to Prisma `id`/`type` without
+ * duplicating fields (jsonSchema2Prisma would otherwise emit `id` twice).
+ */
+export function jsonLdSchemaToPrismaIdentity(schema: JSONSchema7): JSONSchema7 {
+  const definitions = (schema.definitions ?? schema.$defs) as
+    | Record<string, JSONSchema7>
+    | undefined;
+  if (!definitions) return schema;
+
+  const nextDefs: Record<string, JSONSchema7> = {};
+  for (const [name, def] of Object.entries(definitions)) {
+    if (typeof def !== "object" || def === null) continue;
+    const props = { ...(def.properties as Record<string, JSONSchema7>) };
+    if (props["@id"]) {
+      props.id = props["@id"];
+      delete props["@id"];
+    }
+    if (props["@type"]) {
+      props.type = props["@type"];
+      delete props["@type"];
+    }
+    if (!props.id) props.id = { type: "string" };
+    if (!props.type) props.type = { type: "string" };
+    const required = (def.required as string[] | undefined)?.map((k) =>
+      k === "@id" ? "id" : k === "@type" ? "type" : k,
+    );
+    const req = new Set(required ?? []);
+    req.add("id");
+    req.add("type");
+    nextDefs[name] = {
+      ...def,
+      properties: props,
+      required: [...req],
+    };
+  }
+  return { ...schema, definitions: nextDefs };
+}
+
+/**
  * Regenerate prisma/schema.prisma for `databaseUrl`, run `prisma generate` + `db push`.
  * Synchronous; throws on failure.
  */
@@ -124,10 +162,8 @@ export function runPrismaSetupForUrl(databaseUrl: string): void {
   console.log(`[setup-prisma] Generating schema for provider: ${provider}`);
   console.log(`[setup-prisma] Database URL: ${databaseUrl}`);
 
-  const extendedSchema = extendSchemaShortcut(
+  const extendedSchema = jsonLdSchemaToPrismaIdentity(
     rawTestSchema as unknown as JSONSchema7,
-    PRISMA_SCHEMA_IDENTITY.typeKey,
-    PRISMA_SCHEMA_IDENTITY.idKey,
   );
   const persistenceSchema = deriveExtendedSchema(
     extendedSchema,
@@ -139,10 +175,13 @@ export function runPrismaSetupForUrl(databaseUrl: string): void {
     },
   );
 
-  let modelDefinitions = jsonSchema2Prisma(persistenceSchema, new WeakSet(), {
-    databaseProvider: provider,
-    reverseMap: {},
-  });
+  const { schemaText: generatedModels, manifest } =
+    jsonSchema2PrismaWithManifest(persistenceSchema, new WeakSet(), {
+      databaseProvider: provider,
+      reverseMap: {},
+    });
+
+  let modelDefinitions = generatedModels;
 
   if (provider !== "mongodb") {
     modelDefinitions = applyFrameworkNativeLifecycleColumns(modelDefinitions);
@@ -182,6 +221,10 @@ ${modelDefinitions}
   const schemaPath = join(prismaDir, "schema.prisma");
   writeFileSync(schemaPath, schemaContent, "utf-8");
   console.log(`[setup-prisma] Written: ${schemaPath}`);
+
+  const manifestPath = join(prismaDir, "persistence-manifest.json");
+  writeFileSync(manifestPath, JSON.stringify(manifest, null, 2), "utf-8");
+  console.log(`[setup-prisma] Written: ${manifestPath}`);
 
   const prismaConfigPath = join(appRoot, "prisma.config.ts");
   if (prismaMajor === 7) {
