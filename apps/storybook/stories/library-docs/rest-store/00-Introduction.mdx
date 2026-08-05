@@ -1,0 +1,71 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Library Docs/REST Store/Introduction" />
+
+# REST Store wire (v1)
+
+The Graviola REST interface is a **translation layer**: a WinterCG `Request → Response`
+handler maps HTTP to the capability-composed `Store` API. It does not care which
+concrete backend sits underneath (Oxigraph, remote SPARQL, Prisma, …). Clients
+discover what the server can do via the **handshake**.
+
+## One-call server
+
+```ts
+import { serveGraviolaRest } from "@graviola/rest-server-hono";
+
+await serveGraviolaRest({
+  schema,
+  typeNameToTypeIRI,
+  primaryFields,
+  backend: { kind: "oxigraph", initialData: turtle },
+  port: 3010,
+});
+```
+
+Backend selection can also come from env (`GRAVIOLA_STORE=oxigraph|sparql|prisma`).
+
+Switching the testapp from local Oxigraph to REST is two lines of env:
+
+```bash
+bun run dev:api          # server
+bun run dev:rest         # Vite with VITE_STORE=rest
+```
+
+## Handshake & capabilities
+
+`GET /.well-known/graviola-store` returns a descriptor. Per-type capabilities
+include `filters`, `writes`, `counts`, … The v1 client builds its
+`CapabilityDescriptor` from this handshake and gates each method with
+`capOrThrow`. A store without `filters` yields a clean
+`501 capability_not_supported` on `POST /{type}/_query` — the UI degrades
+instead of crashing.
+
+## Typed filter query
+
+```http
+POST /api/graviola/Item/_query
+Content-Type: application/json
+
+{
+  "where": { "name": { "contains": "Lap" } },
+  "include": { "tags": { "take": 2, "orderBy": { "name": "asc" } } },
+  "select": { "name": true, "price": true }
+}
+```
+
+The body is the same `StoreDocumentsSearchOptions` shape used by SPARQL and
+Prisma stores. The server passes it through to `store.filterMany`.
+
+Client-side `filterOne` is emulated as
+`where: { "@id": iri }` + `limit: 1` against `_query`.
+
+## Related packages
+
+| Package | Role |
+| --- | --- |
+| `@graviola/rest-store-server` | Framework-agnostic WinterCG handler |
+| `@graviola/rest-server-hono` | Hono binding + `serveGraviolaRest` |
+| `@graviola/rest-store-client` | v1 `RESTClientStore` + handshake |
+| `@graviola/store-factory` | Declarative backend resolution |
+| `@graviola/rest-store-provider` | React `V1RestStoreProvider` |
