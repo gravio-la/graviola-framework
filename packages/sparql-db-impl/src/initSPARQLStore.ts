@@ -41,8 +41,19 @@ import {
   remapEntityMetaFromPersistence,
   resolveEntityMetaProfile,
   resolveSparqlMetaStamping,
-  type MetaStampingConfig,
 } from "@graviola/meta-schema";
+import type { StatementWrite } from "@graviola/provenance-types";
+import {
+  alwaysStatementPathsForType,
+  applyStatementWrites,
+  deriveProvenanceSchema,
+  remapStatementsForPersistence,
+  remapStatementsFromPersistence,
+  resolveStatementMetaProfile,
+  resolveStatementPolicy,
+  statementsForPath,
+  stripClientStatements,
+} from "@graviola/statement-meta";
 import type {
   EntityChangeEvent,
   SparqlStore,
@@ -96,6 +107,7 @@ export function initSPARQLDatastorePair(
     enableInversePropertiesFeature,
     defaultUpdateGraph,
     metaStamping,
+    statementMeta,
     defaultFilterOptions,
   } = dataStoreConfig;
 
@@ -103,7 +115,9 @@ export function initSPARQLDatastorePair(
     ? resolveSparqlMetaStamping(metaStamping)
     : undefined;
 
-  const persistenceSchema = effectiveMetaStamping
+  const statementEncoding = statementMeta?.encoding ?? "statement-node";
+
+  let persistenceSchema = effectiveMetaStamping
     ? rootSchema.definitions?.EntityMeta
       ? rootSchema
       : deriveExtendedSchema(
@@ -114,6 +128,14 @@ export function initSPARQLDatastorePair(
           },
         )
     : rootSchema;
+
+  if (statementMeta && statementEncoding === "statement-node") {
+    persistenceSchema = deriveProvenanceSchema(
+      persistenceSchema,
+      statementMeta.statementSchema,
+      { policies: statementMeta.policies },
+    );
+  }
 
   const schemaForType = (typeName: string) =>
     bringDefinitionToTop(
@@ -140,6 +162,20 @@ export function initSPARQLDatastorePair(
     changeBus.emit(event);
   };
 
+  const remapLoadedDocument = <T>(
+    document: T | null | undefined,
+  ): T | null | undefined => {
+    if (!document || typeof document !== "object") return document;
+    let out = document as Record<string, unknown>;
+    if (effectiveMetaStamping) {
+      out = remapEntityMetaFromPersistence(out) as Record<string, unknown>;
+    }
+    if (statementMeta && statementEncoding === "statement-node") {
+      out = remapStatementsFromPersistence(out) as Record<string, unknown>;
+    }
+    return out as T;
+  };
+
   const loadDocument = async (typeName: string, entityIRI: string) => {
     const typeIRI = typeNameToTypeIRI(typeName);
     const schema = schemaForType(typeName);
@@ -150,9 +186,87 @@ export function initSPARQLDatastorePair(
       maxRecursion: walkerOptions?.maxRecursion,
     });
     const document = res.document;
-    return effectiveMetaStamping && document
-      ? remapEntityMetaFromPersistence(document)
-      : document;
+    return document ? remapLoadedDocument(document) : document;
+  };
+
+  const persistDocument = async (
+    typeName: string,
+    entityIRI: string,
+    document: Record<string, unknown>,
+    opts?: { keepStatements?: boolean },
+  ) => {
+    const schema = schemaForType(typeName);
+    let doc: Record<string, unknown> = {
+      ...document,
+      "@id": entityIRI,
+      "@type": typeNameToTypeIRI(typeName),
+    };
+
+    if (statementMeta) {
+      doc = opts?.keepStatements
+        ? remapStatementsForPersistence(doc)
+        : stripClientStatements(doc);
+    }
+
+    if (effectiveMetaStamping) {
+      const previous = await loadDocument(typeName, entityIRI).catch(
+        () => null,
+      );
+      doc = applyMetaStampingOnWrite(
+        doc,
+        typeName,
+        persistenceSchema,
+        effectiveMetaStamping,
+        previous as Record<string, unknown> | null,
+      );
+      doc = remapEntityMetaForPersistence(doc);
+    }
+
+    const cleanData = await cleanJSONLD(
+      doc as Parameters<typeof cleanJSONLD>[0],
+      schema,
+      {
+        jsonldContext,
+        defaultPrefix,
+        keepContext: true,
+        removeInverseProperties: true,
+        pruneLinkedDocuments: true,
+      },
+    );
+    await save(cleanData, schema, updateFetch, {
+      defaultPrefix,
+      queryBuildOptions,
+      defaultUpdateGraph,
+    });
+
+    if (enableInversePropertiesFeature) {
+      const schemaForInverse = bringDefinitionToTop(rootSchema, typeName);
+      const inverseProperties = getInverseProperties(
+        rootSchema,
+        schemaForInverse as JSONSchema7,
+        doc as Parameters<typeof getInverseProperties>[2],
+      );
+      const inversePropertiesWithTypeIRI = inverseProperties.map(
+        (inverseProperty) => ({
+          ...inverseProperty,
+          typeIRI: typeNameToTypeIRI(inverseProperty.typeName),
+        }),
+      );
+
+      const inversePropertiesSyncQuery = makeSPARQLInverseSyncQuery(
+        entityIRI,
+        inversePropertiesWithTypeIRI,
+        {
+          defaultPrefix,
+          queryBuildOptions,
+          defaultUpdateGraph,
+        },
+      );
+      if (inversePropertiesSyncQuery) {
+        await updateFetch(inversePropertiesSyncQuery);
+      }
+    }
+    return remapLoadedDocument(doc) as Record<string, unknown>;
   };
 
   const findDocumentsInner = async (
@@ -266,68 +380,9 @@ export function initSPARQLDatastorePair(
       );
     },
     upsertDocument: async (typeName, entityIRI, document) => {
-      const schema = schemaForType(typeName);
-      let doc = {
-        ...document,
-        "@id": entityIRI,
-        "@type": typeNameToTypeIRI(typeName),
-      };
-
-      if (effectiveMetaStamping) {
-        const previous = await loadDocument(typeName, entityIRI).catch(
-          () => null,
-        );
-        doc = applyMetaStampingOnWrite(
-          doc,
-          typeName,
-          persistenceSchema,
-          effectiveMetaStamping,
-          previous,
-        );
-        doc = remapEntityMetaForPersistence(doc);
-      }
-
-      const cleanData = await cleanJSONLD(doc, schema, {
-        jsonldContext,
-        defaultPrefix,
-        keepContext: true,
-        removeInverseProperties: true,
-        pruneLinkedDocuments: true,
+      return persistDocument(typeName, entityIRI, document, {
+        keepStatements: false,
       });
-      await save(cleanData, schema, updateFetch, {
-        defaultPrefix,
-        queryBuildOptions,
-        defaultUpdateGraph,
-      });
-
-      if (enableInversePropertiesFeature) {
-        const schemaForInverse = bringDefinitionToTop(rootSchema, typeName);
-        const inverseProperties = getInverseProperties(
-          rootSchema,
-          schemaForInverse as JSONSchema7,
-          doc,
-        );
-        const inversePropertiesWithTypeIRI = inverseProperties.map(
-          (inverseProperty) => ({
-            ...inverseProperty,
-            typeIRI: typeNameToTypeIRI(inverseProperty.typeName),
-          }),
-        );
-
-        const inversePropertiesSyncQuery = makeSPARQLInverseSyncQuery(
-          entityIRI,
-          inversePropertiesWithTypeIRI,
-          {
-            defaultPrefix,
-            queryBuildOptions,
-            defaultUpdateGraph,
-          },
-        );
-        if (inversePropertiesSyncQuery) {
-          await updateFetch(inversePropertiesSyncQuery);
-        }
-      }
-      return doc;
     },
     listDocuments: (typeName, limit, cb) =>
       findDocumentsInner(typeName, limit, null, cb),
@@ -535,9 +590,7 @@ export function initSPARQLDatastorePair(
         throw new Error("Multiple documents found for entityIRI");
       } else if (result.length === 1) {
         const document = result[0];
-        return effectiveMetaStamping && document
-          ? (remapEntityMetaFromPersistence(document) as T)
-          : document;
+        return remapLoadedDocument(document) as T;
       } else {
         return null;
       }
@@ -577,10 +630,8 @@ export function initSPARQLDatastorePair(
         typeof options.limit === "number"
           ? results.slice(0, options.limit)
           : results;
-      return effectiveMetaStamping
-        ? capped.map(
-            (document) => remapEntityMetaFromPersistence(document) as T,
-          )
+      return statementMeta || effectiveMetaStamping
+        ? capped.map((document) => remapLoadedDocument(document) as T)
         : capped;
     },
     iterableImplementation: {
@@ -620,6 +671,7 @@ export function initSPARQLDatastorePair(
       searches: true,
       counts: true,
       writes: true,
+      ...(statementMeta ? { statements: true as const } : {}),
       removes: true,
       streams: true,
       resolves: true,
@@ -638,6 +690,11 @@ export function initSPARQLDatastorePair(
                 "triples",
                 "sparql",
               ),
+            }
+          : {}),
+        ...(statementMeta
+          ? {
+              statementMeta: resolveStatementMetaProfile(statementEncoding),
             }
           : {}),
       },
@@ -767,6 +824,84 @@ export function initSPARQLDatastorePair(
       });
       return doc;
     },
+
+    ...(statementMeta
+      ? {
+          writeStatements: async (
+            typeName: string,
+            entityIRI: string,
+            writes: StatementWrite[],
+          ) => {
+            for (const write of writes) {
+              if (
+                resolveStatementPolicy(
+                  statementMeta.policies,
+                  typeName,
+                  write.path,
+                ) !== "always"
+              ) {
+                throw new Error(
+                  `writeStatements: no "always" statement policy for ${typeName}.${write.path}`,
+                );
+              }
+            }
+
+            if (statementEncoding === "rdf-12") {
+              throw new Error(
+                "rdf-12 encoding: use writeStatements after P3.5 wiring",
+              );
+            }
+
+            const current =
+              ((await loadDocument(typeName, entityIRI)) as Record<
+                string,
+                unknown
+              > | null) ?? {};
+            const merged = applyStatementWrites({ ...current }, writes);
+            const saved = await persistDocument(typeName, entityIRI, merged, {
+              keepStatements: true,
+            });
+            emitChange({
+              entityIRI,
+              changeType: "upsert",
+              typeIRI: typeNameToTypeIRI(typeName),
+              typeName,
+              data: saved,
+            });
+          },
+
+          loadStatements: async (
+            typeName: string,
+            entityIRI: string,
+            paths?: string[],
+          ) => {
+            if (statementEncoding === "rdf-12") {
+              throw new Error(
+                "rdf-12 encoding: use loadStatements after P3.5 wiring",
+              );
+            }
+
+            const doc = (await loadDocument(typeName, entityIRI)) as Record<
+              string,
+              unknown
+            > | null;
+            if (!doc) return {};
+
+            const targets =
+              paths ??
+              alwaysStatementPathsForType(statementMeta.policies, typeName);
+            const out: Record<
+              string,
+              ReturnType<typeof statementsForPath>
+            > = {};
+            for (const path of targets) {
+              const rows = statementsForPath(doc, path);
+              if (rows.length) out[path] = rows;
+            }
+            return out;
+          },
+        }
+      : {}),
 
     remove: async (typeName, entityIRI) => {
       const res = await abstractDatastore.removeDocument(typeName, entityIRI);
