@@ -1,7 +1,7 @@
 {
-  "name": "@graviola/formula-materialization",
+  "name": "@graviola/provenance-types",
   "version": "0.1.0",
-  "description": "Optional materialization of computed values with provenance (Layer 2)",
+  "description": "Provenance and statement-level metadata types and vocabulary (Layer 1)",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -18,14 +18,9 @@
   "scripts": {
     "build": "tsup",
     "test": "bun test",
+    "depcheck": "depcheck",
     "lint": "eslint src/**/*.ts",
     "release": "bun publish --access public"
-  },
-  "dependencies": {
-    "@graviola/formula-dependency": "workspace:*",
-    "@graviola/formula-runtime": "workspace:*",
-    "@graviola/provenance-types": "workspace:*",
-    "@graviola/store-core": "workspace:*"
   },
   "devDependencies": {
     "@graviola/edb-tsconfig": "workspace:*",

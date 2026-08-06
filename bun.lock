@@ -913,9 +913,9 @@
       "name": "@graviola/formula-materialization",
       "version": "0.1.0",
       "dependencies": {
-        "@graviola/edb-core-types": "workspace:*",
         "@graviola/formula-dependency": "workspace:*",
         "@graviola/formula-runtime": "workspace:*",
+        "@graviola/provenance-types": "workspace:*",
         "@graviola/store-core": "workspace:*",
       },
       "devDependencies": {
@@ -1347,6 +1347,17 @@
       },
       "peerDependencies": {
         "@prisma/client": "^6.0.0 || ^7.0.0",
+      },
+    },
+    "packages/provenance-types": {
+      "name": "@graviola/provenance-types",
+      "version": "0.1.0",
+      "devDependencies": {
+        "@graviola/edb-tsconfig": "workspace:*",
+        "@graviola/edb-tsup-config": "workspace:*",
+        "eslint-config-edb": "workspace:*",
+        "tsup": "^8.0.0",
+        "typescript": "^5.8.2",
       },
     },
     "packages/remote-query": {
@@ -2971,6 +2982,8 @@
     "@graviola/meta-schema": ["@graviola/meta-schema@workspace:packages/meta-schema"],
 
     "@graviola/prisma-db-impl": ["@graviola/prisma-db-impl@workspace:packages/prisma-db-impl"],
+
+    "@graviola/provenance-types": ["@graviola/provenance-types@workspace:packages/provenance-types"],
 
     "@graviola/remote-query-implementations": ["@graviola/remote-query-implementations@workspace:packages/remote-query"],
 
@@ -6763,6 +6776,8 @@
     "@graviola/meta-schema/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 
     "@graviola/prisma-db-impl/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
+
+    "@graviola/provenance-types/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 
     "@graviola/remote-query-implementations/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 

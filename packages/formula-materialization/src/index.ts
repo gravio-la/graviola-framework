@@ -1,7 +1,15 @@
-import type { GenerationActivity } from "@graviola/edb-core-types";
 import type { CompiledProfile } from "@graviola/formula-dependency";
 import { evaluateCompiledProfileDeterministic } from "@graviola/formula-runtime";
+import type { GenerationActivity } from "@graviola/provenance-types";
 import type { EntityChangeEvent } from "@graviola/store-core";
+
+export type { GenerationActivity } from "@graviola/provenance-types";
+export {
+  PROV,
+  DCT,
+  GRA,
+  generationActivityToPredicates,
+} from "@graviola/provenance-types";
 
 export type MaterializedValue = {
   scope: string;
