@@ -53,6 +53,10 @@ import { runFindByLabelSuite } from "./suites/findByLabel.suite";
 import { runTypedFilterSuite } from "./suites/typedFilter.suite";
 import { runMetaSuite } from "./suites/meta.suite";
 import { runFormulaPortabilitySuite } from "./suites/formulaPortability.suite";
+import {
+  runStatementMetaSuite,
+  runStatementMetaWithEntityMetaSuite,
+} from "./suites/statement-meta.suite";
 
 // ─── Adapter loop ─────────────────────────────────────────────────────────────
 // Top-level await is supported in bun:test — adapters are resolved before
@@ -137,6 +141,21 @@ for (const adapter of adapters) {
         () => store,
         metaStampingStore ? () => metaStampingStore : undefined,
         setupResult.metaStampingStores,
+      );
+    }
+
+    if (setupResult.statementStore) {
+      runStatementMetaSuite(
+        () => store,
+        () => setupResult.statementStore!,
+        setupResult.statementStoreRdf12
+          ? () => setupResult.statementStoreRdf12!
+          : undefined,
+      );
+      runStatementMetaWithEntityMetaSuite(
+        setupResult.statementMetaStampingStore
+          ? () => setupResult.statementMetaStampingStore!
+          : undefined,
       );
     }
   });

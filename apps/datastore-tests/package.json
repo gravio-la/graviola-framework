@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@graviola/formula-dependency": "workspace:*",
+    "@graviola/formula-materialization": "workspace:*",
     "@graviola/formula-runtime": "workspace:*",
     "@graviola/edb-core-types": "workspace:*",
     "@graviola/json-schema-prisma-utils": "workspace:*",
@@ -27,6 +28,7 @@
     "@graviola/rest-store-client": "workspace:*",
     "@graviola/rest-store-server": "workspace:*",
     "@graviola/sparql-db-impl": "workspace:*",
+    "@graviola/statement-meta": "workspace:*",
     "@graviola/store-core": "workspace:*",
     "@prisma/adapter-mariadb": "^7.6.0",
     "@prisma/adapter-pg": "^7.6.0",

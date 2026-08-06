@@ -296,8 +296,26 @@ export function deriveProvenanceSchema(
   return extended;
 }
 
+/** Canonical primitive for hashing and round-trip (RDF literals may arrive as strings). */
+export function normalizeStatementValue(value: unknown): StatementValue {
+  if (typeof value === "number" || typeof value === "boolean") {
+    return value;
+  }
+  if (typeof value === "string") {
+    if (value === "true") return true;
+    if (value === "false") return false;
+    const trimmed = value.trim();
+    if (/^-?\d+$/.test(trimmed)) return parseInt(trimmed, 10);
+    if (/^-?\d+\.\d+$/.test(trimmed)) return parseFloat(trimmed);
+    return value;
+  }
+  throw new Error(
+    `normalizeStatementValue: expected primitive, got ${typeof value}`,
+  );
+}
+
 export function statementValueHash(value: StatementValue): string {
-  return contentHash8(value);
+  return contentHash8(normalizeStatementValue(value));
 }
 
 function navigateToParent(
@@ -359,7 +377,7 @@ export function applyStatementWrites<T extends Record<string, unknown>>(
     const existing = (parent[stmtKey] as StatementNode[] | undefined) ?? [];
     const hash = statementValueHash(write.value);
     const nextNode: StatementNode = {
-      value: write.value,
+      value: normalizeStatementValue(write.value),
       ...write.statement,
     };
     const withoutSame = existing.filter(
@@ -393,6 +411,29 @@ function remapStatementKeysDeep(
   return out;
 }
 
+function normalizeStatementValuesDeep(value: unknown): unknown {
+  if (value == null || typeof value !== "object") return value;
+  if (Array.isArray(value)) {
+    return value.map((item) => {
+      if (item != null && typeof item === "object" && "value" in item) {
+        const node = item as StatementNode;
+        try {
+          return { ...node, value: normalizeStatementValue(node.value) };
+        } catch {
+          return item;
+        }
+      }
+      return normalizeStatementValuesDeep(item);
+    });
+  }
+  const obj = value as Record<string, unknown>;
+  const out: Record<string, unknown> = {};
+  for (const [key, fieldValue] of Object.entries(obj)) {
+    out[key] = normalizeStatementValuesDeep(fieldValue);
+  }
+  return out;
+}
+
 export function remapStatementsForPersistence<T>(document: T): T {
   return remapStatementKeysDeep(
     document,
@@ -402,11 +443,12 @@ export function remapStatementsForPersistence<T>(document: T): T {
 }
 
 export function remapStatementsFromPersistence<T>(document: T): T {
-  return remapStatementKeysDeep(
+  const remapped = remapStatementKeysDeep(
     document,
     STATEMENT_PERSISTENCE_SUFFIX,
     STATEMENT_JSON_SUFFIX,
   ) as T;
+  return normalizeStatementValuesDeep(remapped) as T;
 }
 
 function stripStatementKeysDeep(value: unknown): unknown {
@@ -434,10 +476,15 @@ function collectFromObject(
   const key = `${lastSegment}${STATEMENT_JSON_SUFFIX}`;
   const raw = obj[key];
   if (!Array.isArray(raw)) return [];
-  return raw.filter(
-    (item): item is StatementNode =>
-      item != null && typeof item === "object" && "value" in item,
-  );
+  return raw
+    .filter(
+      (item): item is StatementNode =>
+        item != null && typeof item === "object" && "value" in item,
+    )
+    .map((item) => ({
+      ...item,
+      value: normalizeStatementValue(item.value),
+    }));
 }
 
 export function statementsForPath(
