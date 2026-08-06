@@ -5,6 +5,7 @@ import {
   buildRdf12StatementInsert,
   buildRdf12StatementSelect,
   parseRdf12StatementBindings,
+  toSparqlLiteral,
 } from "./rdf12Statements";
 import { statementValueHash } from "@graviola/statement-meta";
 
@@ -50,7 +51,7 @@ describe("rdf-12 spike (Oxigraph 0.5.6)", () => {
       results?: { bindings?: Record<string, { value: string }>[] };
     };
     const grouped = parseRdf12StatementBindings(parsed.results?.bindings ?? []);
-    expect(grouped.price?.[0]?.value).toBe("42");
+    expect(grouped.price?.[0]?.value).toBe(42);
     expect(grouped.price?.[0]?.source).toBe("nas01");
 
     store.update(
@@ -76,6 +77,32 @@ describe("rdf12Statements builders", () => {
     );
     expect(q).toContain("http://ex/i");
     expect(q).toContain("http://ex/price");
-    expect(q).toContain("rdf-syntax-ns#reifies");
+    expect(q).toMatch(/rdf:reifies|rdf-syntax-ns#reifies/);
+  });
+
+  test("toSparqlLiteral escapes special characters in strings", () => {
+    expect(toSparqlLiteral('say "hello"')).toBe('"say \\"hello\\""');
+  });
+
+  test("insert survives string metadata with quotes (Oxigraph)", () => {
+    const store = new Store();
+    const entity = "http://example.org/Item/special";
+    const prop = "http://example.org/price";
+    store.update(
+      buildRdf12StatementInsert(entity, prop, "price", {
+        path: "price",
+        value: 99,
+        statement: { source: 'import "batch-7"' },
+      }),
+    );
+    const select = buildRdf12StatementSelect(entity, ["price"]);
+    const raw = store.query(select, {
+      results_format: "application/sparql-results+json",
+    }) as string;
+    const parsed = JSON.parse(raw || "{}") as {
+      results?: { bindings?: Record<string, { value: string }>[] };
+    };
+    const grouped = parseRdf12StatementBindings(parsed.results?.bindings ?? []);
+    expect(grouped.price?.[0]?.source).toBe('import "batch-7"');
   });
 });
