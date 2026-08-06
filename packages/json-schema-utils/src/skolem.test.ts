@@ -1,9 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import {
-  assignSkolemIris,
-  contentHash8,
-  skolemListMemberIri,
-} from "@graviola/json-schema-utils";
+import { assignSkolemIris, contentHash8, skolemListMemberIri } from ".";
 
 describe("skolem list member IRIs", () => {
   const root = "http://ex/Item/1";

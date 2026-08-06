@@ -1,3 +1,7 @@
+import df from "@rdfjs/data-model";
+import type { BlankNode, Literal, NamedNode } from "@rdfjs/types";
+import { xsd } from "@tpluscode/rdf-ns-builders";
+import { sparql } from "@tpluscode/rdf-string";
 import {
   PROV,
   RDF,
@@ -11,17 +15,52 @@ import {
   statementValueHash,
 } from "@graviola/statement-meta";
 
-export function toSparqlLiteral(value: StatementValue): string {
+function named(iri: string): NamedNode {
+  return df.namedNode(iri);
+}
+
+function statementValueLiteral(value: StatementValue): Literal {
   if (typeof value === "string") {
-    return JSON.stringify(value);
+    return df.literal(value);
   }
   if (typeof value === "boolean") {
-    return `"${value}"^^<http://www.w3.org/2001/XMLSchema#boolean>`;
+    return df.literal(value);
   }
   if (Number.isInteger(value)) {
-    return `"${value}"^^<http://www.w3.org/2001/XMLSchema#integer>`;
+    return df.literal(String(value), xsd.integer);
   }
-  return `"${value}"^^<http://www.w3.org/2001/XMLSchema#decimal>`;
+  return df.literal(String(value), xsd.decimal);
+}
+
+/** SPARQL literal for a {@link StatementValue} (escape-safe via `@tpluscode/rdf-string`). */
+export function toSparqlLiteral(value: StatementValue): string {
+  return sparql`${statementValueLiteral(value)}`.toString();
+}
+
+/**
+ * RDF 1.2 triple term `<<( s p o )>>` — not supported by `@tpluscode/rdf-string`;
+ * components are rendered through `sparql` before wrapping.
+ */
+function rdf12TripleTerm(
+  subject: NamedNode,
+  predicate: NamedNode,
+  object: Literal,
+): string {
+  const term = (node: NamedNode | Literal) =>
+    sparql`${node}`
+      .toString()
+      .replace(/^PREFIX[^\n]*\n/gm, "")
+      .trim();
+  return `<<( ${term(subject)} ${term(predicate)} ${term(object)} )>>`;
+}
+
+type SparqlPattern = ReturnType<typeof sparql>;
+
+function appendPattern(
+  body: SparqlPattern,
+  line: SparqlPattern,
+): SparqlPattern {
+  return sparql`${body}\n  ${line}`;
 }
 
 export function propertyIriFromPath(
@@ -39,18 +78,25 @@ export function buildRdf12StatementDelete(
   path: string,
   valueHash: string,
 ): string {
-  return `
+  const entity = named(entityIRI);
+  const property = named(propertyIRI);
+  const r = df.variable("r");
+  const mp = df.variable("mp");
+  const mo = df.variable("mo");
+  const oldV = df.variable("oldV");
+
+  return sparql`
 DELETE {
-  <${entityIRI}> <${propertyIRI}> ?oldV .
-  ?r ?mp ?mo .
+  ${entity} ${property} ${oldV} .
+  ${r} ${mp} ${mo} .
 }
 WHERE {
-  ?r <${STMT.about}> <${entityIRI}> ;
-     <${STMT.path}> ${JSON.stringify(path)} ;
-     <${STMT.valueHash}> ${JSON.stringify(valueHash)} .
-  ?r ?mp ?mo .
-  OPTIONAL { <${entityIRI}> <${propertyIRI}> ?oldV . }
-}`.trim();
+  ${r} ${named(STMT.about)} ${entity} ;
+     ${named(STMT.path)} ${df.literal(path)} ;
+     ${named(STMT.valueHash)} ${df.literal(valueHash)} .
+  ${r} ${mp} ${mo} .
+  OPTIONAL { ${entity} ${property} ${oldV} . }
+}`.toString();
 }
 
 export type Rdf12InsertOptions = {
@@ -64,87 +110,119 @@ export function buildRdf12StatementInsert(
   write: StatementWrite,
   options?: Rdf12InsertOptions,
 ): string {
-  const valueLiteral = toSparqlLiteral(write.value);
+  const entity = named(entityIRI);
+  const property = named(propertyIRI);
+  const valueLit = statementValueLiteral(write.value);
   const hash = statementValueHash(write.value);
+  const reifier = df.blankNode("r");
   const stmt = write.statement;
 
-  const metaTriples: string[] = [
-    `_:r <${STMT.about}> <${entityIRI}> ;`,
-    `    <${STMT.path}> ${JSON.stringify(path)} ;`,
-    `    <${STMT.valueHash}> ${JSON.stringify(hash)} ;`,
-    `    <${STMT.value}> ${valueLiteral} .`,
-  ];
+  let body: SparqlPattern = sparql`${entity} ${property} ${valueLit} .`;
 
-  if (stmt.rank) {
-    metaTriples.push(`_:r <${STMT.rank}> ${JSON.stringify(stmt.rank)} .`);
-  }
-  if (stmt.source) {
-    metaTriples.push(`_:r <${STMT.source}> ${JSON.stringify(stmt.source)} .`);
-  }
-  if (stmt.generatedAt) {
-    metaTriples.push(
-      `_:r <${PROV.generatedAtTime}> ${JSON.stringify(stmt.generatedAt)} .`,
+  if (options?.includeTripleTerm !== false) {
+    body = appendPattern(
+      body,
+      sparql`${reifier} ${named(RDF.reifies)} ${sparql`${rdf12TripleTerm(entity, property, valueLit)}`} .`,
     );
   }
+
+  body = appendPattern(
+    body,
+    sparql`
+      ${reifier} ${named(STMT.about)} ${entity} ;
+                 ${named(STMT.path)} ${df.literal(path)} ;
+                 ${named(STMT.valueHash)} ${df.literal(hash)} ;
+                 ${named(STMT.value)} ${valueLit} .
+    `,
+  );
+
+  if (stmt.rank) {
+    body = appendPattern(
+      body,
+      sparql`${reifier} ${named(STMT.rank)} ${df.literal(stmt.rank)} .`,
+    );
+  }
+  if (stmt.source) {
+    body = appendPattern(
+      body,
+      sparql`${reifier} ${named(STMT.source)} ${df.literal(stmt.source)} .`,
+    );
+  }
+  if (stmt.generatedAt) {
+    body = appendPattern(
+      body,
+      sparql`${reifier} ${named(PROV.generatedAtTime)} ${df.literal(stmt.generatedAt)} .`,
+    );
+  }
+
   const activity = stmt.wasGeneratedBy;
   if (activity?.formulaId) {
-    metaTriples.push(
-      `_:r <https://graviola.gra.one/ns/formulaId> ${JSON.stringify(activity.formulaId)} .`,
+    body = appendPattern(
+      body,
+      sparql`${reifier} ${named("https://graviola.gra.one/ns/formulaId")} ${df.literal(activity.formulaId)} .`,
     );
   }
   if (activity?.lensId) {
-    metaTriples.push(
-      `_:r <https://graviola.gra.one/ns/lensId> ${JSON.stringify(activity.lensId)} .`,
+    body = appendPattern(
+      body,
+      sparql`${reifier} ${named("https://graviola.gra.one/ns/lensId")} ${df.literal(activity.lensId)} .`,
     );
   }
   if (activity?.stratum !== undefined) {
-    metaTriples.push(
-      `_:r <https://graviola.gra.one/ns/stratum> ${JSON.stringify(String(activity.stratum))} .`,
+    body = appendPattern(
+      body,
+      sparql`${reifier} ${named("https://graviola.gra.one/ns/stratum")} ${df.literal(String(activity.stratum))} .`,
     );
   }
   if (activity?.inputFingerprint) {
-    metaTriples.push(
-      `_:r <https://graviola.gra.one/ns/inputFingerprint> ${JSON.stringify(activity.inputFingerprint)} .`,
+    body = appendPattern(
+      body,
+      sparql`${reifier} ${named("https://graviola.gra.one/ns/inputFingerprint")} ${df.literal(activity.inputFingerprint)} .`,
     );
   }
   if (activity?.agent) {
-    metaTriples.push(
-      `_:r <${PROV.wasAttributedTo}> ${JSON.stringify(activity.agent)} .`,
+    body = appendPattern(
+      body,
+      sparql`${reifier} ${named(PROV.wasAttributedTo)} ${df.literal(activity.agent)} .`,
     );
   }
   if (activity?.generatedAt) {
-    metaTriples.push(
-      `_:r <${PROV.generatedAtTime}> ${JSON.stringify(activity.generatedAt)} .`,
+    body = appendPattern(
+      body,
+      sparql`${reifier} ${named(PROV.generatedAtTime)} ${df.literal(activity.generatedAt)} .`,
     );
   }
 
-  const tripleTerm =
-    options?.includeTripleTerm !== false
-      ? `_:r <${RDF.reifies}> <<( <${entityIRI}> <${propertyIRI}> ${valueLiteral} )>> .\n`
-      : "";
-
-  return `
-INSERT DATA {
-  <${entityIRI}> <${propertyIRI}> ${valueLiteral} .
-  ${tripleTerm}${metaTriples.join("\n  ")}
-}`.trim();
+  return sparql`INSERT DATA { ${body} }`.toString();
 }
 
 export function buildRdf12StatementSelect(
   entityIRI: string,
   paths?: string[],
 ): string {
-  const valuesFilter =
-    paths && paths.length
-      ? `VALUES ?path { ${paths.map((p) => JSON.stringify(p)).join(" ")} }`
-      : "";
-  return `
+  const entity = named(entityIRI);
+  const r = df.variable("r");
+  const pathVar = df.variable("path");
+  const mp = df.variable("mp");
+  const mo = df.variable("mo");
+
+  if (paths?.length) {
+    const pathLits = paths.map((p) => df.literal(p));
+    return sparql`
 SELECT ?path ?mp ?mo ?r WHERE {
-  ?r <${STMT.about}> <${entityIRI}> ;
-     <${STMT.path}> ?path .
-  ?r ?mp ?mo .
-  ${valuesFilter}
-}`.trim();
+  ${r} ${named(STMT.about)} ${entity} ;
+     ${named(STMT.path)} ${pathVar} .
+  ${r} ${mp} ${mo} .
+  VALUES ?path { ${pathLits} }
+}`.toString();
+  }
+
+  return sparql`
+SELECT ?path ?mp ?mo ?r WHERE {
+  ${r} ${named(STMT.about)} ${entity} ;
+     ${named(STMT.path)} ${pathVar} .
+  ${r} ${mp} ${mo} .
+}`.toString();
 }
 
 type SparqlBinding = {

@@ -606,6 +606,3 @@ export interface Logger {
    */
   error(message: string, context?: Record<string, any>): void;
 }
-
-export type { GenerationActivity } from "./provenance";
-export { PROV, DCT, GRA, generationActivityToPredicates } from "./provenance";
