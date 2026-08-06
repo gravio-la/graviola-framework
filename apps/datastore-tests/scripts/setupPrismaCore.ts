@@ -23,7 +23,10 @@ import {
   deriveExtendedSchema,
   ENTITY_META_PERSISTENCE_KEY,
 } from "@graviola/meta-schema";
-import { jsonSchema2PrismaWithManifest } from "@graviola/json-schema-prisma-utils";
+import {
+  graviolaStatementsModelText,
+  jsonSchema2PrismaWithManifest,
+} from "@graviola/json-schema-prisma-utils";
 import {
   entityIdentityFromIdKey,
   PRISMA_SCHEMA_IDENTITY,
@@ -185,6 +188,7 @@ export function runPrismaSetupForUrl(databaseUrl: string): void {
 
   if (provider !== "mongodb") {
     modelDefinitions = applyFrameworkNativeLifecycleColumns(modelDefinitions);
+    modelDefinitions += graviolaStatementsModelText();
   }
 
   const prismaMajor = getInstalledPrismaMajorVersion();

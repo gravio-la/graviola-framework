@@ -36,10 +36,23 @@ import type {
   ReadableImportSource,
   Removes,
   Resolves,
+  Statements,
   StoreDocumentsSearchOptions,
   StoreId,
   Writes,
 } from "@graviola/store-core";
+import type { StatementWrite } from "@graviola/provenance-types";
+import {
+  applyStatementWrites,
+  resolveStatementMetaProfile,
+  resolveStatementPolicy,
+  stripClientStatements,
+} from "@graviola/statement-meta";
+import {
+  groupStatementRowsByPath,
+  statementRowFromWrite,
+  type GraviolaStatementRow,
+} from "./statementRows";
 
 import { filterManyPrisma, filterOnePrisma } from "./filters";
 import { expandSelectWithManifest, toJSONLD } from "./helper";
@@ -60,7 +73,8 @@ type PrismaStore = BaseStore<PrismaSchemaRegistry> &
   Removes<PrismaSchemaRegistry> &
   Imports<PrismaSchemaRegistry> &
   Exists<PrismaSchemaRegistry> &
-  Resolves;
+  Resolves &
+  Partial<Statements<PrismaSchemaRegistry>>;
 
 export type PrismaDatastorePair = {
   store: PrismaStore;
@@ -142,8 +156,14 @@ export function initPrismaDatastorePair<
     datasourceProvider,
     metaStamping,
     persistenceManifest,
+    statementMeta,
   }: PrismaStoreOptions,
 ): PrismaDatastorePair {
+  if (statementMeta && datasourceProvider.toLowerCase() === "mongodb") {
+    throw new Error(
+      "statementMeta side-table encoding is not supported on MongoDB in this slice",
+    );
+  }
   const domainSchema = extendSchemaShortcut(
     rootSchema,
     PRISMA_SCHEMA_IDENTITY.typeKey,
@@ -333,7 +353,7 @@ export function initPrismaDatastorePair<
     },
     upsertDocument: async (typeName: string, entityIRI, document: any) => {
       let doc = {
-        ...document,
+        ...(statementMeta ? stripClientStatements(document) : document),
         "@id": entityIRI,
         "@type": typeNameToTypeIRI(typeName),
       };
@@ -505,7 +525,13 @@ export function initPrismaDatastorePair<
               ),
             }
           : {}),
+        ...(statementMeta
+          ? {
+              statementMeta: resolveStatementMetaProfile("side-table"),
+            }
+          : {}),
       },
+      ...(statementMeta ? { statements: true as const } : {}),
     },
     subscribe: changeBus.subscribe,
     emit: changeBus.emit,
@@ -631,10 +657,13 @@ export function initPrismaDatastorePair<
       return abstractDatastore.countDocuments(typeName, query);
     },
     upsert: async (typeName: string, entityIRI: string, document: any) => {
+      const payload = statementMeta
+        ? stripClientStatements(document)
+        : document;
       const result = await abstractDatastore.upsertDocument(
         typeName,
         entityIRI,
-        document,
+        payload,
       );
       emitChange({
         entityIRI,
@@ -711,6 +740,76 @@ export function initPrismaDatastorePair<
       }
       return abstractDatastore.getClasses(entityIRI);
     },
+
+    ...(statementMeta
+      ? {
+          writeStatements: async (
+            typeName: string,
+            entityIRI: string,
+            writes: StatementWrite[],
+          ) => {
+            for (const write of writes) {
+              if (
+                resolveStatementPolicy(
+                  statementMeta.policies,
+                  typeName,
+                  write.path,
+                ) !== "always"
+              ) {
+                throw new Error(
+                  `writeStatements: no "always" statement policy for ${typeName}.${write.path}`,
+                );
+              }
+            }
+
+            await prisma.$transaction(async (tx) => {
+              for (const write of writes) {
+                const row = statementRowFromWrite(typeName, entityIRI, write);
+                await tx.graviolaStatement.upsert({
+                  where: { id: row.id },
+                  create: row,
+                  update: row,
+                });
+              }
+            });
+
+            const current =
+              ((await abstractDatastore.loadDocument(
+                typeName,
+                entityIRI,
+              )) as Record<string, unknown> | null) ?? {};
+            const merged = applyStatementWrites({ ...current }, writes);
+            const truthyOnly = stripClientStatements(merged);
+            const saved = await abstractDatastore.upsertDocument(
+              typeName,
+              entityIRI,
+              truthyOnly,
+            );
+            emitChange({
+              entityIRI,
+              changeType: "upsert",
+              typeIRI: typeNameToTypeIRI(typeName),
+              typeName,
+              data: saved,
+            });
+          },
+
+          loadStatements: async (
+            typeName: string,
+            entityIRI: string,
+            paths?: string[],
+          ) => {
+            void typeName;
+            const rows = (await prisma.graviolaStatement.findMany({
+              where: {
+                entityIri: entityIRI,
+                ...(paths?.length ? { path: { in: paths } } : {}),
+              },
+            })) as GraviolaStatementRow[];
+            return groupStatementRowsByPath(rows);
+          },
+        }
+      : {}),
   };
 
   return { store, abstractDatastore };
