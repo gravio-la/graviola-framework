@@ -10,6 +10,7 @@ import type {
   Removes,
   Resolves,
   Searches,
+  Statements,
   Streams,
   Writes,
 } from "@graviola/store-core";
@@ -57,6 +58,10 @@ export type DatastoreContractStoreWithFilters = DatastoreContractStore &
 export type DatastoreContractStoreWithImports = DatastoreContractStore &
   Imports<TestSchemaRegistry>;
 
+/** Optional suites: fact-level statement metadata — requires {@link Statements}. */
+export type DatastoreContractStoreWithStatements = DatastoreContractStore &
+  Statements<TestSchemaRegistry>;
+
 /**
  * Fresh Store usable as seed data source for import suite tests (readable + writable baseline).
  */
@@ -84,6 +89,12 @@ export type DatastoreAdapter = {
     /** Same backing data; optional store with entity `$meta` stamping enabled. */
     metaStampingStore?: DatastoreContractStore;
     metaStampingStores?: MetaStampingStoreVariants;
+    /** Store with fact-level `$stmt` (statement-node or side-table encoding). */
+    statementStore?: DatastoreContractStoreWithStatements;
+    /** SPARQL in-process only: RDF 1.2 reifier encoding variant. */
+    statementStoreRdf12?: DatastoreContractStoreWithStatements;
+    /** Statements + entity `$meta` stamping (for combined lifecycle tests). */
+    statementMetaStampingStore?: DatastoreContractStoreWithStatements;
   }>;
   /** Wipe backing data — invoked in beforeEach. */
   clearAll: () => Promise<void>;

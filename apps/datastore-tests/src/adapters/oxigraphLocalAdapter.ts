@@ -30,7 +30,15 @@ import {
   sparqlMetaStampingLifecycleOff,
   sparqlMetaTestSchema,
 } from "../schema/metaTestConfig";
-import type { DatastoreAdapter, DatastoreContractStore } from "../types";
+import {
+  sparqlStatementNodeMetaConfig,
+  sparqlStatementRdf12MetaConfig,
+} from "../schema/statementTestConfig";
+import type {
+  DatastoreAdapter,
+  DatastoreContractStore,
+  DatastoreContractStoreWithStatements,
+} from "../types";
 
 /** Build CRUDFunctions that delegate to a synchronous Oxigraph Store. */
 function makeSyncStoreCRUDFunctions(store: Store): CRUDFunctions {
@@ -113,6 +121,41 @@ export function createOxigraphLocalAdapter(): DatastoreAdapter {
         sparqlMetaStampingDatabaseNativeConfig,
       );
 
+      const statementPair = (encoding: "statement-node" | "rdf-12") =>
+        initSPARQLDatastorePair({
+          schema: sparqlMetaTestSchema as any,
+          defaultPrefix: BASE_IRI,
+          jsonldContext: { "@vocab": BASE_IRI },
+          typeNameToTypeIRI,
+          queryBuildOptions: {
+            ...queryBuildOptions,
+            sparqlFlavour: "oxigraph",
+          },
+          sparqlQueryFunctions: crudFunctions,
+          defaultLimit: 100,
+          statementMeta:
+            encoding === "rdf-12"
+              ? sparqlStatementRdf12MetaConfig
+              : sparqlStatementNodeMetaConfig,
+        });
+
+      const { store: statementStore } = statementPair("statement-node");
+      const { store: statementStoreRdf12 } = statementPair("rdf-12");
+      const { store: statementMetaStampingStore } = initSPARQLDatastorePair({
+        schema: sparqlMetaTestSchema as any,
+        defaultPrefix: BASE_IRI,
+        jsonldContext: { "@vocab": BASE_IRI },
+        typeNameToTypeIRI,
+        queryBuildOptions: {
+          ...queryBuildOptions,
+          sparqlFlavour: "oxigraph",
+        },
+        sparqlQueryFunctions: crudFunctions,
+        defaultLimit: 100,
+        metaStamping: sparqlMetaStampingConfig,
+        statementMeta: sparqlStatementNodeMetaConfig,
+      });
+
       return {
         store: pair.store as DatastoreContractStore,
         metaStampingStore: metaStampingStore as DatastoreContractStore,
@@ -120,6 +163,11 @@ export function createOxigraphLocalAdapter(): DatastoreAdapter {
           lifecycleOff: lifecycleOffStore as DatastoreContractStore,
           sparqlNativeConfig: sparqlNativeConfigStore as DatastoreContractStore,
         },
+        statementStore: statementStore as DatastoreContractStoreWithStatements,
+        statementStoreRdf12:
+          statementStoreRdf12 as DatastoreContractStoreWithStatements,
+        statementMetaStampingStore:
+          statementMetaStampingStore as DatastoreContractStoreWithStatements,
       };
     },
 

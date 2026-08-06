@@ -6,7 +6,10 @@ import {
   type StatementValue,
   type StatementWrite,
 } from "@graviola/provenance-types";
-import { statementValueHash } from "@graviola/statement-meta";
+import {
+  normalizeStatementValue,
+  statementValueHash,
+} from "@graviola/statement-meta";
 
 export function toSparqlLiteral(value: StatementValue): string {
   if (typeof value === "string") {
@@ -174,7 +177,7 @@ export function parseRdf12StatementBindings(
   for (const entry of byReifier.values()) {
     if (!entry.path) continue;
     const node: StatementNode = {
-      value: entry.fields[STMT.value] ?? "",
+      value: normalizeStatementValue(entry.fields[STMT.value] ?? ""),
     };
     if (entry.fields[STMT.rank]) {
       node.rank = entry.fields[STMT.rank] as StatementNode["rank"];

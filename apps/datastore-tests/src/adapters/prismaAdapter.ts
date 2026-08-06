@@ -40,8 +40,13 @@ import {
   prismaMetaStampingConfig,
   prismaMetaStampingLifecycleOff,
 } from "../schema/metaTestConfig";
+import { prismaStatementMetaConfig } from "../schema/statementTestConfig";
 import type { MetaStampingConfig } from "@graviola/meta-schema";
-import type { DatastoreAdapter, DatastoreContractStore } from "../types";
+import type {
+  DatastoreAdapter,
+  DatastoreContractStore,
+  DatastoreContractStoreWithStatements,
+} from "../types";
 import {
   databaseUrlToProvider,
   getInstalledPrismaMajorVersion,
@@ -147,6 +152,11 @@ async function clearPrismaData(prisma: any): Promise<void> {
     /* model may not exist */
   }
   try {
+    await prisma.graviolaStatement?.deleteMany?.();
+  } catch {
+    /* side table may not exist on Mongo */
+  }
+  try {
     await prisma.category.deleteMany();
   } catch {
     /* model may not exist */
@@ -206,6 +216,32 @@ export function createPrismaAdapter(
         prismaMetaStampingApplication,
       );
 
+      const provider = databaseUrlToProvider(databaseUrl);
+      const statementVariants =
+        provider === "mongodb"
+          ? {}
+          : {
+              statementStore: initPrismaDatastorePair(
+                prismaClient,
+                extendedSchema,
+                primaryFields,
+                {
+                  ...pairOptions,
+                  statementMeta: prismaStatementMetaConfig,
+                },
+              ).store as DatastoreContractStoreWithStatements,
+              statementMetaStampingStore: initPrismaDatastorePair(
+                prismaClient,
+                extendedSchema,
+                primaryFields,
+                {
+                  ...pairOptions,
+                  statementMeta: prismaStatementMetaConfig,
+                  metaStamping: prismaMetaStampingConfig,
+                },
+              ).store as DatastoreContractStoreWithStatements,
+            };
+
       return {
         store: store as DatastoreContractStore,
         metaStampingStore: metaStampingStore as DatastoreContractStore,
@@ -213,6 +249,7 @@ export function createPrismaAdapter(
           lifecycleOff: lifecycleOffStore as DatastoreContractStore,
           application: applicationStore as DatastoreContractStore,
         },
+        ...statementVariants,
       };
     },
 

@@ -29,7 +29,12 @@ import {
   queryBuildOptions,
   BASE_IRI,
 } from "../schema/testSchema";
-import type { DatastoreAdapter, DatastoreContractStore } from "../types";
+import { sparqlStatementNodeMetaConfig } from "../schema/statementTestConfig";
+import type {
+  DatastoreAdapter,
+  DatastoreContractStore,
+  DatastoreContractStoreWithStatements,
+} from "../types";
 
 type EndpointConfig = {
   queryUrl: string;
@@ -114,8 +119,23 @@ export function createSparqlAdapter(
         defaultLimit: 100,
       });
 
+      const { store: statementStore } = initSPARQLDatastorePair({
+        schema: rawTestSchema as any,
+        defaultPrefix: BASE_IRI,
+        jsonldContext: { "@vocab": BASE_IRI },
+        typeNameToTypeIRI,
+        queryBuildOptions: {
+          ...queryBuildOptions,
+          sparqlFlavour: cfg.flavour,
+        },
+        sparqlQueryFunctions: crudFunctions,
+        defaultLimit: 100,
+        statementMeta: sparqlStatementNodeMetaConfig,
+      });
+
       return {
         store: store as DatastoreContractStore,
+        statementStore: statementStore as DatastoreContractStoreWithStatements,
       };
     },
 
