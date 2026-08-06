@@ -1,6 +1,10 @@
 import type { CompiledProfile } from "@graviola/formula-dependency";
 import { evaluateCompiledProfileDeterministic } from "@graviola/formula-runtime";
-import type { GenerationActivity } from "@graviola/provenance-types";
+import type {
+  GenerationActivity,
+  StatementNode,
+  StatementWrite,
+} from "@graviola/provenance-types";
 import type { EntityChangeEvent } from "@graviola/store-core";
 
 export type { GenerationActivity } from "@graviola/provenance-types";
@@ -10,6 +14,7 @@ export {
   GRA,
   generationActivityToPredicates,
 } from "@graviola/provenance-types";
+export type { StatementNode, StatementWrite } from "@graviola/provenance-types";
 
 export type MaterializedValue = {
   scope: string;
@@ -100,4 +105,94 @@ export function emitMaterializationChanges(
       data: { materializedScope: mat.scope, value: mat.value },
     });
   }
+}
+
+const PROPERTIES_MARKER = "/properties/";
+
+/** JSON Schema scope pointer → dot path on entity documents. */
+export function scopeToDotPath(scope: string): string {
+  const idx = scope.indexOf(PROPERTIES_MARKER);
+  if (idx === -1) {
+    const parts = scope.split("/");
+    return parts[parts.length - 1] ?? scope;
+  }
+  const afterFirst = scope.slice(idx + PROPERTIES_MARKER.length);
+  return afterFirst.split(PROPERTIES_MARKER).join(".");
+}
+
+function assertStatementValue(
+  value: unknown,
+  scope: string,
+): asserts value is StatementWrite["value"] {
+  if (
+    typeof value !== "string" &&
+    typeof value !== "number" &&
+    typeof value !== "boolean"
+  ) {
+    throw new Error(
+      `buildStatementWrites: non-primitive value at scope ${scope}`,
+    );
+  }
+}
+
+/** Map a materialization plan to dual-assertion statement writes. */
+export function buildStatementWrites(
+  plan: MaterializationPlan,
+  options?: { agent?: string },
+): StatementWrite[] {
+  return plan.values.map((mat) => {
+    assertStatementValue(mat.value, mat.scope);
+    const wasGeneratedBy: GenerationActivity = {
+      ...mat.wasGeneratedBy,
+      ...(options?.agent ? { agent: options.agent } : {}),
+    };
+    return {
+      path: scopeToDotPath(mat.scope),
+      value: mat.value,
+      statement: {
+        generatedAt: mat.wasGeneratedBy.generatedAt,
+        wasGeneratedBy,
+      },
+    };
+  });
+}
+
+/** Persist a plan through a statements-capable store (dual assertion), then emit change events. */
+export async function materializePlan(
+  store: {
+    writeStatements: (
+      typeName: string,
+      entityIRI: string,
+      writes: StatementWrite[],
+    ) => Promise<void>;
+    emit?: (event: EntityChangeEvent) => void;
+  },
+  typeName: string,
+  typeIRI: string,
+  entityIRI: string,
+  plan: MaterializationPlan,
+  options?: { agent?: string },
+): Promise<void> {
+  await store.writeStatements(
+    typeName,
+    entityIRI,
+    buildStatementWrites(plan, options),
+  );
+  if (store.emit) {
+    emitMaterializationChanges(store.emit, entityIRI, typeName, typeIRI, plan);
+  }
+}
+
+/**
+ * Cache-validity check for one computed slot: fresh iff any statement's
+ * wasGeneratedBy.inputFingerprint equals the current one.
+ */
+export function isMaterializationFresh(
+  statements: StatementNode[],
+  currentInputFingerprint: string,
+): boolean {
+  if (statements.length === 0) return false;
+  return statements.some(
+    (stmt) => stmt.wasGeneratedBy?.inputFingerprint === currentInputFingerprint,
+  );
 }
