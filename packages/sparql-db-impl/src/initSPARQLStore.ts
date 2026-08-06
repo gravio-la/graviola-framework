@@ -51,9 +51,17 @@ import {
   remapStatementsFromPersistence,
   resolveStatementMetaProfile,
   resolveStatementPolicy,
+  statementValueHash,
   statementsForPath,
   stripClientStatements,
 } from "@graviola/statement-meta";
+import {
+  buildRdf12StatementDelete,
+  buildRdf12StatementInsert,
+  buildRdf12StatementSelect,
+  parseRdf12StatementBindings,
+  propertyIriFromPath,
+} from "./rdf12Statements";
 import type {
   EntityChangeEvent,
   SparqlStore,
@@ -847,9 +855,53 @@ export function initSPARQLDatastorePair(
             }
 
             if (statementEncoding === "rdf-12") {
-              throw new Error(
-                "rdf-12 encoding: use writeStatements after P3.5 wiring",
+              for (const write of writes) {
+                const propIri = propertyIriFromPath(defaultPrefix, write.path);
+                const hash = statementValueHash(write.value);
+                await updateFetch(
+                  withDefaultPrefix(
+                    defaultPrefix,
+                    buildRdf12StatementDelete(
+                      entityIRI,
+                      propIri,
+                      write.path,
+                      hash,
+                    ),
+                  ),
+                );
+                await updateFetch(
+                  withDefaultPrefix(
+                    defaultPrefix,
+                    buildRdf12StatementInsert(
+                      entityIRI,
+                      propIri,
+                      write.path,
+                      write,
+                    ),
+                  ),
+                );
+              }
+              const current =
+                ((await loadDocument(typeName, entityIRI)) as Record<
+                  string,
+                  unknown
+                > | null) ?? {};
+              const merged = applyStatementWrites({ ...current }, writes);
+              const truthyOnly = stripClientStatements(merged);
+              const saved = await persistDocument(
+                typeName,
+                entityIRI,
+                truthyOnly,
+                { keepStatements: false },
               );
+              emitChange({
+                entityIRI,
+                changeType: "upsert",
+                typeIRI: typeNameToTypeIRI(typeName),
+                typeName,
+                data: saved,
+              });
+              return;
             }
 
             const current =
@@ -876,9 +928,19 @@ export function initSPARQLDatastorePair(
             paths?: string[],
           ) => {
             if (statementEncoding === "rdf-12") {
-              throw new Error(
-                "rdf-12 encoding: use loadStatements after P3.5 wiring",
+              const targets =
+                paths ??
+                alwaysStatementPathsForType(statementMeta.policies, typeName);
+              const query = withDefaultPrefix(
+                defaultPrefix,
+                buildRdf12StatementSelect(entityIRI, targets),
               );
+              const raw = (await selectFetch(query, {
+                withHeaders: true,
+              })) as {
+                results?: { bindings?: Record<string, { value: string }>[] };
+              };
+              return parseRdf12StatementBindings(raw.results?.bindings ?? []);
             }
 
             const doc = (await loadDocument(typeName, entityIRI)) as Record<
