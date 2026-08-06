@@ -25,6 +25,10 @@ export type EntityMetaProfile = {
   lifecycleTimestamps?: false | "application" | "database-native";
 };
 
+export type StatementMetaProfile = {
+  encoding: "statement-node" | "rdf-12" | "side-table" | "named-graph" | "none";
+};
+
 /**
  * Where nested `include.take` / `skip` / `orderBy` are applied.
  * - `"query"` — SEP-0006 LATERAL windowing (`lateralNestedPagination`)
@@ -40,6 +44,7 @@ export type CapabilityProfiles = {
   writes?: WritesProfile;
   streams?: StreamsProfile;
   entityMeta?: EntityMetaProfile;
+  statementMeta?: StatementMetaProfile;
   nestedPagination?: NestedPaginationProfile;
   /** Resolved SPARQL dialect features (from engine profile + overrides) */
   sparqlFeatures?: {
@@ -61,6 +66,7 @@ export type CapabilityName =
   | "searches"
   | "counts"
   | "writes"
+  | "statements"
   | "removes"
   | "streams"
   | "imports"
@@ -84,6 +90,7 @@ export type CapabilityDescriptor = {
   searches?: true;
   counts?: true;
   writes?: true;
+  statements?: true;
   removes?: true;
   streams?: true;
   imports?: true;

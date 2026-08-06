@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@graviola/edb-core-types": "workspace:*",
+    "@graviola/provenance-types": "workspace:*",
     "@graviola/typed-query-types": "workspace:*"
   },
   "devDependencies": {

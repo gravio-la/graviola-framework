@@ -13,6 +13,7 @@ import type { Searches } from "./capabilities/searches";
 import type { SpeaksNative } from "./capabilities/speaks-native";
 import type { Streams } from "./capabilities/streams";
 import type { TextSearches } from "./capabilities/text-searches";
+import type { Statements } from "./capabilities/statements";
 import type { Writes } from "./capabilities/writes";
 import type { CapabilityName } from "./descriptor";
 import type { SchemaRegistry } from "./registry";
@@ -31,6 +32,7 @@ export type CapabilityFacets<R extends SchemaRegistry> = {
   searches: Searches<R>;
   counts: Counts<R>;
   writes: Writes<R>;
+  statements: Statements<R>;
   removes: Removes<R>;
   streams: Streams<R>;
   imports: Imports<R>;
