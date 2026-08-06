@@ -1,0 +1,86 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Library Docs/statement-meta/Statement metadata ($stmt)" />
+
+# @graviola/statement-meta
+
+Fact-level statement metadata — the Wikidata statement-node pattern — as a schema-driven sidecar.
+Slice 1 implements dual assertion (truthy value + `$stmt` array), `writeStatements` / `loadStatements`
+store facets, and three encodings of the same logical model.
+
+## Logical model
+
+Each annotated property carries a direct value **and** zero or more statement nodes:
+
+```json
+{
+  "price": 42,
+  "price$stmt": [
+    {
+      "value": 42,
+      "rank": "preferred",
+      "source": "import-batch-7",
+      "generatedAt": "2026-03-01T10:00:00.000Z",
+      "wasGeneratedBy": {
+        "formulaId": "#/definitions/Item/properties/price",
+        "stratum": 2,
+        "inputFingerprint": "sha256:…"
+      }
+    }
+  ]
+}
+```
+
+API keys use `$stmt`; persistence remaps to `__stmt` (SPARQL) or a `GraviolaStatement` side table (Prisma).
+
+## Encodings (one model, negotiated storage)
+
+| Encoding | Backend | Notes |
+| --- | --- | --- |
+| `statement-node` | SPARQL 1.1 | Anonymous statement nodes in entity CBD; `$stmt` embedded on load |
+| `rdf-12` | Oxigraph ≥ 0.5 | Reifier + addressing predicates; same facet API |
+| `side-table` | Prisma SQL | One `GraviolaStatement` table per database |
+| `named-graph` | Quad stores | Proposed |
+| `none` | REST / feature off | Plain upsert; client `$stmt` stripped |
+
+**Co-location rule:** statement metadata lives in the **same store** as the facts it annotates.
+
+## Schema derivation
+
+`deriveProvenanceSchema(domainSchema, statementSchemaProfile, { policies })` grafts
+`<property>$stmt` arrays onto property scopes for paths with policy `"always"`:
+
+```typescript
+import {
+  baseStatementSchemaProfile,
+  deriveProvenanceSchema,
+} from "@graviola/statement-meta";
+
+const readSchema = deriveProvenanceSchema(itemSchema, baseStatementSchemaProfile, {
+  policies: { "Item.price": "always" },
+});
+// readSchema now includes price$stmt: { type: "array", items: { …StatementNode } }
+```
+
+Prisma uses the side table only — no schema graft on write.
+
+## Reading statements in UI
+
+Use `statementsForPath(document, "billing.total")` for chips such as “value proposed by import”
+without re-querying:
+
+```typescript
+import { statementsForPath } from "@graviola/statement-meta";
+
+const proposals = statementsForPath(invoice, "billing.total");
+// → StatementNode[] for DetailRenderer / chip dispatch
+```
+
+Materialized computed values integrate via `@graviola/formula-materialization`:
+`buildStatementWrites(plan)` → `store.writeStatements(…)` → `isMaterializationFresh(statements, fingerprint)`.
+
+## Write policy (slice 1)
+
+Per-property policy keys: `"TypeName.dot.path"` → `"always" | "never"`.
+Plain `upsert` strips client-supplied `$stmt`; only `writeStatements` asserts metadata.
+`on-conflict` resolution is reserved for a later slice.
