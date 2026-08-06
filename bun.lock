@@ -1614,9 +1614,11 @@
         "@graviola/json-schema-utils": "workspace:*",
         "@graviola/jsonld-utils": "workspace:*",
         "@graviola/meta-schema": "workspace:*",
+        "@graviola/provenance-types": "workspace:*",
         "@graviola/remote-query-implementations": "workspace:*",
         "@graviola/sparql-schema": "workspace:*",
         "@graviola/sparql-tools": "workspace:*",
+        "@graviola/statement-meta": "workspace:*",
         "@graviola/store-core": "workspace:*",
       },
       "devDependencies": {
