@@ -1,6 +1,8 @@
 import type { IRIToStringFn, StringToIRIFn } from "@graviola/edb-core-types";
+import type { JSONSchema7 } from "json-schema";
 import type { PersistenceManifest } from "@graviola/json-schema-prisma-utils";
 import type { MetaStampingConfig } from "@graviola/meta-schema";
+import type { StatementPolicyMap } from "@graviola/statement-meta";
 
 export interface AbstractPrismaClient extends Record<string, any> {
   $transaction<T>(fn: (tx: AbstractPrismaClient) => Promise<T>): Promise<T>;
@@ -47,4 +49,9 @@ export type PrismaStoreOptions = {
    * Drives multi-value list write/read/filter representation.
    */
   persistenceManifest?: PersistenceManifest;
+  /** Fact-level statement metadata (side-table encoding; SQL providers only). */
+  statementMeta?: {
+    policies: StatementPolicyMap;
+    statementSchema?: JSONSchema7;
+  };
 };
