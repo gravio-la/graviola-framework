@@ -51,6 +51,7 @@ import { runClassesSuite } from "./suites/classes.suite";
 import { runIterableSuite } from "./suites/iterable.suite";
 import { runFindByLabelSuite } from "./suites/findByLabel.suite";
 import { runTypedFilterSuite } from "./suites/typedFilter.suite";
+import { runCalcEngineSuite } from "./suites/calcEngine.suite";
 import { runMetaSuite } from "./suites/meta.suite";
 import { runFormulaPortabilitySuite } from "./suites/formulaPortability.suite";
 import {
@@ -132,6 +133,9 @@ for (const adapter of adapters) {
 
     if (supports("filters")) {
       runTypedFilterSuite(
+        () => store as unknown as DatastoreContractStoreWithFilters,
+      );
+      runCalcEngineSuite(
         () => store as unknown as DatastoreContractStoreWithFilters,
       );
     }

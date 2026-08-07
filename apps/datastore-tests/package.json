@@ -15,6 +15,8 @@
     "docker:down": "docker compose down"
   },
   "dependencies": {
+    "@graviola/calc-engine": "workspace:*",
+    "@graviola/calc-fixtures": "workspace:*",
     "@graviola/formula-dependency": "workspace:*",
     "@graviola/formula-materialization": "workspace:*",
     "@graviola/formula-runtime": "workspace:*",
