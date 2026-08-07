@@ -1,5 +1,11 @@
 import type { JSONSchema7 } from "json-schema";
-import { getSubschemaByPath, isJSONSchema } from "@graviola/json-schema-utils";
+import {
+  definitionNameFromRef,
+  definitionNameFromScope,
+  definitionScope,
+  getSubschemaByPath,
+  isJSONSchema,
+} from "@graviola/json-schema-utils";
 import type { CalcProfileSlot } from "./types";
 
 const FORMULA_FUNCTIONS = new Set([
@@ -54,27 +60,38 @@ export function scopeToEntityScope(scope: string): string {
   return scope.slice(0, idx);
 }
 
+/** @deprecated Prefer {@link definitionNameFromScope} from `@graviola/json-schema-utils`. */
 export function entityTypeNameFromScope(
   entityScope: string,
 ): string | undefined {
-  const match = entityScope.match(/\/definitions\/([^/]+)$/);
-  return match?.[1];
+  return definitionNameFromScope(entityScope);
 }
 
 export function resolveEntitySchema(
   domainSchema: JSONSchema7,
   entityScope: string,
 ): JSONSchema7 | undefined {
-  const pointer = entityScope.startsWith("#")
-    ? entityScope.slice(1)
-    : entityScope;
-  const segments = pointer.split("/").filter(Boolean);
-  let current: unknown = domainSchema;
-  for (const segment of segments) {
-    if (!current || typeof current !== "object") return undefined;
-    current = (current as Record<string, unknown>)[segment];
-  }
-  return isJSONSchema(current) ? current : undefined;
+  const tryResolve = (scope: string): JSONSchema7 | undefined => {
+    const pointer = scope.startsWith("#") ? scope.slice(1) : scope;
+    const segments = pointer.split("/").filter(Boolean);
+    let current: unknown = domainSchema;
+    for (const segment of segments) {
+      if (!current || typeof current !== "object") return undefined;
+      current = (current as Record<string, unknown>)[segment];
+    }
+    return isJSONSchema(current) ? current : undefined;
+  };
+
+  const direct = tryResolve(entityScope);
+  if (direct) return direct;
+
+  // Tolerant: `#/definitions/X` ↔ `#/$defs/X` when the document uses the other key.
+  const name = definitionNameFromScope(entityScope);
+  if (!name) return undefined;
+  const alt = entityScope.includes("/$defs/")
+    ? definitionScope(name, "definitions")
+    : definitionScope(name, "$defs");
+  return tryResolve(alt);
 }
 
 export function validateBindingPath(
@@ -177,9 +194,9 @@ export function pathToComputedScope(
 
     if (isJSONSchema(prop)) {
       if (prop.$ref) {
-        const refName = prop.$ref.split("/").pop();
+        const refName = definitionNameFromRef(prop.$ref);
         if (refName) {
-          currentEntityScope = `#/definitions/${refName}`;
+          currentEntityScope = definitionScope(refName, domainSchema);
           currentSchema = resolveEntitySchema(domainSchema, currentEntityScope);
           continue;
         }
@@ -216,8 +233,8 @@ export function resolveArrayItemEntityScope(
   const items = Array.isArray(prop.items) ? prop.items[0] : prop.items;
   if (!isJSONSchema(items)) return undefined;
   if (items.$ref) {
-    const refName = items.$ref.split("/").pop();
-    return refName ? `#/definitions/${refName}` : undefined;
+    const refName = definitionNameFromRef(items.$ref);
+    return refName ? definitionScope(refName, domainSchema) : undefined;
   }
   return undefined;
 }

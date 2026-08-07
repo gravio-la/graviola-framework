@@ -44,12 +44,15 @@ export type CostHint = "static" | "low" | "medium" | "high";
 export type CompiledSlot = {
   stratum: number;
   dependents: string[];
+  /** Binding paths on the owning entity that this slot reads (from compile). */
   sources: string[];
   cost: CostHint;
   formula?: string;
   bindings?: Record<string, CalcBinding>;
   aggregate?: CalcAggregate;
   eval?: "client" | "server" | "auto";
+  /** Declared cache policy from the sidecar (`reactive` | `ttl` | `static`). */
+  cache?: string;
   /** JSON Pointer scope of the owning named entity (CBD boundary). */
   entityScope: string;
   /** Property key on the entity instance. */

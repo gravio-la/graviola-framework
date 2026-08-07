@@ -1,4 +1,6 @@
 export { compileCalcProfile } from "./compileCalcProfile";
+export { planCalcReads } from "./planCalcReads";
+export type { CalcReadPlan, UnreachableSlot } from "./planCalcReads";
 export {
   explainCompiledSlot,
   formatCompileIssues,

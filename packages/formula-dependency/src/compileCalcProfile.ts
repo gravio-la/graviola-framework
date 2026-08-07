@@ -1,7 +1,11 @@
 import type { JSONSchema7 } from "json-schema";
 import Graph from "graphology";
 import { willCreateCycle, topologicalSort } from "graphology-dag";
-import { schemaIdentityOfSync } from "@graviola/json-schema-utils";
+import {
+  defs,
+  definitionScope,
+  schemaIdentityOfSync,
+} from "@graviola/json-schema-utils";
 import type { SidecarDocument } from "@graviola/sidecar-core";
 import {
   aggregateFieldComputedScope,
@@ -186,15 +190,17 @@ export function compileCalcProfile(
 
   const slots: CompiledProfile["slots"] = {};
   for (const [scope, slot] of slotEntries) {
+    const { paths } = slotDependencyPaths(scope, slot, domainSchema);
     slots[scope] = {
       stratum: strata.get(scope) ?? 1,
       dependents: dependents.get(scope) ?? [],
-      sources: ["local"],
+      sources: paths,
       cost: inferCost(slot),
       formula: slot.formula,
       bindings: slot.bindings,
       aggregate: slot.aggregate,
       eval: slot.eval ?? "auto",
+      cache: slot.cache,
       entityScope: scopeToEntityScope(scope),
       propertyName: scopeToPropertyName(scope),
     };
@@ -205,11 +211,11 @@ export function compileCalcProfile(
 
 function collectPropertyScopes(domainSchema: JSONSchema7): string[] {
   const scopes: string[] = [];
-  const defs = domainSchema.definitions ?? {};
-  for (const [name, def] of Object.entries(defs)) {
+  const named = defs(domainSchema);
+  for (const [name, def] of Object.entries(named)) {
     if (!def || typeof def !== "object") continue;
     const props = (def as JSONSchema7).properties ?? {};
-    const entityScope = `#/definitions/${name}`;
+    const entityScope = definitionScope(name, domainSchema);
     for (const prop of Object.keys(props)) {
       scopes.push(`${entityScope}/properties/${prop}`);
     }
