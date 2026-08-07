@@ -1,10 +1,10 @@
 import { describe, expect, it } from "bun:test";
 import {
-  compileCalcProfile,
+  gardenFeeSampleData,
   gardenFeeSchema,
   gardenFeeSidecar,
-  gardenFeeSampleData,
-} from "@graviola/formula-dependency";
+} from "@graviola/calc-fixtures";
+import { compileCalcProfile } from "@graviola/formula-dependency";
 import type { StatementNode } from "@graviola/provenance-types";
 import {
   buildMaterializationPlan,

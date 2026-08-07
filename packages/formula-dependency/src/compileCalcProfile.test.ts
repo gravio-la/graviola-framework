@@ -1,12 +1,12 @@
 import { describe, expect, it } from "bun:test";
-import { compileCalcProfile } from "./compileCalcProfile";
-import { CalcProfileCompileError, explainCompiledSlot } from "./types";
 import {
   gardenFeeExpected,
   gardenFeeSampleData,
   gardenFeeSchema,
   gardenFeeSidecar,
-} from "./fixtures/garden-fee";
+} from "@graviola/calc-fixtures";
+import { compileCalcProfile } from "./compileCalcProfile";
+import { CalcProfileCompileError, explainCompiledSlot } from "./types";
 
 describe("compileCalcProfile", () => {
   it("assigns garden-fee strata 1–4 (Plot→Patch→Garden chain)", () => {

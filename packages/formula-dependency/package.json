@@ -14,7 +14,10 @@
       "default": "./dist/index.js"
     }
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsup",
     "test": "bun test",
@@ -29,6 +32,7 @@
     "graphology-dag": "^0.4.1"
   },
   "devDependencies": {
+    "@graviola/calc-fixtures": "workspace:*",
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
     "@types/json-schema": "catalog:",
@@ -38,6 +42,8 @@
   },
   "eslintConfig": {
     "root": true,
-    "extends": ["eslint-config-edb"]
+    "extends": [
+      "eslint-config-edb"
+    ]
   }
 }

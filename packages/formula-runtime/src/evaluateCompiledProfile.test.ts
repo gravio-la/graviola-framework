@@ -1,11 +1,11 @@
 import { describe, expect, it } from "bun:test";
 import {
-  compileCalcProfile,
   gardenFeeExpected,
   gardenFeeSampleData,
   gardenFeeSchema,
   gardenFeeSidecar,
-} from "@graviola/formula-dependency";
+} from "@graviola/calc-fixtures";
+import { compileCalcProfile } from "@graviola/formula-dependency";
 import {
   evaluateCompiledProfile,
   evaluateCompiledProfileDeterministic,

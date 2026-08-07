@@ -1,10 +1,10 @@
 import { describe, expect, it } from "bun:test";
 import {
-  compileCalcProfile,
   gardenFeeSampleData,
   gardenFeeSchema,
   gardenFeeSidecar,
-} from "@graviola/formula-dependency";
+} from "@graviola/calc-fixtures";
+import { compileCalcProfile } from "@graviola/formula-dependency";
 import { evaluateCompiledProfileDeterministic } from "@graviola/formula-runtime";
 
 describe("useComputedFields (pure evaluation parity)", () => {
