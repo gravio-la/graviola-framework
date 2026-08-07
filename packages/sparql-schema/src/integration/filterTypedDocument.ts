@@ -25,6 +25,7 @@ import type {
 import { resolveSparqlFeatures } from "@graviola/edb-core-utils";
 import {
   applyIncludeOrderByAndSlice,
+  resolveEffectiveMaxRecursion,
   traverseGraphExtractBySchema,
 } from "@graviola/edb-graph-traversal";
 import { buildFilterableSPARQLQuery } from "../schema2sparql/buildTypedSPARQLQuery";
@@ -91,6 +92,7 @@ export async function filterTypedDocuments<T = any>(
     flavour,
     sparqlFeatures,
     include,
+    maxRecursion: explicitMaxRecursion,
     ...buildOptions
   } = options;
 
@@ -104,6 +106,13 @@ export async function filterTypedDocuments<T = any>(
 
   const features = resolveSparqlFeatures(flavour, sparqlFeatures);
 
+  const maxRecursion = resolveEffectiveMaxRecursion({
+    include: include as
+      | Record<string, import("@graviola/edb-graph-traversal").IncludeTree>
+      | undefined,
+    maxRecursion: explicitMaxRecursion,
+  });
+
   // Step 1: Build type-safe SPARQL query
   const { query, traversalSchema } = buildFilterableSPARQLQuery<T>(
     entityIRIs,
@@ -112,6 +121,7 @@ export async function filterTypedDocuments<T = any>(
     {
       ...buildOptions,
       include,
+      maxRecursion,
       flavour,
       sparqlFeatures,
       prefixMap: finalPrefixMap,
@@ -125,19 +135,41 @@ export async function filterTypedDocuments<T = any>(
   // projections match CONSTRUCT (Prisma-like includeRelationsByDefault: false).
   const extractSchema = (traversalSchema as JSONSchema7) || schema;
 
+  const effectiveWalkerOptions: Partial<WalkerOptions> = {
+    ...walkerOptions,
+    // Keep extraction depth in sync with CONSTRUCT — do not silently recap.
+    maxRecursion: walkerOptions?.maxRecursion ?? maxRecursion,
+  };
+
   const extractOne = (iri: string): T => {
     const raw = traverseGraphExtractBySchema(
       defaultPrefix,
       iri,
       dataset as Dataset,
       extractSchema,
-      walkerOptions,
+      effectiveWalkerOptions,
     ) as T;
     return postProcessDocument(raw, include, features);
   };
 
   if (Array.isArray(entityIRIs) && entityIRIs.length > 0) {
-    return entityIRIs.map((iri) => extractOne(iri));
+    // Only return subjects that actually appear in the CONSTRUCT result —
+    // VALUES binds the candidate set; WHERE may exclude some of them.
+    const stamped = new Set(
+      [...dataset.match(null, rdf.type, QUERY_RESULT_SUBJECT_IRI_NODE)].map(
+        (quad) => quad.subject.value,
+      ),
+    );
+    const subjectsWithTriples = new Set<string>();
+    for (const quad of dataset) {
+      if (quad.subject.termType === "NamedNode") {
+        subjectsWithTriples.add(quad.subject.value);
+      }
+    }
+    const present = stamped.size > 0 ? stamped : subjectsWithTriples;
+    return entityIRIs
+      .filter((iri) => present.has(iri))
+      .map((iri) => extractOne(iri));
   } else if (typeof entityIRIs === "string") {
     return [extractOne(entityIRIs)];
   }

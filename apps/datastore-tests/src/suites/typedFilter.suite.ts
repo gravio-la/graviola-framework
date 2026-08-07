@@ -489,6 +489,40 @@ export function runTypedFilterSuite(
       });
     });
 
+    describe("filterTypedDocuments — entityIRIs batch", () => {
+      test("entityIRIs restricts to the given subjects", async () => {
+        const store = getStore();
+        const result = await store.filterMany("Item", {
+          entityIRIs: [item1, item3],
+        });
+        expect(result.length).toBe(2);
+        const names = result.map((r: any) => r.name).sort();
+        expect(names).toEqual(["Football", "Laptop"]);
+      });
+
+      test("entityIRIs + where still applies both constraints", async () => {
+        const store = getStore();
+        const result = await store.filterMany("Item", {
+          entityIRIs: [item1, item2, item3],
+          where: { isAvailable: { equals: true } },
+        });
+        expect(result.length).toBe(2);
+        const names = result.map((r: any) => r.name).sort();
+        expect(names).toEqual(["Laptop", "TypeScript Handbook"]);
+      });
+
+      test("entityIRIs + include loads nested data for the batch", async () => {
+        const store = getStore();
+        const result = await store.filterMany("Item", {
+          entityIRIs: [item1],
+          include: { category: true, tags: true },
+        });
+        expect(result.length).toBe(1);
+        expect(result[0].category?.name).toBe("Electronics");
+        expect(result[0].tags?.length).toBe(3);
+      });
+    });
+
     describe("filterTypedDocuments — combined", () => {
       test("where + select", async () => {
         const store = getStore();

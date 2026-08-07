@@ -610,9 +610,11 @@ export function initSPARQLDatastorePair(
       const typeIRI = typeNameToTypeIRI(typeName);
       const schema = listSchemaForType(typeName);
 
+      const { entityIRIs, ...restOptions } = options;
+
       const sparqlOptions: TypedFilterOptions<T> = {
         ...defaultFilterOptions,
-        ...options,
+        ...restOptions,
         defaultPrefix,
         queryBuildOptions,
         flavour: options.flavour ?? queryBuildOptions.sparqlFlavour,
@@ -626,7 +628,7 @@ export function initSPARQLDatastorePair(
       };
 
       const results = await filterTypedDocuments<T>(
-        undefined,
+        entityIRIs && entityIRIs.length > 0 ? entityIRIs : undefined,
         typeIRI,
         schema,
         constructFetch,

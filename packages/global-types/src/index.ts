@@ -110,6 +110,11 @@ export type TypedDocumentsSearchOptions<T = any> =
     searchString?: string | null;
     /** Maximum number of entities to return */
     limit?: number;
+    /**
+     * Restrict the result set to these entity IRIs (batched subject binding).
+     * SPARQL: VALUES ?subject { … }; Prisma: `id: { in: […] }`.
+     */
+    entityIRIs?: string[];
   };
 
 export type AbstractDatastoreIterable<
