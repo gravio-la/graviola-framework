@@ -34,6 +34,7 @@ The following are not stylistic preferences; they constrain what does and does n
 - **Scope vs. binding path.** A _scope_ (`#/properties/birthDate`) is a JSON Pointer into a **schema document** — TBox. A _binding path_ (`patch.lane.owner.id`) is a runtime traversal of **instance data** shaped by the schema — ABox. Renderers, testers, and UI schema use scopes. Calculated-field formulas, mapping selectors, and data extractors use binding paths. Confusing the two is a category error.
 - **Reasoning-compatible, reasoner-optional.** Conceptual model is description-logic-shaped (property-driven class derivation, transitive `sameAs`, `x-inverseOf`), but the framework ships no reasoner. Inference, where required, is delegated to the underlying store or to application code.
 - **Local-first by default.** The in-browser Oxigraph backend is a first-class deployment target, not a demo mode. Servers — when present — are transports/accelerators, not authorities.
+- **Reuse before reinvent.** Prefer `lodash-es` and Layer 1 helpers (`json-schema-utils`, `typed-query-types`, `edb-core-utils`) over local copies. No demo-domain heuristics in library packages; shared fixtures live in private fixture packages as `devDependency`. See Development Conventions.
 
 ---
 
@@ -194,20 +195,20 @@ The framework is layered. Each layer consumes only from layers below it.
 
 ### Layer 1 — Foundation (no framework deps)
 
-| Package                         | Purpose                                                                                                         |
-| ------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `@graviola/edb-core-types`      | TypeScript definitions: RDF/SPARQL terms, prefixes, walker options, typed-filter base types                     |
-| `@graviola/edb-core-utils`      | IRI encoding/decoding, URL utilities, helpers                                                                   |
-| `@graviola/edb-global-types`    | **`AbstractDatastore` interface contract** (legacy) + query/sort/search/pagination types                        |
-| `@graviola/store-core`          | **`Store<R>` capability interfaces**, `ReadResult`, descriptors, simulators (successor seam; Layer 1, no React) |
-| `@graviola/search-facet-schema` | `SearchFacetSchema` types + AJV loader for FTS/facets (Layer 1, no React)                                       |
-| `@graviola/typed-query-types`   | Recursive Prisma-style query types (`TypedWhereInput`, …) shared by Store Filters and graph traversal           |
-| `@graviola/json-schema-utils`   | JSON Schema manipulation (`bringDefinitionToTop`, `$ref` resolve, flatten, `extractTypeIRI`, helpers)           |
-| `@graviola/jsonld-utils`        | JSON-LD ↔ RDF conversion utilities                                                                              |
-| `@graviola/edb-build-helper`    | Build / dependency analysis helpers (`get-dependencies.js`)                                                     |
-| `@graviola/edb-config-helper`   | Configuration helpers                                                                                           |
-| `@graviola/edb-tsconfig`        | Shared `tsconfig` bases                                                                                         |
-| `@graviola/edb-tsup-config`     | Shared `tsup` configurations                                                                                    |
+| Package                         | Purpose                                                                                                                                                     |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@graviola/edb-core-types`      | TypeScript definitions: RDF/SPARQL terms, prefixes, walker options, typed-filter base types                                                                 |
+| `@graviola/edb-core-utils`      | IRI encoding/decoding, URL utilities, helpers                                                                                                               |
+| `@graviola/edb-global-types`    | **`AbstractDatastore` interface contract** (legacy) + query/sort/search/pagination types                                                                    |
+| `@graviola/store-core`          | **`Store<R>` capability interfaces**, `ReadResult`, descriptors, simulators (successor seam; Layer 1, no React)                                             |
+| `@graviola/search-facet-schema` | `SearchFacetSchema` types + AJV loader for FTS/facets (Layer 1, no React)                                                                                   |
+| `@graviola/typed-query-types`   | Recursive Prisma-style query types (`TypedWhereInput`, …) shared by Store Filters and graph traversal                                                       |
+| `@graviola/json-schema-utils`   | JSON Schema manipulation (`bringDefinitionToTop`, `$ref` resolve, `definitionScope` / `definitionNameFromScope`, `stripXCalcProperties`, CBD boundaries, …) |
+| `@graviola/jsonld-utils`        | JSON-LD ↔ RDF conversion utilities                                                                                                                          |
+| `@graviola/edb-build-helper`    | Build / dependency analysis helpers (`get-dependencies.js`)                                                                                                 |
+| `@graviola/edb-config-helper`   | Configuration helpers                                                                                                                                       |
+| `@graviola/edb-tsconfig`        | Shared `tsconfig` bases                                                                                                                                     |
+| `@graviola/edb-tsup-config`     | Shared `tsup` configurations                                                                                                                                |
 
 > **Layer 1 + Layer 2 constraint:** these packages **must never take on React, MUI, or any browser/frontend dependencies**. They are consumed from Bun in CLIs (`@graviola/edb-cli-creator`, `apps/json-schema-cli`) and contract tests (`apps/datastore-tests`). Frontend dependencies here would silently break server consumers.
 
@@ -463,6 +464,22 @@ Current development decisions should remain _compatible_ with these directions b
 
 ## Development Conventions
 
+### Reuse before reinvent (quality bar for agents)
+
+These are hard rules, not preferences. Recent calc-engine work regressed on all of them; do not repeat.
+
+1. **Prefer `lodash-es` over hand-rolled helpers.** The monorepo already depends on `lodash-es` via `catalog:`. Before writing `getAtPath`, `cloneData`, `uniq` via `Set`, deep merge, debounce, etc., import the lodash equivalent (`get`, `cloneDeep`, `uniq`, `merge`, `debounce`, …) with a **per-function import** (`import get from "lodash-es/get"`) and add `"lodash-es": "catalog:"` to the package if missing. Do not reimplement path walks, deep clones, or collection utilities locally.
+
+2. **Prefer Layer 1 helpers over local copies.** Before parsing JSON Pointers, `$ref`s, definition names, CBD boundaries, IRI encoding, or schema identity, search `@graviola/json-schema-utils`, `@graviola/edb-core-utils`, `@graviola/typed-query-types`, and related Layer 1 packages. Examples that must not be reinvented:
+   - `definitionNameFromScope` / `definitionScope` / `definitionNameFromRef` / `definitionPropertyScope` — `$defs`/`definitions`-aware scope helpers
+   - `defs`, `bringDefinitionToTop`, `cbdBoundaryScopes`, `stripXCalcProperties`
+   - `selectionDepth` / `resolveEffectiveMaxRecursion` in `@graviola/typed-query-types`
+     If a helper is missing, **add it to the Layer 1 package and call it from callers** — do not paste a one-off regex into Layer 2+.
+
+3. **No domain leakage into library code.** Demo/fixture heuristics (e.g. garden-fee structural type guessing, hardcoded type names like `"Garden"`) must never land in `@graviola/*` library packages. Entity typing uses `@type` (and schema scopes), not shape sniffing. Golden fixtures shared across packages belong in a **private fixture package** (e.g. `@graviola/calc-fixtures`) consumed as a **devDependency** — never export fixtures from a public library barrel.
+
+4. **Search the monorepo before inventing.** Grep for an existing helper or the lodash usage pattern in sibling packages (`data-mapping`, `json-schema-utils`, `sparql-schema`, …) and match that style.
+
 ### File Organization
 
 ```
@@ -593,7 +610,7 @@ The shell also exposes a `pages-preview` alias (calls `./preview-pages.sh`) for 
 - **Domain-specific SLUB applications and schemas.** Maintained in a separate repository; not part of this core monorepo.
 - **`packages/ideas/`.** Experimental / incubating; APIs are unstable.
 - **`packages/indexeddb-store-provider/`, `packages/indexeddb-dataset/`, `apps/edb-api/`, `apps/edb-cli/`.** Empty / inactive directories at present.
-- **Trajectory features (lenses, calc, signed states).** Conceptually clear, not implemented yet — see [conceptual docs trajectory chapter](https://gravio-la.github.io/graviola-concept-documentation/trajectory.html). Do not assume they exist.
+- **Trajectory features still incomplete (lenses, signed states, query-scoped aggregates).** See [conceptual docs trajectory chapter](https://gravio-la.github.io/graviola-concept-documentation/trajectory.html). Calculated fields have a working Layer 2 stack (`formula-dependency`, `formula-runtime`, `calc-engine`, `calc-fixtures`) — do not reintroduce domain demos into those packages.
 
 The **canonical reference implementation** is `apps/testapp` — a small Vite + React app with three example schemas (`item-schema`, `metal-schema`, `course-schema`) demonstrating `GenericForm`, `SemanticTable`, `DetailRenderer`, and `LocalOxigraphStoreProvider`.
 
