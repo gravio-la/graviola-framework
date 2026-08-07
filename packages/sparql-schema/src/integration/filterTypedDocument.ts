@@ -131,6 +131,21 @@ export async function filterTypedDocuments<T = any>(
   // Step 2: Execute CONSTRUCT query
   const dataset = await constructFetch(query);
 
+  // The QueryResultSubject marker is query-layer bookkeeping. Capture the
+  // stamped subjects, then strip the marker quads so extraction sees a
+  // single-valued rdf:type (clownface `.value` is undefined on multi-types,
+  // which would drop `@type` from every root entity).
+  const stampedSubjects = new Set(
+    [...dataset.match(null, rdf.type, QUERY_RESULT_SUBJECT_IRI_NODE)].map(
+      (quad) => quad.subject.value,
+    ),
+  );
+  for (const quad of [
+    ...dataset.match(null, rdf.type, QUERY_RESULT_SUBJECT_IRI_NODE),
+  ]) {
+    (dataset as Dataset).delete(quad);
+  }
+
   // Extract against the traversal schema so omitted relations / select
   // projections match CONSTRUCT (Prisma-like includeRelationsByDefault: false).
   const extractSchema = (traversalSchema as JSONSchema7) || schema;
@@ -155,11 +170,7 @@ export async function filterTypedDocuments<T = any>(
   if (Array.isArray(entityIRIs) && entityIRIs.length > 0) {
     // Only return subjects that actually appear in the CONSTRUCT result —
     // VALUES binds the candidate set; WHERE may exclude some of them.
-    const stamped = new Set(
-      [...dataset.match(null, rdf.type, QUERY_RESULT_SUBJECT_IRI_NODE)].map(
-        (quad) => quad.subject.value,
-      ),
-    );
+    const stamped = stampedSubjects;
     const subjectsWithTriples = new Set<string>();
     for (const quad of dataset) {
       if (quad.subject.termType === "NamedNode") {
@@ -174,14 +185,9 @@ export async function filterTypedDocuments<T = any>(
     return [extractOne(entityIRIs)];
   }
 
-  const subjectIRIs = dataset.match(
-    null,
-    rdf.type,
-    QUERY_RESULT_SUBJECT_IRI_NODE,
-  );
   const results: T[] = [];
-  for (const quad of subjectIRIs) {
-    results.push(extractOne(quad.subject.value));
+  for (const subjectIRI of stampedSubjects) {
+    results.push(extractOne(subjectIRI));
   }
   return results;
 }

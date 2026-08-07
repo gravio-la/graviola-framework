@@ -21,7 +21,6 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@graviola/formula-dependency": "workspace:*",
     "@graviola/json-schema-utils": "workspace:*"
   },
   "devDependencies": {

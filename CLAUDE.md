@@ -454,7 +454,7 @@ Filters are validated at runtime (`filterValidationMode`: `'throw' | 'warn' | 'o
 The conceptual documentation calls out directions whose architectural shape is clear but whose implementations have not landed. Treat the following as **not present in the codebase today** unless told otherwise:
 
 - **Schema evolution via lenses** — bidirectional version migrations (`gra:version` per entity, lens chains composed at query time). The closest existing system is [Project Cambria](https://www.inkandswitch.com/cambria/).
-- **Calculated fields** — declarative formula language (HyperFormula-shaped) with complexity annotations and capability contexts (browser vs server vs IVM-capable).
+- **Calculated fields** — the Layer 2 stack is implemented (`formula-dependency`, `formula-runtime`, `calc-engine`, `formula-materialization`; see below). Still trajectory-only: true delta computation (differential dataflow-style), query-scoped (level 4) aggregates, and native aggregate pushdown.
 - **Signed states / authoritative value** — cryptographically signed entity snapshots (W3C Verifiable Credentials), with a computed authoritative value over multiple signatures.
 - **Schema-as-data and lens-as-data** — schemas and lenses as JSON-LD documents flowing through the same federated sync transport (Yjs, Solid).
 

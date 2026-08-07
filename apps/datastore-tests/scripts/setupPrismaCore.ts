@@ -31,8 +31,23 @@ import {
   entityIdentityFromIdKey,
   PRISMA_SCHEMA_IDENTITY,
 } from "@graviola/json-schema-utils";
+import { gardenFeeSchema } from "@graviola/calc-fixtures";
 import { rawTestSchema } from "../src/schema/testSchema";
 import type { JSONSchema7 } from "json-schema";
+
+/**
+ * Contract-test persistence schema: the Item/Tag/Category test domain plus the
+ * garden-fee calc fixture domain (Plot/Patch/Garden), so Prisma adapters can
+ * expose a `calcStore` for the real-store calc-engine suite.
+ */
+export const contractPersistenceSchema = {
+  ...(rawTestSchema as unknown as JSONSchema7),
+  definitions: {
+    ...(rawTestSchema as { definitions: Record<string, unknown> }).definitions,
+    ...(gardenFeeSchema as { definitions?: Record<string, unknown> })
+      .definitions,
+  },
+} as JSONSchema7;
 
 export type PrismaProvider = "sqlite" | "postgresql" | "mysql" | "mongodb";
 
@@ -166,7 +181,7 @@ export function runPrismaSetupForUrl(databaseUrl: string): void {
   console.log(`[setup-prisma] Database URL: ${databaseUrl}`);
 
   const extendedSchema = jsonLdSchemaToPrismaIdentity(
-    rawTestSchema as unknown as JSONSchema7,
+    contractPersistenceSchema,
   );
   const persistenceSchema = deriveExtendedSchema(
     extendedSchema,

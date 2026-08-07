@@ -1,13 +1,13 @@
 import type { JSONSchema7 } from "json-schema";
 import type { SchemaConfig } from "./schemaTypes";
 import { makeSchemaConfig } from "./makeSchemaConfig";
+import { compileCalcProfile } from "@graviola/formula-dependency";
 import {
-  compileCalcProfile,
   gardenFeeExpected,
   gardenFeeSampleData,
   gardenFeeSchema,
   gardenFeeSidecar,
-} from "@graviola/formula-dependency";
+} from "@graviola/calc-fixtures";
 import { evaluateCompiledProfileDeterministic } from "@graviola/formula-runtime";
 
 export const gardenFeeCompiledProfile = compileCalcProfile(
@@ -28,16 +28,16 @@ export const gardenFeeInitialTurtle = `@prefix ex: <https://example.org/> .
 <https://example.org/garden/1> a ex:Garden ;
   ex:name "Allotment North" ;
   ex:fee_rate_per_sqm "2.5"^^xsd:decimal ;
-  ex:patch _:patch1 .
+  ex:patch <https://example.org/patch/1> .
 
-_:patch1 a ex:Patch ;
-  ex:plots _:plot1, _:plot2 .
+<https://example.org/patch/1> a ex:Patch ;
+  ex:plots <https://example.org/plot/1>, <https://example.org/plot/2> .
 
-_:plot1 a ex:Plot ;
+<https://example.org/plot/1> a ex:Plot ;
   ex:width_m "4"^^xsd:decimal ;
   ex:length_m "5"^^xsd:decimal .
 
-_:plot2 a ex:Plot ;
+<https://example.org/plot/2> a ex:Plot ;
   ex:width_m "3"^^xsd:decimal ;
   ex:length_m "6"^^xsd:decimal .
 `;
@@ -50,7 +50,7 @@ export const gardenFeeSchemaConfig: SchemaConfig = makeSchemaConfig({
   version: "1.0.0",
   color: "#558b2f",
   icon: "🌱",
-  storageKey: "testapp-garden-fee-v2",
+  storageKey: "testapp-garden-fee-v3",
   initialData: gardenFeeInitialTurtle,
   baseIRI: "https://example.org/",
   entityBaseIRI: "https://example.org/",

@@ -33,6 +33,8 @@
     "@graviola/edb-linked-data-renderer": "workspace:*",
     "@graviola/edb-state-hooks": "workspace:*",
     "@graviola/edb-ui-utils": "workspace:*",
+    "@graviola/calc-engine": "workspace:*",
+    "@graviola/calc-fixtures": "workspace:*",
     "@graviola/formula-dependency": "workspace:*",
     "@graviola/formula-runtime": "workspace:*",
     "@graviola/formula-runtime-react": "workspace:*",

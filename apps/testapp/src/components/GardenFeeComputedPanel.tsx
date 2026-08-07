@@ -1,33 +1,19 @@
 import { Box, Chip, Stack, Typography } from "@mui/material";
-import { useComputedFields } from "@graviola/formula-runtime-react";
-import { useMemo } from "react";
+import { useDataStore, useQuery } from "@graviola/edb-state-hooks";
+import { evaluateForRoots } from "@graviola/calc-engine";
+import { gardenFeeSchema } from "@graviola/calc-fixtures";
+import type { JSONSchema7 } from "json-schema";
 import {
   gardenFeeCompiledProfile,
   gardenFeeExpected,
-  gardenFeeSampleData,
 } from "../garden-fee-schema";
 
-const SEED_GARDEN_IRI = "https://example.org/garden/1";
-
-/** CBD load may collapse nested named entities; seed demo merges fixture plot dimensions. */
-function documentForCalc(
-  typeName: string,
-  document: Record<string, unknown> | undefined,
-): Record<string, unknown> {
-  if (!document || typeName !== "Garden") return document ?? {};
-  const patch = document.patch as { plots?: unknown[] } | undefined;
-  if (Array.isArray(patch?.plots) && patch.plots.length > 0) return document;
-  if (document["@id"] !== SEED_GARDEN_IRI) return document;
-  return {
-    ...gardenFeeSampleData,
-    ...document,
-    fee_rate_per_sqm: Number(
-      document.fee_rate_per_sqm ?? gardenFeeSampleData.fee_rate_per_sqm,
-    ),
-    patch: gardenFeeSampleData.patch,
-  };
-}
-
+/**
+ * Computed-fields demo panel. A CBD `loadOne` stops at nested named entities,
+ * so the calc input tree (Garden → Patch → Plots) is read through the store's
+ * `filterMany` with the profile's precise read plan — which is exactly what
+ * `evaluateForRoots` does in one batched query.
+ */
 export function GardenFeeComputedPanel({
   typeName,
   document,
@@ -35,13 +21,31 @@ export function GardenFeeComputedPanel({
   typeName: string;
   document: Record<string, unknown> | undefined;
 }) {
-  const calcSource = useMemo(
-    () => documentForCalc(typeName, document),
-    [typeName, document],
-  );
-  const { computed } = useComputedFields(gardenFeeCompiledProfile, calcSource);
+  const { dataStore, ready } = useDataStore();
+  const entityIRI = document?.["@id"] as string | undefined;
+  const canEvaluate =
+    typeName === "Garden" &&
+    Boolean(entityIRI) &&
+    ready &&
+    typeof (dataStore as { filterMany?: unknown })?.filterMany === "function";
+
+  const { data } = useQuery({
+    // `document` in the key re-evaluates after each save of the entity.
+    queryKey: ["garden-fee-calc", entityIRI, document],
+    queryFn: () =>
+      evaluateForRoots(
+        dataStore as never,
+        gardenFeeCompiledProfile,
+        "Garden",
+        gardenFeeSchema as JSONSchema7,
+        { rootIRIs: [entityIRI!] },
+      ),
+    enabled: canEvaluate,
+  });
 
   if (typeName !== "Garden") return null;
+
+  const computed = (data?.values?.[0] ?? {}) as Record<string, unknown>;
 
   return (
     <Box sx={{ p: 2, borderTop: 1, borderColor: "divider" }}>

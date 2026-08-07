@@ -257,6 +257,8 @@
         "@ebay/nice-modal-react": "^1.2.11",
         "@emotion/react": "catalog:",
         "@emotion/styled": "catalog:",
+        "@graviola/calc-engine": "workspace:*",
+        "@graviola/calc-fixtures": "workspace:*",
         "@graviola/edb-advanced-components": "workspace:*",
         "@graviola/edb-basic-components": "workspace:*",
         "@graviola/edb-core-types": "workspace:*",
@@ -449,7 +451,6 @@
       "name": "@graviola/calc-fixtures",
       "version": "0.1.0",
       "dependencies": {
-        "@graviola/formula-dependency": "workspace:*",
         "@graviola/json-schema-utils": "workspace:*",
       },
       "devDependencies": {

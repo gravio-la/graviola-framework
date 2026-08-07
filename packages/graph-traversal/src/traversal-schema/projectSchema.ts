@@ -174,13 +174,6 @@ export function shouldIncludeProperty<T = any>(
     return { include: true };
   }
 
-  // If select is specified, only include selected properties — plus any root-only `where`
-  // refs so query builders still see relational filters (amenities.some, …).
-  if (select) {
-    const isSelected = select[propertyName] === true;
-    return { include: isSelected };
-  }
-
   // Determine if this is a relationship by checking the schema
   // For arrays, check if the items are relationships
   let isRelationship = false;
@@ -195,7 +188,10 @@ export function shouldIncludeProperty<T = any>(
     isRelationship = isRelationshipSchema(propSchema);
   }
 
-  // Check include pattern (for both relationships and arrays with pagination)
+  // Check include pattern (for both relationships and arrays with pagination).
+  // Checked before `select`: at one level `select` narrows scalars while
+  // `include` declares relations (calc read plans emit both together) — a
+  // relation listed in `include` must survive a sibling `select`.
   if (include && propertyName in include) {
     const includeValue = include[propertyName];
 
@@ -220,6 +216,13 @@ export function shouldIncludeProperty<T = any>(
         },
       };
     }
+  }
+
+  // If select is specified, only include selected properties — plus any root-only `where`
+  // refs so query builders still see relational filters (amenities.some, …).
+  if (select) {
+    const isSelected = select[propertyName] === true;
+    return { include: isSelected };
   }
 
   // For relationships not in include pattern

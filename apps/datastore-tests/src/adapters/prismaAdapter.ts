@@ -42,9 +42,17 @@ import {
 } from "../schema/metaTestConfig";
 import { prismaStatementMetaConfig } from "../schema/statementTestConfig";
 import type { MetaStampingConfig } from "@graviola/meta-schema";
+import { gardenFeeSchema } from "@graviola/calc-fixtures";
+import {
+  GARDEN_FEE_BASE_IRI,
+  gardenFeePrimaryFields,
+  gardenFeeTypeIRItoTypeName,
+  gardenFeeTypeNameToTypeIRI,
+} from "../schema/gardenFeeTestConfig";
 import type {
   DatastoreAdapter,
   DatastoreContractStore,
+  DatastoreContractStoreWithFilters,
   DatastoreContractStoreWithStatements,
 } from "../types";
 import {
@@ -146,6 +154,14 @@ async function clearPrismaData(prisma: any): Promise<void> {
   } catch {
     /* model may not exist for this schema */
   }
+  // Garden-fee calc fixture domain — children before parents (Plot FK → Patch)
+  for (const model of ["plot", "patch", "garden"]) {
+    try {
+      await prisma[model]?.deleteMany?.();
+    } catch {
+      /* model may not exist */
+    }
+  }
   try {
     await prisma.tag.deleteMany();
   } catch {
@@ -216,6 +232,20 @@ export function createPrismaAdapter(
         prismaMetaStampingApplication,
       );
 
+      const { store: calcStore } = initPrismaDatastorePair(
+        prismaClient,
+        jsonLdSchemaToPrismaIdentity(gardenFeeSchema as unknown as JSONSchema7),
+        gardenFeePrimaryFields as any,
+        {
+          jsonldContext: { "@vocab": GARDEN_FEE_BASE_IRI },
+          defaultPrefix: GARDEN_FEE_BASE_IRI,
+          typeNameToTypeIRI: gardenFeeTypeNameToTypeIRI,
+          typeIRItoTypeName: gardenFeeTypeIRItoTypeName,
+          datasourceProvider: databaseUrlToProvider(databaseUrl),
+          persistenceManifest: loadPersistenceManifest(),
+        },
+      );
+
       const provider = databaseUrlToProvider(databaseUrl);
       const statementVariants =
         provider === "mongodb"
@@ -249,6 +279,7 @@ export function createPrismaAdapter(
           lifecycleOff: lifecycleOffStore as DatastoreContractStore,
           application: applicationStore as DatastoreContractStore,
         },
+        calcStore: calcStore as unknown as DatastoreContractStoreWithFilters,
         ...statementVariants,
       };
     },
