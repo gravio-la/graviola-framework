@@ -1,6 +1,10 @@
 import type { IRIToStringFn, StringToIRIFn } from "@graviola/edb-core-types";
 import type { PersistenceManifest } from "@graviola/json-schema-prisma-utils";
 import type { StoreDocumentsSearchOptions } from "@graviola/store-core";
+import {
+  resolveEffectiveMaxRecursion,
+  type IncludeTree,
+} from "@graviola/typed-query-types";
 import type { JSONSchema7 } from "json-schema";
 
 import type { AbstractPrismaClient } from "../types.js";
@@ -53,15 +57,32 @@ export async function filterManyPrisma(
 ): Promise<Record<string, unknown>[]> {
   const wopts = whereOpts(ctx, typeName);
 
-  const prismaWhere = options?.where
+  const userWhere = options?.where
     ? whereToPrisma(options.where, wopts)
     : undefined;
+
+  let idInWhere: Record<string, unknown> | undefined;
+  if (options?.entityIRIs && options.entityIRIs.length > 0) {
+    const ids = options.entityIRIs.map((iri) =>
+      ctx.IRItoId ? ctx.IRItoId(iri) : iri,
+    );
+    idInWhere = { id: { in: ids } };
+  }
+
+  const prismaWhere =
+    userWhere && idInWhere
+      ? { AND: [idInWhere, userWhere] }
+      : (idInWhere ?? userWhere);
 
   const { select: baseSelect } = buildPrismaSelectArgs(typeName, ctx.schema, {
     select: options?.select as Record<string, boolean> | undefined,
     include: options?.include as never,
     includeRelationsByDefault: options?.includeRelationsByDefault,
-    maxRecursion: options?.maxRecursion ?? ctx.maxRecursionDepth,
+    maxRecursion: resolveEffectiveMaxRecursion({
+      include: options?.include as Record<string, IncludeTree> | undefined,
+      maxRecursion: options?.maxRecursion,
+      defaultMaxRecursion: ctx.maxRecursionDepth,
+    }),
     ...wopts,
   });
 
@@ -111,7 +132,11 @@ export async function filterOnePrisma(
     select: options?.select as Record<string, boolean> | undefined,
     include: options?.include as never,
     includeRelationsByDefault: options?.includeRelationsByDefault,
-    maxRecursion: options?.maxRecursion ?? ctx.maxRecursionDepth,
+    maxRecursion: resolveEffectiveMaxRecursion({
+      include: options?.include as Record<string, IncludeTree> | undefined,
+      maxRecursion: options?.maxRecursion,
+      defaultMaxRecursion: ctx.maxRecursionDepth,
+    }),
     ...wopts,
   });
 

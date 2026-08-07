@@ -21,4 +21,9 @@ export type StoreDocumentsSearchOptions<
 > = StoreFilterTraversalOptions<T, F> & {
   searchString?: string | null;
   limit?: number;
+  /**
+   * Restrict results to these entity IRIs (one batched query).
+   * SPARQL: VALUES binding; Prisma: `id: { in }`.
+   */
+  entityIRIs?: string[];
 };

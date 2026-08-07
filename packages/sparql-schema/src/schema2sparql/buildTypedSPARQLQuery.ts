@@ -20,7 +20,10 @@ import type {
   SPARQLFlavour,
   SparqlFeatureFlags,
 } from "@graviola/edb-core-types";
-import { buildTraversalSchema } from "@graviola/edb-graph-traversal";
+import {
+  buildTraversalSchema,
+  resolveEffectiveMaxRecursion,
+} from "@graviola/edb-graph-traversal";
 import { traversalSchema2construct } from "./traversalSchema2construct";
 import { buildSPARQLConstructQuery } from "./buildSPARQLConstructQuery";
 import type { ConstructResult } from "./traversalSchema2construct";
@@ -37,7 +40,12 @@ export interface BuildFilterableSPARQLQueryOptions<
 > extends TypedGraphTraversalFilterOptions<T> {
   /** Prefix mappings for the query (e.g., { "foaf": "http://xmlns.com/foaf/0.1/" }) */
   prefixMap?: Prefixes;
-  /** Maximum recursion depth for nested objects (default: 4) */
+  /**
+   * Maximum recursion depth for nested objects.
+   * When omitted and an `include` tree is present, depth is derived from the
+   * selection set (no silent truncation). When set lower than selection depth,
+   * throws `SelectionTruncationError`. Historical default without include: 4.
+   */
   maxRecursion?: number;
   /** Properties to explicitly exclude from the query */
   excludedProperties?: string[];
@@ -114,13 +122,20 @@ export function buildFilterableSPARQLQuery<T = any>(
 ): TypedSPARQLQueryResult {
   const {
     prefixMap = {},
-    maxRecursion = 4,
+    maxRecursion: explicitMaxRecursion,
     excludedProperties = [],
     filterValidationMode,
     flavour,
     sparqlFeatures,
     ...filterOptions
   } = options;
+
+  const maxRecursion = resolveEffectiveMaxRecursion({
+    include: filterOptions.include as
+      | Record<string, import("@graviola/edb-graph-traversal").IncludeTree>
+      | undefined,
+    maxRecursion: explicitMaxRecursion,
+  });
 
   const jsonSchema: JSONSchema7 = schema;
 
