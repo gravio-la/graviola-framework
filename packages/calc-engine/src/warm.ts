@@ -50,7 +50,7 @@ export type WarmResult = {
   queriesIssued: number;
 };
 
-function fingerprintForEntity(
+export function fingerprintForEntity(
   profile: CompiledProfile,
   typeName: string,
   doc: Record<string, unknown>,
@@ -65,7 +65,7 @@ function fingerprintForEntity(
   return parts.sort().join("&");
 }
 
-type EntityWriteTarget = {
+export type EntityWriteTarget = {
   typeName: string;
   entityIRI: string;
   entity: Record<string, unknown>;
@@ -75,7 +75,9 @@ type EntityWriteTarget = {
  * Collect every named entity in the evaluated tree (depth-first).
  * Entities without `@type` are skipped — callers must type the graph.
  */
-function collectEntities(root: Record<string, unknown>): EntityWriteTarget[] {
+export function collectEntities(
+  root: Record<string, unknown>,
+): EntityWriteTarget[] {
   const out: EntityWriteTarget[] = [];
   const visit = (node: unknown): void => {
     if (!node || typeof node !== "object") return;

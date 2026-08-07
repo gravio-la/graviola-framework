@@ -91,13 +91,32 @@ const executeOnStore = async (
   cmd: StoreCommand,
 ): Promise<unknown> => {
   switch (cmd.kind) {
-    case "loadOne":
+    case "loadOne": {
+      if (
+        cmd.materialized &&
+        cmd.withMeta &&
+        typeof store.readCalcValues === "function"
+      ) {
+        const result = (await (store.readCalcValues as Function)(
+          cmd.entityIRI,
+        )) as { value: Record<string, unknown> | null; freshness: string };
+        if (result.value == null) return null;
+        return {
+          data: result.value,
+          provenance: {
+            sources: [store.storeId ?? "unknown"],
+            fetchedAt: new Date().toISOString(),
+            freshness: result.freshness,
+          },
+        };
+      }
       if (cmd.withMeta) {
         return (store.loadOne as Function)(cmd.typeName, cmd.entityIRI, {
           withMeta: true,
         });
       }
       return (store.loadOne as Function)(cmd.typeName, cmd.entityIRI);
+    }
     case "exists":
       return (store.exists as Function)(cmd.typeName, cmd.entityIRI);
     case "list":

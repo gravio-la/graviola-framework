@@ -452,6 +452,7 @@
         "@graviola/formula-runtime": "workspace:*",
         "@graviola/json-schema-utils": "workspace:*",
         "@graviola/provenance-types": "workspace:*",
+        "@graviola/statement-meta": "workspace:*",
         "@graviola/store-core": "workspace:*",
         "@graviola/typed-query-types": "workspace:*",
         "lodash-es": "catalog:",

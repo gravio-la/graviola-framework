@@ -15,7 +15,11 @@ export type { Searches } from "./capabilities/searches";
 export type { Counts } from "./capabilities/counts";
 export type { Writes } from "./capabilities/writes";
 export type { Statements } from "./capabilities/statements";
-export type { Calc, CalcWarmResult } from "./capabilities/calc";
+export type {
+  Calc,
+  CalcWarmResult,
+  ReadCalcValuesResult,
+} from "./capabilities/calc";
 export type { Removes } from "./capabilities/removes";
 export type { Streams } from "./capabilities/streams";
 export type { Imports, ReadableImportSource } from "./capabilities/imports";
