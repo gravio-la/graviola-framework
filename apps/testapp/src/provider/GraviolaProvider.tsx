@@ -22,6 +22,10 @@ import {
 } from "@graviola/semantic-json-form";
 import { GlobalSemanticConfig } from "@graviola/semantic-jsonform-types";
 import {
+  annotateCalcSchema,
+  type CompiledProfile,
+} from "@graviola/formula-dependency";
+import {
   JsonFormsCellRendererRegistryEntry,
   JsonFormsRendererRegistryEntry,
   UISchemaElement,
@@ -58,6 +62,8 @@ type GraviolaProviderProps = {
   displaySchema?: JSONSchema7;
   /** Opt-in entity-level $meta stamping (P1 milestone demo). */
   metaStamping?: MetaStampingConfig;
+  /** Compiled calc profile — annotates computed fields (`x-calc`) in the UI schema. */
+  calcProfile?: CompiledProfile;
 };
 
 export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
@@ -75,8 +81,17 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
   initialData,
   displaySchema,
   metaStamping,
+  calcProfile,
 }: GraviolaProviderProps) => {
-  const schemaForUi = displaySchema ?? schema;
+  // Annotation runs against the raw domain schema — the compiled profile's
+  // fingerprint targets it. A grafted displaySchema wins unannotated (no
+  // schema currently combines $meta grafting with calc).
+  const schemaForUi = useMemo(
+    () =>
+      displaySchema ??
+      (calcProfile ? annotateCalcSchema(schema, calcProfile) : schema),
+    [displaySchema, schema, calcProfile],
+  );
   const endpoint: SparqlEndpoint = useMemo(() => {
     return {
       endpoint: "urn:worker",
@@ -140,6 +155,7 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
           baseIRI,
         }}
         schema={schemaForUi}
+        calcProfile={calcProfile}
         makeStubSchema={makeStubSchema}
         uiSchemaDefaultRegistry={registry}
         rendererRegistry={rendererRegistry}

@@ -943,6 +943,7 @@
         "@graviola/typed-query-types": "workspace:*",
         "graphology": "^0.25.4",
         "graphology-dag": "^0.4.1",
+        "lodash-es": "catalog:",
       },
       "devDependencies": {
         "@graviola/calc-fixtures": "workspace:*",
@@ -1602,6 +1603,7 @@
         "@graviola/edb-detail-renderer-core": "workspace:*",
         "@graviola/edb-global-types": "workspace:*",
         "@graviola/edb-table-types": "workspace:*",
+        "@graviola/formula-dependency": "workspace:*",
         "@jsonforms/core": "catalog:jsonforms",
         "@jsonforms/react": "catalog:jsonforms",
         "@types/json-schema": "catalog:",

@@ -118,6 +118,7 @@ function GardenFeeSchemaLayout() {
   return (
     <GraviolaProvider
       schema={c.schema as any}
+      calcProfile={c.calcProfile}
       renderers={allRenderers}
       cellRendererRegistry={materialCells}
       baseIRI={c.baseIRI}

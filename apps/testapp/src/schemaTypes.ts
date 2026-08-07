@@ -3,6 +3,7 @@ import type { GenerateDefaultDetailUISchemaOptions } from "@graviola/edb-detail-
 import type { GenerateUISchemaOptions } from "@graviola/edb-ui-utils";
 import type { UISchemaElement } from "@jsonforms/core";
 import type { MetaStampingConfig } from "@graviola/meta-schema";
+import type { CompiledProfile } from "@graviola/formula-dependency";
 import type { TableUiSchema } from "@graviola/edb-table-types";
 import type { JSONSchema7 } from "json-schema";
 import type { FC } from "react";
@@ -54,6 +55,8 @@ export type SchemaConfig = {
   extendedSchema?: JSONSchema7;
   /** Opt-in `$meta` stamping configuration. */
   metaStamping?: MetaStampingConfig;
+  /** Compiled calc profile (calculated fields) for this schema set. */
+  calcProfile?: CompiledProfile;
   /** Optional SemanticTable column overrides (e.g. hidden lifecycle columns). */
   tableUiSchema?: TableUiSchema;
 };
