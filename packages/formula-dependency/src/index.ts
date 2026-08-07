@@ -17,10 +17,3 @@ export type {
   CompileCalcProfileError,
   CostHint,
 } from "./types";
-
-export {
-  gardenFeeSchema,
-  gardenFeeSidecar,
-  gardenFeeSampleData,
-  gardenFeeExpected,
-} from "./fixtures/garden-fee";

@@ -28,6 +28,7 @@
     "@graviola/store-core": "workspace:*"
   },
   "devDependencies": {
+    "@graviola/calc-fixtures": "workspace:*",
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
     "eslint-config-edb": "workspace:*",

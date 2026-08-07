@@ -1,6 +1,6 @@
 import type { JSONSchema7 } from "json-schema";
 import { schemaIdentityOfSync } from "@graviola/json-schema-utils";
-import { createCalcProfileSidecar, type CalcProfileSlot } from "../types";
+import { createCalcProfileSidecar } from "@graviola/formula-dependency";
 
 export const gardenFeeSchema = {
   $id: "https://example.org/garden-fee/v1",
@@ -57,6 +57,7 @@ export const gardenFeeSidecar = createCalcProfileSidecar(identity, {
   },
 });
 
+/** Sample instance data — every named entity carries `@type` (required by the runtime). */
 export const gardenFeeSampleData = {
   "@id": "https://example.org/garden/1",
   "@type": "Garden",
@@ -64,14 +65,17 @@ export const gardenFeeSampleData = {
   fee_rate_per_sqm: 2.5,
   patch: {
     "@id": "https://example.org/patch/1",
+    "@type": "Patch",
     plots: [
       {
         "@id": "https://example.org/plot/1",
+        "@type": "Plot",
         width_m: 4,
         length_m: 5,
       },
       {
         "@id": "https://example.org/plot/2",
+        "@type": "Plot",
         width_m: 3,
         length_m: 6,
       },

@@ -1,7 +1,8 @@
 {
-  "name": "@graviola/formula-runtime",
+  "name": "@graviola/calc-fixtures",
   "version": "0.1.0",
-  "description": "HyperFormula-backed evaluation runtime for compiled calc profiles (Layer 2)",
+  "private": true,
+  "description": "Golden calc-profile fixtures (garden-fee) for unit and contract tests — not a domain model",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -14,33 +15,21 @@
       "default": "./dist/index.js"
     }
   },
-  "files": [
-    "dist",
-    "README.md"
-  ],
+  "files": ["dist", "README.md"],
   "scripts": {
     "build": "tsup",
-    "test": "bun test",
-    "depcheck": "depcheck",
-    "lint": "eslint src/**/*.ts",
-    "release": "bun publish --access public"
+    "lint": "tsc --noEmit"
   },
   "dependencies": {
     "@graviola/formula-dependency": "workspace:*",
-    "hyperformula": "^3.0.0"
+    "@graviola/json-schema-utils": "workspace:*"
   },
   "devDependencies": {
-    "@graviola/calc-fixtures": "workspace:*",
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
-    "eslint-config-edb": "workspace:*",
+    "@types/json-schema": "catalog:",
     "tsup": "^8.0.0",
     "typescript": "^5.8.2"
   },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "eslint-config-edb"
-    ]
-  }
+  "license": "MIT"
 }
