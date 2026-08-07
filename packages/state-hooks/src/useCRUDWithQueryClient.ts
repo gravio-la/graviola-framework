@@ -6,6 +6,11 @@ import { useCallback } from "react";
 import type { NamedAndTypedEntity } from "@graviola/edb-core-types";
 import type { CrudDatastoreStore } from "./crudDatastoreStore";
 import { crudQueryKey, useQueryCacheScope } from "./queryCacheKeys";
+import {
+  bringDefinitionToTop,
+  stripXCalcProperties,
+} from "@graviola/json-schema-utils";
+import type { JSONSchema7 } from "json-schema";
 
 type LoadResult = {
   document: any;
@@ -137,7 +142,7 @@ export const useCRUDWithQueryClient: UseCRUDHook<
   loadQueryKey: presetLoadQueryKey,
   allowUnsafeSourceIRIs,
 }) => {
-  const { createEntityIRI } = useAdbContext();
+  const { createEntityIRI, schema: adbSchema } = useAdbContext();
   const { dataStore, ready } = useDataStore();
   const loadQueryKey = presetLoadQueryKey || "load";
   const { enabled, ...queryOptionsRest } = queryOptions || {};
@@ -191,10 +196,21 @@ export const useCRUDWithQueryClient: UseCRUDHook<
       }
       const typeName = dataStore.typeIRItoTypeName(typeIRI);
       const _entityIRI = entityIRI || createEntityIRI(typeName);
-      const draftDocumentsStored = await storeDraftDocuments(data, dataStore);
+      let persistData = data as Record<string, unknown>;
+      if (adbSchema && typeName) {
+        const typeSchema = bringDefinitionToTop(
+          adbSchema as JSONSchema7,
+          typeName,
+        ) as JSONSchema7;
+        persistData = stripXCalcProperties(persistData, typeSchema);
+      }
+      const draftDocumentsStored = await storeDraftDocuments(
+        persistData,
+        dataStore,
+      );
 
       const dataWithType: NamedAndTypedEntity = {
-        ...data,
+        ...persistData,
         "@id": _entityIRI,
         "@type": typeIRI,
       } as NamedAndTypedEntity;
