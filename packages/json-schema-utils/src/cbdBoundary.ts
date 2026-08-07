@@ -5,6 +5,8 @@ import {
   type EntityIdentityOptions,
   schemaHasEntityIdentity,
 } from "./entityIdentity";
+import { definitionNameFromScope } from "./definitionScope";
+import { defs, getDefintitionKey } from "./jsonSchema";
 
 export type { EntityIdentityOptions } from "./entityIdentity";
 export {
@@ -24,7 +26,7 @@ export {
 export type CbdBoundaryScope = {
   /** JSON Pointer scope to the sub-schema that starts a named entity. */
   scope: string;
-  /** Definition name when scope is under `#/definitions/<Name>`. */
+  /** Definition name when scope is under `#/definitions/<Name>` or `#/$defs/<Name>`. */
   definitionName?: string;
 };
 
@@ -49,10 +51,9 @@ export function cbdBoundaryScopes(
         onObject: (objSchema, objPath) => {
           if (schemaHasEntityIdentity(objSchema.properties, options)) {
             const scope = schemaPathToPointer([...path, ...objPath].join("/"));
-            const defMatch = scope.match(/^#\/definitions\/([^/]+)/);
             boundaries.push({
               scope,
-              definitionName: defMatch?.[1],
+              definitionName: definitionNameFromScope(scope),
             });
           }
         },
@@ -60,10 +61,13 @@ export function cbdBoundaryScopes(
     });
   };
 
-  if (schema.definitions) {
-    for (const [name, def] of Object.entries(schema.definitions)) {
+  const named = defs(schema);
+  const names = Object.keys(named);
+  if (names.length > 0) {
+    const key = getDefintitionKey(schema);
+    for (const [name, def] of Object.entries(named)) {
       if (def && typeof def === "object") {
-        visit(def as JSONSchema7, ["definitions", name]);
+        visit(def as JSONSchema7, [key, name]);
       }
     }
   } else {

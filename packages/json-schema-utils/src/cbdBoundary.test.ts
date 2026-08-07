@@ -114,4 +114,23 @@ describe("cbdBoundary", () => {
       isNamedEntityBoundaryAtScope(prismaSchema, "#/definitions/Category"),
     ).toBe(false);
   });
+
+  it("walks $defs and reports definitionName", () => {
+    const withDefs: JSONSchema7 = {
+      $defs: {
+        Place: {
+          type: "object",
+          properties: {
+            [JSONLD_ENTITY_ID_KEY]: { type: "string" },
+            name: { type: "string" },
+          },
+        },
+      },
+    };
+    const scopes = cbdBoundaryScopes(withDefs);
+    expect(scopes).toContainEqual({
+      scope: "#/$defs/Place",
+      definitionName: "Place",
+    });
+  });
 });
