@@ -3,6 +3,7 @@ import type { GraphTraversalFilterOptions } from "@graviola/edb-core-types";
 import type { TraversalSchema, DereferenceContext } from "./types";
 import { dereferenceSchema } from "./dereferenceSchema";
 import { projectSchema } from "./projectSchema";
+import type { IncludeTree } from "./selectionDepth";
 
 /**
  * Prepare a JSON Schema for graph traversal / SPARQL CONSTRUCT generation.
@@ -52,6 +53,11 @@ export function buildTraversalSchema<T = any>(
     rootSchema: schema,
     filterOptions,
     visitedRefs: new Set(),
+    // Seeded exactly once, here — dereferenceSchema's own recursion only ever
+    // narrows this, never re-derives it from filterOptions.include.
+    includeCursor: filterOptions.include as
+      | Record<string, IncludeTree>
+      | undefined,
     depth: 0,
   };
 

@@ -257,6 +257,44 @@ describe("dereferenceSchema", () => {
     expect(resolved.properties?.parent).toBeDefined();
   });
 
+  test("visitedRefs is branch-local: sibling properties sharing a $ref don't see each other's entries", () => {
+    // Regression test at the dereferenceSchema level (no buildTraversalSchema/
+    // projectSchema in the way): a single shared Set mutated in place used
+    // to make the SECOND sibling property look "already visited" and get
+    // stubbed, even though Address is not self-referential and there's no
+    // real cycle here at all.
+    const schema: JSONSchema7 = {
+      type: "object",
+      properties: {
+        billingAddress: { $ref: "#/$defs/Address" },
+        shippingAddress: { $ref: "#/$defs/Address" },
+      },
+      $defs: {
+        Address: {
+          type: "object",
+          properties: {
+            street: { type: "string" },
+            city: { type: "string" },
+          },
+        },
+      },
+    };
+
+    const context: DereferenceContext = {
+      rootSchema: schema,
+      filterOptions: {},
+      visitedRefs: new Set(),
+      depth: 0,
+    };
+
+    const resolved = dereferenceSchema(schema, context);
+
+    const billing = resolved.properties?.billingAddress as JSONSchema7;
+    const shipping = resolved.properties?.shippingAddress as JSONSchema7;
+    expect(billing.properties?.street).toEqual({ type: "string" });
+    expect(shipping.properties?.street).toEqual({ type: "string" });
+  });
+
   test("resolves $refs in array items", () => {
     const schema: JSONSchema7 = {
       type: "object",
