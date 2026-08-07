@@ -171,7 +171,7 @@ without a native evaluator it always falls back to JS (`pushed: false`).
 
 ## `dereferenceSchema` cycle-guard conflates sibling `$ref` reuse with real cycles
 
-**Status:** escalated (found during Stage D warm-contract testing; worked around locally, not fixed generically)
+**Status:** fixed (see below) — no longer escalated
 
 **Context:** `@graviola/graph-traversal`'s `dereferenceSchema` (used by
 `buildTraversalSchema`, which every CONSTRUCT-query build depends on) guards
@@ -217,11 +217,44 @@ resolved the `$ref` regardless) and fixes the multi-property case. This does
 legitimately reuse a `$ref` across sibling properties outside the
 statement-meta path.
 
-**Action:** design a proper fix — most likely threading `include`-tree depth
-(or an explicit per-`$ref` unroll budget) through `DereferenceContext` so
-cycle detection can distinguish "revisit with no more requested depth" from
-"unrelated sibling reuse" — before relying on shared-`$ref` sibling patterns
-anywhere outside the statement-meta workaround above.
+**Fix shipped:** `DereferenceContext` gained an `includeCursor` field, seeded once
+(from `filterOptions.include`) at `buildTraversalSchema`'s entry point, narrowed
+only when stepping into a named property key (passed through unchanged for
+`items`/`allOf`/`anyOf`/`oneOf`, since none of those correspond to an
+include-tree key). `visitedRefs` is now genuinely branch-local (cloned, never
+mutated in place) and keyed by `refPath` alone (true ancestor-path cycle
+detection, not depth-qualified) — this alone fixes case 2 and correctly bounds
+case 1 to one real level of self-expansion with zero caller input. On top of
+that, a `$ref` reappearing on the path is allowed to expand again — rather than
+stub — exactly as many times as the caller's `include` tree, from that point,
+still explicitly requests (via `@graviola/typed-query-types`'s existing
+`resolveEffectiveMaxRecursion`/`selectionDepth`, reused rather than
+reimplemented; default budget `0`, deliberately more conservative than that
+helper's own default of `4`, since dereferencing runs unconditionally on every
+call including the zero-argument form). Verified: the Category case now bounds
+correctly with no configuration, the pre-existing 3-level `schema:knows`
+explicit-include test still passes unchanged, and new regression tests cover
+both the sibling-collision case (unrelated `$ref`-sharing siblings) and an
+explicit-include-overrides-the-default-budget case. Full downstream suites
+green (`graph-traversal`, `sparql-schema`, `sparql-db-impl` incl.
+`initSPARQLStore.inverseOf.test.ts`, `apps/datastore-tests`), 75/75 packages
+build clean. The `inlineStatementSchema: true` workaround in
+`initSPARQLStore.ts` is being **kept in place** as defense-in-depth (not
+reverted) — it's already behavior-preserving and provides a second, independent
+line of defense at the exact call site that hit this bug in production-shaped
+data.
+
+**Follow-up, not done here:** `packages/formula-dependency/src/planCalcReads.ts`
+has its own independent, parallel cycle guard (`findPathToEntityType`) —
+checked directly, it already clones-not-mutates correctly, so it does not
+appear to share this bug class. Two smaller things worth a separate audit:
+a second, apparently-vestigial `visitedEntityPaths` set (`planCalcReads.ts:244-253`)
+with an empty branch body that's never `.add()`-ed anywhere visible (confirm
+it's intentionally inert rather than assuming so); and whether two sibling
+calc slots that both traverse through the same related entity type correctly
+_union_ their required `include`/`select` fields for that type rather than one
+clobbering the other (the real analog of this bug for `planCalcReads`'s output,
+not covered by cycle-safety alone).
 
 ## `$stmt` auto-embed unreliable for entities reached via nested `include`
 

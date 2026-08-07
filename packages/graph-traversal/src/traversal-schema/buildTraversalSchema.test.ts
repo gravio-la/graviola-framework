@@ -733,6 +733,174 @@ describe("buildTraversalSchema - integration tests", () => {
     // Note: Pagination is no longer stored in schema, it's passed through context
   });
 
+  test("sibling self-referential $refs (Category subCategories + parentCategory) both resolve real structure and stay bounded", () => {
+    // Regression test for the dereferenceSchema sibling-$ref cycle bug (see
+    // ESCALATIONS.md): a single shared `Set` mutated in place made the SECOND
+    // sibling property reaching a self-referential $ref look "already
+    // visited" and get stubbed, while the unbounded alternative fix let both
+    // siblings expand forever. Neither `subCategories` nor `parentCategory`
+    // should be a stub at level 1, and the walk must be bounded (stub) at
+    // level 2 by default with no `include` requesting more depth.
+    const schema: JSONSchema7 = {
+      type: "object",
+      $defs: {
+        Category: {
+          type: "object",
+          properties: {
+            "@id": { type: "string" },
+            name: { type: "string" },
+            subCategories: {
+              type: "array",
+              items: { $ref: "#/$defs/Category" },
+            },
+            parentCategory: { $ref: "#/$defs/Category" },
+          },
+        },
+      },
+      properties: {
+        "@id": { type: "string" },
+        name: { type: "string" },
+        subCategories: {
+          type: "array",
+          items: { $ref: "#/$defs/Category" },
+        },
+        parentCategory: { $ref: "#/$defs/Category" },
+      },
+    };
+
+    const start = Date.now();
+    const result = buildTraversalSchema(schema, {
+      includeRelationsByDefault: true,
+    });
+    // Defense-in-depth: guards against a future change that terminates but
+    // reintroduces combinatorial slowness through some other path.
+    expect(Date.now() - start).toBeLessThan(2000);
+
+    // Level 1 subCategories: real structure, not a stub.
+    const subItems = (result.properties?.subCategories as JSONSchema7)
+      .items as JSONSchema7;
+    expect(subItems.properties?.name).toEqual({ type: "string" });
+
+    // Level 1 parentCategory: real structure, not a stub — independent of
+    // whatever subCategories' branch did.
+    const parent = result.properties?.parentCategory as JSONSchema7;
+    expect(parent.properties?.name).toEqual({ type: "string" });
+
+    // Level 2 (Category reappearing on the same path): stubbed — bounded.
+    // (`@id` doesn't survive here either — projectSchema strips it as
+    // JSON-LD metadata by default, regardless of stub vs. full expansion —
+    // the absence of `name` is what actually distinguishes a stub.)
+    const subOfSub = (subItems.properties?.subCategories as JSONSchema7)
+      .items as JSONSchema7;
+    expect(subOfSub.properties?.name).toBeUndefined();
+
+    const parentOfParent = parent.properties?.parentCategory as JSONSchema7;
+    expect(parentOfParent.properties?.name).toBeUndefined();
+  });
+
+  test("two unrelated sibling properties sharing a non-cyclic $ref both resolve fully independently", () => {
+    // Regression test for the original bug report: two calc-materialized
+    // statement sidecar properties on the same type, both $ref-ing a shared
+    // value-object definition at the same depth. The second sibling used to
+    // silently collapse to a stub.
+    const schema: JSONSchema7 = {
+      type: "object",
+      $defs: {
+        __Statement: {
+          type: "object",
+          properties: {
+            value: { type: "number" },
+            rank: { type: "string" },
+            source: { type: "string" },
+            generatedAt: { type: "string" },
+            wasGeneratedBy: { type: "string" },
+          },
+        },
+      },
+      properties: {
+        total_billable__stmt: { $ref: "#/$defs/__Statement" },
+        annual_fee__stmt: { $ref: "#/$defs/__Statement" },
+      },
+    };
+
+    const result = buildTraversalSchema(schema, {
+      includeRelationsByDefault: true,
+    });
+
+    for (const key of ["total_billable__stmt", "annual_fee__stmt"]) {
+      const stmt = result.properties?.[key] as JSONSchema7;
+      expect(Object.keys(stmt.properties ?? {}).sort()).toEqual(
+        ["generatedAt", "rank", "source", "value", "wasGeneratedBy"].sort(),
+      );
+    }
+  });
+
+  test("explicit include requests more self-reference depth than the default one-level budget", () => {
+    // Category-shaped schema, but this time the caller explicitly asks for
+    // subCategories to unroll 2 levels via `include`. The default budget
+    // (0 — stub on first repeat) must be overridable by an explicit request,
+    // same mechanism that makes the "3 levels of knows" test above work.
+    const schema: JSONSchema7 = {
+      type: "object",
+      $defs: {
+        Category: {
+          type: "object",
+          properties: {
+            "@id": { type: "string" },
+            name: { type: "string" },
+            subCategories: {
+              type: "array",
+              items: { $ref: "#/$defs/Category" },
+            },
+          },
+        },
+      },
+      properties: {
+        "@id": { type: "string" },
+        name: { type: "string" },
+        subCategories: {
+          type: "array",
+          items: { $ref: "#/$defs/Category" },
+        },
+      },
+    };
+
+    const filterOptions: GraphTraversalFilterOptions = {
+      includeRelationsByDefault: false,
+      include: {
+        subCategories: {
+          include: {
+            subCategories: {
+              include: { subCategories: { include: { subCategories: {} } } },
+            },
+          },
+        },
+      },
+    };
+
+    const result = buildTraversalSchema(schema, filterOptions);
+
+    const level1 = (result.properties?.subCategories as JSONSchema7)
+      .items as JSONSchema7;
+    expect(level1.properties?.name).toEqual({ type: "string" });
+
+    const level2 = (level1.properties?.subCategories as JSONSchema7)
+      .items as JSONSchema7;
+    expect(level2.properties?.name).toEqual({ type: "string" });
+
+    // Level 3 was requested (`include.subCategories.include.subCategories`)
+    // but has no further `include` of its own — so its subCategories, at
+    // level 4, is where the budget finally runs out.
+    const level3 = (level2.properties?.subCategories as JSONSchema7)
+      .items as JSONSchema7;
+    expect(level3.properties?.name).toEqual({ type: "string" });
+    const level4 = (level3.properties?.subCategories as JSONSchema7)
+      .items as JSONSchema7;
+    // `@id` doesn't survive projection either way (stripped as JSON-LD
+    // metadata) — absence of `name` is the actual stub signal.
+    expect(level4.properties?.name).toBeUndefined();
+  });
+
   test("defaults to Prisma-like: relations omitted without include", () => {
     const schema: JSONSchema7 = {
       type: "object",
