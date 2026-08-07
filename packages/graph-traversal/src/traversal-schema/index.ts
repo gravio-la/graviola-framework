@@ -85,3 +85,10 @@ export {
   extractPaginationOptions,
   orderByPropertyKeys,
 } from "./projectSchema";
+export {
+  selectionDepth,
+  truncatedSelectionPaths,
+  resolveEffectiveMaxRecursion,
+  SelectionTruncationError,
+} from "./selectionDepth";
+export type { IncludeTree } from "./selectionDepth";

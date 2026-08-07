@@ -69,6 +69,7 @@
   "dependencies": {
     "@graviola/edb-core-utils": "workspace:*",
     "@graviola/json-schema-utils": "workspace:*",
+    "@graviola/typed-query-types": "workspace:*",
     "@tpluscode/rdf-ns-builders": "^5",
     "rdf-dataset-ext": "^1.0.1",
     "@rdfjs/namespace": "catalog:rdf",

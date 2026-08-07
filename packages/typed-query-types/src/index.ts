@@ -23,3 +23,11 @@ export type {
   TypedIncludePattern,
   TypedGraphTraversalFilterOptions,
 } from "./typed-filters";
+
+export {
+  selectionDepth,
+  truncatedSelectionPaths,
+  resolveEffectiveMaxRecursion,
+  SelectionTruncationError,
+} from "./selectionDepth";
+export type { IncludeTree } from "./selectionDepth";
