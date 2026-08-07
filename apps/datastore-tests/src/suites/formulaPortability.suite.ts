@@ -6,12 +6,12 @@
  */
 import { describe, test, expect } from "bun:test";
 import {
-  compileCalcProfile,
   gardenFeeExpected,
   gardenFeeSampleData,
   gardenFeeSchema,
   gardenFeeSidecar,
-} from "@graviola/formula-dependency";
+} from "@graviola/calc-fixtures";
+import { compileCalcProfile } from "@graviola/formula-dependency";
 import { evaluateCompiledProfileDeterministic } from "@graviola/formula-runtime";
 import type { DatastoreContractStore } from "../types";
 import { entityIRI } from "../schema/testSchema";
