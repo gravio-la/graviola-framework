@@ -1,16 +1,15 @@
 import type { ScopePointer, SearchFacetSchema } from "./types";
+import { definitionNameFromScope } from "@graviola/json-schema-utils";
 
-const DEFINITIONS_SEGMENT = "#/definitions/";
 const PROPERTIES_SEGMENT = "/properties/";
 
-/** Extract type name from a scope pointer like `#/definitions/Exhibition/properties/title`. */
+/**
+ * Extract type name from a property scope pointer like
+ * `#/definitions/Exhibition/properties/title` or `#/$defs/…/properties/…`.
+ */
 export function typeFromScope(scope: ScopePointer): string | null {
-  if (!scope.startsWith(DEFINITIONS_SEGMENT)) return null;
-  const afterDef = scope.slice(DEFINITIONS_SEGMENT.length);
-  const propIdx = afterDef.indexOf(PROPERTIES_SEGMENT);
-  if (propIdx === -1) return null;
-  const typeName = afterDef.slice(0, propIdx);
-  return typeName || null;
+  if (!scope.includes(PROPERTIES_SEGMENT)) return null;
+  return definitionNameFromScope(scope) ?? null;
 }
 
 /** Extract JSON Schema property name from a scope pointer. */
