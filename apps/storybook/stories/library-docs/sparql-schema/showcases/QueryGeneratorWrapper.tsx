@@ -1,9 +1,9 @@
 import React, { useMemo } from "react";
 import type { JSONSchema7 } from "json-schema";
-import { normalizeSchema } from "@graviola/edb-graph-traversal";
+import { buildTraversalSchema } from "@graviola/edb-graph-traversal";
 import {
   buildSPARQLConstructQuery,
-  normalizedSchema2construct,
+  traversalSchema2construct,
 } from "@graviola/sparql-schema";
 import type {
   GraphTraversalFilterOptions,
@@ -46,11 +46,11 @@ export const QueryGeneratorWrapper: React.FC<QueryGeneratorWrapperProps> = ({
   triples,
 }) => {
   const computedProps = useMemo(() => {
-    const normalized = normalizeSchema(schema, {
+    const normalized = buildTraversalSchema(schema, {
       ...filterOptions,
       excludeJsonLdMetadata: true,
     });
-    const constructResult = normalizedSchema2construct(
+    const constructResult = traversalSchema2construct(
       subjectIRI,
       undefined,
       normalized as any,
@@ -62,7 +62,7 @@ export const QueryGeneratorWrapper: React.FC<QueryGeneratorWrapperProps> = ({
 
     return {
       schema,
-      normalizedSchema: normalized,
+      traversalSchema: normalized,
       sparqlQuery,
       constructResult,
       prefixMap,

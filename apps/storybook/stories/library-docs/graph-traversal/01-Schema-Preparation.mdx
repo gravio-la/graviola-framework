@@ -1,13 +1,13 @@
 import { Meta } from "@storybook/addon-docs/blocks";
 import { Mermaid } from "mdx-mermaid/Mermaid";
 
-<Meta title="Library Docs/graph-traversal/Schema Normalization" />
+<Meta title="Library Docs/graph-traversal/Schema Preparation" />
 
-# Schema Normalization
+# Schema Preparation
 
-Schema normalization is the first critical stage in the metadata extraction pipeline. It converts a JSON Schema with `$ref` references into a flat, fully-resolved schema ready for SPARQL generation and graph extraction.
+Preparing a schema for traversal is the first stage in the read pipeline. It **dereferences** `$ref`s (inlining definitions — denormalization in the database sense) and then **projects** by the selection set (`select` / `include` / `omit` / `where`). The result is a deeply nested but locally readable tree with no surviving `$ref`s — ready for SPARQL generation and graph extraction.
 
-## What is Schema Normalization?
+## What is Schema Preparation?
 
 JSON Schema allows defining reusable schema fragments using `$ref` references:
 
@@ -33,60 +33,57 @@ JSON Schema allows defining reusable schema fragments using `$ref` references:
 - Walk RDF graphs
 - Apply filters consistently
 
-**The Solution**: Normalize the schema by resolving all `$ref` pointers inline.
+**The Solution**: `buildTraversalSchema` — dereference all `$ref`s, then project by the selection set.
 
-## The normalizeSchema Function
+## The buildTraversalSchema Function
 
 ```typescript
-import { normalizeSchema } from "@graviola/edb-graph-traversal";
+import { buildTraversalSchema } from "@graviola/edb-graph-traversal";
 
-const normalized = normalizeSchema(schema, filterOptions);
+const traversal = buildTraversalSchema(schema, filterOptions);
 ```
 
 ### Signature
 
 ```typescript
-function normalizeSchema(
+function buildTraversalSchema(
   schema: JSONSchema7,
   filterOptions?: GraphTraversalFilterOptions
-): NormalizedSchema
+): TraversalSchema
 ```
 
-###
-
- Parameters
+### Parameters
 
 **schema** (JSONSchema7)
 - The input JSON Schema, which may contain `$ref` references
 - Must be a valid JSON Schema Draft 7 schema
 
 **filterOptions** (optional)
-- Prisma-style filter options to apply during normalization
-- Includes: `select`, `include`, `omit`, `includeRelationsByDefault`, etc.
+- Selection set / read plan: `select`, `include`, `omit`, `where`, `includeRelationsByDefault`, etc.
 
 ### Returns
 
-A `NormalizedSchema` object with:
-- All `$ref` references resolved
-- Filters applied
-- Property metadata attached
-- Pagination configuration
+A `TraversalSchema` object with:
+- All `$ref` references dereferenced (inlined)
+- Selection/projection applied
+- `_traversalSchema: true` marker
 
-## Normalization Process
+Phases are also available separately: `dereferenceSchema`, `projectSchema`.
+
+## Preparation Process
 
 <Mermaid chart={`graph TB
-    A[Input Schema] --> B[Phase 1: Resolve Refs]
-    B --> C[Phase 2: Extract Metadata]
-    C --> D[Phase 3: Apply Filters]
-    D --> E[Output: Normalized Schema]
+    A[Input Schema] --> B[Phase 1: Dereference Refs]
+    B --> C[Phase 2: Project Selection]
+    C --> D[Output: TraversalSchema]
     
     style A fill:#e1f5ff
-    style E fill:#fff4e1
+    style D fill:#fff4e1
 `} />
 
-### Phase 1: Resolve All $refs
+### Phase 1: Dereference All $refs
 
-Recursively resolves all `$ref` pointers up to a configurable depth.
+Recursively inlines all `$ref` targets (denormalization of factored definitions).
 
 **Input**:
 ```typescript
@@ -206,10 +203,10 @@ Without protection, this would expand infinitely!
 
 ### Max Recursion Depth
 
-The normalizer uses `maxRecursion` to prevent infinite expansion:
+`buildTraversalSchema` uses `maxRecursion` to prevent infinite expansion:
 
 ```typescript
-normalizeSchema(schema, {
+buildTraversalSchema(schema, {
   maxRecursion: 3  // Stop after 3 levels
 });
 ```
@@ -232,7 +229,7 @@ Person {
 
 ### Depth Counter
 
-The normalizer tracks depth during resolution:
+Dereferencing tracks depth during resolution:
 
 ```typescript
 function resolveRef(ref, depth) {
@@ -252,7 +249,7 @@ function resolveRef(ref, depth) {
 
 **Example**:
 ```typescript
-normalizeSchema(schema, {
+buildTraversalSchema(schema, {
   select: {
     name: true,
     email: true
@@ -268,7 +265,7 @@ normalizeSchema(schema, {
 
 **Example**:
 ```typescript
-normalizeSchema(schema, {
+buildTraversalSchema(schema, {
   includeRelationsByDefault: false,
   include: {
     friends: {
@@ -290,7 +287,7 @@ normalizeSchema(schema, {
 
 **Example**:
 ```typescript
-normalizeSchema(schema, {
+buildTraversalSchema(schema, {
   omit: ["password", "internalId"]
 });
 ```
@@ -305,7 +302,7 @@ normalizeSchema(schema, {
 
 ## Pagination Metadata
 
-When pagination is specified in `include` patterns, the normalizer attaches `x-pagination` metadata:
+When pagination is specified in `include` patterns, `buildTraversalSchema` attaches `x-pagination` metadata:
 
 **Input**:
 ```typescript
@@ -320,7 +317,7 @@ When pagination is specified in `include` patterns, the normalizer attaches `x-p
 }
 ```
 
-**Output** (in normalized schema):
+**Output** (in traversal schema):
 ```typescript
 {
   properties: {
@@ -341,9 +338,9 @@ This metadata is used by:
 - SPARQL generator to create SUBSELECT queries
 - Graph extractor to apply in-memory pagination (if needed)
 
-## Normalized Schema Structure
+## Traversal Schema Structure
 
-A `NormalizedSchema` has this structure:
+A `TraversalSchema` has this structure:
 
 ```typescript
 {
@@ -355,7 +352,7 @@ A `NormalizedSchema` has this structure:
   required: ["name"],
   
   // Normalization marker
-  _normalized: true,
+  _traversalSchema: true,
   
   // Property metadata
   _propertyMetadata: {
@@ -370,8 +367,8 @@ A `NormalizedSchema` has this structure:
 
 ### Special Fields
 
-**_normalized** (boolean)
-- Always `true` for normalized schemas
+**_traversalSchema** (boolean)
+- Always `true` for traversal schemas
 - Indicates normalization is complete
 
 **_propertyMetadata** (Record\<string, PropertyMetadata\>)
@@ -403,7 +400,7 @@ const schema = {
   }
 };
 
-const normalized = normalizeSchema(schema);
+const normalized = buildTraversalSchema(schema);
 ```
 
 **Output**:
@@ -418,7 +415,7 @@ const normalized = normalizeSchema(schema);
       }
     }
   },
-  _normalized: true,
+  _traversalSchema: true,
   _propertyMetadata: {
     person: {
       isRelationship: false,
@@ -433,7 +430,7 @@ const normalized = normalizeSchema(schema);
 
 **Input**:
 ```typescript
-const normalized = normalizeSchema(schema, {
+const normalized = buildTraversalSchema(schema, {
   select: { name: true },
   omit: ["email"]
 });
@@ -445,7 +442,7 @@ const normalized = normalizeSchema(schema, {
 
 **Input**:
 ```typescript
-const normalized = normalizeSchema(schema, {
+const normalized = buildTraversalSchema(schema, {
   include: {
     posts: {
       take: 10,
@@ -518,7 +515,7 @@ Applied to arrays without explicit `take` value.
 
 ### Caching Normalized Schemas
 
-Normalized schemas can be cached and reused:
+Traversal schemas can be cached and reused:
 
 ```typescript
 const cache = new Map();
@@ -526,7 +523,7 @@ const cache = new Map();
 function getNormalized(schema, filters) {
   const key = JSON.stringify({ schema, filters });
   if (!cache.has(key)) {
-    cache.set(key, normalizeSchema(schema, filters));
+    cache.set(key, buildTraversalSchema(schema, filters));
   }
   return cache.get(key);
 }
@@ -554,7 +551,7 @@ Set `maxRecursion` appropriately:
 
 ## Error Handling
 
-The normalizer throws errors for:
+`buildTraversalSchema` throws errors for:
 
 - Invalid JSON Schema
 - Missing `$defs` for `$ref`
@@ -563,7 +560,7 @@ The normalizer throws errors for:
 **Example**:
 ```typescript
 try {
-  const normalized = normalizeSchema(schema);
+  const normalized = buildTraversalSchema(schema);
 } catch (error) {
   if (error.message.includes('maximum recursion')) {
     // Handle circular reference
@@ -574,8 +571,8 @@ try {
 ## Type Definitions
 
 ```typescript
-interface NormalizedSchema extends JSONSchema7 {
-  _normalized: true;
+interface TraversalSchema extends JSONSchema7 {
+  _traversalSchema: true;
   _propertyMetadata: Record<string, PropertyMetadata>;
 }
 
@@ -598,7 +595,7 @@ interface GraphTraversalFilterOptions {
 ## Next Steps
 
 - [Learn about Graph Extraction →](?path=/docs/library-docs-graph-traversal-graph-extraction--docs)
-- [Try the interactive normalizer demo →](?path=/story/library-docs-graph-traversal-normalizer--basic)
+- [Try the interactive traversal-schema demo →](?path=/story/library-docs-graph-traversal-traversal-schema--with-references)
 - [Explore filtering patterns →](?path=/story/library-docs-graph-traversal-filtering--basic)
 
 ---

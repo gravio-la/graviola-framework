@@ -53,10 +53,10 @@ The metadata extraction framework transforms data through four distinct stages. 
 
 ---
 
-## Stage 1: Schema Normalization
+## Stage 1: Schema Preparation
 
 **Package**: `@graviola/edb-graph-traversal`  
-**Function**: `normalizeSchema(schema, filterOptions)`
+**Function**: `buildTraversalSchema(schema, filterOptions)`
 
 ### Purpose
 
@@ -196,7 +196,7 @@ Attaches pagination configuration to array properties:
       }
     }
   },
-  _normalized: true,
+  _traversalSchema: true,
   _propertyMetadata: { /* ... */ }
 }
 ```
@@ -206,20 +206,20 @@ Attaches pagination configuration to array properties:
 ## Stage 2: SPARQL Generation
 
 **Package**: `@graviola/sparql-schema`  
-**Function**: `normalizedSchema2construct(iri, normalizedSchema, options)`
+**Function**: `traversalSchema2construct(iri, traversalSchema, options)`
 
 ### Purpose
 
-Convert a normalized schema into SPARQL CONSTRUCT and WHERE patterns, including SUBSELECTs for paginated arrays.
+Convert a traversal schema into SPARQL CONSTRUCT and WHERE patterns, including SUBSELECTs for paginated arrays.
 
 ### Input
 
-Normalized schema from Stage 1 + subject IRI:
+Traversal schema from Stage 1 + subject IRI:
 
 ```typescript
-normalizedSchema2construct(
+traversalSchema2construct(
   "http://example.com/person/1",  // Subject IRI
-  normalizedSchema,                // From Stage 1
+  traversalSchema,                // From Stage 1
   { prefixMap: { foaf: "..." } }  // Optional prefixes
 )
 ```
@@ -372,11 +372,11 @@ RDF/JS Dataset containing matching triples:
 ## Stage 4: Graph Extraction
 
 **Package**: `@graviola/edb-graph-traversal`  
-**Function**: `extractFromGraph(iri, dataset, normalizedSchema, options)`
+**Function**: `extractFromGraph(iri, dataset, traversalSchema, options)`
 
 ### Purpose
 
-Walk the RDF dataset using the normalized schema to extract a type-safe JavaScript object.
+Walk the RDF dataset using the traversal schema to extract a type-safe JavaScript object.
 
 ### Input
 
@@ -524,7 +524,7 @@ Type-safe JavaScript object:
 
 ### Stage 1: Normalization
 
-- **Cached**: Normalized schemas can be reused across multiple queries
+- **Cached**: Traversal schemas can be reused across multiple queries
 - **Cost**: O(depth × properties) for ref resolution
 - **Optimization**: Set appropriate maxRecursion to avoid deep nesting
 

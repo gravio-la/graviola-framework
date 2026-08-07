@@ -4,7 +4,7 @@ import type {
   ExtendedWalkerOptions,
   PaginationMetadata,
 } from "@graviola/edb-core-types";
-import type { NormalizedSchema } from "../normalizer";
+import type { TraversalSchema } from "../traversal-schema";
 import type { Logger } from "@graviola/edb-core-types";
 
 // Re-export PaginationMetadata for backward compatibility
@@ -19,8 +19,8 @@ export type ExtractionContext = {
   baseIRI: string;
   /** The RDF dataset to extract from */
   dataset: DatasetCore;
-  /** The normalized schema (all $refs resolved) */
-  normalizedSchema: NormalizedSchema;
+  /** Traversal schema (dereferenced then projected) */
+  traversalSchema: TraversalSchema;
   /** Walker options including filter options */
   options: Partial<ExtendedWalkerOptions>;
   /** Optional prefix mappings for property name expansion (e.g., "dc" -> "http://purl.org/dc/elements/1.1/") */

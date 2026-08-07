@@ -1,15 +1,15 @@
 /**
- * Top-level WHERE clause filtering tests for normalizedSchema2construct
+ * Top-level WHERE clause filtering tests for traversalSchema2construct
  *
  * Tests filtering the main entity's properties using top-level where clauses
  */
 
 import { describe, test, expect } from "bun:test";
 import { JSONSchema7 } from "json-schema";
-import { normalizeSchema } from "@graviola/edb-graph-traversal";
-import { normalizedSchema2construct } from "./normalizedSchema2construct";
+import { buildTraversalSchema } from "@graviola/edb-graph-traversal";
+import { traversalSchema2construct } from "./traversalSchema2construct";
 
-describe("normalizedSchema2construct - Top-Level WHERE Filters", () => {
+describe("traversalSchema2construct - Top-Level WHERE Filters", () => {
   describe("Basic top-level property filtering", () => {
     test("filters main entity by node reference (@id)", () => {
       const schema: JSONSchema7 = {
@@ -35,8 +35,8 @@ describe("normalizedSchema2construct - Top-Level WHERE Filters", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, filterOptions);
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, filterOptions);
+      const result = traversalSchema2construct(
         undefined,
         undefined,
         normalized,
@@ -74,8 +74,8 @@ describe("normalizedSchema2construct - Top-Level WHERE Filters", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, filterOptions);
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, filterOptions);
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -108,8 +108,8 @@ describe("normalizedSchema2construct - Top-Level WHERE Filters", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, filterOptions);
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, filterOptions);
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -150,8 +150,8 @@ describe("normalizedSchema2construct - Top-Level WHERE Filters", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, filterOptions);
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, filterOptions);
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -203,8 +203,8 @@ describe("normalizedSchema2construct - Top-Level WHERE Filters", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, filterOptions);
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, filterOptions);
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -257,8 +257,8 @@ describe("normalizedSchema2construct - Top-Level WHERE Filters", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, filterOptions);
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, filterOptions);
+      const result = traversalSchema2construct(
         undefined,
         undefined,
         normalized,
@@ -292,8 +292,8 @@ describe("normalizedSchema2construct - Top-Level WHERE Filters", () => {
         where: {},
       };
 
-      const normalized = normalizeSchema(schema, filterOptions);
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, filterOptions);
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -315,8 +315,8 @@ describe("normalizedSchema2construct - Top-Level WHERE Filters", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, {});
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, {});
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -341,8 +341,8 @@ describe("normalizedSchema2construct - Top-Level WHERE Filters", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, filterOptions);
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, filterOptions);
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -351,7 +351,7 @@ describe("normalizedSchema2construct - Top-Level WHERE Filters", () => {
         },
       );
 
-      // Should not crash - normalizeSchema might have removed the property
+      // Should not crash - buildTraversalSchema might have removed the property
       expect(result.constructPatterns).toBeDefined();
       expect(result.wherePatterns).toBeDefined();
     });

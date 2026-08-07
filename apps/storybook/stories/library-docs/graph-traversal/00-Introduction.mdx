@@ -4,7 +4,7 @@ import { Meta } from "@storybook/addon-docs/blocks";
 
 # @graviola/edb-graph-traversal
 
-Schema normalization (Stage 1) and graph extraction (Stage 4).
+Schema preparation — dereference + project (Stage 1) — and graph extraction (Stage 4).
 
 ```bash
 bun add @graviola/edb-graph-traversal
@@ -12,10 +12,10 @@ bun add @graviola/edb-graph-traversal
 
 ## Quick Start
 
-### Schema Normalization
+### Schema Preparation
 
 ```typescript
-import { normalizeSchema } from "@graviola/edb-graph-traversal";
+import { buildTraversalSchema } from "@graviola/edb-graph-traversal";
 import { JSONSchema7 } from "json-schema";
 
 const schema: JSONSchema7 = {
@@ -39,7 +39,7 @@ const schema: JSONSchema7 = {
 };
 
 // Normalize with filters
-const normalized = normalizeSchema(schema, {
+const normalized = buildTraversalSchema(schema, {
   include: {
     friends: {
       take: 10,
@@ -66,7 +66,7 @@ const dataset = datasetFactory.dataset();
 const person = extractFromGraph(
   "http://example.com/person/1",  // Subject IRI
   dataset,                          // RDF dataset
-  normalized,                       // Normalized schema
+  normalized,                       // Traversal schema
   {
     baseIRI: "http://schema.org/"
   }
@@ -83,15 +83,15 @@ console.log(person);
 
 ## Main Exports
 
-### normalizeSchema
+### buildTraversalSchema
 
 Converts a JSON Schema with `$ref` references into a flat, resolved schema.
 
 ```typescript
-function normalizeSchema(
+function buildTraversalSchema(
   schema: JSONSchema7,
   filterOptions?: GraphTraversalFilterOptions
-): NormalizedSchema
+): TraversalSchema
 ```
 
 **Features**:
@@ -101,17 +101,17 @@ function normalizeSchema(
 - Attaches pagination metadata
 - Handles circular references safely
 
-[Learn more about Schema Normalization →](?path=/docs/library-docs-graph-traversal-schema-normalization--docs)
+[Learn more about Schema Preparation →](?path=/docs/library-docs-graph-traversal-schema-normalization--docs)
 
 ### extractFromGraph
 
-Walks an RDF dataset using a normalized schema to extract a TypeScript object.
+Walks an RDF dataset using a traversal schema to extract a TypeScript object.
 
 ```typescript
 function extractFromGraph(
   iri: string,
   dataset: DatasetCore,
-  normalizedSchema: NormalizedSchema,
+  traversalSchema: TraversalSchema,
   options?: {
     baseIRI?: string;
     prefixMap?: Record<string, string>;
@@ -134,10 +134,10 @@ function extractFromGraph(
 ```
 @graviola/edb-graph-traversal/
 ├── src/
-│   ├── normalizer/           # Schema normalization
-│   │   ├── index.ts          # Main normalizeSchema function
-│   │   ├── resolveAllRefs.ts # $ref resolution
-│   │   ├── applyFilters.ts   # Filter application
+│   ├── traversal-schema/    # Dereference + project
+│   │   ├── index.ts          # Main buildTraversalSchema function
+│   │   ├── dereferenceSchema.ts # $ref resolution
+│   │   ├── projectSchema.ts   # Filter application
 │   │   └── types.ts          # Type definitions
 │   │
 │   ├── extractor/            # Graph extraction
@@ -152,13 +152,13 @@ function extractFromGraph(
 
 ## Key Concepts
 
-### Normalized Schema
+### Traversal Schema
 
-A `NormalizedSchema` is a JSON Schema with:
+A `TraversalSchema` is a JSON Schema with:
 - All `$ref` references resolved inline
 - No `$ref` pointers remaining
 - Additional metadata attached:
-  - `_normalized: true` flag
+  - `_traversalSchema: true` flag
   - `_propertyMetadata` with relationship information
   - `x-pagination` on array properties
 
@@ -182,7 +182,7 @@ A `NormalizedSchema` is a JSON Schema with:
       }
     }
   },
-  _normalized: true,
+  _traversalSchema: true,
   _propertyMetadata: {
     friends: {
       isRelationship: true,
@@ -195,7 +195,7 @@ A `NormalizedSchema` is a JSON Schema with:
 
 ### Property Metadata
 
-Each property in a normalized schema has associated metadata:
+Each property in a traversal schema has associated metadata:
 
 ```typescript
 {
@@ -287,7 +287,7 @@ Exclude specific fields:
 The package supports pagination at the extraction stage:
 
 ```typescript
-const normalized = normalizeSchema(schema, {
+const normalized = buildTraversalSchema(schema, {
   include: {
     posts: {
       take: 20,
@@ -307,7 +307,7 @@ const result = extractFromGraph(iri, dataset, normalized);
 
 ## Performance
 
-- Cache normalized schemas for reuse
+- Cache traversal schemas for reuse
 - Set appropriate `maxRecursion` (default: 4)
 - Use query-stage pagination for large arrays
 
@@ -317,11 +317,11 @@ Fully typed with TypeScript. All exports have type definitions.
 
 ## Next Steps
 
-- [Learn about Schema Normalization →](?path=/docs/library-docs-graph-traversal-schema-normalization--docs)
+- [Learn about Schema Preparation →](?path=/docs/library-docs-graph-traversal-schema-normalization--docs)
 - [Learn about Graph Extraction →](?path=/docs/library-docs-graph-traversal-graph-extraction--docs)
-- [Try interactive demos →](?path=/story/library-docs-graph-traversal-normalizer--basic)
+- [Try interactive demos →](?path=/story/library-docs-graph-traversal-traversal-schema--with-references)
 
 ---
 
-[← Back to Architecture](?path=/docs/architecture-overview--docs) | [Schema Normalization →](?path=/docs/library-docs-graph-traversal-schema-normalization--docs)
+[← Back to Architecture](?path=/docs/architecture-overview--docs) | [Schema Preparation →](?path=/docs/library-docs-graph-traversal-schema-normalization--docs)
 

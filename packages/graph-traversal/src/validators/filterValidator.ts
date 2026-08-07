@@ -13,7 +13,7 @@ import Ajv from "ajv";
 import addFormats from "ajv-formats";
 import type { JSONSchema7 } from "json-schema";
 import type { FilterValidationMode } from "@graviola/edb-core-types";
-import type { NormalizedSchema } from "../normalizer/types";
+import type { TraversalSchema } from "../traversal-schema/types";
 
 /**
  * Validation error details
@@ -420,7 +420,7 @@ function validateWhereClause(
  * Validate a WHERE clause against a schema
  *
  * @param whereClause - The WHERE clause to validate
- * @param schema - The normalized schema to validate against
+ * @param schema - The traversal schema to validate against
  * @param mode - Validation mode: 'throw' | 'warn' | 'ignore'
  * @returns Validation result with errors if any
  *
@@ -435,7 +435,7 @@ function validateWhereClause(
  */
 export function validateFilter(
   whereClause: any,
-  schema: NormalizedSchema | JSONSchema7,
+  schema: TraversalSchema | JSONSchema7,
   mode: FilterValidationMode = "ignore",
 ): FilterValidationResult {
   // Skip validation if mode is 'ignore'

@@ -1,5 +1,5 @@
 /**
- * Relationship filtering tests for normalizedSchema2construct
+ * Relationship filtering tests for traversalSchema2construct
  *
  * Tests filtering of related entities using:
  * - some: at least one related entity matches
@@ -10,11 +10,11 @@
 
 import { describe, test, expect } from "bun:test";
 import { JSONSchema7 } from "json-schema";
-import { normalizeSchema } from "@graviola/edb-graph-traversal";
-import { normalizedSchema2construct } from "./normalizedSchema2construct";
+import { buildTraversalSchema } from "@graviola/edb-graph-traversal";
+import { traversalSchema2construct } from "./traversalSchema2construct";
 import { buildSPARQLConstructQuery } from "./buildSPARQLConstructQuery";
 
-describe("normalizedSchema2construct - Relationship Filtering", () => {
+describe("traversalSchema2construct - Relationship Filtering", () => {
   describe("Basic relationship filtering with node references", () => {
     test("filters relationship with 'some' and single @id reference", () => {
       const schema: JSONSchema7 = {
@@ -46,8 +46,8 @@ describe("normalizedSchema2construct - Relationship Filtering", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, filterOptions);
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, filterOptions);
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -93,8 +93,8 @@ describe("normalizedSchema2construct - Relationship Filtering", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, filterOptions);
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, filterOptions);
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -143,8 +143,8 @@ describe("normalizedSchema2construct - Relationship Filtering", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, filterOptions);
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, filterOptions);
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -193,8 +193,8 @@ describe("normalizedSchema2construct - Relationship Filtering", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, filterOptions);
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, filterOptions);
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -245,8 +245,8 @@ describe("normalizedSchema2construct - Relationship Filtering", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, filterOptions);
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, filterOptions);
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -295,8 +295,8 @@ describe("normalizedSchema2construct - Relationship Filtering", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, filterOptions);
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, filterOptions);
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -350,8 +350,8 @@ describe("normalizedSchema2construct - Relationship Filtering", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, filterOptions);
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, filterOptions);
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -418,8 +418,8 @@ describe("normalizedSchema2construct - Relationship Filtering", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, filterOptions);
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, filterOptions);
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -473,8 +473,8 @@ describe("normalizedSchema2construct - Relationship Filtering", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, filterOptions);
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, filterOptions);
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -526,8 +526,8 @@ describe("normalizedSchema2construct - Relationship Filtering", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, filterOptions);
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, filterOptions);
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -581,8 +581,8 @@ describe("normalizedSchema2construct - Relationship Filtering", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, filterOptions);
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, filterOptions);
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -625,8 +625,8 @@ describe("normalizedSchema2construct - Relationship Filtering", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, filterOptions);
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, filterOptions);
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -685,8 +685,8 @@ describe("normalizedSchema2construct - Relationship Filtering", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, filterOptions);
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, filterOptions);
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -736,8 +736,8 @@ describe("normalizedSchema2construct - Relationship Filtering", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, filterOptions);
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, filterOptions);
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,

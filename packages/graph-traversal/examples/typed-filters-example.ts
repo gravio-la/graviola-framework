@@ -246,8 +246,8 @@ function processPersonData(options: TypedGraphTraversalFilterOptions<Person>) {
 
   console.log("Processing person data with filters:", options);
 
-  // In real usage, you would pass this to normalizeSchema or extractFromGraph:
-  // const normalized = normalizeSchema<Person>(jsonSchema, options);
+  // In real usage, you would pass this to buildTraversalSchema or extractFromGraph:
+  // const normalized = buildTraversalSchema<Person>(jsonSchema, options);
   // const result = extractFromGraph<Person>(iri, dataset, jsonSchema, options);
 }
 

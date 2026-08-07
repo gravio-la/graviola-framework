@@ -8,11 +8,11 @@
 
 import { describe, test, expect } from "bun:test";
 import { JSONSchema7 } from "json-schema";
-import { normalizeSchema } from "@graviola/edb-graph-traversal";
-import { normalizedSchema2construct } from "./normalizedSchema2construct";
+import { buildTraversalSchema } from "@graviola/edb-graph-traversal";
+import { traversalSchema2construct } from "./traversalSchema2construct";
 import { buildSPARQLConstructQuery } from "./buildSPARQLConstructQuery";
 
-describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
+describe("traversalSchema2construct - Proper OPTIONAL Nesting", () => {
   describe("Single-level optional relationships", () => {
     test("optional object property has nested patterns inside OPTIONAL block", () => {
       const schema: JSONSchema7 = {
@@ -30,8 +30,8 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
         required: ["name"], // address is optional
       };
 
-      const normalized = normalizeSchema(schema, {});
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, {});
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -86,8 +86,8 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
         required: ["name"], // friends is optional
       };
 
-      const normalized = normalizeSchema(schema, {});
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, {});
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -142,8 +142,8 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
         required: ["name"], // Everything else optional
       };
 
-      const normalized = normalizeSchema(schema, {});
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, {});
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -199,8 +199,8 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
         required: ["name"],
       };
 
-      const normalized = normalizeSchema(schema, {});
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, {});
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -243,8 +243,8 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
         required: ["name", "company"], // Both required at root
       };
 
-      const normalized = normalizeSchema(schema, {});
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, {});
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -290,8 +290,8 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
         required: ["name"], // address is optional
       };
 
-      const normalized = normalizeSchema(schema, {});
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, {});
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -339,8 +339,8 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, {});
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, {});
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -386,8 +386,8 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, {});
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, {});
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -448,8 +448,8 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
         required: ["name"],
       };
 
-      const normalized = normalizeSchema(schema, {});
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, {});
+      const result = traversalSchema2construct(
         "http://example.com/garden1",
         undefined,
         normalized,
@@ -512,8 +512,8 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
         required: ["name"], // company is optional
       };
 
-      const normalized = normalizeSchema(schema, {});
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, {});
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -569,8 +569,8 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
         required: ["name"],
       };
 
-      const normalized = normalizeSchema(schema, {});
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, {});
+      const result = traversalSchema2construct(
         "http://example.com/garden1",
         undefined,
         normalized,
@@ -615,8 +615,8 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
         // No required properties
       };
 
-      const normalized = normalizeSchema(schema, {});
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, {});
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -649,8 +649,8 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
         required: ["name", "age", "email"],
       };
 
-      const normalized = normalizeSchema(schema, {});
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, {});
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined,
         normalized,
@@ -681,8 +681,8 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, {});
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, {});
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         "http://example.com/Person", // Explicit type
         normalized,
@@ -709,8 +709,8 @@ describe("normalizedSchema2construct - Proper OPTIONAL Nesting", () => {
         },
       };
 
-      const normalized = normalizeSchema(schema, {});
-      const result = normalizedSchema2construct(
+      const normalized = buildTraversalSchema(schema, {});
+      const result = traversalSchema2construct(
         "http://example.com/person1",
         undefined, // No explicit type
         normalized,

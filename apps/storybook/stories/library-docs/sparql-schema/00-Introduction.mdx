@@ -22,8 +22,8 @@ bun add @graviola/sparql-schema
 ### Basic SPARQL Generation
 
 ```typescript
-import { normalizedSchema2construct } from "@graviola/sparql-schema";
-import { normalizeSchema } from "@graviola/edb-graph-traversal";
+import { traversalSchema2construct } from "@graviola/sparql-schema";
+import { buildTraversalSchema } from "@graviola/edb-graph-traversal";
 
 // Step 1: Normalize schema
 const schema = {
@@ -34,10 +34,10 @@ const schema = {
   }
 };
 
-const normalized = normalizeSchema(schema);
+const normalized = buildTraversalSchema(schema);
 
 // Step 2: Generate SPARQL patterns
-const { constructPatterns, wherePatterns } = normalizedSchema2construct(
+const { constructPatterns, wherePatterns } = traversalSchema2construct(
   "http://example.com/person/1",
   normalized,
   {
@@ -151,14 +151,14 @@ console.log(adults.length);
 
 ## Main Exports
 
-### normalizedSchema2construct
+### traversalSchema2construct
 
-Generates SPARQL CONSTRUCT and WHERE patterns from a normalized schema.
+Generates SPARQL CONSTRUCT and WHERE patterns from a traversal schema.
 
 ```typescript
-function normalizedSchema2construct(
+function traversalSchema2construct(
   iri: string,
-  normalizedSchema: NormalizedSchema,
+  traversalSchema: TraversalSchema,
   options?: {
     prefixMap?: Prefixes;
   }
@@ -467,7 +467,7 @@ function PersonComponent() {
 
 **Input**:
 ```typescript
-normalizedSchema2construct(
+traversalSchema2construct(
   "http://example.com/person/1",
   {
     type: "object",
@@ -580,7 +580,7 @@ const cache = new Map();
 function getCached(iri, schema) {
   const key = `${iri}:${JSON.stringify(schema)}`;
   if (!cache.has(key)) {
-    cache.set(key, normalizedSchema2construct(iri, schema));
+    cache.set(key, traversalSchema2construct(iri, schema));
   }
   return cache.get(key);
 }

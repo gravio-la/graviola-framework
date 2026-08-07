@@ -29,8 +29,8 @@ QueryGeneratorShowcase (Pure Display)
 
 **Responsibilities**:
 
-- Calls `normalizeSchema()` to apply filters and resolve refs
-- Calls `normalizedSchema2construct()` to generate SPARQL patterns
+- Calls `buildTraversalSchema()` to apply filters and resolve refs
+- Calls `traversalSchema2construct()` to generate SPARQL patterns
 - Calls `buildCompleteSPARQLQuery()` to build final query
 - Passes computed props to display component
 

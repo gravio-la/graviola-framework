@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React, { useState } from "react";
 import type { JSONSchema7 } from "json-schema";
-import type { NormalizedSchema } from "@graviola/edb-graph-traversal";
+import type { TraversalSchema } from "@graviola/edb-graph-traversal";
 import type { Prefixes, PaginationMetadata } from "@graviola/edb-core-types";
 import { Grid, Typography, Button, Box } from "@mui/material";
 import { JsonView } from "react-json-view-lite";
@@ -30,8 +30,8 @@ export interface QueryGeneratorShowcaseProps {
   /** Original JSON Schema (before normalization) */
   schema: JSONSchema7;
 
-  /** Normalized schema (after resolving refs and applying filters) */
-  normalizedSchema: NormalizedSchema;
+  /** Traversal schema (after resolving refs and applying filters) */
+  traversalSchema: TraversalSchema;
 
   /** Generated SPARQL query string */
   sparqlQuery: string;
@@ -51,7 +51,7 @@ export interface QueryGeneratorShowcaseProps {
 
 export const QueryGeneratorShowcase: React.FC<QueryGeneratorShowcaseProps> = ({
   schema,
-  normalizedSchema,
+  traversalSchema,
   sparqlQuery,
   constructResult,
   prefixMap,
@@ -86,7 +86,7 @@ export const QueryGeneratorShowcase: React.FC<QueryGeneratorShowcaseProps> = ({
         <Grid item flex={1} sx={{ maxHeight: "70vh", overflow: "auto" }}>
           <Typography variant="h5">Normalized Schema</Typography>
           <JsonView
-            data={normalizedSchema}
+            data={traversalSchema}
             shouldExpandNode={(lvl) => lvl < 2}
           />
         </Grid>

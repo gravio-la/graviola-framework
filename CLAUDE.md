@@ -216,7 +216,7 @@ The framework is layered. Each layer consumes only from layers below it.
 | Package                                  | Purpose                                                                                                              |
 | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | `@graviola/sparql-schema`                | **JSON Schema → SPARQL** (CONSTRUCT, SELECT, INSERT, DELETE, soft-delete, typed filters with optional Zod inference) |
-| `@graviola/edb-graph-traversal`          | **RDF graph → JSON** extraction guided by JSON Schema + normalizer + typed filters                                   |
+| `@graviola/edb-graph-traversal`          | **RDF graph → JSON** extraction guided by JSON Schema + traversal-schema prep + typed filters                        |
 | `@graviola/sparql-db-impl`               | SPARQL **`Store`** (`initSPARQLStore`) + legacy **`AbstractDatastore`** (`initSPARQLAbstractDatastore`)              |
 | `@graviola/prisma-db-impl`               | `AbstractDatastore` over Prisma                                                                                      |
 | `@graviola/restfull-fetch-db-impl`       | `AbstractDatastore` over REST                                                                                        |
@@ -601,23 +601,23 @@ The **canonical reference implementation** is `apps/testapp` — a small Vite + 
 
 ## Key files for understanding the framework
 
-| File                                                                     | Why                                                          |
-| ------------------------------------------------------------------------ | ------------------------------------------------------------ |
-| `apps/testapp/src/main.tsx`                                              | Top-level wiring (router, theme, Snackbar, GraviolaProvider) |
-| `apps/testapp/src/provider/GraviolaProvider.tsx`                         | Canonical `AdbProvider` + `LocalOxigraphStoreProvider` setup |
-| `apps/testapp/src/item-schema.ts`                                        | Example JSON Schema with `$ref` nesting and `x-inverseOf`    |
-| `packages/global-types/src/index.ts`                                     | **`AbstractDatastore` interface** + typed filter contracts   |
-| `packages/semantic-json-form/src/SemanticJsonForm.tsx`                   | Core form component                                          |
-| `packages/semantic-json-form/src/GenericForm.tsx`                        | Top-level convenience component                              |
-| `packages/sparql-schema/src/crud/`                                       | CRUD → SPARQL translation                                    |
-| `packages/sparql-schema/src/schema2sparql/normalizedSchema2construct.ts` | The heart of JSON Schema → CONSTRUCT generation              |
-| `packages/sparql-schema/src/schema2sparql/buildTypedSPARQLQuery.ts`      | Type-safe query API (Zod-aware)                              |
-| `packages/graph-traversal/src/traverseGraphExtractBySchema.ts`           | RDF graph → JSON extraction                                  |
-| `packages/graph-traversal/src/typed-filters.ts`                          | Runtime filter validation (Ajv-based)                        |
-| `packages/state-hooks/src/useCRUDWithQueryClient.ts`                     | React Query CRUD integration                                 |
-| `packages/table-components/src/SemanticTable.tsx`                        | Schema-driven table                                          |
-| `packages/detail-renderer-core/src/index.ts`                             | Headless detail-view dispatch (testers, scopes, chips)       |
-| `packages/detail-renderer/src/DetailRenderer.tsx`                        | MUI implementation built on the core                         |
-| `packages/data-mapping/src/index.ts`                                     | Mapping engine + strategy catalog                            |
-| `apps/datastore-tests/src/datastore.test.ts`                             | Contract test entry point — adapters × shared suites         |
-| `flake.nix`                                                              | Dev-shell definition (Prisma 6 / 7 variants)                 |
+| File                                                                    | Why                                                          |
+| ----------------------------------------------------------------------- | ------------------------------------------------------------ |
+| `apps/testapp/src/main.tsx`                                             | Top-level wiring (router, theme, Snackbar, GraviolaProvider) |
+| `apps/testapp/src/provider/GraviolaProvider.tsx`                        | Canonical `AdbProvider` + `LocalOxigraphStoreProvider` setup |
+| `apps/testapp/src/item-schema.ts`                                       | Example JSON Schema with `$ref` nesting and `x-inverseOf`    |
+| `packages/global-types/src/index.ts`                                    | **`AbstractDatastore` interface** + typed filter contracts   |
+| `packages/semantic-json-form/src/SemanticJsonForm.tsx`                  | Core form component                                          |
+| `packages/semantic-json-form/src/GenericForm.tsx`                       | Top-level convenience component                              |
+| `packages/sparql-schema/src/crud/`                                      | CRUD → SPARQL translation                                    |
+| `packages/sparql-schema/src/schema2sparql/traversalSchema2construct.ts` | The heart of JSON Schema → CONSTRUCT generation              |
+| `packages/sparql-schema/src/schema2sparql/buildTypedSPARQLQuery.ts`     | Type-safe query API (Zod-aware)                              |
+| `packages/graph-traversal/src/traverseGraphExtractBySchema.ts`          | RDF graph → JSON extraction                                  |
+| `packages/graph-traversal/src/typed-filters.ts`                         | Runtime filter validation (Ajv-based)                        |
+| `packages/state-hooks/src/useCRUDWithQueryClient.ts`                    | React Query CRUD integration                                 |
+| `packages/table-components/src/SemanticTable.tsx`                       | Schema-driven table                                          |
+| `packages/detail-renderer-core/src/index.ts`                            | Headless detail-view dispatch (testers, scopes, chips)       |
+| `packages/detail-renderer/src/DetailRenderer.tsx`                       | MUI implementation built on the core                         |
+| `packages/data-mapping/src/index.ts`                                    | Mapping engine + strategy catalog                            |
+| `apps/datastore-tests/src/datastore.test.ts`                            | Contract test entry point — adapters × shared suites         |
+| `flake.nix`                                                             | Dev-shell definition (Prisma 6 / 7 variants)                 |

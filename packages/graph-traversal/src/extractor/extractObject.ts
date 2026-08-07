@@ -50,12 +50,12 @@ function buildNestedContext(
  * Extracts properties from an object node recursively following the schema structure
  *
  * This is the core recursive extractor that walks through object properties.
- * Since the schema is normalized (no $refs), we just follow the schema structure.
+ * Since the schema is dereferenced (no $refs), we just follow the schema structure.
  * The depth is controlled by the schema itself - when we reach a stub (only @id property),
  * we stop recursing.
  *
  * @param node The RDF node to extract from
- * @param schema The normalized schema for this object
+ * @param schema The traversal schema for this object
  * @param ctx Extraction context
  * @returns Extracted object with properties
  */

@@ -1,13 +1,13 @@
 // @ts-nocheck
 import React, { useMemo } from "react";
 import type { JSONSchema7 } from "json-schema";
-import { normalizeSchema } from "@graviola/edb-graph-traversal";
+import { buildTraversalSchema } from "@graviola/edb-graph-traversal";
 import type { GraphTraversalFilterOptions } from "@graviola/edb-core-types";
 import { Grid, Typography } from "@mui/material";
 import { JsonView } from "react-json-view-lite";
 import "react-json-view-lite/dist/index.css";
 
-export interface NormalizerShowcaseProps {
+export interface TraversalSchemaShowcaseProps {
   schema: JSONSchema7;
   includeFriends: boolean;
   friendsLimit: number;
@@ -15,7 +15,9 @@ export interface NormalizerShowcaseProps {
   omitFields?: string[];
 }
 
-export const NormalizerShowcase: React.FC<NormalizerShowcaseProps> = ({
+export const TraversalSchemaShowcase: React.FC<
+  TraversalSchemaShowcaseProps
+> = ({
   schema,
   includeFriends,
   friendsLimit,
@@ -41,7 +43,7 @@ export const NormalizerShowcase: React.FC<NormalizerShowcaseProps> = ({
         filterOptions.omit = omitFields;
       }
 
-      return normalizeSchema(schema, filterOptions);
+      return buildTraversalSchema(schema, filterOptions);
     } catch (e) {
       return { error: (e as Error).message };
     }

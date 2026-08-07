@@ -4,8 +4,8 @@
 
 import { describe, test, expect } from "bun:test";
 import { JSONSchema7 } from "json-schema";
-import { normalizeSchema } from "@graviola/edb-graph-traversal";
-import { normalizedSchema2construct } from "./normalizedSchema2construct";
+import { buildTraversalSchema } from "@graviola/edb-graph-traversal";
+import { traversalSchema2construct } from "./traversalSchema2construct";
 import { buildSPARQLConstructQuery } from "./buildSPARQLConstructQuery";
 
 describe("User Case: Filter Patch by geoFeature", () => {
@@ -37,8 +37,8 @@ describe("User Case: Filter Patch by geoFeature", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, filterOptions);
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema, filterOptions);
+    const result = traversalSchema2construct(
       undefined, // Query all Patches
       "https://ontology.semantic-desk.top/garden#Patch", // Only Patch type
       normalized,
@@ -94,8 +94,8 @@ describe("User Case: Filter Patch by geoFeature", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, filterOptions);
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema, filterOptions);
+    const result = traversalSchema2construct(
       undefined,
       "https://ontology.semantic-desk.top/garden#Patch",
       normalized,

@@ -1,23 +1,23 @@
 import type { Prefixes } from "@graviola/edb-core-types";
 import { CONSTRUCT } from "@tpluscode/sparql-builder";
-import type { ConstructResult } from "./normalizedSchema2construct";
+import type { ConstructResult } from "./traversalSchema2construct";
 import { prefixes2sparqlPrefixDeclaration } from "./prefixes2sparqlPrefixDeclaration";
 
 /**
- * Builds a complete SPARQL CONSTRUCT query from normalized schema results
+ * Builds a complete SPARQL CONSTRUCT query from traversal schema results
  *
  * Uses @tpluscode/sparql-builder to ensure proper query structure with:
  * - PREFIX declarations at the top level (deduplicated)
  * - CONSTRUCT clause with all patterns
  * - WHERE clause with all patterns (including SUBSELECTs)
  *
- * @param constructResult - Result from normalizedSchema2construct
+ * @param constructResult - Result from traversalSchema2construct
  * @param prefixMap - Optional prefix mappings for the query
  * @returns Complete SPARQL query string
  *
  * @example
  * ```typescript
- * const result = normalizedSchema2construct(iri, typeIRIs, schema, { prefixMap });
+ * const result = traversalSchema2construct(iri, typeIRIs, schema, { prefixMap });
  * const query = buildSPARQLConstructQuery(result, prefixMap);
  * // Execute query against triple store
  * ```

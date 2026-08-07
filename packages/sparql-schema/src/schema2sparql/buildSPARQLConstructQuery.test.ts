@@ -1,6 +1,6 @@
 import { describe, it, expect } from "bun:test";
-import { normalizeSchema } from "@graviola/edb-graph-traversal";
-import { normalizedSchema2construct } from "./normalizedSchema2construct";
+import { buildTraversalSchema } from "@graviola/edb-graph-traversal";
+import { traversalSchema2construct } from "./traversalSchema2construct";
 import { buildSPARQLConstructQuery } from "./buildSPARQLConstructQuery";
 import type { JSONSchema7 } from "json-schema";
 
@@ -14,8 +14,8 @@ describe("buildCompleteSPARQLQuery", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema);
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema);
+    const result = traversalSchema2construct(
       "http://example.com/person/1",
       undefined,
       normalized,
@@ -39,8 +39,8 @@ describe("buildCompleteSPARQLQuery", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema);
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema);
+    const result = traversalSchema2construct(
       "http://example.com/person/1",
       undefined,
       normalized,
@@ -87,8 +87,8 @@ describe("buildCompleteSPARQLQuery", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, filterOptions);
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema, filterOptions);
+    const result = traversalSchema2construct(
       "http://example.com/person/1",
       undefined,
       normalized,

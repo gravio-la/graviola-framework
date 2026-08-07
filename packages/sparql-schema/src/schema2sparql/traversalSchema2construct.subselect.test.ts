@@ -1,7 +1,7 @@
 import { describe, test, expect } from "bun:test";
 import { JSONSchema7 } from "json-schema";
-import { normalizeSchema } from "@graviola/edb-graph-traversal";
-import { normalizedSchema2construct } from "./normalizedSchema2construct";
+import { buildTraversalSchema } from "@graviola/edb-graph-traversal";
+import { traversalSchema2construct } from "./traversalSchema2construct";
 
 const friendsSchema: JSONSchema7 = {
   type: "object",
@@ -19,20 +19,20 @@ const friendsSchema: JSONSchema7 = {
 };
 
 function whereString(
-  result: ReturnType<typeof normalizedSchema2construct>,
+  result: ReturnType<typeof traversalSchema2construct>,
 ): string {
   return result.wherePatterns.map((p) => p.toString()).join("\n");
 }
 
-describe("normalizedSchema2construct — pagination flavours", () => {
+describe("traversalSchema2construct — pagination flavours", () => {
   test("default flavour: no SUBSELECT / LIMIT for include.take", () => {
     const filterOptions = {
       include: {
         friends: { take: 10, orderBy: { name: "asc" as const } },
       },
     };
-    const normalized = normalizeSchema(friendsSchema, filterOptions);
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(friendsSchema, filterOptions);
+    const result = traversalSchema2construct(
       "http://example.com/person1",
       undefined,
       normalized,
@@ -53,8 +53,8 @@ describe("normalizedSchema2construct — pagination flavours", () => {
         friends: { take: 10, orderBy: { name: "asc" as const } },
       },
     };
-    const normalized = normalizeSchema(friendsSchema, filterOptions);
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(friendsSchema, filterOptions);
+    const result = traversalSchema2construct(
       "http://example.com/person1",
       undefined,
       normalized,
@@ -77,8 +77,8 @@ describe("normalizedSchema2construct — pagination flavours", () => {
         friends: { take: 5, orderBy: { name: "asc" as const } },
       },
     };
-    const normalized = normalizeSchema(friendsSchema, filterOptions);
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(friendsSchema, filterOptions);
+    const result = traversalSchema2construct(
       "http://example.com/person1",
       undefined,
       normalized,
@@ -97,8 +97,8 @@ describe("normalizedSchema2construct — pagination flavours", () => {
         friends: { take: 5 },
       },
     };
-    const normalized = normalizeSchema(friendsSchema, filterOptions);
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(friendsSchema, filterOptions);
+    const result = traversalSchema2construct(
       "http://example.com/person1",
       undefined,
       normalized,
@@ -117,8 +117,8 @@ describe("normalizedSchema2construct — pagination flavours", () => {
         friends: { take: 5 },
       },
     };
-    const normalized = normalizeSchema(friendsSchema, filterOptions);
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(friendsSchema, filterOptions);
+    const result = traversalSchema2construct(
       "http://example.com/person1",
       undefined,
       normalized,
@@ -160,8 +160,8 @@ describe("normalizedSchema2construct — pagination flavours", () => {
         },
       },
     };
-    const normalized = normalizeSchema(schema, filterOptions);
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema, filterOptions);
+    const result = traversalSchema2construct(
       "http://example.com/blog1",
       undefined,
       normalized,
@@ -176,8 +176,8 @@ describe("normalizedSchema2construct — pagination flavours", () => {
 
   test("lateral: LIMIT only (no ORDER BY)", () => {
     const filterOptions = { include: { friends: { take: 5 } } };
-    const normalized = normalizeSchema(friendsSchema, filterOptions);
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(friendsSchema, filterOptions);
+    const result = traversalSchema2construct(
       "http://example.com/person1",
       undefined,
       normalized,
@@ -189,10 +189,10 @@ describe("normalizedSchema2construct — pagination flavours", () => {
   });
 
   test("no pagination metadata without take/skip/orderBy", () => {
-    const normalized = normalizeSchema(friendsSchema, {
+    const normalized = buildTraversalSchema(friendsSchema, {
       include: { friends: true },
     });
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/person1",
       undefined,
       normalized,
@@ -249,8 +249,8 @@ describe("normalizedSchema2construct — pagination flavours", () => {
     const filterOptions = {
       include: { parts: { take: 5, orderBy: { name: "asc" as const } } },
     };
-    const normalized = normalizeSchema(inline, filterOptions);
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(inline, filterOptions);
+    const result = traversalSchema2construct(
       "http://example.com/place1",
       undefined,
       normalized,

@@ -1,17 +1,17 @@
 import { describe, test, expect } from "bun:test";
 import { JSONSchema7 } from "json-schema";
-import { normalizeSchema } from "@graviola/edb-graph-traversal";
-import { normalizedSchema2construct } from "./normalizedSchema2construct";
+import { buildTraversalSchema } from "@graviola/edb-graph-traversal";
+import { traversalSchema2construct } from "./traversalSchema2construct";
 
 /**
  * Focused tests for ORDER BY generation in paginated SUBSELECTs.
  *
  * createPaginatedSubselect is a private function, so we test it through
- * normalizedSchema2construct. These tests verify the generated SPARQL string
+ * traversalSchema2construct. These tests verify the generated SPARQL string
  * contains correct ORDER BY clauses with proper variable references and direction.
  */
 
-function getWhereString(result: ReturnType<typeof normalizedSchema2construct>) {
+function getWhereString(result: ReturnType<typeof traversalSchema2construct>) {
   return result.wherePatterns.map((p) => p.toString()).join("\n");
 }
 
@@ -41,8 +41,8 @@ describe("createPaginatedSubselect - ORDER BY", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, filterOptions);
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema, filterOptions);
+    const result = traversalSchema2construct(
       "http://example.com/s",
       undefined,
       normalized,
@@ -79,8 +79,8 @@ describe("createPaginatedSubselect - ORDER BY", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, filterOptions);
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema, filterOptions);
+    const result = traversalSchema2construct(
       "http://example.com/s",
       undefined,
       normalized,
@@ -119,8 +119,8 @@ describe("createPaginatedSubselect - ORDER BY", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, filterOptions);
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema, filterOptions);
+    const result = traversalSchema2construct(
       "http://example.com/s",
       undefined,
       normalized,
@@ -165,8 +165,8 @@ describe("createPaginatedSubselect - ORDER BY", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, filterOptions);
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema, filterOptions);
+    const result = traversalSchema2construct(
       "http://example.com/s",
       undefined,
       normalized,
@@ -206,8 +206,8 @@ describe("createPaginatedSubselect - ORDER BY", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, filterOptions);
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema, filterOptions);
+    const result = traversalSchema2construct(
       "http://example.com/s",
       undefined,
       normalized,
@@ -245,8 +245,8 @@ describe("createPaginatedSubselect - ORDER BY", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, filterOptions);
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema, filterOptions);
+    const result = traversalSchema2construct(
       "http://example.com/s",
       undefined,
       normalized,
@@ -282,8 +282,8 @@ describe("createPaginatedSubselect - ORDER BY", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, filterOptions);
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema, filterOptions);
+    const result = traversalSchema2construct(
       "http://example.com/s",
       undefined,
       normalized,
@@ -325,8 +325,8 @@ describe("createPaginatedSubselect - ORDER BY", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, filterOptions);
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema, filterOptions);
+    const result = traversalSchema2construct(
       "http://example.com/s",
       undefined,
       normalized,
@@ -370,8 +370,8 @@ describe("createPaginatedSubselect - ORDER BY", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, filterOptions);
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema, filterOptions);
+    const result = traversalSchema2construct(
       "http://example.com/s",
       undefined,
       normalized,

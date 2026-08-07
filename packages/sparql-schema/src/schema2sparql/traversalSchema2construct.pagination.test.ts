@@ -1,19 +1,19 @@
 /**
- * Pagination metadata tests for normalizedSchema2construct
+ * Pagination metadata tests for traversalSchema2construct
  *
  * These tests verify that pagination metadata is correctly:
- * - Extracted from normalized schemas
+ * - Extracted from traversal schemas
  * - Marked with _stage: "extraction"
  * - Passed through to prevent double-pagination
  */
 
 import { describe, expect, test } from "@jest/globals";
 import { JSONSchema7 } from "json-schema";
-import { normalizeSchema } from "@graviola/edb-graph-traversal";
+import { buildTraversalSchema } from "@graviola/edb-graph-traversal";
 
-import { normalizedSchema2construct } from "./normalizedSchema2construct";
+import { traversalSchema2construct } from "./traversalSchema2construct";
 
-describe("normalizedSchema2construct - Pagination Metadata", () => {
+describe("traversalSchema2construct - Pagination Metadata", () => {
   test("extracts pagination from include pattern with take", () => {
     const schema: JSONSchema7 = {
       type: "object",
@@ -26,19 +26,19 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {
+    const normalized = buildTraversalSchema(schema, {
       include: {
         friends: { take: 20 },
       },
     });
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/person1",
       undefined,
       normalized,
     );
 
-    // Check if normalizer added pagination
+    // Check if buildTraversalSchema added pagination
     const friendsProperty = normalized.properties?.friends as JSONSchema7;
     if (friendsProperty && (friendsProperty as any)["x-pagination"]) {
       const pagMeta = result.paginationMetadata.get("friends");
@@ -60,13 +60,13 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {
+    const normalized = buildTraversalSchema(schema, {
       include: {
         posts: { take: 10, skip: 5 },
       },
     });
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/user1",
       undefined,
       normalized,
@@ -95,9 +95,9 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
     };
 
     // No pagination in include
-    const normalized = normalizeSchema(schema, {});
+    const normalized = buildTraversalSchema(schema, {});
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/doc1",
       undefined,
       normalized,
@@ -126,7 +126,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {
+    const normalized = buildTraversalSchema(schema, {
       include: {
         friends: { take: 10 },
         posts: { take: 20, skip: 5 },
@@ -134,7 +134,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
       },
     });
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/person1",
       undefined,
       normalized,
@@ -174,13 +174,13 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {
+    const normalized = buildTraversalSchema(schema, {
       include: {
         items: { take: 100 },
       },
     });
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/collection1",
       undefined,
       normalized,
@@ -218,7 +218,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {
+    const normalized = buildTraversalSchema(schema, {
       include: {
         department: {
           include: {
@@ -228,14 +228,14 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
       },
     });
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/company1",
       undefined,
       normalized,
     );
 
     // Nested pagination should be tracked
-    // (Note: This depends on how normalizer handles nested pagination)
+    // (Note: This depends on how projectSchema handles nested pagination)
     expect(result.paginationMetadata).toBeDefined();
   });
 
@@ -250,13 +250,13 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {
+    const normalized = buildTraversalSchema(schema, {
       include: {
         logs: { take: 0 }, // Explicitly fetch none
       },
     });
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/system1",
       undefined,
       normalized,
@@ -283,13 +283,13 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {
+    const normalized = buildTraversalSchema(schema, {
       include: {
         records: { skip: 1000, take: 10 }, // Start from 1001st record
       },
     });
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/db1",
       undefined,
       normalized,
@@ -322,7 +322,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {
+    const normalized = buildTraversalSchema(schema, {
       include: {
         friends: {
           take: 10,
@@ -331,7 +331,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
       },
     });
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/person1",
       undefined,
       normalized,
@@ -365,7 +365,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {
+    const normalized = buildTraversalSchema(schema, {
       include: {
         posts: {
           take: 20,
@@ -374,7 +374,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
       },
     });
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/blog1",
       undefined,
       normalized,
@@ -411,7 +411,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {
+    const normalized = buildTraversalSchema(schema, {
       include: {
         friends: {
           take: 10,
@@ -420,7 +420,7 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
       },
     });
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/person1",
       undefined,
       normalized,
@@ -448,13 +448,13 @@ describe("normalizedSchema2construct - Pagination Metadata", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {
+    const normalized = buildTraversalSchema(schema, {
       include: {
         data: { take: 5, skip: 2 },
       },
     });
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/dataset1",
       undefined,
       normalized,

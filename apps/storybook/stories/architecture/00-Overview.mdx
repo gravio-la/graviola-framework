@@ -36,7 +36,7 @@ The framework orchestrates a 4-stage pipeline to transform JSON Schema into extr
     style I fill:#f0e1ff
 `} />
 
-### Stage 1: Schema Normalization
+### Stage 1: Schema Preparation
 
 Resolves `$ref` references, applies filters, identifies relationships, attaches pagination metadata.
 
@@ -44,7 +44,7 @@ Resolves `$ref` references, applies filters, identifies relationships, attaches 
 
 ### Stage 2: SPARQL Generation
 
-Converts normalized schema to SPARQL CONSTRUCT patterns with SUBSELECTs for pagination.
+Converts traversal schema to SPARQL CONSTRUCT patterns with SUBSELECTs for pagination.
 
 **Package**: `@graviola/sparql-schema`
 
@@ -98,20 +98,20 @@ The entire pipeline is fully typed with TypeScript, from schema definition to ex
 
 ### 1. @graviola/edb-graph-traversal
 
-Handles schema normalization and graph extraction.
+Handles schema preparation and graph extraction.
 
 **Main Exports**:
-- `normalizeSchema(schema, filterOptions)` - Resolves refs and applies filters
+- `buildTraversalSchema(schema, filterOptions)` - Resolves refs and applies filters
 - `extractFromGraph(iri, dataset, schema, options)` - Extracts objects from RDF
 
 [Go to graph-traversal documentation →](?path=/docs/library-docs-graph-traversal-00-introduction--docs)
 
 ### 2. @graviola/sparql-schema
 
-Generates SPARQL CONSTRUCT queries from normalized schemas with type-safe Prisma-style filters.
+Generates SPARQL CONSTRUCT queries from traversal schemas with type-safe Prisma-style filters.
 
 **Main Exports**:
-- `normalizedSchema2construct(iri, schema, options)` - Generates SPARQL patterns
+- `traversalSchema2construct(iri, schema, options)` - Generates SPARQL patterns
 - `buildTypedSPARQLQuery<T>(iri, schema, options)` - Type-safe query builder with filters
 - `filterTypedDocument<T>(iri, typeIRI, schema, fetch, options)` - Load entities with filters
 - `filterTypedDocuments<T>(typeIRI, schema, selectFetch, constructFetch, options)` - Find entities with filters
@@ -136,7 +136,7 @@ CMS systems, REST APIs, data migration, search interfaces, form generators on RD
 
 - [Pipeline Stages →](?path=/docs/architecture-pipeline-stages--docs)
 - [Key Concepts →](?path=/docs/architecture-key-concepts--docs)
-- [Interactive Demos →](?path=/story/library-docs-graph-traversal-normalizer--basic)
+- [Interactive Demos →](?path=/story/library-docs-graph-traversal-traversal-schema--with-references)
 
 ## Architecture Diagram
 
@@ -148,12 +148,12 @@ Here's a more detailed view of how the packages interact:
     end
     
     subgraph "@graviola/edb-graph-traversal"
-        NORM[normalizeSchema]
+        PREP[buildTraversalSchema]
         EXTRACT[extractFromGraph]
     end
     
     subgraph "@graviola/sparql-schema"
-        GEN[normalizedSchema2construct]
+        GEN[traversalSchema2construct]
         TYPED[buildTypedSPARQLQuery]
         FILTER[filterTypedDocument]
     end
@@ -167,25 +167,25 @@ Here's a more detailed view of how the packages interact:
         CLIENT[SPARQL Client]
     end
     
-    APP --> NORM
+    APP --> PREP
     APP --> GEN
     APP --> TYPED
     APP --> FILTER
     
     FILTER --> TYPED
-    TYPED --> NORM
+    TYPED --> PREP
     TYPED --> GEN
     FILTER --> CLIENT
     FILTER --> EXTRACT
     
-    NORM --> TYPES
+    PREP --> TYPES
     GEN --> TYPES
     EXTRACT --> TYPES
     
     CLIENT --> STORE
     
     style APP fill:#e1f5ff
-    style NORM fill:#fff4e1
+    style PREP fill:#fff4e1
     style GEN fill:#ffe1f5
     style EXTRACT fill:#e1ffe1
     style TYPES fill:#f0e1ff

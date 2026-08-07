@@ -3,7 +3,10 @@ import type { JSONSchema7 } from "json-schema";
 import ds from "@rdfjs/data-model";
 import clownface from "clownface";
 import type { ExtendedWalkerOptions, Logger } from "@graviola/edb-core-types";
-import { normalizeSchema, type NormalizedSchema } from "../normalizer";
+import {
+  buildTraversalSchema,
+  type TraversalSchema,
+} from "../traversal-schema";
 import type { ExtractionContext } from "./types";
 import { createNoOpLogger } from "@graviola/edb-core-utils";
 import { extractObject } from "./extractObject";
@@ -12,11 +15,11 @@ import { extractObject } from "./extractObject";
  * Extracts data from an RDF graph according to a JSON Schema
  *
  * This is the main entry point for the new extractor implementation.
- * It automatically normalizes the schema if needed, then uses the
- * normalized schema structure to guide extraction from the graph.
+ * It builds a traversal schema if needed (dereference + project), then uses
+ * that structure to guide extraction from the graph.
  *
  * Key improvements over the legacy implementation:
- * - Uses normalized schemas (no ref resolution during extraction)
+ * - Uses traversal schemas (no `$ref` resolution during extraction)
  * - Cleaner separation of concerns with dedicated extractor functions
  * - Better handling of anyOf/oneOf patterns
  * - Structured logging support
@@ -79,21 +82,21 @@ export function extractFromGraph<T = any>(
 
   log.info("Starting graph extraction", { iri, depth: 0 });
 
-  // Normalize the schema if not already normalized
-  let normalized: NormalizedSchema;
-  if ((schema as any)._normalized) {
-    normalized = schema as NormalizedSchema;
-    log.debug("Schema already normalized");
+  // Build the traversal schema if not already prepared
+  let traversal: TraversalSchema;
+  if ((schema as any)._traversalSchema) {
+    traversal = schema as TraversalSchema;
+    log.debug("Schema already prepared for traversal");
   } else {
-    log.debug("Normalizing schema");
-    normalized = normalizeSchema(schema, options);
+    log.debug("Building traversal schema");
+    traversal = buildTraversalSchema(schema, options);
   }
 
   // Create the extraction context
   const ctx: ExtractionContext = {
     baseIRI,
     dataset,
-    normalizedSchema: normalized,
+    traversalSchema: traversal,
     options,
     context,
     depth: 0,
@@ -104,8 +107,8 @@ export function extractFromGraph<T = any>(
   const cf = clownface({ dataset });
   const startNode = cf.node(ds.namedNode(iri));
 
-  // Extract using the normalized schema
-  const result = extractObject(startNode as any, normalized, ctx);
+  // Extract using the traversal schema
+  const result = extractObject(startNode as any, traversal, ctx);
 
   log.info("Graph extraction complete", {
     iri,
