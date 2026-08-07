@@ -1,0 +1,47 @@
+{
+  "name": "@graviola/calc-engine",
+  "version": "0.1.0",
+  "description": "Batched calc evaluation driver: plan → precise read → evaluate → optional materialize (Layer 2)",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsup",
+    "test": "bun test",
+    "lint": "eslint src/**/*.ts",
+    "release": "bun publish --access public"
+  },
+  "dependencies": {
+    "@graviola/formula-dependency": "workspace:*",
+    "@graviola/formula-materialization": "workspace:*",
+    "@graviola/formula-runtime": "workspace:*",
+    "@graviola/json-schema-utils": "workspace:*",
+    "@graviola/provenance-types": "workspace:*",
+    "@graviola/store-core": "workspace:*",
+    "@graviola/typed-query-types": "workspace:*",
+    "lodash-es": "catalog:"
+  },
+  "devDependencies": {
+    "@graviola/calc-fixtures": "workspace:*",
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*",
+    "@types/json-schema": "catalog:",
+    "eslint-config-edb": "workspace:*",
+    "tsup": "^8.0.0",
+    "typescript": "^5.8.2"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": ["eslint-config-edb"]
+  }
+}
