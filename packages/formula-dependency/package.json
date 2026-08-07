@@ -30,7 +30,8 @@
     "@graviola/sidecar-core": "workspace:*",
     "@graviola/typed-query-types": "workspace:*",
     "graphology": "^0.25.4",
-    "graphology-dag": "^0.4.1"
+    "graphology-dag": "^0.4.1",
+    "lodash-es": "catalog:"
   },
   "devDependencies": {
     "@graviola/calc-fixtures": "workspace:*",

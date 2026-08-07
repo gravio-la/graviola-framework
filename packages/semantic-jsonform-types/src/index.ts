@@ -18,6 +18,7 @@ import type {
   JsonFormsUISchemaRegistryEntry,
 } from "@jsonforms/core";
 import type { TableColumnRegistry } from "@graviola/edb-table-types";
+import type { CompiledProfile } from "@graviola/formula-dependency";
 
 export type ChangeCause = "user" | "mapping" | "reload";
 export type AuthorityConfiguration = {
@@ -138,6 +139,12 @@ export type GlobalAppConfig<DeclarativeMappingType> = GlobalSemanticConfig & {
   normDataMapping?: Record<string, NormDataMapping<DeclarativeMappingType>>;
   authorityAccess?: Record<string, AuthorityConfiguration>;
   schema: JSONSchema7;
+  /**
+   * Compiled calc profile for this schema set. When present, computed fields
+   * are annotated (`x-calc`) in the provided `schema` and hooks/forms may
+   * evaluate live slots. Apps without calculated fields omit it.
+   */
+  calcProfile?: CompiledProfile;
   makeStubSchema?: (schema: JSONSchema7) => JSONSchema7;
   uiSchemaDefaultRegistry?: JsonFormsUISchemaRegistryEntry[];
   rendererRegistry?: JsonFormsRendererRegistryEntry[];

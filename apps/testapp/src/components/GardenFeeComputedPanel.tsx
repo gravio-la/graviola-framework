@@ -1,12 +1,13 @@
 import { Box, Chip, Stack, Typography } from "@mui/material";
-import { useDataStore, useQuery } from "@graviola/edb-state-hooks";
+import {
+  useAdbContext,
+  useDataStore,
+  useQuery,
+} from "@graviola/edb-state-hooks";
 import { evaluateForRoots } from "@graviola/calc-engine";
 import { gardenFeeSchema } from "@graviola/calc-fixtures";
 import type { JSONSchema7 } from "json-schema";
-import {
-  gardenFeeCompiledProfile,
-  gardenFeeExpected,
-} from "../garden-fee-schema";
+import { gardenFeeExpected } from "../garden-fee-schema";
 
 /**
  * Computed-fields demo panel. A CBD `loadOne` stops at nested named entities,
@@ -22,10 +23,12 @@ export function GardenFeeComputedPanel({
   document: Record<string, unknown> | undefined;
 }) {
   const { dataStore, ready } = useDataStore();
+  const { calcProfile } = useAdbContext();
   const entityIRI = document?.["@id"] as string | undefined;
   const canEvaluate =
     typeName === "Garden" &&
     Boolean(entityIRI) &&
+    Boolean(calcProfile) &&
     ready &&
     typeof (dataStore as { filterMany?: unknown })?.filterMany === "function";
 
@@ -35,7 +38,7 @@ export function GardenFeeComputedPanel({
     queryFn: () =>
       evaluateForRoots(
         dataStore as never,
-        gardenFeeCompiledProfile,
+        calcProfile!,
         "Garden",
         gardenFeeSchema as JSONSchema7,
         { rootIRIs: [entityIRI!] },

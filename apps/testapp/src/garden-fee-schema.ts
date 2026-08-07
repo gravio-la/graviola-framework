@@ -52,6 +52,7 @@ export const gardenFeeSchemaConfig: SchemaConfig = makeSchemaConfig({
   icon: "🌱",
   storageKey: "testapp-garden-fee-v3",
   initialData: gardenFeeInitialTurtle,
+  calcProfile: gardenFeeCompiledProfile,
   baseIRI: "https://example.org/",
   entityBaseIRI: "https://example.org/",
   schema: gardenFeeSchema as JSONSchema7,

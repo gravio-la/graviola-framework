@@ -27,6 +27,7 @@
     "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-global-types": "workspace:*",
     "@graviola/edb-table-types": "workspace:*",
+    "@graviola/formula-dependency": "workspace:*",
     "@jsonforms/core": "catalog:jsonforms",
     "@jsonforms/react": "catalog:jsonforms",
     "@types/json-schema": "catalog:",

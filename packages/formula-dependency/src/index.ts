@@ -1,6 +1,8 @@
 export { compileCalcProfile } from "./compileCalcProfile";
 export { planCalcReads } from "./planCalcReads";
 export type { CalcReadPlan, UnreachableSlot } from "./planCalcReads";
+export { annotateCalcSchema } from "./annotateCalcSchema";
+export type { XCalcAnnotation } from "./annotateCalcSchema";
 export {
   explainCompiledSlot,
   formatCompileIssues,
