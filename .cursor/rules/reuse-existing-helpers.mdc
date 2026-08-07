@@ -1,0 +1,45 @@
+---
+description: Prefer lodash-es and Layer 1 helpers; no domain leakage or hand-rolled duplicates
+alwaysApply: true
+---
+
+# Reuse before reinvent
+
+When editing this monorepo, **do not reimplement helpers that already exist**. Prefer existing Layer 1 utilities and `lodash-es`.
+
+## lodash-es first
+
+Before writing a local helper for path get/set, deep clone, uniq, merge, debounce, isNil, omit, pick, etc.:
+
+1. Use `lodash-es` with a **per-function import** (repo convention):
+
+```ts
+import get from "lodash-es/get";
+import cloneDeep from "lodash-es/cloneDeep";
+import uniq from "lodash-es/uniq";
+```
+
+2. Add `"lodash-es": "catalog:"` to the package `dependencies` if missing.
+3. **Do not** hand-roll `getAtPath`, `cloneData`, `[...new Set(xs)]` as `uniq`, or `JSON.parse(JSON.stringify(...))` for deep clone.
+
+## Layer 1 helpers first
+
+Before adding regexes or local parsers for JSON Schema scopes / `$ref` / definitions:
+
+- Search `@graviola/json-schema-utils` — use `definitionNameFromScope`, `definitionScope`, `definitionNameFromRef`, `definitionPropertyScope`, `defs`, `bringDefinitionToTop`, `cbdBoundaryScopes`, `stripXCalcProperties`, …
+- Search `@graviola/typed-query-types` — use `selectionDepth`, `resolveEffectiveMaxRecursion`, …
+- Search `@graviola/edb-core-utils` — IRI / URL helpers
+
+If the helper is missing: **add it to the Layer 1 package**, export it, and call it from Layer 2+. Never paste a one-off `#/definitions/` regex into formula/calc/store packages.
+
+## No domain leakage
+
+- Library packages (`packages/**`) must not encode demo-domain heuristics (e.g. garden-fee shape sniffing, hardcoded `"Garden"` / `"Plot"` checks).
+- Entity type resolution uses `@type` and schema scopes — not structural guessing.
+- Shared test/demo fixtures go in a **private fixture package** consumed as `devDependency` — never export fixtures from a public library `index.ts`.
+
+## Quick check before shipping a helper
+
+1. Does `lodash-es` already do this?
+2. Does a Layer 1 package already export this?
+3. Would another package need the same thing? → put it in Layer 1, not inline.
