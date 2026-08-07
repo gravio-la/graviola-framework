@@ -104,3 +104,67 @@ predicates round-trips via `packages/sparql-db-impl/src/rdf12Statements.ts`.
 Annotation sugar forms were not needed for the facet API.
 
 **Action:** none — encoding shipped as `rdf-12` profile value.
+
+## Calc materialization: fingerprint cached view vs pure derivation
+
+**Status:** decided for `@graviola/calc-engine` warm path (glossary 4.8)
+
+**Context:** Production computed values persist via `writeStatements` with
+`wasGeneratedBy.inputFingerprint`. Reads prefer materialized values; freshness
+is `isMaterializationFresh`. Pure derivation remains available via
+`evaluateForRoots` for live overlays.
+
+**Proposal:** cached materialized view with fingerprint freshness is the default
+server path; browsers may live-evaluate cost-gated slots (`selectLiveEvalSlots`).
+
+**Action:** confirm before GA; document in conceptual calculated-fields chapter.
+
+## Entity-level change bus as calc invalidation substrate
+
+**Status:** proposed (calc-engine Stage 4)
+
+**Context:** `store.subscribe` emits entity-level upsert/remove events. Slot-level
+diffs require either `event.data` or a load of prior fingerprints. Without either,
+`dirtyScopesForChange` treats all slots on the changed type (+ transitive
+dependents) as dirty.
+
+**Proposal:** keep entity-level events; document the coarse-dirty fallback; refine
+to slot-level when writes always carry `data` or statements are loadable cheaply.
+
+**Action:** architect sign-off on coarse fallback vs requiring `data` on upserts.
+
+## `@graviola/calc-engine` package boundary
+
+**Status:** decided
+
+**Context:** Driver for plan → batched read → evaluate → warm / delta lives in a
+new package rather than folding into `formula-materialization` (which stays a pure
+plan/write helper with no store orchestration).
+
+**Action:** none — package shipped as Layer 2.
+
+## JSON-LD `filterMany` lacks server-side pagination
+
+**Status:** escalated (known; deferred honest fix)
+
+**Context:** `StoreDocumentsSearchOptions` gained `entityIRIs` but still has no
+`pagination`. SPARQL `filterTypedDocuments` CONSTRUCT has no LIMIT; callers may
+cap post-fetch via `limit`. Selection-depth honouring landed; paged subject
+subselects remain a follow-up.
+
+**Action:** implement paged subject subselect inside CONSTRUCT when list UIs need
+thousands of JSON-LD rows.
+
+## Query-scoped aggregates (level 4) deferred
+
+**Status:** deferred
+
+**Context:** `CalcAggregate.over` is an in-document collection path only.
+`where` inside aggregate / relation-query bindings are level 4 in the conceptual
+defaults ladder. `planCalcReads` reports unreachable slots instead of inventing
+query-scoped aggregates. Stage 5 `tryPushdownAggregates` is a capability-flagged
+seam (`canPushdownAggregates` + optional `evaluateAggregate`) with
+`computeAggregateInJs` / `assertPushdownEqualsJs` as the differential oracle;
+without a native evaluator it always falls back to JS (`pushed: false`).
+
+**Action:** admit only with a concrete use case the intermediate-slot idiom cannot express.
