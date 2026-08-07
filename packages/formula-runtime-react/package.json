@@ -24,7 +24,8 @@
   },
   "dependencies": {
     "@graviola/formula-dependency": "workspace:*",
-    "@graviola/formula-runtime": "workspace:*"
+    "@graviola/formula-runtime": "workspace:*",
+    "lodash-es": "catalog:"
   },
   "peerDependencies": {
     "react": "catalog:"

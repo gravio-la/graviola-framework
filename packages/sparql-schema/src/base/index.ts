@@ -1,8 +1,13 @@
 import isNil from "lodash-es/isNil";
 import df from "@rdfjs/data-model";
+import {
+  GRAVIOLA_ONTOLOGY_IRI,
+  QUERY_RESULT_SUBJECT_IRI,
+} from "@graviola/edb-core-utils";
 
-export const GRAVOILA_ONTOLOGY_IRI = "http://graviola.gra.one/ontology#";
-export const QUERY_RESULT_SUBJECT_IRI = `${GRAVOILA_ONTOLOGY_IRI}QueryResultSubject`;
+export { QUERY_RESULT_SUBJECT_IRI };
+/** @deprecated misspelling kept for back-compat — use GRAVIOLA_ONTOLOGY_IRI from @graviola/edb-core-types. */
+export const GRAVOILA_ONTOLOGY_IRI = GRAVIOLA_ONTOLOGY_IRI;
 export const QUERY_RESULT_SUBJECT_IRI_NODE = df.namedNode(
   QUERY_RESULT_SUBJECT_IRI,
 );

@@ -14,6 +14,7 @@ import {
   useDispatchIntent,
   useGraviolaModal,
 } from "@graviola/edb-state-hooks";
+import { useLiveCalcOverlay } from "@graviola/formula-runtime-react";
 import { SemanticJsonFormToolbar } from "./SemanticJsonFormToolbar";
 import { SemanticJsonFormNoOps } from "./SemanticJsonFormNoOps";
 import { Backdrop, Box, CircularProgress } from "@mui/material";
@@ -49,7 +50,10 @@ export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
     [managedEditMode, forceEditMode],
   );
 
-  const { typeIRIToTypeName } = useAdbContext();
+  const { typeIRIToTypeName, calcProfile } = useAdbContext();
+  // Live computed-fields overlay (display only): x-calc properties are
+  // stripped again at the persist boundary (useCRUDWithQueryClient).
+  const { data: displayData } = useLiveCalcOverlay(calcProfile, data);
   const dispatchIntent = useDispatchIntent();
   const detailModal = useGraviolaModal(MODAL_ENTITY_DETAIL);
 
@@ -295,7 +299,7 @@ export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
       </Backdrop>
       <SemanticJsonFormNoOps
         typeIRI={typeIRI}
-        data={data}
+        data={displayData}
         onChange={handleOnChange}
         schema={schema}
         formsPath="root"
