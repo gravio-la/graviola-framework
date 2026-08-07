@@ -9,15 +9,51 @@ import {
 import {
   SemanticAnnotationsView,
   SemanticDetailView,
+  SemanticDetailViewNoOps,
 } from "@graviola/semantic-views";
 import { bringDefinitionToTop } from "@graviola/json-schema-utils";
+import { useComputedFields } from "@graviola/formula-runtime-react";
+import {
+  BROWSER_FORM_HOST,
+  selectLiveEvalSlots,
+} from "@graviola/formula-runtime";
 import { useCallback, useMemo } from "react";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import type { SchemaRouteOutletContext } from "../schemaOutletContext";
-import { GardenFeeComputedPanel } from "../components/GardenFeeComputedPanel";
+import {
+  CalcDebugToggle,
+  documentForCalc,
+  GardenFeeComputedPanel,
+} from "../components/GardenFeeComputedPanel";
+import { EntityMetaAffordances } from "../components/EntityMetaAffordances";
+import { StratificationStoryPanel } from "../components/StratificationStoryPanel";
 import { useEntityIRIFromEntityID } from "../useEntityIRIFromEntityID";
 import type { JSONSchema7 } from "json-schema";
 import { priceCentsRendererEntry } from "../detailRenderers/PriceCentsRenderer";
+import {
+  computedFieldRendererEntry,
+  statementArrayRendererEntry,
+} from "../detailRenderers/ComputedFieldRenderer";
+import {
+  gardenFeeCompiledProfile,
+  gardenFeeExtendedSchema,
+} from "../garden-fee-schema";
+import { attachDemoStatements, demoEntityMeta } from "../demo/demoProvenance";
+import { calcDebug } from "../demo/calcDebug";
+
+function fingerprintInputs(
+  source: Record<string, unknown> | undefined,
+): string {
+  const raw = JSON.stringify({
+    fee: source?.fee_rate_per_sqm,
+    vat: source?.vat_rate,
+    patch: source?.patch,
+  });
+  let h = 0;
+  for (let i = 0; i < raw.length; i++)
+    h = (Math.imul(31, h) + raw.charCodeAt(i)) | 0;
+  return (h >>> 0).toString(16).padStart(8, "0");
+}
 
 export function GenericDetailPage() {
   const { typeName, entityID } = useParams<{
@@ -68,6 +104,51 @@ export function GenericDetailPage() {
 
   const data = rawData?.document;
 
+  const isGardenFee = schemaConfig.schemaName === "garden-fee";
+
+  const calcSource = useMemo(
+    () =>
+      isGardenFee && resolvedTypeName
+        ? documentForCalc(
+            resolvedTypeName,
+            data as Record<string, unknown> | undefined,
+          )
+        : undefined,
+    [isGardenFee, resolvedTypeName, data],
+  );
+
+  const liveProfile = useMemo(
+    () =>
+      isGardenFee
+        ? selectLiveEvalSlots(gardenFeeCompiledProfile, BROWSER_FORM_HOST)
+        : undefined,
+    [isGardenFee],
+  );
+
+  const { data: evaluated } = useComputedFields(liveProfile, calcSource);
+
+  const displayData = useMemo(() => {
+    if (!isGardenFee || !data) return data;
+    const fingerprint = fingerprintInputs(calcSource);
+    const withStmt = attachDemoStatements(
+      evaluated as Record<string, unknown>,
+      gardenFeeCompiledProfile,
+      { inputFingerprint: fingerprint },
+    );
+    const merged = {
+      ...withStmt,
+      $meta:
+        (data as { $meta?: unknown }).$meta ??
+        demoEntityMeta(data as Record<string, unknown>),
+    };
+    calcDebug("detail displayData", {
+      annual_fee: merged.annual_fee,
+      annual_fee_gross: merged.annual_fee_gross,
+      stmtKeys: Object.keys(merged).filter((k) => k.endsWith("$stmt")),
+    });
+    return merged;
+  }, [isGardenFee, data, evaluated, calcSource]);
+
   const detailUiSchema = useMemo(
     () =>
       resolvedTypeName
@@ -77,22 +158,29 @@ export function GenericDetailPage() {
   );
 
   const typeSchema = useMemo<JSONSchema7 | undefined>(() => {
-    if (!resolvedTypeName || !rootSchema) return undefined;
+    if (!resolvedTypeName) return undefined;
+    const schemaForDetail = isGardenFee
+      ? gardenFeeExtendedSchema
+      : ((schemaConfig.extendedSchema as JSONSchema7 | undefined) ??
+        (rootSchema as JSONSchema7 | undefined));
+    if (!schemaForDetail) return undefined;
     return bringDefinitionToTop(
-      rootSchema as any,
+      schemaForDetail as never,
       resolvedTypeName,
     ) as JSONSchema7;
-  }, [rootSchema, resolvedTypeName]);
+  }, [rootSchema, resolvedTypeName, isGardenFee, schemaConfig.extendedSchema]);
 
   const humanLabel =
     schemaConfig.typeNameLabelMap[resolvedTypeName ?? ""] ?? resolvedTypeName;
-  const extraDetailRenderers = useMemo(
-    () =>
-      schemaConfig.schemaName === "item-schema"
-        ? [priceCentsRendererEntry]
-        : [],
-    [schemaConfig.schemaName],
-  );
+  const extraDetailRenderers = useMemo(() => {
+    if (schemaConfig.schemaName === "item-schema") {
+      return [priceCentsRendererEntry];
+    }
+    if (isGardenFee) {
+      return [computedFieldRendererEntry, statementArrayRendererEntry];
+    }
+    return [];
+  }, [schemaConfig.schemaName, isGardenFee]);
 
   if (!typeName || !entityIRI) {
     return (
@@ -124,6 +212,7 @@ export function GenericDetailPage() {
               Bearbeiten
             </Button>
           </ButtonGroup>
+          {isGardenFee ? <CalcDebugToggle /> : null}
         </Box>
 
         {isLoading ? (
@@ -136,32 +225,71 @@ export function GenericDetailPage() {
               />
             ))}
           </Box>
-        ) : typeSchema && data ? (
+        ) : typeSchema && displayData ? (
           <>
-            <SemanticDetailView
-              entityIRI={entityIRI}
-              typeIRI={classIRI}
-              typeName={resolvedTypeName}
-              defaultData={data}
-              disableLoad
-              uiSchema={detailUiSchema}
-              config={{
-                primaryFields: schemaConfig.primaryFields as Record<
-                  string,
-                  unknown
-                >,
-                extraRenderers: extraDetailRenderers,
-              }}
-            />
-            {schemaConfig.schemaName === "garden-fee" ? (
-              <GardenFeeComputedPanel
+            {isGardenFee && schemaConfig.annotationMetaSchema ? (
+              <>
+                <StratificationStoryPanel
+                  dense
+                  highlightStratum={
+                    resolvedTypeName === "Plot"
+                      ? 1
+                      : resolvedTypeName === "Patch"
+                        ? 2
+                        : undefined
+                  }
+                />
+                <EntityMetaAffordances
+                  document={displayData as Record<string, unknown>}
+                  metaSchema={schemaConfig.annotationMetaSchema}
+                />
+              </>
+            ) : null}
+            {isGardenFee ? (
+              <SemanticDetailViewNoOps
+                data={displayData}
+                schema={typeSchema}
+                typeIRI={classIRI}
                 typeName={resolvedTypeName}
+                entityIRI={entityIRI}
+                uiSchema={detailUiSchema}
+                config={{
+                  primaryFields: schemaConfig.primaryFields as Record<
+                    string,
+                    unknown
+                  >,
+                  extraRenderers: extraDetailRenderers,
+                }}
+              />
+            ) : (
+              <SemanticDetailView
+                entityIRI={entityIRI}
+                typeIRI={classIRI}
+                typeName={resolvedTypeName}
+                defaultData={displayData}
+                disableLoad
+                uiSchema={detailUiSchema}
+                schema={typeSchema}
+                config={{
+                  primaryFields: schemaConfig.primaryFields as Record<
+                    string,
+                    unknown
+                  >,
+                  extraRenderers: extraDetailRenderers,
+                }}
+              />
+            )}
+            {isGardenFee ? (
+              <GardenFeeComputedPanel
+                typeName={resolvedTypeName!}
                 document={data as Record<string, unknown>}
               />
             ) : null}
-            {schemaConfig.metaStamping && schemaConfig.annotationMetaSchema ? (
+            {schemaConfig.metaStamping &&
+            schemaConfig.annotationMetaSchema &&
+            !isGardenFee ? (
               <SemanticAnnotationsView
-                meta={(data as { $meta?: unknown })?.$meta}
+                meta={(displayData as { $meta?: unknown })?.$meta}
                 metaSchema={schemaConfig.annotationMetaSchema}
                 uiSchema={
                   resolvedTypeName
