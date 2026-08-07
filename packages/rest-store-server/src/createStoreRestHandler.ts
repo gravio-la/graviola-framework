@@ -148,6 +148,22 @@ const executeOnStore = async (
       return (store.remove as Function)(cmd.typeName, cmd.entityIRI);
     case "resolveTypes":
       return (store.resolveTypes as Function)(cmd.entityIRI);
+    case "writeStatements":
+      return (store.writeStatements as Function)(
+        cmd.typeName,
+        cmd.entityIRI,
+        cmd.writes,
+      );
+    case "loadStatements":
+      return (store.loadStatements as Function)(
+        cmd.typeName,
+        cmd.entityIRI,
+        cmd.paths,
+      );
+    case "calcWarm":
+      return (store.calcWarm as Function)(cmd.rootIRIs, {
+        skipFresh: cmd.skipFresh,
+      });
     case "entitiesWithClasses": {
       const fn = store.getEntitiesWithClassesByFilter;
       if (typeof fn !== "function") {
@@ -246,7 +262,10 @@ export const createStoreRestHandler = <R extends SchemaRegistry>(
       cmd.kind === "count" ||
       cmd.kind === "search" ||
       cmd.kind === "upsert" ||
-      cmd.kind === "entitiesWithClasses"
+      cmd.kind === "entitiesWithClasses" ||
+      cmd.kind === "writeStatements" ||
+      cmd.kind === "loadStatements" ||
+      cmd.kind === "calcWarm"
     ) {
       cmd = await enrichCommandFromBody(cmd, req);
     }

@@ -1,0 +1,27 @@
+{
+  "name": "calc-worker",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Reference calc-tier deployment: garden-fee schema over REST, live materialization via @graviola/calc-worker",
+  "type": "module",
+  "scripts": {
+    "start": "bun run src/server.ts",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@graviola/calc-fixtures": "workspace:*",
+    "@graviola/calc-worker": "workspace:*",
+    "@graviola/formula-dependency": "workspace:*",
+    "@graviola/rest-store-server": "workspace:*",
+    "@graviola/store-factory": "workspace:*",
+    "@graviola/sparql-db-impl": "workspace:*",
+    "@rdfjs/dataset": "^2.0.2",
+    "oxigraph": "^0.5.6"
+  },
+  "devDependencies": {
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@types/bun": "latest",
+    "typescript": "5.8.2"
+  },
+  "license": "MIT"
+}

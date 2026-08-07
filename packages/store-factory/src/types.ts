@@ -70,6 +70,35 @@ export type CreateStoreFromSpecOptions<
   backend: StoreBackendSpec;
   /** Optional SPARQL queryBuildOptions overrides (flavour, primaryFields, …). */
   queryBuildOptions?: Record<string, unknown>;
+  /**
+   * Fact-level statement metadata (`$stmt`) configuration. Enables the
+   * `statements` capability (`writeStatements` / `loadStatements`) — required
+   * for calc materialization. `policies` keys are `"<TypeName>.<dot.path>"`.
+   * `encoding` applies to SPARQL backends only (`statement-node` default;
+   * `rdf-12` needs Oxigraph ≥ 0.5). Prisma uses the side-table encoding and
+   * rejects MongoDB. Typed loosely to avoid a hard dep on
+   * `@graviola/statement-meta`.
+   */
+  statementMeta?: {
+    policies: Record<string, "always" | "never">;
+    encoding?: "statement-node" | "rdf-12";
+  };
+  /**
+   * Calc materialization config. When present (together with `statementMeta`
+   * — `calcWarm` needs `writeStatements`/`loadStatements`), the built store
+   * gets a `calcWarm(rootIRIs?, { skipFresh? })` method (backed by
+   * `@graviola/calc-engine`'s `warm()`, dynamically imported) and
+   * `capabilities.calc = true`. `profile` is typed as `unknown` — the real
+   * shape is `CompiledProfile` from `@graviola/formula-dependency` — to avoid
+   * a hard Layer 2 dependency in `store-factory` itself; it is passed through
+   * opaquely to `warm()`.
+   */
+  calc?: {
+    profile: unknown;
+    domainSchema: JSONSchema7;
+    rootTypeName: string;
+    agent?: string;
+  };
 };
 
 export type CreatedStore<R extends SchemaRegistry = SchemaRegistry> =

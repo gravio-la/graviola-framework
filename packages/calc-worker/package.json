@@ -1,0 +1,45 @@
+{
+  "name": "@graviola/calc-worker",
+  "version": "0.1.0",
+  "description": "Calc materialization host: cold-start warm sweep + live invalidation subscription (Layer 2/3)",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "bun test",
+    "lint": "eslint src/**/*.ts",
+    "release": "bun publish --access public"
+  },
+  "dependencies": {
+    "@graviola/calc-engine": "workspace:*",
+    "@graviola/store-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@graviola/calc-fixtures": "workspace:*",
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*",
+    "@graviola/formula-dependency": "workspace:*",
+    "@graviola/provenance-types": "workspace:*",
+    "@types/json-schema": "catalog:",
+    "eslint-config-edb": "workspace:*",
+    "tsup": "^8.0.0",
+    "typescript": "^5.8.2"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": ["eslint-config-edb"]
+  },
+  "license": "MIT"
+}

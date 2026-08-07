@@ -67,6 +67,7 @@ export type CapabilityName =
   | "counts"
   | "writes"
   | "statements"
+  | "calc"
   | "removes"
   | "streams"
   | "imports"
@@ -91,6 +92,8 @@ export type CapabilityDescriptor = {
   counts?: true;
   writes?: true;
   statements?: true;
+  /** Store-level: calc materialization (`calcWarm`) attached at construction time. */
+  calc?: true;
   removes?: true;
   streams?: true;
   imports?: true;

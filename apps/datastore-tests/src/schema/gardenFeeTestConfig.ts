@@ -1,3 +1,5 @@
+import { gardenFeeStatementPolicies } from "@graviola/calc-fixtures";
+
 /**
  * Store configuration for the garden-fee calc fixture domain
  * (`@graviola/calc-fixtures`). Used by adapters to expose an optional
@@ -27,4 +29,19 @@ export const gardenFeeQueryBuildOptions = {
   typeIRItoTypeName: gardenFeeTypeIRItoTypeName,
   primaryFields: gardenFeePrimaryFields,
   primaryFieldExtracts: {},
+};
+
+/**
+ * `statementMeta` config for the `calcWarmStore` variant — every formula
+ * output in the garden-fee profile materialized (`gardenFeeStatementPolicies`).
+ * SPARQL uses the default statement-node encoding; Prisma uses the side-table
+ * encoding (no `encoding` choice).
+ */
+export const gardenFeeSparqlStatementMetaConfig = {
+  policies: gardenFeeStatementPolicies,
+  encoding: "statement-node" as const,
+};
+
+export const gardenFeePrismaStatementMetaConfig = {
+  policies: gardenFeeStatementPolicies,
 };

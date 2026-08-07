@@ -168,3 +168,57 @@ seam (`canPushdownAggregates` + optional `evaluateAggregate`) with
 without a native evaluator it always falls back to JS (`pushed: false`).
 
 **Action:** admit only with a concrete use case the intermediate-slot idiom cannot express.
+
+## `dereferenceSchema` cycle-guard conflates sibling `$ref` reuse with real cycles
+
+**Status:** escalated (found during Stage D warm-contract testing; worked around locally, not fixed generically)
+
+**Context:** `@graviola/graph-traversal`'s `dereferenceSchema` (used by
+`buildTraversalSchema`, which every CONSTRUCT-query build depends on) guards
+against infinite `$ref` recursion with `context.visitedRefs`, keyed by
+`` `${refPath}@${depth}` `` and **mutated on a single `Set` shared across the
+entire schema walk** (spread via `{...context}` copies the wrapper, not the
+`Set`). This conflates two unrelated situations:
+
+1. **Real structural cycles** (e.g. `Category.subCategories` and
+   `Category.parentCategory` both `$ref`-ing `Category`) — where the shared
+   mutation is (accidentally) load-bearing: it caps what would otherwise be
+   exponential blowup, since both sibling properties recursively contain the
+   same two self-referential properties again at every level.
+2. **Unrelated sibling properties sharing a value-object `$ref`** at the same
+   depth (e.g. two calc-materialized properties on the same type, both
+   `$ref`-ing a shared `__Statement` definition via
+   `@graviola/statement-meta`'s `deriveProvenanceSchema`) — here the shared
+   mutation is a bug: the second sibling's `$ref` gets silently collapsed to
+   `{ type: "object", properties: { "@id": { type: "string" } } }`, dropping
+   its entire substructure with no error. Confirmed via CONSTRUCT-query dump:
+   the first sibling's `$stmt` sidecar got the full `value`/`rank`/`source`/
+   `generatedAt`/`wasGeneratedBy` shape; the second got only `rdf:type`.
+
+Two attempted generic fixes both broke existing behavior: (a) branch-local
+`Set` clone with the same `(refPath, depth)` key still let case 1 blow up
+(each sibling starts its own clone, so both expand fully, independently,
+forever); (b) branch-local clone keyed by `refPath` alone (real ancestor-path
+cycle detection) fixed case 1 but broke the legitimate multi-level
+self-reference test (`schema:knows` → `knows` → `knows`, 3 levels via explicit
+`include`), because it stubs the _second_ occurrence of a `$ref` on a path
+even when the caller explicitly asked for N levels of self-reference via
+`include`. A correct general fix needs to thread the `include`-tree's
+requested depth through `dereferenceSchema`, not just a path/depth heuristic.
+
+**Workaround shipped (Stage D):** `initSPARQLStore.ts` now always passes
+`inlineStatementSchema: true` to `deriveProvenanceSchema` — this avoids the
+shared `$ref` entirely for statement-node sidecars (each annotated property
+gets its own inlined copy of the statement schema instead of a shared `$ref`),
+which is behavior-preserving for existing single-property configs (the
+flattened result is identical either way once `dereferenceSchema` would have
+resolved the `$ref` regardless) and fixes the multi-property case. This does
+**not** fix the general `dereferenceSchema` bug for other schemas that
+legitimately reuse a `$ref` across sibling properties outside the
+statement-meta path.
+
+**Action:** design a proper fix — most likely threading `include`-tree depth
+(or an explicit per-`$ref` unroll budget) through `DereferenceContext` so
+cycle detection can distinguish "revisit with no more requested depth" from
+"unrelated sibling reuse" — before relying on shared-`$ref` sibling patterns
+anywhere outside the statement-meta workaround above.

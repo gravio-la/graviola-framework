@@ -141,7 +141,21 @@ export function initSPARQLDatastorePair(
     persistenceSchema = deriveProvenanceSchema(
       persistenceSchema,
       statementMeta.statementSchema,
-      { policies: statementMeta.policies },
+      {
+        policies: statementMeta.policies,
+        // Every annotated property otherwise shares one `$ref` to the
+        // statement-node definition. The CBD/CONSTRUCT builder always fully
+        // dereferences `$ref`s downstream (`dereferenceSchema`), and its
+        // cycle-guard is keyed by `(refPath, depth)` without branch scoping —
+        // two sibling properties sharing that `$ref` at the same depth (e.g.
+        // two calc-materialized properties on the same type) causes the
+        // second one's statement sidecar to be silently stubbed to just
+        // `{ "@id" }` (no `value`/`wasGeneratedBy`/…), dropping the read.
+        // Inlining sidesteps the shared `$ref` entirely; the flattened shape
+        // is identical either way once dereferenced, so this is safe for the
+        // single-property case too.
+        inlineStatementSchema: true,
+      },
     );
   }
 

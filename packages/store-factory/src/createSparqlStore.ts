@@ -1,3 +1,4 @@
+import { attachCalcWarm } from "./attachCalcWarm.js";
 import {
   defaultTypeIRItoTypeName,
   defaultTypeNameToTypeIRI,
@@ -53,10 +54,20 @@ export async function createSparqlStore(
     },
     sparqlQueryFunctions: crud,
     defaultLimit: opts.defaultLimit ?? 100,
+    ...(opts.statementMeta
+      ? {
+          statementMeta: {
+            policies: opts.statementMeta.policies,
+            encoding: opts.statementMeta.encoding ?? "statement-node",
+          } as never,
+        }
+      : {}),
   });
 
-  return {
+  const result = {
     store: store as unknown as CreateStoreResult["store"],
     typeNames: typeNamesFromSchema(opts.schema),
   };
+  await attachCalcWarm(result.store, opts);
+  return result;
 }

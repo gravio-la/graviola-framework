@@ -13,6 +13,7 @@ export type GraviolaTypeCapabilities = {
   lists?: boolean;
   filters?: boolean;
   writes?: boolean;
+  statements?: boolean;
   removes?: boolean;
   counts?: boolean;
   /** Present when label/token/fulltext search is supported */
@@ -44,6 +45,9 @@ export type GraviolaStoreHandshakeInner = {
     supported: boolean;
   };
   resolves?: {
+    supported: boolean;
+  };
+  calc?: {
     supported: boolean;
   };
   types: Record<string, { capabilities: GraviolaTypeCapabilities }>;

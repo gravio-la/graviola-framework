@@ -1,3 +1,4 @@
+import { attachCalcWarm } from "./attachCalcWarm.js";
 import {
   defaultTypeIRItoTypeName,
   defaultTypeNameToTypeIRI,
@@ -67,12 +68,17 @@ export async function createPrismaStore(
       typeIRItoTypeName,
       datasourceProvider: provider,
       persistenceManifest: opts.backend.persistenceManifest as never,
+      ...(opts.statementMeta
+        ? { statementMeta: { policies: opts.statementMeta.policies } as never }
+        : {}),
     },
   );
 
-  return {
+  const result = {
     store: store as unknown as CreateStoreResult["store"],
     typeNames: typeNamesFromSchema(opts.schema),
     dispose,
   };
+  await attachCalcWarm(result.store, opts);
+  return result;
 }

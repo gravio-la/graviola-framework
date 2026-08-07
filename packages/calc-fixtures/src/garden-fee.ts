@@ -92,6 +92,19 @@ export const gardenFeeSampleData = {
   },
 };
 
+/**
+ * Statement policies for materializing every computed slot (`$stmt` with
+ * `wasGeneratedBy` provenance). Shape matches
+ * `StatementPolicyMap` from `@graviola/statement-meta` (structural — this
+ * package stays a dependency leaf).
+ */
+export const gardenFeeStatementPolicies: Record<string, "always" | "never"> = {
+  "Plot.billable_area": "always",
+  "Patch.billable_area_total": "always",
+  "Garden.total_billable": "always",
+  "Garden.annual_fee": "always",
+};
+
 /** Expected computed values for {@link gardenFeeSampleData}. */
 export const gardenFeeExpected = {
   plotBillable: [20, 18],
