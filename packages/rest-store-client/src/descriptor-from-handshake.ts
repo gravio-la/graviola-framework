@@ -24,7 +24,14 @@ const pickSearchesProfile = (
 
 const anyType = (
   inner: GraviolaStoreHandshakeInner,
-  key: "loads" | "lists" | "filters" | "writes" | "removes" | "counts",
+  key:
+    | "loads"
+    | "lists"
+    | "filters"
+    | "writes"
+    | "statements"
+    | "removes"
+    | "counts",
 ): boolean => {
   return Object.values(inner.types).some((t) => Boolean(t.capabilities[key]));
 };
@@ -45,11 +52,13 @@ export const capabilityDescriptorFromHandshake = (
   if (anyType(inner, "lists")) desc.lists = true;
   if (anyType(inner, "filters")) desc.filters = true;
   if (anyType(inner, "writes")) desc.writes = true;
+  if (anyType(inner, "statements")) desc.statements = true;
   if (anyType(inner, "removes")) desc.removes = true;
   if (anyType(inner, "counts")) desc.counts = true;
   if (anySearches(inner)) desc.searches = true;
   if (anyType(inner, "loads")) desc.exists = true;
   if (inner.resolves?.supported) desc.resolves = true;
+  if (inner.calc?.supported) desc.calc = true;
   if (searchesProfile) desc.profiles = { searches: searchesProfile };
   return desc;
 };

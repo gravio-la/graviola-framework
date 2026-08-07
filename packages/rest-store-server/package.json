@@ -36,7 +36,8 @@
     "test": "bun test src"
   },
   "dependencies": {
-    "@graviola/store-core": "workspace:*"
+    "@graviola/store-core": "workspace:*",
+    "@graviola/provenance-types": "workspace:*"
   },
   "devDependencies": {
     "@graviola/edb-tsconfig": "workspace:*",

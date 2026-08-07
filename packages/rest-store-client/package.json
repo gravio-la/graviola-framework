@@ -47,6 +47,7 @@
     "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-data-mapping": "workspace:*",
     "@graviola/edb-global-types": "workspace:*",
+    "@graviola/provenance-types": "workspace:*",
     "@graviola/store-core": "workspace:*",
     "@graviola/typed-query-types": "workspace:*",
     "cross-fetch": "^4.0.0",

@@ -9,6 +9,7 @@ export type GraviolaTypeCapabilities = {
   lists?: boolean;
   filters?: boolean;
   writes?: boolean;
+  statements?: boolean;
   removes?: boolean;
   counts?: boolean;
   searches?: {
@@ -39,6 +40,10 @@ export type GraviolaStoreHandshakeInner = {
     supported: boolean;
   };
   resolves?: {
+    supported: boolean;
+  };
+  /** Store-level (not per-type) calc materialization — see `Calc` in `@graviola/store-core`. */
+  calc?: {
     supported: boolean;
   };
   types: Record<string, { capabilities: GraviolaTypeCapabilities }>;
@@ -76,6 +81,7 @@ const typeCapabilitiesFromDescriptor = (
   if (descriptor.lists) caps.lists = true;
   if (descriptor.filters) caps.filters = true;
   if (descriptor.writes) caps.writes = true;
+  if (descriptor.statements) caps.statements = true;
   if (descriptor.removes) caps.removes = true;
   if (descriptor.counts) caps.counts = true;
   if (descriptor.searches && descriptor.profiles?.searches) {
@@ -120,6 +126,7 @@ export const computeHandshake = (
       ...(opts.idempotency ? { idempotency: opts.idempotency } : {}),
       envelope: { supported: Boolean(descriptor.loads) },
       ...(resolves ? { resolves: { supported: true } } : {}),
+      ...(descriptor.calc ? { calc: { supported: true } } : {}),
       types,
       ...(opts.openapiUrl ? { openapiUrl: opts.openapiUrl } : {}),
     },

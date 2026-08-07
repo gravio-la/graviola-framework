@@ -155,11 +155,29 @@ export async function climbAffectedRoots(args: {
   };
 }
 
+type QueuedWarm = { rootIRIs?: string[] };
+
 /**
  * Subscribe to the change bus and recompute only affected root instances.
  *
  * Uses entity-level events: when `data` is absent, all dependents of the
  * changed type are treated as dirty (documented limitation in ESCALATIONS).
+ *
+ * `warm()`'s own `writeStatements` calls re-emit `upsert` events on the store
+ * change bus (dual assertion), so this subscription would otherwise trigger
+ * itself. Two guards keep that self-triggering from becoming an unbounded,
+ * concurrently-racing write loop:
+ *  - **Always `skipFresh: true`.** `warm()`'s fingerprint check already
+ *    distinguishes "inputs actually changed" (re-warm needed) from "an echo
+ *    of our own write" (fingerprint unchanged, `writesIssued: 0`, no further
+ *    event emitted — the loop terminates). Forcing `skipFresh: false` here
+ *    defeats that mechanism and was the source of an observed crash
+ *    (concurrent `warm()` calls racing a read-modify-write on the same
+ *    document via `loadDocument` → `applyStatementWrites` → `persistDocument`).
+ *  - **Single-flight with one coalesced trailing run.** Overlapping triggers
+ *    (including self-triggers) never start a second concurrent `warm()`
+ *    against the same store; they merge into the next run once the current
+ *    one finishes.
  */
 export function subscribeCalcInvalidation(args: {
   store: WarmStore & {
@@ -171,48 +189,94 @@ export function subscribeCalcInvalidation(args: {
   rootTypeName: string;
   affectedPlanner?: AffectedInstancePlanner;
   agent?: string;
+  onError?: (error: unknown) => void;
 }): CalcInvalidationHandle {
-  const { store, profile, domainSchema, rootTypeName, affectedPlanner, agent } =
-    args;
+  const {
+    store,
+    profile,
+    domainSchema,
+    rootTypeName,
+    affectedPlanner,
+    agent,
+    onError,
+  } = args;
 
-  const unsubscribe = store.subscribe(async (event) => {
-    if (event.changeType === "remove") {
-      await warm(store, profile, rootTypeName, domainSchema, {
-        agent,
-        skipFresh: true,
-      });
+  let running: Promise<void> | null = null;
+  let queued: QueuedWarm | null = null;
+
+  const runOrQueue = (task: QueuedWarm): void => {
+    if (running) {
+      // A full sweep (`rootIRIs` undefined) subsumes any queued targeted run.
+      if (!queued || queued.rootIRIs === undefined) {
+        if (!queued) queued = task;
+        else if (task.rootIRIs === undefined) queued = task;
+      } else if (task.rootIRIs === undefined) {
+        queued = task;
+      } else {
+        queued = {
+          rootIRIs: uniq([...queued.rootIRIs, ...task.rootIRIs]),
+        };
+      }
       return;
     }
 
-    const dirtyScopes = dirtyScopesForChange(profile, event.typeName);
-    if (dirtyScopes.length === 0) return;
+    running = (async () => {
+      try {
+        await warm(store, profile, rootTypeName, domainSchema, {
+          rootIRIs: task.rootIRIs,
+          agent,
+          skipFresh: true,
+        });
+      } catch (error) {
+        onError?.(error);
+      } finally {
+        running = null;
+        if (queued) {
+          const next = queued;
+          queued = null;
+          runOrQueue(next);
+        }
+      }
+    })();
+  };
 
-    if (event.typeName === rootTypeName) {
-      await warm(store, profile, rootTypeName, domainSchema, {
-        rootIRIs: [event.entityIRI],
-        agent,
-        skipFresh: false,
-      });
-      return;
+  const unsubscribe = store.subscribe((event) => {
+    try {
+      if (event.changeType === "remove") {
+        runOrQueue({});
+        return;
+      }
+
+      const dirtyScopes = dirtyScopesForChange(profile, event.typeName);
+      if (dirtyScopes.length === 0) return;
+
+      if (event.typeName === rootTypeName) {
+        runOrQueue({ rootIRIs: [event.entityIRI] });
+        return;
+      }
+
+      if (affectedPlanner) {
+        climbAffectedRoots({
+          domainSchema,
+          planner: affectedPlanner,
+          childTypeName: event.typeName,
+          childIRIs: [event.entityIRI],
+          rootTypeName,
+        })
+          .then((climbed) => {
+            runOrQueue({
+              rootIRIs:
+                climbed.rootIRIs.length > 0 ? climbed.rootIRIs : undefined,
+            });
+          })
+          .catch((error) => onError?.(error));
+        return;
+      }
+
+      runOrQueue({});
+    } catch (error) {
+      onError?.(error);
     }
-
-    let rootIRIs: string[] | undefined;
-    if (affectedPlanner) {
-      const climbed = await climbAffectedRoots({
-        domainSchema,
-        planner: affectedPlanner,
-        childTypeName: event.typeName,
-        childIRIs: [event.entityIRI],
-        rootTypeName,
-      });
-      rootIRIs = climbed.rootIRIs.length > 0 ? climbed.rootIRIs : undefined;
-    }
-
-    await warm(store, profile, rootTypeName, domainSchema, {
-      rootIRIs,
-      agent,
-      skipFresh: false,
-    });
   });
 
   return { unsubscribe };

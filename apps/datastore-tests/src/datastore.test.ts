@@ -55,6 +55,7 @@ import {
   runCalcEngineSuite,
   runCalcEngineRealStoreSuite,
 } from "./suites/calcEngine.suite";
+import { runCalcWarmSuite } from "./suites/calcWarm.suite";
 import { runMetaSuite } from "./suites/meta.suite";
 import { runFormulaPortabilitySuite } from "./suites/formulaPortability.suite";
 import {
@@ -145,6 +146,10 @@ for (const adapter of adapters) {
 
     if (setupResult.calcStore) {
       runCalcEngineRealStoreSuite(() => setupResult.calcStore!);
+    }
+
+    if (setupResult.calcWarmStore) {
+      runCalcWarmSuite(() => setupResult.calcWarmStore!);
     }
 
     if (supports("writes")) {

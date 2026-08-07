@@ -4,6 +4,7 @@ import {
   type BaseStore,
   type CapabilityDescriptor,
   type CapabilityName,
+  type CalcWarmResult,
   type Counts,
   type EntityOf,
   type Exists,
@@ -16,12 +17,14 @@ import {
   type Resolves,
   type SchemaRegistry,
   type Searches,
+  type Statements,
   type StoreDocumentsSearchOptions,
   type StoreFilterTraversalOptions,
   type StoreId,
   type StoreListQuery,
   type Writes,
 } from "@graviola/store-core";
+import type { StatementNode, StatementWrite } from "@graviola/provenance-types";
 
 import { capabilityDescriptorFromHandshake } from "../descriptor-from-handshake";
 import type {
@@ -85,7 +88,14 @@ export type RESTClientStore<R extends SchemaRegistry = SchemaRegistry> =
     Counts<R> &
     Searches<R> &
     Exists<R> &
-    Resolves;
+    Resolves &
+    Statements<R> & {
+      /** Store-level (not per-type) calc materialization — see `Calc` in `@graviola/store-core`. */
+      calcWarm: (
+        rootIRIs?: string[],
+        options?: { skipFresh?: boolean },
+      ) => Promise<CalcWarmResult>;
+    };
 
 const ensureProtocolVersion = (inner: GraviolaStoreHandshakeInner): void => {
   if (inner.version !== "1") {
@@ -421,6 +431,41 @@ export const createRESTClientStoreClient = <
       const json: unknown = await res.json();
       if (!Array.isArray(json)) return [];
       return json.filter((x): x is string => typeof x === "string");
+    },
+    writeStatements: async (
+      typeName: string,
+      entityIRI: string,
+      writes: StatementWrite[],
+    ): Promise<void> => {
+      capOrThrow(capabilities, "statements");
+      const path = rel(`${entityPath(typeName, entityIRI)}/_statements`);
+      await opts.transport.mutatingJson("PUT", path, { writes });
+    },
+    loadStatements: async (
+      typeName: string,
+      entityIRI: string,
+      paths?: string[],
+    ): Promise<Record<string, StatementNode[]>> => {
+      capOrThrow(capabilities, "statements");
+      const path = rel(`${entityPath(typeName, entityIRI)}/_statements/query`);
+      const res = await opts.transport.postJson(path, { paths });
+      const json: unknown = await res.json();
+      return json && typeof json === "object"
+        ? (json as Record<string, StatementNode[]>)
+        : {};
+    },
+    calcWarm: async (
+      rootIRIs?: string[],
+      warmOptions?: { skipFresh?: boolean },
+    ): Promise<CalcWarmResult> => {
+      capOrThrow(capabilities, "calc");
+      const path = rel("_calc/warm");
+      const res = await opts.transport.postJson(path, {
+        rootIRIs,
+        skipFresh: warmOptions?.skipFresh,
+      });
+      const json: unknown = await res.json();
+      return json as CalcWarmResult;
     },
   };
 

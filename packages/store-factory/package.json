@@ -33,6 +33,7 @@
     "@graviola/prisma-db-impl": "workspace:*",
     "@graviola/remote-query-implementations": "workspace:*",
     "@graviola/sparql-tools": "workspace:*",
+    "@graviola/calc-engine": "workspace:*",
     "@prisma/client": "^6.0.0 || ^7.0.0",
     "@rdfjs/dataset": "^2.0.0",
     "oxigraph": "^0.5.0"
@@ -42,11 +43,13 @@
     "@graviola/prisma-db-impl": { "optional": true },
     "@graviola/remote-query-implementations": { "optional": true },
     "@graviola/sparql-tools": { "optional": true },
+    "@graviola/calc-engine": { "optional": true },
     "@prisma/client": { "optional": true },
     "@rdfjs/dataset": { "optional": true },
     "oxigraph": { "optional": true }
   },
   "devDependencies": {
+    "@graviola/calc-engine": "workspace:*",
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
     "@types/json-schema": "catalog:",

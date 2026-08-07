@@ -46,12 +46,14 @@ import { gardenFeeSchema } from "@graviola/calc-fixtures";
 import {
   GARDEN_FEE_BASE_IRI,
   gardenFeePrimaryFields,
+  gardenFeePrismaStatementMetaConfig,
   gardenFeeTypeIRItoTypeName,
   gardenFeeTypeNameToTypeIRI,
 } from "../schema/gardenFeeTestConfig";
 import type {
   DatastoreAdapter,
   DatastoreContractStore,
+  DatastoreContractStoreWithCalcWarm,
   DatastoreContractStoreWithFilters,
   DatastoreContractStoreWithStatements,
 } from "../types";
@@ -270,6 +272,22 @@ export function createPrismaAdapter(
                   metaStamping: prismaMetaStampingConfig,
                 },
               ).store as DatastoreContractStoreWithStatements,
+              calcWarmStore: initPrismaDatastorePair(
+                prismaClient,
+                jsonLdSchemaToPrismaIdentity(
+                  gardenFeeSchema as unknown as JSONSchema7,
+                ),
+                gardenFeePrimaryFields as any,
+                {
+                  jsonldContext: { "@vocab": GARDEN_FEE_BASE_IRI },
+                  defaultPrefix: GARDEN_FEE_BASE_IRI,
+                  typeNameToTypeIRI: gardenFeeTypeNameToTypeIRI,
+                  typeIRItoTypeName: gardenFeeTypeIRItoTypeName,
+                  datasourceProvider: provider,
+                  persistenceManifest: loadPersistenceManifest(),
+                  statementMeta: gardenFeePrismaStatementMetaConfig,
+                },
+              ).store as unknown as DatastoreContractStoreWithCalcWarm,
             };
 
       return {

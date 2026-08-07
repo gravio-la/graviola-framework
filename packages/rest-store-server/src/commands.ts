@@ -4,6 +4,7 @@ import type {
   StoreDocumentsSearchOptions,
   StoreListQuery,
 } from "@graviola/store-core";
+import type { StatementWrite } from "@graviola/provenance-types";
 
 /** MIME negotiation for ReadResult envelope (v1 wire contract). */
 export const GRAVIOLA_STORE_ENVELOPE_ACCEPT =
@@ -54,7 +55,20 @@ export type StoreCommand<R extends SchemaRegistry = SchemaRegistry> =
   | {
       kind: "entitiesWithClasses";
       options: StoreDocumentsSearchOptions<unknown>;
-    };
+    }
+  | {
+      kind: "writeStatements";
+      typeName: string;
+      entityIRI: string;
+      writes: StatementWrite[];
+    }
+  | {
+      kind: "loadStatements";
+      typeName: string;
+      entityIRI: string;
+      paths?: string[];
+    }
+  | { kind: "calcWarm"; rootIRIs?: string[]; skipFresh?: boolean };
 
 export type CommandContext = {
   request: Request;
@@ -164,6 +178,15 @@ export const decodeStorePath = (
     return { kind: "entitiesWithClasses", options: {} };
   }
 
+  if (
+    segments[0] === "_calc" &&
+    segments[1] === "warm" &&
+    segments.length === 2 &&
+    method === "POST"
+  ) {
+    return { kind: "calcWarm" };
+  }
+
   const typeName = decodePathSegment(segments[0]);
   if (!isKnownType(typeName, ctx.typeNames)) {
     return "unknown_type";
@@ -177,6 +200,27 @@ export const decodeStorePath = (
   if (segments.length === 3 && segments[2] === "_query" && method === "POST") {
     const entityIRI = decodeEntityIri(typeName, segments[1], ctx);
     return { kind: "filterOne", typeName, entityIRI, options: {} };
+  }
+
+  // PUT /{typeName}/{id}/_statements → writeStatements
+  if (
+    segments.length === 3 &&
+    segments[2] === "_statements" &&
+    method === "PUT"
+  ) {
+    const entityIRI = decodeEntityIri(typeName, segments[1], ctx);
+    return { kind: "writeStatements", typeName, entityIRI, writes: [] };
+  }
+
+  // POST /{typeName}/{id}/_statements/query → loadStatements
+  if (
+    segments.length === 4 &&
+    segments[2] === "_statements" &&
+    segments[3] === "query" &&
+    method === "POST"
+  ) {
+    const entityIRI = decodeEntityIri(typeName, segments[1], ctx);
+    return { kind: "loadStatements", typeName, entityIRI };
   }
 
   if (segments.length === 2 && segments[1] === "_count" && method === "POST") {
@@ -310,6 +354,49 @@ export const enrichCommandFromBody = async (
     const document = await req.json();
     return { ...cmd, document };
   }
+  if (cmd.kind === "writeStatements") {
+    const body = await req.json();
+    const writes =
+      body &&
+      typeof body === "object" &&
+      Array.isArray((body as { writes?: unknown }).writes)
+        ? ((body as { writes: unknown[] }).writes as StatementWrite[])
+        : [];
+    return { ...cmd, writes };
+  }
+  if (cmd.kind === "loadStatements") {
+    let body: unknown = {};
+    try {
+      body = await req.json();
+    } catch {
+      body = {};
+    }
+    const paths =
+      body &&
+      typeof body === "object" &&
+      Array.isArray((body as { paths?: unknown }).paths)
+        ? (body as { paths: unknown[] }).paths.filter(
+            (p): p is string => typeof p === "string",
+          )
+        : undefined;
+    return { ...cmd, paths };
+  }
+  if (cmd.kind === "calcWarm") {
+    let body: unknown = {};
+    try {
+      body = await req.json();
+    } catch {
+      body = {};
+    }
+    const o =
+      body && typeof body === "object" ? (body as Record<string, unknown>) : {};
+    const rootIRIs = Array.isArray(o.rootIRIs)
+      ? o.rootIRIs.filter((x): x is string => typeof x === "string")
+      : undefined;
+    const skipFresh =
+      typeof o.skipFresh === "boolean" ? o.skipFresh : undefined;
+    return { ...cmd, rootIRIs, skipFresh };
+  }
   return cmd;
 };
 
@@ -369,6 +456,12 @@ export const encodeCommandResult = (
     }
     case "resolveTypes":
       return jsonResponse(Array.isArray(result) ? result : []);
+    case "writeStatements":
+      return jsonResponse(result ?? {});
+    case "loadStatements":
+      return jsonResponse(result && typeof result === "object" ? result : {});
+    case "calcWarm":
+      return jsonResponse(result ?? {});
     case "entitiesWithClasses": {
       // Map → plain object for JSON wire
       if (result instanceof Map) {
@@ -419,6 +512,8 @@ export type CommandCapability =
   | "counts"
   | "searches"
   | "writes"
+  | "statements"
+  | "calc"
   | "removes"
   | "resolves";
 
@@ -440,6 +535,11 @@ export const commandCapability = (cmd: StoreCommand): CommandCapability => {
       return "searches";
     case "upsert":
       return "writes";
+    case "writeStatements":
+    case "loadStatements":
+      return "statements";
+    case "calcWarm":
+      return "calc";
     case "remove":
       return "removes";
     case "resolveTypes":

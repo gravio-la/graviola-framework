@@ -20,6 +20,25 @@
         "typescript": "5.8.2",
       },
     },
+    "apps/calc-worker": {
+      "name": "calc-worker",
+      "version": "0.1.0",
+      "dependencies": {
+        "@graviola/calc-fixtures": "workspace:*",
+        "@graviola/calc-worker": "workspace:*",
+        "@graviola/formula-dependency": "workspace:*",
+        "@graviola/rest-store-server": "workspace:*",
+        "@graviola/sparql-db-impl": "workspace:*",
+        "@graviola/store-factory": "workspace:*",
+        "@rdfjs/dataset": "^2.0.2",
+        "oxigraph": "^0.5.6",
+      },
+      "devDependencies": {
+        "@graviola/edb-tsconfig": "workspace:*",
+        "@types/bun": "latest",
+        "typescript": "5.8.2",
+      },
+    },
     "apps/datastore-tests": {
       "name": "@graviola/datastore-tests",
       "version": "0.1.5",
@@ -457,6 +476,25 @@
         "@graviola/edb-tsconfig": "workspace:*",
         "@graviola/edb-tsup-config": "workspace:*",
         "@types/json-schema": "catalog:",
+        "tsup": "^8.0.0",
+        "typescript": "^5.8.2",
+      },
+    },
+    "packages/calc-worker": {
+      "name": "@graviola/calc-worker",
+      "version": "0.1.0",
+      "dependencies": {
+        "@graviola/calc-engine": "workspace:*",
+        "@graviola/store-core": "workspace:*",
+      },
+      "devDependencies": {
+        "@graviola/calc-fixtures": "workspace:*",
+        "@graviola/edb-tsconfig": "workspace:*",
+        "@graviola/edb-tsup-config": "workspace:*",
+        "@graviola/formula-dependency": "workspace:*",
+        "@graviola/provenance-types": "workspace:*",
+        "@types/json-schema": "catalog:",
+        "eslint-config-edb": "workspace:*",
         "tsup": "^8.0.0",
         "typescript": "^5.8.2",
       },
@@ -1464,6 +1502,7 @@
         "@graviola/edb-core-types": "workspace:*",
         "@graviola/edb-data-mapping": "workspace:*",
         "@graviola/edb-global-types": "workspace:*",
+        "@graviola/provenance-types": "workspace:*",
         "@graviola/store-core": "workspace:*",
         "@graviola/typed-query-types": "workspace:*",
         "cross-fetch": "^4.0.0",
@@ -1501,6 +1540,7 @@
       "name": "@graviola/rest-store-server",
       "version": "0.2.0",
       "dependencies": {
+        "@graviola/provenance-types": "workspace:*",
         "@graviola/store-core": "workspace:*",
       },
       "devDependencies": {
@@ -1844,6 +1884,7 @@
         "@graviola/store-core": "workspace:*",
       },
       "devDependencies": {
+        "@graviola/calc-engine": "workspace:*",
         "@graviola/edb-tsconfig": "workspace:*",
         "@graviola/edb-tsup-config": "workspace:*",
         "@types/json-schema": "catalog:",
@@ -1851,6 +1892,7 @@
         "typescript": "5.8.2",
       },
       "peerDependencies": {
+        "@graviola/calc-engine": "workspace:*",
         "@graviola/prisma-db-impl": "workspace:*",
         "@graviola/remote-query-implementations": "workspace:*",
         "@graviola/sparql-db-impl": "workspace:*",
@@ -1860,6 +1902,7 @@
         "oxigraph": "^0.5.0",
       },
       "optionalPeers": [
+        "@graviola/calc-engine",
         "@graviola/prisma-db-impl",
         "@graviola/remote-query-implementations",
         "@graviola/sparql-db-impl",
@@ -2958,6 +3001,8 @@
 
     "@graviola/calc-fixtures": ["@graviola/calc-fixtures@workspace:packages/calc-fixtures"],
 
+    "@graviola/calc-worker": ["@graviola/calc-worker@workspace:packages/calc-worker"],
+
     "@graviola/data-mapping-hooks": ["@graviola/data-mapping-hooks@workspace:packages/data-mapping-hooks"],
 
     "@graviola/datastore-tests": ["@graviola/datastore-tests@workspace:apps/datastore-tests"],
@@ -3981,6 +4026,8 @@
     "cac": ["cac@6.7.14", "", {}, "sha512-b6Ilus+c3RrdDk+JhLKUAQfzzgLEPy6wcXqS7f/xe1EETvsDP6GORG7SFuOs6cID5YkqchW/LXZbX5bc8j7ZcQ=="],
 
     "cacache": ["cacache@18.0.4", "", { "dependencies": { "@npmcli/fs": "^3.1.0", "fs-minipass": "^3.0.0", "glob": "^10.2.2", "lru-cache": "^10.0.1", "minipass": "^7.0.3", "minipass-collect": "^2.0.1", "minipass-flush": "^1.0.5", "minipass-pipeline": "^1.2.4", "p-map": "^4.0.0", "ssri": "^10.0.0", "tar": "^6.1.11", "unique-filename": "^3.0.0" } }, "sha512-B+L5iIa9mgcjLbliir2th36yEwPftrzteHYujzsx3dFP/31GCHcIeS8f5MGd80odLOjaOvSpU3EEAmRQptkxLQ=="],
+
+    "calc-worker": ["calc-worker@workspace:apps/calc-worker"],
 
     "call-bind": ["call-bind@1.0.8", "", { "dependencies": { "call-bind-apply-helpers": "^1.0.0", "es-define-property": "^1.0.0", "get-intrinsic": "^1.2.4", "set-function-length": "^1.2.2" } }, "sha512-oKlSFMcMwpUg2ednkhQ454wfWiU/ul3CkJe/PEHcTKuiX6RpbehUiFMXu13HalGZxfUwCQzZG747YXBn1im9ww=="],
 
@@ -6773,6 +6820,8 @@
     "@graviola/calc-engine/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 
     "@graviola/calc-fixtures/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
+
+    "@graviola/calc-worker/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 
     "@graviola/data-mapping-hooks/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 

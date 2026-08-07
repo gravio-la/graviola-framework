@@ -1,4 +1,5 @@
 import type { Aggregates } from "./capabilities/aggregates";
+import type { Calc } from "./capabilities/calc";
 import type { Counts } from "./capabilities/counts";
 import type { Exists } from "./capabilities/exists";
 import type { Filters } from "./capabilities/filters";
@@ -33,6 +34,7 @@ export type CapabilityFacets<R extends SchemaRegistry> = {
   counts: Counts<R>;
   writes: Writes<R>;
   statements: Statements<R>;
+  calc: Calc;
   removes: Removes<R>;
   streams: Streams<R>;
   imports: Imports<R>;

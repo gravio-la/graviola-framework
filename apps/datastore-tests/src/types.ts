@@ -63,6 +63,20 @@ export type DatastoreContractStoreWithStatements = DatastoreContractStore &
   Statements<TestSchemaRegistry>;
 
 /**
+ * Garden-fee calc store with statement materialization + live invalidation —
+ * requires {@link Filters}, {@link Statements}, and a `subscribe` method
+ * (present on every store-factory-style backend's change bus
+ * unconditionally). `@graviola/calc-engine`'s `warm()`/
+ * `subscribeCalcInvalidation()` are called directly against this store by the
+ * contract suite — no `Calc` capability method needed here.
+ */
+export type DatastoreContractStoreWithCalcWarm = DatastoreContractStore &
+  Filters<TestSchemaRegistry> &
+  Statements<TestSchemaRegistry> & {
+    subscribe: NonNullable<BaseStore<TestSchemaRegistry>["subscribe"]>;
+  };
+
+/**
  * Fresh Store usable as seed data source for import suite tests (readable + writable baseline).
  */
 export type ImportSeedStore = DatastoreContractStore;
@@ -101,6 +115,13 @@ export type DatastoreAdapter = {
      * `evaluateForRoots` against a real store read.
      */
     calcStore?: DatastoreContractStoreWithFilters;
+    /**
+     * Garden-fee store with `statementMeta` enabled — proves `warm()` and
+     * `subscribeCalcInvalidation()` against a real store (writes, freshness
+     * skip, and upsert-driven re-warm), not the in-memory fakes used by
+     * `@graviola/calc-engine`'s own unit tests.
+     */
+    calcWarmStore?: DatastoreContractStoreWithCalcWarm;
   }>;
   /** Wipe backing data — invoked in beforeEach. */
   clearAll: () => Promise<void>;
