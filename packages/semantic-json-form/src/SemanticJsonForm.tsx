@@ -67,9 +67,18 @@ export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
 
   const [isSaving, setIsSaving] = useState(false);
   const [isReloading, setIsReloading] = useState(false);
+  const [initialFetchKey, setInitialFetchKey] = useState<string | null>(null);
+  const fetchKey = useMemo(
+    () => `${entityIRI}-${typeIRI}`,
+    [entityIRI, typeIRI],
+  );
+  const [initiallyLoaded, setInitiallyLoaded] = useState(false);
+  const isInitialLoading = Boolean(
+    shouldLoadInitially && entityIRI && typeIRI && !initiallyLoaded,
+  );
   const isLoading = useMemo(
-    () => saveMutation.isPending || isSaving || isReloading,
-    [saveMutation.isPending, isSaving, isReloading],
+    () => saveMutation.isPending || isSaving || isReloading || isInitialLoading,
+    [saveMutation.isPending, isSaving, isReloading, isInitialLoading],
   );
 
   const refetch = useCallback(() => {
@@ -83,13 +92,11 @@ export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
     );
   }, [loadEntity, entityIRI, typeIRI, schema, onChange]);
 
-  const [initialFetchKey, setInitialFetchKey] = useState<string | null>(null);
-  const fetchKey = useMemo(
-    () => `${entityIRI}-${typeIRI}`,
-    [entityIRI, typeIRI],
-  );
-  const [initiallyLoaded, setInitiallyLoaded] = useState(false);
   useEffect(() => {
+    if (!shouldLoadInitially) {
+      setInitiallyLoaded(true);
+      return;
+    }
     if (!entityIRI || !typeIRI) return;
     if (initialFetchKey === fetchKey) return;
     setInitiallyLoaded(false);
@@ -98,6 +105,7 @@ export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
       setInitiallyLoaded(true);
     });
   }, [
+    shouldLoadInitially,
     entityIRI,
     typeIRI,
     refetch,
@@ -246,6 +254,11 @@ export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
 
   const handleOnChange = useCallback(
     (data: any, reason: ChangeCause) => {
+      // Gate "user" until initial load completes — JsonForms init/sync can
+      // otherwise overwrite a successful loadEntity with {}.
+      if (shouldLoadInitially && !initiallyLoaded && reason === "user") {
+        return;
+      }
       if (
         (reason === "user" && editMode && !isLoading) ||
         (reason === "mapping" && !isLoading) ||
@@ -254,15 +267,22 @@ export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
         onChange(data);
       }
     },
-    [onChange, editMode, isLoading, isReloading],
+    [
+      onChange,
+      editMode,
+      isLoading,
+      isReloading,
+      shouldLoadInitially,
+      initiallyLoaded,
+    ],
   );
 
   const jsonFormsPropsFinal = useMemo(
     () => ({
-      readonly: !editMode || (shouldLoadInitially && !initiallyLoaded),
+      readonly: !editMode || isInitialLoading,
       ...(jsonFormsProps || {}),
     }),
-    [editMode, initiallyLoaded, jsonFormsProps],
+    [editMode, isInitialLoading, jsonFormsProps],
   );
 
   return (
