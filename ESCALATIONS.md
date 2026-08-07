@@ -222,3 +222,44 @@ statement-meta path.
 cycle detection can distinguish "revisit with no more requested depth" from
 "unrelated sibling reuse" — before relying on shared-`$ref` sibling patterns
 anywhere outside the statement-meta workaround above.
+
+## `$stmt` auto-embed unreliable for entities reached via nested `include`
+
+**Status:** escalated (found during Stage E read-shape verification; worked around by not relying on it, root cause not fixed)
+
+**Context:** The "feature-on loads embed `$stmt`" behavior (see that escalation
+above) only holds for an **unfiltered** read of the root: `filterMany("Garden",
+{ entityIRIs: [iri] })` with no `select`/`include` correctly returns every
+`$stmt` sidecar on Garden's own properties. Two further problems, verified
+empirically against a real Oxigraph-backed `statementMeta` store:
+
+1. **`select`/`include` suppresses `$stmt` entirely**, at any depth. Passing
+   `planCalcReads`'s selection (a narrow, source-only projection — see
+   `@graviola/calc-engine`'s `evaluateForRoots`) returns none of the requested
+   type's `$stmt` sidecars, not even at the root. This is arguably correct
+   ("you asked for exactly these fields") but means the "no include needed"
+   framing in the escalation above only describes the _unfiltered_ case.
+2. **Nested entities reached via `include` get incomplete/malformed `$stmt`
+   even without a narrowing `select`.** With
+   `include: { patch: { include: { plots: {} } } }` (traversal-only, no
+   `select` anywhere), Garden's own `$stmt` sidecars were correct, but:
+   - `Patch.billable_area_total$stmt` came back with **two duplicate
+     entries**, both missing `wasGeneratedBy` entirely (present at the root
+     level, absent one level down).
+   - `Plot.billable_area$stmt` came back as an **empty array** — the
+     sidecar exists (confirmed via direct `loadStatements("Plot", iri)`,
+     which returns it correctly) but the nested-`include` extraction drops
+     it completely.
+
+**Workaround shipped (Stage E):** `readCalcValues` (`@graviola/calc-engine`)
+does not rely on `$stmt` embedding at all — it fetches the raw input tree via
+`planCalcReads`'s selection (proven correct for _values_, including
+intermediate dual-asserted properties like `Patch.billable_area_total`), then
+calls the already-proven-reliable `store.loadStatements` once per entity in
+that tree. Costs N+1 queries instead of the hoped-for 1, but every piece is
+independently already covered by the Stage D contract suite.
+
+**Action:** root-cause the nested-`include` `$stmt` extraction gap in
+`sparql-db-impl`'s graph-traversal/remap path (likely the same family of
+issue as the CBD-boundary/dereference work above — worth checking together)
+before any caller relies on embedded `$stmt` below the root level.

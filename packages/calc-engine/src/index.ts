@@ -8,8 +8,19 @@ export type {
   CalcResultCache,
 } from "./evaluateForRoots";
 
-export { warm } from "./warm";
-export type { WarmOptions, WarmResult, WarmStore } from "./warm";
+export { warm, collectEntities, fingerprintForEntity } from "./warm";
+export type {
+  WarmOptions,
+  WarmResult,
+  WarmStore,
+  EntityWriteTarget,
+} from "./warm";
+
+export { readCalcValues } from "./readCalcValues";
+export type {
+  ReadCalcValuesOptions,
+  ReadCalcValuesResult,
+} from "./readCalcValues";
 
 export {
   subscribeCalcInvalidation,

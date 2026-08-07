@@ -1,8 +1,15 @@
+import type { FreshnessState } from "../envelope";
+
 export type CalcWarmResult = {
   warmed: number;
   skippedFresh: number;
   writesIssued: number;
   queriesIssued: number;
+};
+
+export type ReadCalcValuesResult = {
+  value: Record<string, unknown> | null;
+  freshness: FreshnessState;
 };
 
 /**
@@ -11,11 +18,13 @@ export type CalcWarmResult = {
  * `statementMeta`. Kept loosely typed here (no `CompiledProfile`/`JSONSchema7`
  * import) so Layer 1 (`store-core`) never depends on Layer 2 (`calc-engine`,
  * `formula-dependency`) — the real implementation lives in
- * `@graviola/calc-engine`'s `warm()`.
+ * `@graviola/calc-engine`'s `warm()`/`readCalcValues()`.
  */
 export interface Calc {
   calcWarm(
     rootIRIs?: string[],
     options?: { skipFresh?: boolean },
   ): Promise<CalcWarmResult>;
+  /** Materialized-first read for one root entity — see `readCalcValues()` in `@graviola/calc-engine`. */
+  readCalcValues(rootIRI: string): Promise<ReadCalcValuesResult>;
 }

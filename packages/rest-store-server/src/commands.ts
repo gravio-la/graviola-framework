@@ -16,6 +16,8 @@ export type StoreCommand<R extends SchemaRegistry = SchemaRegistry> =
       typeName: keyof R & string;
       entityIRI: string;
       withMeta: boolean;
+      /** Prefer a verified-fresh materialized calc value over a plain load — see `Calc.readCalcValues`. */
+      materialized?: boolean;
     }
   | { kind: "exists"; typeName: string; entityIRI: string }
   | {
@@ -234,13 +236,17 @@ export const decodeStorePath = (
   if (segments.length === 2) {
     const entityIRI = decodeEntityIri(typeName, segments[1], ctx);
     switch (method) {
-      case "GET":
+      case "GET": {
+        const url = new URL(req.url);
+        const materialized = url.searchParams.get("materialized") === "1";
         return {
           kind: "loadOne",
           typeName,
           entityIRI,
           withMeta: acceptsEnvelope(req),
+          ...(materialized ? { materialized: true } : {}),
         };
+      }
       case "HEAD":
         return { kind: "exists", typeName, entityIRI };
       case "PUT":

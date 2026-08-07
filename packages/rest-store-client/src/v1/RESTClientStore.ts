@@ -207,14 +207,14 @@ export const createRESTClientStoreClient = <
     <T extends keyof RInner & string>(
       typeName: T,
       iri: string,
-      options: { withMeta: true },
+      options: { withMeta: true; materialized?: boolean },
     ): Promise<ReadResult<EntityOf<RInner, T>> | null>;
   };
 
   const loadOne = (async <T extends keyof R & string>(
     typeName: T,
     iri: string,
-    options?: { withMeta?: boolean },
+    options?: { withMeta?: boolean; materialized?: boolean },
   ): Promise<EntityOf<R, T> | ReadResult<EntityOf<R, T>> | null> => {
     capOrThrow(capabilities, "loads");
     const path = rel(entityPath(typeName, iri));
@@ -222,7 +222,8 @@ export const createRESTClientStoreClient = <
       options?.withMeta === true
         ? GRAVIOLA_STORE_ENVELOPE_ACCEPT
         : "application/json";
-    const res = await opts.transport.getUnchecked(path, {
+    const query = options?.materialized ? "?materialized=1" : "";
+    const res = await opts.transport.getUnchecked(`${path}${query}`, {
       headers: { Accept: accept },
     });
     if (res.status === 404) return null;
