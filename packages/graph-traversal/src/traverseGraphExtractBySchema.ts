@@ -1,5 +1,9 @@
 import type { WalkerOptions } from "@graviola/edb-core-types";
-import { filterUndefOrNull, isValidUrl } from "@graviola/edb-core-utils";
+import {
+  QUERY_RESULT_SUBJECT_IRI,
+  filterUndefOrNull,
+  isValidUrl,
+} from "@graviola/edb-core-utils";
 import {
   isJSONSchema,
   isJSONSchemaDefinition,
@@ -165,11 +169,17 @@ const propertyWalker = (
     if (!isDraft && skipProps) {
       return additionalProps;
     }
-    const typeNode = node.out(rdf.type);
-    if (typeNode.value) {
+    // Clownface `.value` is undefined for multi-valued results, and query
+    // generation stamps a bookkeeping QueryResultSubject type on result
+    // subjects — filter it, then emit `@type` (array only when genuinely
+    // multi-typed, matching JSON-LD).
+    const typeValues = node
+      .out(rdf.type)
+      .values.filter((value) => value !== QUERY_RESULT_SUBJECT_IRI);
+    if (typeValues.length > 0) {
       additionalProps = {
         ...additionalProps,
-        "@type": typeNode.value,
+        "@type": typeValues.length === 1 ? typeValues[0] : typeValues,
       };
     }
   }

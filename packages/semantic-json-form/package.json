@@ -39,6 +39,7 @@
     "react-json-view-lite": "^2.4.1"
   },
   "dependencies": {
+    "@graviola/formula-runtime-react": "workspace:*",
     "@graviola/edb-state-hooks": "workspace:*",
     "@graviola/json-schema-utils": "workspace:*",
     "@graviola/jsonld-utils": "workspace:*",

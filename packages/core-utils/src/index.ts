@@ -1,4 +1,5 @@
 export * from "./encodeIRI";
+export * from "./graviolaOntology";
 export * from "./filterUndefOrNull";
 export * from "./foldInner2Outer";
 export * from "./hex-to-rgba";
