@@ -39,7 +39,15 @@ export type SchemaConfig = {
   initialData?: string;
   baseIRI: string;
   entityBaseIRI: string;
+  /** Domain JSON Schema (store / write shape). */
   schema: JSONSchema7;
+  /**
+   * Schema for AdbContext / GenericForm (e.g. domain + `x-calc`).
+   * When omitted, forms use `schema`. Must not include statement/meta grafts.
+   */
+  formSchema?: JSONSchema7;
+  /** Extended schema with grafted `$meta` / statements for detail/provenance only. */
+  extendedSchema?: JSONSchema7;
   primaryFields: PrimaryFieldDeclaration;
   typeNameLabelMap: Record<string, string>;
   typeNameUiSchemaOptionsMap: Record<string, unknown>;
@@ -50,8 +58,6 @@ export type SchemaConfig = {
   annotationDetailUiSchemata?: Record<string, UISchemaElement>;
   /** Meta profile schema used to generate annotation detail UI schemata. */
   annotationMetaSchema?: JSONSchema7;
-  /** Extended schema with grafted `$meta` for reads/tables (domain schema stays in `schema`). */
-  extendedSchema?: JSONSchema7;
   /** Opt-in `$meta` stamping configuration. */
   metaStamping?: MetaStampingConfig;
   /** Optional SemanticTable column overrides (e.g. hidden lifecycle columns). */

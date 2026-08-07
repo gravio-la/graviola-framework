@@ -74,7 +74,7 @@ function ItemSchemaLayout() {
   return (
     <GraviolaProvider
       schema={c.schema as any}
-      displaySchema={c.extendedSchema as any}
+      formSchema={(c.formSchema ?? c.schema) as any}
       metaStamping={c.metaStamping}
       renderers={allRenderers}
       cellRendererRegistry={materialCells}
@@ -118,6 +118,8 @@ function GardenFeeSchemaLayout() {
   return (
     <GraviolaProvider
       schema={c.schema as any}
+      formSchema={(c.formSchema ?? c.schema) as any}
+      metaStamping={c.metaStamping}
       renderers={allRenderers}
       cellRendererRegistry={materialCells}
       baseIRI={c.baseIRI}

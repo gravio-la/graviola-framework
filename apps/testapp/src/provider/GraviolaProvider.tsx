@@ -54,7 +54,16 @@ type GraviolaProviderProps = {
   uischemata?: Record<string, UISchemaElement>;
   storageKey: string;
   initialData?: string;
-  /** Schema for reads/UI (may include grafted `$meta`). Writes validate against domain shape. */
+  /**
+   * Schema for AdbContext / GenericForm.
+   * Must not include statement/meta grafts — pass those via outlet `extendedSchema` to detail only.
+   * Defaults to `schema`.
+   */
+  formSchema?: JSONSchema7;
+  /**
+   * @deprecated Prefer `formSchema` for Adb + `schema` for the store.
+   * Ignored for AdbContext (no longer collapsed into the form schema).
+   */
   displaySchema?: JSONSchema7;
   /** Opt-in entity-level $meta stamping (P1 milestone demo). */
   metaStamping?: MetaStampingConfig;
@@ -65,6 +74,7 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
   baseIRI,
   entityBaseIRI,
   schema,
+  formSchema,
   uischemata,
   primaryFields,
   renderers,
@@ -73,10 +83,10 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
   typeNameUiSchemaOptionsMap,
   storageKey,
   initialData,
-  displaySchema,
+  displaySchema: _displaySchema,
   metaStamping,
 }: GraviolaProviderProps) => {
-  const schemaForUi = displaySchema ?? schema;
+  const schemaForForms = formSchema ?? schema;
   const endpoint: SparqlEndpoint = useMemo(() => {
     return {
       endpoint: "urn:worker",
@@ -92,12 +102,17 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
 
   const { registry } = useMemo(
     () =>
-      createUISchemata(schema as JSONSchema7, {
+      createUISchemata(schemaForForms as JSONSchema7, {
         typeNameLabelMap,
         typeNameUiSchemaOptionsMap,
         definitionToTypeIRI,
       }),
-    [schema, typeNameLabelMap, typeNameUiSchemaOptionsMap, definitionToTypeIRI],
+    [
+      schemaForForms,
+      typeNameLabelMap,
+      typeNameUiSchemaOptionsMap,
+      definitionToTypeIRI,
+    ],
   );
 
   const config = useMemo<GlobalSemanticConfig>(() => {
@@ -139,7 +154,7 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
           publicBasePath,
           baseIRI,
         }}
-        schema={schemaForUi}
+        schema={schemaForForms}
         makeStubSchema={makeStubSchema}
         uiSchemaDefaultRegistry={registry}
         rendererRegistry={rendererRegistry}

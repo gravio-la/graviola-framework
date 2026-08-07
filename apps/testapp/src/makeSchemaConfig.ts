@@ -121,7 +121,7 @@ export function makeSchemaConfig(
     const generated: NonNullable<SchemaConfig["uischemata"]> = {};
     for (const [typeName, opts] of Object.entries(uischemaScopeOverrides)) {
       generated[typeName] = uiSchemaForDefinition(
-        config.schema,
+        config.formSchema ?? config.schema,
         typeName,
         opts,
       );
