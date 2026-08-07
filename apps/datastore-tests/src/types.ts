@@ -95,6 +95,12 @@ export type DatastoreAdapter = {
     statementStoreRdf12?: DatastoreContractStoreWithStatements;
     /** Statements + entity `$meta` stamping (for combined lifecycle tests). */
     statementMetaStampingStore?: DatastoreContractStoreWithStatements;
+    /**
+     * Same backing data; store bound to the garden-fee calc fixture schema
+     * (`@graviola/calc-fixtures`) so the calc-engine suite can prove
+     * `evaluateForRoots` against a real store read.
+     */
+    calcStore?: DatastoreContractStoreWithFilters;
   }>;
   /** Wipe backing data — invoked in beforeEach. */
   clearAll: () => Promise<void>;

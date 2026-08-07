@@ -1,6 +1,5 @@
 import type { JSONSchema7 } from "json-schema";
 import { schemaIdentityOfSync } from "@graviola/json-schema-utils";
-import { createCalcProfileSidecar } from "@graviola/formula-dependency";
 
 export const gardenFeeSchema = {
   $id: "https://example.org/garden-fee/v1",
@@ -42,20 +41,30 @@ export const gardenFeeSchema = {
 
 const identity = schemaIdentityOfSync(gardenFeeSchema);
 
-export const gardenFeeSidecar = createCalcProfileSidecar(identity, {
-  "#/definitions/Plot/properties/billable_area": {
-    formula: "width_m * length_m",
+/**
+ * Golden calc-profile sidecar as a plain literal. This fixture package stays a
+ * dependency leaf: it must not import from `@graviola/formula-dependency`
+ * (which devDepends on these fixtures for its own tests). Consumers assign it
+ * where `CalcProfileSidecar` is expected; structural typing keeps it honest.
+ */
+export const gardenFeeSidecar = {
+  $schema: "https://graviola.gra.one/calc-profile/v1",
+  appliesTo: identity,
+  slots: {
+    "#/definitions/Plot/properties/billable_area": {
+      formula: "width_m * length_m",
+    },
+    "#/definitions/Patch/properties/billable_area_total": {
+      aggregate: { type: "sum", over: "plots", field: "billable_area" },
+    },
+    "#/definitions/Garden/properties/total_billable": {
+      formula: "patch.billable_area_total",
+    },
+    "#/definitions/Garden/properties/annual_fee": {
+      formula: "total_billable * fee_rate_per_sqm",
+    },
   },
-  "#/definitions/Patch/properties/billable_area_total": {
-    aggregate: { type: "sum", over: "plots", field: "billable_area" },
-  },
-  "#/definitions/Garden/properties/total_billable": {
-    formula: "patch.billable_area_total",
-  },
-  "#/definitions/Garden/properties/annual_fee": {
-    formula: "total_billable * fee_rate_per_sqm",
-  },
-});
+} as const;
 
 /** Sample instance data — every named entity carries `@type` (required by the runtime). */
 export const gardenFeeSampleData = {

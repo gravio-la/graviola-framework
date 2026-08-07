@@ -34,9 +34,16 @@ import {
   sparqlStatementNodeMetaConfig,
   sparqlStatementRdf12MetaConfig,
 } from "../schema/statementTestConfig";
+import { gardenFeeSchema } from "@graviola/calc-fixtures";
+import {
+  GARDEN_FEE_BASE_IRI,
+  gardenFeeQueryBuildOptions,
+  gardenFeeTypeNameToTypeIRI,
+} from "../schema/gardenFeeTestConfig";
 import type {
   DatastoreAdapter,
   DatastoreContractStore,
+  DatastoreContractStoreWithFilters,
   DatastoreContractStoreWithStatements,
 } from "../types";
 
@@ -156,6 +163,19 @@ export function createOxigraphLocalAdapter(): DatastoreAdapter {
         statementMeta: sparqlStatementNodeMetaConfig,
       });
 
+      const { store: calcStore } = initSPARQLDatastorePair({
+        schema: gardenFeeSchema as any,
+        defaultPrefix: GARDEN_FEE_BASE_IRI,
+        jsonldContext: { "@vocab": GARDEN_FEE_BASE_IRI },
+        typeNameToTypeIRI: gardenFeeTypeNameToTypeIRI,
+        queryBuildOptions: {
+          ...gardenFeeQueryBuildOptions,
+          sparqlFlavour: "oxigraph",
+        },
+        sparqlQueryFunctions: crudFunctions,
+        defaultLimit: 100,
+      });
+
       return {
         store: pair.store as DatastoreContractStore,
         metaStampingStore: metaStampingStore as DatastoreContractStore,
@@ -168,6 +188,7 @@ export function createOxigraphLocalAdapter(): DatastoreAdapter {
           statementStoreRdf12 as DatastoreContractStoreWithStatements,
         statementMetaStampingStore:
           statementMetaStampingStore as DatastoreContractStoreWithStatements,
+        calcStore: calcStore as unknown as DatastoreContractStoreWithFilters,
       };
     },
 

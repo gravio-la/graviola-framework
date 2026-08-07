@@ -1,5 +1,5 @@
 import { StringToIRIFn } from "@graviola/edb-core-types";
-import { filterUndefOrNull } from "@graviola/edb-core-utils";
+import { filterUndefOrNull, isValidUrl } from "@graviola/edb-core-utils";
 import { assignSkolemIris } from "@graviola/json-schema-utils";
 import type {
   PersistenceManifest,
@@ -145,8 +145,14 @@ function reinflateAnonymousRow(
       continue;
     }
 
-    // Underscore-flattened field (copyright_year) or nested list (copyright_notes)
-    if (key.includes("_") && !subDesc) {
+    // Underscore-flattened field (copyright_year) or nested list (copyright_notes).
+    // Only when the descriptor confirms the group is flattened — ordinary
+    // snake_case properties (`width_m`) must pass through untouched.
+    if (
+      key.includes("_") &&
+      !subDesc &&
+      nested[key.split("_")[0]!]?.representation === "flattened"
+    ) {
       const [group, ...rest] = key.split("_");
       const restKey = rest.join("_");
       if (!flatGroups.has(group)) flatGroups.set(group, {});
@@ -267,6 +273,35 @@ export const toJSONLD = (
     const manifest = options.persistenceManifest;
     const typeManifest = typeName ? manifest?.types?.[typeName] : undefined;
 
+    // Underscore-column reinflation is manifest-driven: only groups the
+    // persistence manifest records as `flattened` were written as
+    // `<group>_<field>` columns. Domain properties that genuinely contain
+    // underscores (`fee_rate_per_sqm`, `width_m`) are plain scalar columns and
+    // must never be exploded.
+    const flattenedGroups = typeManifest
+      ? Object.entries(typeManifest)
+          .filter(([, desc]) => desc.representation === "flattened")
+          .map(([key]) => key)
+      : [];
+    const flattenedGroupFor = (key: string): string | undefined =>
+      flattenedGroups.find((group) => key.startsWith(`${group}_`));
+
+    // Keys following the `<childTableProp>_<flattenedField>` naming are folded
+    // when the child rows themselves are processed — dropped at this level.
+    const isChildTableFlattenedKey = (key: string): boolean => {
+      if (!typeManifest) return false;
+      for (const desc of Object.values(typeManifest)) {
+        if (desc.representation !== "childTable" || !desc.properties) continue;
+        for (const [pk, pd] of Object.entries(desc.properties)) {
+          if (pd.representation !== "flattened" || !pd.properties) continue;
+          for (const fk of Object.keys(pd.properties)) {
+            if (key === `${pk}_${fk}`) return true;
+          }
+        }
+      }
+      return false;
+    };
+
     // Resolve root IRI for embedded skolemization
     let rootEntityIRI = options.rootEntityIRI;
     if (!rootEntityIRI && typeof obj.id === "string") {
@@ -274,27 +309,11 @@ export const toJSONLD = (
     }
 
     const specialEntries = Object.entries(obj)
-      .filter(([key, value]) => key.includes("_") && value !== null)
-      .filter(([key]) => {
-        // Keep child-table relation fields that happen to contain underscore
-        // (e.g. none expected at top level like Item_photos — those don't have _)
-        // Underscore fields are flattened scalars OR flattened-prefix nested lists
-        // like copyright_notes — handle copyright_notes via manifest, not splitUp
-        if (typeManifest) {
-          for (const desc of Object.values(typeManifest)) {
-            if (desc.representation === "childTable" && desc.properties) {
-              for (const [pk, pd] of Object.entries(desc.properties)) {
-                if (pd.representation === "flattened" && pd.properties) {
-                  for (const fk of Object.keys(pd.properties)) {
-                    if (key === `${pk}_${fk}`) return false; // handle below
-                  }
-                }
-              }
-            }
-          }
-        }
-        return true;
-      })
+      .filter(
+        ([key, value]) =>
+          value !== null && flattenedGroupFor(key) !== undefined,
+      )
+      .filter(([key]) => !isChildTableFlattenedKey(key))
       .map(([key, value]: [string, any]) => {
         return splitUpLoDashConnectedEntry(key, value);
       });
@@ -303,29 +322,14 @@ export const toJSONLD = (
     for (const [key, value] of Object.entries(obj)) {
       if (value === null) continue;
 
-      // Skip underscore keys that go through specialEntries (flattened scalars)
-      if (key.includes("_")) {
-        // Unless it's a nested child list under flattened path handled here
-        let handledAsNestedList = false;
-        if (typeManifest && Array.isArray(value)) {
-          for (const [prop, desc] of Object.entries(typeManifest)) {
-            if (desc.representation !== "childTable" || !desc.properties)
-              continue;
-            for (const [pk, pd] of Object.entries(desc.properties)) {
-              if (pd.representation !== "flattened" || !pd.properties) continue;
-              for (const [fk, fd] of Object.entries(pd.properties)) {
-                if (
-                  key === `${pk}_${fk}` &&
-                  fd.representation === "childTable"
-                ) {
-                  // Will be folded when we process the parent child rows
-                  handledAsNestedList = true;
-                }
-              }
-            }
-          }
-        }
-        if (!handledAsNestedList) continue;
+      // Skip underscore keys that go through specialEntries (manifest-confirmed
+      // flattened columns) or are folded with their child rows. All other
+      // underscore keys are ordinary properties (`fee_rate_per_sqm`) and fall
+      // through to normal processing.
+      if (
+        flattenedGroupFor(key) !== undefined ||
+        isChildTableFlattenedKey(key)
+      ) {
         continue;
       }
 
@@ -334,7 +338,11 @@ export const toJSONLD = (
         continue;
       }
       if (key === "type" && options.typeNameToTypeIRI) {
-        normalEntries["@type"] = options.typeNameToTypeIRI(value as string);
+        // The type column may already hold a full IRI (write path stores the
+        // mapped type IRI) — never prefix twice.
+        normalEntries["@type"] = isValidUrl(String(value))
+          ? value
+          : options.typeNameToTypeIRI(value as string);
         continue;
       }
       if (key === "id" || key === "type") {
