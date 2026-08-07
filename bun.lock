@@ -24,6 +24,8 @@
       "name": "@graviola/datastore-tests",
       "version": "0.1.5",
       "dependencies": {
+        "@graviola/calc-engine": "workspace:*",
+        "@graviola/calc-fixtures": "workspace:*",
         "@graviola/edb-core-types": "workspace:*",
         "@graviola/formula-dependency": "workspace:*",
         "@graviola/formula-materialization": "workspace:*",
@@ -417,6 +419,44 @@
       "devDependencies": {
         "@types/json-schema": "catalog:",
         "npm-registry-fetch": "^17.0.1",
+        "typescript": "^5.8.2",
+      },
+    },
+    "packages/calc-engine": {
+      "name": "@graviola/calc-engine",
+      "version": "0.1.0",
+      "dependencies": {
+        "@graviola/formula-dependency": "workspace:*",
+        "@graviola/formula-materialization": "workspace:*",
+        "@graviola/formula-runtime": "workspace:*",
+        "@graviola/json-schema-utils": "workspace:*",
+        "@graviola/provenance-types": "workspace:*",
+        "@graviola/store-core": "workspace:*",
+        "@graviola/typed-query-types": "workspace:*",
+        "lodash-es": "catalog:",
+      },
+      "devDependencies": {
+        "@graviola/calc-fixtures": "workspace:*",
+        "@graviola/edb-tsconfig": "workspace:*",
+        "@graviola/edb-tsup-config": "workspace:*",
+        "@types/json-schema": "catalog:",
+        "eslint-config-edb": "workspace:*",
+        "tsup": "^8.0.0",
+        "typescript": "^5.8.2",
+      },
+    },
+    "packages/calc-fixtures": {
+      "name": "@graviola/calc-fixtures",
+      "version": "0.1.0",
+      "dependencies": {
+        "@graviola/formula-dependency": "workspace:*",
+        "@graviola/json-schema-utils": "workspace:*",
+      },
+      "devDependencies": {
+        "@graviola/edb-tsconfig": "workspace:*",
+        "@graviola/edb-tsup-config": "workspace:*",
+        "@types/json-schema": "catalog:",
+        "tsup": "^8.0.0",
         "typescript": "^5.8.2",
       },
     },
@@ -899,10 +939,12 @@
       "dependencies": {
         "@graviola/json-schema-utils": "workspace:*",
         "@graviola/sidecar-core": "workspace:*",
+        "@graviola/typed-query-types": "workspace:*",
         "graphology": "^0.25.4",
         "graphology-dag": "^0.4.1",
       },
       "devDependencies": {
+        "@graviola/calc-fixtures": "workspace:*",
         "@graviola/edb-tsconfig": "workspace:*",
         "@graviola/edb-tsup-config": "workspace:*",
         "@types/json-schema": "catalog:",
@@ -921,6 +963,7 @@
         "@graviola/store-core": "workspace:*",
       },
       "devDependencies": {
+        "@graviola/calc-fixtures": "workspace:*",
         "@graviola/edb-tsconfig": "workspace:*",
         "@graviola/edb-tsup-config": "workspace:*",
         "eslint-config-edb": "workspace:*",
@@ -933,9 +976,12 @@
       "version": "0.1.0",
       "dependencies": {
         "@graviola/formula-dependency": "workspace:*",
+        "@graviola/json-schema-utils": "workspace:*",
         "hyperformula": "^3.0.0",
+        "lodash-es": "catalog:",
       },
       "devDependencies": {
+        "@graviola/calc-fixtures": "workspace:*",
         "@graviola/edb-tsconfig": "workspace:*",
         "@graviola/edb-tsup-config": "workspace:*",
         "eslint-config-edb": "workspace:*",
@@ -951,6 +997,7 @@
         "@graviola/formula-runtime": "workspace:*",
       },
       "devDependencies": {
+        "@graviola/calc-fixtures": "workspace:*",
         "@graviola/edb-tsconfig": "workspace:*",
         "@graviola/edb-tsup-config": "workspace:*",
         "@types/react": "catalog:",
@@ -1002,6 +1049,7 @@
       "dependencies": {
         "@graviola/edb-core-utils": "workspace:*",
         "@graviola/json-schema-utils": "workspace:*",
+        "@graviola/typed-query-types": "workspace:*",
         "@rdfjs/namespace": "catalog:rdf",
         "@tpluscode/rdf-ns-builders": "^5",
         "clownface": "2.0.2",
@@ -1337,6 +1385,7 @@
         "@graviola/provenance-types": "workspace:*",
         "@graviola/statement-meta": "workspace:*",
         "@graviola/store-core": "workspace:*",
+        "@graviola/typed-query-types": "workspace:*",
         "cli-progress": "^3.12.0",
         "lodash-es": "catalog:",
       },
@@ -1496,6 +1545,7 @@
       "name": "@graviola/search-facet-schema",
       "version": "0.1.2",
       "dependencies": {
+        "@graviola/json-schema-utils": "workspace:*",
         "ajv": "^8.17.1",
       },
       "devDependencies": {
@@ -2898,6 +2948,10 @@
     "@fortawesome/free-solid-svg-icons": ["@fortawesome/free-solid-svg-icons@5.15.4", "", { "dependencies": { "@fortawesome/fontawesome-common-types": "^0.2.36" } }, "sha512-JLmQfz6tdtwxoihXLg6lT78BorrFyCf59SAwBM6qV/0zXyVeDygJVb3fk+j5Qat+Yvcxp1buLTY5iDh1ZSAQ8w=="],
 
     "@graviola/async-oxigraph": ["@graviola/async-oxigraph@workspace:packages/async-oxigraph"],
+
+    "@graviola/calc-engine": ["@graviola/calc-engine@workspace:packages/calc-engine"],
+
+    "@graviola/calc-fixtures": ["@graviola/calc-fixtures@workspace:packages/calc-fixtures"],
 
     "@graviola/data-mapping-hooks": ["@graviola/data-mapping-hooks@workspace:packages/data-mapping-hooks"],
 
@@ -6710,6 +6764,10 @@
     "@eslint/eslintrc/js-yaml": ["js-yaml@4.1.1", "", { "dependencies": { "argparse": "^2.0.1" }, "bin": { "js-yaml": "bin/js-yaml.js" } }, "sha512-qQKT4zQxXl8lLwBtHMWwaTcGfFOZviOJet3Oy/xmGk2gZH677CJM9EvtfdSkgWcATZhj/55JZ0rmy3myCT5lsA=="],
 
     "@eslint/eslintrc/minimatch": ["minimatch@3.1.5", "", { "dependencies": { "brace-expansion": "^1.1.7" } }, "sha512-VgjWUsnnT6n+NUk6eZq77zeFdpW2LWDzP6zFGrCbHXiYNul5Dzqk2HHQ5uFH2DNW5Xbp8+jVzaeNt94ssEEl4w=="],
+
+    "@graviola/calc-engine/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
+
+    "@graviola/calc-fixtures/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 
     "@graviola/data-mapping-hooks/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 
