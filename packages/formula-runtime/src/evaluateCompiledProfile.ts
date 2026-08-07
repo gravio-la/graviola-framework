@@ -3,9 +3,12 @@ import type {
   CompiledProfile,
   CompiledSlot,
 } from "@graviola/formula-dependency";
+import { definitionNameFromScope } from "@graviola/json-schema-utils";
+import cloneDeep from "lodash-es/cloneDeep";
+import get from "lodash-es/get";
 
 export type FormulaEvaluationContext = {
-  /** Optional resolver for `context:` bindings (not used in garden-fee v1). */
+  /** Optional resolver for `context:` bindings. */
   contextValues?: Record<string, unknown>;
 };
 
@@ -48,16 +51,6 @@ export class HyperFormulaAdapter {
   }
 }
 
-function getAtPath(obj: unknown, path: string): unknown {
-  const segments = path.split(".");
-  let current: unknown = obj;
-  for (const segment of segments) {
-    if (current == null || typeof current !== "object") return undefined;
-    current = (current as Record<string, unknown>)[segment];
-  }
-  return current;
-}
-
 function numeric(value: unknown): number {
   if (typeof value === "number" && Number.isFinite(value)) return value;
   if (
@@ -75,12 +68,12 @@ function evaluateAggregate(
   entity: Record<string, unknown>,
 ): number {
   const agg = slot.aggregate!;
-  const collection = getAtPath(entity, agg.over);
+  const collection = get(entity, agg.over);
   if (!Array.isArray(collection)) return 0;
 
   const values = collection.map((item) => {
     if (!agg.field) return 1;
-    return numeric(getAtPath(item, agg.field));
+    return numeric(get(item, agg.field));
   });
 
   switch (agg.type) {
@@ -118,7 +111,7 @@ function buildFormulaVariables(
     }
 
     if (slot.bindings?.[id]?.path) {
-      const value = getAtPath(entity, slot.bindings[id].path!);
+      const value = get(entity, slot.bindings[id].path!);
       vars[alias] =
         typeof value === "boolean" || typeof value === "string"
           ? value
@@ -126,7 +119,7 @@ function buildFormulaVariables(
       continue;
     }
 
-    const value = getAtPath(entity, id);
+    const value = get(entity, id);
     if (value !== undefined) {
       vars[alias] =
         typeof value === "boolean" || typeof value === "string"
@@ -144,13 +137,19 @@ function slotsByStratum(profile: CompiledProfile): CompiledSlot[] {
     .map(([, slot]) => slot);
 }
 
-function entityTypeFromData(data: Record<string, unknown>): string | undefined {
+/**
+ * Local type name from `@type` (IRI fragment, last path segment, or bare name).
+ * Named entities in the eval tree must carry `@type` — no structural guessing.
+ */
+export function entityTypeFromData(
+  data: Record<string, unknown>,
+): string | undefined {
   const type = data["@type"];
-  if (typeof type === "string") {
-    const parts = type.split("/");
-    return parts[parts.length - 1];
-  }
-  return undefined;
+  if (typeof type !== "string" || type.length === 0) return undefined;
+  const hash = type.lastIndexOf("#");
+  if (hash >= 0) return type.slice(hash + 1) || undefined;
+  const slash = type.lastIndexOf("/");
+  return slash >= 0 ? type.slice(slash + 1) : type;
 }
 
 function applySlotToEntityTree(
@@ -158,7 +157,7 @@ function applySlotToEntityTree(
   slot: CompiledSlot,
   adapter: HyperFormulaAdapter,
 ): void {
-  const typeName = slot.entityScope.match(/\/definitions\/([^/]+)$/)?.[1];
+  const typeName = definitionNameFromScope(slot.entityScope);
   if (!typeName) return;
 
   const visit = (node: unknown): void => {
@@ -169,8 +168,7 @@ function applySlotToEntityTree(
     }
 
     const record = node as Record<string, unknown>;
-    const nodeType =
-      entityTypeFromData(record) ?? inferTypeFromStructure(record);
+    const nodeType = entityTypeFromData(record);
 
     if (nodeType === typeName) {
       let value: unknown;
@@ -191,46 +189,29 @@ function applySlotToEntityTree(
   visit(root);
 }
 
-function inferTypeFromStructure(
-  record: Record<string, unknown>,
-): string | undefined {
-  if ("plots" in record) return "Patch";
-  if ("width_m" in record && "length_m" in record) return "Plot";
-  if ("patch" in record && "fee_rate_per_sqm" in record) return "Garden";
-  return undefined;
-}
-
-function cloneData<T>(value: T): T {
-  if (typeof globalThis.structuredClone === "function") {
-    return globalThis.structuredClone(value);
-  }
-  return JSON.parse(JSON.stringify(value)) as T;
-}
-
 export function evaluateCompiledProfile(
   profile: CompiledProfile,
   data: Record<string, unknown>,
   _context?: FormulaEvaluationContext,
+  sharedAdapter?: HyperFormulaAdapter,
 ): FormulaEvaluationResult {
-  const result = cloneData(data) as Record<string, unknown>;
-  const adapter = new HyperFormulaAdapter();
+  const result = cloneDeep(data) as Record<string, unknown>;
+  const ownsAdapter = !sharedAdapter;
+  const adapter = sharedAdapter ?? new HyperFormulaAdapter();
   const computed: Record<string, unknown> = {};
+  const rootType = entityTypeFromData(result);
 
   try {
     for (const slot of slotsByStratum(profile)) {
       applySlotToEntityTree(result, slot, adapter);
-      const scope = Object.entries(profile.slots).find(
-        ([, s]) => s === slot,
-      )?.[0];
-      if (scope) {
-        const typeName = slot.entityScope.match(/\/definitions\/([^/]+)$/)?.[1];
-        if (typeName === "Garden" || !typeName) {
-          computed[slot.propertyName] = result[slot.propertyName];
-        }
+      const typeName = definitionNameFromScope(slot.entityScope);
+      // Surface only slots owned by the eval root (not nested entities).
+      if (typeName && rootType && typeName === rootType) {
+        computed[slot.propertyName] = result[slot.propertyName];
       }
     }
   } finally {
-    adapter.destroy();
+    if (ownsAdapter) adapter.destroy();
   }
 
   return { data: result, computed };
