@@ -24,6 +24,8 @@ export interface SemanticViewProps {
   typeIRI?: string;
   typeName?: string;
   defaultData?: unknown;
+  /** Optional schema override (otherwise resolved from AdbContext via typeName). */
+  schema?: JSONSchema7;
   uiSchema?: UISchemaElement;
   config?: Partial<DetailViewConfig>;
   onClick?: (event?: MouseEvent) => void;
