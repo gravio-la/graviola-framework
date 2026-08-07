@@ -27,7 +27,9 @@
   },
   "dependencies": {
     "@graviola/formula-dependency": "workspace:*",
-    "hyperformula": "^3.0.0"
+    "@graviola/json-schema-utils": "workspace:*",
+    "hyperformula": "^3.0.0",
+    "lodash-es": "catalog:"
   },
   "devDependencies": {
     "@graviola/calc-fixtures": "workspace:*",
