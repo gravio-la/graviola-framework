@@ -349,7 +349,7 @@ if (paginationMeta?.source === "query") {
 
 **Example**:
 ```typescript
-normalizeSchema(schema, {
+buildTraversalSchema(schema, {
   include: {
     posts: { take: 20, orderBy: { date: 'desc' } }
   }
@@ -372,7 +372,7 @@ normalizeSchema(schema, {
 **Example**:
 ```typescript
 // Query without pagination
-const result = normalizedSchema2construct(iri, schema);
+const result = traversalSchema2construct(iri, schema);
 
 // Apply pagination during extraction
 extractFromGraph(iri, dataset, schema, {
@@ -456,7 +456,7 @@ Controls whether relationships are automatically included.
 
 ---
 
-## Schema Normalization Depth
+## Schema Preparation Depth
 
 Controls how deep `$ref` references are resolved.
 
@@ -605,7 +605,7 @@ Now that you understand the key concepts:
 
 - [Learn about the graph-traversal package →](?path=/docs/library-docs-graph-traversal-00-introduction--docs)
 - [Learn about the sparql-schema package →](?path=/docs/library-docs-sparql-schema-00-introduction--docs)
-- [Try interactive demos →](?path=/story/library-docs-graph-traversal-normalizer--basic)
+- [Try interactive demos →](?path=/story/library-docs-graph-traversal-traversal-schema--with-references)
 
 ---
 

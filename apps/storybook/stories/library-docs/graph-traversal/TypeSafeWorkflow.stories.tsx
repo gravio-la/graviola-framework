@@ -4,13 +4,13 @@ import { z } from "zod";
 import Ajv from "ajv";
 import mapValues from "lodash-es/mapValues";
 import {
-  normalizeSchema,
+  buildTraversalSchema,
   extractFromGraph,
 } from "@graviola/edb-graph-traversal";
 import { createConsoleLogger } from "@graviola/edb-core-utils";
 import type { GraphTraversalFilterOptions } from "@graviola/edb-core-types";
 import {
-  normalizedSchema2construct,
+  traversalSchema2construct,
   buildSPARQLConstructQuery,
 } from "@graviola/sparql-schema";
 import { useCrudProvider } from "@graviola/edb-state-hooks";
@@ -351,11 +351,11 @@ const TypeSafePipelineDemo = <T extends any>({
         status: "pending",
       });
 
-      const normalizedSchema = normalizeSchema<T>(
+      const traversalSchema = buildTraversalSchema<T>(
         jsonSchema as any,
         filters as any,
       );
-      const normalizedSchemaWithJSONLDContext = normalizeSchema<T>(
+      const traversalSchemaWithJSONLDContext = buildTraversalSchema<T>(
         {
           ...(jsonSchema as any),
         },
@@ -370,10 +370,10 @@ const TypeSafePipelineDemo = <T extends any>({
         status: "success",
         input: { filters },
         inputType: "json",
-        output: normalizedSchema,
+        output: traversalSchema,
         outputType: "json",
         metadata: {
-          Properties: Object.keys(normalizedSchema.properties || {}).length,
+          Properties: Object.keys(traversalSchema.properties || {}).length,
         },
       });
 
@@ -384,10 +384,10 @@ const TypeSafePipelineDemo = <T extends any>({
       });
 
       try {
-        const constructResult = normalizedSchema2construct(
+        const constructResult = traversalSchema2construct(
           targetIRI,
           undefined,
-          normalizedSchema as any,
+          traversalSchema as any,
           {
             prefixMap: tbbtSchemaPrefixes,
             maxRecursion: 3,
@@ -457,7 +457,7 @@ const TypeSafePipelineDemo = <T extends any>({
             const extracted = extractFromGraph<T>(
               targetIRI,
               dataset,
-              normalizedSchema as any,
+              traversalSchema as any,
               filters as any,
               "http://schema.org/",
               schemaPrefixes,
@@ -483,7 +483,7 @@ const TypeSafePipelineDemo = <T extends any>({
             try {
               const ajv = new Ajv({ strict: false });
               const validate = ajv.compile({
-                ...(normalizedSchemaWithJSONLDContext as any),
+                ...(traversalSchemaWithJSONLDContext as any),
                 $schema: "http://json-schema.org/draft-07/schema",
               });
               const valid = validate(extracted);

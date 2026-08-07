@@ -20,10 +20,10 @@ import type {
   SPARQLFlavour,
   SparqlFeatureFlags,
 } from "@graviola/edb-core-types";
-import { normalizeSchema } from "@graviola/edb-graph-traversal";
-import { normalizedSchema2construct } from "./normalizedSchema2construct";
+import { buildTraversalSchema } from "@graviola/edb-graph-traversal";
+import { traversalSchema2construct } from "./traversalSchema2construct";
 import { buildSPARQLConstructQuery } from "./buildSPARQLConstructQuery";
-import type { ConstructResult } from "./normalizedSchema2construct";
+import type { ConstructResult } from "./traversalSchema2construct";
 import { OptionalStringOrStringArray } from "@/base";
 import { TypedGraphTraversalFilterOptions } from "@graviola/edb-core-types";
 
@@ -57,15 +57,15 @@ export interface TypedSPARQLQueryResult {
   query: string;
   /** Raw CONSTRUCT and WHERE patterns */
   constructResult: ConstructResult;
-  /** The normalized schema used */
-  normalizedSchema: any;
+  /** The traversal schema used */
+  traversalSchema: any;
 }
 
 /**
  * Build a SPARQL CONSTRUCT query from JSON Schema with optional filter validation
  *
  * This is the main entry point for building SPARQL queries with typed filter options.
- * It combines schema normalization, filter validation, and query generation.
+ * It combines schema preparation, filter validation, and query generation.
  * Supports both single and multiple subject IRIs for batch queries.
  *
  * @template T - Document shape used to type filter options (caller-supplied)
@@ -125,16 +125,16 @@ export function buildFilterableSPARQLQuery<T = any>(
   const jsonSchema: JSONSchema7 = schema;
 
   // This applies select, include, omit, and validates WHERE filters
-  const normalizedSchema = normalizeSchema(jsonSchema, {
+  const traversalSchema = buildTraversalSchema(jsonSchema, {
     ...filterOptions,
     filterValidationMode,
   });
 
   // Pass filter options through context for nested query construction
-  const constructResult = normalizedSchema2construct(
+  const constructResult = traversalSchema2construct(
     subjectIRI,
     typeIRIs,
-    normalizedSchema,
+    traversalSchema,
     {
       prefixMap,
       maxRecursion,
@@ -150,6 +150,6 @@ export function buildFilterableSPARQLQuery<T = any>(
   return {
     query,
     constructResult,
-    normalizedSchema,
+    traversalSchema,
   };
 }

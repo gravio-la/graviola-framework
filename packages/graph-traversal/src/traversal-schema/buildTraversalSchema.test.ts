@@ -2,9 +2,9 @@ import { describe, expect, test } from "@jest/globals";
 import type { JSONSchema7 } from "json-schema";
 import type { GraphTraversalFilterOptions } from "@graviola/edb-core-types";
 import { bringDefinitionToTop } from "@graviola/json-schema-utils";
-import { normalizeSchema } from "./index";
+import { buildTraversalSchema } from "./index";
 
-describe("normalizeSchema - integration tests", () => {
+describe("buildTraversalSchema - integration tests", () => {
   test("normalizes schema with simple refs", () => {
     const schema: JSONSchema7 = {
       type: "object",
@@ -23,11 +23,11 @@ describe("normalizeSchema - integration tests", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {
+    const normalized = buildTraversalSchema(schema, {
       includeRelationsByDefault: true,
     });
 
-    expect(normalized._normalized).toBe(true);
+    expect(normalized._traversalSchema).toBe(true);
     expect((normalized.properties?.author as JSONSchema7).$ref).toBeUndefined();
     expect(
       (normalized.properties?.author as JSONSchema7).properties?.name,
@@ -75,7 +75,7 @@ describe("normalizeSchema - integration tests", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, filterOptions);
+    const normalized = buildTraversalSchema(schema, filterOptions);
 
     // Should have title but not description
     expect(normalized.properties).toHaveProperty("title");
@@ -113,11 +113,11 @@ describe("normalizeSchema - integration tests", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {
+    const normalized = buildTraversalSchema(schema, {
       includeRelationsByDefault: true,
     });
 
-    expect(normalized._normalized).toBe(true);
+    expect(normalized._traversalSchema).toBe(true);
     expect(normalized.properties?.tags).toBeDefined();
 
     // Should handle circular reference without infinite loop
@@ -145,7 +145,7 @@ describe("normalizeSchema - integration tests", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, filterOptions);
+    const normalized = buildTraversalSchema(schema, filterOptions);
 
     expect(Object.keys(normalized.properties || {})).toEqual(["id", "title"]);
   });
@@ -172,7 +172,7 @@ describe("normalizeSchema - integration tests", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {
+    const normalized = buildTraversalSchema(schema, {
       select: {
         name: true,
         slug: true,
@@ -272,7 +272,7 @@ describe("normalizeSchema - integration tests", () => {
       omit: ["fileSize", "mimeType"],
     };
 
-    const normalized = normalizeSchema(schema, filterOptions);
+    const normalized = buildTraversalSchema(schema, filterOptions);
 
     // JSON-LD metadata properties should be filtered out by default
     expect(normalized.properties).not.toHaveProperty("@id");
@@ -317,11 +317,11 @@ describe("normalizeSchema - integration tests", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {
+    const normalized = buildTraversalSchema(schema, {
       includeRelationsByDefault: true,
     });
 
-    expect(normalized._normalized).toBe(true);
+    expect(normalized._traversalSchema).toBe(true);
     expect(normalized.properties?.author).toBeDefined();
 
     const authorSchema = normalized.properties?.author as JSONSchema7;
@@ -347,7 +347,7 @@ describe("normalizeSchema - integration tests", () => {
     };
 
     const originalPropsCount = Object.keys(schema.properties || {}).length;
-    const normalized = normalizeSchema(schema, { omit: ["name"] });
+    const normalized = buildTraversalSchema(schema, { omit: ["name"] });
 
     // Original schema should be unchanged
     expect(Object.keys(schema.properties || {}).length).toBe(
@@ -356,7 +356,7 @@ describe("normalizeSchema - integration tests", () => {
     expect(schema.properties).toHaveProperty("name");
     expect((schema.properties?.ref as JSONSchema7).$ref).toBe("#/$defs/Thing");
 
-    // Normalized schema should be filtered
+    // Traversal schema should be filtered
     expect(normalized.properties).not.toHaveProperty("name");
   });
 
@@ -397,7 +397,7 @@ describe("normalizeSchema - integration tests", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, filterOptions);
+    const normalized = buildTraversalSchema(schema, filterOptions);
 
     // Only selected properties should be included
     expect(normalized.properties).toHaveProperty("id");
@@ -446,14 +446,14 @@ describe("normalizeSchema - integration tests", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, filterOptions);
+    const normalized = buildTraversalSchema(schema, filterOptions);
 
     // Note: Pagination is no longer stored in schema, it's passed through context
     // defaultPaginationLimit is stored in filterOptions but not automatically applied
     // to properties without explicit pagination. This could be implemented in future if needed.
   });
 
-  test("logs normalized schema for Person with jobs and WorkingPeriod relationships - depth 1 and 2", () => {
+  test("logs traversal schema for Person with jobs and WorkingPeriod relationships - depth 1 and 2", () => {
     // Create fixture schema with Person, Organization, and WorkingPeriod
     const rootSchema: JSONSchema7 = {
       type: "object",
@@ -504,7 +504,7 @@ describe("normalizeSchema - integration tests", () => {
     console.log(
       "\n=== Test 1: Depth 1 - Include jobs only (no nested 'for') ===",
     );
-    const normalizedDepth1 = normalizeSchema(personSchema, {
+    const normalizedDepth1 = buildTraversalSchema(personSchema, {
       includeRelationsByDefault: false,
       include: {
         jobs: true, // Include jobs but not the nested "for" relationship
@@ -516,7 +516,7 @@ describe("normalizeSchema - integration tests", () => {
     console.log(
       "\n=== Test 2: Depth 2 - Include jobs with nested 'for' relationship ===",
     );
-    const normalizedDepth2 = normalizeSchema(personSchema, {
+    const normalizedDepth2 = buildTraversalSchema(personSchema, {
       includeRelationsByDefault: false,
       include: {
         jobs: {
@@ -530,7 +530,7 @@ describe("normalizeSchema - integration tests", () => {
 
     // Test 3: Select only name and jobs
     console.log("\n=== Test 3: Select only name and jobs ===");
-    const normalizedSelect = normalizeSchema(personSchema, {
+    const normalizedSelect = buildTraversalSchema(personSchema, {
       select: {
         name: true,
         jobs: true,
@@ -540,7 +540,7 @@ describe("normalizeSchema - integration tests", () => {
 
     // Test 4: Include all relations by default
     console.log("\n=== Test 4: Include all relations by default ===");
-    const normalizedAllRelations = normalizeSchema(personSchema, {
+    const normalizedAllRelations = buildTraversalSchema(personSchema, {
       includeRelationsByDefault: true,
     });
     console.log(JSON.stringify(normalizedAllRelations, null, 2));
@@ -549,7 +549,7 @@ describe("normalizeSchema - integration tests", () => {
     console.log(
       "\n=== Test 5: Include jobs with pagination and nested 'for' ===",
     );
-    const normalizedPagination = normalizeSchema(personSchema, {
+    const normalizedPagination = buildTraversalSchema(personSchema, {
       includeRelationsByDefault: false,
       include: {
         jobs: {
@@ -564,14 +564,14 @@ describe("normalizeSchema - integration tests", () => {
 
     // Test 6: Omit jobs but include name
     console.log("\n=== Test 6: Omit jobs, include name ===");
-    const normalizedOmit = normalizeSchema(personSchema, {
+    const normalizedOmit = buildTraversalSchema(personSchema, {
       omit: ["jobs"],
     });
     console.log(JSON.stringify(normalizedOmit, null, 2));
 
     // Test 7: Depth 2 with nested "for" included
     console.log("\n=== Test 7: Depth 2 - Include jobs with nested 'for' ===");
-    const normalizedOrgFields = normalizeSchema(personSchema, {
+    const normalizedOrgFields = buildTraversalSchema(personSchema, {
       includeRelationsByDefault: false,
       include: {
         jobs: {
@@ -585,8 +585,8 @@ describe("normalizeSchema - integration tests", () => {
 
     // Note: This test currently only logs output for review
     // Assertions will be added later once the expected output is verified
-    expect(normalizedDepth1._normalized).toBe(true);
-    expect(normalizedDepth2._normalized).toBe(true);
+    expect(normalizedDepth1._traversalSchema).toBe(true);
+    expect(normalizedDepth2._traversalSchema).toBe(true);
   });
 
   test("handles nested includes with pagination (knows -> knows)", () => {
@@ -632,9 +632,9 @@ describe("normalizeSchema - integration tests", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, filterOptions);
+    const normalized = buildTraversalSchema(schema, filterOptions);
 
-    expect(normalized._normalized).toBe(true);
+    expect(normalized._traversalSchema).toBe(true);
     expect(normalized.properties).toHaveProperty("schema:knows");
 
     // Top-level knows should be present (pagination passed through context)
@@ -703,9 +703,9 @@ describe("normalizeSchema - integration tests", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, filterOptions);
+    const normalized = buildTraversalSchema(schema, filterOptions);
 
-    expect(normalized._normalized).toBe(true);
+    expect(normalized._traversalSchema).toBe(true);
     expect(normalized.properties).toHaveProperty("schema:knows");
 
     // Level 1: Top-level knows should be present (pagination passed through context)
@@ -751,7 +751,7 @@ describe("normalizeSchema - integration tests", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema);
+    const normalized = buildTraversalSchema(schema);
     expect(normalized.properties).toHaveProperty("title");
     expect(normalized.properties).not.toHaveProperty("author");
   });
@@ -779,7 +779,7 @@ describe("normalizeSchema - integration tests", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {
+    const normalized = buildTraversalSchema(schema, {
       include: {
         tags: {
           take: 2,
@@ -815,7 +815,7 @@ describe("normalizeSchema - integration tests", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {
+    const normalized = buildTraversalSchema(schema, {
       where: { partOf: { "@id": "http://example.org/p1" } },
     });
 

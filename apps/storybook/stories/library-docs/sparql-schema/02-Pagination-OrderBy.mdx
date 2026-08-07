@@ -129,7 +129,7 @@ This prevents double-pagination during extraction.
 ### Example 1: Simple Pagination
 
 ```typescript
-normalizeSchema(schema, {
+buildTraversalSchema(schema, {
   include: {
     posts: { take: 20 }
   }

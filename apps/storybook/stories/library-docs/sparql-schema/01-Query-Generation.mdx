@@ -5,7 +5,7 @@ import { Mermaid } from "mdx-mermaid/Mermaid";
 
 # Query Generation
 
-The `normalizedSchema2construct` function converts a normalized JSON Schema into SPARQL CONSTRUCT and WHERE patterns.
+The `traversalSchema2construct` function converts a normalized JSON Schema into SPARQL CONSTRUCT and WHERE patterns.
 
 ## How It Works
 
@@ -133,7 +133,7 @@ The generator uses three rules:
 ### Example
 
 ```typescript
-normalizedSchema2construct(iri, schema, {
+traversalSchema2construct(iri, schema, {
   prefixMap: {
     "": "http://example.com/",
     "foaf": "http://xmlns.com/foaf/0.1/"
@@ -188,7 +188,7 @@ function createRequiredWherePattern(subject, predicate, object) {
 
 **Input**:
 ```typescript
-const schema = normalizeSchema({
+const schema = buildTraversalSchema({
   type: "object",
   properties: {
     name: { type: "string" },
@@ -202,7 +202,7 @@ const schema = normalizeSchema({
   }
 });
 
-const result = normalizedSchema2construct(
+const result = traversalSchema2construct(
   "http://example.com/person/1",
   schema,
   {
@@ -249,7 +249,7 @@ WHERE {
 ```typescript
 import { sparql } from "@tpluscode/sparql-builder";
 
-const { constructPatterns, wherePatterns } = normalizedSchema2construct(...);
+const { constructPatterns, wherePatterns } = traversalSchema2construct(...);
 
 // Add PREFIX declarations
 const prefixes = Object.entries(prefixMap)

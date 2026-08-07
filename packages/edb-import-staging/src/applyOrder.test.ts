@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { referenceFirstApplyOrder } from "./applyOrder";
-import { normalizeStagedDocument } from "./normalizeStagedDocument";
+import { prepareStagedDocument } from "./prepareStagedDocument";
 import type { StagedEntity } from "./types";
 
 const baseEntity = (
@@ -40,9 +40,9 @@ describe("referenceFirstApplyOrder", () => {
   });
 });
 
-describe("normalizeStagedDocument", () => {
+describe("prepareStagedDocument", () => {
   test("unwraps single-element parent arrays and strips mapping metadata", () => {
-    const normalized = normalizeStagedDocument({
+    const normalized = prepareStagedDocument({
       "@id": "http://example.org/entity",
       parent: [{ "@id": "http://example.org/parent" }],
       idAuthority: { authority: "http://www.wikidata.org", id: "Q1" },

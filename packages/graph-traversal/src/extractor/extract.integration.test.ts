@@ -423,7 +423,7 @@ describe("extractFromGraph - Integration Tests with TBBT Dataset", () => {
     }
   });
 
-  test("schema normalization happens automatically", () => {
+  test("schema preparation happens automatically", () => {
     // Schema with $ref (not normalized)
     const schemaWithRef: JSONSchema7 = {
       type: "object",

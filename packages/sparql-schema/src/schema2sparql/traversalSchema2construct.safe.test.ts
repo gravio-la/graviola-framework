@@ -1,5 +1,5 @@
 /**
- * Injection prevention tests for normalizedSchema2construct
+ * Injection prevention tests for traversalSchema2construct
  *
  * These tests verify that the SPARQL builder properly handles:
  * - Special characters in property names
@@ -10,11 +10,11 @@
 
 import { describe, expect, test } from "@jest/globals";
 import { JSONSchema7 } from "json-schema";
-import { normalizeSchema } from "@graviola/edb-graph-traversal";
+import { buildTraversalSchema } from "@graviola/edb-graph-traversal";
 
-import { normalizedSchema2construct } from "./normalizedSchema2construct";
+import { traversalSchema2construct } from "./traversalSchema2construct";
 
-describe("normalizedSchema2construct - Injection Prevention", () => {
+describe("traversalSchema2construct - Injection Prevention", () => {
   test("handles property names with special SPARQL characters", () => {
     const schema: JSONSchema7 = {
       type: "object",
@@ -26,18 +26,18 @@ describe("normalizedSchema2construct - Injection Prevention", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {});
+    const normalized = buildTraversalSchema(schema, {});
 
     // Should not throw - builder handles escaping
     expect(() => {
-      normalizedSchema2construct(
+      traversalSchema2construct(
         "http://example.com/test",
         undefined,
         normalized,
       );
     }).not.toThrow();
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/test",
       undefined,
       normalized,
@@ -56,7 +56,7 @@ describe("normalizedSchema2construct - Injection Prevention", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {});
+    const normalized = buildTraversalSchema(schema, {});
 
     // Malformed IRIs should be handled gracefully
     const malformedIRIs = [
@@ -67,7 +67,7 @@ describe("normalizedSchema2construct - Injection Prevention", () => {
 
     malformedIRIs.forEach((iri) => {
       expect(() => {
-        normalizedSchema2construct(iri, undefined, normalized);
+        traversalSchema2construct(iri, undefined, normalized);
       }).not.toThrow();
     });
   });
@@ -82,9 +82,9 @@ describe("normalizedSchema2construct - Injection Prevention", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {});
+    const normalized = buildTraversalSchema(schema, {});
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/test",
       undefined,
       normalized,
@@ -104,9 +104,9 @@ describe("normalizedSchema2construct - Injection Prevention", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {});
+    const normalized = buildTraversalSchema(schema, {});
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/test",
       undefined,
       normalized,
@@ -126,9 +126,9 @@ describe("normalizedSchema2construct - Injection Prevention", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {});
+    const normalized = buildTraversalSchema(schema, {});
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/test",
       undefined,
       normalized,
@@ -148,9 +148,9 @@ describe("normalizedSchema2construct - Injection Prevention", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {});
+    const normalized = buildTraversalSchema(schema, {});
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/test",
       undefined,
       normalized,
@@ -170,9 +170,9 @@ describe("normalizedSchema2construct - Injection Prevention", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {});
+    const normalized = buildTraversalSchema(schema, {});
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/test",
       undefined,
       normalized,
@@ -195,9 +195,9 @@ describe("normalizedSchema2construct - Injection Prevention", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {});
+    const normalized = buildTraversalSchema(schema, {});
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/test",
       undefined,
       normalized,
@@ -218,9 +218,9 @@ describe("normalizedSchema2construct - Injection Prevention", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {});
+    const normalized = buildTraversalSchema(schema, {});
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/test",
       undefined,
       normalized,
@@ -245,9 +245,9 @@ describe("normalizedSchema2construct - Injection Prevention", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {});
+    const normalized = buildTraversalSchema(schema, {});
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/test",
       undefined,
       normalized,

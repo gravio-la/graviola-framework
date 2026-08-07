@@ -13,10 +13,10 @@ describe("extractObject", () => {
   ): ExtractionContext => ({
     baseIRI: "http://schema.org/",
     dataset: datasetFactory.dataset(),
-    normalizedSchema: {
+    traversalSchema: {
       type: "object",
       properties: {},
-      _normalized: true,
+      _traversalSchema: true,
     },
     options: {},
     depth: 0,

@@ -266,7 +266,7 @@ export type TypedGraphTraversalFilterOptions<
   defaultPaginationLimit?: number;
   /**
    * Whether to exclude JSON-LD metadata properties (starting with @)
-   * from schema normalization. Defaults to true.
+   * from schema preparation. Defaults to true.
    */
   excludeJsonLdMetadata?: boolean;
   /**

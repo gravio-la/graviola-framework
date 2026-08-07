@@ -1,6 +1,6 @@
 /**
  * Tests read (CONSTRUCT) and write (UPDATE) behaviour for x-inverseOf on an array property.
- * Covers jsonSchema2construct only; normalizedSchema2construct does not implement x-inverseOf.
+ * Covers jsonSchema2construct only; traversalSchema2construct does not implement x-inverseOf.
  */
 import { describe, expect, test } from "@jest/globals";
 import type { JSONSchema7 } from "json-schema";

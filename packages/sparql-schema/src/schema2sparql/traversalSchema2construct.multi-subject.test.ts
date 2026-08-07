@@ -1,19 +1,19 @@
 import { describe, it, expect } from "vitest";
-import { normalizedSchema2construct } from "./normalizedSchema2construct";
-import type { NormalizedSchema } from "@graviola/edb-graph-traversal";
+import { traversalSchema2construct } from "./traversalSchema2construct";
+import type { TraversalSchema } from "@graviola/edb-graph-traversal";
 
-describe("normalizedSchema2construct - Multiple Subjects", () => {
+describe("traversalSchema2construct - Multiple Subjects", () => {
   it("should generate VALUES pattern for multiple subject IRIs", () => {
-    const schema: NormalizedSchema = {
+    const schema: TraversalSchema = {
       type: "object",
       properties: {
         name: { type: "string" },
         age: { type: "number" },
       },
-      _normalized: true,
+      _traversalSchema: true,
     };
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       [
         "http://example.com/person1",
         "http://example.com/person2",
@@ -38,15 +38,15 @@ describe("normalizedSchema2construct - Multiple Subjects", () => {
   });
 
   it("should generate BIND pattern for single subject IRI with oxigraph flavour", () => {
-    const schema: NormalizedSchema = {
+    const schema: TraversalSchema = {
       type: "object",
       properties: {
         name: { type: "string" },
       },
-      _normalized: true,
+      _traversalSchema: true,
     };
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/person1",
       undefined,
       schema,
@@ -64,15 +64,15 @@ describe("normalizedSchema2construct - Multiple Subjects", () => {
   });
 
   it("should generate VALUES pattern for single subject IRI with default flavour", () => {
-    const schema: NormalizedSchema = {
+    const schema: TraversalSchema = {
       type: "object",
       properties: {
         name: { type: "string" },
       },
-      _normalized: true,
+      _traversalSchema: true,
     };
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/person1",
       undefined,
       schema,
@@ -90,15 +90,15 @@ describe("normalizedSchema2construct - Multiple Subjects", () => {
   });
 
   it("should handle prefixed IRIs in multiple subjects", () => {
-    const schema: NormalizedSchema = {
+    const schema: TraversalSchema = {
       type: "object",
       properties: {
         name: { type: "string" },
       },
-      _normalized: true,
+      _traversalSchema: true,
     };
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       ["ex:person1", "ex:person2"],
       undefined,
       schema,
@@ -117,15 +117,15 @@ describe("normalizedSchema2construct - Multiple Subjects", () => {
   });
 
   it("should handle mix of prefixed and full IRIs", () => {
-    const schema: NormalizedSchema = {
+    const schema: TraversalSchema = {
       type: "object",
       properties: {
         name: { type: "string" },
       },
-      _normalized: true,
+      _traversalSchema: true,
     };
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       ["ex:person1", "http://example.com/person2", "urn:uuid:12345"],
       undefined,
       schema,
@@ -145,16 +145,16 @@ describe("normalizedSchema2construct - Multiple Subjects", () => {
   });
 
   it("should generate correct CONSTRUCT patterns for multiple subjects", () => {
-    const schema: NormalizedSchema = {
+    const schema: TraversalSchema = {
       type: "object",
       properties: {
         name: { type: "string" },
         age: { type: "number" },
       },
-      _normalized: true,
+      _traversalSchema: true,
     };
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       ["http://example.com/person1", "http://example.com/person2"],
       undefined,
       schema,
@@ -172,7 +172,7 @@ describe("normalizedSchema2construct - Multiple Subjects", () => {
   });
 
   it("should work with nested objects for multiple subjects", () => {
-    const schema: NormalizedSchema = {
+    const schema: TraversalSchema = {
       type: "object",
       properties: {
         name: { type: "string" },
@@ -184,10 +184,10 @@ describe("normalizedSchema2construct - Multiple Subjects", () => {
           },
         },
       },
-      _normalized: true,
+      _traversalSchema: true,
     };
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       ["http://example.com/person1", "http://example.com/person2"],
       undefined,
       schema,
@@ -204,7 +204,7 @@ describe("normalizedSchema2construct - Multiple Subjects", () => {
   });
 
   it("should work with arrays for multiple subjects", () => {
-    const schema: NormalizedSchema = {
+    const schema: TraversalSchema = {
       type: "object",
       properties: {
         name: { type: "string" },
@@ -218,10 +218,10 @@ describe("normalizedSchema2construct - Multiple Subjects", () => {
           },
         },
       },
-      _normalized: true,
+      _traversalSchema: true,
     };
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       ["http://example.com/person1", "http://example.com/person2"],
       undefined,
       schema,
@@ -247,16 +247,16 @@ describe("normalizedSchema2construct - Multiple Subjects", () => {
   });
 
   it("should handle empty array of subject IRIs (query all subjects)", () => {
-    const schema: NormalizedSchema = {
+    const schema: TraversalSchema = {
       type: "object",
       properties: {
         name: { type: "string" },
       },
-      _normalized: true,
+      _traversalSchema: true,
     };
 
     // Empty array is now treated like undefined - query all subjects
-    const result = normalizedSchema2construct([], undefined, schema);
+    const result = traversalSchema2construct([], undefined, schema);
 
     expect(result).toBeDefined();
     expect(result.constructPatterns).toBeDefined();

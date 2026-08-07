@@ -5,14 +5,14 @@ import { Mermaid } from "mdx-mermaid/Mermaid";
 
 # Graph Extraction
 
-Graph extraction is the final stage in the metadata extraction pipeline. It walks an RDF dataset using a normalized schema to produce a type-safe JavaScript object.
+Graph extraction is the final stage in the metadata extraction pipeline. It walks an RDF dataset using a traversal schema to produce a type-safe JavaScript object.
 
 ## The extractFromGraph Function
 
 ```typescript
 import { extractFromGraph } from "@graviola/edb-graph-traversal";
 
-const result = extractFromGraph(iri, dataset, normalizedSchema, options);
+const result = extractFromGraph(iri, dataset, traversalSchema, options);
 ```
 
 ### Signature
@@ -21,7 +21,7 @@ const result = extractFromGraph(iri, dataset, normalizedSchema, options);
 function extractFromGraph(
   iri: string,
   dataset: DatasetCore,
-  normalizedSchema: NormalizedSchema,
+  traversalSchema: TraversalSchema,
   options?: ExtractionOptions
 ): any
 ```
@@ -36,8 +36,8 @@ function extractFromGraph(
 - RDF/JS dataset containing triples
 - Usually from SPARQL CONSTRUCT result
 
-**normalizedSchema** (NormalizedSchema)
-- Normalized schema (from `normalizeSchema`)
+**traversalSchema** (TraversalSchema)
+- Traversal schema (from `buildTraversalSchema`)
 - All `$ref` references must be resolved
 
 **options** (optional)
@@ -514,5 +514,5 @@ For even better type safety, generate TypeScript types from your JSON Schema!
 
 ---
 
-[← Schema Normalization](?path=/docs/library-docs-graph-traversal-schema-normalization--docs) | [Back to Introduction](?path=/docs/library-docs-graph-traversal-00-introduction--docs)
+[← Schema Preparation](?path=/docs/library-docs-graph-traversal-schema-normalization--docs) | [Back to Introduction](?path=/docs/library-docs-graph-traversal-00-introduction--docs)
 

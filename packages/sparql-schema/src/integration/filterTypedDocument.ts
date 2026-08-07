@@ -105,7 +105,7 @@ export async function filterTypedDocuments<T = any>(
   const features = resolveSparqlFeatures(flavour, sparqlFeatures);
 
   // Step 1: Build type-safe SPARQL query
-  const { query, normalizedSchema } = buildFilterableSPARQLQuery<T>(
+  const { query, traversalSchema } = buildFilterableSPARQLQuery<T>(
     entityIRIs,
     typeIRIs,
     schema,
@@ -121,9 +121,9 @@ export async function filterTypedDocuments<T = any>(
   // Step 2: Execute CONSTRUCT query
   const dataset = await constructFetch(query);
 
-  // Extract against the normalized schema so omitted relations / select
+  // Extract against the traversal schema so omitted relations / select
   // projections match CONSTRUCT (Prisma-like includeRelationsByDefault: false).
-  const extractSchema = (normalizedSchema as JSONSchema7) || schema;
+  const extractSchema = (traversalSchema as JSONSchema7) || schema;
 
   const extractOne = (iri: string): T => {
     const raw = traverseGraphExtractBySchema(

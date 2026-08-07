@@ -10,8 +10,8 @@
 
 import { describe, test, expect } from "bun:test";
 import { JSONSchema7 } from "json-schema";
-import { normalizeSchema } from "@graviola/edb-graph-traversal";
-import { normalizedSchema2construct } from "./normalizedSchema2construct";
+import { buildTraversalSchema } from "@graviola/edb-graph-traversal";
+import { traversalSchema2construct } from "./traversalSchema2construct";
 import { buildSPARQLConstructQuery } from "./buildSPARQLConstructQuery";
 
 /**
@@ -28,7 +28,7 @@ function extractVarsByBase(query: string, baseName: string): string[] {
   return [...found];
 }
 
-describe("normalizedSchema2construct - Unique Variable Names", () => {
+describe("traversalSchema2construct - Unique Variable Names", () => {
   test("sibling object relations with overlapping property names get unique variables", () => {
     const schema: JSONSchema7 = {
       type: "object",
@@ -52,8 +52,8 @@ describe("normalizedSchema2construct - Unique Variable Names", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {});
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema, {});
+    const result = traversalSchema2construct(
       "http://example.com/wc/1",
       "http://example.com/WorkingCircle",
       normalized,
@@ -102,8 +102,8 @@ describe("normalizedSchema2construct - Unique Variable Names", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {});
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema, {});
+    const result = traversalSchema2construct(
       "http://example.com/list/1",
       undefined,
       normalized,
@@ -154,8 +154,8 @@ describe("normalizedSchema2construct - Unique Variable Names", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {});
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema, {});
+    const result = traversalSchema2construct(
       "http://example.com/wc/1",
       undefined,
       normalized,
@@ -194,8 +194,8 @@ describe("normalizedSchema2construct - Unique Variable Names", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {});
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema, {});
+    const result = traversalSchema2construct(
       "http://example.com/entity/1",
       undefined,
       normalized,
@@ -267,8 +267,8 @@ describe("normalizedSchema2construct - Unique Variable Names", () => {
       required: ["name", "description"],
     };
 
-    const normalized = normalizeSchema(schema, {});
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema, {});
+    const result = traversalSchema2construct(
       "http://ontology.winzlieb.eu/school#WorkingCircle/test",
       "http://ontology.winzlieb.eu/school#WorkingCircle",
       normalized,

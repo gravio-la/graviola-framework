@@ -1,10 +1,10 @@
 import { describe, expect, test } from "@jest/globals";
 import { JSONSchema7 } from "json-schema";
-import { normalizeSchema } from "@graviola/edb-graph-traversal";
+import { buildTraversalSchema } from "@graviola/edb-graph-traversal";
 
-import { normalizedSchema2construct } from "./normalizedSchema2construct";
+import { traversalSchema2construct } from "./traversalSchema2construct";
 
-describe("normalizedSchema2construct - Step 1: Basic Types & Variable Handling", () => {
+describe("traversalSchema2construct - Step 1: Basic Types & Variable Handling", () => {
   test("handles simple object with one literal property", () => {
     // Start with the simplest case: one string property
     const schema: JSONSchema7 = {
@@ -14,8 +14,8 @@ describe("normalizedSchema2construct - Step 1: Basic Types & Variable Handling",
       },
     };
 
-    const normalized = normalizeSchema(schema, {});
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema, {});
+    const result = traversalSchema2construct(
       "http://example.com/person1",
       undefined,
       normalized,
@@ -40,8 +40,8 @@ describe("normalizedSchema2construct - Step 1: Basic Types & Variable Handling",
       },
     };
 
-    const normalized = normalizeSchema(schema, {});
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema, {});
+    const result = traversalSchema2construct(
       "http://example.com/person1",
       undefined,
       normalized,
@@ -62,11 +62,11 @@ describe("normalizedSchema2construct - Step 1: Basic Types & Variable Handling",
       },
     };
 
-    const normalized = normalizeSchema(schema, {});
+    const normalized = buildTraversalSchema(schema, {});
 
     // Should not throw, should handle safely
     expect(() => {
-      normalizedSchema2construct(
+      traversalSchema2construct(
         "http://example.com/doc1",
         undefined,
         normalized,
@@ -85,10 +85,10 @@ describe("normalizedSchema2construct - Step 1: Basic Types & Variable Handling",
       },
     };
 
-    const normalized = normalizeSchema(schema, {});
+    const normalized = buildTraversalSchema(schema, {});
 
     // Test with prefixMap that has foaf and dc prefixes
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/person1",
       undefined,
       normalized,
@@ -118,10 +118,10 @@ describe("normalizedSchema2construct - Step 1: Basic Types & Variable Handling",
       },
     };
 
-    const normalized = normalizeSchema(schema, {});
+    const normalized = buildTraversalSchema(schema, {});
 
     // Test without context - these should be treated as full URLs
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/book1",
       undefined,
       normalized,
@@ -134,7 +134,7 @@ describe("normalizedSchema2construct - Step 1: Basic Types & Variable Handling",
   });
 });
 
-describe("normalizedSchema2construct - Step 2: Property Type Handlers", () => {
+describe("traversalSchema2construct - Step 2: Property Type Handlers", () => {
   test("handles nested object properties", () => {
     const schema: JSONSchema7 = {
       type: "object",
@@ -150,8 +150,8 @@ describe("normalizedSchema2construct - Step 2: Property Type Handlers", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {});
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema, {});
+    const result = traversalSchema2construct(
       "http://example.com/person1",
       undefined,
       normalized,
@@ -174,8 +174,8 @@ describe("normalizedSchema2construct - Step 2: Property Type Handlers", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {});
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema, {});
+    const result = traversalSchema2construct(
       "http://example.com/doc1",
       undefined,
       normalized,
@@ -203,8 +203,8 @@ describe("normalizedSchema2construct - Step 2: Property Type Handlers", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {});
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema, {});
+    const result = traversalSchema2construct(
       "http://example.com/person1",
       undefined,
       normalized,
@@ -234,8 +234,8 @@ describe("normalizedSchema2construct - Step 2: Property Type Handlers", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {});
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema, {});
+    const result = traversalSchema2construct(
       "http://example.com/person1",
       undefined,
       normalized,
@@ -257,8 +257,8 @@ describe("normalizedSchema2construct - Step 2: Property Type Handlers", () => {
       },
     };
 
-    const normalized = normalizeSchema(schema, {});
-    const result = normalizedSchema2construct(
+    const normalized = buildTraversalSchema(schema, {});
+    const result = traversalSchema2construct(
       "http://example.com/person1",
       undefined,
       normalized,
@@ -270,8 +270,8 @@ describe("normalizedSchema2construct - Step 2: Property Type Handlers", () => {
   });
 });
 
-describe("normalizedSchema2construct - Step 3: Pagination with Query-Stage Marking", () => {
-  test("extracts pagination metadata from normalized schema", () => {
+describe("traversalSchema2construct - Step 3: Pagination with Query-Stage Marking", () => {
+  test("extracts pagination metadata from traversal schema", () => {
     const schema: JSONSchema7 = {
       type: "object",
       properties: {
@@ -289,22 +289,22 @@ describe("normalizedSchema2construct - Step 3: Pagination with Query-Stage Marki
     };
 
     // Normalize with pagination in include pattern
-    const normalized = normalizeSchema(schema, {
+    const normalized = buildTraversalSchema(schema, {
       include: {
         friends: { take: 10, skip: 0 },
       },
     });
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/person1",
       undefined,
       normalized,
     );
 
-    // Should extract pagination metadata from normalized schema
+    // Should extract pagination metadata from traversal schema
     expect(result.paginationMetadata).toBeDefined();
 
-    // Check if pagination was detected (normalizer adds x-pagination)
+    // Check if pagination was detected (buildTraversalSchema adds x-pagination)
     const friendsProperty = normalized.properties?.friends as JSONSchema7;
     if (friendsProperty && (friendsProperty as any)["x-pagination"]) {
       // Pagination metadata should be marked with _stage: "extraction"
@@ -325,19 +325,19 @@ describe("normalizedSchema2construct - Step 3: Pagination with Query-Stage Marki
       },
     };
 
-    const normalized = normalizeSchema(schema, {
+    const normalized = buildTraversalSchema(schema, {
       include: {
         posts: { take: 20 },
       },
     });
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/user1",
       undefined,
       normalized,
     );
 
-    // If normalizer added pagination metadata, our function should mark it
+    // If buildTraversalSchema added pagination metadata, our function should mark it
     const postsProperty = normalized.properties?.posts as JSONSchema7;
     if (postsProperty && (postsProperty as any)["x-pagination"]) {
       const pagMeta = result.paginationMetadata.get("posts");
@@ -362,9 +362,9 @@ describe("normalizedSchema2construct - Step 3: Pagination with Query-Stage Marki
     };
 
     // No pagination in include pattern
-    const normalized = normalizeSchema(schema, {});
+    const normalized = buildTraversalSchema(schema, {});
 
-    const result = normalizedSchema2construct(
+    const result = traversalSchema2construct(
       "http://example.com/doc1",
       undefined,
       normalized,

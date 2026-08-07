@@ -1,11 +1,11 @@
 import { describe, expect, test } from "@jest/globals";
 import type { JSONSchema7 } from "json-schema";
 import {
-  resolveAllRefs,
+  dereferenceSchema,
   isRelationshipSchema,
   extractPropertyMetadata,
-} from "./resolveAllRefs";
-import type { NormalizationContext } from "./types";
+} from "./dereferenceSchema";
+import type { DereferenceContext } from "./types";
 
 describe("isRelationshipSchema", () => {
   test("identifies schema with @id as relationship", () => {
@@ -83,7 +83,7 @@ describe("extractPropertyMetadata", () => {
       },
     };
 
-    const context: NormalizationContext = {
+    const context: DereferenceContext = {
       rootSchema: {},
       filterOptions: {},
       visitedRefs: new Set(),
@@ -109,7 +109,7 @@ describe("extractPropertyMetadata", () => {
       },
     };
 
-    const context: NormalizationContext = {
+    const context: DereferenceContext = {
       rootSchema: {},
       filterOptions: {},
       visitedRefs: new Set(),
@@ -132,7 +132,7 @@ describe("extractPropertyMetadata", () => {
       },
     };
 
-    const context: NormalizationContext = {
+    const context: DereferenceContext = {
       rootSchema: {},
       filterOptions: {},
       visitedRefs: new Set(),
@@ -146,7 +146,7 @@ describe("extractPropertyMetadata", () => {
   });
 });
 
-describe("resolveAllRefs", () => {
+describe("dereferenceSchema", () => {
   test("resolves simple $ref", () => {
     const schema: JSONSchema7 = {
       type: "object",
@@ -165,14 +165,14 @@ describe("resolveAllRefs", () => {
       },
     };
 
-    const context: NormalizationContext = {
+    const context: DereferenceContext = {
       rootSchema: schema,
       filterOptions: {},
       visitedRefs: new Set(),
       depth: 0,
     };
 
-    const resolved = resolveAllRefs(schema, context);
+    const resolved = dereferenceSchema(schema, context);
 
     expect(resolved.properties?.address).toBeDefined();
     expect((resolved.properties?.address as JSONSchema7).$ref).toBeUndefined();
@@ -207,14 +207,14 @@ describe("resolveAllRefs", () => {
       },
     };
 
-    const context: NormalizationContext = {
+    const context: DereferenceContext = {
       rootSchema: schema,
       filterOptions: {},
       visitedRefs: new Set(),
       depth: 0,
     };
 
-    const resolved = resolveAllRefs(schema, context);
+    const resolved = dereferenceSchema(schema, context);
 
     const personSchema = resolved.properties?.person as JSONSchema7;
     expect(personSchema.$ref).toBeUndefined();
@@ -243,7 +243,7 @@ describe("resolveAllRefs", () => {
       },
     };
 
-    const context: NormalizationContext = {
+    const context: DereferenceContext = {
       rootSchema: schema,
       filterOptions: {},
       visitedRefs: new Set(),
@@ -251,7 +251,7 @@ describe("resolveAllRefs", () => {
     };
 
     // Should not throw or hang
-    const resolved = resolveAllRefs(schema, context);
+    const resolved = dereferenceSchema(schema, context);
 
     expect(resolved).toBeDefined();
     expect(resolved.properties?.parent).toBeDefined();
@@ -277,14 +277,14 @@ describe("resolveAllRefs", () => {
       },
     };
 
-    const context: NormalizationContext = {
+    const context: DereferenceContext = {
       rootSchema: schema,
       filterOptions: {},
       visitedRefs: new Set(),
       depth: 0,
     };
 
-    const resolved = resolveAllRefs(schema, context);
+    const resolved = dereferenceSchema(schema, context);
 
     const tagsSchema = resolved.properties?.tags as JSONSchema7;
     expect(tagsSchema.items).toBeDefined();
@@ -315,14 +315,14 @@ describe("resolveAllRefs", () => {
       },
     };
 
-    const context: NormalizationContext = {
+    const context: DereferenceContext = {
       rootSchema: schema,
       filterOptions: {},
       visitedRefs: new Set(),
       depth: 0,
     };
 
-    const resolved = resolveAllRefs(schema, context);
+    const resolved = dereferenceSchema(schema, context);
 
     expect(resolved.allOf).toBeDefined();
     expect(resolved.allOf?.[0]).toBeDefined();
@@ -359,14 +359,14 @@ describe("resolveAllRefs", () => {
       },
     };
 
-    const context: NormalizationContext = {
+    const context: DereferenceContext = {
       rootSchema: schema,
       filterOptions: {},
       visitedRefs: new Set(),
       depth: 0,
     };
 
-    const resolved = resolveAllRefs(schema, context);
+    const resolved = dereferenceSchema(schema, context);
 
     const valueSchema = resolved.properties?.value as JSONSchema7;
     expect(valueSchema.anyOf).toBeDefined();
@@ -401,14 +401,14 @@ describe("resolveAllRefs", () => {
       },
     };
 
-    const context: NormalizationContext = {
+    const context: DereferenceContext = {
       rootSchema: schema,
       filterOptions: {},
       visitedRefs: new Set(),
       depth: 0,
     };
 
-    const resolved = resolveAllRefs(schema, context);
+    const resolved = dereferenceSchema(schema, context);
 
     const paymentSchema = resolved.properties?.payment as JSONSchema7;
     expect(paymentSchema.oneOf).toBeDefined();
@@ -437,14 +437,14 @@ describe("resolveAllRefs", () => {
       },
     };
 
-    const context: NormalizationContext = {
+    const context: DereferenceContext = {
       rootSchema: schema,
       filterOptions: {},
       visitedRefs: new Set(),
       depth: 0,
     };
 
-    const resolved = resolveAllRefs(schema, context);
+    const resolved = dereferenceSchema(schema, context);
 
     // Original schema should still have $ref
     expect((schema.properties?.ref as JSONSchema7).$ref).toBe("#/$defs/Thing");

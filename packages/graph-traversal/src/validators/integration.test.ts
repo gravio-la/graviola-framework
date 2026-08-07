@@ -1,9 +1,9 @@
 /**
- * Integration tests for filter validation with normalizeSchema
+ * Integration tests for filter validation with buildTraversalSchema
  */
 
 import { describe, it, expect } from "@jest/globals";
-import { normalizeSchema } from "../normalizer";
+import { buildTraversalSchema } from "../traversal-schema";
 import type { JSONSchema7 } from "json-schema";
 import type { GraphTraversalFilterOptions } from "@graviola/edb-core-types";
 
@@ -22,8 +22,8 @@ describe("Filter Validation Integration", () => {
     },
   };
 
-  describe("normalizeSchema with filter validation", () => {
-    it("should validate filters during normalization (throw mode)", () => {
+  describe("buildTraversalSchema with filter validation", () => {
+    it("should validate filters during schema preparation (throw mode)", () => {
       const options: GraphTraversalFilterOptions = {
         where: {
           email: { gt: 20 }, // Invalid: gt on string
@@ -32,11 +32,11 @@ describe("Filter Validation Integration", () => {
       };
 
       expect(() => {
-        normalizeSchema(schema, options);
+        buildTraversalSchema(schema, options);
       }).toThrow("Filter validation failed");
     });
 
-    it("should validate filters during normalization (warn mode)", () => {
+    it("should validate filters during schema preparation (warn mode)", () => {
       const options: GraphTraversalFilterOptions = {
         where: {
           email: { gt: 20 }, // Invalid but should only warn
@@ -46,7 +46,7 @@ describe("Filter Validation Integration", () => {
 
       // Should not throw, just warn (logs to console)
       expect(() => {
-        normalizeSchema(schema, options);
+        buildTraversalSchema(schema, options);
       }).not.toThrow();
     });
 
@@ -58,7 +58,7 @@ describe("Filter Validation Integration", () => {
         filterValidationMode: "ignore",
       };
 
-      const result = normalizeSchema(schema, options);
+      const result = buildTraversalSchema(schema, options);
       expect(result).toBeDefined();
     });
 
@@ -69,7 +69,7 @@ describe("Filter Validation Integration", () => {
         },
       };
 
-      const result = normalizeSchema(schema, options);
+      const result = buildTraversalSchema(schema, options);
       expect(result).toBeDefined();
     });
 
@@ -83,9 +83,9 @@ describe("Filter Validation Integration", () => {
         filterValidationMode: "throw",
       };
 
-      const result = normalizeSchema(schema, options);
+      const result = buildTraversalSchema(schema, options);
       expect(result).toBeDefined();
-      expect(result._normalized).toBe(true);
+      expect(result._traversalSchema).toBe(true);
     });
   });
 
@@ -106,7 +106,7 @@ describe("Filter Validation Integration", () => {
         filterValidationMode: "throw",
       };
 
-      const result = normalizeSchema(schema, options);
+      const result = buildTraversalSchema(schema, options);
       expect(result).toBeDefined();
     });
 
@@ -122,7 +122,7 @@ describe("Filter Validation Integration", () => {
       };
 
       expect(() => {
-        normalizeSchema(schema, options);
+        buildTraversalSchema(schema, options);
       }).toThrow();
     });
   });
@@ -154,7 +154,7 @@ describe("Filter Validation Integration", () => {
         filterValidationMode: "throw",
       };
 
-      const result = normalizeSchema(schemaWithRefs, options);
+      const result = buildTraversalSchema(schemaWithRefs, options);
       expect(result).toBeDefined();
     });
   });

@@ -17,7 +17,7 @@ const isEntityRef = (value: unknown): value is { "@id": string } =>
  * Prepare a staged document for persistence: unwrap single-element ref arrays,
  * truncate overlong strings, and drop mapping-only metadata fields.
  */
-export const normalizeStagedDocument = (
+export const prepareStagedDocument = (
   document: Record<string, unknown>,
 ): Record<string, unknown> => {
   const result: Record<string, unknown> = { ...document };

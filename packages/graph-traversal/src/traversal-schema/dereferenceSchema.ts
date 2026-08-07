@@ -1,6 +1,6 @@
 import type { JSONSchema7, JSONSchema7Definition } from "json-schema";
 import { resolveSchema, isJSONSchema } from "@graviola/json-schema-utils";
-import type { NormalizationContext } from "./types";
+import type { DereferenceContext } from "./types";
 
 /**
  * Checks if a schema represents a relationship (an object with @id property).
@@ -44,7 +44,7 @@ export interface PropertyMetadata {
  */
 export function extractPropertyMetadata(
   schema: JSONSchema7,
-  _context: NormalizationContext,
+  _context: DereferenceContext,
 ): PropertyMetadata {
   if (schema.type === "array") {
     const items = Array.isArray(schema.items)
@@ -69,9 +69,9 @@ export function extractPropertyMetadata(
  * @param context Normalization context
  * @returns A new schema with all $refs resolved
  */
-export function resolveAllRefs(
+export function dereferenceSchema(
   schema: JSONSchema7,
-  context: NormalizationContext,
+  context: DereferenceContext,
 ): JSONSchema7 {
   // Avoid infinite recursion
   if (context.depth > 50) {
@@ -106,7 +106,7 @@ export function resolveAllRefs(
 
     if (resolved && isJSONSchema(resolved as JSONSchema7Definition)) {
       // Recursively resolve the resolved schema (cast to JSONSchema7 as we only support v7)
-      return resolveAllRefs(resolved as JSONSchema7, {
+      return dereferenceSchema(resolved as JSONSchema7, {
         ...context,
         depth: context.depth + 1,
       });
@@ -126,7 +126,7 @@ export function resolveAllRefs(
         newSchema.properties[key] = value;
       } else if (isJSONSchema(value)) {
         // Recursively resolve each property (this will handle $refs in properties)
-        newSchema.properties[key] = resolveAllRefs(value as JSONSchema7, {
+        newSchema.properties[key] = dereferenceSchema(value as JSONSchema7, {
           ...context,
           depth: context.depth + 1,
         });
@@ -141,7 +141,7 @@ export function resolveAllRefs(
     if (Array.isArray(schema.items)) {
       newSchema.items = schema.items.map((item) => {
         if (isJSONSchema(item)) {
-          return resolveAllRefs(item as JSONSchema7, {
+          return dereferenceSchema(item as JSONSchema7, {
             ...context,
             depth: context.depth + 1,
           });
@@ -149,7 +149,7 @@ export function resolveAllRefs(
         return item;
       });
     } else if (isJSONSchema(schema.items)) {
-      newSchema.items = resolveAllRefs(schema.items as JSONSchema7, {
+      newSchema.items = dereferenceSchema(schema.items as JSONSchema7, {
         ...context,
         depth: context.depth + 1,
       });
@@ -160,7 +160,7 @@ export function resolveAllRefs(
   if (schema.allOf) {
     newSchema.allOf = schema.allOf.map((subSchema) => {
       if (isJSONSchema(subSchema)) {
-        return resolveAllRefs(subSchema as JSONSchema7, {
+        return dereferenceSchema(subSchema as JSONSchema7, {
           ...context,
           depth: context.depth + 1,
         });
@@ -173,7 +173,7 @@ export function resolveAllRefs(
   if (schema.anyOf) {
     newSchema.anyOf = schema.anyOf.map((subSchema) => {
       if (isJSONSchema(subSchema)) {
-        return resolveAllRefs(subSchema as JSONSchema7, {
+        return dereferenceSchema(subSchema as JSONSchema7, {
           ...context,
           depth: context.depth + 1,
         });
@@ -186,7 +186,7 @@ export function resolveAllRefs(
   if (schema.oneOf) {
     newSchema.oneOf = schema.oneOf.map((subSchema) => {
       if (isJSONSchema(subSchema)) {
-        return resolveAllRefs(subSchema as JSONSchema7, {
+        return dereferenceSchema(subSchema as JSONSchema7, {
           ...context,
           depth: context.depth + 1,
         });

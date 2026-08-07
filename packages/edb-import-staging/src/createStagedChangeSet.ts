@@ -6,7 +6,7 @@ import {
   type DocumentToTriplesOptions,
 } from "./documentToTriples";
 import { referenceFirstApplyOrder } from "./applyOrder";
-import { normalizeStagedDocument } from "./normalizeStagedDocument";
+import { prepareStagedDocument } from "./prepareStagedDocument";
 import type { ChangeSetEvent, StagedChangeSet, StagedEntity } from "./types";
 
 export type CreateStagedChangeSetOptions = {
@@ -161,7 +161,7 @@ export const createStagedChangeSet = (
       for (let index = 0; index < toApply.length; index += 1) {
         const entity = toApply[index]!;
         const typeName = typeIRItoTypeName(entity.typeIRI);
-        const document = normalizeStagedDocument(entity.document);
+        const document = prepareStagedDocument(entity.document);
         await target.upsert(typeName, entity.entityIRI, document);
         appliedIRIs.push(entity.entityIRI);
         emit({

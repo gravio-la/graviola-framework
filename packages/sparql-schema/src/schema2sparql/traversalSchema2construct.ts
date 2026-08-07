@@ -1,12 +1,13 @@
 /**
- * New safe SPARQL CONSTRUCT query builder that operates on normalized schemas
+ * SPARQL CONSTRUCT query builder that operates on traversal schemas
+ * (output of `buildTraversalSchema`: `$ref`s dereferenced, then projected).
  *
  * Key features:
- * - Works on normalized schemas (all $refs resolved)
+ * - Assumes no surviving `$ref`s — walks `.properties` directly
  * - Uses @tpluscode/sparql-builder for safe query construction
  * - Prevents injection attacks through proper escaping
  * - Supports pagination with query-stage marking
- * - Cache-friendly design (normalized schemas can be reused)
+ * - Cache-friendly: traversal schemas can be reused across queries
  */
 
 import {
@@ -17,7 +18,7 @@ import {
 import { rdf } from "@tpluscode/rdf-ns-builders";
 import { JSONSchema7 } from "json-schema";
 import { isJSONSchema } from "@graviola/json-schema-utils";
-import type { NormalizedSchema } from "@graviola/edb-graph-traversal";
+import type { TraversalSchema } from "@graviola/edb-graph-traversal";
 import type {
   Prefixes,
   OrderByClause,
@@ -48,7 +49,7 @@ import type { FilterContext } from "@/filters/types";
  */
 export type QueryConstructionContext = {
   /** The current schema being processed */
-  schema: NormalizedSchema;
+  schema: TraversalSchema;
   /** Filter options (select, include, omit, where) carried through recursion */
   filterOptions: GraphTraversalFilterOptions;
   /** SPARQL engine profile id (for FilterContext / diagnostics) */
@@ -398,7 +399,7 @@ function applyFieldKeyedIncludeWhere(
 function createNestedContext(
   ctx: QueryConstructionContext,
   propertyName: string,
-  nestedSchema?: NormalizedSchema,
+  nestedSchema?: TraversalSchema,
 ): QueryConstructionContext {
   const includeValue = ctx.filterOptions.include?.[propertyName];
   const nestedFilterOptions: Partial<GraphTraversalFilterOptions> =
@@ -525,19 +526,19 @@ function createPaginatedLateralSelect(
 }
 
 /**
- * Generate SPARQL CONSTRUCT query from a normalized schema
+ * Generate SPARQL CONSTRUCT query from a traversal schema
  *
  *
  * @param subjectIRI - The IRI(s) of the subject(s) to construct (single IRI or array of IRIs) or undefined/null to construct all subjects
  * @param typeIRIs - The IRI(s) of the type(s) to construct (single IRI or array of IRIs) or undefined/null to construct all types
- * @param normalizedSchema - Schema with all $refs resolved
+ * @param traversalSchema - Dereferenced + projected schema from `buildTraversalSchema`
  * @param options - Optional configuration
  * @returns CONSTRUCT and WHERE patterns with metadata
  */
-export function normalizedSchema2construct(
+export function traversalSchema2construct(
   subjectIRI: OptionalStringOrStringArray,
   typeIRIs: OptionalStringOrStringArray | undefined,
-  normalizedSchema: NormalizedSchema,
+  traversalSchema: TraversalSchema,
   options?: {
     excludedProperties?: string[];
     maxRecursion?: number;
@@ -552,7 +553,7 @@ export function normalizedSchema2construct(
   const flavour = options?.flavour || "default";
   const features = resolveSparqlFeatures(flavour, options?.sparqlFeatures);
   const ctx: QueryConstructionContext = {
-    schema: normalizedSchema,
+    schema: traversalSchema,
     filterOptions: options?.filterOptions || {},
     flavour,
     features,
@@ -630,7 +631,7 @@ export function normalizedSchema2construct(
         const logicalResult = applyFieldKeyedIncludeWhere(
           { [key]: value } as Record<string, unknown>,
           subject,
-          normalizedSchema,
+          traversalSchema,
           ctx,
           ctx.flavour,
         );
@@ -653,12 +654,12 @@ export function normalizedSchema2construct(
   }
 
   // Walk through schema properties
-  if (normalizedSchema.properties) {
-    Object.entries(normalizedSchema.properties).forEach(
+  if (traversalSchema.properties) {
+    Object.entries(traversalSchema.properties).forEach(
       ([propertyName, propertySchema]) => {
         // Skip explicitly excluded properties
         // Note: JSON-LD metadata properties (@id, @type, etc.) should already be
-        // filtered out during schema normalization (via excludeJsonLdMetadata flag)
+        // filtered out during schema preparation (via excludeJsonLdMetadata flag)
         if (ctx.excludedProperties.includes(propertyName)) {
           return;
         }
@@ -1005,18 +1006,18 @@ function handleNestedObject(
   };
   whereParts.push(typeWherePart);
 
-  // Create a minimal NormalizedSchema for nested property processing
+  // Create a minimal TraversalSchema for nested property processing
   // This allows createPropertyPatterns to check for required properties
-  const nestedNormalizedSchema: NormalizedSchema = {
+  const nestedTraversalSchema: TraversalSchema = {
     ...objectSchema,
-    _normalized: true,
+    _traversalSchema: true,
   };
 
   // Walk through nested properties
   if (objectSchema.properties) {
     Object.entries(objectSchema.properties).forEach(
       ([nestedPropName, nestedPropSchema]) => {
-        // Note: JSON-LD metadata properties should already be filtered during normalization
+        // Note: JSON-LD metadata properties should already be filtered during schema preparation
         if (!isJSONSchema(nestedPropSchema)) {
           return; // Skip boolean schemas
         }
@@ -1028,7 +1029,7 @@ function handleNestedObject(
           nestedPropSchema as JSONSchema7,
           {
             ...ctx,
-            schema: nestedNormalizedSchema,
+            schema: nestedTraversalSchema,
           },
         );
 

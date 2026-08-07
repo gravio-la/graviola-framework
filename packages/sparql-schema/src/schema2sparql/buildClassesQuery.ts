@@ -1,7 +1,7 @@
 /**
  * Simplified SPARQL query builder for getting entity classes with filters
  *
- * This is a lightweight alternative to normalizedSchema2construct
+ * This is a lightweight alternative to traversalSchema2construct
  * 1. Find entities matching a where clause
  * 2. Get their rdf:type triples
  *
@@ -59,7 +59,7 @@ export interface ClassesQueryResult {
  * This generates a minimal query that:
  * - Finds all entities matching the where clause
  * - Constructs their rdf:type triples
- * - Does NOT traverse nested properties (unlike normalizedSchema2construct)
+ * - Does NOT traverse nested properties (unlike traversalSchema2construct)
  *
  * @param options - Filter and configuration options
  * @returns Complete SPARQL query

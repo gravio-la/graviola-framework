@@ -326,11 +326,11 @@ expectError<TypedGraphTraversalFilterOptions<SimplePerson>>({
 });
 
 // ============================================================================
-// Integration Tests with normalizeSchema-like function signatures
+// Integration Tests with buildTraversalSchema-like function signatures
 // ============================================================================
 
 // Simulate function that accepts typed options
-function mockNormalizeSchema<T = any>(
+function mockBuildTraversalSchema<T = any>(
   schema: any,
   options: TypedGraphTraversalFilterOptions<T> = {},
 ): void {
@@ -338,14 +338,14 @@ function mockNormalizeSchema<T = any>(
 }
 
 // ✓ Should work with explicit type parameter
-mockNormalizeSchema<SimplePerson>({}, { select: { name: true } });
+mockBuildTraversalSchema<SimplePerson>({}, { select: { name: true } });
 
 // ✓ Should work without type parameter (defaults to any)
-mockNormalizeSchema({}, { select: { anyKey: true } });
+mockBuildTraversalSchema({}, { select: { anyKey: true } });
 
 // ✗ Should reject invalid keys with explicit type
 expectError(
-  mockNormalizeSchema<SimplePerson>(
+  mockBuildTraversalSchema<SimplePerson>(
     {},
     {
       select: {

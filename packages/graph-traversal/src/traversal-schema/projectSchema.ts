@@ -4,7 +4,7 @@ import type {
   IncludePattern,
   PaginationOptions,
 } from "@graviola/edb-core-types";
-import { isRelationshipSchema } from "./resolveAllRefs";
+import { isRelationshipSchema } from "./dereferenceSchema";
 import { validateFilter } from "../validators/filterValidator";
 
 /**
@@ -34,10 +34,10 @@ const WHERE_SYNTAX_KEYS = new Set([
  * without descending into relational filter objects (`some` / nested value shapes).
  *
  * Used with `select` so properties only mentioned in `where` (e.g. `amenities`) are preserved
- * in the normalized schema, allowing downstream SPARQL CONSTRUCT generators to attach `where`
+ * in the traversal schema, allowing downstream SPARQL CONSTRUCT generators to attach `where`
  * clauses for those properties.
  *
- * Intended for `depth === 0` only; nested normalization passes an empty hint set.
+ * Intended for `depth === 0` only; nested projection passes an empty hint set.
  */
 export function referencedRootWhereFilterProperties(
   where: unknown,
@@ -253,7 +253,7 @@ function applyNestedFilters<T = any>(
   }
 
   // Apply filters with the nested include pattern
-  return applyFilters(schema, nestedFilterOptions, rootSchema, depth + 1);
+  return projectSchema(schema, nestedFilterOptions, rootSchema, depth + 1);
 }
 
 /**
@@ -307,16 +307,16 @@ function mergeOrderByIntoSelect<T>(
 }
 
 /**
- * Applies filter options to a schema's properties
- * @template T - The type to derive filter patterns from
- * @param schema The schema to filter
- * @param filterOptions The filter options to apply
- * @param rootSchema The root schema for resolving refs in nested filters
- * @param depth Current recursion depth for nested filtering
- * @returns A new schema with filtered properties
+ * Project a schema by a selection set (`select` / `include` / `omit` / `where`).
  *
+ * @template T - The type to derive filter patterns from
+ * @param schema The (typically dereferenced) schema to project
+ * @param filterOptions The selection set / filter options to apply
+ * @param rootSchema The root schema for resolving refs in nested filters
+ * @param depth Current recursion depth for nested projection
+ * @returns A new schema with projected properties
  */
-export function applyFilters<T = any>(
+export function projectSchema<T = any>(
   schema: JSONSchema7,
   filterOptions: GraphTraversalFilterOptions<T>,
   rootSchema?: JSONSchema7,

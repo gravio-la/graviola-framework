@@ -4,7 +4,7 @@ export * from "./annotationProjectionsToSparql";
 export * from "./selectQuery";
 export * from "./primitives";
 export * from "./prefixes2sparqlPrefixDeclaration";
-export * from "./normalizedSchema2construct";
+export * from "./traversalSchema2construct";
 export * from "./buildSPARQLConstructQuery";
 export * from "./buildTypedSPARQLQuery";
 export * from "./buildClassesQuery";
