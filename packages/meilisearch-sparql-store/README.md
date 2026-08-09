@@ -47,10 +47,19 @@ const { documents } = await store.searchDocuments("Exhibition", "modern", {
 });
 ```
 
+## Bootstrap CLI
+
+Prefer [`apps/fts-cli`](../../apps/fts-cli) (`graviola-fts`) for Prisma-like index lifecycle:
+
+```bash
+graviola-fts push && graviola-fts populate
+graviola-fts status --check
+```
+
 ## Tests
 
 ```bash
-bun test                          # unit tests (mocked fetch)
-docker compose up -d --wait
-MEILI_URL=http://localhost:7700 bun test test/e2e.test.ts
+cd packages/meilisearch-sparql-store
+docker compose up -d --wait   # Meilisearch on host port 7701
+MEILI_URL=http://127.0.0.1:7701 bun test test/e2e.test.ts test/lifecycle.e2e.test.ts
 ```

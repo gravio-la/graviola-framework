@@ -159,6 +159,48 @@ describe("initMeilisearchSparqlStore", () => {
 });
 
 describe("createMeilisearchAdapter", () => {
+  test("getIndexSettings and getIndexStats", async () => {
+    globalThis.fetch = (async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes("/settings")) {
+        return new Response(
+          JSON.stringify({
+            searchableAttributes: ["title"],
+            filterableAttributes: ["year"],
+            sortableAttributes: ["year"],
+          }),
+          { status: 200, headers: { "Content-Type": "application/json" } },
+        );
+      }
+      if (url.includes("/stats")) {
+        return new Response(JSON.stringify({ numberOfDocuments: 42 }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+      return new Response("", { status: 404 });
+    }) as typeof fetch;
+
+    const adapter = createMeilisearchAdapter({
+      baseUrl: "http://localhost:7700",
+    });
+    const settings = await adapter.getIndexSettings?.("Exhibition");
+    expect(settings?.searchableAttributes).toEqual(["title"]);
+    expect(settings?.filterableAttributes).toEqual(["year"]);
+    const stats = await adapter.getIndexStats?.("Exhibition");
+    expect(stats?.numberOfDocuments).toBe(42);
+  });
+
+  test("getIndexSettings returns null for missing index", async () => {
+    globalThis.fetch = (async () =>
+      new Response("", { status: 404 })) as typeof fetch;
+    const adapter = createMeilisearchAdapter({
+      baseUrl: "http://localhost:7700",
+    });
+    expect(await adapter.getIndexSettings?.("Missing")).toBeNull();
+    expect(await adapter.getIndexStats?.("Missing")).toBeNull();
+  });
+
   test("ensureIndex creates index and patches settings", async () => {
     const calls: { url: string; method: string; body?: unknown }[] = [];
 
