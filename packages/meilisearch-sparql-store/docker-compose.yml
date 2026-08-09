@@ -2,7 +2,8 @@ services:
   meilisearch:
     image: getmeili/meilisearch:v1.12
     ports:
-      - "7700:7700"
+      # Host 7701 avoids clash with a system Meilisearch often bound on 7700.
+      - "7701:7700"
     environment:
       MEILI_ENV: development
       MEILI_NO_ANALYTICS: "true"

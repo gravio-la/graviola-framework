@@ -200,6 +200,26 @@ export function createMeilisearchAdapter(
       if (taskUid != null) await waitForTask(config, taskUid);
     },
 
+    async deleteDocuments(uid, ids: string[]) {
+      if (ids.length === 0) return;
+      const res = await meiliFetch(
+        config,
+        `/indexes/${encodeURIComponent(uid)}/documents/delete-batch`,
+        {
+          method: "POST",
+          body: JSON.stringify(ids),
+        },
+      );
+      if (!res.ok && res.status !== 404) {
+        const text = await res.text();
+        throw new Error(
+          `Meilisearch deleteDocuments ${uid}: ${res.status} ${text}`,
+        );
+      }
+      const taskUid = await parseTaskUid(res);
+      if (taskUid != null) await waitForTask(config, taskUid);
+    },
+
     async search(uid, q: TextIndexQuery): Promise<TextIndexResult> {
       const body: Record<string, unknown> = {
         q: q.q,
@@ -230,6 +250,12 @@ export function createMeilisearchAdapter(
     },
 
     async clearIndex(uid) {
+      const exists = await meiliFetch(
+        config,
+        `/indexes/${encodeURIComponent(uid)}`,
+      );
+      if (exists.status === 404) return;
+
       const res = await meiliFetch(
         config,
         `/indexes/${encodeURIComponent(uid)}/documents`,
@@ -244,6 +270,12 @@ export function createMeilisearchAdapter(
     },
 
     async deleteIndex(uid) {
+      const exists = await meiliFetch(
+        config,
+        `/indexes/${encodeURIComponent(uid)}`,
+      );
+      if (exists.status === 404) return;
+
       const res = await meiliFetch(
         config,
         `/indexes/${encodeURIComponent(uid)}`,
@@ -257,6 +289,48 @@ export function createMeilisearchAdapter(
       }
       const taskUid = await parseTaskUid(res);
       if (taskUid != null) await waitForTask(config, taskUid);
+    },
+
+    async getIndexSettings(uid) {
+      const res = await meiliFetch(
+        config,
+        `/indexes/${encodeURIComponent(uid)}/settings`,
+      );
+      if (res.status === 404) return null;
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(
+          `Meilisearch getIndexSettings ${uid}: ${res.status} ${text}`,
+        );
+      }
+      const body = (await res.json()) as {
+        searchableAttributes?: string[] | null;
+        filterableAttributes?: string[] | null;
+        sortableAttributes?: string[] | null;
+        primaryKey?: string | null;
+      };
+      return {
+        primaryKey: body.primaryKey ?? undefined,
+        searchableAttributes: body.searchableAttributes ?? [],
+        filterableAttributes: body.filterableAttributes ?? [],
+        sortableAttributes: body.sortableAttributes ?? undefined,
+      };
+    },
+
+    async getIndexStats(uid) {
+      const res = await meiliFetch(
+        config,
+        `/indexes/${encodeURIComponent(uid)}/stats`,
+      );
+      if (res.status === 404) return null;
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(
+          `Meilisearch getIndexStats ${uid}: ${res.status} ${text}`,
+        );
+      }
+      const body = (await res.json()) as { numberOfDocuments?: number };
+      return { numberOfDocuments: body.numberOfDocuments ?? 0 };
     },
   };
 }

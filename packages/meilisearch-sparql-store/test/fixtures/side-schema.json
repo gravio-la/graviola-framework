@@ -1,0 +1,12 @@
+{
+  "schemaName": "fts-e2e-fixture",
+  "label": "FTS E2E",
+  "baseIRI": "http://example.org/ontology#",
+  "entityBaseIRI": "http://example.org/entity/",
+  "primaryFields": {
+    "Exhibition": { "label": "title", "description": "description" },
+    "Artist": { "label": "name", "description": "bio" },
+    "Place": { "label": "placeName", "description": "description" },
+    "Curator": { "label": "curatorName" }
+  }
+}
