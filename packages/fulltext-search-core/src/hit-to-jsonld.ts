@@ -1,11 +1,16 @@
 import { INDEX_DOC_IRI, INDEX_DOC_TYPE } from "./constants";
 import { decodeDocIdToIri } from "./id-mapping";
-import type { TextIndexHit } from "./engine";
 import type { TypeRouting } from "./routing/build-routing-policy";
 
 export type JsonLdEntity = Record<string, unknown> & {
   "@id": string;
   "@type": string;
+};
+
+/** Minimal hit shape — avoid coupling DTS to `./engine` re-exports. */
+type SearchIndexHit = {
+  id: string;
+  document: Record<string, unknown>;
 };
 
 /** Reverse-map index field names → schema property names. */
@@ -19,11 +24,21 @@ function indexFieldToProperty(routing: TypeRouting): Map<string, string> {
 
 const INTERNAL_KEYS = new Set(["id", INDEX_DOC_IRI, INDEX_DOC_TYPE]);
 
+function isHyperFormulaNameError(value: unknown): boolean {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "type" in value &&
+    "value" in value &&
+    (value as { value?: unknown }).value === "#NAME?"
+  );
+}
+
 /**
  * Turn a text-index hit into a JSON-LD stub document with `@id` and `@type`.
  */
 export function hitToJsonLd(
-  hit: TextIndexHit,
+  hit: SearchIndexHit,
   routing: TypeRouting,
   options: { typeIri: string; decodeId?: (id: string) => string },
 ): JsonLdEntity {
@@ -45,6 +60,7 @@ export function hitToJsonLd(
 
   for (const [key, value] of Object.entries(doc)) {
     if (INTERNAL_KEYS.has(key)) continue;
+    if (isHyperFormulaNameError(value)) continue;
     const prop = indexToProp.get(key) ?? key;
     result[prop] = value;
   }
@@ -58,5 +74,14 @@ export function mergeHydratedStub<T extends JsonLdEntity>(
   hydrated: Record<string, unknown> | null | undefined,
 ): T {
   if (!hydrated) return stub;
-  return { ...stub, ...hydrated, "@id": stub["@id"], "@type": stub["@type"] };
+  const cleanedStub = { ...stub } as Record<string, unknown>;
+  for (const [key, value] of Object.entries(cleanedStub)) {
+    if (isHyperFormulaNameError(value)) delete cleanedStub[key];
+  }
+  return {
+    ...cleanedStub,
+    ...hydrated,
+    "@id": stub["@id"],
+    "@type": stub["@type"],
+  } as T;
 }

@@ -207,6 +207,92 @@ describe("initFulltextSearchStore with in-memory adapter", () => {
     expect(result.documents[0]?.fileName).toBe("AlbumArtSmall.jpg");
   });
 
+  test("hydrate prefers filterMany batch over loadOne", async () => {
+    const adapter = createInMemoryTextIndexAdapter();
+    const typeIri = "http://ex.org/Artist";
+    const artistSidecar = loadSearchFacetSchema({
+      fulltextIndex: {
+        scopes: { "#/definitions/Artist/properties/name": {} },
+      },
+    });
+    await prepareFulltextIndexes({
+      adapter,
+      searchFacetSchema: artistSidecar,
+      primaryFields,
+    });
+    const routing = buildRoutingPolicy({
+      sidecar: artistSidecar,
+      primaryFields,
+    });
+    const artistRouting = getTypeRouting(routing, "Artist")!;
+
+    await adapter.addDocuments(artistRouting.indexUid, [
+      projectEntityToIndexDoc(
+        { "@id": "http://ex.org/a/1", "@type": typeIri, name: "Monet" },
+        artistRouting,
+        { typeIri },
+      ),
+      projectEntityToIndexDoc(
+        { "@id": "http://ex.org/a/2", "@type": typeIri, name: "Manet" },
+        artistRouting,
+        { typeIri },
+      ),
+    ]);
+
+    let loadOneCalls = 0;
+    let filterManyCalls = 0;
+    const primary = {
+      storeId: "mock",
+      capabilities: {
+        identifies: true as const,
+        loads: true as const,
+        filters: true as const,
+      },
+      typeNameToTypeIRI: () => typeIri,
+      typeIRItoTypeName: () => "Artist",
+      loadOne: async () => {
+        loadOneCalls += 1;
+        return null;
+      },
+      filterMany: async (
+        _type: string,
+        options?: { entityIRIs?: string[] },
+      ) => {
+        filterManyCalls += 1;
+        return (options?.entityIRIs ?? []).map((iri) => ({
+          "@id": iri,
+          "@type": typeIri,
+          name: iri.endsWith("/1") ? "Monet" : "Manet",
+          birthYear: iri.endsWith("/1") ? 1840 : 1832,
+        }));
+      },
+    };
+
+    const store = initFulltextSearchStore({
+      adapter,
+      primaryStore: primary,
+      searchFacetSchema: artistSidecar,
+      schema: {},
+      primaryFields,
+    });
+
+    const byLabel = await store.searchByLabel("Artist", "M", 10);
+    expect(byLabel).toHaveLength(2);
+    expect(byLabel[0]?.birthYear).toBeDefined();
+    expect(filterManyCalls).toBe(1);
+    expect(loadOneCalls).toBe(0);
+
+    filterManyCalls = 0;
+    const viaFilter = await store.filterMany("Artist", {
+      searchString: "Monet",
+      limit: 5,
+    });
+    expect(viaFilter).toHaveLength(1);
+    expect(viaFilter[0]?.["@id"]).toBe("http://ex.org/a/1");
+    expect((viaFilter[0] as { birthYear?: number }).birthYear).toBe(1840);
+    expect(filterManyCalls).toBe(1);
+  });
+
   test("hydrate merges primary store document", async () => {
     const adapter = createInMemoryTextIndexAdapter();
     await prepareFulltextIndexes({

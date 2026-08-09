@@ -35,7 +35,8 @@ export type PrepareFulltextIndexesResult = {
   types: TypeIndexSummary[];
 };
 
-function settingsForType(routing: TypeRouting): IndexSettings {
+/** Derive engine {@link IndexSettings} from a type's routing entry. */
+export function settingsForType(routing: TypeRouting): IndexSettings {
   const filterable = routing.facetFields.map((f) => f.indexField);
   const sortable = routing.facetFields
     .filter((f) => f.mode === "range")
