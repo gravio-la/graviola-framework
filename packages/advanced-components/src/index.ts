@@ -6,3 +6,4 @@ export * from "./menu";
 export * from "./list";
 export * from "./finder";
 export * from "./sidebar";
+export * from "./authority/createWikidataKnowledgeBase";
