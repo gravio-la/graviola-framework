@@ -51,6 +51,13 @@ export type StoreCommand<R extends SchemaRegistry = SchemaRegistry> =
       limit?: number;
       mode?: "typed" | "entity_rows";
     }
+  | {
+      kind: "findByAuthority";
+      typeName: string;
+      authorityIRI: string;
+      repositoryIRI?: string;
+      limit?: number;
+    }
   | { kind: "upsert"; typeName: string; entityIRI: string; document: unknown }
   | { kind: "remove"; typeName: string; entityIRI: string }
   | { kind: "resolveTypes"; entityIRI: string }
@@ -231,6 +238,29 @@ export const decodeStorePath = (
 
   if (segments.length === 2 && segments[1] === "_search" && method === "POST") {
     return { kind: "search", typeName, text: "" };
+  }
+
+  // GET /{typeName}/_by-authority?authorityIRI=…&repositoryIRI=…&limit=…
+  if (
+    segments.length === 2 &&
+    segments[1] === "_by-authority" &&
+    method === "GET"
+  ) {
+    const url = new URL(req.url);
+    const authorityIRI = url.searchParams.get("authorityIRI") ?? "";
+    const repositoryIRI = url.searchParams.get("repositoryIRI") ?? undefined;
+    const limitRaw = url.searchParams.get("limit");
+    const limit =
+      limitRaw != null && Number.isFinite(Number(limitRaw))
+        ? Number(limitRaw)
+        : undefined;
+    return {
+      kind: "findByAuthority",
+      typeName,
+      authorityIRI,
+      repositoryIRI,
+      limit,
+    };
   }
 
   if (segments.length === 2) {
@@ -460,6 +490,10 @@ export const encodeCommandResult = (
       const items = Array.isArray(result) ? result : [];
       return jsonResponse({ items });
     }
+    case "findByAuthority": {
+      const items = Array.isArray(result) ? result : [];
+      return jsonResponse({ items });
+    }
     case "resolveTypes":
       return jsonResponse(Array.isArray(result) ? result : []);
     case "writeStatements":
@@ -538,6 +572,7 @@ export const commandCapability = (cmd: StoreCommand): CommandCapability => {
     case "count":
       return "counts";
     case "search":
+    case "findByAuthority":
       return "searches";
     case "upsert":
       return "writes";

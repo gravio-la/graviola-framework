@@ -157,6 +157,30 @@ const executeOnStore = async (
         cmd.text,
         cmd.limit,
       );
+    case "findByAuthority": {
+      const finder = (
+        store as {
+          findDocumentsByAuthorityIRI?: (
+            typeName: string,
+            authorityIRI: string,
+            repositoryIRI?: string,
+            limit?: number,
+          ) => Promise<unknown[]>;
+        }
+      ).findDocumentsByAuthorityIRI;
+      if (typeof finder !== "function") {
+        throw Object.assign(
+          new Error("findDocumentsByAuthorityIRI not implemented"),
+          { status: 501, code: "capability_not_supported" },
+        );
+      }
+      return finder(
+        cmd.typeName,
+        cmd.authorityIRI,
+        cmd.repositoryIRI,
+        cmd.limit,
+      );
+    }
     case "upsert":
       return (store.upsert as Function)(
         cmd.typeName,
