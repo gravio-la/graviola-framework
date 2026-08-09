@@ -95,6 +95,17 @@ export type RESTClientStore<R extends SchemaRegistry = SchemaRegistry> =
         rootIRIs?: string[],
         options?: { skipFresh?: boolean },
       ) => Promise<CalcWarmResult>;
+      /**
+       * Resolve local entities by secondary authority identifier
+       * (`GET /{type}/_by-authority`). Falls back to `filterMany` on `sameAs`
+       * when the dedicated route is unavailable.
+       */
+      findDocumentsByAuthorityIRI: (
+        typeName: string,
+        authorityIRI: string,
+        repositoryIRI?: string,
+        limit?: number,
+      ) => Promise<EntityOf<R, keyof R & string>[]>;
     };
 
 const ensureProtocolVersion = (inner: GraviolaStoreHandshakeInner): void => {
@@ -416,6 +427,56 @@ export const createRESTClientStoreClient = <
           ? ((json as GraviolaListEnvelope).items ?? [])
           : [];
       return raw.map((row) => coerceEntityRow(row));
+    },
+    findDocumentsByAuthorityIRI: async (
+      typeName: string,
+      authorityIRI: string,
+      repositoryIRI?: string,
+      limit?: number,
+    ): Promise<EntityOf<R, keyof R & string>[]> => {
+      capOrThrow(capabilities, "searches");
+      const params = new URLSearchParams({ authorityIRI });
+      if (repositoryIRI) params.set("repositoryIRI", repositoryIRI);
+      if (limit != null) params.set("limit", String(limit));
+      const byAuthPath = rel(
+        `${encodeURIComponent(typeName)}/_by-authority?${params.toString()}`,
+      );
+      try {
+        const res = await opts.transport.get(byAuthPath);
+        const json: unknown = await res.json();
+        let items: unknown[];
+        if (Array.isArray(json)) items = json;
+        else if (json && typeof json === "object" && "items" in json) {
+          items = (json as GraviolaListEnvelope).items ?? [];
+        } else items = [];
+        return items.map((item) => {
+          if (typeof item === "string") {
+            return { "@id": item } as EntityOf<R, keyof R & string>;
+          }
+          return item as EntityOf<R, keyof R & string>;
+        });
+      } catch (err) {
+        // Older servers: fall back to typed filter on schema `sameAs`
+        if (
+          err instanceof GraviolaRestError &&
+          (err.status === 404 || err.status === 501)
+        ) {
+          const filterPath = rel(`${encodeURIComponent(typeName)}/_query`);
+          const res = await opts.transport.postJson(filterPath, {
+            where: { sameAs: { equals: authorityIRI } },
+            select: { "@id": true },
+            limit: limit ?? 10,
+          });
+          const json: unknown = await res.json();
+          let items: unknown[];
+          if (Array.isArray(json)) items = json;
+          else if (json && typeof json === "object" && "items" in json) {
+            items = (json as GraviolaListEnvelope).items ?? [];
+          } else items = [];
+          return items as EntityOf<R, keyof R & string>[];
+        }
+        throw err;
+      }
     },
     resolveTypes: async (entityIRI: string): Promise<string[]> => {
       if (!inner.resolves?.supported) {

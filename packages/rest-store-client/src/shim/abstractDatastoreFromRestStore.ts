@@ -84,9 +84,31 @@ export const abstractDatastoreFromRestStore = <
       store.findEntityByTypeName(typeName, searchString, limit) as Promise<
         Entity[]
       >,
-    findDocumentsByAuthorityIRI: async () => {
-      throw new Error(
-        "findDocumentsByAuthorityIRI is not implemented for this HTTP-backed store client",
+    findDocumentsByAuthorityIRI: async (
+      typeName,
+      authorityIRI,
+      repositoryIRI,
+      limit,
+    ) => {
+      if (!("findDocumentsByAuthorityIRI" in store)) {
+        throw new Error(
+          "findDocumentsByAuthorityIRI is not implemented for this HTTP-backed store client",
+        );
+      }
+      return (
+        store as {
+          findDocumentsByAuthorityIRI: (
+            typeName: string,
+            authorityIRI: string,
+            repositoryIRI?: string,
+            limit?: number,
+          ) => Promise<unknown[]>;
+        }
+      ).findDocumentsByAuthorityIRI(
+        typeName,
+        authorityIRI,
+        repositoryIRI,
+        limit,
       );
     },
     findDocumentsAsFlatResultSet: isLegacy(store)
