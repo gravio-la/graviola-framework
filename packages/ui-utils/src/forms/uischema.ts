@@ -25,6 +25,11 @@ export type GenerateUISchemaOptions = OverrideOptions & {
   layoutType?: string;
   prefix?: string;
   rootSchema?: JsonSchema;
+  /**
+   * `override` (default): walk all properties and apply scopeOverride / skipScope.
+   * `exclusive`: layout contains only scopes listed in scopeOverride (order preserved).
+   */
+  mode?: "override" | "exclusive";
 };
 /**
  * Creates a new ILayout.
@@ -232,7 +237,20 @@ export const generateDefaultUISchema = (
     rootSchema = jsonSchema,
     scopeOverride = {},
     skipScope = [],
+    mode = "override",
   } = options;
+
+  if (mode === "exclusive") {
+    const layout = createLayout(layoutType);
+    for (const scope of Object.keys(scopeOverride)) {
+      if (skipScope.includes(scope)) continue;
+      layout.elements.push(
+        createControlElement(scope, { scopeOverride, skipScope }),
+      );
+    }
+    return layout;
+  }
+
   return wrapInLayoutIfNecessary(
     generateUISchema(jsonSchema, [], prefix, "", layoutType, rootSchema, {
       scopeOverride,
