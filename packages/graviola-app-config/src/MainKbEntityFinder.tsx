@@ -2,6 +2,10 @@
 
 import { useMemo } from "react";
 import { KBMainDatabase } from "@graviola/edb-advanced-components";
+import {
+  createWikidataKnowledgeBase,
+  WIKIDATA_AUTHORITY,
+} from "@graviola/edb-advanced-components";
 import { useAdbContext, useDataStore } from "@graviola/edb-state-hooks";
 import { EntityFinder } from "@graviola/entity-finder";
 import type {
@@ -10,28 +14,39 @@ import type {
 } from "@graviola/semantic-jsonform-types";
 
 /**
- * Default similarity finder: single knowledge base backed by the app's
- * configured {@link useDataStore} + primary fields.
+ * Default similarity finder: local KB plus Wikidata when
+ * `normDataMapping[wikidata].sameAsTypeMap` is configured.
  */
 export const MainKbEntityFinder = (props: EntityFinderProps) => {
-  const { queryBuildOptions } = useAdbContext();
+  const { queryBuildOptions, normDataMapping = {} } = useAdbContext();
   const { dataStore } = useDataStore();
-  const allKnowledgeBases = useMemo<FinderKnowledgeBaseDescription<any>[]>(
-    () =>
-      dataStore
-        ? [
-            KBMainDatabase(
-              dataStore,
-              queryBuildOptions.primaryFields,
-              queryBuildOptions.typeIRItoTypeName,
-            ),
-          ]
-        : [],
-    [
-      dataStore,
-      queryBuildOptions.primaryFields,
-      queryBuildOptions.typeIRItoTypeName,
-    ],
-  );
+  const allKnowledgeBases = useMemo<
+    FinderKnowledgeBaseDescription<any>[]
+  >(() => {
+    const bases: FinderKnowledgeBaseDescription<any>[] = [];
+    if (dataStore) {
+      bases.push(
+        KBMainDatabase(
+          dataStore,
+          queryBuildOptions.primaryFields,
+          queryBuildOptions.typeIRItoTypeName,
+        ),
+      );
+    }
+    const wd = normDataMapping[WIKIDATA_AUTHORITY];
+    if (wd?.sameAsTypeMap) {
+      bases.push(
+        createWikidataKnowledgeBase({
+          sameAsTypeMap: wd.sameAsTypeMap,
+        }),
+      );
+    }
+    return bases;
+  }, [
+    dataStore,
+    normDataMapping,
+    queryBuildOptions.primaryFields,
+    queryBuildOptions.typeIRItoTypeName,
+  ]);
   return <EntityFinder {...props} allKnowledgeBases={allKnowledgeBases} />;
 };

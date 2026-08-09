@@ -32,6 +32,7 @@ import {
   extractFieldIfString,
 } from "@graviola/edb-data-mapping";
 import type { EditEntityModalProps } from "@graviola/semantic-jsonform-types";
+import { ImportFromAuthorityButton } from "./ImportFromAuthorityButton";
 
 // Component that handles the loaded state with all the form logic
 const EditEntityModalContent = ({
@@ -269,6 +270,16 @@ const EditEntityModalContent = ({
       editMode={true}
       actions={
         <Stack direction="row" spacing={2} alignItems="center">
+          <ImportFromAuthorityButton
+            typeIRI={classIRI}
+            typeName={typeName}
+            entityIRI={entityIRI}
+            data={formData as Record<string, unknown>}
+            onApplied={() => {
+              void loadQuery.refetch?.();
+              onSaveSuccessProp?.();
+            }}
+          />
           <Box sx={{ flexGrow: 1 }} />
           <Button onClick={handleClose} color="error">
             {t("cancel")}
