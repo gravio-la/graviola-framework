@@ -7,6 +7,16 @@ import type { TypeRouting } from "./routing/build-routing-policy";
 
 function extractScalar(value: unknown): unknown {
   if (value == null) return value;
+  // HyperFormula DetailedCellError leaked into materialization / Meili
+  if (
+    typeof value === "object" &&
+    value !== null &&
+    "type" in value &&
+    "value" in value &&
+    (value as { value?: unknown }).value === "#NAME?"
+  ) {
+    return undefined;
+  }
   if (typeof value === "object" && value !== null && "@id" in value) {
     const obj = value as Record<string, unknown>;
     if (typeof obj.label === "string") return obj.label;
@@ -66,7 +76,26 @@ export function projectEntityToIndexDoc(
     if (!(prop in entity)) continue;
     const raw = entity[prop];
     const indexField = routing.propertyToIndexField.get(prop) ?? prop;
-    doc[indexField] = getNestedLabel(raw, options.primaryFields);
+    const projected = getNestedLabel(raw, options.primaryFields);
+    // Skip HyperFormula #NAME? leaks (extractScalar → undefined)
+    if (projected === undefined) continue;
+    doc[indexField] = projected;
+  }
+
+  // If primary label was skipped (bad calc object), fall back to `name`.
+  const typeHint =
+    typeof entity["@type"] === "string"
+      ? entity["@type"].replace(/^.*[#/]/, "")
+      : undefined;
+  const labelProp =
+    typeHint && options.primaryFields?.[typeHint]?.label
+      ? options.primaryFields[typeHint]!.label!
+      : undefined;
+  if (labelProp && typeof entity.name === "string") {
+    const indexField = routing.propertyToIndexField.get(labelProp) ?? labelProp;
+    if (doc[indexField] === undefined) {
+      doc[indexField] = entity.name;
+    }
   }
 
   return doc;

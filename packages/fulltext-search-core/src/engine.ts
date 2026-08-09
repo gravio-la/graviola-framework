@@ -50,6 +50,11 @@ export type TextIndexResult = {
   query?: string;
 };
 
+/** Document-count stats for an index (engine-agnostic). */
+export type IndexStats = {
+  numberOfDocuments: number;
+};
+
 /**
  * Single boundary every full-text engine implements (Meilisearch, Elasticsearch, Solr, Lunr, …).
  */
@@ -57,9 +62,15 @@ export interface FullTextSearchAdapter {
   readonly engine: string;
   ensureIndex(uid: string, settings: IndexSettings): Promise<void>;
   addDocuments(uid: string, docs: IndexDocument[]): Promise<void>;
+  /** Remove documents by primary key (no-op for missing ids). */
+  deleteDocuments?(uid: string, ids: string[]): Promise<void>;
   search(uid: string, q: TextIndexQuery): Promise<TextIndexResult>;
   clearIndex?(uid: string): Promise<void>;
   deleteIndex?(uid: string): Promise<void>;
+  /** Read live settings; `null` if the index does not exist. */
+  getIndexSettings?(uid: string): Promise<IndexSettings | null>;
+  /** Read document counts; `null` if the index does not exist. */
+  getIndexStats?(uid: string): Promise<IndexStats | null>;
   /** Optional id charset sanitiser; core falls back to base64url. */
   sanitizeId?(id: string): string;
 }

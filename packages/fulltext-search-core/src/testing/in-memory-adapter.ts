@@ -100,6 +100,13 @@ export function createInMemoryTextIndexAdapter(): FullTextSearchAdapter & {
       entry.docs = [...byId.values()];
     },
 
+    async deleteDocuments(uid, ids) {
+      const entry = indexes.get(uid);
+      if (!entry || ids.length === 0) return;
+      const remove = new Set(ids);
+      entry.docs = entry.docs.filter((d) => !remove.has(d.id));
+    },
+
     async search(uid, q) {
       const entry = indexes.get(uid);
       if (!entry) {
@@ -132,6 +139,25 @@ export function createInMemoryTextIndexAdapter(): FullTextSearchAdapter & {
 
     async deleteIndex(uid) {
       indexes.delete(uid);
+    },
+
+    async getIndexSettings(uid) {
+      const entry = indexes.get(uid);
+      if (!entry) return null;
+      return {
+        primaryKey: entry.settings.primaryKey,
+        searchableAttributes: [...entry.settings.searchableAttributes],
+        filterableAttributes: [...entry.settings.filterableAttributes],
+        sortableAttributes: entry.settings.sortableAttributes
+          ? [...entry.settings.sortableAttributes]
+          : undefined,
+      };
+    },
+
+    async getIndexStats(uid) {
+      const entry = indexes.get(uid);
+      if (!entry) return null;
+      return { numberOfDocuments: entry.docs.length };
     },
 
     getIndex(uid) {

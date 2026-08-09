@@ -5,12 +5,15 @@ import type {
   Aggregates,
   BaseStore,
   CapabilityDescriptor,
+  EntityOf,
   FacetResult,
+  Filters,
   Imports,
   Loads,
   ReadableImportSource,
   SchemaRegistry,
   Searches,
+  StoreDocumentsSearchOptions,
   StoreId,
   TextSearchHit,
   TextSearches,
@@ -38,16 +41,27 @@ import {
   resolveIndexField,
   type RoutingPolicy,
 } from "./routing/build-routing-policy";
+import {
+  subscribeFulltextIndexSync,
+  type FulltextIndexSyncHandle,
+} from "./sync/subscribeFulltextIndexSync";
 
 /** Primary store must support entity hydration at minimum. */
 export type PrimaryStore<R extends SchemaRegistry = SchemaRegistry> =
-  BaseStore<R> & Loads<R> & Partial<Searches<R>> & Partial<Aggregates<R>>;
+  BaseStore<R> &
+    Loads<R> &
+    Partial<Searches<R>> &
+    Partial<Aggregates<R>> &
+    Partial<Filters<R>>;
 
 export type SearchDocumentsOptions = {
   limit?: number;
   offset?: number;
   filters?: FacetFilter[];
-  /** When true, merge each hit with primaryStore.loadOne (default false). */
+  /**
+   * When true, merge each hit with the primary document (default false).
+   * Prefers one `filterMany({ entityIRIs })` batch; falls back to N× `loadOne`.
+   */
   hydrate?: boolean;
   fields?: string[];
 };
@@ -77,6 +91,15 @@ export type FulltextSearchStoreConfig<
   idCodecForType?: (typeName: string) => IndexIdCodec | undefined;
   /** Type names whose indexes already exist — skip ensureIndex in prepareFulltextIndexes. */
   existingIndexTypes?: string[];
+  /**
+   * Optional enricher run before projecting an entity into an index document
+   * (e.g. merge materialized calc fields). Core stays calc-engine-free —
+   * callers / CLI supply the callback.
+   */
+  enrichEntityForIndex?: (
+    typeName: string,
+    entity: Record<string, unknown>,
+  ) => Promise<Record<string, unknown>>;
 };
 
 export type FulltextSearchStore<R extends SchemaRegistry = SchemaRegistry> =
@@ -84,9 +107,14 @@ export type FulltextSearchStore<R extends SchemaRegistry = SchemaRegistry> =
     TextSearches &
     Aggregates<R> &
     Searches<R> &
+    Filters<R> &
     Imports<R> & {
       readonly routing: RoutingPolicy;
       readonly adapter: FullTextSearchAdapter;
+      /** Stop change-bus → index sync (no-op if primary has no subscribe). */
+      unsubscribeFulltextIndexSync: () => void;
+      /** Await queued index sync (tests). No-op when sync is inactive. */
+      flushFulltextIndexSync: () => Promise<void>;
       searchDocuments<T extends JsonLdEntity = JsonLdEntity>(
         typeName: keyof R & string,
         text: string,
@@ -108,18 +136,34 @@ function mergeCapabilities(
 ): CapabilityDescriptor {
   return {
     ...primary,
+    searches: true,
     textSearches: true,
     aggregates: true,
     imports: true,
+    filters: primary.filters ?? true,
     profiles: {
       ...primary.profiles,
       searches: {
+        ...primary.profiles?.searches,
         mode: "fulltext",
         ranked: true,
-        ...primary.profiles?.searches,
       },
     },
   };
+}
+
+/** Preserve Meilisearch hit order when reordering primary `filterMany` results. */
+function orderByIris<T>(iris: string[], docs: T[]): T[] {
+  const byIri = new Map<string, T>();
+  for (const doc of docs) {
+    const id = (doc as { "@id"?: unknown })["@id"];
+    if (typeof id === "string" && id.length > 0) {
+      byIri.set(id, doc);
+    }
+  }
+  return iris
+    .map((iri) => byIri.get(iri))
+    .filter((d): d is T => d !== undefined);
 }
 
 function facetDistributionToResult(
@@ -182,6 +226,14 @@ export function initFulltextSearchStore<R extends SchemaRegistry>(
     return config.adapter.sanitizeId?.(id) ?? id;
   }
 
+  async function prepareEntityForIndex(
+    typeName: string,
+    entity: Record<string, unknown>,
+  ): Promise<Record<string, unknown>> {
+    if (!config.enrichEntityForIndex) return entity;
+    return config.enrichEntityForIndex(typeName, entity);
+  }
+
   async function runIndexSearch(
     typeName: string,
     query: TextIndexQuery,
@@ -197,7 +249,34 @@ export function initFulltextSearchStore<R extends SchemaRegistry>(
     typeName: keyof R & string,
     stubs: T[],
   ): Promise<T[]> {
+    if (stubs.length === 0) return stubs;
+
+    const iris = stubs
+      .map((s) => s["@id"])
+      .filter((id): id is string => typeof id === "string" && id.length > 0);
+
+    if (typeof primary.filterMany === "function" && iris.length > 0) {
+      try {
+        const loaded = (await primary.filterMany(typeName, {
+          entityIRIs: iris,
+          limit: iris.length,
+        })) as JsonLdEntity[];
+        const byIri = new Map(
+          loaded.map((doc) => [
+            String(doc["@id"]),
+            doc as Record<string, unknown>,
+          ]),
+        );
+        return stubs.map((stub) =>
+          mergeHydratedStub(stub, byIri.get(stub["@id"]) ?? null),
+        );
+      } catch {
+        // fall through to loadOne
+      }
+    }
+
     if (!primary.loadOne) return stubs;
+
     const results: T[] = [];
     for (const stub of stubs) {
       try {
@@ -335,7 +414,7 @@ export function initFulltextSearchStore<R extends SchemaRegistry>(
 
       const result = await storeOverrides.searchDocuments(typeName, label, {
         limit,
-        hydrate: false,
+        hydrate: true,
       });
       return result.documents as R[T][];
     },
@@ -372,6 +451,88 @@ export function initFulltextSearchStore<R extends SchemaRegistry>(
                 ? doc.name
                 : undefined,
         }),
+      );
+    },
+
+    async filterMany<T extends keyof R & string>(
+      typeName: T,
+      options?: StoreDocumentsSearchOptions<EntityOf<R, T>>,
+    ): Promise<EntityOf<R, T>[]> {
+      const searchString = options?.searchString;
+      if (
+        typeof searchString === "string" &&
+        searchString.length > 0 &&
+        isFulltextType(routing, typeName)
+      ) {
+        const limit = options?.limit ?? 20;
+        const result = await storeOverrides.searchDocuments(
+          typeName,
+          searchString,
+          {
+            limit,
+            hydrate: false,
+          },
+        );
+        const iris = result.documents
+          .map((d) => d["@id"])
+          .filter(
+            (id): id is string => typeof id === "string" && id.length > 0,
+          );
+        if (iris.length === 0) return [];
+
+        if (typeof primary.filterMany === "function") {
+          const { searchString: _ignored, ...rest } = options ?? {};
+          const loaded = await primary.filterMany(typeName, {
+            ...rest,
+            entityIRIs: iris,
+            limit: iris.length,
+          });
+          return orderByIris(iris, loaded as EntityOf<R, T>[]);
+        }
+
+        const hydrated = await hydrateDocuments(
+          typeName,
+          result.documents as JsonLdEntity[],
+        );
+        return hydrated as EntityOf<R, T>[];
+      }
+
+      if (typeof primary.filterMany === "function") {
+        return primary.filterMany(typeName, options);
+      }
+      throw new Error(
+        `filterMany is not available on primary store "${String(primary.storeId)}"`,
+      );
+    },
+
+    async filterOne<T extends keyof R & string>(
+      typeName: T,
+      entityIRI: string,
+      options?: Parameters<Filters<R>["filterOne"]>[2],
+    ): Promise<EntityOf<R, T> | null> {
+      if (typeof primary.filterOne === "function") {
+        return primary.filterOne(
+          typeName,
+          entityIRI,
+          options,
+        ) as Promise<EntityOf<R, T> | null>;
+      }
+      if (typeof primary.filterMany === "function") {
+        const rows = await primary.filterMany(typeName, {
+          ...options,
+          entityIRIs: [entityIRI],
+          limit: 1,
+        });
+        return (rows[0] as EntityOf<R, T> | undefined) ?? null;
+      }
+      if (typeof primary.loadOne === "function") {
+        return (await primary.loadOne(typeName, entityIRI)) as EntityOf<
+          R,
+          T
+        > | null;
+      }
+      throw new Error(
+        `filterOne is not available on primary store "${String(primary.storeId)}"`,
       );
     },
 
@@ -452,15 +613,16 @@ export function initFulltextSearchStore<R extends SchemaRegistry>(
         throw new Error(`Entity not found: ${entityIRI}`);
       }
 
-      const doc = projectEntityToIndexDoc(
+      const enriched = await prepareEntityForIndex(
+        typeName,
         entity as Record<string, unknown>,
-        typeRouting,
-        {
-          typeIri: typeIri(typeName),
-          primaryFields: config.primaryFields,
-          encodeId: (iri) => encodeEntityId(typeName, iri),
-        },
       );
+
+      const doc = projectEntityToIndexDoc(enriched, typeRouting, {
+        typeIri: typeIri(typeName),
+        primaryFields: config.primaryFields,
+        encodeId: (iri) => encodeEntityId(typeName, iri),
+      });
 
       await config.adapter.addDocuments(typeRouting.indexUid, [doc]);
       return entity;
@@ -489,13 +651,17 @@ export function initFulltextSearchStore<R extends SchemaRegistry>(
         unknown
       >[];
 
-      const docs = entities.map((entity) =>
-        projectEntityToIndexDoc(entity, typeRouting, {
-          typeIri: typeIri(typeName),
-          primaryFields: config.primaryFields,
-          encodeId: (iri) => encodeEntityId(typeName, iri),
-        }),
-      );
+      const docs: ReturnType<typeof projectEntityToIndexDoc>[] = [];
+      for (const entity of entities) {
+        const enriched = await prepareEntityForIndex(typeName, entity);
+        docs.push(
+          projectEntityToIndexDoc(enriched, typeRouting, {
+            typeIri: typeIri(typeName),
+            primaryFields: config.primaryFields,
+            encodeId: (iri) => encodeEntityId(typeName, iri),
+          }),
+        );
+      }
 
       if (docs.length > 0) {
         await config.adapter.addDocuments(typeRouting.indexUid, docs);
@@ -532,6 +698,24 @@ export function initFulltextSearchStore<R extends SchemaRegistry>(
     ...primary,
     ...storeOverrides,
   } as FulltextSearchStore<R>;
+
+  const syncHandle: FulltextIndexSyncHandle | null = subscribeFulltextIndexSync(
+    {
+      routing,
+      adapter: config.adapter,
+      primary,
+      importOne: (typeName, entityIRI, source) =>
+        store.importOne(typeName, entityIRI, source),
+      encodeEntityId,
+    },
+  );
+
+  store.unsubscribeFulltextIndexSync = () => {
+    syncHandle?.unsubscribe();
+  };
+  store.flushFulltextIndexSync = async () => {
+    await syncHandle?.flush();
+  };
 
   return store;
 }
