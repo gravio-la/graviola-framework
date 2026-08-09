@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "@graviola/edb-core-utils": "workspace:*",
+    "@graviola/edb-state-hooks": "workspace:*",
     "@graviola/edb-ui-utils": "workspace:*",
     "dayjs": "^1",
     "json-schema-to-ts": "^3.0.1",

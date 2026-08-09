@@ -255,9 +255,12 @@ export function SemanticViewCore({
       humanLabel,
       isLoading,
       valueRenderers,
+      // Hide @id/@type in the property grid (TopLevelLayout already shows entityIRI).
+      // Stub schemas set `@id.title` to entityBaseIRI — leaving @id visible looks like
+      // overlapping IRIs in the detail header.
       hideLinkedDataProperties:
         (resolvedConfig.hideLinkedDataProperties as boolean | undefined) ??
-        viewSize !== "detail",
+        true,
       linkedDataPropertyNames: unique([
         ...DEFAULT_LINKED_DATA_PROPERTY_NAMES,
         ...((resolvedConfig.linkedDataPropertyNames as string[] | undefined) ??

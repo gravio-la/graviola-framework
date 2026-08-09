@@ -1,5 +1,6 @@
 import { ControlProps } from "@jsonforms/core";
 import { withJsonFormsControlProps } from "@jsonforms/react";
+import { useThumbnailUrl } from "@graviola/edb-state-hooks";
 import { Edit as EditIcon, ImageNotSupported } from "@mui/icons-material";
 import {
   Box,
@@ -32,6 +33,10 @@ const ImageRendererComponent = (props: ControlProps) => {
   const theme = useTheme();
   const appliedUiSchemaOptions = merge({}, config, uischema.options);
   const [editMode, setEditMode] = useState(false);
+  const imageSrc = useThumbnailUrl(
+    typeof data === "string" ? data : undefined,
+    { sizeCategory: "detail" },
+  );
 
   const handleChange_ = useCallback(
     (v?: string) => {
@@ -66,10 +71,10 @@ const ImageRendererComponent = (props: ControlProps) => {
             overflow: "hidden",
           }}
         >
-          {data ? (
+          {imageSrc ? (
             <img
-              src={data}
-              alt={data}
+              src={imageSrc}
+              alt={typeof data === "string" ? data : ""}
               style={{
                 width: "100%",
                 height: "100%",

@@ -10,6 +10,23 @@ import {
 } from "@mui/material";
 import type { Layout } from "@jsonforms/core";
 import type { DetailRendererProps } from "@graviola/edb-detail-renderer-core";
+import { useThumbnailUrl } from "@graviola/edb-state-hooks";
+
+function useDetailHeroImage(
+  image: string | null | undefined,
+  ctx: DetailRendererProps["ctx"],
+) {
+  return useThumbnailUrl(
+    image ?? undefined,
+    { sizeCategory: "detail" },
+    {
+      viewSize: "detail",
+      typeName: ctx.typeName,
+      typeIRI: ctx.typeIRI,
+      entityIRI: ctx.entityIRI,
+    },
+  );
+}
 
 /** Single surface: edge-to-edge hero image (rounded top), headline, subtitle, divider, properties. */
 function TopLevelLayoutSingleCardHeroBleed({
@@ -27,7 +44,7 @@ function TopLevelLayoutSingleCardHeroBleed({
   const preview = ctx.headerPreview;
   const titleText = preview?.label ?? headline;
   const desc = preview?.description;
-  const img = preview?.image;
+  const img = useDetailHeroImage(preview?.image, ctx);
 
   return (
     <Box>
@@ -107,7 +124,7 @@ export function TopLevelLayoutRenderer(props: DetailRendererProps) {
   const preview = ctx.headerPreview;
   const titleText = preview?.label ?? headline;
   const desc = preview?.description;
-  const img = preview?.image;
+  const img = useDetailHeroImage(preview?.image, ctx);
 
   return (
     <Box>

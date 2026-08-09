@@ -9,6 +9,7 @@ import {
   createStubSchema,
   createUISchemata,
 } from "@graviola/semantic-json-form";
+import type { ResolveThumbnailUrl } from "@graviola/edb-core-types";
 import type { GlobalSemanticConfig } from "@graviola/semantic-jsonform-types";
 import type {
   JsonFormsCellRendererRegistryEntry,
@@ -59,6 +60,10 @@ export type GraviolaAppProviderProps = {
    * Override NiceModal ids (`graviola:entity-detail`, `graviola:edit-entity`).
    */
   modalOverrides?: Record<string, ComponentType<any>>;
+  /**
+   * Optional display-time image URL rewrite forwarded to `AdbProvider`.
+   */
+  resolveThumbnailUrl?: ResolveThumbnailUrl;
 };
 
 /**
@@ -81,6 +86,7 @@ export const GraviolaAppProvider: FC<GraviolaAppProviderProps> = ({
   publicBasePath,
   intentHandlers,
   modalOverrides,
+  resolveThumbnailUrl,
 }) => {
   const {
     baseIRI,
@@ -155,6 +161,7 @@ export const GraviolaAppProvider: FC<GraviolaAppProviderProps> = ({
         cellRendererRegistry={cellRegistry}
         uischemata={uischemata}
         tableActionRegistry={tableActions}
+        resolveThumbnailUrl={resolveThumbnailUrl}
       >
         <GraviolaLoungeProviders
           intentHandlers={intentHandlers}

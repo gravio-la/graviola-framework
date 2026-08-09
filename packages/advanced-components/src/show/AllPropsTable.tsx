@@ -1,5 +1,6 @@
 import { OverflowContainer } from "@graviola/edb-basic-components";
 import { camelCaseToTitleCase, isValidUrl } from "@graviola/edb-core-utils";
+import { useThumbnailUrl } from "@graviola/edb-state-hooks";
 import { specialDate2LocalDate } from "@graviola/edb-ui-utils";
 import {
   Box,
@@ -106,6 +107,17 @@ const obj2Groups = (obj: Record<string, any>): ObjectGroups => {
 const isImageUrl = (url: string) => {
   return url.match(/\.(jpeg|jpg|gif|png)(\?.*)?$/) != null;
 };
+
+function AllPropsImageThumb({ url }: { url: string }) {
+  const src = useThumbnailUrl(url, { sizeCategory: "listItem" });
+  return (
+    <Box sx={{ display: "flex", justifyContent: "end" }}>
+      <Link href={url} target="_blank">
+        <img src={src} alt={url} width={100} />
+      </Link>
+    </Box>
+  );
+}
 
 const useMenuState = () => {
   const [menuAnchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -277,15 +289,7 @@ const PropertyItem = ({
             })()
           ) : isValidUrl(value as string) ? (
             isImageUrl(value as string) ? (
-              <Box sx={{ display: "flex", justifyContent: "end" }}>
-                <Link href={value as string} target="_blank">
-                  <img
-                    src={value as string}
-                    alt={value as string}
-                    width={100}
-                  />
-                </Link>
-              </Box>
+              <AllPropsImageThumb url={value as string} />
             ) : (
               <LabledLink uri={value as string} />
             )

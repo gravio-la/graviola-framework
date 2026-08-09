@@ -7,6 +7,7 @@ import {
   useAdbContext,
   useCRUDWithQueryClient,
   useGraviolaModal,
+  useThumbnailUrl,
 } from "@graviola/edb-state-hooks";
 import { queryOptionMixinBasedOnEntity } from "@graviola/edb-ui-utils";
 import { bringDefinitionToTop } from "@graviola/json-schema-utils";
@@ -148,6 +149,17 @@ export const SimpleChipRenderer = (
     },
     [setTooltipEnabled, showDetailModal],
   );
+  const imageSrc = useThumbnailUrl(
+    image,
+    { sizeCategory: "chip" },
+    {
+      viewSize: "chip",
+      typeName,
+      typeIRI,
+      entityIRI,
+      data,
+    },
+  );
   return (
     <Tooltip
       title={description}
@@ -158,8 +170,8 @@ export const SimpleChipRenderer = (
         {...chipProps}
         data-testid={`chip-${formsPath}-${index}`}
         avatar={
-          image ? (
-            <Avatar alt={realLabel} src={image} />
+          imageSrc ? (
+            <Avatar alt={realLabel} src={imageSrc} />
           ) : (
             <Avatar>{count + 1}</Avatar>
           )

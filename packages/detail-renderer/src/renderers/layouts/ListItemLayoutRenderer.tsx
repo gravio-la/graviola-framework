@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { ListItem, ListItemAvatar, ListItemText } from "@mui/material";
 import type { Layout } from "@jsonforms/core";
 import type { DetailRendererProps } from "@graviola/edb-detail-renderer-core";
@@ -19,6 +19,15 @@ export function ListItemLayoutRenderer({
   const preview = previewFromCtx(ctx);
   const { Slot } = useMotionAdapter();
   const scope = motionScopeId(ctx);
+  const thumbCtx = useMemo(
+    () => ({
+      viewSize: "listItem" as const,
+      typeName: ctx.typeName,
+      typeIRI: ctx.typeIRI,
+      entityIRI: ctx.entityIRI,
+    }),
+    [ctx.typeName, ctx.typeIRI, ctx.entityIRI],
+  );
 
   const extra = (layout.elements ?? []).map((el, i) => (
     <React.Fragment key={i}>{dispatch({ uiSchema: el, ctx })}</React.Fragment>
@@ -33,6 +42,7 @@ export function ListItemLayoutRenderer({
               preview={preview}
               alt={preview.label}
               density="list"
+              thumbnailContext={thumbCtx}
             />
           </Slot>
         </ListItemAvatar>

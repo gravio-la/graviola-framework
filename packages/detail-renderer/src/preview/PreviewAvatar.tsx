@@ -4,7 +4,10 @@ import type {
   EntityPreview,
   IconRef,
   PreviewDisplayMedia,
+  ThumbnailResolveContext,
+  ThumbnailSizeCategory,
 } from "@graviola/edb-core-types";
+import { useThumbnailUrl } from "@graviola/edb-state-hooks";
 
 /** Matches MUI `Chip` `size="small"` avatar slot (24px). */
 const CHIP_AVATAR_SX: AvatarProps["sx"] = {
@@ -14,6 +17,12 @@ const CHIP_AVATAR_SX: AvatarProps["sx"] = {
 };
 
 export type PreviewAvatarDensity = "chip" | "list";
+
+function densityToCategory(
+  density: PreviewAvatarDensity,
+): ThumbnailSizeCategory {
+  return density === "chip" ? "chip" : "listItem";
+}
 
 function initialLetter(label: string | undefined): string | undefined {
   const ch = label?.trim()?.[0];
@@ -64,17 +73,25 @@ export function PreviewAvatar({
   preview,
   alt,
   density = "list",
+  thumbnailContext,
 }: {
   preview: EntityPreview;
   alt?: string;
   /** `chip` = 24px to fit MUI `Chip size="small"`; `list` = default Avatar for `ListItemAvatar`. */
   density?: PreviewAvatarDensity;
+  thumbnailContext?: ThumbnailResolveContext;
 }) {
   const media = effectivePreviewDisplayMedia(preview);
   const sizeSx = density === "chip" ? CHIP_AVATAR_SX : undefined;
+  const category = densityToCategory(density);
+  const rawSrc = preview.displayImage ?? preview.image;
+  const src = useThumbnailUrl(
+    media === "image" ? rawSrc : undefined,
+    { sizeCategory: category },
+    thumbnailContext,
+  );
 
   if (media === "image") {
-    const src = preview.displayImage ?? preview.image;
     if (!src) return null;
     return <Avatar alt={alt ?? preview.label} src={src} sx={sizeSx} />;
   }
@@ -123,8 +140,16 @@ export function previewChipIcon(
 export function previewChipAvatar(
   preview: EntityPreview,
   alt?: string,
+  thumbnailContext?: ThumbnailResolveContext,
 ): React.ReactElement | undefined {
   const media = effectivePreviewDisplayMedia(preview);
   if (media !== "image" && media !== "initial") return undefined;
-  return <PreviewAvatar preview={preview} alt={alt} density="chip" />;
+  return (
+    <PreviewAvatar
+      preview={preview}
+      alt={alt}
+      density="chip"
+      thumbnailContext={thumbnailContext}
+    />
+  );
 }

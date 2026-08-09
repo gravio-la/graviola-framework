@@ -1,5 +1,6 @@
 import React from "react";
 import { Avatar, Box, Link } from "@mui/material";
+import { useThumbnailUrl } from "@graviola/edb-state-hooks";
 import type {
   MRT_Cell,
   MRT_Row,
@@ -43,6 +44,17 @@ export function JsonLdPrimaryColumnCell({ cell, row }: CellProps) {
     imageKey && typeof original[imageKey] === "string"
       ? (original[imageKey] as string)
       : undefined;
+  const imageSrc = useThumbnailUrl(
+    image,
+    { sizeCategory: "listItem" },
+    {
+      viewSize: "listItem",
+      typeName,
+      typeIRI,
+      entityIRI,
+      data: original,
+    },
+  );
 
   const rawValue = cell.getValue();
   const label =
@@ -50,14 +62,14 @@ export function JsonLdPrimaryColumnCell({ cell, row }: CellProps) {
 
   const content = (
     <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-      {image && (
+      {imageSrc && (
         <Avatar
           alt=""
           variant={
             typeName.toLowerCase().includes("person") ? "circular" : "rounded"
           }
           sx={{ width: 42, height: 42 }}
-          src={image}
+          src={imageSrc}
         />
       )}
       <span>{label}</span>
