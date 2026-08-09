@@ -115,16 +115,23 @@ function buildFormulaVariables(
       vars[alias] =
         typeof value === "boolean" || typeof value === "string"
           ? value
-          : numeric(value);
+          : value === undefined || value === null
+            ? ""
+            : numeric(value);
       continue;
     }
 
     const value = get(entity, id);
-    if (value !== undefined) {
+    if (value !== undefined && value !== null) {
       vars[alias] =
         typeof value === "boolean" || typeof value === "string"
           ? value
           : numeric(value);
+    } else if (alias !== id || id.includes(".")) {
+      // Always bind dotted identifiers (partOf.name → partOf_name). Omitting
+      // them makes HyperFormula return a DetailedCellError (#NAME?), which then
+      // gets materialised / indexed as a broken search label.
+      vars[alias] = "";
     }
   }
 

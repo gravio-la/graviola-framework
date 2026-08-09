@@ -141,8 +141,13 @@ export async function climbAffectedRoots(args: {
         edgeProperty: edge.edgeProperty,
       });
       queriesIssued += 1;
+      if (parents.length === 0) continue;
       for (const iri of parents) next.add(iri);
-      nextType = edge.parentTypeName;
+      // Prefer a hop that reaches the requested root type when several
+      // inbound edges exist (e.g. City.partOf and Place.contains → Place).
+      if (edge.parentTypeName === rootTypeName || !nextType) {
+        nextType = edge.parentTypeName;
+      }
     }
     if (next.size === 0 || !nextType) break;
     currentType = nextType;
@@ -248,12 +253,24 @@ export function subscribeCalcInvalidation(args: {
       }
 
       const dirtyScopes = dirtyScopesForChange(profile, event.typeName);
-      if (dirtyScopes.length === 0) return;
 
       if (event.typeName === rootTypeName) {
+        if (dirtyScopes.length === 0) return;
         runOrQueue({ rootIRIs: [event.entityIRI] });
         return;
       }
+
+      // Related-entity change: e.g. Place rename while City.indexedLabel
+      // reads partOf.name. dirtyScopesForChange only seeds slots *on* the
+      // changed type, so relation targets often look clean — still climb.
+      const edges = discoverRelationEdges(domainSchema);
+      const isRelatedChild = edges.some(
+        (e) =>
+          e.parentTypeName === rootTypeName &&
+          e.childTypeName === event.typeName,
+      );
+
+      if (dirtyScopes.length === 0 && !isRelatedChild) return;
 
       if (affectedPlanner) {
         climbAffectedRoots({
@@ -284,21 +301,24 @@ export function subscribeCalcInvalidation(args: {
 
 /**
  * Helper for SPARQL/Prisma-backed upward navigation: one VALUES/`in`-bound query.
+ *
+ * Prefer `{ edge: { in: [{ "@id" }, ...] } }` — works for singular object refs
+ * (`City.partOf`) and multi-value edges. Avoid `some: { "@id": { in } }`, which
+ * currently yields empty SPARQL results for object edges.
  */
 export function createSparqlAffectedPlanner(store: {
   filterMany: CalcEngineStore["filterMany"];
 }): AffectedInstancePlanner {
   return {
     async findParents({ childIRIs, parentTypeName, edgeProperty }) {
-      if (!edgeProperty) {
+      if (!edgeProperty || childIRIs.length === 0) {
         return [];
       }
+
       const parents = await store.filterMany(parentTypeName, {
         where: {
           [edgeProperty]: {
-            some: {
-              "@id": { in: childIRIs },
-            },
+            in: childIRIs.map((id) => ({ "@id": id })),
           },
         } as never,
         select: { "@id": true } as never,
