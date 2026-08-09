@@ -76,17 +76,25 @@ export async function readCalcValues(
 ): Promise<ReadCalcValuesResult> {
   const plan = planCalcReads(profile, typeName, domainSchema);
 
-  const docs = await store.filterMany(typeName, {
+  const docsShallow = await store.filterMany(typeName, {
     ...(plan.selection as StoreDocumentsSearchOptions),
     entityIRIs: [rootIRI],
   } as StoreDocumentsSearchOptions);
 
-  const doc = docs[0];
+  let queriesIssued = 1;
+  let doc = docsShallow[0];
   if (!doc) {
-    return { value: null, freshness: "unknown", queriesIssued: 1, plan };
+    return { value: null, freshness: "unknown", queriesIssued, plan };
   }
 
-  let queriesIssued = 1;
+  // Mirror evaluateForRoots: relation hops (e.g. partOf.name) need loadOne —
+  // SPARQL filterMany is often too shallow for formula bindings / fingerprints.
+  if (plan.depth > 0 && typeof store.loadOne === "function") {
+    const loaded = await store.loadOne(typeName, rootIRI);
+    queriesIssued += 1;
+    if (loaded) doc = loaded;
+  }
+
   let statementsFound = false;
   let allFresh = true;
   const statementsByEntity = new Map<string, Record<string, StatementNode[]>>();

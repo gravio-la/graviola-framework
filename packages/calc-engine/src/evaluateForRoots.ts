@@ -21,6 +21,14 @@ export type CalcEngineStore = {
     typeName: string,
     options?: StoreDocumentsSearchOptions<Record<string, unknown>>,
   ) => Promise<Record<string, unknown>[]>;
+  /**
+   * Optional deep load — preferred when the calc plan needs relation hops
+   * (SPARQL `filterMany` often returns shallow documents).
+   */
+  loadOne?: (
+    typeName: string,
+    entityIRI: string,
+  ) => Promise<Record<string, unknown> | null>;
 };
 
 export type EvaluateForRootsOptions = {
@@ -38,6 +46,16 @@ export type EvaluateForRootsResult = {
   plan: CalcReadPlan;
 };
 
+function stampShortType(
+  doc: Record<string, unknown>,
+  typeName: string,
+): Record<string, unknown> {
+  if (typeof doc["@type"] === "string" && doc["@type"].length > 0) {
+    return doc;
+  }
+  return { ...doc, "@type": typeName };
+}
+
 /**
  * Plan precise reads for a calc profile, fetch the batch in one query, evaluate
  * with a shared HyperFormula engine. Query count is independent of row count.
@@ -53,13 +71,35 @@ export async function evaluateForRoots(
   const host = options.host ?? BROWSER_FORM_HOST;
   const liveProfile = selectLiveEvalSlots(profile, host);
 
-  const docs = await store.filterMany(typeName, {
+  let docs = await store.filterMany(typeName, {
     ...(plan.selection as StoreDocumentsSearchOptions),
     ...(options.rootIRIs && options.rootIRIs.length > 0
       ? { entityIRIs: options.rootIRIs }
       : {}),
     ...(options.where ? { where: options.where } : {}),
   } as StoreDocumentsSearchOptions);
+
+  let queriesIssued = 1;
+
+  // Deepen via loadOne when the plan needs relation hops and the store exposes
+  // it — SPARQL filterMany is often shallow (no partOf.name for CONCATENATE).
+  if (plan.depth > 0 && typeof store.loadOne === "function") {
+    const iris =
+      options.rootIRIs && options.rootIRIs.length > 0
+        ? options.rootIRIs
+        : docs
+            .map((d) => d["@id"])
+            .filter((id): id is string => typeof id === "string");
+    const loaded: Record<string, unknown>[] = [];
+    for (const iri of iris) {
+      const doc = await store.loadOne(typeName, iri);
+      queriesIssued += 1;
+      if (doc) loaded.push(doc);
+    }
+    docs = loaded;
+  }
+
+  docs = docs.map((d) => stampShortType(d, typeName));
 
   const { rows, incomplete } = evaluateCompiledProfileMany(liveProfile, docs, {
     cache: options.cache,
@@ -68,7 +108,7 @@ export async function evaluateForRoots(
 
   return {
     values: rows,
-    queriesIssued: 1,
+    queriesIssued,
     incomplete,
     plan,
   };

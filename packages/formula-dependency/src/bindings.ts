@@ -10,6 +10,7 @@ import type { CalcProfileSlot } from "./types";
 
 const FORMULA_FUNCTIONS = new Set([
   "CONCAT",
+  "CONCATENATE",
   "TEXT",
   "SUM",
   "COUNT",
@@ -34,7 +35,9 @@ const FORMULA_FUNCTIONS = new Set([
 
 /** Extract binding path segments from a formula string (Level 0 + 1). */
 export function extractFormulaIdentifiers(formula: string): string[] {
-  const tokens = formula.match(/[A-Za-z_][A-Za-z0-9_.]*/g) ?? [];
+  // Drop string literals so words inside CONCAT glue (" Teil von ") are not paths.
+  const withoutStrings = formula.replace(/(["'])(?:\\.|(?!\1).)*\1/g, '""');
+  const tokens = withoutStrings.match(/[A-Za-z_][A-Za-z0-9_.]*/g) ?? [];
   const seen = new Set<string>();
   const ids: string[] = [];
   for (const token of tokens) {
