@@ -133,7 +133,10 @@ export type PreviewIconResolver = (
   ctx: PreviewMediaContext,
 ) => IconRef | undefined;
 
-/** Optional per-instance image URL (thumbnail service, derived URL, base64). */
+/**
+ * Optional per-instance image URL (thumbnail service, derived URL, base64).
+ * For size-aware display rewriting, use {@link ResolveThumbnailUrl} on GlobalAppConfig.
+ */
 export type PreviewImageResolver = (
   ctx: PreviewMediaContext,
 ) => string | undefined;
@@ -144,6 +147,44 @@ export type PreviewMediaContext = {
   typeIRI?: string;
   mimeType?: string;
 };
+
+/** Aligns with ViewSize. Call sites almost always pass only `sizeCategory`. */
+export type ThumbnailSizeCategory = "chip" | "listItem" | "card" | "detail";
+
+/** Named 2D size; either side optional (e.g. width-only thumbs). */
+export type Size2D = Partial<{ width: number; height: number }>;
+
+/**
+ * Desired thumbnail geometry. If every field is omitted / size arg is omitted,
+ * the framework treats it as `{ sizeCategory: "detail" }`.
+ */
+export type ThumbnailSizeOptions = {
+  /** Exact pixel box (width and/or height). */
+  dimension?: Size2D;
+  /** Desired aspect ratio as named sides (e.g. `{ width: 16, height: 9 }`). */
+  aspect?: Size2D;
+  /** Named slot; preferred for chips, lists, cards, detail heroes. */
+  sizeCategory?: ThumbnailSizeCategory;
+};
+
+/** Entity/view metadata for {@link ResolveThumbnailUrl}; size lives on the size arg only. */
+export type ThumbnailResolveContext = {
+  viewSize?: ThumbnailSizeCategory;
+  typeName?: string;
+  typeIRI?: string;
+  entityIRI?: string;
+  data?: unknown;
+};
+
+/**
+ * App-supplied display-time image URL rewrite (CDN / Commons / proxy).
+ * Return `undefined` to keep the original URL.
+ */
+export type ResolveThumbnailUrl = (
+  imageUrl: string,
+  size: ThumbnailSizeOptions,
+  context?: ThumbnailResolveContext,
+) => string | undefined;
 
 export type MimeIconMatcherMap = Record<string, IconRef>;
 export type MimeIconMatcherFn = (
@@ -162,7 +203,10 @@ export interface TypePresentation {
   iconByMime?: MimeIconMatchers;
   /** Dot-path on instance data for MIME type; default `mimeType`. */
   mimeTypePath?: string;
-  /** App-provided image URL when instance primary field is not used. */
+  /**
+   * App-provided image URL when instance primary field is not used.
+   * Size-aware CDN rewrite belongs on GlobalAppConfig.resolveThumbnailUrl.
+   */
   image?: PreviewImageResolver;
   color?: string;
   backgroundPattern?: string;
