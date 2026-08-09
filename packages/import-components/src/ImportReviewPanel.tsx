@@ -26,7 +26,7 @@ import type {
   StagedChangeSet,
   StagedEntity,
 } from "@graviola/edb-import-staging";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { labelForEntity } from "./helpers";
 
 type ImportReviewPanelProps = {
@@ -251,7 +251,19 @@ export function ImportReviewPanel({
   onDiscard,
 }: ImportReviewPanelProps) {
   const [tab, setTab] = useState(0);
+  const [reviewTick, setReviewTick] = useState(0);
+
+  useEffect(() => {
+    return changeSet.subscribe((ev) => {
+      if (ev.kind === "review-changed" || ev.kind === "updated") {
+        setReviewTick((n) => n + 1);
+      }
+    });
+  }, [changeSet]);
+
+  // refreshKey from parent (re-stage) + reviewTick (accept/reject) force list re-read
   void refreshKey;
+  void reviewTick;
 
   const entities = changeSet.list();
   const roots = changeSet.roots();

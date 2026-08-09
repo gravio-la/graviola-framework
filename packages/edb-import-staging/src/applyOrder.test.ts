@@ -53,6 +53,26 @@ describe("prepareStagedDocument", () => {
       "@id": "http://example.org/parent",
     });
     expect(normalized.idAuthority).toBeUndefined();
+    expect(normalized.sameAs).toBe("Q1");
     expect((normalized.titleVariants as string).length).toBe(600);
+  });
+
+  test("promotes idAuthority.id to sameAs and collapses nested entity bodies", () => {
+    const normalized = prepareStagedDocument({
+      "@id": "http://example.org/city",
+      partOf: {
+        "@id": "http://example.org/place",
+        name: "Landkreis",
+        idAuthority: { authority: "http://www.wikidata.org", id: "Q9" },
+      },
+      idAuthority: {
+        authority: "http://www.wikidata.org",
+        id: "http://www.wikidata.org/entity/Q42",
+      },
+    });
+
+    expect(normalized.sameAs).toBe("http://www.wikidata.org/entity/Q42");
+    expect(normalized.idAuthority).toBeUndefined();
+    expect(normalized.partOf).toEqual({ "@id": "http://example.org/place" });
   });
 });
