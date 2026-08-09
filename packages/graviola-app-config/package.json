@@ -23,6 +23,7 @@
     "dev": "tsup --watch",
     "lint": "eslint src/**/*.{ts,tsx}",
     "lint-fix": "eslint --fix src/**/*.{ts,tsx}",
+    "test": "bun test src",
     "release": "bun publish --access public",
     "pack-tarball": "bun pm pack"
   },
@@ -45,11 +46,15 @@
     "@graviola/edb-debug-utils": "workspace:*",
     "@graviola/edb-detail-renderer": "workspace:*",
     "@graviola/edb-state-hooks": "workspace:*",
+    "@graviola/edb-table-types": "workspace:*",
     "@graviola/edb-ui-utils": "workspace:*",
     "@graviola/entity-finder": "workspace:*",
+    "@graviola/formula-dependency": "workspace:*",
     "@graviola/json-schema-utils": "workspace:*",
+    "@graviola/search-facet-schema": "workspace:*",
     "@graviola/semantic-json-form": "workspace:*",
-    "@graviola/semantic-jsonform-types": "workspace:*"
+    "@graviola/semantic-jsonform-types": "workspace:*",
+    "@graviola/sidecar-core": "workspace:*"
   },
   "devDependencies": {
     "@graviola/edb-tsconfig": "workspace:*",
