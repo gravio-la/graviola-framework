@@ -43,6 +43,7 @@
     "@graviola/edb-detail-renderer": "workspace:*",
     "@graviola/jsonld-utils": "workspace:*",
     "@graviola/edb-core-utils": "workspace:*",
+    "@graviola/edb-state-hooks": "workspace:*",
     "@graviola/edb-ui-utils": "workspace:*",
     "@graviola/json-schema-utils": "workspace:*",
     "lodash-es": "catalog:",

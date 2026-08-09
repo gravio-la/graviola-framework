@@ -11,6 +11,7 @@ import {
   Box,
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
+import { useThumbnailUrl } from "@graviola/edb-state-hooks";
 import { withEllipsis } from "@graviola/edb-ui-utils";
 import React, { ReactNode } from "react";
 
@@ -45,6 +46,13 @@ export const SelectableListItem: React.FC<SelectableListItemProps> = ({
   actionTools,
   listItemButtonProps = {},
 }) => {
+  const avatarSrc = useThumbnailUrl(
+    avatar,
+    { sizeCategory: "listItem" },
+    {
+      entityIRI: id,
+    },
+  );
   const handleSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (onSelect) {
       onSelect(id, event.target.checked);
@@ -84,7 +92,7 @@ export const SelectableListItem: React.FC<SelectableListItemProps> = ({
         onClick={() => onClickEntity?.(id)}
       >
         <ListItemAvatar>
-          <Avatar variant="rounded" aria-label="Index" src={avatar}>
+          <Avatar variant="rounded" aria-label="Index" src={avatarSrc}>
             {index + 1}
           </Avatar>
         </ListItemAvatar>

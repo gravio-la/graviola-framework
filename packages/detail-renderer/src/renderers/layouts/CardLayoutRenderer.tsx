@@ -15,6 +15,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import type { Layout } from "@jsonforms/core";
 import type { DetailRendererProps } from "@graviola/edb-detail-renderer-core";
 import type { CardActionDef, CardPresentation } from "@graviola/edb-core-types";
+import { useThumbnailUrl } from "@graviola/edb-state-hooks";
 
 import { PreviewAvatar } from "../../preview/PreviewAvatar";
 import { useDetailRendererContext } from "../../context";
@@ -99,7 +100,27 @@ export function CardLayoutRenderer({
   const variant = presentation.variant ?? "elevated";
   const aspectRatio = presentation.mediaAspectRatio ?? "16 / 9";
   const bannerUrl = readPropertyString(rootData, presentation.banner);
-  const heroImage = bannerUrl ?? preview.image;
+  const rawHeroImage = bannerUrl ?? preview.image;
+  const thumbCtx = useMemo(
+    () => ({
+      viewSize: "card" as const,
+      typeName: ctx.typeName,
+      typeIRI: ctx.typeIRI,
+      entityIRI: ctx.entityIRI,
+      data: rootData,
+    }),
+    [ctx.typeName, ctx.typeIRI, ctx.entityIRI, rootData],
+  );
+  const heroImage = useThumbnailUrl(
+    rawHeroImage,
+    { sizeCategory: "card" },
+    thumbCtx,
+  );
+  const profileAvatarSrc = useThumbnailUrl(
+    preview.image,
+    { sizeCategory: "listItem" },
+    { ...thumbCtx, viewSize: "listItem" },
+  );
   const isProfileLayout = Boolean(presentation.banner);
   const secondaryDisplay = presentation.secondaryDisplay ?? "inline";
   const secondaryFieldNames = secondaryFieldNamesFromPresentation(
@@ -253,7 +274,7 @@ export function CardLayoutRenderer({
           <Box sx={{ mt: -4, mb: 1 }}>
             <Slot id="avatar" motionId={`${scope}:avatar`}>
               <Avatar
-                src={preview.image}
+                src={profileAvatarSrc}
                 alt={title}
                 sx={{
                   width: 72,
@@ -263,7 +284,7 @@ export function CardLayoutRenderer({
                   boxShadow: 2,
                 }}
               >
-                {!preview.image && title ? title.charAt(0) : null}
+                {!profileAvatarSrc && title ? title.charAt(0) : null}
               </Avatar>
             </Slot>
           </Box>
@@ -275,7 +296,12 @@ export function CardLayoutRenderer({
             !heroImage &&
             preview.displayMedia !== "none" ? (
               <Box sx={{ mb: 1.5 }}>
-                <PreviewAvatar preview={preview} alt={title} density="list" />
+                <PreviewAvatar
+                  preview={preview}
+                  alt={title}
+                  density="list"
+                  thumbnailContext={thumbCtx}
+                />
               </Box>
             ) : null}
             <Slot id="label" motionId={`${scope}:label`}>

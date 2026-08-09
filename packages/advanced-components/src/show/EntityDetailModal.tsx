@@ -10,6 +10,7 @@ import {
   useCRUDWithQueryClient,
   useDispatchIntent,
   useModalRegistry,
+  useThumbnailUrl,
   useTypeIRIFromEntity,
 } from "@graviola/edb-state-hooks";
 import { EntityDetailModalProps } from "@graviola/semantic-jsonform-types";
@@ -40,8 +41,6 @@ import { FC, useCallback, useMemo } from "react";
 
 import { EditEntityModal } from "../edit/EditEntityModal";
 import { SemanticDetailView } from "@graviola/semantic-views";
-
-import { allPropsDetailRendererEntry } from "./AllPropsDetailRenderer";
 import { queryOptionMixinBasedOnEntity } from "@graviola/edb-ui-utils";
 
 /**
@@ -141,6 +140,16 @@ const EntityDetailContent: FC<{
 }) => {
   const { t } = useTranslation();
   const isMobile = useSafeMediaQuery((theme) => theme.breakpoints.down("sm"));
+  const sideImage = useThumbnailUrl(
+    cardInfo.image ?? undefined,
+    { sizeCategory: "detail" },
+    {
+      viewSize: "detail",
+      typeIRI: classIRI,
+      entityIRI,
+      data,
+    },
+  );
 
   return (
     <Dialog
@@ -175,7 +184,7 @@ const EntityDetailContent: FC<{
         </Toolbar>
       </AppBar>
       <Box sx={{ flexGrow: 1, display: "flex" }}>
-        {cardInfo.image && (
+        {sideImage && (
           <Box
             sx={{
               display: { xs: "none", md: "block" },
@@ -187,7 +196,7 @@ const EntityDetailContent: FC<{
           >
             <Box
               component="img"
-              src={cardInfo.image}
+              src={sideImage}
               alt={cardInfo.label || ""}
               sx={{
                 width: "100%",
@@ -216,7 +225,6 @@ const EntityDetailContent: FC<{
                 typeIRI={classIRI}
                 defaultData={data}
                 disableLoad
-                config={{ fallbackRenderers: [allPropsDetailRendererEntry] }}
               />
             </Box>
           </DialogContent>

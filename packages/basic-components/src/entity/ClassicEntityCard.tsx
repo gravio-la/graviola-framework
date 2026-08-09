@@ -1,4 +1,5 @@
 import { ArrowBack } from "@mui/icons-material";
+import { useThumbnailUrl } from "@graviola/edb-state-hooks";
 import {
   Box,
   BoxProps,
@@ -40,6 +41,13 @@ export const ClassicEntityCard: FunctionComponent<ClassicEntityCardProps> = ({
   ...rest
 }) => {
   const _label = data.label || data.title || data.name || id;
+  const avatarSrc = useThumbnailUrl(
+    data.avatar,
+    { sizeCategory: "detail" },
+    {
+      entityIRI: id,
+    },
+  );
 
   return (
     <Box {...rest}>
@@ -49,12 +57,12 @@ export const ClassicEntityCard: FunctionComponent<ClassicEntityCardProps> = ({
         </IconButton>
       )}
       <Card>
-        {data.avatar && (
+        {avatarSrc && (
           <CardMedia
             component="img"
             alt={"Image of " + _label}
             height="300"
-            image={data.avatar}
+            image={avatarSrc}
           />
         )}
         <CardContent>

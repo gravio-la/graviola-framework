@@ -13,6 +13,7 @@ import { FunctionComponent, useCallback, useEffect, useState } from "react";
 import {
   useKeyEventForSimilarityFinder,
   useSimilarityFinderState,
+  useThumbnailUrl,
 } from "@graviola/edb-state-hooks";
 import { OverflowChip, OverflowContainer } from "../overflow";
 import { ClassicResultPopperItem } from "../entity";
@@ -58,6 +59,13 @@ export const ClassicResultListItem: FunctionComponent<
   ...rest
 }) => {
   const theme = useTheme();
+  const avatarSrc = useThumbnailUrl(
+    avatar,
+    { sizeCategory: "listItem" },
+    {
+      entityIRI: id,
+    },
+  );
   const anchorRef = React.useRef<HTMLLIElement | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<HTMLLIElement | null>(null);
   const setAnchorAndState = React.useCallback((node: HTMLLIElement | null) => {
@@ -133,9 +141,9 @@ export const ClassicResultListItem: FunctionComponent<
           <Avatar
             sx={{ width: "32px", height: "32px" }}
             aria-label="Photo"
-            src={avatar}
+            src={avatarSrc}
           >
-            {!avatar ? altAvatar : ""}
+            {!avatarSrc ? altAvatar : ""}
           </Avatar>
         </ListItemAvatar>
         <ListItemText

@@ -1,5 +1,9 @@
 import { AutocompleteSuggestion, PrimaryField } from "@graviola/edb-core-types";
-import { useAdbContext, useDataStore } from "@graviola/edb-state-hooks";
+import {
+  useAdbContext,
+  useDataStore,
+  useThumbnailUrl,
+} from "@graviola/edb-state-hooks";
 import { useQuery } from "@graviola/edb-state-hooks";
 import {
   Avatar,
@@ -43,6 +47,25 @@ interface OwnProps {
 }
 
 export type DiscoverAutocompleteInputProps = OwnProps;
+
+function SuggestionAvatar({
+  image,
+  label,
+  entityIRI,
+}: {
+  image: string;
+  label: string;
+  entityIRI?: string;
+}) {
+  const src = useThumbnailUrl(
+    image,
+    { sizeCategory: "listItem" },
+    {
+      entityIRI,
+    },
+  );
+  return <Avatar src={src} alt={label} />;
+}
 
 export const DiscoverAutocompleteInput: FunctionComponent<
   DiscoverAutocompleteInputProps
@@ -226,7 +249,11 @@ export const DiscoverAutocompleteInput: FunctionComponent<
           <ListItem disablePadding {...props} key={option.value}>
             {option.image && (
               <ListItemAvatar>
-                <Avatar src={option.image} alt={option.label} />
+                <SuggestionAvatar
+                  image={option.image}
+                  label={option.label}
+                  entityIRI={option.value}
+                />
               </ListItemAvatar>
             )}
             <ListItemText

@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useMemo } from "react";
+import type { ThumbnailSizeCategory } from "@graviola/edb-core-types";
 import type { DetailRendererProps } from "@graviola/edb-detail-renderer-core";
+import { useThumbnailUrl } from "@graviola/edb-state-hooks";
 
 import { UriValueRenderer } from "../value-renderers/UriValueRenderer";
 import { PropertyRow } from "./PropertyRow";
@@ -23,16 +25,50 @@ export function UriRenderer(props: DetailRendererProps) {
   const href = String(data);
 
   if (IMAGE_EXT_RE.test(href)) {
-    const img = (
-      <img
-        src={href}
-        alt={label}
-        style={{ maxHeight: "8em", maxWidth: "100%", objectFit: "contain" }}
-      />
-    );
-    if (ctx.viewSize && ctx.viewSize !== "detail") return img;
-    return <PropertyRow label={label}>{img}</PropertyRow>;
+    return <UriImageThumb href={href} label={label} ctx={ctx} />;
   }
 
   return renderValueWithRow(props, uriFallback);
+}
+
+function UriImageThumb({
+  href,
+  label,
+  ctx,
+}: {
+  href: string;
+  label: string;
+  ctx: DetailRendererProps["ctx"];
+}) {
+  const category = useMemo((): ThumbnailSizeCategory => {
+    const vs = ctx.viewSize;
+    if (
+      vs === "chip" ||
+      vs === "listItem" ||
+      vs === "card" ||
+      vs === "detail"
+    ) {
+      return vs;
+    }
+    return "listItem";
+  }, [ctx.viewSize]);
+  const src = useThumbnailUrl(
+    href,
+    { sizeCategory: category },
+    {
+      viewSize: ctx.viewSize,
+      typeName: ctx.typeName,
+      typeIRI: ctx.typeIRI,
+      entityIRI: ctx.entityIRI,
+    },
+  );
+  const img = (
+    <img
+      src={src}
+      alt={label}
+      style={{ maxHeight: "8em", maxWidth: "100%", objectFit: "contain" }}
+    />
+  );
+  if (ctx.viewSize && ctx.viewSize !== "detail") return img;
+  return <PropertyRow label={label}>{img}</PropertyRow>;
 }

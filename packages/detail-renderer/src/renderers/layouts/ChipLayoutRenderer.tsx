@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Chip } from "@mui/material";
 import type { Layout } from "@jsonforms/core";
 import type { DetailRendererProps } from "@graviola/edb-detail-renderer-core";
@@ -19,6 +19,15 @@ export function ChipLayoutRenderer({
   const preview = previewFromCtx(ctx);
   const { Slot } = useMotionAdapter();
   const scope = motionScopeId(ctx);
+  const thumbCtx = useMemo(
+    () => ({
+      viewSize: "chip" as const,
+      typeName: ctx.typeName,
+      typeIRI: ctx.typeIRI,
+      entityIRI: ctx.entityIRI,
+    }),
+    [ctx.typeName, ctx.typeIRI, ctx.entityIRI],
+  );
 
   const body = (layout.elements ?? []).map((el, i) => (
     <React.Fragment key={i}>{dispatch({ uiSchema: el, ctx })}</React.Fragment>
@@ -29,7 +38,7 @@ export function ChipLayoutRenderer({
     (preview.color as "default" | "primary" | "secondary" | undefined) ??
     "default";
   const chipIcon = previewChipIcon(preview);
-  const chipAvatar = previewChipAvatar(preview, label);
+  const chipAvatar = previewChipAvatar(preview, label, thumbCtx);
 
   return (
     <Slot id="body" motionId={`${scope}:body`}>

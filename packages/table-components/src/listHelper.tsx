@@ -9,6 +9,7 @@ import {
   MODAL_ENTITY_DETAIL,
   useAdbContext,
   useGraviolaModal,
+  useThumbnailUrl,
 } from "@graviola/edb-state-hooks";
 import { isJSONSchema } from "@graviola/json-schema-utils";
 import { JsonSchema, RankedTester, TesterContext } from "@jsonforms/core";
@@ -78,6 +79,19 @@ export const PrimaryColumnContent = ({
     [entityIRI, detailModal, typeNameToTypeIRI, typeName, onShowEntry],
   );
 
+  const imageSrc = useThumbnailUrl(
+    primaryContent.image ?? undefined,
+    density === "compact"
+      ? { sizeCategory: "chip" }
+      : { sizeCategory: "listItem" },
+    {
+      viewSize: density === "compact" ? "chip" : "listItem",
+      typeName,
+      entityIRI,
+      data,
+    },
+  );
+
   return (
     <Link
       component="button"
@@ -93,7 +107,7 @@ export const PrimaryColumnContent = ({
           gap: "1rem",
         }}
       >
-        {primaryContent.image && (
+        {imageSrc && (
           <Avatar
             alt="avatar"
             variant={
@@ -104,7 +118,7 @@ export const PrimaryColumnContent = ({
                 ? { width: 24, height: 24 }
                 : { width: 42, height: 42 }
             }
-            src={primaryContent.image}
+            src={imageSrc}
           />
         )}
         {/* using renderedCellValue instead of cell.getValue() preserves filter match highlighting */}

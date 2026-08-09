@@ -7,6 +7,7 @@ import {
   MODAL_ENTITY_DETAIL,
   useCRUDWithQueryClient,
   useGraviolaModal,
+  useThumbnailUrl,
 } from "@graviola/edb-state-hooks";
 import {
   queryOptionMixinBasedOnEntity,
@@ -185,6 +186,18 @@ export const SimpleExpandPanelRenderer = (
     }
   }, [typeIRI, entityIRI, data, elementDetailItem, detailModal]);
 
+  const imageSrc = useThumbnailUrl(
+    image,
+    { sizeCategory: "listItem" },
+    {
+      viewSize: "listItem",
+      typeName,
+      typeIRI,
+      entityIRI,
+      data,
+    },
+  );
+
   return (
     <ListItem
       secondaryAction={
@@ -206,7 +219,7 @@ export const SimpleExpandPanelRenderer = (
     >
       <ListItemButton onClick={!draft ? showDetailModal : undefined}>
         <ListItemAvatar>
-          <Avatar aria-label="Index" src={image}>
+          <Avatar aria-label="Index" src={imageSrc}>
             {count + 1}
           </Avatar>
         </ListItemAvatar>

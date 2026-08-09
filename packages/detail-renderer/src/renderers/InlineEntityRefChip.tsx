@@ -1,10 +1,11 @@
 import React, { useMemo } from "react";
-import { Avatar, Chip } from "@mui/material";
+import { Chip } from "@mui/material";
 import { extractEntityPreview } from "@graviola/edb-core-utils";
 
 import type { DetailRendererProps } from "@graviola/edb-detail-renderer-core";
 
 import { useDetailRendererContext } from "../context";
+import { PreviewAvatar } from "../preview/PreviewAvatar";
 
 /** Compact linked-entity chip without loading from store (uses embedded ref data). */
 export function InlineEntityRefChip({
@@ -36,6 +37,18 @@ export function InlineEntityRefChip({
     (typeof data.realmName === "string" ? data.realmName : undefined) ??
     (typeof data.documentTitle === "string" ? data.documentTitle : undefined) ??
     String(data["@id"] ?? "");
+  const entityIRI =
+    typeof data["@id"] === "string" ? data["@id"] : ctx.entityIRI;
+  const thumbCtx = useMemo(
+    () => ({
+      viewSize: "chip" as const,
+      typeName,
+      typeIRI,
+      entityIRI,
+      data,
+    }),
+    [typeName, typeIRI, entityIRI, data],
+  );
 
   return (
     <Chip
@@ -43,7 +56,14 @@ export function InlineEntityRefChip({
       onClick={onClick}
       clickable={Boolean(onClick)}
       avatar={
-        preview.image ? <Avatar src={preview.image} alt={label} /> : undefined
+        preview.image ? (
+          <PreviewAvatar
+            preview={preview}
+            alt={label}
+            density="chip"
+            thumbnailContext={thumbCtx}
+          />
+        ) : undefined
       }
       label={label}
     />
