@@ -42,6 +42,7 @@ export * from "./uiSlots/FinderSlot";
 export * from "./useExtendedSchema";
 export * from "./useEntity";
 export * from "./useEntityPreview";
+export * from "./useThumbnailUrl";
 export * from "./useTypedFilterStore";
 export * from "./useAnyOfFilterStore";
 export type { CrudDatastoreStore } from "./crudDatastoreStore";

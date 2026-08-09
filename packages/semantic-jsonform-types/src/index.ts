@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 import type {
   IRIToStringFn,
   NormDataMapping,
+  ResolveThumbnailUrl,
   SparqlBuildOptions,
   StringToIRIFn,
   CardPresentationRegistry,
@@ -152,6 +153,12 @@ export type GlobalAppConfig<DeclarativeMappingType> = GlobalSemanticConfig & {
   uischemata?: Record<string, any>;
   viewConfig?: import("./viewConfig").ViewConfigSet;
   typePresentation?: TypePresentationRegistry;
+  /**
+   * Optional display-time image URL rewrite (CDN / Commons / proxy).
+   * Called at render sites with a size category or pixel dimension; return
+   * `undefined` to keep the original URL. Distinct from {@link TypePresentation.image}.
+   */
+  resolveThumbnailUrl?: ResolveThumbnailUrl;
   /** Per-type-name card layout defaults (hero is still {@link PrimaryField}). */
   cardPresentation?: CardPresentationRegistry;
   /** @deprecated Use `viewConfig.detail.options` */
