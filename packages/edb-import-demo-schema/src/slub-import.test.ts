@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { makeDefaultMappingStrategyContext } from "@graviola/data-mapping-hooks";
 import { mapByConfig } from "@graviola/edb-data-mapping";
 import { availableAuthorityMappings } from "./mappings/availableAuthorityMappings";
+import { SLUB_LOD_AUTHORITY } from "./mappings/slubLodAccess";
 import { slubPersonMapping } from "./mappings/slubLodMappings";
 import { primaryFields } from "./primaryFields";
 import { BASE_IRI } from "./schema";
@@ -27,6 +28,7 @@ describe("SLUB LOD person mapping (offline)", () => {
       availableAuthorityMappings,
       fixtureAuthorityAccess,
       true,
+      SLUB_LOD_AUTHORITY,
     );
 
     const strategyContext = {

@@ -1,4 +1,4 @@
-import { Store } from "n3";
+import { Parser, Store, Writer } from "n3";
 import type { DatasetCore } from "@rdfjs/types";
 import {
   documentToTriples,
@@ -12,6 +12,12 @@ import type { ChangeSetEvent, StagedChangeSet, StagedEntity } from "./types";
 export type CreateStagedChangeSetOptions = {
   changeSetIRI?: string;
   propertyToIRI?: DocumentToTriplesOptions["propertyToIRI"];
+  /** Rehydrate from a prior `snapshot()`. */
+  initialState?: {
+    entities: StagedEntity[];
+    /** N-Triples or Turtle string of the change-set dataset. */
+    datasetN3?: string;
+  };
 };
 
 let changeSetCounter = 0;
@@ -40,6 +46,11 @@ const computeDepth = (
   return parent ? parent.depth + 1 : 0;
 };
 
+const serializeDatasetN3 = (store: Store): string => {
+  const writer = new Writer({ format: "N-Triples" });
+  return writer.quadsToString(store.getQuads(null, null, null, null));
+};
+
 export const createStagedChangeSet = (
   options: CreateStagedChangeSetOptions = {},
 ): StagedChangeSet => {
@@ -49,6 +60,26 @@ export const createStagedChangeSet = (
   const entities = new Map<string, StagedEntity>();
   const insertionOrder: string[] = [];
   const listeners = new Set<(event: ChangeSetEvent) => void>();
+
+  if (options.initialState) {
+    for (const entity of options.initialState.entities) {
+      entities.set(entity.entityIRI, { ...entity });
+      insertionOrder.push(entity.entityIRI);
+    }
+    if (options.initialState.datasetN3) {
+      const parser = new Parser();
+      for (const q of parser.parse(options.initialState.datasetN3)) {
+        store.addQuad(q);
+      }
+    } else {
+      // Fall back to re-materializing triples from staged documents.
+      for (const entity of options.initialState.entities) {
+        for (const q of documentToTriples(entity.document, { propertyToIRI })) {
+          store.addQuad(q);
+        }
+      }
+    }
+  }
 
   const emit = (event: ChangeSetEvent) => {
     for (const listener of listeners) {
@@ -194,6 +225,17 @@ export const createStagedChangeSet = (
 
     get dataset(): DatasetCore {
       return store;
+    },
+
+    snapshot: () => {
+      return {
+        changeSetIRI,
+        entities: insertionOrder.map((iri) => {
+          const e = entities.get(iri)!;
+          return { ...e, document: { ...e.document } };
+        }),
+        datasetN3: serializeDatasetN3(store),
+      };
     },
   };
 };

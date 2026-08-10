@@ -76,4 +76,12 @@ export interface StagedChangeSet {
 
   /** RDFJS DatasetCore view of all staged docs (feeds the overlay) */
   readonly dataset: import("@rdfjs/types").DatasetCore;
+
+  /** Serializable review metadata (documents live in `dataset`). */
+  snapshot(): {
+    changeSetIRI: string;
+    entities: StagedEntity[];
+    /** N-Triples serialization of the dataset. */
+    datasetN3?: string;
+  };
 }

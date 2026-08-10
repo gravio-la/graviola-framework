@@ -15,8 +15,8 @@ export const labelForEntity = (
   primaryFields: PrimaryFieldDeclaration,
 ): string => {
   const typeName = typeIRItoTypeName(entity.typeIRI);
-  const field = primaryFields[typeName]?.label ?? "title";
-  const value = entity.document[field];
+  const field = primaryFields[typeName]?.label;
+  const value = field ? entity.document[field] : undefined;
   if (typeof value === "string" && value.length > 0) return value;
   return entity.entityIRI;
 };

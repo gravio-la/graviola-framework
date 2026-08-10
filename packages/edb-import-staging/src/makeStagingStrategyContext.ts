@@ -3,11 +3,11 @@ import type {
   NormDataMappings,
   PrimaryFieldDeclaration,
 } from "@graviola/edb-core-types";
-import { makeDefaultMappingStrategyContext } from "@graviola/data-mapping-hooks";
-import type {
-  AuthorityConfiguration,
-  DeclarativeMapping,
-  StrategyContext,
+import {
+  makeDefaultMappingStrategyContext,
+  type AuthorityConfiguration,
+  type DeclarativeMapping,
+  type StrategyContext,
 } from "@graviola/edb-data-mapping";
 import type { StagedChangeSet, StrategyTrace } from "./types";
 
@@ -39,6 +39,8 @@ export type MakeStagingStrategyContextOptions = {
   authorityAccess?: Record<string, AuthorityConfiguration>;
   normDataMappings?: NormDataMappings<DeclarativeMapping>;
   disableLogging?: boolean;
+  /** Default `StrategyContext.authorityIRI` (no framework default). */
+  defaultAuthorityIRI?: string;
 };
 
 const pathKey = (path: string[]): string => path.join("/");
@@ -117,8 +119,8 @@ const labelFromDocument = (
   primaryFields: PrimaryFieldDeclaration,
 ): string | null => {
   const typeName = typeIRItoTypeName(typeIRI);
-  const labelField = primaryFields[typeName]?.label ?? "title";
-  const value = document[labelField];
+  const labelField = primaryFields[typeName]?.label;
+  const value = labelField ? document[labelField] : undefined;
   return typeof value === "string" && value.length > 0 ? value : null;
 };
 
@@ -187,6 +189,7 @@ export const makeStagingStrategyContext = (
     authorityAccess,
     normDataMappings,
     disableLogging = true,
+    defaultAuthorityIRI,
   } = opts;
 
   const pathToIRI = new Map<string, string>();
@@ -206,6 +209,7 @@ export const makeStagingStrategyContext = (
     normDataMappings,
     authorityAccess,
     disableLogging,
+    defaultAuthorityIRI,
   );
 
   const probeSameAs = async (

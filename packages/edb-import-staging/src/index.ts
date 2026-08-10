@@ -36,3 +36,9 @@ export type {
   RdfFileImportOptions,
   StageRdfIntoChangeSetOptions,
 } from "./rdfFileImport";
+
+export {
+  canonicalizeChangeSet,
+  canonicalIriFor,
+} from "./canonicalizeChangeSet";
+export type { CanonicalizeOptions } from "./canonicalizeChangeSet";

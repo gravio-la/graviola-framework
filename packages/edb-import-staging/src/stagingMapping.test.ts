@@ -59,6 +59,7 @@ const runGoetheStagingMapping = async (options?: {
     primaryFields,
     normDataMappings: availableAuthorityMappings,
     authorityAccess: fixtureAuthorityAccess,
+    defaultAuthorityIRI: "http://www.wikidata.org",
   });
 
   const personFixture = fixtureAuthorityRecords[PERSON_WIKIDATA_IRI];
@@ -147,14 +148,18 @@ describe("staging mapping (offline Goethe fixture)", () => {
     expect(hessen?.parentIRI).toBe(darmstadt?.entityIRI);
     expect(deutschland?.parentIRI).toBe(hessen?.entityIRI);
     expect(occupation?.parentIRI).toBe(rootIRI);
-    expect(
-      changeSet
-        .childrenOf(rootIRI)
-        .map((e) => e.entityIRI)
-        .sort(),
-    ).toEqual(
-      [frankfurt?.entityIRI, occupation?.entityIRI].filter(Boolean).sort(),
+    const rootChildren = changeSet.childrenOf(rootIRI);
+    const occupationChildren = rootChildren.filter(
+      (e) => typeIRItoTypeName(e.typeIRI) === "Occupation",
     );
+    // Goethe fixture yields Place (Frankfurt) plus both Occupations as direct children.
+    expect(rootChildren).toHaveLength(3);
+    expect(rootChildren.map((e) => e.entityIRI).sort()).toEqual(
+      [frankfurt?.entityIRI, ...occupationChildren.map((e) => e.entityIRI)]
+        .filter((iri): iri is string => Boolean(iri))
+        .sort(),
+    );
+    expect(occupationChildren).toHaveLength(2);
 
     const nameQuads = changeSet.dataset.getQuads(
       namedNode(rootIRI),

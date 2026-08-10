@@ -15,8 +15,8 @@ import {
 
 const labelFor = (doc: RecordedDocument): string => {
   const typeName = typeIRItoTypeName(doc["@type"]);
-  const field = primaryFields[typeName]?.label ?? "title";
-  const value = doc[field];
+  const field = primaryFields[typeName]?.label;
+  const value = field ? doc[field] : undefined;
   if (typeof value === "string" && value.length > 0) return value;
   if (doc.idAuthority && typeof doc.idAuthority === "object") {
     const id = (doc.idAuthority as { id?: string }).id;
@@ -86,6 +86,7 @@ export const runPersonMappingDemo = async (): Promise<RecordedDocument[]> => {
     availableAuthorityMappings,
     fixtureAuthorityAccess,
     true,
+    "http://www.wikidata.org",
   );
 
   const strategyContext = {

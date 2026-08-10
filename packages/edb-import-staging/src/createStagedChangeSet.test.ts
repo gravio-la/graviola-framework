@@ -181,3 +181,76 @@ describe("document triples in staged dataset", () => {
     expect(nameQuads[0]?.object.value).toBe("Johann Wolfgang von Goethe");
   });
 });
+
+describe("createStagedChangeSet snapshot/initialState", () => {
+  test("round-trips entities, parent links, depths, and dataset quads", async () => {
+    const changeSet = createStagedChangeSet({
+      changeSetIRI: "urn:graviola:changeset:snapshot-test",
+      propertyToIRI,
+    });
+    const rootIRI = `${BASE}root`;
+    const childIRI = `${BASE}child`;
+    const leafIRI = `${BASE}leaf`;
+
+    await changeSet.stage({
+      entityIRI: rootIRI,
+      typeIRI: `${BASE}Person`,
+      document: { "@id": rootIRI, "@type": `${BASE}Person`, name: "Root" },
+      provenance: baseProvenance,
+      trace: baseTrace,
+    });
+    await changeSet.stage({
+      entityIRI: childIRI,
+      typeIRI: `${BASE}Place`,
+      document: { "@id": childIRI, "@type": `${BASE}Place`, title: "Child" },
+      provenance: baseProvenance,
+      trace: { ...baseTrace, mappingPath: ["birthPlace"] },
+      parentIRI: rootIRI,
+    });
+    await changeSet.stage({
+      entityIRI: leafIRI,
+      typeIRI: `${BASE}Location`,
+      document: { "@id": leafIRI, "@type": `${BASE}Location`, title: "Leaf" },
+      provenance: baseProvenance,
+      trace: { ...baseTrace, mappingPath: ["birthPlace", "location"] },
+      parentIRI: childIRI,
+    });
+    changeSet.setReviewState(leafIRI, "approved");
+
+    const snap = changeSet.snapshot();
+    expect(snap.changeSetIRI).toBe("urn:graviola:changeset:snapshot-test");
+    expect(snap.entities).toHaveLength(3);
+    expect(snap.datasetN3).toBeTruthy();
+
+    const restored = createStagedChangeSet({
+      changeSetIRI: snap.changeSetIRI,
+      propertyToIRI,
+      initialState: {
+        entities: snap.entities,
+        datasetN3: snap.datasetN3,
+      },
+    });
+
+    expect(restored.list().map((e) => e.entityIRI)).toEqual([
+      rootIRI,
+      childIRI,
+      leafIRI,
+    ]);
+    expect(restored.get(childIRI)?.parentIRI).toBe(rootIRI);
+    expect(restored.get(leafIRI)?.parentIRI).toBe(childIRI);
+    expect(restored.get(rootIRI)?.depth).toBe(0);
+    expect(restored.get(childIRI)?.depth).toBe(1);
+    expect(restored.get(leafIRI)?.depth).toBe(2);
+    expect(restored.get(leafIRI)?.reviewState).toBe("approved");
+    expect(restored.dataset.size).toBe(changeSet.dataset.size);
+    expect(restored.dataset.size).toBeGreaterThan(0);
+
+    const nameQuads = restored.dataset.getQuads(
+      namedNode(rootIRI),
+      namedNode(`${BASE}name`),
+      null,
+      null,
+    );
+    expect(nameQuads[0]?.object.value).toBe("Root");
+  });
+});

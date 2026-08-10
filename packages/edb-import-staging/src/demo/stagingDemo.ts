@@ -30,6 +30,7 @@ export const runStagingDemo = async (): Promise<void> => {
     primaryFields,
     normDataMappings: availableAuthorityMappings,
     authorityAccess: fixtureAuthorityAccess,
+    defaultAuthorityIRI: "http://www.wikidata.org",
   });
 
   const personFixture = fixtureAuthorityRecords[PERSON_WIKIDATA_IRI];
