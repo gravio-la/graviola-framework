@@ -23,8 +23,7 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "lint": "tsc --noEmit",
-    "test": "bun test src",
-    "release": "bun publish --access public"
+    "test": "bun test src"
   },
   "dependencies": {
     "@graviola/edb-core-types": "workspace:*"
@@ -39,5 +38,6 @@
     "tsup": "^8.0.0",
     "typescript": "5.8.2"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "private": true
 }
