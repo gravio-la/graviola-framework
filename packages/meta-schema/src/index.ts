@@ -231,6 +231,10 @@ const fingerprintAndProvenanceProperties: JSONSchema7["properties"] = {
       agent: { type: "string" },
       formulaId: { type: "string" },
       lensId: { type: "string" },
+      activityId: {
+        type: "string",
+        description: "prov:wasGeneratedBy",
+      },
     },
     additionalProperties: false,
   },
@@ -272,8 +276,11 @@ export type EntityMetaBlock = {
     agent?: string;
     formulaId?: string;
     lensId?: string;
+    activityId?: string;
   };
 };
+
+export type GenerationActivity = NonNullable<EntityMetaBlock["provenance"]>;
 
 export type MetaStampingConfig = {
   schemaVersion?: string;
@@ -283,6 +290,11 @@ export type MetaStampingConfig = {
   rejectClientMeta?: boolean;
   /** Injectable clock for tests. */
   now?: () => string;
+  /**
+   * Entity-level generation activity (job run, formula, lens).
+   * A function lets one long-lived store vary it per write (same pattern as `now`).
+   */
+  provenance?: GenerationActivity | (() => GenerationActivity | undefined);
   /**
    * Instance property keys that identify a named entity when stamping.
    * Default: `@id` (JSON-LD API shape). Use `["id"]` only when stamping
@@ -499,6 +511,12 @@ export function stampDocumentMeta<T extends Record<string, unknown>>(
         block.created = previousMeta?.created ?? now;
         block.modified = now;
       }
+
+      const prov =
+        typeof config.provenance === "function"
+          ? config.provenance()
+          : config.provenance;
+      if (prov) block.provenance = prov;
 
       entity.$meta = block;
     },
