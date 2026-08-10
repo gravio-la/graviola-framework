@@ -29,14 +29,35 @@ export function annotationProjectionsToSparql(
   const containerKey = options?.containerKey ?? ENTITY_META_PERSISTENCE_KEY;
   const containerVar = `?${containerKey}`;
 
-  const innerTriples = projections
-    .map((projection) => {
-      const leafVar = `?${projection.persistenceSegments.join("_")}`;
-      return `${containerVar} ${makePrefixed(projection.leafKey)} ${leafVar} .`;
-    })
-    .join("\n    ");
+  // Walk intermediate segments and deduplicate shared paths
+  // (e.g., provenance/activityId and provenance/agent share the provenance step)
+  const tripleLines: string[] = [];
+  const seenPaths = new Set<string>();
 
-  const where = `OPTIONAL { ${entityVar} ${makePrefixed(containerKey)} ${containerVar} .\n    ${innerTriples}\n}`;
+  for (const projection of projections) {
+    const segments = projection.persistenceSegments;
+    if (segments.length === 0) continue;
+
+    // Walk from container through intermediate segments to leaf
+    let prevVar = containerVar;
+    for (let i = 0; i < segments.length; i++) {
+      const pathKey = segments.slice(0, i + 1).join("/");
+      if (seenPaths.has(pathKey)) {
+        prevVar = `?${segments.slice(0, i + 1).join("_")}`;
+        continue;
+      }
+      seenPaths.add(pathKey);
+
+      const pathVar = `?${segments.slice(0, i + 1).join("_")}`;
+      const pred = makePrefixed(segments[i]!);
+      tripleLines.push(`${prevVar} ${pred} ${pathVar} .`);
+      prevVar = pathVar;
+    }
+  }
+
+  const where = tripleLines.length
+    ? `OPTIONAL { ${entityVar} ${makePrefixed(containerKey)} ${containerVar} .\n    ${tripleLines.join("\n    ")}\n}`
+    : "";
 
   const select = projections
     .map((projection) => {
