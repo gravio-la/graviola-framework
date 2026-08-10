@@ -1,0 +1,60 @@
+{
+  "name": "@graviola/data-acquisition",
+  "version": "0.1.0",
+  "description": "Declarative data-source acquisition: fetch, cache, retry, rate-limit, provenance",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./cache/node": {
+      "types": "./dist/cache/node-entry.d.ts",
+      "import": "./dist/cache/node-entry.js",
+      "require": "./dist/cache/node-entry.cjs",
+      "default": "./dist/cache/node-entry.js"
+    }
+  },
+  "files": [
+    "dist",
+    "CHANGELOG.md",
+    "README.md"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "depcheck": "depcheck",
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint src/**/*.ts",
+    "lint-fix": "eslint --fix src/**/*.ts",
+    "test": "bun test",
+    "test:watch": "bun test --watch",
+    "release": "bun publish --access public",
+    "pack-tarball": "bun pm pack"
+  },
+  "dependencies": {
+    "@graviola/edb-core-types": "workspace:*",
+    "@graviola/edb-data-mapping": "workspace:*",
+    "lodash-es": "catalog:"
+  },
+  "devDependencies": {
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*",
+    "@types/json-schema": "catalog:",
+    "@types/node": "^22.0.0",
+    "eslint-config-edb": "workspace:*",
+    "tsup": "^8.0.0",
+    "typescript": "^5.8.2"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "eslint-config-edb"
+    ]
+  }
+}
