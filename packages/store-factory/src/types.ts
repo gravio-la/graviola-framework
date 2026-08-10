@@ -29,6 +29,13 @@ export type SparqlBackendSpec = {
   flavour?: SPARQLFlavour;
   /** CONSTRUCT Accept format. Default inferred from flavour (`ntriples` for oxigraph). */
   constructResultFormat?: "turtle" | "ntriples";
+  /**
+   * Named graph for this store instance. Writes use WITH / GRAPH via
+   * `defaultUpdateGraph`; reads append `?default-graph-uri=` (Oxigraph and
+   * SPARQL 1.1 dataset params — required because Oxigraph unscoped queries
+   * do not see named-graph triples; verified E-0 2026-08-09).
+   */
+  graph?: string;
 };
 
 export type PrismaBackendSpec = {

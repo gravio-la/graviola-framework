@@ -35,6 +35,7 @@ export async function createSparqlStore(
     queryUrl: urls.query,
     updateUrl: urls.update,
     constructResultFormat,
+    defaultGraphUris: opts.backend.graph ? [opts.backend.graph] : undefined,
   });
 
   const primaryFields = opts.primaryFields ?? {};
@@ -54,6 +55,7 @@ export async function createSparqlStore(
     },
     sparqlQueryFunctions: crud,
     defaultLimit: opts.defaultLimit ?? 100,
+    ...(opts.backend.graph ? { defaultUpdateGraph: opts.backend.graph } : {}),
     ...(opts.statementMeta
       ? {
           statementMeta: {

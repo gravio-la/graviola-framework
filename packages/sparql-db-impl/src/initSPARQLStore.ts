@@ -206,6 +206,9 @@ export function initSPARQLDatastorePair(
       queryBuildOptions,
       walkerOptions,
       maxRecursion: walkerOptions?.maxRecursion,
+      resolveInverseMaxDepth: (
+        queryBuildOptions as { resolveInverseMaxDepth?: number } | undefined
+      )?.resolveInverseMaxDepth,
     });
     const document = res.document;
     return document ? remapLoadedDocument(document) : document;

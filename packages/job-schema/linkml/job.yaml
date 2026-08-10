@@ -1,0 +1,363 @@
+# Shared job / ingest-run vocabulary — not domain-specific.
+id: https://graviola.la/schema/job#v1
+name: job
+title: Graviola job runs
+description: >-
+  Persisted background jobs (ingest, reconcile, import) with steps, fetches,
+  and staged-entity review metadata. Lives in its own named graph.
+version: "1.0.0"
+prefixes:
+  linkml: https://w3id.org/linkml/
+  job: https://graviola.gra.one/schema/job#
+  gra: https://graviola.gra.one/schema/
+default_prefix: job
+default_range: string
+imports:
+  - linkml:types
+
+annotations:
+  gra:baseIRI: https://graviola.gra.one/schema/job#
+  gra:entityBaseIRI: https://graviola.gra.one/jobs/
+
+enums:
+  JobStatus:
+    permissible_values:
+      queued:
+      running:
+      awaiting-review:
+      applying:
+      done:
+      partial:
+      error:
+      cancelled:
+      discarded:
+  Intervention:
+    permissible_values:
+      auto:
+      review:
+      assisted:
+  ReviewState:
+    permissible_values:
+      pending:
+      accepted:
+      rejected:
+
+classes:
+
+  JobParam:
+    class_uri: job:JobParam
+    description: A single named parameter on a JobRun (SPARQL-queryable).
+    attributes:
+      name:
+        range: string
+        required: true
+      value:
+        range: string
+
+  SourceFetch:
+    class_uri: job:SourceFetch
+    description: One persisted FetchProvenance record.
+    slots:
+      - id
+      - ofStep
+      - sourceId
+      - sourceKind
+      - endpoint
+      - requestHash
+      - requestSummary
+      - requestedAt
+      - durationMs
+      - cacheStatus
+      - attempts
+      - httpStatus
+      - errorMessage
+      - detailJson
+
+  JobStep:
+    class_uri: job:JobStep
+    description: One phase of a JobRun (retry/resume unit).
+    slots:
+      - id
+      - ofRun
+      - ordinal
+      - phase
+      - detail
+      - status
+      - startedAt
+      - finishedAt
+      - done
+      - total
+      - errorMessage
+      - resumeToken
+      - fetches
+    slot_usage:
+      fetches:
+        multivalued: true
+        range: SourceFetch
+        inlined: true
+        inverse: ofStep
+
+  JobRun:
+    class_uri: job:JobRun
+    description: One job invocation.
+    slots:
+      - id
+      - kind
+      - label
+      - status
+      - intervention
+      - params
+      - inputJson
+      - targetEndpoint
+      - targetGraph
+      - targetSecondaryStore
+      - changeSetGraph
+      - startedAt
+      - finishedAt
+      - heartbeatAt
+      - itemsSeen
+      - entitiesUpserted
+      - geometriesUpserted
+      - fetchCount
+      - fetchErrorCount
+      - errorMessage
+      - errorDetail
+      - dedupeKey
+      - parentRun
+      - agent
+      - schemaFingerprint
+      - steps
+      - touchedEntities
+      - tileRevision
+    slot_usage:
+      params:
+        multivalued: true
+        range: JobParam
+        inlined: true
+      steps:
+        multivalued: true
+        range: JobStep
+        inlined: true
+        inverse: ofRun
+      touchedEntities:
+        multivalued: true
+        range: uri
+      status:
+        range: JobStatus
+      intervention:
+        range: Intervention
+
+  StagedEntityRecord:
+    class_uri: job:StagedEntityRecord
+    description: Review metadata for one staged entity (document lives in changeSetGraph).
+    slots:
+      - id
+      - entityIRI
+      - typeIRI
+      - ofRun
+      - parentIRI
+      - depth
+      - reviewState
+      - decision
+      - matchMethod
+      - mappingPath
+      - provenanceMethod
+      - mappingId
+      - sourceRef
+      - appliedAt
+    slot_usage:
+      reviewState:
+        range: ReviewState
+      mappingPath:
+        multivalued: true
+        range: string
+      ofRun:
+        range: JobRun
+
+slots:
+
+  id:
+    identifier: true
+    range: string
+
+  kind:
+    range: string
+
+  label:
+    range: string
+
+  status:
+    range: string
+
+  intervention:
+    range: string
+
+  params:
+    range: JobParam
+    multivalued: true
+
+  inputJson:
+    range: string
+
+  targetEndpoint:
+    range: uri
+
+  targetGraph:
+    range: uri
+
+  targetSecondaryStore:
+    range: string
+
+  changeSetGraph:
+    range: uri
+
+  startedAt:
+    range: string
+
+  finishedAt:
+    range: string
+
+  heartbeatAt:
+    range: string
+
+  itemsSeen:
+    range: integer
+
+  entitiesUpserted:
+    range: integer
+
+  geometriesUpserted:
+    range: integer
+
+  fetchCount:
+    range: integer
+
+  fetchErrorCount:
+    range: integer
+
+  errorMessage:
+    range: string
+
+  errorDetail:
+    range: string
+
+  dedupeKey:
+    range: string
+
+  parentRun:
+    range: uri
+
+  agent:
+    range: string
+
+  schemaFingerprint:
+    range: string
+
+  steps:
+    range: JobStep
+    multivalued: true
+
+  touchedEntities:
+    range: uri
+    multivalued: true
+
+  tileRevision:
+    range: integer
+
+  ofRun:
+    range: JobRun
+
+  ofStep:
+    range: JobStep
+
+  ordinal:
+    range: integer
+
+  phase:
+    range: string
+
+  detail:
+    range: string
+
+  done:
+    range: integer
+
+  total:
+    range: integer
+
+  resumeToken:
+    range: string
+
+  fetches:
+    range: SourceFetch
+    multivalued: true
+
+  sourceId:
+    range: string
+
+  sourceKind:
+    range: string
+
+  endpoint:
+    range: string
+
+  requestHash:
+    range: string
+
+  requestSummary:
+    range: string
+
+  requestedAt:
+    range: string
+
+  durationMs:
+    range: integer
+
+  cacheStatus:
+    range: string
+
+  attempts:
+    range: integer
+
+  httpStatus:
+    range: integer
+
+  detailJson:
+    range: string
+
+  entityIRI:
+    range: uri
+
+  typeIRI:
+    range: uri
+
+  parentIRI:
+    range: uri
+
+  depth:
+    range: integer
+
+  reviewState:
+    range: string
+
+  decision:
+    range: string
+
+  matchMethod:
+    range: string
+
+  mappingPath:
+    range: string
+    multivalued: true
+
+  provenanceMethod:
+    range: string
+
+  mappingId:
+    range: string
+
+  sourceRef:
+    range: string
+
+  appliedAt:
+    range: string

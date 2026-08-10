@@ -1,0 +1,8 @@
+{
+  "schemaName": "job",
+  "label": "Graviola job runs",
+  "description": "Persisted background jobs (ingest, reconcile, import) with steps, fetches, and staged-entity review metadata. Lives in its own named graph.",
+  "version": "1.0.0",
+  "entityBaseIRI": "https://graviola.gra.one/jobs/",
+  "baseIRI": "https://graviola.gra.one/schema/job#"
+}

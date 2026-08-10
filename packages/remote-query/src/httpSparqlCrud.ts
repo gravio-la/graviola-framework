@@ -31,6 +31,23 @@ export type HttpSparqlCrudOptions = {
    * Use `"ntriples"` for Oxigraph-style HTTP (matches previous `oxigraphCrudOptions`).
    */
   constructResultFormat?: "turtle" | "ntriples";
+  /**
+   * Appended as `?default-graph-uri=` on query requests only (SPARQL 1.1 dataset
+   * protocol). Updates use WITH via `defaultUpdateGraph` on the store config.
+   */
+  defaultGraphUris?: string[];
+};
+
+const withDefaultGraphUris = (
+  queryUrl: string,
+  uris: string[] | undefined,
+): string => {
+  if (!uris?.length) return queryUrl;
+  const u = new URL(queryUrl);
+  for (const g of uris) {
+    u.searchParams.append("default-graph-uri", g);
+  }
+  return u.toString();
 };
 
 /**
@@ -41,11 +58,13 @@ export function createHttpSparqlCrudFunctions(
   options: HttpSparqlCrudOptions,
 ): CRUDFunctions {
   const {
-    queryUrl,
+    queryUrl: queryUrlRaw,
     updateUrl,
     auth,
     constructResultFormat = "turtle",
+    defaultGraphUris,
   } = options;
+  const queryUrl = withDefaultGraphUris(queryUrlRaw, defaultGraphUris);
 
   const fetchConstruct =
     constructResultFormat === "ntriples" ? fetchNTriples : fetchTurtle;

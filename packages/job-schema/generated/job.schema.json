@@ -1,0 +1,342 @@
+{
+  "type": "object",
+  "definitions": {
+    "Intervention": {
+      "description": "",
+      "enum": [
+        "auto",
+        "review",
+        "assisted"
+      ],
+      "type": "string"
+    },
+    "JobParam": {
+      "description": "A single named parameter on a JobRun (SPARQL-queryable).",
+      "properties": {
+        "@type": {
+          "const": "https://graviola.gra.one/schema/job#JobParam",
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "name"
+      ],
+      "type": "object"
+    },
+    "JobRun": {
+      "description": "One job invocation.",
+      "properties": {
+        "@id": {
+          "type": "string"
+        },
+        "@type": {
+          "const": "https://graviola.gra.one/schema/job#JobRun",
+          "type": "string"
+        },
+        "agent": {
+          "type": "string"
+        },
+        "changeSetGraph": {
+          "type": "string"
+        },
+        "dedupeKey": {
+          "type": "string"
+        },
+        "entitiesUpserted": {
+          "type": "integer"
+        },
+        "errorDetail": {
+          "type": "string"
+        },
+        "errorMessage": {
+          "type": "string"
+        },
+        "fetchCount": {
+          "type": "integer"
+        },
+        "fetchErrorCount": {
+          "type": "integer"
+        },
+        "finishedAt": {
+          "type": "string"
+        },
+        "geometriesUpserted": {
+          "type": "integer"
+        },
+        "heartbeatAt": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "inputJson": {
+          "type": "string"
+        },
+        "intervention": {
+          "$ref": "#/definitions/Intervention"
+        },
+        "itemsSeen": {
+          "type": "integer"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "params": {
+          "items": {
+            "$ref": "#/definitions/JobParam"
+          },
+          "type": "array"
+        },
+        "parentRun": {
+          "type": "string"
+        },
+        "schemaFingerprint": {
+          "type": "string"
+        },
+        "startedAt": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/JobStatus"
+        },
+        "steps": {
+          "items": {
+            "$ref": "#/definitions/JobStep"
+          },
+          "type": "array",
+          "x-inverseOf": {
+            "inverseOf": [
+              "#/definitions/JobStep/properties/ofRun"
+            ]
+          }
+        },
+        "targetEndpoint": {
+          "type": "string"
+        },
+        "targetGraph": {
+          "type": "string"
+        },
+        "targetSecondaryStore": {
+          "type": "string"
+        },
+        "tileRevision": {
+          "type": "integer"
+        },
+        "touchedEntities": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "JobStatus": {
+      "description": "",
+      "enum": [
+        "queued",
+        "running",
+        "awaiting-review",
+        "applying",
+        "done",
+        "partial",
+        "error",
+        "cancelled",
+        "discarded"
+      ],
+      "type": "string"
+    },
+    "JobStep": {
+      "description": "One phase of a JobRun (retry/resume unit).",
+      "properties": {
+        "@id": {
+          "type": "string"
+        },
+        "@type": {
+          "const": "https://graviola.gra.one/schema/job#JobStep",
+          "type": "string"
+        },
+        "detail": {
+          "type": "string"
+        },
+        "done": {
+          "type": "integer"
+        },
+        "errorMessage": {
+          "type": "string"
+        },
+        "fetches": {
+          "items": {
+            "$ref": "#/definitions/SourceFetch"
+          },
+          "type": "array",
+          "x-inverseOf": {
+            "inverseOf": [
+              "#/definitions/SourceFetch/properties/ofStep"
+            ]
+          }
+        },
+        "finishedAt": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "ofRun": {
+          "$ref": "#/definitions/JobRun"
+        },
+        "ordinal": {
+          "type": "integer"
+        },
+        "phase": {
+          "type": "string"
+        },
+        "resumeToken": {
+          "type": "string"
+        },
+        "startedAt": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "total": {
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "ReviewState": {
+      "description": "",
+      "enum": [
+        "pending",
+        "accepted",
+        "rejected"
+      ],
+      "type": "string"
+    },
+    "SourceFetch": {
+      "description": "One persisted FetchProvenance record.",
+      "properties": {
+        "@id": {
+          "type": "string"
+        },
+        "@type": {
+          "const": "https://graviola.gra.one/schema/job#SourceFetch",
+          "type": "string"
+        },
+        "attempts": {
+          "type": "integer"
+        },
+        "cacheStatus": {
+          "type": "string"
+        },
+        "detailJson": {
+          "type": "string"
+        },
+        "durationMs": {
+          "type": "integer"
+        },
+        "endpoint": {
+          "type": "string"
+        },
+        "errorMessage": {
+          "type": "string"
+        },
+        "httpStatus": {
+          "type": "integer"
+        },
+        "id": {
+          "type": "string"
+        },
+        "ofStep": {
+          "$ref": "#/definitions/JobStep"
+        },
+        "requestHash": {
+          "type": "string"
+        },
+        "requestSummary": {
+          "type": "string"
+        },
+        "requestedAt": {
+          "type": "string"
+        },
+        "sourceId": {
+          "type": "string"
+        },
+        "sourceKind": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "StagedEntityRecord": {
+      "description": "Review metadata for one staged entity (document lives in changeSetGraph).",
+      "properties": {
+        "@id": {
+          "type": "string"
+        },
+        "@type": {
+          "const": "https://graviola.gra.one/schema/job#StagedEntityRecord",
+          "type": "string"
+        },
+        "appliedAt": {
+          "type": "string"
+        },
+        "decision": {
+          "type": "string"
+        },
+        "depth": {
+          "type": "integer"
+        },
+        "entityIRI": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "mappingId": {
+          "type": "string"
+        },
+        "mappingPath": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "matchMethod": {
+          "type": "string"
+        },
+        "ofRun": {
+          "type": "string"
+        },
+        "parentIRI": {
+          "type": "string"
+        },
+        "provenanceMethod": {
+          "type": "string"
+        },
+        "reviewState": {
+          "$ref": "#/definitions/ReviewState"
+        },
+        "sourceRef": {
+          "type": "string"
+        },
+        "typeIRI": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}
