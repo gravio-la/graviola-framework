@@ -263,6 +263,48 @@
         "typescript": "^5.8.2",
       },
     },
+    "apps/metadata-explorer": {
+      "name": "@graviola/metadata-explorer",
+      "version": "0.1.0",
+      "dependencies": {
+        "@ebay/nice-modal-react": "^1.2.11",
+        "@emotion/react": "catalog:",
+        "@emotion/styled": "catalog:",
+        "@graviola/edb-detail-renderer": "workspace:*",
+        "@graviola/edb-detail-renderer-core": "workspace:*",
+        "@graviola/edb-state-hooks": "workspace:*",
+        "@graviola/graviola-app-config": "workspace:*",
+        "@graviola/json-schema-utils": "workspace:*",
+        "@graviola/meta-schema": "workspace:*",
+        "@graviola/provenance-types": "workspace:*",
+        "@graviola/rest-store-server": "workspace:*",
+        "@graviola/semantic-json-form": "workspace:*",
+        "@graviola/semantic-views": "workspace:*",
+        "@graviola/statement-meta": "workspace:*",
+        "@graviola/store-core": "workspace:*",
+        "@jsonforms/core": "catalog:jsonforms",
+        "@jsonforms/material-renderers": "catalog:jsonforms",
+        "@jsonforms/react": "catalog:jsonforms",
+        "@mui/icons-material": "catalog:mui",
+        "@mui/material": "catalog:mui",
+        "@tanstack/react-query": "^5.28.5",
+        "lodash-es": "catalog:",
+        "react": "catalog:",
+        "react-dom": "catalog:",
+        "react-redux": "^9.2.0",
+        "react-router-dom": "catalog:",
+      },
+      "devDependencies": {
+        "@types/json-schema": "catalog:",
+        "@types/lodash-es": "^4.17.12",
+        "@types/react": "catalog:",
+        "@types/react-dom": "^18.0.4",
+        "@vitejs/plugin-react": "^4.3.4",
+        "buffer": "^6.0.3",
+        "typescript": "^5.8.2",
+        "vite": "^6.0.0",
+      },
+    },
     "apps/parliament-map": {
       "name": "@graviola/parliament-map",
       "version": "0.0.1",
@@ -270,16 +312,24 @@
         "@ebay/nice-modal-react": "^1.2.11",
         "@emotion/react": "catalog:",
         "@emotion/styled": "catalog:",
+        "@graviola/data-acquisition": "workspace:*",
         "@graviola/edb-core-types": "workspace:*",
         "@graviola/edb-core-utils": "workspace:*",
         "@graviola/edb-data-mapping": "workspace:*",
+        "@graviola/edb-detail-renderer": "workspace:*",
+        "@graviola/edb-import-components": "workspace:*",
         "@graviola/edb-import-staging": "workspace:*",
         "@graviola/edb-state-hooks": "workspace:*",
+        "@graviola/edb-table-components": "workspace:*",
         "@graviola/edb-wikidata-utils": "workspace:*",
         "@graviola/graviola-app-config": "workspace:*",
+        "@graviola/job-schema": "workspace:*",
+        "@graviola/json-schema-utils": "workspace:*",
         "@graviola/rest-server-hono": "workspace:*",
         "@graviola/rest-store-provider": "workspace:*",
+        "@graviola/rest-store-server": "workspace:*",
         "@graviola/semantic-json-form": "workspace:*",
+        "@graviola/semantic-views": "workspace:*",
         "@graviola/sparql-db-impl": "workspace:*",
         "@graviola/store-core": "workspace:*",
         "@graviola/store-factory": "workspace:*",
@@ -290,11 +340,14 @@
         "@mui/material": "catalog:mui",
         "@tanstack/react-query": "^5.28.5",
         "hono": "^4.7.2",
+        "i18next": "^25.4.0",
         "maplibre-gl": "^5.1.0",
         "pg": "^8.13.3",
         "react": "catalog:",
         "react-dom": "catalog:",
+        "react-i18next": "^15.0.0",
         "react-redux": "^9.2.0",
+        "react-router-dom": "^6.28.0",
       },
       "devDependencies": {
         "@types/json-schema": "catalog:",
@@ -719,6 +772,24 @@
         "@types/json-schema": "catalog:",
         "eslint-config-edb": "workspace:*",
         "jest": "^29.0.0",
+        "tsup": "^8.0.0",
+        "typescript": "^5.8.2",
+      },
+    },
+    "packages/data-acquisition": {
+      "name": "@graviola/data-acquisition",
+      "version": "0.1.0",
+      "dependencies": {
+        "@graviola/edb-core-types": "workspace:*",
+        "@graviola/edb-data-mapping": "workspace:*",
+        "lodash-es": "catalog:",
+      },
+      "devDependencies": {
+        "@graviola/edb-tsconfig": "workspace:*",
+        "@graviola/edb-tsup-config": "workspace:*",
+        "@types/json-schema": "catalog:",
+        "@types/node": "^22.0.0",
+        "eslint-config-edb": "workspace:*",
         "tsup": "^8.0.0",
         "typescript": "^5.8.2",
       },
@@ -1324,6 +1395,7 @@
         "@graviola/edb-core-utils": "workspace:*",
         "@graviola/edb-debug-utils": "workspace:*",
         "@graviola/edb-detail-renderer": "workspace:*",
+        "@graviola/edb-detail-renderer-core": "workspace:*",
         "@graviola/edb-state-hooks": "workspace:*",
         "@graviola/edb-table-types": "workspace:*",
         "@graviola/edb-ui-utils": "workspace:*",
@@ -1334,6 +1406,7 @@
         "@graviola/semantic-json-form": "workspace:*",
         "@graviola/semantic-jsonform-types": "workspace:*",
         "@graviola/sidecar-core": "workspace:*",
+        "ajv": "^8.17.1",
       },
       "devDependencies": {
         "@graviola/edb-tsconfig": "workspace:*",
@@ -1423,6 +1496,18 @@
         "@graviola/edb-state-hooks": "workspace:*",
         "@rdfjs/types": "catalog:rdf",
         "react": "catalog:",
+      },
+    },
+    "packages/job-schema": {
+      "name": "@graviola/job-schema",
+      "version": "0.1.0",
+      "devDependencies": {
+        "@graviola/edb-tsconfig": "workspace:*",
+        "@graviola/edb-tsup-config": "workspace:*",
+        "@types/json-schema": "catalog:",
+        "eslint-config-edb": "workspace:*",
+        "tsup": "^8.0.0",
+        "typescript": "^5.8.2",
       },
     },
     "packages/json-schema-prisma-utils": {
@@ -3192,6 +3277,8 @@
 
     "@graviola/calc-worker": ["@graviola/calc-worker@workspace:packages/calc-worker"],
 
+    "@graviola/data-acquisition": ["@graviola/data-acquisition@workspace:packages/data-acquisition"],
+
     "@graviola/data-mapping-hooks": ["@graviola/data-mapping-hooks@workspace:packages/data-mapping-hooks"],
 
     "@graviola/datastore-tests": ["@graviola/datastore-tests@workspace:apps/datastore-tests"],
@@ -3290,6 +3377,8 @@
 
     "@graviola/indexeddb-store-provider": ["@graviola/indexeddb-store-provider@workspace:packages/indexeddb-store-provider"],
 
+    "@graviola/job-schema": ["@graviola/job-schema@workspace:packages/job-schema"],
+
     "@graviola/json-schema-cli": ["@graviola/json-schema-cli@workspace:apps/json-schema-cli"],
 
     "@graviola/json-schema-prisma-utils": ["@graviola/json-schema-prisma-utils@workspace:packages/json-schema-prisma-utils"],
@@ -3305,6 +3394,8 @@
     "@graviola/meilisearch-sparql-store": ["@graviola/meilisearch-sparql-store@workspace:packages/meilisearch-sparql-store"],
 
     "@graviola/meta-schema": ["@graviola/meta-schema@workspace:packages/meta-schema"],
+
+    "@graviola/metadata-explorer": ["@graviola/metadata-explorer@workspace:apps/metadata-explorer"],
 
     "@graviola/parliament-map": ["@graviola/parliament-map@workspace:apps/parliament-map"],
 
@@ -3675,6 +3766,8 @@
     "@rdfjs/types": ["@rdfjs/types@2.0.1", "", { "dependencies": { "@types/node": "*" } }, "sha512-uyAzpugX7KekAXAHq26m3JlUIZJOC0uSBhpnefGV5i15bevDyyejoB7I+9MKeUrzXD8OOUI3+4FeV1wwQr5ihA=="],
 
     "@reduxjs/toolkit": ["@reduxjs/toolkit@2.11.2", "", { "dependencies": { "@standard-schema/spec": "^1.0.0", "@standard-schema/utils": "^0.3.0", "immer": "^11.0.0", "redux": "^5.0.1", "redux-thunk": "^3.1.0", "reselect": "^5.1.0" }, "peerDependencies": { "react": "^16.9.0 || ^17.0.0 || ^18 || ^19", "react-redux": "^7.2.1 || ^8.1.3 || ^9.0.0" }, "optionalPeers": ["react", "react-redux"] }, "sha512-Kd6kAHTA6/nUpp8mySPqj3en3dm0tdMIgbttnQ1xFMVpufoj+ADi8pXLBsd4xzTRHQa7t/Jv8W5UnCuW4kuWMQ=="],
+
+    "@remix-run/router": ["@remix-run/router@1.23.3", "", {}, "sha512-4An71tdz9X8+3sI4Qqqd2LWd9vS39J7sqd9EU4Scw7TJE/qB10Flv/UuqbPVgfQV9XoK8Np6jNquZitnZq5i+Q=="],
 
     "@rolldown/pluginutils": ["@rolldown/pluginutils@1.0.0-beta.27", "", {}, "sha512-+d0F4MKMCbeVUJwG96uQ4SgAznZNSq93I3V+9NHA4OpvqG8mRCpGdKmK8l/dl02h2CCDHwW2FqilnTyDcAnqjA=="],
 
@@ -7064,6 +7157,8 @@
 
     "@graviola/calc-worker/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 
+    "@graviola/data-acquisition/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
+
     "@graviola/data-mapping-hooks/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 
     "@graviola/datastore-tests/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
@@ -7144,6 +7239,8 @@
 
     "@graviola/indexeddb-store-provider/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 
+    "@graviola/job-schema/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
+
     "@graviola/json-schema-cli/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 
     "@graviola/json-schema-prisma-utils/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
@@ -7163,6 +7260,10 @@
     "@graviola/meilisearch-sparql-store/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 
     "@graviola/meta-schema/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
+
+    "@graviola/metadata-explorer/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
+
+    "@graviola/parliament-map/react-router-dom": ["react-router-dom@6.30.4", "", { "dependencies": { "@remix-run/router": "1.23.3", "react-router": "6.30.4" }, "peerDependencies": { "react": ">=16.8", "react-dom": ">=16.8" } }, "sha512-q4HvNl+mmDdkS0g+MqiBZNteQJCuimWoOyHMy4T/RQLAn9Z29+E91QXRaxOujeMl2HTzRSS0KFPd7lxX3PjV0Q=="],
 
     "@graviola/parliament-map/typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 
@@ -8829,6 +8930,8 @@
     "@graviola/edb-import-staging/jsonld/lru-cache": ["lru-cache@6.0.0", "", { "dependencies": { "yallist": "^4.0.0" } }, "sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA=="],
 
     "@graviola/edb-import-staging/jsonld/rdf-canonize": ["rdf-canonize@3.4.0", "", { "dependencies": { "setimmediate": "^1.0.5" } }, "sha512-fUeWjrkOO0t1rg7B2fdyDTvngj+9RlUyL92vOdiB7c0FPguWVsniIMjEtHH+meLBO9rzkUlUzBVXgWrjI8P9LA=="],
+
+    "@graviola/parliament-map/react-router-dom/react-router": ["react-router@6.30.4", "", { "dependencies": { "@remix-run/router": "1.23.3" }, "peerDependencies": { "react": ">=16.8" } }, "sha512-SVUsDe+DybHM/WmYKIVYhZh1o5Dcuf16yM6WjG02Q9XVFMZIJyHYhwrr6bFBXZkVP6z69kNkMyBCujt8FaFLJA=="],
 
     "@graviola/storybook/@storybook/react/@storybook/react-dom-shim": ["@storybook/react-dom-shim@10.3.4", "", { "peerDependencies": { "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "storybook": "^10.3.4" } }, "sha512-VIm9YzreGubnOtQOZ6iqEfj6KncHvAkrCR/IilqnJq7DidPWuykrFszyajTASRMiY+p+TElOW+O1PGpv55qNGw=="],
 

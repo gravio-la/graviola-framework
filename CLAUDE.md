@@ -226,6 +226,8 @@ The framework is layered. Each layer consumes only from layers below it.
 | `@graviola/json-schema2prisma-schema`    | CLI wrapping the above                                                                                               |
 | `@graviola/remote-query-implementations` | Store-specific SPARQL query builders (paginate, count, …)                                                            |
 | `@graviola/edb-data-mapping`             | Declarative source → target mapping engine + strategy registry                                                       |
+| `@graviola/data-acquisition`             | Declarative data-source fetch/cache/retry/rate-limit/provenance (`DataSource` descriptors + `Evidence`)              |
+| `@graviola/job-schema`                   | LinkML + JSON Schema for persisted `JobRun` / `JobStep` / `SourceFetch` / `StagedEntityRecord`                       |
 | `@graviola/edb-authorities`              | Search/retrieve metadata from external authorities                                                                   |
 | `@graviola/edb-marc-to-rdf`              | MARC21 → RDF (cultural heritage ingestion)                                                                           |
 | `@graviola/edb-wikidata-utils`           | Lookup helpers for Wikidata                                                                                          |
