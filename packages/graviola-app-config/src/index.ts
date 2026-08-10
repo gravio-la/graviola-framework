@@ -1,5 +1,7 @@
 export * from "./types";
 export * from "./defineGraviolaApp";
+export * from "./loadGraviolaSideSchema";
+export * from "./sideSchemaDefinition";
 export * from "./GraviolaAppProvider";
 export * from "./GraviolaLoungeProviders";
 export * from "./defaultIntentDispatch";

@@ -19,8 +19,45 @@ import type { JSONSchema7 } from "json-schema";
 
 import type { IntentHandlersOverride } from "./defaultIntentDispatch";
 import { defaultCellRenderers, defaultRenderers } from "./defaultRenderers";
-import type { SchemaConfig } from "./types";
+import type { SchemaConfig, SideSchemaViewConfig } from "./types";
 import { GraviolaLoungeProviders } from "./GraviolaLoungeProviders";
+
+function buildAdbViewConfig(
+  detailUiSchemata: SchemaConfig["detailUiSchemata"],
+  sideView: SideSchemaViewConfig["detail"] | undefined,
+): import("@graviola/semantic-jsonform-types").ViewConfigSet | undefined {
+  if (!detailUiSchemata && !sideView) return undefined;
+
+  return {
+    detail: {
+      uiSchemata: {
+        ...(sideView?.uiSchemata ?? {}),
+        ...(detailUiSchemata ?? {}),
+      },
+      ...(sideView?.detailLayoutType != null
+        ? { detailLayoutType: sideView.detailLayoutType }
+        : {}),
+      ...(sideView?.nesting != null ? { nesting: sideView.nesting } : {}),
+      ...(sideView?.article != null ? { article: sideView.article } : {}),
+      ...(sideView?.maxDepth != null ? { maxDepth: sideView.maxDepth } : {}),
+      ...(sideView?.hideLinkedDataProperties != null
+        ? { hideLinkedDataProperties: sideView.hideLinkedDataProperties }
+        : {}),
+      ...(sideView?.linkedDataPropertyNames != null
+        ? { linkedDataPropertyNames: sideView.linkedDataPropertyNames }
+        : {}),
+      ...(sideView?.hideHeaderPrimaryFields != null
+        ? { hideHeaderPrimaryFields: sideView.hideHeaderPrimaryFields }
+        : {}),
+      ...(sideView?.hiddenPropertyNames != null
+        ? { hiddenPropertyNames: sideView.hiddenPropertyNames }
+        : {}),
+      ...(sideView?.alwaysShowPropertyNames != null
+        ? { alwaysShowPropertyNames: sideView.alwaysShowPropertyNames }
+        : {}),
+    },
+  };
+}
 
 export type GraviolaAppProviderProps = {
   /**
@@ -96,6 +133,12 @@ export const GraviolaAppProvider: FC<GraviolaAppProviderProps> = ({
     typeNameLabelMap,
     typeNameUiSchemaOptionsMap,
     uischemata,
+    detailUiSchemata,
+    tableUiSchemaByType,
+    tableUiSchema,
+    menuUISchema,
+    menuSidebarConfig,
+    viewConfig: sideViewConfig,
   } = schemaConfig;
 
   const definitionToTypeIRI = useMemo(
@@ -146,6 +189,18 @@ export const GraviolaAppProvider: FC<GraviolaAppProviderProps> = ({
   const resolvedPublicBasePath = publicBasePath ?? "";
   const showDevtools = enableDevtools ?? false;
 
+  const viewConfig = useMemo(
+    () => buildAdbViewConfig(detailUiSchemata, sideViewConfig?.detail),
+    [detailUiSchemata, sideViewConfig],
+  );
+
+  // Keep table/menu sidecars reachable for apps that read them from Adb context
+  // via schemaConfig or a future table provider; surface them on env for now.
+  void tableUiSchemaByType;
+  void tableUiSchema;
+  void menuUISchema;
+  void menuSidebarConfig;
+
   return (
     <ReduxProvider store={store}>
       <AdbProvider
@@ -160,6 +215,7 @@ export const GraviolaAppProvider: FC<GraviolaAppProviderProps> = ({
         rendererRegistry={rendererRegistry}
         cellRendererRegistry={cellRegistry}
         uischemata={uischemata}
+        viewConfig={viewConfig}
         tableActionRegistry={tableActions}
         resolveThumbnailUrl={resolveThumbnailUrl}
       >

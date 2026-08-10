@@ -45,6 +45,7 @@
     "@graviola/edb-core-utils": "workspace:*",
     "@graviola/edb-debug-utils": "workspace:*",
     "@graviola/edb-detail-renderer": "workspace:*",
+    "@graviola/edb-detail-renderer-core": "workspace:*",
     "@graviola/edb-state-hooks": "workspace:*",
     "@graviola/edb-table-types": "workspace:*",
     "@graviola/edb-ui-utils": "workspace:*",
@@ -54,7 +55,8 @@
     "@graviola/search-facet-schema": "workspace:*",
     "@graviola/semantic-json-form": "workspace:*",
     "@graviola/semantic-jsonform-types": "workspace:*",
-    "@graviola/sidecar-core": "workspace:*"
+    "@graviola/sidecar-core": "workspace:*",
+    "ajv": "^8.17.1"
   },
   "devDependencies": {
     "@graviola/edb-tsconfig": "workspace:*",

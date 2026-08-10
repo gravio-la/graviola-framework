@@ -1,5 +1,5 @@
 import type { PrimaryFieldDeclaration } from "@graviola/edb-core-types";
-import type { GenerateDefaultDetailUISchemaOptions } from "@graviola/edb-detail-renderer";
+import type { GenerateDefaultDetailUISchemaOptions } from "@graviola/edb-detail-renderer-core";
 import type { GenerateUISchemaOptions } from "@graviola/edb-ui-utils";
 import type {
   MenuUISchema,
@@ -29,6 +29,37 @@ export type DetailUiSchemaScopeOverrides = Record<
   string,
   GenerateDefaultDetailUISchemaOptions
 >;
+
+/**
+ * JSON-serializable subset of view config allowed in a side-schema.
+ * Renderer registries are TS-only and stay out of this document.
+ */
+export type SideSchemaViewConfig = {
+  detail?: {
+    /** Per-type-name detail UISchema roots (usually filled by defineGraviolaApp). */
+    uiSchemata?: Record<string, UISchemaElement>;
+    /** App-wide detail defaults: layout type, nesting, article, visibility. */
+    detailLayoutType?: string;
+    nesting?: {
+      collapsible?: boolean;
+      defaultExpanded?: boolean;
+      flat?: boolean;
+      forceCollapsibleInArticle?: boolean;
+    };
+    article?: {
+      infoBox?: "aside" | "block";
+      infoBoxWidth?: string;
+      headingStartLevel?: number;
+      sectionThreshold?: number;
+    };
+    hideLinkedDataProperties?: boolean;
+    linkedDataPropertyNames?: string[];
+    hideHeaderPrimaryFields?: boolean;
+    hiddenPropertyNames?: string[];
+    alwaysShowPropertyNames?: string[];
+    maxDepth?: number;
+  };
+};
 
 /**
  * Fully-resolved, ready-to-use schema configuration for a Graviola-driven app.
@@ -85,6 +116,11 @@ export type SchemaConfig = {
   calcProfile?: CompiledProfile;
   /** Full-text / facet sidecar (from search-facet sidecar). */
   searchFacetSchema?: SearchFacetSchema;
+  /**
+   * JSON-serializable view defaults (detail layout, nesting, article, …).
+   * Fed into `AdbProvider.viewConfig` by {@link GraviolaAppProvider}.
+   */
+  viewConfig?: SideSchemaViewConfig;
 };
 
 /**
@@ -125,4 +161,6 @@ export type GraviolaSideSchema = {
   tableUiSchema?: TableUiSchema;
   menuUISchema?: MenuUISchema;
   menuSidebarConfig?: SidebarConfig;
+  /** JSON-serializable detail/view defaults (no renderer registries). */
+  viewConfig?: SideSchemaViewConfig;
 };

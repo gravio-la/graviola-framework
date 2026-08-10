@@ -16,6 +16,7 @@ import {
   DetailRendererContext,
   MotionAdapterProvider,
   NoopMotionAdapter,
+  defaultArticleRenderers,
   defaultCardRenderers,
   defaultChipRenderers,
   defaultDetailRenderers,
@@ -104,6 +105,14 @@ const REGISTRY_BY_SIZE: Record<ViewSize, DetailRendererRegistryEntry[]> = {
   detail: defaultDetailRenderers,
 };
 
+function detailRegistryForConfig(
+  config: DetailViewConfig,
+): DetailRendererRegistryEntry[] {
+  return config.detailLayoutType === "ArticleLayout"
+    ? defaultArticleRenderers
+    : defaultDetailRenderers;
+}
+
 export function SemanticViewCore({
   viewSize,
   data,
@@ -146,12 +155,44 @@ export function SemanticViewCore({
   );
 
   const baseConfig = useMemo((): DetailViewConfig => {
-    const merged: DetailViewConfig = {
-      ...(viewConfigSlice as DetailViewConfig),
+    const legacy = viewConfigSlice?.options as
+      | DetailViewConfigOptions
+      | undefined;
+    const fromView: DetailViewConfig = {
+      maxDepth: viewConfigSlice?.maxDepth,
+      valueRenderers: viewConfigSlice?.valueRenderers,
+      overrideValueRenderers: viewConfigSlice?.overrideValueRenderers,
+      uiSchemata: viewConfigSlice?.uiSchemata,
+      uiSchemataByTypeIRI: viewConfigSlice?.uiSchemataByTypeIRI,
+      detailLayoutType: viewConfigSlice?.detailLayoutType,
+      nesting: viewConfigSlice?.nesting,
+      article: viewConfigSlice?.article,
+      hideLinkedDataProperties:
+        viewConfigSlice?.hideLinkedDataProperties ??
+        legacy?.hideLinkedDataProperties,
+      linkedDataPropertyNames:
+        viewConfigSlice?.linkedDataPropertyNames ??
+        legacy?.linkedDataPropertyNames,
+      hideHeaderPrimaryFields:
+        viewConfigSlice?.hideHeaderPrimaryFields ??
+        legacy?.hideHeaderPrimaryFields,
+      hiddenPropertyNames:
+        viewConfigSlice?.hiddenPropertyNames ?? legacy?.hiddenPropertyNames,
+      alwaysShowPropertyNames:
+        viewConfigSlice?.alwaysShowPropertyNames ??
+        legacy?.alwaysShowPropertyNames,
+      cardPresentation: (
+        viewConfigSlice?.options as CardViewConfigOptions | undefined
+      )?.cardPresentation,
+      onCardAction: (
+        viewConfigSlice?.options as CardViewConfigOptions | undefined
+      )?.onCardAction,
+    };
+    return {
+      ...fromView,
       ...(configProp ?? {}),
       typeIRIToTypeName: adb.typeIRIToTypeName,
     };
-    return merged;
   }, [viewConfigSlice, configProp, adb.typeIRIToTypeName]);
 
   const resolvedConfig = useMemo(
@@ -163,7 +204,9 @@ export function SemanticViewCore({
     () =>
       resolvedConfig.overrideRenderers ?? [
         ...(resolvedConfig.extraRenderers ?? []),
-        ...REGISTRY_BY_SIZE[viewSize],
+        ...(viewSize === "detail"
+          ? detailRegistryForConfig(resolvedConfig)
+          : REGISTRY_BY_SIZE[viewSize]),
         ...(resolvedConfig.fallbackRenderers ?? []),
       ],
     [resolvedConfig, viewSize],
@@ -216,9 +259,11 @@ export function SemanticViewCore({
     const pf = typeName ? primaryFields[typeName] : undefined;
     return generateDefaultViewUISchema(viewSize, schema as JsonSchema, pf, {
       layoutType:
-        viewSize === "detail" ? "TopLevelLayout" : `${viewSize}Layout`,
+        viewSize === "detail"
+          ? (resolvedConfig.detailLayoutType ?? "TopLevelLayout")
+          : `${viewSize}Layout`,
       rootSchema: schema as JsonSchema,
-      ...resolvedConfig.defaultGenerationOptions,
+      ...viewConfigSlice?.defaultGenerationOptions,
       cardPresentation:
         viewSize === "card"
           ? (cardPresentation ?? resolvedConfig.cardPresentation)
@@ -226,6 +271,7 @@ export function SemanticViewCore({
     });
   }, [
     resolvedConfig,
+    viewConfigSlice?.defaultGenerationOptions,
     uiSchemaProp,
     typeIRI,
     typeName,
@@ -273,6 +319,8 @@ export function SemanticViewCore({
           true,
       headerPrimaryFieldNames,
       topLevelLayoutVariant: resolvedConfig.topLevelLayoutVariant,
+      nesting: resolvedConfig.nesting,
+      article: resolvedConfig.article,
     }),
     [
       schema,
@@ -281,6 +329,8 @@ export function SemanticViewCore({
       resolvedConfig.linkedDataPropertyNames,
       resolvedConfig.hideHeaderPrimaryFields,
       resolvedConfig.topLevelLayoutVariant,
+      resolvedConfig.nesting,
+      resolvedConfig.article,
       viewSize,
       typeIRI,
       typeName,

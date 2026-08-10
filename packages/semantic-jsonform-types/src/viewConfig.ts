@@ -2,11 +2,12 @@ import type { RankedTester, UISchemaElement } from "@jsonforms/core";
 import type { JSONSchema7 } from "json-schema";
 import type React from "react";
 
+import type { CardPresentation } from "@graviola/edb-core-types";
 import type {
-  CardPresentation,
-  TypePresentationRegistry,
-} from "@graviola/edb-core-types";
-import type { ValueRendererEntry } from "@graviola/edb-detail-renderer-core";
+  DetailArticleOptions,
+  DetailNestingOptions,
+  ValueRendererEntry,
+} from "@graviola/edb-detail-renderer-core";
 
 export type ViewSize = "chip" | "listItem" | "card" | "detail";
 export type ViewContext = "modal" | "page";
@@ -55,6 +56,18 @@ export interface ViewConfig {
   typeIRIOverrides?: Record<string, Partial<ViewConfig>>;
   defaultGenerationOptions?: GenerateDefaultViewUISchemaOptions;
   options?: Record<string, unknown> & CardViewConfigOptions;
+  /** Root layout type when generating a default detail UISchema. */
+  detailLayoutType?: string;
+  /** App-wide default for foldable nested sections. */
+  nesting?: DetailNestingOptions;
+  /** App-wide default for ArticleLayout presentation. */
+  article?: DetailArticleOptions;
+  hideLinkedDataProperties?: boolean;
+  linkedDataPropertyNames?: string[];
+  hideHeaderPrimaryFields?: boolean;
+  hiddenPropertyNames?: string[];
+  alwaysShowPropertyNames?: string[];
+  maxDepth?: number;
 }
 
 export interface ViewConfigSet {

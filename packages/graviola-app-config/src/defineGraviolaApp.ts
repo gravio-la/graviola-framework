@@ -4,7 +4,7 @@ import { bringDefinitionToTop } from "@graviola/json-schema-utils";
 import {
   generateDefaultDetailUISchema,
   type GenerateDefaultDetailUISchemaOptions,
-} from "@graviola/edb-detail-renderer";
+} from "@graviola/edb-detail-renderer-core";
 import {
   generateDefaultUISchema,
   type GenerateUISchemaOptions,
@@ -24,6 +24,7 @@ import type {
   OverridableSchemaConfig,
   SchemaConfig,
 } from "./types";
+import { loadGraviolaSideSchema } from "./loadGraviolaSideSchema";
 
 /**
  * Build a JSON Forms detail UISchema for one definition in the schema. Wraps
@@ -159,11 +160,13 @@ export function schemaConfigFromSidecars(
 ): SchemaConfig {
   const {
     schema,
-    sideSchema,
+    sideSchema: rawSideSchema,
     calcProfile: calcSidecar,
     searchFacet,
     initialData,
   } = input;
+
+  const sideSchema = loadGraviolaSideSchema(rawSideSchema);
 
   const overridable: OverridableSchemaConfig = {
     schemaName: sideSchema.schemaName ?? "schema",
@@ -187,6 +190,7 @@ export function schemaConfigFromSidecars(
     tableUiSchema: sideSchema.tableUiSchema,
     menuUISchema: sideSchema.menuUISchema,
     menuSidebarConfig: sideSchema.menuSidebarConfig,
+    viewConfig: sideSchema.viewConfig,
   };
 
   let resolved = defineGraviolaApp(overridable);
