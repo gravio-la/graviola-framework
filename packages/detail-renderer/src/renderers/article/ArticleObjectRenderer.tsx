@@ -1,17 +1,19 @@
 import React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import type { ControlElement } from "@jsonforms/core";
 import type { JSONSchema7 } from "json-schema";
 import {
+  childArticleContext,
   extendPropertyScope,
-  readNestingOptions,
-  childNestingContext,
+  type DetailRendererProps,
 } from "@graviola/edb-detail-renderer-core";
-import type { DetailRendererProps } from "@graviola/edb-detail-renderer-core";
 
-import { NestedSection } from "./NestedSection";
+import { ArticleSection } from "./ArticleSection";
 
-export function ObjectRenderer({
+/**
+ * Inline (anonymous) object under article presentation: heading + flat body.
+ */
+export function ArticleObjectRenderer({
   label,
   schema,
   data,
@@ -23,8 +25,7 @@ export function ObjectRenderer({
   const s = schema as JSONSchema7;
   if (!s.properties) return null;
 
-  const nesting = readNestingOptions(uiSchema, ctx);
-  const childCtx = childNestingContext(uiSchema, ctx);
+  const childCtx = childArticleContext(ctx);
   const parentScope = (uiSchema as ControlElement).scope ?? "#";
   const children = Object.entries(s.properties)
     .filter(([key]) => !key.startsWith("@"))
@@ -40,36 +41,22 @@ export function ObjectRenderer({
 
   if (children.length === 0) return null;
 
-  if (nesting.collapsible) {
+  const headingLevel = ctx.headingLevel ?? 2;
+  const showHeading = typeof label === "string" && label.trim().length > 0;
+
+  if (showHeading) {
     return (
-      <NestedSection
-        label={label}
-        defaultExpanded={nesting.defaultExpanded ?? true}
-        flat={nesting.flat}
-      >
-        {children}
-      </NestedSection>
+      <ArticleSection label={label} headingLevel={headingLevel}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
+          {children}
+        </Box>
+      </ArticleSection>
     );
   }
 
   return (
-    <Box>
-      <Typography
-        variant="caption"
-        color="text.secondary"
-        sx={{ fontWeight: 600, display: "block", mb: 0.5 }}
-      >
-        {label}
-      </Typography>
-      <Box
-        sx={{
-          pl: 2,
-          borderLeft: "2px solid",
-          borderColor: "divider",
-        }}
-      >
-        {children}
-      </Box>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
+      {children}
     </Box>
   );
 }

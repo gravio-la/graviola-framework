@@ -1,6 +1,6 @@
 import type { PrimaryField } from "@graviola/edb-core-types";
+import { resolveSchema } from "@graviola/json-schema-utils";
 import type { JsonSchema } from "@jsonforms/core";
-import { resolveSchema } from "@jsonforms/core";
 import type { JSONSchema7 } from "json-schema";
 
 const LINKED_DATA = new Set(["@id", "@type"]);
@@ -11,9 +11,11 @@ function resolvePropSchema(
   rootSchema: JsonSchema,
 ): JSONSchema7 {
   if (propSchema.$ref) {
-    const resolved = resolveSchema(rootSchema, propSchema.$ref, rootSchema) as
-      | JSONSchema7
-      | undefined;
+    const resolved = resolveSchema(
+      rootSchema as JSONSchema7,
+      propSchema.$ref,
+      rootSchema as JSONSchema7,
+    ) as JSONSchema7 | undefined;
     return resolved ?? propSchema;
   }
   return propSchema;

@@ -6,8 +6,9 @@ import type {
   JsonSchema,
   UISchemaElement,
 } from "@jsonforms/core";
-import { isControl, isLayout } from "@jsonforms/core";
+import { isControl } from "@jsonforms/core";
 import type { JSONSchema7 } from "json-schema";
+import { isGraviolaDetailLayout } from "../layouts/graviolaLayouts";
 import { selectEntry } from "../registry/select";
 import type {
   DetailDispatch,
@@ -17,11 +18,6 @@ import type {
 } from "../types";
 import { dataAtScope, pathFromScope } from "./scope";
 import { createElement } from "react";
-
-function isGraviolaDetailLayout(uischema: UISchemaElement): boolean {
-  if (isLayout(uischema)) return true;
-  return (uischema as { type?: string }).type === "TopLevelLayout";
-}
 
 function shouldHideProperty(
   propertyName: string | undefined,

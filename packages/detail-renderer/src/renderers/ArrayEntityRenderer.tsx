@@ -14,16 +14,9 @@ import {
   ContainedEntityView,
   containedAsFromUiSchema,
 } from "./ContainedEntityView";
+import { isEntityLikeData } from "./entityLike";
 import { PropertyRow } from "./PropertyRow";
-
-function hasStableEntityId(obj: Record<string, unknown>): boolean {
-  const id = obj["@id"];
-  return typeof id === "string" && id.length > 0;
-}
-
-function isEntityLikeData(obj: Record<string, unknown>): boolean {
-  return typeof obj["@type"] === "string" || hasStableEntityId(obj);
-}
+import { nestingGuideSx } from "./NestedSection";
 
 /**
  * Schema-typed entity arrays render as chips when items carry `@type` and/or `@id`.
@@ -119,14 +112,7 @@ export function ArrayEntityRenderer({
         ctx,
       });
       return (
-        <Box
-          key={`inline-${index}`}
-          sx={{
-            pl: 2,
-            borderLeft: "2px solid",
-            borderColor: "divider",
-          }}
-        >
+        <Box key={`inline-${index}`} sx={nestingGuideSx}>
           {body}
         </Box>
       );

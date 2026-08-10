@@ -5,6 +5,10 @@ export type {
   ChipRendererProps,
   ChipsConfig,
   DetailArrayInlineControlOptions,
+  DetailArticleOptions,
+  DetailNestingOptions,
+  DetailPresentation,
+  DetailRelationViaOptions,
   DetailDispatch,
   DetailRendererProps,
   DetailRendererRegistryEntry,
@@ -15,7 +19,50 @@ export type {
   ViewSize,
 } from "./types";
 
-export { DETAIL_ARRAY_INLINE_OPTIONS_KEY } from "./types";
+export {
+  DETAIL_ARRAY_INLINE_OPTIONS_KEY,
+  DETAIL_ARTICLE_OPTIONS_KEY,
+  DETAIL_NESTING_OPTIONS_KEY,
+  DETAIL_RELATION_VIA_OPTIONS_KEY,
+} from "./types";
+
+export {
+  GRAVIOLA_LAYOUT_TYPES,
+  isGraviolaDetailLayout,
+} from "./layouts/graviolaLayouts";
+
+export {
+  childArticleContext,
+  classifyPropertyControl,
+  classifyResolvedSchema,
+  headingTokenForLevel,
+  isArticlePresentation,
+  isSectionWorthyObjectSchema,
+  partitionArticleElements,
+  readArticleOptions,
+  rootArticleContext,
+} from "./article";
+export type {
+  ArticleHeadingToken,
+  ArticlePropertyClass,
+  PartitionedArticleElements,
+} from "./article";
+
+export {
+  readNestingOptions,
+  childNestingContext,
+} from "./nesting/readNestingOptions";
+
+export {
+  readRelationViaOptions,
+  resolveQualifierProperties,
+  groupRelationVia,
+  relationViaTester,
+} from "./relations/relationVia";
+export type {
+  RelationGroup,
+  RelationOccurrence,
+} from "./relations/relationVia";
 
 export type {
   ValueRendererEntry,

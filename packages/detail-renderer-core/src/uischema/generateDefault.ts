@@ -8,13 +8,8 @@ import type {
   Layout,
   UISchemaElement,
 } from "@jsonforms/core";
-import {
-  deriveTypes,
-  encode,
-  isGroup,
-  isLayout,
-  resolveSchema,
-} from "@jsonforms/core";
+import { deriveTypes, encode, isGroup, resolveSchema } from "@jsonforms/core";
+import { isGraviolaDetailLayout } from "../layouts/graviolaLayouts";
 
 export type OverrideOptions = {
   scopeOverride?: Record<string, Partial<ControlElement>>;
@@ -31,11 +26,6 @@ export type GenerateDefaultDetailUISchemaOptions = OverrideOptions & {
    */
   mode?: "override" | "exclusive";
 };
-
-function isGraviolaDetailLayout(uischema: UISchemaElement): boolean {
-  if (isLayout(uischema)) return true;
-  return (uischema as { type?: string }).type === "TopLevelLayout";
-}
 
 const createLayout = (layoutType: string): Layout => ({
   type: layoutType,

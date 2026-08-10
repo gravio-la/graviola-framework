@@ -5,6 +5,8 @@ import {
   buildDispatch,
   enterArrayDetailFrame,
   DETAIL_ARRAY_INLINE_OPTIONS_KEY,
+  readNestingOptions,
+  childNestingContext,
   type DetailArrayInlineControlOptions,
   type DetailRendererProps,
   type GenerateDefaultDetailUISchemaOptions,
@@ -17,6 +19,7 @@ import {
   itemVirtualRoot,
   renderDetailInlineObjectBody,
 } from "./detailInlineSubDispatch";
+import { NestedSection } from "./NestedSection";
 import { PropertyRow } from "./PropertyRow";
 
 function readOptionsDetail(
@@ -87,6 +90,18 @@ function computeItemGenerateOptions(
   return Object.keys(out).length === 0 ? undefined : out;
 }
 
+function itemLabel(
+  item: Record<string, unknown>,
+  index: number,
+  itemSchema: JSONSchema7,
+): string {
+  const schemaTitle =
+    typeof itemSchema.title === "string" ? itemSchema.title : undefined;
+  // Prefer schema title; otherwise index. Callers that need a primary-field
+  // label should pass it via uiSchema options / ContainedEntityView preview.
+  return schemaTitle ?? `Item ${index + 1}`;
+}
+
 /**
  * Renders arrays of anonymous structured objects (items schema type `object` without `@id`)
  * via a per-item sub–detail tree at `rootData = item`.
@@ -102,6 +117,8 @@ export function ArrayInlineObjectRenderer({
   const presentOpts = readDetailArrayInlineOpts(uiSchema);
   const optionsDetail = readOptionsDetail(uiSchema);
   const arrayScope = (uiSchema as ControlElement).scope;
+  const nesting = readNestingOptions(uiSchema, ctx);
+  const childCtx = childNestingContext(uiSchema, ctx);
 
   if (!Array.isArray(data) || data.length === 0) return null;
 
@@ -115,6 +132,7 @@ export function ArrayInlineObjectRenderer({
 
   const compact = Boolean(presentOpts?.compactItems);
   const rowLike = presentOpts?.itemLayout === "row";
+  const useCollapsible = Boolean(nesting.collapsible) && !compact;
 
   const rows = data.map((item: unknown, index: number) => {
     if (item == null || typeof item !== "object") return null;
@@ -124,9 +142,9 @@ export function ArrayInlineObjectRenderer({
       const itemFrame = enterArrayDetailFrame(ctx.frame, arrayScope, index);
       if (itemFrame) {
         const run = buildDispatch(registry, itemFrame.localRootSchema, item, {
-          ...ctx,
+          ...childCtx,
           frame: itemFrame,
-          depth: ctx.depth + 1,
+          depth: childCtx.depth + 1,
         });
         body = run(optionsDetail);
       }
@@ -136,10 +154,27 @@ export function ArrayInlineObjectRenderer({
         registry,
         virtualRootSchema: virtualRoot,
         itemData: item as Record<string, unknown>,
-        ctx,
+        ctx: childCtx,
         extraGenerateDetailOptions: itemGenOpts,
       });
     }
+
+    const itemData = item as Record<string, unknown>;
+    const rowLabel = itemLabel(itemData, index, itemSchema);
+
+    if (useCollapsible) {
+      return (
+        <NestedSection
+          key={index}
+          label={rowLabel}
+          defaultExpanded={nesting.defaultExpanded ?? true}
+          flat={nesting.flat}
+        >
+          {body}
+        </NestedSection>
+      );
+    }
+
     return (
       <Box
         key={index}
@@ -162,20 +197,32 @@ export function ArrayInlineObjectRenderer({
 
   if (!rows.some(Boolean)) return null;
 
-  return (
-    <PropertyRow label={label}>
-      <Box
-        sx={{
-          display: "flex",
-          flexWrap: compact && rowLike ? "wrap" : "nowrap",
-          flexDirection: rowLike ? "row" : "column",
-          gap: compact ? 0.75 : 1,
-          alignItems: rowLike ? "center" : "stretch",
-          alignContent: compact && rowLike ? "flex-start" : undefined,
-        }}
-      >
-        {rows}
-      </Box>
-    </PropertyRow>
+  const listBody = (
+    <Box
+      sx={{
+        display: "flex",
+        flexWrap: compact && rowLike ? "wrap" : "nowrap",
+        flexDirection: rowLike ? "row" : "column",
+        gap: compact ? 0.75 : useCollapsible ? 0.25 : 1,
+        alignItems: rowLike ? "center" : "stretch",
+        alignContent: compact && rowLike ? "flex-start" : undefined,
+      }}
+    >
+      {rows}
+    </Box>
   );
+
+  if (useCollapsible) {
+    return (
+      <NestedSection
+        label={label}
+        defaultExpanded={nesting.defaultExpanded ?? true}
+        flat={nesting.flat}
+      >
+        {listBody}
+      </NestedSection>
+    );
+  }
+
+  return <PropertyRow label={label}>{listBody}</PropertyRow>;
 }

@@ -12,10 +12,18 @@ import {
 import { extractEntityPreview } from "@graviola/edb-core-utils";
 import type { TypePresentationRegistry } from "@graviola/edb-core-types";
 import { useAdbContext } from "@graviola/edb-state-hooks";
-import { defaultDetailRenderers } from "./renderers";
+import { defaultDetailRenderers, defaultArticleRenderers } from "./renderers";
 import { defaultValueRenderers } from "./value-renderers";
 import { DetailRendererContext } from "./context";
 import type { GenerateDefaultDetailUISchemaOptions } from "@graviola/edb-detail-renderer-core";
+
+function defaultRegistryForConfig(
+  config: DetailViewConfig,
+): typeof defaultDetailRenderers {
+  return config.detailLayoutType === "ArticleLayout"
+    ? defaultArticleRenderers
+    : defaultDetailRenderers;
+}
 
 const DEFAULT_LINKED_DATA_PROPERTY_NAMES = ["@id", "@type"];
 
@@ -156,7 +164,7 @@ export const DetailRenderer = React.memo(function DetailRenderer({
     () =>
       resolvedConfig.overrideRenderers ?? [
         ...(resolvedConfig.extraRenderers ?? []),
-        ...defaultDetailRenderers,
+        ...defaultRegistryForConfig(resolvedConfig),
       ],
     [resolvedConfig],
   );
@@ -212,7 +220,7 @@ export const DetailRenderer = React.memo(function DetailRenderer({
     if (fromConfig) return fromConfig;
     if (!generateUISchema || !schema) return undefined;
     return generateDefaultDetailUISchema(schema as JsonSchema, {
-      layoutType: "TopLevelLayout",
+      layoutType: resolvedConfig.detailLayoutType ?? "TopLevelLayout",
       ...uiSchemaOptions,
     });
   }, [
@@ -249,6 +257,8 @@ export const DetailRenderer = React.memo(function DetailRenderer({
       ),
       headerPrimaryFieldNames,
       topLevelLayoutVariant: resolvedConfig.topLevelLayoutVariant,
+      nesting: resolvedConfig.nesting,
+      article: resolvedConfig.article,
       valueRenderers,
     }),
     [
@@ -269,6 +279,8 @@ export const DetailRenderer = React.memo(function DetailRenderer({
       resolvedConfig.alwaysShowPropertyNames,
       headerPrimaryFieldNames,
       resolvedConfig.topLevelLayoutVariant,
+      resolvedConfig.nesting,
+      resolvedConfig.article,
       valueRenderers,
     ],
   );

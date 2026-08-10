@@ -17,6 +17,13 @@ export type DetailTopLevelLayoutVariant =
   | "default"
   | "singleCardPropertiesFirst";
 
+/**
+ * Presentation mode for detail control renderers.
+ * - `default` — NestedSection / PropertyRow tree presentation.
+ * - `article` — headed sections + info-box literals (ArticleLayout).
+ */
+export type DetailPresentation = "default" | "article";
+
 /** Per-node context for dispatch and JSON Forms–style testers. */
 export interface DetailTesterContext {
   rootSchema: JSONSchema7;
@@ -45,6 +52,20 @@ export interface DetailTesterContext {
   headerPrimaryFieldNames?: string[];
   /** Inherited from merged {@link DetailViewConfig}; drives {@link TopLevelLayoutRenderer}. */
   topLevelLayoutVariant?: DetailTopLevelLayoutVariant;
+  /** Resolved nesting options inherited from config or enclosing layouts. */
+  nesting?: DetailNestingOptions;
+  /**
+   * Article vs default presentation. Set by ArticleLayoutRenderer when dispatching
+   * object-property children so article control renderers win via tester gate.
+   */
+  presentation?: DetailPresentation;
+  /**
+   * Current heading level for article sections (HTML h2–h6). Starts at
+   * {@link DetailArticleOptions.headingStartLevel} (default 2).
+   */
+  headingLevel?: number;
+  /** Resolved article options inherited from config or enclosing ArticleLayout. */
+  article?: DetailArticleOptions;
   /** Merged registry used by leaf renderers for inline value formatting. */
   valueRenderers?: import("./value-renderers/types").ValueRendererEntry[];
 }
@@ -93,6 +114,82 @@ export interface DetailArrayInlineControlOptions {
 
 export const DETAIL_ARRAY_INLINE_OPTIONS_KEY = "detailArrayInline" as const;
 
+/**
+ * JSON Forms `ControlElement.options.nesting` / layout `options.nesting` —
+ * foldable nesting for a property or layout subtree.
+ */
+export interface DetailNestingOptions {
+  /** Full-width foldable section instead of caption + indented block. Default false. */
+  collapsible?: boolean;
+  /** Section starts expanded. Default true. */
+  defaultExpanded?: boolean;
+  /** Suppress the guide rule / indent for this level. */
+  flat?: boolean;
+  /**
+   * Keep collapsible chrome under article presentation.
+   * By default article mode forces `collapsible: false` (headings replace carets).
+   */
+  forceCollapsibleInArticle?: boolean;
+}
+
+export const DETAIL_NESTING_OPTIONS_KEY = "nesting" as const;
+
+/**
+ * JSON Forms `UISchemaElement.options.relationVia` — render an array of reification /
+ * intermediate nodes as a list of the entity each node points at.
+ */
+export interface DetailRelationViaOptions {
+  /** Property on the intermediate item holding the displayed entity. Required. */
+  target: string;
+  /** View size for the target. Default `"listItem"`. */
+  targetAs?: ViewSize;
+  /** Merge repeated occurrences of the same target into one row. Default true. */
+  groupByTarget?: boolean;
+  /** Item properties rendered per occurrence. Default: all except `target`, `@id`, `@type`. */
+  qualifierProperties?: string[];
+  /** Joined between qualifier values of one occurrence. Default `" – "`. */
+  qualifierSeparator?: string;
+  /** Text substituted when a qualifier value is nullish, e.g. `{ to: "today" }`. */
+  qualifierEmptyText?: Record<string, string>;
+  /** `"trailing"` (right-aligned beside the target) or `"below"`. Default `"trailing"`. */
+  qualifierPlacement?: "trailing" | "below";
+  /** Full escape hatch: UISchema dispatched against the item schema, one per occurrence. */
+  occurrenceUiSchema?: UISchemaElement;
+  /** Dot path inside the item used to order occurrences within a group. */
+  sortOccurrencesBy?: string;
+  sortDirection?: "asc" | "desc";
+  /** Divider between target rows. Default true. */
+  dividers?: boolean;
+}
+
+export const DETAIL_RELATION_VIA_OPTIONS_KEY = "relationVia" as const;
+
+/**
+ * JSON Forms `UISchemaElement.options.article` / {@link DetailViewConfig.article} —
+ * presentation hints for {@link ArticleLayout}.
+ */
+export interface DetailArticleOptions {
+  /**
+   * Info-box placement for literal properties.
+   * - `aside` — floated right beside sections (stacks under `sm`).
+   * - `block` — full-width block above sections.
+   * Default `"aside"`.
+   */
+  infoBox?: "aside" | "block";
+  /** CSS width for the aside info box (e.g. `"16rem"`). Default `"16rem"`. */
+  infoBoxWidth?: string;
+  /** HTML heading level for the first article section. Default `2`. */
+  headingStartLevel?: number;
+  /**
+   * An object property becomes a headed section when it has at least one
+   * object-typed child, or more than this many literal children. Smaller
+   * objects stay in the info box. Default `2`.
+   */
+  sectionThreshold?: number;
+}
+
+export const DETAIL_ARTICLE_OPTIONS_KEY = "article" as const;
+
 export interface DetailViewConfig {
   maxDepth?: number;
   extraRenderers?: DetailRendererRegistryEntry[];
@@ -120,6 +217,15 @@ export interface DetailViewConfig {
   alwaysShowPropertyNames?: string[];
   /** Top-level detail layout; default is `"default"`. */
   topLevelLayoutVariant?: DetailTopLevelLayoutVariant;
+  /**
+   * Root layout type used when generating a default detail UISchema
+   * (`"TopLevelLayout"` | `"ArticleLayout"` | …). Default `"TopLevelLayout"`.
+   */
+  detailLayoutType?: string;
+  /** App-wide default for foldable nested sections. Per-scope overrides via UI schema. */
+  nesting?: DetailNestingOptions;
+  /** App-wide default for ArticleLayout presentation. Per-layout overrides via UI schema. */
+  article?: DetailArticleOptions;
   /** Per-type card presentation merged into generated CardLayout options. */
   cardPresentation?: import("@graviola/edb-core-types").CardPresentation;
   /** Card action callback for `custom` intents on declared actions. */
