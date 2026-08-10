@@ -54,6 +54,8 @@ export const useDeclarativeMapper = () => {
           primaryFields,
           normDataMapping,
           authorityAccess,
+          false,
+          authorityIRI,
         );
 
         const mappingConfig = getMappingConfig(

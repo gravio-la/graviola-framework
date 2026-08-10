@@ -20,7 +20,7 @@ import jsonpath from "jsonpath";
  * @param sourceData
  * @param sourcePath
  */
-const getViaSourcePath = (
+export const getViaSourcePath = (
   sourceData: any,
   sourcePath: string[] | string,
 ): any => {

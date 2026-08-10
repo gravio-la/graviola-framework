@@ -6,3 +6,5 @@ export * from "./types";
 export * from "./mapByConfigFlat";
 export * from "./mapFromFlatResource";
 export * from "./makeCreateDeeperContextFn";
+export * from "./makeDefaultMappingStrategyContext";
+export type { MappingStoreProbe } from "./makeDefaultMappingStrategyContext";

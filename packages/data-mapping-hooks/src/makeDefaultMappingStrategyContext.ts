@@ -5,9 +5,8 @@ import type {
 } from "@graviola/edb-core-types";
 import {
   type AuthorityConfiguration,
-  createLogger,
   type DeclarativeMapping,
-  makeCreateDeeperContextFn,
+  makeDefaultMappingStrategyContext as makeDefaultMappingStrategyContextBase,
   type StrategyContext,
 } from "@graviola/edb-data-mapping";
 import type { CrudDatastoreStore } from "@graviola/edb-state-hooks";
@@ -22,9 +21,10 @@ import type { CrudDatastoreStore } from "@graviola/edb-state-hooks";
  * @param createEntityIRI a function that creates a new IRI for an entity of a given type
  * @param typeIRItoTypeName a function that maps typeIRIs to type names
  * @param primaryFields the primary fields for all types that are used in the mapping
- * @param declarativeMappings the mappings that are used to map norm data to the data store
+ * @param normDataMappings the mappings that are used to map norm data to the data store
  * @param authorityAccess the authority access configuration
  * @param disableLogging whether to disable logging
+ * @deprecated Use makeDefaultMappingStrategyContext from @graviola/edb-data-mapping directly (Layer 1/2 compatible)
  */
 export const makeDefaultMappingStrategyContext: (
   dataStore: CrudDatastoreStore,
@@ -34,56 +34,4 @@ export const makeDefaultMappingStrategyContext: (
   normDataMappings?: NormDataMappings<DeclarativeMapping>,
   authorityAccess?: Record<string, AuthorityConfiguration>,
   disableLogging?: boolean,
-) => StrategyContext = (
-  dataStore,
-  createEntityIRI,
-  typeIRItoTypeName,
-  primaryFields,
-  normDataMappings,
-  authorityAccess,
-  disableLogging = false,
-) => ({
-  getPrimaryIRIBySecondaryIRI: async (
-    secondaryIRI: string,
-    authorityIRI: string,
-    typeIRI?: string | undefined,
-  ) => {
-    if (!typeIRI) {
-      return null;
-    }
-    const typeName = typeIRItoTypeName(typeIRI);
-    const finder = dataStore.findDocumentsByAuthorityIRI;
-    if (!finder) {
-      return null;
-    }
-    const ids = await finder(typeName, secondaryIRI, authorityIRI);
-    if (ids.length > 0) {
-      console.warn("found more then one entity");
-    }
-    return ids[0] || null;
-  },
-  searchEntityByLabel: async (
-    label: string,
-    typeIRI: string,
-  ): Promise<string | null> => {
-    const typeName = typeIRItoTypeName(typeIRI);
-    if (!dataStore.searchByLabel) {
-      return null;
-    }
-    const docs = await dataStore.searchByLabel(typeName, label, 10);
-    if (docs.length > 0) {
-      console.warn("found more then one entity");
-    }
-    const first = docs[0] as { ["@id"]?: string } | undefined;
-    return (typeof first?.["@id"] === "string" ? first["@id"] : null) ?? null;
-  },
-  authorityAccess: authorityAccess,
-  authorityIRI: "http://d-nb.info/gnd",
-  newIRI: createEntityIRI,
-  typeIRItoTypeName: typeIRItoTypeName,
-  primaryFields: primaryFields,
-  normDataMappings,
-  path: [],
-  logger: createLogger([], disableLogging),
-  createDeeperContext: makeCreateDeeperContextFn(disableLogging),
-});
+) => StrategyContext = makeDefaultMappingStrategyContextBase;
