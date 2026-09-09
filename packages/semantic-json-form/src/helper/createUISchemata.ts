@@ -1,6 +1,10 @@
 import { JsonFormsUISchemaRegistryEntry, UISchemaElement } from "@jsonforms/core";
 
-import { defs, getDefintitionKey } from "@graviola/json-schema-utils";
+import {
+  defs,
+  extractTypeIRI,
+  getDefintitionKey,
+} from "@graviola/json-schema-utils";
 import { JSONSchema7 } from "json-schema";
 import { StringToIRIFn } from "@graviola/edb-core-types";
 
@@ -14,6 +18,25 @@ type CreateUISchemataOptions = {
   definitionToTypeIRI?: StringToIRIFn,
   makeUiSchemaOptions?: (defs: string) => object,
   excludeDefinitions?: string[],
+}
+
+/**
+ * Prefer the definition's own `@type.const` (schema is source of truth) over
+ * `baseIRI + name`. LinkML-generated models often put classes under
+ * `entityBaseIRI` while `baseIRI` stays shorter — a mismatch here makes the
+ * stub UISchema registry miss, and MaterialLinkedObjectRenderer falls back to
+ * Generate.uiSchema → infinite recursion on self-referential $refs.
+ */
+function resolveDefinitionTypeIRI(
+  definitionSchema: JSONSchema7 | boolean | undefined,
+  definitionName: string,
+  definitionToTypeIRI?: StringToIRIFn,
+): string | undefined {
+  if (definitionSchema && typeof definitionSchema !== "boolean") {
+    const fromSchema = extractTypeIRI(definitionSchema);
+    if (fromSchema) return fromSchema;
+  }
+  return definitionToTypeIRI?.(definitionName);
 }
 
 /**
@@ -50,18 +73,23 @@ export const createUISchemata = (
   } = options ?? {};
 
   const definitionsKey = getDefintitionKey(schema);
+  const definitions = defs(schema as JSONSchema7);
 
-  const defaultMakeUiSchemaOptions = (definitionName: string) => ({
+  const defaultMakeUiSchemaOptions = (
+    definitionName: string,
+    typeIRI: string | undefined,
+  ) => ({
     inline: true,
     context: {
       $ref: `#/${definitionsKey}/${definitionName}`,
-      typeIRI: definitionToTypeIRI ? definitionToTypeIRI(definitionName) : undefined,
+      typeIRI,
     },
     ...(definitionName in typeNameUiSchemaOptionsMap ? typeNameUiSchemaOptionsMap[definitionName] : {}),
   })
 
   const createStubLayout = (
     definitionName: string,
+    typeIRI: string | undefined,
     label?: string,
   ) => ({
     type: "VerticalLayout",
@@ -69,7 +97,9 @@ export const createUISchemata = (
       {
         type: "Control",
         ...(definitionName in typeNameLabelMap ? { label: typeNameLabelMap[definitionName] } : (label ? { label } : {})),
-        options: makeUiSchemaOptions ? makeUiSchemaOptions(definitionName) : defaultMakeUiSchemaOptions(definitionName),
+        options: makeUiSchemaOptions
+          ? makeUiSchemaOptions(definitionName)
+          : defaultMakeUiSchemaOptions(definitionName, typeIRI),
         scope: "#/properties/@id",
       },
       {
@@ -79,24 +109,25 @@ export const createUISchemata = (
     ],
   } as UISchemaElement);
 
-  const makeUISchemaRegistryEntry: (
-    definitionName: string,
-    element: UISchemaElement,
-  ) => JsonFormsUISchemaRegistryEntry = (definitionName, element) => ({
-    tester: (schema) => {
-      return schema.properties?.["@type"]?.const === definitionToTypeIRI(definitionName) ? rank : -1;
-    },
-    uischema: element,
-  });
-
   const registry: JsonFormsUISchemaRegistryEntry[] = [];
   const uiSchemata: Record<string, UISchemaElement> = {};
-  Object.keys(defs(schema as JSONSchema7))
+  Object.keys(definitions)
     .filter(definitionName => !excludeDefinitions.includes(definitionName))
     .map((definitionName) => {
-      const element = createStubLayout(definitionName);
+      const typeIRI = resolveDefinitionTypeIRI(
+        definitions[definitionName],
+        definitionName,
+        definitionToTypeIRI,
+      );
+      const element = createStubLayout(definitionName, typeIRI);
       uiSchemata[definitionName] = element;
-      registry.push(makeUISchemaRegistryEntry(definitionName, element));
+      registry.push({
+        tester: (candidate) => {
+          if (!typeIRI) return -1;
+          return candidate.properties?.["@type"]?.const === typeIRI ? rank : -1;
+        },
+        uischema: element,
+      });
     });
   return { registry, uiSchemata };
 }
