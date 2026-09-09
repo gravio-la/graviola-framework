@@ -44,7 +44,6 @@
     "@types/json-schema": "catalog:"
   },
   "peerDependencies": {
-    "next": ">=14",
     "@jsonforms/react": "catalog:jsonforms",
     "@jsonforms/core": "catalog:jsonforms",
     "@jsonforms/material-renderers": "catalog:jsonforms",
