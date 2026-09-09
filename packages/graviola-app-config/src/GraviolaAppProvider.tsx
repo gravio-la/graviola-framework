@@ -10,6 +10,7 @@ import {
   createUISchemata,
 } from "@graviola/semantic-json-form";
 import type { ResolveThumbnailUrl } from "@graviola/edb-core-types";
+import { defs, extractTypeIRI } from "@graviola/json-schema-utils";
 import type { GlobalSemanticConfig } from "@graviola/semantic-jsonform-types";
 import type {
   JsonFormsCellRendererRegistryEntry,
@@ -21,6 +22,30 @@ import type { IntentHandlersOverride } from "./defaultIntentDispatch";
 import { defaultCellRenderers, defaultRenderers } from "./defaultRenderers";
 import type { SchemaConfig, SideSchemaViewConfig } from "./types";
 import { GraviolaLoungeProviders } from "./GraviolaLoungeProviders";
+
+/**
+ * Prefer each definition's `@type.const` over `baseIRI + name`.
+ * LinkML models often put classes under `entityBaseIRI` while `baseIRI` is shorter —
+ * using only `baseIRI + name` breaks dropdown search, form chips, and UISchema stubs.
+ */
+function typeIRIMapsFromSchema(schema: JSONSchema7): {
+  typeNameToTypeIRI: (name: string) => string;
+  typeIRIToTypeName: (iri: string) => string;
+} {
+  const nameToIri = new Map<string, string>();
+  const iriToName = new Map<string, string>();
+  for (const [name, def] of Object.entries(defs(schema))) {
+    if (!def || typeof def === "boolean") continue;
+    const iri = extractTypeIRI(def);
+    if (!iri) continue;
+    nameToIri.set(name, iri);
+    iriToName.set(iri, name);
+  }
+  return {
+    typeNameToTypeIRI: (name) => nameToIri.get(name) ?? name,
+    typeIRIToTypeName: (iri) => iriToName.get(iri) ?? iri,
+  };
+}
 
 function buildAdbViewConfig(
   detailUiSchemata: SchemaConfig["detailUiSchemata"],
@@ -141,14 +166,26 @@ export const GraviolaAppProvider: FC<GraviolaAppProviderProps> = ({
     viewConfig: sideViewConfig,
   } = schemaConfig;
 
+  const schemaAsJson = schema as JSONSchema7;
+
+  const { typeNameToTypeIRI, typeIRIToTypeName } = useMemo(
+    () => typeIRIMapsFromSchema(schemaAsJson),
+    [schemaAsJson],
+  );
+
+  /** Fall back to baseIRI+name when a definition has no `@type.const`. */
   const definitionToTypeIRI = useMemo(
-    () => (definitionName: string) => `${baseIRI}${definitionName}`,
-    [baseIRI],
+    () => (definitionName: string) => {
+      const fromSchema = typeNameToTypeIRI(definitionName);
+      if (fromSchema !== definitionName) return fromSchema;
+      return `${baseIRI}${definitionName}`;
+    },
+    [typeNameToTypeIRI, baseIRI],
   );
 
   const { registry } = useMemo(
     () =>
-      createUISchemata(schema as JSONSchema7, {
+      createUISchemata(schemaAsJson, {
         typeNameLabelMap,
         typeNameUiSchemaOptionsMap: typeNameUiSchemaOptionsMap as Record<
           string,
@@ -156,24 +193,52 @@ export const GraviolaAppProvider: FC<GraviolaAppProviderProps> = ({
         >,
         definitionToTypeIRI,
       }),
-    [schema, typeNameLabelMap, typeNameUiSchemaOptionsMap, definitionToTypeIRI],
+    [schemaAsJson, typeNameLabelMap, typeNameUiSchemaOptionsMap, definitionToTypeIRI],
   );
 
+  // Property IRIs and new entity IRIs follow entityBaseIRI when set (matches
+  // LinkML `@type.const` and typical seed/fixture namespaces).
+  const defaultPrefix = entityBaseIRI || baseIRI;
+
   const config = useMemo<GlobalSemanticConfig>(() => {
-    const c = createSemanticConfig({ baseIRI });
+    const c = createSemanticConfig({ baseIRI, defaultPrefix });
+    const resolveTypeName = (iri: string) => {
+      const mapped = typeIRIToTypeName(iri);
+      if (mapped !== iri) return mapped;
+      return c.typeIRIToTypeName(iri);
+    };
     return {
       ...c,
+      typeNameToTypeIRI: definitionToTypeIRI,
+      typeIRIToTypeName: resolveTypeName,
+      createEntityIRI: (typeName: string, id?: string) => {
+        const uuid = id || Math.random().toString(36).substring(2, 15);
+        // Keep individuals under entityBaseIRI; type local-name only.
+        return `${defaultPrefix}${typeName}/${uuid}`;
+      },
+      jsonLDConfig: {
+        ...c.jsonLDConfig,
+        defaultPrefix,
+        jsonldContext: {
+          ...(typeof c.jsonLDConfig.jsonldContext === "object" &&
+          c.jsonLDConfig.jsonldContext !== null
+            ? c.jsonLDConfig.jsonldContext
+            : {}),
+          "@vocab": defaultPrefix,
+        },
+      },
       queryBuildOptions: {
         ...c.queryBuildOptions,
         primaryFields,
+        typeIRItoTypeName: resolveTypeName,
       },
     };
-  }, [baseIRI, primaryFields]);
+  }, [baseIRI, defaultPrefix, primaryFields, definitionToTypeIRI, typeIRIToTypeName]);
 
   const makeStubSchema = useMemo(
     () => (s: JSONSchema7) =>
-      createStubSchema(s, { entityBaseIRI, definitionToTypeIRI }),
-    [entityBaseIRI, definitionToTypeIRI],
+      createStubSchema(s, { entityBaseIRI: defaultPrefix, definitionToTypeIRI }),
+    [defaultPrefix, definitionToTypeIRI],
   );
 
   const rendererRegistry = useMemo<JsonFormsRendererRegistryEntry[]>(() => {
