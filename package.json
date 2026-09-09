@@ -30,7 +30,7 @@
     "build:pages": "turbo run build:pages",
     "dev": "turbo run dev --parallel",
     "dev:api": "turbo run dev:api",
-    "dev:testapp": "turbo run dev --filter='./apps/testapp'",
+    "dev:portal": "turbo run dev --parallel --filter='./platform/*'",
     "dev:storybook": "turbo run storybook --filter='./apps/storybook'",
     "sample:geo": "bun run --filter @graviola/sample-data generate:geo",
     "dev:packages": "turbo run dev --parallel --filter='./packages/*'",
@@ -57,7 +57,8 @@
       "packages/*",
       "packages/ideas/*",
       "packages/form-renderer/*",
-      "apps/*"
+      "apps/*",
+      "platform/*"
     ],
     "catalog": {
       "jsonld": "^9.0.0",
@@ -82,7 +83,8 @@
       "mui": {
         "@mui/material": "^7",
         "@mui/icons-material": "^7",
-        "@mui/x-date-pickers": "^8"
+        "@mui/x-date-pickers": "^8",
+        "@mui/x-tree-view": "^8"
       },
       "rdf": {
         "@rdfjs/data-model": "^2.0.2",
