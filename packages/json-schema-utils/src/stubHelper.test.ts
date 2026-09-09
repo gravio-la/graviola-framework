@@ -157,4 +157,23 @@ describe("JSON Schema Utility Functions", () => {
       ?.requirements as JSONSchema7;
     expect(requirementsProp.$ref).toBe("#/definitions/__schema0");
   });
+
+  it("should not inject @id onto anonymous nested definitions", () => {
+    const stub = prepareStubbedSchema(
+      schemaWithNonNamedEntitys,
+      (modelName) => ({
+        "@type": { type: "string", const: `ex:${modelName}` },
+        "@id": { type: "string" },
+      }),
+      () => ["@id"],
+    );
+
+    const nested = stub.definitions?.__schema0 as JSONSchema7;
+    expect(nested.properties).not.toHaveProperty("@id");
+    expect(nested.required).toBeUndefined();
+
+    const plant = stub.definitions?.PlantSpecies as JSONSchema7;
+    expect(plant.properties).toHaveProperty("@id");
+    expect(plant.required).toEqual(["@id"]);
+  });
 });

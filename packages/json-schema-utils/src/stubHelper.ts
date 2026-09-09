@@ -260,17 +260,27 @@ export const extendDefinitionsWithProperties: (
   const newDefs = Object.entries(defs(schema)).reduce<
     JSONSchema7["definitions"]
   >((acc, [key, value]) => {
-    return options?.excludeSemanticPropertiesForType?.includes(key)
-      ? { ...acc, [key]: value }
-      : {
-          ...acc,
-          [key]: extendProperties(
-            key,
-            value as JSONSchema7,
-            generateSemanticProperties,
-            requiredProperties,
-          ),
-        };
+    if (options?.excludeSemanticPropertiesForType?.includes(key)) {
+      return { ...acc, [key]: value };
+    }
+    const asSchema = value as JSONSchema7;
+    // Anonymous / value-object definitions (no @id) must stay unaddressable.
+    // Injecting @id here falsely turns inlined notes into linked entities in forms.
+    const isEntityLike =
+      key.endsWith("Stub") ||
+      Boolean(asSchema.properties && "@id" in asSchema.properties);
+    if (!isEntityLike) {
+      return { ...acc, [key]: value };
+    }
+    return {
+      ...acc,
+      [key]: extendProperties(
+        key,
+        asSchema,
+        generateSemanticProperties,
+        requiredProperties,
+      ),
+    };
   }, {}) as JSONSchema7["definitions"];
   return {
     ...schema,
