@@ -86,14 +86,23 @@ export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
   );
 
   const refetch = useCallback(() => {
-    return loadEntity(entityIRI, typeIRI).then(
-      (loadResult: LoadResult | null) => {
+    return loadEntity(entityIRI, typeIRI)
+      .then((loadResult: LoadResult | null) => {
         if (loadResult !== null && loadResult?.document) {
           const data = loadResult.document;
           onChange(data);
         }
-      },
-    );
+      })
+      .catch((error: unknown) => {
+        // A missing entity (e.g. a not-yet-created preview/new document) is
+        // an expected outcome here, not a fatal error - swallow it after
+        // logging so callers don't see an unhandled promise rejection.
+        console.warn("[SemanticJsonForm] failed to load entity", {
+          entityIRI,
+          typeIRI,
+          error,
+        });
+      });
   }, [loadEntity, entityIRI, typeIRI, schema, onChange]);
 
   useEffect(() => {
