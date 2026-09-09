@@ -116,11 +116,18 @@ export type PreviewIconProps = {
 };
 
 /**
- * React component (incl. MUI forwardRef/memo objects), render function, or emoji string.
+ * React component (incl. MUI forwardRef/memo / OverridableComponent),
+ * render function, or plain object component.
+ *
+ * MUI `@mui/icons-material` icons are `OverridableComponent`s whose call
+ * overloads are not assignable to `(props: PreviewIconProps) => unknown`.
+ * They are accepted via the structural arms (`muiName` / `$$typeof`).
  */
 export type IconComponentLike =
   | ((props: PreviewIconProps) => unknown)
-  | Record<string, unknown>;
+  | Record<string, unknown>
+  | { readonly muiName: string }
+  | { readonly $$typeof: unknown };
 
 /**
  * Type-level or MIME-level icon: emoji/label string, component, render fn, or
