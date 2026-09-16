@@ -25,6 +25,80 @@ const makePrefixedProperyPath = (path: string[]) =>
   path.map((key) => makePrefixed(key)).join("/");
 const mkSubject = (subjectURI: string) =>
   subjectURI.startsWith("?") ? subjectURI : `<${subjectURI}>`;
+
+/**
+ * Resolve the object sub-schema a property points at (via `$ref`, inline
+ * `properties`, or array `items`), or `undefined` when the property is a
+ * primitive / non-recursable value.
+ */
+const resolveNestedObjectSchema = (
+  schema: JSONSchemaWithInverseProperties,
+  rootSchema: JSONSchemaWithInverseProperties,
+): JSONSchema7 | undefined => {
+  if (schema.$ref) {
+    const resolved = resolveSchema(
+      schema as JSONSchema7,
+      "",
+      rootSchema as JSONSchema7,
+    );
+    return resolved && (resolved as JSONSchema7).properties
+      ? (resolved as JSONSchema7)
+      : undefined;
+  }
+  if (schema.properties) {
+    return schema as JSONSchema7;
+  }
+  if (
+    schema.items &&
+    isJSONSchemaDefinition(schema.items) &&
+    isJSONSchema(schema.items)
+  ) {
+    if (schema.items.$ref) {
+      const resolved = resolveSchema(
+        schema.items as JSONSchema7,
+        "",
+        rootSchema as JSONSchema7,
+      );
+      return resolved &&
+        isJSONSchemaDefinition(resolved as JSONSchema7Definition) &&
+        isJSONSchema(resolved as JSONSchema7)
+        ? (resolved as JSONSchema7)
+        : undefined;
+    }
+    if (schema.items.properties) {
+      return schema.items as JSONSchema7;
+    }
+  }
+  return undefined;
+};
+
+/**
+ * Build the DELETE template (`construct`) and matching WHERE patterns for the
+ * Concise Bounded Description (CBD) of `subjectURI` as described by `rootSchema`.
+ *
+ * Used exclusively by the write path (`save` → DELETE/INSERT, `remove` → DELETE).
+ * Reads use `traversalSchema2construct`.
+ *
+ * Boundary semantics — two independent guards decide how far the template
+ * expands into nested objects:
+ *
+ * 1. **Schema (TBox) guard:** recursion stops at sub-schemas whose `properties`
+ *    contain one of `stopSymbols` (callers pass `["@id"]`, i.e. named-entity
+ *    definitions). This is the declared boundary.
+ *
+ * 2. **Data (ABox) guard:** every nested expansion is anchored in its own
+ *    `OPTIONAL { <link> FILTER(isBlank(?o)) … }` group. Only *anonymous*
+ *    (blank-node) objects owned by the subject are ever expanded; IRIs are
+ *    never followed, regardless of what the schema declares. This is the CBD
+ *    definition proper and protects linked named entities (e.g. a
+ *    `Location.parent` pointing at another `Location`) from being wiped when
+ *    the schema artifact omits `@id` on referenced definitions.
+ *
+ * The link triple itself (`<s> :p ?o`) is always matched in a separate
+ * OPTIONAL so stale references are removed even when the target is an IRI.
+ * Inside nested (level > 0) groups every pattern is OPTIONAL: for deletion we
+ * want maximal matching, `required` is irrelevant there.
+ */
 export const jsonSchema2construct: (
   subjectURI: string | Variable,
   rootSchema: JSONSchemaWithInverseProperties,
@@ -62,88 +136,50 @@ export const jsonSchema2construct: (
     const __type = `?__type_${varIndex++}`;
     whereOptionals += `OPTIONAL { ${sP} a ${__type} . }\n`;
     construct += `${sP} a ${__type} .\n`;
-    Object.entries(subSchema.properties || {}).map(([property, schema]) => {
-      if (isJSONSchema(schema) && !excludedProperties.includes(property)) {
-        const required = subSchema.required?.includes(property),
-          p = makePrefixed(property),
-          o = `?${property}_${varIndex++}`;
-
-        if (schema["x-inverseOf"]) {
-          const resolvedInverse = resolveInverseProperties(schema, rootSchema);
-          if (resolvedInverse) {
-            resolvedInverse.forEach((inverse) => {
-              const ipp = makePrefixedProperyPath(inverse.path);
-              if (!required) {
-                whereOptionals += `OPTIONAL {\n ${o} ${ipp} ${sP} .\n`;
-              } else {
-                whereOptionals += `${o} ${ipp} ${sP} .\n`;
-              }
-              construct += `${sP} ${p} ${o} .\n`;
-            });
-          }
-        } else {
-          if (!required) {
-            whereOptionals += `OPTIONAL {\n${sP} ${p} ${o} .\n`;
-          } else {
-            whereOptionals += `${sP} ${p} ${o} .\n`;
-          }
-          construct += `${sP} ${p} ${o} .\n`;
-        }
-        if (schema.$ref) {
-          const subSchema = resolveSchema(
-            schema as JSONSchema7,
-            "",
-            rootSchema as JSONSchema7,
-          );
-          if (
-            subSchema &&
-            subSchema.properties &&
-            !propertiesContainStopSymbol(subSchema.properties, stopSymbols)
-          ) {
-            propertiesToSPARQLPatterns(o, subSchema as JSONSchema7, level + 1);
-          }
-        } else if (
-          schema.properties &&
-          !propertiesContainStopSymbol(schema.properties, stopSymbols)
-        ) {
-          propertiesToSPARQLPatterns(o, schema, level + 1);
-        } else if (schema.items) {
-          if (
-            isJSONSchemaDefinition(schema.items) &&
-            isJSONSchema(schema.items) &&
-            schema.items.properties &&
-            !propertiesContainStopSymbol(schema.items.properties, stopSymbols)
-          ) {
-            propertiesToSPARQLPatterns(o, schema.items, level + 1);
-          }
-          if (
-            isJSONSchemaDefinition(schema.items) &&
-            isJSONSchema(schema.items) &&
-            schema.items.$ref
-          ) {
-            //const ref = schema.items.$ref
-            const subSchema = resolveSchema(
-              schema.items as JSONSchema7,
-              "",
-              rootSchema as JSONSchema7,
-            );
-            if (
-              subSchema &&
-              isJSONSchemaDefinition(subSchema as JSONSchema7Definition) &&
-              isJSONSchema(subSchema as JSONSchema7)
-            ) {
-              propertiesToSPARQLPatterns(
-                o,
-                subSchema as JSONSchema7,
-                level + 1,
-              );
-            }
-          }
-        }
-        if (!required) {
-          whereOptionals += "}\n";
-        }
+    Object.entries(subSchema.properties || {}).forEach(([property, schema]) => {
+      if (!isJSONSchema(schema) || excludedProperties.includes(property)) {
+        return;
       }
+      // Nested levels are always optional: DELETE wants maximal matching.
+      const required = level === 0 && subSchema.required?.includes(property);
+      const p = makePrefixed(property);
+      const o = `?${property}_${varIndex++}`;
+
+      // 1. link pattern(s) between subject and object
+      let linkPatterns: string[];
+      if (schema["x-inverseOf"]) {
+        const resolvedInverse = resolveInverseProperties(schema, rootSchema);
+        linkPatterns = (resolvedInverse ?? []).map(
+          (inverse) => `${o} ${makePrefixedProperyPath(inverse.path)} ${sP} .`,
+        );
+      } else {
+        linkPatterns = [`${sP} ${p} ${o} .`];
+      }
+      if (linkPatterns.length === 0) {
+        return;
+      }
+      for (const link of linkPatterns) {
+        construct += `${sP} ${p} ${o} .\n`;
+        whereOptionals += required ? `${link}\n` : `OPTIONAL {\n${link}\n}\n`;
+      }
+
+      // 2. nested expansion, guarded to anonymous (blank-node) objects only
+      const nested = resolveNestedObjectSchema(schema, rootSchema);
+      if (
+        !nested ||
+        !nested.properties ||
+        propertiesContainStopSymbol(nested.properties, stopSymbols) ||
+        level + 1 > maxRecursion
+      ) {
+        return;
+      }
+      const anchor =
+        linkPatterns.length === 1
+          ? linkPatterns[0]
+          : linkPatterns.map((link) => `{ ${link} }`).join(" UNION ");
+      whereOptionals += `OPTIONAL {\n${anchor}\nFILTER(isBlank(${o}))\n`;
+      propertiesToSPARQLPatterns(o, nested, level + 1);
+      whereOptionals += "}\n";
     });
   };
   propertiesToSPARQLPatterns(s, rootSchema, 0);

@@ -28,7 +28,7 @@ const subjectIriFromBinding = (cell: BindingCell): string | undefined => {
   // RDF/JS Term
   if (cell.termType === "NamedNode") return cell.value;
   // SPARQL Results JSON (selectFetch from httpSparqlCrud)
-  if (cell.type === "uri") return cell.value;
+  if ((cell as { type?: string }).type === "uri") return cell.value;
   return undefined;
 };
 
