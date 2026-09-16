@@ -4,6 +4,7 @@ import type {
   StringToIRIFn,
   IRIToStringFn,
 } from "@graviola/edb-core-types";
+import type { MetaStampingConfig } from "@graviola/meta-schema";
 import type { BaseStore, SchemaRegistry } from "@graviola/store-core";
 import type { JSONSchema7 } from "json-schema";
 
@@ -77,6 +78,8 @@ export type CreateStoreFromSpecOptions<
   backend: StoreBackendSpec;
   /** Optional SPARQL queryBuildOptions overrides (flavour, primaryFields, …). */
   queryBuildOptions?: Record<string, unknown>;
+  /** System-asserted entity `$meta` stamping on upsert (SPARQL / Oxigraph backends). */
+  metaStamping?: MetaStampingConfig;
   /**
    * Fact-level statement metadata (`$stmt`) configuration. Enables the
    * `statements` capability (`writeStatements` / `loadStatements`) — required

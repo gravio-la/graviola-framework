@@ -79,6 +79,7 @@ export async function createOxigraphStore(
     },
     sparqlQueryFunctions: crud,
     defaultLimit: opts.defaultLimit ?? 100,
+    ...(opts.metaStamping ? { metaStamping: opts.metaStamping } : {}),
     ...(opts.statementMeta
       ? {
           statementMeta: {

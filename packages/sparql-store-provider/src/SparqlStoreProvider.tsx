@@ -7,6 +7,8 @@ import type {
 import { sparqlLoggingWrapper } from "@graviola/edb-core-utils";
 import { CrudProviderContext, useAdbContext } from "@graviola/edb-state-hooks";
 import { initSPARQLStore } from "@graviola/sparql-db-impl";
+import type { MetaStampingConfig } from "@graviola/meta-schema";
+import type { JSONSchema7 } from "json-schema";
 import { type FunctionComponent, type ReactNode, useMemo } from "react";
 
 import { tripleStoreImplementations } from "./tripleStoreImplementations";
@@ -17,6 +19,12 @@ export type SparqlStoreProviderProps = {
   defaultLimit: number;
   walkerOptions?: Partial<WalkerOptions>;
   enableInversePropertiesFeature?: boolean;
+  /** Opt-in system-asserted entity `$meta` stamping on upsert. */
+  metaStamping?: MetaStampingConfig;
+  /**
+   * Schema for store init (writes + persistence). Defaults to {@link useAdbContext} `schema`.
+   */
+  storeSchema?: JSONSchema7;
 };
 export const SparqlStoreProvider: FunctionComponent<
   SparqlStoreProviderProps
@@ -26,6 +34,8 @@ export const SparqlStoreProvider: FunctionComponent<
   defaultLimit,
   walkerOptions,
   enableInversePropertiesFeature,
+  metaStamping,
+  storeSchema: storeSchemaOverride,
 }) => {
   const rawCrud = useMemo<CRUDFunctions | null>(() => {
     return tripleStoreImplementations[endpoint.provider](endpoint);
@@ -40,12 +50,13 @@ export const SparqlStoreProvider: FunctionComponent<
   }, [endpoint, rawCrud]);
 
   const {
-    schema,
+    schema: contextSchema,
     typeNameToTypeIRI,
     queryBuildOptions,
     jsonLDConfig: { defaultPrefix, jsonldContext },
     makeStubSchema,
   } = useAdbContext();
+  const schema = storeSchemaOverride ?? contextSchema;
 
   const dataStore = useMemo(() => {
     return initSPARQLStore({
@@ -60,6 +71,7 @@ export const SparqlStoreProvider: FunctionComponent<
       makeStubSchema,
       enableInversePropertiesFeature,
       defaultUpdateGraph: endpoint.defaultUpdateGraph,
+      metaStamping,
     });
   }, [
     crudOptions,
@@ -73,6 +85,7 @@ export const SparqlStoreProvider: FunctionComponent<
     endpoint.defaultUpdateGraph,
     makeStubSchema,
     enableInversePropertiesFeature,
+    metaStamping,
   ]);
 
   return (

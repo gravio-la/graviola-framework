@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@graviola/edb-core-types": "workspace:*",
+    "@graviola/meta-schema": "workspace:*",
     "@graviola/store-core": "workspace:*"
   },
   "peerDependencies": {

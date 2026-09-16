@@ -56,6 +56,7 @@ export async function createSparqlStore(
     sparqlQueryFunctions: crud,
     defaultLimit: opts.defaultLimit ?? 100,
     ...(opts.backend.graph ? { defaultUpdateGraph: opts.backend.graph } : {}),
+    ...(opts.metaStamping ? { metaStamping: opts.metaStamping } : {}),
     ...(opts.statementMeta
       ? {
           statementMeta: {
