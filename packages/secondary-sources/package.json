@@ -1,0 +1,48 @@
+{
+  "name": "@graviola/edb-secondary-sources",
+  "version": "0.1.0",
+  "description": "Secondary data source declarations, runtime, adapters, and import protocol",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./protocol": {
+      "types": "./dist/protocol.d.ts",
+      "import": "./dist/protocol.js",
+      "require": "./dist/protocol.cjs",
+      "default": "./dist/protocol.js"
+    }
+  },
+  "files": ["dist"],
+  "license": "MIT",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch --no-dts",
+    "lint": "tsc --noEmit",
+    "test": "bun test src"
+  },
+  "dependencies": {
+    "@graviola/data-acquisition": "workspace:*",
+    "@graviola/edb-core-types": "workspace:*",
+    "@graviola/edb-data-mapping": "workspace:*",
+    "lodash-es": "catalog:",
+    "yaml": "^2.7.0",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*",
+    "hono": "^4.7.2",
+    "@types/json-schema": "catalog:",
+    "@types/node": "^22.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.8.2"
+  }
+}
