@@ -41,6 +41,8 @@ export type MakeStagingStrategyContextOptions = {
   disableLogging?: boolean;
   /** Default `StrategyContext.authorityIRI` (no framework default). */
   defaultAuthorityIRI?: string;
+  /** Max mapping path depth for authority fetches (default 3). Deeper paths use label stubs. */
+  maxDepth?: number;
 };
 
 const pathKey = (path: string[]): string => path.join("/");
@@ -190,6 +192,7 @@ export const makeStagingStrategyContext = (
     normDataMappings,
     disableLogging = true,
     defaultAuthorityIRI,
+    maxDepth = 3,
   } = opts;
 
   const pathToIRI = new Map<string, string>();
@@ -386,10 +389,27 @@ export const makeStagingStrategyContext = (
         "@type": typeIRI,
       };
     },
-    createDeeperContext: (innerCtx, pathElement, currentMapping) =>
-      augmentContext(
+    createDeeperContext: (innerCtx, pathElement, currentMapping) => {
+      const deeper = augmentContext(
         context.createDeeperContext(innerCtx, pathElement, currentMapping),
-      ),
+      );
+      if (deeper.path.length > maxDepth && deeper.authorityAccess) {
+        const stubbed = Object.fromEntries(
+          Object.entries(deeper.authorityAccess).map(([key, cfg]) => [
+            key,
+            {
+              ...cfg,
+              getEntityByIRI: async (uri: string) => {
+                const label = uri.split(/[/:#]/).filter(Boolean).pop() ?? uri;
+                return { id: uri, labels: { en: { value: label } } };
+              },
+            },
+          ]),
+        );
+        return { ...deeper, authorityAccess: stubbed };
+      }
+      return deeper;
+    },
   });
 
   return augmentContext(baseContext);

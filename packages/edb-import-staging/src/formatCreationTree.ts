@@ -22,25 +22,26 @@ const labelFor = (
   return entity.entityIRI;
 };
 
-/** Print the staged creation tree with provenance and strategy traces. */
-export const formatCreationTree = (
+/** Render the staged creation tree as a multi-line string. */
+export const renderCreationTree = (
   changeSet: StagedChangeSet,
   options: FormatCreationTreeOptions,
-): void => {
+): string => {
   const { typeIRItoTypeName, primaryFields, heading } = options;
   const entities = changeSet.list();
+  const lines: string[] = [];
 
   const printNode = (entity: StagedEntity, depth: number) => {
     const typeName = typeIRItoTypeName(entity.typeIRI);
     const indent = "  ".repeat(depth);
     const trace = entity.trace;
-    console.log(
+    lines.push(
       `${indent}- [${entity.reviewState}] ${typeName}: ${labelFor(entity, typeIRItoTypeName, primaryFields)} (${entity.entityIRI})`,
     );
-    console.log(
+    lines.push(
       `${indent}  provenance: ${entity.provenance.method}${entity.provenance.mappingId ? ` / ${entity.provenance.mappingId}` : ""}${entity.provenance.sourceRef ? ` ← ${entity.provenance.sourceRef}` : ""}`,
     );
-    console.log(
+    lines.push(
       `${indent}  trace: ${trace.decision}${trace.matchMethod ? ` via ${trace.matchMethod}` : ""} path=[${trace.mappingPath.join(" → ")}]`,
     );
 
@@ -49,10 +50,21 @@ export const formatCreationTree = (
     }
   };
 
-  console.log(heading ?? `Staged change set ${changeSet.changeSetIRI}:\n`);
+  lines.push(heading ?? `Staged change set ${changeSet.changeSetIRI}:`);
+  lines.push("");
   for (const root of changeSet.roots()) {
     printNode(root, 0);
   }
-  console.log(`\nTotal staged entities: ${entities.length}`);
-  console.log(`RDF triples in dataset: ${changeSet.dataset.size}`);
+  lines.push("");
+  lines.push(`Total staged entities: ${entities.length}`);
+  lines.push(`RDF triples in dataset: ${changeSet.dataset.size}`);
+  return lines.join("\n");
+};
+
+/** Print the staged creation tree with provenance and strategy traces. */
+export const formatCreationTree = (
+  changeSet: StagedChangeSet,
+  options: FormatCreationTreeOptions,
+): void => {
+  console.log(renderCreationTree(changeSet, options));
 };

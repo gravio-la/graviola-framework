@@ -19,7 +19,7 @@ export type {
 export { documentToTriples, removeSubjectQuads } from "./documentToTriples";
 export type { DocumentToTriplesOptions } from "./documentToTriples";
 
-export { formatCreationTree } from "./formatCreationTree";
+export { formatCreationTree, renderCreationTree } from "./formatCreationTree";
 export type { FormatCreationTreeOptions } from "./formatCreationTree";
 
 export { createOverlayStore } from "./overlayStore";

@@ -60,6 +60,7 @@ const runGoetheStagingMapping = async (options?: {
     normDataMappings: availableAuthorityMappings,
     authorityAccess: fixtureAuthorityAccess,
     defaultAuthorityIRI: "http://www.wikidata.org",
+    maxDepth: 10,
   });
 
   const personFixture = fixtureAuthorityRecords[PERSON_WIKIDATA_IRI];
