@@ -107,6 +107,27 @@ function buildMetaAnnotationColumn(
       path.slice(0, -1),
     ) ?? null;
 
+  const formatCell =
+    propSchema.format === "date-time"
+      ? (value: unknown) => {
+          const date = value ? new Date(String(value)) : null;
+          if (!date || Number.isNaN(date.getTime())) return String(value ?? "");
+          return new Intl.DateTimeFormat(undefined, {
+            dateStyle: "medium",
+            timeStyle: "short",
+          }).format(date);
+        }
+      : propSchema.format === "date"
+        ? (value: unknown) => {
+            const date = value ? new Date(String(value)) : null;
+            if (!date || Number.isNaN(date.getTime()))
+              return String(value ?? "");
+            return new Intl.DateTimeFormat(undefined, {
+              dateStyle: "medium",
+            }).format(date);
+          }
+        : (value: unknown) => String(value ?? "");
+
   return {
     id: columnId,
     header: uiColumn.label ?? leafKey,
@@ -116,7 +137,7 @@ function buildMetaAnnotationColumn(
       stub?.Cell ??
       (({ cell, table }) => (
         <OverflowContainer density={table.getState().density}>
-          {String(cell.getValue() ?? "")}
+          {formatCell(cell.getValue())}
         </OverflowContainer>
       )),
   };
