@@ -37,18 +37,17 @@ export const V1RestStoreProvider: FunctionComponent<
   fetchImpl,
   queryCacheScope = "rest",
 }) => {
-  const {
-    typeNameToTypeIRI,
-    jsonLDConfig: { defaultPrefix },
-  } = useAdbContext();
+  const { typeNameToTypeIRI, typeIRIToTypeName } = useAdbContext();
   const [dataStore, setDataStore] = useState<V1RestDataStore | null>(null);
 
+  // Use schema-derived reverse map (class IRIs often sit outside entityBaseIRI /
+  // defaultPrefix — e.g. portal-meta `…/SecondaryDataSource` vs `…/entity/`).
   const identifies = useMemo(
     () => ({
       typeNameToTypeIRI,
-      typeIRItoTypeName: (iri: string) => iri.replace(defaultPrefix, ""),
+      typeIRItoTypeName: typeIRIToTypeName,
     }),
-    [typeNameToTypeIRI, defaultPrefix],
+    [typeNameToTypeIRI, typeIRIToTypeName],
   );
 
   useEffect(() => {

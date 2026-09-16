@@ -374,9 +374,12 @@ export function initSPARQLDatastorePair(
     };
   };
 
+  const resolveTypeIRItoTypeName =
+    typeIRItoTypeName ?? ((iri: string) => iri.replace(defaultPrefix, ""));
+
   const abstractDatastore: AbstractDatastore = {
     typeNameToTypeIRI,
-    typeIRItoTypeName: (iri: string) => iri.replace(defaultPrefix, ""),
+    typeIRItoTypeName: resolveTypeIRItoTypeName,
     importDocument: async () => {
       throw new Error("Not implemented");
     },
@@ -687,7 +690,7 @@ export function initSPARQLDatastorePair(
 
   const store: SparqlStore<Record<string, unknown>> = {
     typeNameToTypeIRI,
-    typeIRItoTypeName: (iri: string) => iri.replace(defaultPrefix, ""),
+    typeIRItoTypeName: resolveTypeIRItoTypeName,
     storeId,
     capabilities: {
       identifies: true,
