@@ -817,6 +817,24 @@ export const dateStringToSpecialInt = (
   return dayJsDateToSpecialInt(dayjs(data, formatString), yearOnly);
 };
 
+/** Wikidata time strings (+1881-10-25T00:00:00Z) → ISO date (YYYY-MM-DD) or year-only. */
+export const dateStringToISODate = (
+  sourceData: string | string[],
+  _targetData: unknown,
+): string | null => {
+  const raw = Array.isArray(sourceData) ? sourceData[0] : sourceData;
+  if (!raw || typeof raw !== "string") return null;
+  const data = raw.replace(/^\+/, "");
+  if (/^\d{4}$/.test(data)) return data;
+  const wikidata = data.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (wikidata) return `${wikidata[1]}-${wikidata[2]}-${wikidata[3]}`;
+  const iso = data.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (iso) return `${iso[1]}-${iso[2]}-${iso[3]}`;
+  const dotted = data.match(/^(\d{2})\.(\d{2})\.(\d{4})/);
+  if (dotted) return `${dotted[3]}-${dotted[2]}-${dotted[1]}`;
+  return null;
+};
+
 type SplitStrategy = Strategy & {
   id: "split";
   options?: {
@@ -1002,6 +1020,7 @@ export const strategyFunctionMap: { [strategyId: string]: StrategyFunction } = {
   createEntityWithReificationFromString,
   createEntityWithAuthoritativeLink,
   dateStringToSpecialInt,
+  dateStringToISODate,
   dateRangeStringToSpecialInt,
   exists: existsStrategy,
   constant: constantStrategy,
