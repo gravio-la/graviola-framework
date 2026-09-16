@@ -40,18 +40,22 @@ const performSearch = (
   setSearchResults: (searchResults: Record<KnowledgeSources, any[]>) => void,
   setElementCount: (resultCount: number) => void,
 ) => {
-  return Promise.all(
-    knowledgeBases.map(async (kb) => {
-      return {
-        [kb.id]: await kb.find(searchString, typeIRI, typeName, findOptions),
-      };
-    }),
+  return Promise.allSettled(
+    knowledgeBases.map(async (kb) => ({
+      id: kb.id,
+      hits: await kb.find(searchString, typeIRI, typeName, findOptions),
+    })),
   ).then((results) => {
     if (!results) return;
-    const searchResults = Object.assign({}, ...results) as Record<
-      KnowledgeSources,
-      any[]
-    >;
+    const searchResults = Object.assign(
+      {},
+      ...results
+        .filter(
+          (r): r is PromiseFulfilledResult<{ id: string; hits: unknown[] }> =>
+            r.status === "fulfilled",
+        )
+        .map((r) => ({ [r.value.id]: r.value.hits })),
+    ) as Record<KnowledgeSources, any[]>;
     setSearchResults(searchResults);
     const resultCount = Object.values(searchResults).reduce(
       (acc, list = []) => acc + list.length,

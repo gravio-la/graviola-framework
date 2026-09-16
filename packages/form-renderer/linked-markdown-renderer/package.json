@@ -1,0 +1,67 @@
+{
+  "name": "@graviola/linked-markdown-renderer",
+  "version": "0.1.0",
+  "description": "Markdown editor with embedded entity links for Graviola knowledge bases",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": {
+        "import": "./dist/index.d.ts",
+        "require": "./dist/index.d.cts"
+      },
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup src/index.tsx --format esm,cjs --dts --external react --external react-dom",
+    "dev": "tsup src/index.tsx --format esm,cjs --dts --watch --external react --external react-dom",
+    "depcheck": "depcheck",
+    "lint": "eslint \"**/*.{ts,tsx}\"",
+    "release": "bun publish --access public"
+  },
+  "peerDependencies": {
+    "@graviola/edb-state-hooks": "workspace:*",
+    "@jsonforms/core": "catalog:jsonforms",
+    "@jsonforms/react": "catalog:jsonforms",
+    "@jsonforms/material-renderers": "catalog:jsonforms",
+    "@mui/icons-material": "catalog:mui",
+    "@mui/material": "catalog:mui",
+    "@uiw/react-markdown-preview": "^5",
+    "@uiw/react-md-editor": "^4",
+    "react": "catalog:"
+  },
+  "dependencies": {
+    "@graviola/edb-markdown-renderer": "workspace:*",
+    "@graviola/entity-embed": "workspace:*",
+    "@graviola/entity-ref-core": "workspace:*",
+    "@graviola/json-schema-utils": "workspace:*",
+    "lodash-es": "catalog:",
+    "rehype-external-links": "^3.0.0",
+    "rehype-sanitize": "^6.0.0"
+  },
+  "devDependencies": {
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*",
+    "@types/json-schema": "catalog:",
+    "@types/react": "catalog:",
+    "eslint-config-edb": "workspace:*",
+    "react": "catalog:",
+    "tsup": "^8.0.0",
+    "typescript": "^5.8.2"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "eslint-config-edb"
+    ]
+  }
+}

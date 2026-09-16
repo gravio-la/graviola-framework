@@ -20,8 +20,12 @@ export function FinderSlotProvider({
   );
 }
 
+export function useOptionalFinderSlot(): FC<EntityFinderProps> | null {
+  return useContext(FinderSlotContext);
+}
+
 export function useFinderSlot(): FC<EntityFinderProps> {
-  const C = useContext(FinderSlotContext);
+  const C = useOptionalFinderSlot();
   if (!C) {
     throw new Error(
       "useFinderSlot: wrap the tree with FinderSlotProvider (GraviolaAppProvider wires the default similarity finder).",

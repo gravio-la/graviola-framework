@@ -1,0 +1,58 @@
+{
+  "name": "@graviola/entity-embed",
+  "version": "0.1.0",
+  "description": "Entity reference views and cross-type suggest for linked documents",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "depcheck": "depcheck",
+    "lint": "eslint \"**/*.{ts,tsx}\"",
+    "release": "bun publish --access public"
+  },
+  "peerDependencies": {
+    "@mui/material": "catalog:mui",
+    "react": "catalog:"
+  },
+  "dependencies": {
+    "@graviola/edb-advanced-components": "workspace:*",
+    "@graviola/edb-state-hooks": "workspace:*",
+    "@graviola/edb-table-components": "workspace:*",
+    "@graviola/entity-ref-core": "workspace:*",
+    "@graviola/json-schema-utils": "workspace:*",
+    "@graviola/semantic-views": "workspace:*",
+    "@tanstack/react-query": "^5.28.5",
+    "lodash-es": "catalog:"
+  },
+  "devDependencies": {
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*",
+    "tsup": "^8.0.0",
+    "@types/json-schema": "catalog:",
+    "@types/react": "catalog:",
+    "eslint-config-edb": "workspace:*",
+    "react": "catalog:",
+    "typescript": "^5.8.2"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "eslint-config-edb"
+    ]
+  }
+}
