@@ -1,0 +1,132 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Library Docs/Fulltext Search/Introduction" />
+
+# Full-text search onboarding (geo sandbox)
+
+This page records the **least-effort path** we measured while building the temporary
+evaluation app `apps/fts-geo-onboarding` — LinkML geo model → Oxigraph + Meilisearch →
+minimal REST → React search with one facet and an editable detail modal.
+
+The sandbox is **not** a long-lived product. Use it (and its
+[`FRICTION.md`](../../../../fts-geo-onboarding/FRICTION.md)) to see where conventions
+or tooling still need to land.
+
+## What you get
+
+| Layer | Artifact |
+| --- | --- |
+| Model | LinkML → `geo.schema.json` + side-schema + search-facet |
+| Data | Existing `geo.ttl` (City / Place sample) |
+| Primary store | Remote Oxigraph (SPARQL) or Prisma / Postgres |
+| Text index | Meilisearch (per-type indexes from search-facet) |
+| API | ~80–130 line Bun + Hono server wrapping `initMeilisearchSparqlStore` |
+| UI | One search field, founded ≥ facet, `SemanticListItem`, `EntityDetailModal` with edit |
+
+## Step-by-step (Scenario A — Oxigraph)
+
+### 0. Generate schema + sidecars
+
+```bash
+# Prefer a current graviola-linkml install (venv). nix run .#bundle may lag source.
+graviola-linkml bundle ./linkml/geo.yaml -d ./generated
+```
+
+Annotate slots with `gra:fulltext`, `gra:facet: range` (e.g. `founded`), and
+`gra:searchable: true` on types you want indexed. Declare an **identifier** slot
+if you also plan Prisma.
+
+Pass **`side-schema.baseIRI`** into the store as `defaultPrefix` — do not rely on
+schema `$id` alone (wrong type IRIs).
+
+### 1. Docker
+
+```bash
+docker compose up -d   # Oxigraph :7880, Meilisearch :7702
+```
+
+Use **dedicated ports** — monorepo defaults collide (`7878` / `7700` / `7701`).
+Oxigraph’s current image is distroless: skip container healthchecks; curl the host port.
+
+Import Turtle into the **default graph**:
+
+```bash
+curl -X POST 'http://127.0.0.1:7880/store?default' \
+  -H 'Content-Type: text/turtle' --data-binary @../sample-data/domains/geo/out/geo.ttl
+```
+
+Without `?default`, triples land in a named graph and SPARQL default-graph reads look empty.
+
+### 2. Minimal REST + FTS (~80 LOC for SPARQL-only)
+
+```ts
+const { store: primaryStore, typeNames } = await createStoreFromSpec({
+  schema, primaryFields, defaultPrefix,
+  backend: { kind: "sparql", endpoint, flavour: "oxigraph" },
+});
+
+const ftStore = initMeilisearchSparqlStore({
+  primaryStore,
+  meilisearch: { baseUrl, apiKey },
+  schema, primaryFields, searchFacetSchema,
+  indexNameForType: (t) => `geo-onboarding-${t}`,
+});
+
+const app = createGraviolaHonoApp({ store: ftStore, typeNames, basePath: "/api/graviola", cors: true });
+Bun.serve({ port: 3020, fetch: (req) => app.fetch(req) });
+```
+
+`serveGraviolaRest` does **not** take Meili yet — hand-compose FT + `createGraviolaHonoApp`.
+That is the main framework gap for a true one-liner.
+
+### 3–4. Index lifecycle (`graviola-fts`)
+
+```bash
+cd apps/fts-geo-onboarding   # paths in fts.config.json are cwd-relative
+bun run fts:push
+bun run fts:populate
+```
+
+Only mark **City** searchable if Place has recursive `partOf` / `contains` —
+`list()`-based populate can hang on deep extraction. Prefer shallow projection for FT import.
+
+### 5–7. React UI
+
+- MUI v7 + `workspace:*` Graviola packages
+- Vite needs the **`buffer` polyfill** (same as testapp) or `n3` crashes
+- Wrap with `BrowserRouter` + `SnackbarProvider` before `GraviolaLoungeProviders`
+- Browser FT store: Meili in the browser, REST client as `primaryStore` for hydrate/CRUD
+- Results: MUI `List` + `SemanticListItemNoOps`
+- Click: `useGraviolaModal(MODAL_ENTITY_DETAIL).show({ entityIRI, typeIRI, data })`
+  **without** lounge `readonly` / `disableInlineEditing`
+
+There is **no dual-write**: after edit, run `graviola-fts import-one City <iri>` (or reindex).
+
+REST `_search` body key is **`text`**, not `searchString`.
+
+## Scenario B — Prisma + Postgres (same UI)
+
+```bash
+docker compose --profile prisma up -d
+nix develop .#prisma6 --command bash -c 'cd apps/fts-geo-onboarding && bun run setup:prisma && bun run server/seed-prisma-lite.ts'
+GRAVIOLA_STORE=prisma bun run dev:api
+```
+
+Expect extra friction: NixOS Prisma engines, identifier slots, recursive `importMany` hangs,
+and REST `_search` returning **501** until FT capability merge is fixed (browser Meili still works).
+
+## Convention gaps to fix next
+
+1. `serveGraviolaRest({ meilisearch, searchFacetSchema })` one-call
+2. Config-relative paths in `graviola-fts`
+3. Shallow / projection `list` for FT populate and Prisma seed
+4. Advertise `searches` from FT-wrapped stores (Prisma 501)
+5. Optional dual-write or post-upsert `import-one` hook
+6. Document lounge peers (`react-router-dom`, `notistack`) and Vite `buffer` alias
+
+## Reference
+
+- Sandbox: `apps/fts-geo-onboarding/`
+- Friction journal: `apps/fts-geo-onboarding/FRICTION.md`
+- CLI: `apps/fts-cli/`
+- Package: `@graviola/meilisearch-sparql-store`

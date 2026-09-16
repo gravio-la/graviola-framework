@@ -20,6 +20,20 @@ export type FacetMode = "filter" | "range";
 
 export type FacetScopeAnnotation = {
   facet: FacetMode;
+  /** Display label override for facet UI */
+  label?: string;
+  /** Semantic hint for renderer dispatch: mimeType, bytes, date, person, realm, geo, … */
+  kind?: string;
+  /** Display order (lower first) */
+  order?: number;
+  /** Allow multi-select within this facet (default true for filter mode) */
+  multi?: boolean;
+  /** Max facet values to show (engine / UI hint) */
+  maxValues?: number;
+  /** Show inline under the search field */
+  quick?: boolean;
+  /** Index field holding numeric companion for range on non-numeric values (e.g. epoch seconds for dates) */
+  numericField?: string;
 };
 
 export type FacetAnnotations = {

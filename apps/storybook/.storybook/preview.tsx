@@ -63,6 +63,7 @@ const preview: Preview = {
               "Playground",
               "Scenarios",
             ],
+            "Fulltext Search",
             "sparql-schema",
             "graph-traversal",
             "table",

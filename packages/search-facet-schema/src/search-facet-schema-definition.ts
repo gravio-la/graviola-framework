@@ -34,6 +34,13 @@ export const searchFacetSchemaDefinition = {
             type: "object",
             properties: {
               facet: { enum: ["filter", "range"] },
+              label: { type: "string" },
+              kind: { type: "string" },
+              order: { type: "number" },
+              multi: { type: "boolean" },
+              maxValues: { type: "number" },
+              quick: { type: "boolean" },
+              numericField: { type: "string" },
             },
             required: ["facet"],
             additionalProperties: true,

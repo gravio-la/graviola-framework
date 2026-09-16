@@ -1,4 +1,5 @@
 import type { JsonLdEntity } from "@graviola/fulltext-search-core";
+import type { FacetStats } from "@graviola/store-core";
 
 /** Presentational contract between search hooks and paged list views. */
 export type ResultListController<T extends JsonLdEntity = JsonLdEntity> = {
@@ -38,6 +39,8 @@ export type PagedSearchController<T extends JsonLdEntity = JsonLdEntity> =
     hasData: boolean;
     isError: boolean;
     error: Error | null;
+    facetDistribution?: Record<string, Record<string, number>>;
+    facetStats?: Record<string, FacetStats>;
   };
 
 export function buildResultListController<T extends JsonLdEntity>(input: {

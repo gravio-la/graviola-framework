@@ -31,7 +31,9 @@ const anyType = (
     | "writes"
     | "statements"
     | "removes"
-    | "counts",
+    | "counts"
+    | "documentSearches"
+    | "aggregates",
 ): boolean => {
   return Object.values(inner.types).some((t) => Boolean(t.capabilities[key]));
 };
@@ -56,6 +58,8 @@ export const capabilityDescriptorFromHandshake = (
   if (anyType(inner, "removes")) desc.removes = true;
   if (anyType(inner, "counts")) desc.counts = true;
   if (anySearches(inner)) desc.searches = true;
+  if (anyType(inner, "documentSearches")) desc.documentSearches = true;
+  if (anyType(inner, "aggregates")) desc.aggregates = true;
   if (anyType(inner, "loads")) desc.exists = true;
   if (inner.resolves?.supported) desc.resolves = true;
   if (inner.calc?.supported) desc.calc = true;

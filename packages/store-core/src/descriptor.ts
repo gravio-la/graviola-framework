@@ -72,6 +72,7 @@ export type CapabilityName =
   | "streams"
   | "imports"
   | "textSearches"
+  | "documentSearches"
   | "aggregates"
   | "speaksNative"
   | "resolves"
@@ -98,6 +99,7 @@ export type CapabilityDescriptor = {
   streams?: true;
   imports?: true;
   textSearches?: true;
+  documentSearches?: true;
   aggregates?: true;
   speaksNative?: true;
   resolves?: true;

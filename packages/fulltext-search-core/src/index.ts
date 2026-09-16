@@ -11,7 +11,21 @@ export type {
   FullTextSearchAdapter,
 } from "./engine";
 
-export { isFacetFilterRange } from "./engine";
+export { isFacetFilterRange, isFacetFilterIn } from "./engine";
+export type {
+  FacetFilterIn,
+  FacetStats,
+  FacetSearchValuesQuery,
+} from "./engine";
+
+export {
+  facetDistributionToResult,
+  facetResultFromSearch,
+  remapFacetDistribution,
+  remapFacetStats,
+  resolveFacetIndexFields,
+  rewriteFiltersForIndex,
+} from "./facet-helpers";
 
 export { INDEX_DOC_IRI, INDEX_DOC_TYPE } from "./constants";
 

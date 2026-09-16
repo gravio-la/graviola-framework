@@ -1,12 +1,16 @@
 import type {
   FacetFilter,
+  FacetSearchValuesQuery,
   FullTextSearchAdapter,
   IndexDocument,
   IndexSettings,
   TextIndexQuery,
   TextIndexResult,
 } from "@graviola/fulltext-search-core";
-import { isFacetFilterRange } from "@graviola/fulltext-search-core";
+import {
+  isFacetFilterIn,
+  isFacetFilterRange,
+} from "@graviola/fulltext-search-core";
 
 export type MeilisearchConfig = {
   baseUrl: string;
@@ -80,6 +84,12 @@ async function waitForTask(
   throw new Error(`Meilisearch task ${taskUid} timed out`);
 }
 
+function renderMeiliValue(value: string | number | boolean): string {
+  return typeof value === "string"
+    ? `"${value.replace(/"/g, '\\"')}"`
+    : String(value);
+}
+
 export function renderMeiliFilter(
   filters: FacetFilter[] | undefined,
 ): string | undefined {
@@ -91,10 +101,15 @@ export function renderMeiliFilter(
       if (f.lte != null) clauses.push(`${f.field} <= ${f.lte}`);
       return clauses.join(" AND ");
     }
-    const val =
-      typeof f.value === "string"
-        ? `"${f.value.replace(/"/g, '\\"')}"`
-        : String(f.value);
+    if (isFacetFilterIn(f)) {
+      if (f.values.length === 0) return "";
+      if (f.values.length === 1) {
+        return `${f.field} = ${renderMeiliValue(f.values[0]!)}`;
+      }
+      const vals = f.values.map(renderMeiliValue).join(", ");
+      return `${f.field} IN [${vals}]`;
+    }
+    const val = renderMeiliValue(f.value);
     return `${f.field} = ${val}`;
   });
   return parts.filter(Boolean).join(" AND ");
@@ -115,6 +130,9 @@ function normalizeSearchResponse(
       (body.totalHits as number | undefined),
     facetDistribution: body.facetDistribution as
       | Record<string, Record<string, number>>
+      | undefined,
+    facetStats: body.facetStats as
+      | Record<string, { min: number; max: number }>
       | undefined,
     processingTimeMs: body.processingTimeMs as number | undefined,
     query: (body.query as string | undefined) ?? q,
@@ -247,6 +265,38 @@ export function createMeilisearchAdapter(
       }
       const json = (await res.json()) as Record<string, unknown>;
       return normalizeSearchResponse(json, q.q);
+    },
+
+    async searchFacetValues(uid, query: FacetSearchValuesQuery) {
+      const filter = renderMeiliFilter(query.filters);
+      const body: Record<string, unknown> = {
+        q: query.q,
+        facetName: query.facetName,
+      };
+      if (filter) body.filter = filter;
+
+      const res = await meiliFetch(
+        config,
+        `/indexes/${encodeURIComponent(uid)}/facet-search`,
+        {
+          method: "POST",
+          body: JSON.stringify(body),
+        },
+      );
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(
+          `Meilisearch facet-search ${uid}: ${res.status} ${text}`,
+        );
+      }
+      const json = (await res.json()) as {
+        facetHits?: { value: string; count: number }[];
+      };
+      const out: Record<string, number> = {};
+      for (const hit of json.facetHits ?? []) {
+        out[String(hit.value)] = hit.count;
+      }
+      return out;
     },
 
     async clearIndex(uid) {

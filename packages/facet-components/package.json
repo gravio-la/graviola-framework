@@ -1,0 +1,49 @@
+{
+  "name": "@graviola/facet-components",
+  "version": "0.1.0",
+  "description": "React + MUI facet UI for Graviola faceted search",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsup",
+    "depcheck": "depcheck",
+    "lint": "eslint src/**/*.{ts,tsx}",
+    "release": "bun publish --access public"
+  },
+  "dependencies": {
+    "@graviola/facet-core": "workspace:*",
+    "@graviola/store-core": "workspace:*"
+  },
+  "peerDependencies": {
+    "@graviola/edb-state-hooks": "workspace:*",
+    "@mui/icons-material": "catalog:mui",
+    "@mui/material": "catalog:mui",
+    "@tanstack/react-query": "^5",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-router-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*",
+    "@types/react": "catalog:",
+    "eslint-config-edb": "workspace:*",
+    "tsup": "^8.0.0",
+    "typescript": "^5.8.2"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": ["eslint-config-edb"]
+  }
+}

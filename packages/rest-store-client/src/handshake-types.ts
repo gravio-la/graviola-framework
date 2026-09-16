@@ -23,6 +23,9 @@ export type GraviolaTypeCapabilities = {
     caseSensitive?: boolean;
     perFieldWeights?: boolean;
   };
+  documentSearches?: boolean;
+  aggregates?: boolean;
+  facets?: { field: string; mode: "filter" | "range" }[];
 };
 
 export type GraviolaStoreHandshakeInner = {

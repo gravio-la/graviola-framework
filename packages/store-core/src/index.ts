@@ -25,6 +25,21 @@ export type { Streams } from "./capabilities/streams";
 export type { Imports, ReadableImportSource } from "./capabilities/imports";
 export type { TextSearches, TextSearchHit } from "./capabilities/text-searches";
 export type {
+  DocumentSearches,
+  FacetFilter,
+  FacetFilterEquality,
+  FacetFilterRange,
+  FacetFilterIn,
+  FacetStats,
+  SearchDocument,
+  SearchDocumentsOptions,
+  SearchDocumentsResult,
+} from "./capabilities/document-searches";
+export {
+  isFacetFilterRange,
+  isFacetFilterIn,
+} from "./capabilities/document-searches";
+export type {
   Aggregates,
   FacetResult,
   FacetBucket,

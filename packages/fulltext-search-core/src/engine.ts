@@ -1,3 +1,5 @@
+import type { FacetFilter, FacetStats } from "@graviola/store-core";
+
 /** Normalized index settings — engine adapters map to native syntax. */
 export type IndexSettings = {
   primaryKey?: string;
@@ -9,23 +11,20 @@ export type IndexSettings = {
 /** Document stored in a text index (primary key + projected fields + carriers). */
 export type IndexDocument = { id: string } & Record<string, unknown>;
 
-export type FacetFilterEquality = {
-  field: string;
-  value: string | number | boolean;
+export type {
+  FacetFilter,
+  FacetFilterEquality,
+  FacetFilterRange,
+  FacetFilterIn,
+  FacetStats,
+} from "@graviola/store-core";
+export { isFacetFilterRange, isFacetFilterIn } from "@graviola/store-core";
+
+export type FacetSearchValuesQuery = {
+  facetName: string;
+  q: string;
+  filters?: FacetFilter[];
 };
-
-export type FacetFilterRange = {
-  field: string;
-  gte?: number;
-  lte?: number;
-};
-
-/** Structured facet filter — each engine renders its own syntax. */
-export type FacetFilter = FacetFilterEquality | FacetFilterRange;
-
-export function isFacetFilterRange(f: FacetFilter): f is FacetFilterRange {
-  return "gte" in f || "lte" in f;
-}
 
 export type TextIndexQuery = {
   q: string;
@@ -46,6 +45,7 @@ export type TextIndexResult = {
   hits: TextIndexHit[];
   estimatedTotalHits?: number;
   facetDistribution?: Record<string, Record<string, number>>;
+  facetStats?: Record<string, FacetStats>;
   processingTimeMs?: number;
   query?: string;
 };
@@ -73,4 +73,9 @@ export interface FullTextSearchAdapter {
   getIndexStats?(uid: string): Promise<IndexStats | null>;
   /** Optional id charset sanitiser; core falls back to base64url. */
   sanitizeId?(id: string): string;
+  /** High-cardinality facet value search (Meili facet-search, Solr terms, …). */
+  searchFacetValues?(
+    uid: string,
+    query: FacetSearchValuesQuery,
+  ): Promise<Record<string, number>>;
 }

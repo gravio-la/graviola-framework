@@ -1,6 +1,7 @@
 import type { PrimaryFieldDeclaration } from "@graviola/edb-core-types";
 import type {
   FacetMode,
+  FacetScopeAnnotation,
   ScopePointer,
   SearchFacetSchema,
 } from "@graviola/search-facet-schema";
@@ -15,11 +16,14 @@ import type { FullTextSearchAdapter } from "../engine";
 import { defaultIndexUid } from "../id-mapping";
 
 export type FacetFieldSpec = {
+  /** JSON Schema scope pointer */
+  scope: ScopePointer;
   /** Schema property name */
   field: string;
   /** Index attribute name */
   indexField: string;
   mode: FacetMode;
+  annotation: FacetScopeAnnotation;
 };
 
 export type TypeRouting = {
@@ -88,9 +92,11 @@ function buildTypeRouting(
     const facetCfg = sidecar.facets?.scopes?.[scope];
     if (facetCfg) {
       facetFields.push({
+        scope,
         field: prop,
         indexField,
         mode: facetCfg.facet,
+        annotation: facetCfg,
       });
     }
   }

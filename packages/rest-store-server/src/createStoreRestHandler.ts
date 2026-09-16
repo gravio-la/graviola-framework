@@ -23,10 +23,36 @@ import {
   matchExtensionRoute,
   normalizeBasePath,
   stripBasePath,
+  type FacetableFieldWire,
   type GraviolaAuthMode,
   type GraviolaIriHandlingMode,
   type GraviolaStoreHandshakeResponse,
 } from "./handshake.js";
+
+const extractFacetFieldsByType = (
+  store: unknown,
+): Record<string, FacetableFieldWire[]> => {
+  const routing = (
+    store as {
+      routing?: {
+        types: Map<
+          string,
+          { facetFields?: Array<{ field: string; mode: "filter" | "range" }> }
+        >;
+      };
+    }
+  ).routing;
+  if (!routing?.types) return {};
+  const out: Record<string, FacetableFieldWire[]> = {};
+  for (const [typeName, tr] of routing.types.entries()) {
+    const fields = tr.facetFields?.map((f) => ({
+      field: f.field,
+      mode: f.mode,
+    }));
+    if (fields?.length) out[typeName] = fields;
+  }
+  return out;
+};
 
 export type StoreRestHandler = (req: Request) => Promise<Response | null>;
 
@@ -157,6 +183,22 @@ const executeOnStore = async (
         cmd.text,
         cmd.limit,
       );
+    case "searchDocuments":
+      return (store.searchDocuments as Function)(cmd.typeName, cmd.text, {
+        limit: cmd.limit,
+        offset: cmd.offset,
+        filters: cmd.filters,
+        facets: cmd.facets,
+        hydrate: cmd.hydrate,
+        fields: cmd.fields,
+      });
+    case "facet":
+      return (store.facet as Function)(cmd.typeName, {
+        facets: cmd.facets,
+        filters: cmd.filters,
+        where: cmd.where,
+        limit: cmd.limit,
+      });
     case "findByAuthority": {
       const finder = (
         store as {
@@ -250,12 +292,15 @@ export const createStoreRestHandler = <R extends SchemaRegistry>(
   const typeNames = opts.typeNames;
   const store = opts.store;
 
+  const facetFieldsByType = extractFacetFieldsByType(store);
+
   const handshakeBody: GraviolaStoreHandshakeResponse = computeHandshake(
     store.capabilities,
     store,
     {
       basePath,
       typeNames,
+      facetFieldsByType,
       iriHandling,
       auth: opts.auth
         ? { modes: opts.auth.modes, apiKeyHeader: opts.auth.apiKeyHeader }
@@ -304,6 +349,8 @@ export const createStoreRestHandler = <R extends SchemaRegistry>(
       cmd.kind === "filterOne" ||
       cmd.kind === "count" ||
       cmd.kind === "search" ||
+      cmd.kind === "searchDocuments" ||
+      cmd.kind === "facet" ||
       cmd.kind === "upsert" ||
       cmd.kind === "entitiesWithClasses" ||
       cmd.kind === "writeStatements" ||

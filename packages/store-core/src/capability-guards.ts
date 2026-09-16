@@ -1,6 +1,7 @@
 import type { Aggregates } from "./capabilities/aggregates";
 import type { Calc } from "./capabilities/calc";
 import type { Counts } from "./capabilities/counts";
+import type { DocumentSearches } from "./capabilities/document-searches";
 import type { Exists } from "./capabilities/exists";
 import type { Filters } from "./capabilities/filters";
 import type { FlatResultSet } from "./capabilities/flat-result-set";
@@ -39,6 +40,7 @@ export type CapabilityFacets<R extends SchemaRegistry> = {
   streams: Streams<R>;
   imports: Imports<R>;
   textSearches: TextSearches;
+  documentSearches: DocumentSearches<R>;
   aggregates: Aggregates<R>;
   speaksNative: SpeaksNative<string, unknown>;
   resolves: Resolves;

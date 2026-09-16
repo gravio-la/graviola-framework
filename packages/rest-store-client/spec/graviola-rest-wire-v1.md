@@ -6,13 +6,15 @@ Normative HTTP mapping for the logical [`Store<R>`](../../store-core) surface. R
 
 Type-scoped paths (no `/entities` prefix):
 
-| Pattern               | Purpose               |
-| --------------------- | --------------------- |
-| `/{typeName}/{id}`    | Single entity         |
-| `/{typeName}`         | Type-level list       |
-| `/{typeName}/_query`  | Typed filter (`POST`) |
-| `/{typeName}/_count`  | Count (`POST`)        |
-| `/{typeName}/_search` | Text search (`POST`)  |
+| Pattern                         | Purpose                                             |
+| ------------------------------- | --------------------------------------------------- |
+| `/{typeName}/{id}`              | Single entity                                       |
+| `/{typeName}`                   | Type-level list                                     |
+| `/{typeName}/_query`            | Typed filter (`POST`)                               |
+| `/{typeName}/_count`            | Count (`POST`)                                      |
+| `/{typeName}/_search`           | Text search (`POST`)                                |
+| `/{typeName}/_search-documents` | Filtered document search (`POST`)                   |
+| `/{typeName}/_facet`            | Facet aggregation (`POST`, capability `aggregates`) |
 
 Underscore-prefixed segments are **operations**, avoiding collisions with arbitrary type names.
 
@@ -29,17 +31,18 @@ Mismatch MUST surface as handshake/config failure, not silent wrong entity.
 
 ## Operations
 
-| Store intent                      | HTTP     | Route                                                             |
-| --------------------------------- | -------- | ----------------------------------------------------------------- |
-| `loadOne`                         | `GET`    | `/{typeName}/{id}` — `404` + `entity_not_found` when missing      |
-| `exists`                          | `HEAD`   | `/{typeName}/{id}` — `200` / `404`                                |
-| `upsert`                          | `PUT`    | `/{typeName}/{id}` — JSON body = entity document                  |
-| `remove`                          | `DELETE` | `/{typeName}/{id}`                                                |
-| `list`                            | `GET`    | `/{typeName}?limit=&offset=&cursor=`                              |
-| `filterMany` / `filterOne`        | `POST`   | `/{typeName}/_query` — body below                                 |
-| `count`                           | `POST`   | `/{typeName}/_count` — body `{ "where": … }`                      |
-| `searchByLabel` / text row search | `POST`   | `/{typeName}/_search` — body below                                |
-| `loadOne` + envelope              | `GET`    | Same URL — `Accept: application/vnd.graviola-store.envelope+json` |
+| Store intent                      | HTTP     | Route                                                                        |
+| --------------------------------- | -------- | ---------------------------------------------------------------------------- |
+| `loadOne`                         | `GET`    | `/{typeName}/{id}` — `404` + `entity_not_found` when missing                 |
+| `exists`                          | `HEAD`   | `/{typeName}/{id}` — `200` / `404`                                           |
+| `upsert`                          | `PUT`    | `/{typeName}/{id}` — JSON body = entity document                             |
+| `remove`                          | `DELETE` | `/{typeName}/{id}`                                                           |
+| `list`                            | `GET`    | `/{typeName}?limit=&offset=&cursor=`                                         |
+| `filterMany` / `filterOne`        | `POST`   | `/{typeName}/_query` — body below                                            |
+| `count`                           | `POST`   | `/{typeName}/_count` — body `{ "where": … }`                                 |
+| `searchByLabel` / text row search | `POST`   | `/{typeName}/_search` — body below                                           |
+| `searchDocuments`                 | `POST`   | `/{typeName}/_search-documents` — body below (capability `documentSearches`) |
+| `loadOne` + envelope              | `GET`    | Same URL — `Accept: application/vnd.graviola-store.envelope+json`            |
 
 ### `_query` body
 
@@ -70,6 +73,65 @@ Servers SHOULD ignore unknown keys.
   "limit": 50
 }
 ```
+
+### `_search-documents` body
+
+Requires handshake capability `documentSearches` on the type. Returns full JSON-LD documents (not typed entity rows).
+
+```json
+{
+  "text": "",
+  "limit": 50,
+  "offset": 0,
+  "filters": [{ "field": "parentDirectory", "value": "/home/user/photos" }],
+  "facets": ["mimeType", "sizeBytes"],
+  "hydrate": false,
+  "fields": ["fileName", "mimeType"]
+}
+```
+
+Response (`SearchDocumentsResult`):
+
+```json
+{
+  "documents": [],
+  "estimatedTotalHits": 123,
+  "processingTimeMs": 4,
+  "query": "",
+  "facetDistribution": {},
+  "facetStats": { "sizeBytes": { "min": 0, "max": 999999999 } }
+}
+```
+
+`filters` entries are equality `{ "field", "value" }`, multi-value `{ "field", "values": [...] }`, or range `{ "field", "gte"?, "lte"? }`.
+
+### `_facet` body
+
+Requires handshake capability `aggregates` on the type.
+
+```json
+{
+  "facets": ["mimeType", "sizeBytes"],
+  "filters": [{ "field": "realmDeviceId", "value": "nas-01" }],
+  "where": {},
+  "limit": 100
+}
+```
+
+Response (`FacetResult`):
+
+```json
+{
+  "matched": 1234,
+  "facets": {
+    "mimeType": [{ "value": "image/jpeg", "count": 42 }]
+  },
+  "facetStats": { "sizeBytes": { "min": 1024, "max": 999999999 } },
+  "approximate": false
+}
+```
+
+Per-type handshake capabilities MAY include `facets: [{ "field": "mimeType", "mode": "filter" }, …]` so clients discover facetable fields without a local sidecar.
 
 ### Optional: `resolveTypes`
 

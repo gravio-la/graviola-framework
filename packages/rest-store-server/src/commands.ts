@@ -1,5 +1,6 @@
 import type {
   BaseStore,
+  FacetFilter,
   SchemaRegistry,
   StoreDocumentsSearchOptions,
   StoreListQuery,
@@ -50,6 +51,25 @@ export type StoreCommand<R extends SchemaRegistry = SchemaRegistry> =
       text: string;
       limit?: number;
       mode?: "typed" | "entity_rows";
+    }
+  | {
+      kind: "searchDocuments";
+      typeName: string;
+      text: string;
+      limit?: number;
+      offset?: number;
+      filters?: FacetFilter[];
+      facets?: string[];
+      hydrate?: boolean;
+      fields?: string[];
+    }
+  | {
+      kind: "facet";
+      typeName: string;
+      facets: string[];
+      filters?: FacetFilter[];
+      where?: Record<string, unknown>;
+      limit?: number;
     }
   | {
       kind: "findByAuthority";
@@ -240,6 +260,18 @@ export const decodeStorePath = (
     return { kind: "search", typeName, text: "" };
   }
 
+  if (
+    segments.length === 2 &&
+    segments[1] === "_search-documents" &&
+    method === "POST"
+  ) {
+    return { kind: "searchDocuments", typeName, text: "" };
+  }
+
+  if (segments.length === 2 && segments[1] === "_facet" && method === "POST") {
+    return { kind: "facet", typeName, facets: [] };
+  }
+
   // GET /{typeName}/_by-authority?authorityIRI=…&repositoryIRI=…&limit=…
   if (
     segments.length === 2 &&
@@ -339,6 +371,8 @@ export const enrichCommandFromBody = async (
     cmd.kind === "filterOne" ||
     cmd.kind === "count" ||
     cmd.kind === "search" ||
+    cmd.kind === "searchDocuments" ||
+    cmd.kind === "facet" ||
     cmd.kind === "entitiesWithClasses"
   ) {
     let body: unknown = {};
@@ -375,6 +409,54 @@ export const enrichCommandFromBody = async (
               : undefined,
         insensitive:
           typeof o.insensitive === "boolean" ? o.insensitive : undefined,
+      };
+    }
+    if (cmd.kind === "searchDocuments") {
+      const o =
+        body && typeof body === "object"
+          ? (body as Record<string, unknown>)
+          : {};
+      const filters = Array.isArray(o.filters)
+        ? (o.filters as FacetFilter[])
+        : undefined;
+      const fields = Array.isArray(o.fields)
+        ? o.fields.filter((f): f is string => typeof f === "string")
+        : undefined;
+      const facets = Array.isArray(o.facets)
+        ? o.facets.filter((f): f is string => typeof f === "string")
+        : undefined;
+      return {
+        ...cmd,
+        text: typeof o.text === "string" ? o.text : "",
+        limit: typeof o.limit === "number" ? o.limit : undefined,
+        offset: typeof o.offset === "number" ? o.offset : undefined,
+        filters,
+        facets,
+        hydrate: typeof o.hydrate === "boolean" ? o.hydrate : undefined,
+        fields,
+      };
+    }
+    if (cmd.kind === "facet") {
+      const o =
+        body && typeof body === "object"
+          ? (body as Record<string, unknown>)
+          : {};
+      const facets = Array.isArray(o.facets)
+        ? o.facets.filter((f): f is string => typeof f === "string")
+        : [];
+      const filters = Array.isArray(o.filters)
+        ? (o.filters as FacetFilter[])
+        : undefined;
+      const where =
+        o.where && typeof o.where === "object"
+          ? (o.where as Record<string, unknown>)
+          : undefined;
+      return {
+        ...cmd,
+        facets,
+        filters,
+        where,
+        limit: typeof o.limit === "number" ? o.limit : undefined,
       };
     }
     const o =
@@ -490,6 +572,18 @@ export const encodeCommandResult = (
       const items = Array.isArray(result) ? result : [];
       return jsonResponse({ items });
     }
+    case "searchDocuments":
+      return jsonResponse(
+        result && typeof result === "object"
+          ? result
+          : { documents: [], query: cmd.text },
+      );
+    case "facet":
+      return jsonResponse(
+        result && typeof result === "object"
+          ? result
+          : { matched: 0, facets: {} },
+      );
     case "findByAuthority": {
       const items = Array.isArray(result) ? result : [];
       return jsonResponse({ items });
@@ -551,6 +645,8 @@ export type CommandCapability =
   | "filters"
   | "counts"
   | "searches"
+  | "documentSearches"
+  | "aggregates"
   | "writes"
   | "statements"
   | "calc"
@@ -574,6 +670,10 @@ export const commandCapability = (cmd: StoreCommand): CommandCapability => {
     case "search":
     case "findByAuthority":
       return "searches";
+    case "searchDocuments":
+      return "documentSearches";
+    case "facet":
+      return "aggregates";
     case "upsert":
       return "writes";
     case "writeStatements":

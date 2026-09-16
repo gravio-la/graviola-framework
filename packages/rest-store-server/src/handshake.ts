@@ -18,6 +18,9 @@ export type GraviolaTypeCapabilities = {
     caseSensitive?: boolean;
     perFieldWeights?: boolean;
   };
+  documentSearches?: boolean;
+  aggregates?: boolean;
+  facets?: { field: string; mode: "filter" | "range" }[];
 };
 
 export type GraviolaStoreHandshakeInner = {
@@ -54,9 +57,15 @@ export type GraviolaStoreHandshakeResponse = {
   graviolaStore: GraviolaStoreHandshakeInner;
 };
 
+export type FacetableFieldWire = {
+  field: string;
+  mode: "filter" | "range";
+};
+
 export type HandshakeOptions = {
   basePath: string;
   typeNames: string[];
+  facetFieldsByType?: Record<string, FacetableFieldWire[]>;
   iriHandling: GraviolaIriHandlingMode[];
   auth?: {
     modes: GraviolaAuthMode[];
@@ -94,6 +103,8 @@ const typeCapabilitiesFromDescriptor = (
   } else if (descriptor.searches) {
     caps.searches = { mode: "substring", ranked: false };
   }
+  if (descriptor.documentSearches) caps.documentSearches = true;
+  if (descriptor.aggregates) caps.aggregates = true;
   return caps;
 };
 
@@ -106,7 +117,12 @@ export const computeHandshake = (
   const perTypeCaps = typeCapabilitiesFromDescriptor(descriptor);
   const types: GraviolaStoreHandshakeResponse["graviolaStore"]["types"] = {};
   for (const typeName of opts.typeNames) {
-    types[typeName] = { capabilities: { ...perTypeCaps } };
+    const caps = { ...perTypeCaps };
+    const facetFields = opts.facetFieldsByType?.[typeName];
+    if (facetFields?.length) {
+      caps.facets = facetFields;
+    }
+    types[typeName] = { capabilities: caps };
   }
 
   const resolves = opts.resolvesSupported ?? Boolean(descriptor.resolves);

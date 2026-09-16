@@ -34,7 +34,8 @@
   "dependencies": {
     "@graviola/edb-core-types": "workspace:*",
     "@graviola/search-facet-schema": "workspace:*",
-    "@graviola/store-core": "workspace:*"
+    "@graviola/store-core": "workspace:*",
+    "@graviola/typed-query-types": "workspace:*"
   },
   "devDependencies": {
     "@graviola/edb-tsconfig": "workspace:*",

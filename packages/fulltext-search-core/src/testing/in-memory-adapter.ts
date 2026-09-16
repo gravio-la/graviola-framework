@@ -5,7 +5,7 @@ import type {
   TextIndexQuery,
   TextIndexResult,
 } from "../engine";
-import { isFacetFilterRange } from "../engine";
+import { isFacetFilterIn, isFacetFilterRange } from "../engine";
 
 type StoredDoc = IndexDocument;
 
@@ -37,6 +37,8 @@ function docMatchesFilters(
       if (Number.isNaN(num)) return false;
       if (f.gte != null && num < f.gte) return false;
       if (f.lte != null && num > f.lte) return false;
+    } else if (isFacetFilterIn(f)) {
+      if (!f.values.some((v) => String(val) === String(v))) return false;
     } else {
       if (String(val) !== String(f.value)) return false;
     }

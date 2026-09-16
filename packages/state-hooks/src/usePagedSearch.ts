@@ -1,11 +1,12 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
+import type { JsonLdEntity } from "@graviola/fulltext-search-core";
 import type {
+  BaseStore,
+  DocumentSearches,
   FacetFilter,
-  FulltextSearchStore,
-  JsonLdEntity,
-} from "@graviola/fulltext-search-core";
-import type { SchemaRegistry } from "@graviola/store-core";
+  SchemaRegistry,
+} from "@graviola/store-core";
 import {
   buildResultListController,
   type PagedSearchController,
@@ -15,12 +16,13 @@ export type UsePagedSearchParams<
   R extends SchemaRegistry = SchemaRegistry,
   T extends JsonLdEntity = JsonLdEntity,
 > = {
-  store: FulltextSearchStore<R> | null;
+  store: (BaseStore<R> & DocumentSearches<R>) | null;
   typeName: keyof R & string;
   query: string;
   page: number;
   limit: number;
   filters?: FacetFilter[];
+  facets?: string[];
   hydrate?: boolean;
   enabled?: boolean;
   queryKeyPrefix?: string;
@@ -38,6 +40,7 @@ export function usePagedSearch<
     page,
     limit,
     filters,
+    facets,
     hydrate = false,
     enabled = true,
     queryKeyPrefix = "fulltext-search-paged",
@@ -52,9 +55,10 @@ export function usePagedSearch<
       limit,
       offset,
       filters,
+      facets,
       hydrate,
     }),
-    [searchQuery, limit, offset, filters, hydrate],
+    [searchQuery, limit, offset, filters, facets, hydrate],
   );
 
   const query = useQuery({
@@ -65,6 +69,7 @@ export function usePagedSearch<
         offset: searchParams.offset,
         hydrate: searchParams.hydrate,
         filters: searchParams.filters,
+        facets: searchParams.facets,
       }),
     enabled: enabled && Boolean(store),
     placeholderData: (prev) => prev,
@@ -87,6 +92,8 @@ export function usePagedSearch<
       hasData: Boolean(query.data),
       isError: query.isError,
       error: (query.error as Error | null) ?? null,
+      facetDistribution: query.data?.facetDistribution,
+      facetStats: query.data?.facetStats,
     };
   }, [
     query.data,

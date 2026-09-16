@@ -1,23 +1,25 @@
 import { useMemo } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import type { JsonLdEntity } from "@graviola/fulltext-search-core";
 import type {
+  BaseStore,
+  DocumentSearches,
   FacetFilter,
-  FulltextSearchStore,
-  JsonLdEntity,
+  SchemaRegistry,
   SearchDocumentsResult,
-} from "@graviola/fulltext-search-core";
-import type { SchemaRegistry } from "@graviola/store-core";
+} from "@graviola/store-core";
 import type { InfiniteResultListController } from "./resultListController";
 
 export type UseInfiniteSearchParams<
   R extends SchemaRegistry = SchemaRegistry,
   T extends JsonLdEntity = JsonLdEntity,
 > = {
-  store: FulltextSearchStore<R> | null;
+  store: (BaseStore<R> & DocumentSearches<R>) | null;
   typeName: keyof R & string;
   query: string;
   limit: number;
   filters?: FacetFilter[];
+  facets?: string[];
   hydrate?: boolean;
   enabled?: boolean;
   queryKeyPrefix?: string;
@@ -33,6 +35,7 @@ export function useInfiniteSearch<
     query: searchQuery,
     limit,
     filters,
+    facets,
     hydrate = false,
     enabled = true,
     queryKeyPrefix = "fulltext-search-infinite",
@@ -41,7 +44,7 @@ export function useInfiniteSearch<
   const query = useInfiniteQuery({
     queryKey: [
       queryKeyPrefix,
-      { query: searchQuery, limit, filters, hydrate },
+      { query: searchQuery, limit, filters, facets, hydrate },
       typeName,
     ],
     queryFn: ({ pageParam }) =>
@@ -50,6 +53,7 @@ export function useInfiniteSearch<
         offset: pageParam,
         hydrate,
         filters,
+        facets,
       }),
     initialPageParam: 0,
     getNextPageParam: (

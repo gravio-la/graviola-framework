@@ -6,7 +6,10 @@ import {
   type CapabilityName,
   type CalcWarmResult,
   type Counts,
+  type Aggregates,
+  type DocumentSearches,
   type EntityOf,
+  type FacetResult,
   type Exists,
   type Filters,
   type Identifies,
@@ -16,6 +19,9 @@ import {
   type Removes,
   type Resolves,
   type SchemaRegistry,
+  type SearchDocument,
+  type SearchDocumentsOptions,
+  type SearchDocumentsResult,
   type Searches,
   type Statements,
   type StoreDocumentsSearchOptions,
@@ -31,6 +37,7 @@ import type {
   GraviolaIriHandlingMode,
   GraviolaStoreHandshakeInner,
   GraviolaStoreHandshakeResponse,
+  GraviolaTypeCapabilities,
 } from "../handshake-types";
 import { GRAVIOLA_STORE_ENVELOPE_ACCEPT } from "../handshake-types";
 import { GraviolaRestError } from "../shared/errors";
@@ -87,6 +94,8 @@ export type RESTClientStore<R extends SchemaRegistry = SchemaRegistry> =
     Removes<R> &
     Counts<R> &
     Searches<R> &
+    DocumentSearches<R> &
+    Partial<Aggregates<R>> &
     Exists<R> &
     Resolves &
     Statements<R> & {
@@ -106,6 +115,10 @@ export type RESTClientStore<R extends SchemaRegistry = SchemaRegistry> =
         repositoryIRI?: string,
         limit?: number,
       ) => Promise<EntityOf<R, keyof R & string>[]>;
+      /** Facetable fields advertised in the handshake for a type. */
+      facetableFields: (
+        typeName: string,
+      ) => NonNullable<GraviolaTypeCapabilities["facets"]>;
     };
 
 const ensureProtocolVersion = (inner: GraviolaStoreHandshakeInner): void => {
@@ -408,6 +421,31 @@ export const createRESTClientStoreClient = <
       } else items = [];
       return items as EntityOf<R, T>[];
     },
+    searchDocuments: async <T extends SearchDocument = SearchDocument>(
+      typeName: keyof R & string,
+      text: string,
+      options?: SearchDocumentsOptions,
+    ): Promise<SearchDocumentsResult<T>> => {
+      capOrThrow(capabilities, "documentSearches");
+      const path = rel(`${encodeURIComponent(typeName)}/_search-documents`);
+      const res = await opts.transport.postJson(path, {
+        text,
+        limit: options?.limit,
+        offset: options?.offset,
+        filters: options?.filters,
+        facets: options?.facets,
+        hydrate: options?.hydrate,
+        fields: options?.fields,
+      });
+      const json: unknown = await res.json();
+      if (json && typeof json === "object" && "documents" in json) {
+        return json as SearchDocumentsResult<T>;
+      }
+      return {
+        documents: [],
+        query: text,
+      };
+    },
     findEntityByTypeName: async (
       typeName: string,
       searchString: string,
@@ -528,6 +566,27 @@ export const createRESTClientStoreClient = <
       });
       const json: unknown = await res.json();
       return json as CalcWarmResult;
+    },
+    facet: async <T extends keyof R & string>(
+      typeName: T,
+      options: {
+        facets: string[];
+        filters?: SearchDocumentsOptions["filters"];
+        where?: Record<string, unknown>;
+        limit?: number;
+      },
+    ): Promise<FacetResult> => {
+      capOrThrow(capabilities, "aggregates");
+      const path = rel(`${encodeURIComponent(typeName)}/_facet`);
+      const res = await opts.transport.postJson(path, options);
+      const json: unknown = await res.json();
+      if (json && typeof json === "object" && "facets" in json) {
+        return json as FacetResult;
+      }
+      return { matched: 0, facets: {} };
+    },
+    facetableFields: (typeName: string) => {
+      return inner.types[typeName]?.capabilities.facets ?? [];
     },
   };
 

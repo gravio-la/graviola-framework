@@ -5,26 +5,26 @@ import type {
   Aggregates,
   BaseStore,
   CapabilityDescriptor,
+  DocumentSearches,
   EntityOf,
-  FacetResult,
+  FacetFilter,
   Filters,
   Imports,
   Loads,
   ReadableImportSource,
   SchemaRegistry,
+  SearchDocumentsOptions,
+  SearchDocumentsResult,
   Searches,
   StoreDocumentsSearchOptions,
   StoreId,
   TextSearchHit,
   TextSearches,
 } from "@graviola/store-core";
+import type { TypedWhereInput } from "@graviola/typed-query-types";
 import type { JSONSchema7 } from "json-schema";
 
-import type {
-  FullTextSearchAdapter,
-  FacetFilter,
-  TextIndexQuery,
-} from "./engine";
+import type { FullTextSearchAdapter, TextIndexQuery } from "./engine";
 import {
   hitToJsonLd,
   mergeHydratedStub,
@@ -33,11 +33,16 @@ import {
 import { defaultIndexIdCodec, type IndexIdCodec } from "./id-mapping";
 import { projectEntityToIndexDoc } from "./project-entity";
 import {
+  facetResultFromSearch,
+  remapFacetDistribution,
+  remapFacetStats,
+  resolveFacetIndexFields,
+  rewriteFiltersForIndex,
+} from "./facet-helpers";
+import {
   buildRoutingPolicy,
   getTypeRouting,
-  isFacetProperty,
   isFulltextType,
-  propertyNameFromScope,
   resolveIndexField,
   type RoutingPolicy,
 } from "./routing/build-routing-policy";
@@ -54,25 +59,10 @@ export type PrimaryStore<R extends SchemaRegistry = SchemaRegistry> =
     Partial<Aggregates<R>> &
     Partial<Filters<R>>;
 
-export type SearchDocumentsOptions = {
-  limit?: number;
-  offset?: number;
-  filters?: FacetFilter[];
-  /**
-   * When true, merge each hit with the primary document (default false).
-   * Prefers one `filterMany({ entityIRIs })` batch; falls back to N× `loadOne`.
-   */
-  hydrate?: boolean;
-  fields?: string[];
-};
-
-export type SearchDocumentsResult<T = JsonLdEntity> = {
-  documents: T[];
-  estimatedTotalHits?: number;
-  processingTimeMs?: number;
-  query: string;
-  facetDistribution?: Record<string, Record<string, number>>;
-};
+export type {
+  SearchDocumentsOptions,
+  SearchDocumentsResult,
+} from "@graviola/store-core";
 
 export type FulltextSearchStoreConfig<
   R extends SchemaRegistry = SchemaRegistry,
@@ -105,6 +95,7 @@ export type FulltextSearchStoreConfig<
 export type FulltextSearchStore<R extends SchemaRegistry = SchemaRegistry> =
   PrimaryStore<R> &
     TextSearches &
+    DocumentSearches<R> &
     Aggregates<R> &
     Searches<R> &
     Filters<R> &
@@ -115,11 +106,6 @@ export type FulltextSearchStore<R extends SchemaRegistry = SchemaRegistry> =
       unsubscribeFulltextIndexSync: () => void;
       /** Await queued index sync (tests). No-op when sync is inactive. */
       flushFulltextIndexSync: () => Promise<void>;
-      searchDocuments<T extends JsonLdEntity = JsonLdEntity>(
-        typeName: keyof R & string,
-        text: string,
-        options?: SearchDocumentsOptions,
-      ): Promise<SearchDocumentsResult<T>>;
       importAllSearchableTypes(
         source: ReadableImportSource<R> & {
           list?: (
@@ -138,6 +124,7 @@ function mergeCapabilities(
     ...primary,
     searches: true,
     textSearches: true,
+    documentSearches: true,
     aggregates: true,
     imports: true,
     filters: primary.filters ?? true,
@@ -164,29 +151,6 @@ function orderByIris<T>(iris: string[], docs: T[]): T[] {
   return iris
     .map((iri) => byIri.get(iri))
     .filter((d): d is T => d !== undefined);
-}
-
-function facetDistributionToResult(
-  distribution: Record<string, Record<string, number>> | undefined,
-  facetIndexFields: string[],
-  propertyFields: string[],
-  matched: number,
-): FacetResult {
-  const facets: FacetResult["facets"] = {};
-  for (let i = 0; i < facetIndexFields.length; i++) {
-    const indexField = facetIndexFields[i]!;
-    const propField = propertyFields[i] ?? indexField;
-    const buckets = distribution?.[indexField];
-    if (!buckets) {
-      facets[propField] = [];
-      continue;
-    }
-    facets[propField] = Object.entries(buckets).map(([value, count]) => ({
-      value,
-      count,
-    }));
-  }
-  return { matched, facets };
 }
 
 type ListCapableSource<R extends SchemaRegistry> = ReadableImportSource<R> & {
@@ -326,12 +290,19 @@ export function initFulltextSearchStore<R extends SchemaRegistry>(
         attributesToSearchOn = typeRouting.fulltextIndexFields;
       }
 
+      const { facetIndexFields, propertyFields } = resolveFacetIndexFields(
+        routing,
+        typeName,
+        options.facets,
+      );
+
       const response = await runIndexSearch(typeName, {
         q: text,
         limit,
         offset,
         attributesToSearchOn,
-        filters: options.filters,
+        filters: rewriteFiltersForIndex(typeRouting, options.filters),
+        facets: facetIndexFields.length > 0 ? facetIndexFields : undefined,
       });
 
       let documents = response.hits.map((hit) =>
@@ -350,7 +321,11 @@ export function initFulltextSearchStore<R extends SchemaRegistry>(
         estimatedTotalHits: response.estimatedTotalHits,
         processingTimeMs: response.processingTimeMs,
         query: text,
-        facetDistribution: response.facetDistribution,
+        facetDistribution: remapFacetDistribution(
+          typeRouting,
+          response.facetDistribution,
+        ),
+        facetStats: remapFacetStats(typeRouting, response.facetStats),
       };
     },
 
@@ -538,38 +513,30 @@ export function initFulltextSearchStore<R extends SchemaRegistry>(
 
     async facet<T extends keyof R & string>(
       typeName: T,
-      options: { facets: string[] },
+      options: {
+        facets: string[];
+        filters?: FacetFilter[];
+        where?: TypedWhereInput<EntityOf<R, T>>;
+        limit?: number;
+      },
     ) {
       const typeRouting = getTypeRouting(routing, typeName);
       if (!typeRouting) {
         throw new Error(`Unknown type "${typeName}" in routing policy`);
       }
 
-      const facetIndexFields: string[] = [];
-      const propertyFields: string[] = [];
-      const rejected: string[] = [];
-
-      for (const f of options.facets) {
-        const prop = f.startsWith("#/") ? propertyNameFromScope(f) : f;
-        if (!prop || !isFacetProperty(routing, typeName, prop)) {
-          rejected.push(f);
-          continue;
-        }
-        const indexField = resolveIndexField(routing, typeName, f);
-        if (indexField) {
-          facetIndexFields.push(indexField);
-          propertyFields.push(prop);
-        } else {
-          rejected.push(f);
-        }
-      }
+      const { facetIndexFields, propertyFields } = resolveFacetIndexFields(
+        routing,
+        typeName,
+        options.facets,
+      );
 
       if (facetIndexFields.length === 0) {
         if (typeof primary.facet === "function") {
           return primary.facet(typeName, options);
         }
         throw new Error(
-          `No facet-enabled fields in sidecar for: ${options.facets.join(", ")}${rejected.length ? ` (not routable: ${rejected.join(", ")})` : ""}`,
+          `No facet-enabled fields in sidecar for: ${options.facets.join(", ")}`,
         );
       }
 
@@ -581,19 +548,10 @@ export function initFulltextSearchStore<R extends SchemaRegistry>(
         q: "",
         limit: 0,
         facets: facetIndexFields,
+        filters: rewriteFiltersForIndex(typeRouting, options.filters),
       });
 
-      const matched =
-        response.estimatedTotalHits ??
-        Object.values(response.facetDistribution ?? {})[0]?.length ??
-        0;
-
-      return facetDistributionToResult(
-        response.facetDistribution,
-        facetIndexFields,
-        propertyFields,
-        matched,
-      );
+      return facetResultFromSearch(typeRouting, response, propertyFields);
     },
 
     async importOne<T extends keyof R & string>(
