@@ -31,6 +31,10 @@
     "dev": "turbo run dev --parallel",
     "dev:api": "turbo run dev:api",
     "dev:portal": "turbo run dev --parallel --filter='./platform/*'",
+    "dev:portal:db": "docker compose -f platform/docker-compose.yml up -d --wait",
+    "seed:portal-registry": "bun run platform/seed/portal-registry.seed.ts",
+    "clean:primary-db": "bun run platform/scripts/clean-primary-db.ts",
+    "clean:portal-registry": "bun run platform/scripts/clean-portal-registry.ts",
     "dev:storybook": "turbo run storybook --filter='./apps/storybook'",
     "sample:geo": "bun run --filter @graviola/sample-data generate:geo",
     "dev:packages": "turbo run dev --parallel --filter='./packages/*'",
@@ -99,6 +103,9 @@
     }
   },
   "devDependencies": {
+    "@graviola/edb-secondary-sources": "workspace:*",
+    "@graviola/rest-store-client": "workspace:*",
+    "yaml": "^2.7.0",
     "@changesets/cli": "^2.27.12",
     "@turbo/gen": "^2.4.0",
     "depcheck": "^1.4.7",

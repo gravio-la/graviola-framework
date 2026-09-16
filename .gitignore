@@ -99,3 +99,6 @@ dependency-graphs/
 apps/datastore-tests/prisma/prisma/
 .claude
 apps/datastore-tests/graphdb.license
+
+# Local runtime data for the portal-server databases registry
+platform/portal-server/data/
