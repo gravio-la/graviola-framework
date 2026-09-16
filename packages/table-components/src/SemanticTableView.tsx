@@ -89,6 +89,7 @@ function extractEntityId(rowOriginal: any): string | undefined {
 
 export function SemanticTableView({
   typeName,
+  layout = "fill",
   typeIRI = "",
   columns,
   data,
@@ -114,6 +115,10 @@ export function SemanticTableView({
   tableColumnVisibility,
   columnVisibility: columnVisibilityProp,
   onColumnVisibilityChange: onColumnVisibilityChangeProp,
+  toolbarDisplay = "static",
+  enableRowSelection = true,
+  density = "comfortable",
+  width = "full-width",
 }: SemanticTableViewProps) {
   const {
     onShowEntry,
@@ -265,37 +270,52 @@ export function SemanticTableView({
     onRemoveSelected || onMoveToTrashSelected || bulkActions.length > 0,
   );
 
+  const embedded = layout === "embedded";
+  const hoverToolbars = toolbarDisplay === "hover";
+  const showToolbars = toolbarDisplay !== "never";
+
+  const hoverToolbarSx = hoverToolbars
+    ? {
+        opacity: 0,
+        pointerEvents: "none" as const,
+        transition: "opacity 120ms ease",
+        flexShrink: 0,
+      }
+    : undefined;
+
   const table = useMaterialReactTable({
     columns,
     data,
     enableStickyHeader: true,
-    rowVirtualizerInstanceRef,
+    rowVirtualizerInstanceRef: embedded ? undefined : rowVirtualizerInstanceRef,
     muiTableContainerProps: {
       ref: tableContainerRef,
-      sx: {
-        flex: 1,
-        overflow: "auto",
-        minHeight: 0,
-        "&::-webkit-scrollbar": {
-          height: 8,
-        },
-        "&::-webkit-scrollbar-track": {
-          backgroundColor: "#F8F8F8",
-          borderRadius: 4,
-        },
-        "&::-webkit-scrollbar-thumb": {
-          backgroundColor: "#B6BCC3",
-          borderRadius: 4,
-        },
-      },
+      sx: embedded
+        ? { overflow: "auto" }
+        : {
+            flex: 1,
+            overflow: "auto",
+            minHeight: 0,
+            "&::-webkit-scrollbar": {
+              height: 8,
+            },
+            "&::-webkit-scrollbar-track": {
+              backgroundColor: "#F8F8F8",
+              borderRadius: 4,
+            },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: "#B6BCC3",
+              borderRadius: 4,
+            },
+          },
     },
-    rowVirtualizerOptions: { overscan: 4 },
+    rowVirtualizerOptions: embedded ? undefined : { overscan: 4 },
     enableColumnVirtualization: false,
     enableColumnOrdering: true,
-    enableRowSelection: true,
+    enableRowSelection,
     enableFacetedValues: true,
-    enableBottomToolbar: true,
-    enableTopToolbar: true,
+    enableBottomToolbar: showToolbars,
+    enableTopToolbar: showToolbars,
     enableFullScreenToggle: true,
     enableColumnActions: true,
     enableDensityToggle: true,
@@ -303,14 +323,35 @@ export function SemanticTableView({
     positionToolbarAlertBanner: "none",
     layoutMode: "semantic",
     muiTablePaperProps: {
-      sx: {
-        position: "absolute",
-        inset: 0,
-        display: "flex",
-        flexDirection: "column",
-        overflow: "hidden",
-      },
+      elevation: embedded ? 0 : undefined,
+      sx: embedded
+        ? {
+            display: "flex",
+            flexDirection: "column",
+            overflow: "visible",
+            width: "100%",
+            boxShadow: "none",
+          }
+        : {
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+          },
     },
+    muiTopToolbarProps: hoverToolbars
+      ? {
+          className: "st-toolbar-top",
+          sx: hoverToolbarSx,
+        }
+      : undefined,
+    muiBottomToolbarProps: hoverToolbars
+      ? {
+          className: "st-toolbar-bottom",
+          sx: hoverToolbarSx,
+        }
+      : undefined,
     onRowSelectionChange: handleRowSelectionChange,
     manualPagination,
     manualSorting,
@@ -332,6 +373,7 @@ export function SemanticTableView({
             ),
           }),
       pagination: { pageIndex: 0, pageSize: defaultLimit },
+      density,
     },
     localization,
     rowCount,
@@ -361,7 +403,7 @@ export function SemanticTableView({
             </Button>
           ) : null}
 
-          {hasSelection && hasBulkActions ? (
+          {enableRowSelection && hasSelection && hasBulkActions ? (
             <>
               <Chip
                 label={t("selected entries", { count: selectedCount })}
@@ -432,7 +474,7 @@ export function SemanticTableView({
               {t("export page only")}
             </MenuItem>
             <MenuItem
-              disabled={!hasSelection}
+              disabled={!enableRowSelection || !hasSelection}
               onClick={() => handleExportRows(selectedRows)}
             >
               <ListItemIcon>
@@ -474,83 +516,84 @@ export function SemanticTableView({
     renderRowActionMenuItems: hasRowActions
       ? ({ row }) => {
           const items: ReactNode[] = [];
-          if (onShowEntry) {
-            items.push(
-              <MenuItem
-                key="show"
-                onClick={() => onShowEntry(row.id, typeIRI)}
-                sx={{ minWidth: 200 }}
-              >
-                <ListItemIcon>
-                  <OpenInNew />
-                </ListItemIcon>
-                {t("show")}
-              </MenuItem>,
-            );
-          }
-          if (onEditEntry) {
-            items.push(
-              <MenuItem
-                key="edit"
-                onClick={() => onEditEntry(row.id, typeIRI)}
-                sx={{ minWidth: 200 }}
-              >
-                <ListItemIcon>
-                  <Edit />
-                </ListItemIcon>
-                {t("edit")}
-              </MenuItem>,
-            );
-          }
-          if (onMoveToTrashEntry) {
-            items.push(
-              <MenuItem
-                key="moveToTrash"
-                onClick={() => void onMoveToTrashEntry(row.id)}
-                sx={{ minWidth: 200 }}
-              >
-                <ListItemIcon>
-                  <Delete />
-                </ListItemIcon>
-                {t("move to trash")}
-              </MenuItem>,
-            );
-          }
-          if (onRemoveEntry) {
-            items.push(
-              <MenuItem
-                key="deleteForever"
-                onClick={() => void onRemoveEntry(row.id)}
-                sx={{ minWidth: 200 }}
-              >
-                <ListItemIcon>
-                  <DeleteForever />
-                </ListItemIcon>
-                {t("delete permanently")}
-              </MenuItem>,
-            );
-          }
+          const entityTarget = {
+            entityIRI: row.id,
+            typeIRI,
+            data: row.original,
+          };
           if (rowActions.length > 0) {
             rowActions.forEach((action) => {
               items.push(
                 <MenuItem
                   key={action.id}
-                  onClick={() =>
-                    void action.run([
-                      {
-                        entityIRI: row.id,
-                        typeIRI,
-                        data: row.original,
-                      },
-                    ])
-                  }
-                  sx={{ minWidth: 200 }}
+                  onClick={() => void action.run([entityTarget])}
+                  sx={{
+                    minWidth: 200,
+                    ...(action.destructive ? { color: "error.main" } : {}),
+                  }}
                 >
                   <ListItemIcon>{action.icon || <OpenInNew />}</ListItemIcon>
                   {action.label}
                 </MenuItem>,
               );
             });
+          } else {
+            if (onShowEntry) {
+              items.push(
+                <MenuItem
+                  key="show"
+                  onClick={() => onShowEntry(row.id, typeIRI)}
+                  sx={{ minWidth: 200 }}
+                >
+                  <ListItemIcon>
+                    <OpenInNew />
+                  </ListItemIcon>
+                  {t("show")}
+                </MenuItem>,
+              );
+            }
+            if (onEditEntry) {
+              items.push(
+                <MenuItem
+                  key="edit"
+                  onClick={() => onEditEntry(row.id, typeIRI)}
+                  sx={{ minWidth: 200 }}
+                >
+                  <ListItemIcon>
+                    <Edit />
+                  </ListItemIcon>
+                  {t("edit")}
+                </MenuItem>,
+              );
+            }
+            if (onMoveToTrashEntry) {
+              items.push(
+                <MenuItem
+                  key="moveToTrash"
+                  onClick={() => void onMoveToTrashEntry(row.id)}
+                  sx={{ minWidth: 200 }}
+                >
+                  <ListItemIcon>
+                    <Delete />
+                  </ListItemIcon>
+                  {t("move to trash")}
+                </MenuItem>,
+              );
+            }
+            if (onRemoveEntry) {
+              items.push(
+                <MenuItem
+                  key="deleteForever"
+                  onClick={() => void onRemoveEntry(row.id)}
+                  sx={{ minWidth: 200 }}
+                >
+                  <ListItemIcon>
+                    <DeleteForever />
+                  </ListItemIcon>
+                  {t("delete permanently")}
+                </MenuItem>,
+              );
+            }
           }
           return items;
         }
@@ -600,11 +643,28 @@ export function SemanticTableView({
   return (
     <Box
       sx={{
-        flex: 1,
-        height: "100%",
-        minHeight: 0,
-        overflow: "hidden",
-        position: "relative",
+        ...(width === "auto"
+          ? { width: "fit-content", maxWidth: "100%" }
+          : { width: "100%" }),
+        ...(embedded
+          ? { position: "relative" }
+          : {
+              flex: 1,
+              height: "100%",
+              minHeight: 0,
+              overflow: "hidden",
+              position: "relative",
+            }),
+        ...(hoverToolbars
+          ? {
+              "&:hover .st-toolbar-top, &:hover .st-toolbar-bottom": {
+                opacity: 1,
+                pointerEvents: "auto",
+                backgroundColor: "background.paper",
+                boxShadow: 1,
+              },
+            }
+          : {}),
       }}
     >
       <Backdrop

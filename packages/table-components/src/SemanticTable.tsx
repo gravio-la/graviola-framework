@@ -29,7 +29,20 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
-import { defaultValueRenderers } from "@graviola/edb-detail-renderer";
+import {
+  createDeleteBulkEntry,
+  createDeleteRowEntry,
+  createMoveToTrashBulkEntry,
+  createMoveToTrashRowEntry,
+  defaultEntityActionRegistry,
+  defaultValueRenderers,
+} from "@graviola/edb-detail-renderer";
+import {
+  selectEntityActions,
+  type EntityActionContext,
+  type EntityActionEntry,
+} from "@graviola/edb-detail-renderer-core";
+import { useHostCapabilities, useViewDensity } from "@graviola/edb-state-hooks";
 import {
   composeJsonLdColumns,
   JsonLdTableProvider,
@@ -46,13 +59,12 @@ import {
   resolveDefaultSortingFromTableUiSchema,
 } from "@graviola/edb-table-types";
 
+import { entityActionsToTableActions } from "./entityActionsAdapter";
 import { SemanticTableView } from "./SemanticTableView";
 import type {
   SemanticTableCallbacks,
   SemanticTableProps,
   TableAction,
-  TableActionContext,
-  TableActionRegistryEntry,
 } from "./types";
 
 const defaultLimit = 25;
@@ -66,6 +78,12 @@ export const SemanticTable = ({
   onShowEntry: onShowEntryProp,
   onEditEntry: onEditEntryProp,
   rowShape = "sparql-select",
+  layout = "fill",
+  toolbarDisplay = "static",
+  enableRowSelection = true,
+  density = "comfortable",
+  width = "full-width",
+  filterManyOptions,
   actionRegistry,
   tableUiSchema,
   columnRegistry,
@@ -83,10 +101,13 @@ export const SemanticTable = ({
     createEntityIRI,
     schema,
     tableActionRegistry,
+    entityActionRegistry,
   } = useAdbContext() as any;
 
   const dispatchIntent = useDispatchIntent();
   const detailModal = useGraviolaModal(MODAL_ENTITY_DETAIL);
+  const capabilities = useHostCapabilities();
+  const { density: viewDensity } = useViewDensity();
 
   const { t } = useTranslation();
   const { t: t2 } = useTranslation("table");
@@ -255,6 +276,7 @@ export const SemanticTable = ({
       typeIRI,
       "list",
       rowShape,
+      filterManyOptions,
       sorting,
       annotationScopes,
       loadAllAtOnce ? undefined : pagination,
@@ -264,6 +286,7 @@ export const SemanticTable = ({
 
       if (rowShape === "jsonld" && dataStore.filterMany) {
         const documents = await dataStore.filterMany(tn, {
+          ...filterManyOptions,
           pagination: loadAllAtOnce ? undefined : pagination,
         } as any);
         return {
@@ -315,8 +338,14 @@ export const SemanticTable = ({
       primaryColId && ids.includes(primaryColId)
         ? [primaryColId, ...ids.filter((id) => id !== primaryColId)]
         : ids;
-    return ["mrt-row-select", ...ordered];
-  }, [displayColumns, queryBuildOptions.primaryFields, typeName, rowShape]);
+    return enableRowSelection ? ["mrt-row-select", ...ordered] : ordered;
+  }, [
+    displayColumns,
+    queryBuildOptions.primaryFields,
+    typeName,
+    rowShape,
+    enableRowSelection,
+  ]);
 
   const locale = useSyncExternalStore(
     (cb) => {
@@ -465,31 +494,104 @@ export const SemanticTable = ({
   const rowCount =
     !loadAllAtOnce && countData != null ? countData : resultList.length;
 
-  const resolvedActionRegistry = (actionRegistry ||
-    tableActionRegistry ||
-    []) as TableActionRegistryEntry[];
-  const actionContext = useMemo<TableActionContext>(
-    () => ({
+  const runtimeRegistry = useMemo<EntityActionEntry[]>(() => {
+    const entries: EntityActionEntry[] = [
+      ...defaultEntityActionRegistry,
+      ...((entityActionRegistry as EntityActionEntry[] | undefined) ?? []),
+      ...((actionRegistry as unknown as EntityActionEntry[] | undefined) ?? []),
+      ...((tableActionRegistry as unknown as EntityActionEntry[] | undefined) ??
+        []),
+    ];
+    if (mergedCallbacks.onMoveToTrashEntry) {
+      entries.push(
+        createMoveToTrashRowEntry(mergedCallbacks.onMoveToTrashEntry),
+      );
+    }
+    if (mergedCallbacks.onMoveToTrashSelected) {
+      entries.push(
+        createMoveToTrashBulkEntry(mergedCallbacks.onMoveToTrashSelected),
+      );
+    }
+    if (mergedCallbacks.onRemoveEntry) {
+      entries.push(createDeleteRowEntry(mergedCallbacks.onRemoveEntry));
+    }
+    if (mergedCallbacks.onRemoveSelected) {
+      entries.push(createDeleteBulkEntry(mergedCallbacks.onRemoveSelected));
+    }
+    return entries;
+  }, [
+    entityActionRegistry,
+    actionRegistry,
+    tableActionRegistry,
+    mergedCallbacks.onMoveToTrashEntry,
+    mergedCallbacks.onMoveToTrashSelected,
+    mergedCallbacks.onRemoveEntry,
+    mergedCallbacks.onRemoveSelected,
+  ]);
+
+  const buildEntityActionContext = useCallback(
+    (
+      surface: EntityActionContext["surface"],
+      targets: EntityActionContext["targets"],
+    ): EntityActionContext => ({
+      surface,
+      density: viewDensity,
+      rootSchema: loadedSchema as JSONSchema7,
       typeName,
-      rootSchema: loadedSchema,
-      rowCount,
-      store: dataStore,
-      t,
+      typeIRI,
+      targets,
+      capabilities,
+      dispatchIntent: (intent) =>
+        Promise.resolve(
+          dispatchIntent(intent as Parameters<typeof dispatchIntent>[0]),
+        ),
+      t: (key: string, opts?: unknown) => String(t(key, opts as never)),
     }),
-    [typeName, loadedSchema, rowCount, dataStore, t],
+    [
+      viewDensity,
+      loadedSchema,
+      typeName,
+      typeIRI,
+      capabilities,
+      dispatchIntent,
+      t,
+    ],
   );
+
   const rowActions = useMemo<TableAction[]>(() => {
-    return resolvedActionRegistry
-      .filter((entry) => entry.surface === "row")
-      .filter((entry) => entry.tester(loadedSchema as any, actionContext) >= 0)
-      .map((entry) => entry.build(actionContext));
-  }, [resolvedActionRegistry, loadedSchema, actionContext]);
+    const placeholderTarget = [{ entityIRI: "", typeIRI, data: undefined }];
+    const resolved = selectEntityActions(
+      runtimeRegistry,
+      loadedSchema as JSONSchema7,
+      buildEntityActionContext("tableRow", placeholderTarget),
+    );
+    return entityActionsToTableActions(resolved, {
+      dispatchIntent,
+      showEntry: mergedCallbacks.onShowEntry
+        ? (id, iri) => mergedCallbacks.onShowEntry?.(id, iri ?? typeIRI)
+        : undefined,
+      editEntry: mergedCallbacks.onEditEntry
+        ? (id, iri) => mergedCallbacks.onEditEntry?.(id, iri ?? typeIRI)
+        : undefined,
+    });
+  }, [
+    runtimeRegistry,
+    loadedSchema,
+    buildEntityActionContext,
+    dispatchIntent,
+    mergedCallbacks.onShowEntry,
+    mergedCallbacks.onEditEntry,
+    typeIRI,
+  ]);
+
   const bulkActions = useMemo<TableAction[]>(() => {
-    return resolvedActionRegistry
-      .filter((entry) => entry.surface === "bulk")
-      .filter((entry) => entry.tester(loadedSchema as any, actionContext) >= 0)
-      .map((entry) => entry.build(actionContext));
-  }, [resolvedActionRegistry, loadedSchema, actionContext]);
+    const resolved = selectEntityActions(
+      runtimeRegistry,
+      loadedSchema as JSONSchema7,
+      buildEntityActionContext("tableBulk", []),
+    );
+    return entityActionsToTableActions(resolved, { dispatchIntent });
+  }, [runtimeRegistry, loadedSchema, buildEntityActionContext, dispatchIntent]);
 
   const jsonLdProviderValue = useMemo(
     () => ({
@@ -515,6 +617,7 @@ export const SemanticTable = ({
     <SemanticTableView
       typeName={typeName}
       typeIRI={typeIRI}
+      layout={layout}
       columns={displayColumns}
       data={resultList}
       rowCount={rowCount}
@@ -538,6 +641,10 @@ export const SemanticTable = ({
       resetKey={typeName}
       columnVisibility={columnVisibility}
       onColumnVisibilityChange={handleColumnVisibilityChange}
+      toolbarDisplay={toolbarDisplay}
+      enableRowSelection={enableRowSelection}
+      density={density}
+      width={width}
     />
   );
 

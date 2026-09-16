@@ -14,14 +14,17 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import type { Layout } from "@jsonforms/core";
 import type { DetailRendererProps } from "@graviola/edb-detail-renderer-core";
-import type { CardActionDef, CardPresentation } from "@graviola/edb-core-types";
+import type {
+  CardPresentation,
+  EntityActionDef,
+} from "@graviola/edb-core-types";
 import { useThumbnailUrl } from "@graviola/edb-state-hooks";
 
 import { PreviewAvatar } from "../../preview/PreviewAvatar";
 import { useDetailRendererContext } from "../../context";
-import { useEntityRefClickHandler } from "../../hooks/useEntityRefClickHandler";
 import { useMotionAdapter } from "../../motion/MotionAdapter";
-import { CardActionsBar } from "../card-actions/CardActionsBar";
+import { EntityActionsBar } from "../../entity-actions/EntityActionsBar";
+import { useEntityOpenHandlers } from "../../entity-actions/useEntityOpenHandlers";
 import { motionScopeId, previewFromCtx } from "./previewFromCtx";
 import {
   CARD_SIZE_TOKENS,
@@ -86,17 +89,19 @@ export function CardLayoutRenderer({
   const { Slot } = useMotionAdapter();
   const scope = motionScopeId(ctx);
   const { config } = useDetailRendererContext();
-  const createEntityClick = useEntityRefClickHandler();
   const [expanded, setExpanded] = useState(false);
+  const isCondensed = ctx.density === "condensed";
 
   const presentation = readCardPresentation(
     layout,
     config.cardPresentation as CardPresentation | undefined,
   );
 
-  const sizeKey = presentation.size ?? "standard";
+  const sizeKey = isCondensed ? "compact" : (presentation.size ?? "standard");
   const tokens = CARD_SIZE_TOKENS[sizeKey];
-  const orientation = presentation.orientation ?? "vertical";
+  const orientation = isCondensed
+    ? "horizontal"
+    : (presentation.orientation ?? "vertical");
   const variant = presentation.variant ?? "elevated";
   const aspectRatio = presentation.mediaAspectRatio ?? "16 / 9";
   const bannerUrl = readPropertyString(rootData, presentation.banner);
@@ -138,28 +143,30 @@ export function CardLayoutRenderer({
     <React.Fragment key={i}>{dispatch({ uiSchema: el, ctx })}</React.Fragment>
   ));
 
-  const handleCardAction = (action: CardActionDef) => {
+  const handleCustomAction = (actionId: string) => {
     const actionCtx = {
       entityIRI: ctx.entityIRI,
       typeIRI: ctx.typeIRI,
       typeName: ctx.typeName,
       data: rootData,
     };
-    if (action.intent === "show" && ctx.entityIRI) {
-      createEntityClick(ctx.entityIRI, ctx.typeIRI, rootData)();
-      return;
-    }
-    if (action.intent === "edit" && ctx.entityIRI) {
-      createEntityClick(ctx.entityIRI, ctx.typeIRI, rootData)();
-      return;
-    }
-    config.onCardAction?.(action.id, actionCtx);
+    config.onEntityAction?.(actionId, actionCtx);
+    config.onCardAction?.(actionId, actionCtx);
   };
 
-  const cardClick =
-    ctx.entityIRI != null
-      ? createEntityClick(ctx.entityIRI, ctx.typeIRI, rootData)
-      : undefined;
+  const openHandlers = useEntityOpenHandlers({
+    surface: "card",
+    target: {
+      entityIRI: ctx.entityIRI,
+      typeIRI: ctx.typeIRI,
+      typeName: ctx.typeName,
+      data: rootData,
+    },
+    schema: rootSchema,
+    onCustomAction: handleCustomAction,
+  });
+
+  const cardClick = ctx.entityIRI != null ? openHandlers.onClick : undefined;
 
   const title = preview.label ?? ctx.humanLabel ?? "";
   const subtitle = preview.description;
@@ -327,7 +334,7 @@ export function CardLayoutRenderer({
           </>
         ) : null}
 
-        {secondaryDisplay === "stats" ? (
+        {!isCondensed && secondaryDisplay === "stats" ? (
           <CardStatsStrip
             schema={rootSchema}
             data={rootData}
@@ -335,7 +342,9 @@ export function CardLayoutRenderer({
           />
         ) : null}
 
-        {!presentation.expandable && secondaryDisplay === "inline" ? (
+        {!isCondensed &&
+        !presentation.expandable &&
+        secondaryDisplay === "inline" ? (
           <Box sx={{ mt: subtitle || presentation.mediaOverlay ? 1.5 : 0 }}>
             <Slot id="body" motionId={`${scope}:body`}>
               {secondaryBody}
@@ -377,13 +386,13 @@ export function CardLayoutRenderer({
         </>
       ) : null}
 
-      <CardActionsBar
-        declaredActions={presentation.actions}
+      <EntityActionsBar
+        surface="card"
+        declaredActions={presentation.actions as EntityActionDef[] | undefined}
         schema={rootSchema}
         data={rootData}
         ctx={ctx}
-        onDeclaredIntent={handleCardAction}
-        onCustomAction={handleCardAction}
+        onCustomAction={handleCustomAction}
       />
     </Box>
   );
@@ -393,6 +402,8 @@ export function CardLayoutRenderer({
       elevation={variant === "elevated" ? 2 : 0}
       sx={cardSx}
       onClick={cardClick}
+      onAuxClick={openHandlers.onAuxClick}
+      onContextMenu={openHandlers.onContextMenu}
       role={cardClick ? "button" : undefined}
       tabIndex={cardClick ? 0 : undefined}
       onKeyDown={
@@ -417,6 +428,7 @@ export function CardLayoutRenderer({
           {textBlock}
         </>
       )}
+      {openHandlers.contextMenu}
     </Card>
   );
 }

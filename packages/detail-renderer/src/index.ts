@@ -37,6 +37,27 @@ export type {
 
 export { useEntityRefClickHandler } from "./hooks/useEntityRefClickHandler";
 
+export {
+  defaultEntityActionRegistry,
+  showEntityAction,
+  editEntityAction,
+  openInNewTabAction,
+  openInWindowAction,
+  openInRouteAction,
+  playableAudioAction,
+} from "./entity-actions/defaultEntityActionRegistry";
+export {
+  createDeleteBulkEntry,
+  createDeleteRowEntry,
+  createMoveToTrashBulkEntry,
+  createMoveToTrashRowEntry,
+} from "./entity-actions/tableActionFactories";
+export { EntityActionsBar } from "./entity-actions/EntityActionsBar";
+export { useEntityContextMenu } from "./entity-actions/EntityContextMenu";
+export { useEntityOpenHandlers } from "./entity-actions/useEntityOpenHandlers";
+export { useExecuteEntityAction } from "./entity-actions/useExecuteEntityAction";
+export { ViewDensityToggle } from "./entity-actions/ViewDensityToggle";
+
 export { previewChipAvatar, previewChipIcon } from "./preview/PreviewAvatar";
 
 export { defaultDetailRenderers } from "./renderers";

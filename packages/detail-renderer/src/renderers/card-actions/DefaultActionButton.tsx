@@ -1,26 +1,19 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { Button } from "@mui/material";
-import type { CardActionDef } from "@graviola/edb-core-types";
-import type { CardActionRendererProps } from "@graviola/edb-detail-renderer-core";
+import type { EntityActionRendererProps } from "@graviola/edb-detail-renderer-core";
 
-type DefaultActionButtonProps = CardActionRendererProps & {
-  onShowEdit?: (intent: "show" | "edit") => void;
-  onCustom?: () => void;
+type DefaultActionButtonProps = EntityActionRendererProps & {
+  onAction?: () => void;
 };
 
-/** Default pill button for card actions without a custom renderer. */
+/** Default pill button for entity actions without a custom renderer. */
 export function DefaultActionButton({
   action,
-  onShowEdit,
-  onCustom,
+  onAction,
 }: DefaultActionButtonProps) {
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (action.intent === "show" || action.intent === "edit") {
-      onShowEdit?.(action.intent);
-      return;
-    }
-    onCustom?.();
+    onAction?.();
   };
 
   return (

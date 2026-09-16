@@ -1,4 +1,8 @@
-import type { CardActionDef, EntityPreview } from "@graviola/edb-core-types";
+import type {
+  EntityActionDef,
+  EntityPreview,
+  ViewDensity,
+} from "@graviola/edb-core-types";
 import type { SchemaScopeFrame } from "@graviola/json-schema-utils";
 import type { JSONSchema7 } from "json-schema";
 import type { RankedTester, UISchemaElement } from "@jsonforms/core";
@@ -30,6 +34,7 @@ export interface DetailTesterContext {
   depth: number;
   maxDepth: number;
   viewSize?: ViewSize;
+  density?: ViewDensity;
   frame?: SchemaScopeFrame;
   typeIRI?: string;
   typeName?: string;
@@ -228,8 +233,8 @@ export interface DetailViewConfig {
   article?: DetailArticleOptions;
   /** Per-type card presentation merged into generated CardLayout options. */
   cardPresentation?: import("@graviola/edb-core-types").CardPresentation;
-  /** Card action callback for `custom` intents on declared actions. */
-  onCardAction?: (
+  /** Entity action callback for `custom` intents on declared actions. */
+  onEntityAction?: (
     actionId: string,
     ctx: {
       entityIRI?: string;
@@ -238,40 +243,22 @@ export interface DetailViewConfig {
       data: unknown;
     },
   ) => void;
-  /** Property-driven card actions (parallel to {@link ChipsConfig}). */
-  cardActions?: CardActionsConfig;
+  /** @deprecated Use {@link onEntityAction}. */
+  onCardAction?: DetailViewConfig["onEntityAction"];
+  /** Property-driven entity actions (parallel to {@link ChipsConfig}). */
+  entityActions?: import("./actions/types").EntityActionsConfig;
+  /** @deprecated Use {@link entityActions}. */
+  cardActions?: import("./actions/types").EntityActionsConfig;
+  density?: ViewDensity;
 }
 
-export interface CardActionRendererProps {
-  action: CardActionDef;
+export interface EntityActionRendererProps {
+  action: EntityActionDef;
   schema: JSONSchema7;
   data: unknown;
   entityIRI?: string;
-  /** Invoked for built-in `show` / `edit` intents on declared actions. */
-  onIntent?: (intent: CardActionDef["intent"]) => void;
-}
-
-export interface CardActionEntry {
-  tester: RankedTester;
-  computeAction: (
-    schema: JSONSchema7,
-    data: unknown,
-  ) => CardActionDef | undefined;
-  /** When omitted, {@link DefaultActionButton} is used (MUI package). */
-  renderer?: React.ComponentType<CardActionRendererProps>;
-}
-
-export interface CardActionsConfig {
-  registry?: CardActionEntry[];
-  /** Max actions shown before overflow menu; default 2. */
-  maxVisible?: number;
-}
-
-/** Declared or registry-resolved card action ready for rendering. */
-export interface ResolvedCardAction {
-  def: CardActionDef;
-  /** Registry entry when property-driven; null for declared actions. */
-  entry: CardActionEntry | null;
+  onIntent?: (intent: EntityActionDef["intent"]) => void;
+  onCustom?: () => void;
 }
 
 export interface ChipDefinition {

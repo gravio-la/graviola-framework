@@ -291,7 +291,7 @@ const EditEntityModalContent = ({
       <SemanticJsonForm
         data={formData}
         onChange={handleFormDataChange}
-        typeIRI={typeIRI}
+        typeIRI={typeIRI ?? classIRI}
         defaultEditMode={true}
         searchText={""}
         schema={loadedSchema as JSONSchema7}

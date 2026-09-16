@@ -2,12 +2,12 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
-import type { CardActionRendererProps } from "@graviola/edb-detail-renderer-core";
+import type { EntityActionRendererProps } from "@graviola/edb-detail-renderer-core";
 
 import { sameAudioUrl } from "./playableAudioUtils";
 
 function audioUrlFromAction(
-  action: CardActionRendererProps["action"],
+  action: EntityActionRendererProps["action"],
   data: unknown,
 ): string | null {
   const prefix = "play:";
@@ -25,7 +25,7 @@ function audioUrlFromAction(
 export function PlayableAudioActionRenderer({
   action,
   data,
-}: CardActionRendererProps) {
+}: EntityActionRendererProps) {
   const url = audioUrlFromAction(action, data);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);

@@ -104,8 +104,11 @@ export type GraviolaAppProviderProps = {
   replaceRenderers?: boolean;
   /** Override the default cell renderer registry (defaults to `materialCells`). */
   cellRendererRegistry?: JsonFormsCellRendererRegistryEntry[];
-  /** Optional extra table actions. */
+  /** Optional extra table actions. @deprecated Use entityActionRegistry. */
   tableActionRegistry?: unknown[];
+  entityActionRegistry?: import("@graviola/edb-detail-renderer-core").EntityActionEntry[];
+  hostCapabilities?: import("@graviola/edb-core-types").HostCapabilityDeclaration;
+  defaultViewDensity?: import("@graviola/edb-core-types").ViewDensity;
   /** Show React Query devtools. Defaults to `false`. */
   enableDevtools?: boolean;
   /**
@@ -144,11 +147,14 @@ export const GraviolaAppProvider: FC<GraviolaAppProviderProps> = ({
   replaceRenderers,
   cellRendererRegistry,
   tableActionRegistry,
+  entityActionRegistry,
   enableDevtools,
   publicBasePath,
   intentHandlers,
   modalOverrides,
   resolveThumbnailUrl,
+  hostCapabilities,
+  defaultViewDensity,
 }) => {
   const {
     baseIRI,
@@ -193,7 +199,12 @@ export const GraviolaAppProvider: FC<GraviolaAppProviderProps> = ({
         >,
         definitionToTypeIRI,
       }),
-    [schemaAsJson, typeNameLabelMap, typeNameUiSchemaOptionsMap, definitionToTypeIRI],
+    [
+      schemaAsJson,
+      typeNameLabelMap,
+      typeNameUiSchemaOptionsMap,
+      definitionToTypeIRI,
+    ],
   );
 
   // Property IRIs and new entity IRIs follow entityBaseIRI when set (matches
@@ -233,11 +244,20 @@ export const GraviolaAppProvider: FC<GraviolaAppProviderProps> = ({
         typeIRItoTypeName: resolveTypeName,
       },
     };
-  }, [baseIRI, defaultPrefix, primaryFields, definitionToTypeIRI, typeIRIToTypeName]);
+  }, [
+    baseIRI,
+    defaultPrefix,
+    primaryFields,
+    definitionToTypeIRI,
+    typeIRIToTypeName,
+  ]);
 
   const makeStubSchema = useMemo(
     () => (s: JSONSchema7) =>
-      createStubSchema(s, { entityBaseIRI: defaultPrefix, definitionToTypeIRI }),
+      createStubSchema(s, {
+        entityBaseIRI: defaultPrefix,
+        definitionToTypeIRI,
+      }),
     [defaultPrefix, definitionToTypeIRI],
   );
 
@@ -250,6 +270,7 @@ export const GraviolaAppProvider: FC<GraviolaAppProviderProps> = ({
 
   const cellRegistry = cellRendererRegistry ?? defaultCellRenderers;
   const tableActions = tableActionRegistry ?? [];
+  const entityActions = entityActionRegistry ?? [];
 
   const resolvedPublicBasePath = publicBasePath ?? "";
   const showDevtools = enableDevtools ?? false;
@@ -282,11 +303,15 @@ export const GraviolaAppProvider: FC<GraviolaAppProviderProps> = ({
         uischemata={uischemata}
         viewConfig={viewConfig}
         tableActionRegistry={tableActions}
+        entityActionRegistry={entityActions}
+        defaultViewDensity={defaultViewDensity}
         resolveThumbnailUrl={resolveThumbnailUrl}
       >
         <GraviolaLoungeProviders
           intentHandlers={intentHandlers}
           modalOverrides={modalOverrides}
+          hostCapabilities={hostCapabilities}
+          defaultViewDensity={defaultViewDensity}
         >
           {children}
         </GraviolaLoungeProviders>

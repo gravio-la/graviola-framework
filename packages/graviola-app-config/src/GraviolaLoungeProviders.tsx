@@ -3,8 +3,11 @@
 import { type ComponentType, type FC, type ReactNode, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
+import type { HostCapabilityDeclaration } from "@graviola/edb-core-types";
+import type { ViewDensity } from "@graviola/edb-core-types";
 import {
   FinderSlotProvider,
+  GraviolaHostCapabilitiesProvider,
   GraviolaIntentBusProvider,
   ModalRegistryProvider,
   MODAL_EDIT_ENTITY,
@@ -12,6 +15,8 @@ import {
   MODAL_SIMILARITY_FINDER,
   PathnameProvider,
   SemanticFormSlotProvider,
+  ViewDensityProvider,
+  createHostCapabilities,
 } from "@graviola/edb-state-hooks";
 import {
   EditEntityModal,
@@ -34,6 +39,8 @@ export type GraviolaLoungeProvidersProps = {
    * implementation (same NiceModal ids).
    */
   modalOverrides?: Record<string, ComponentType<any>>;
+  hostCapabilities?: HostCapabilityDeclaration;
+  defaultViewDensity?: ViewDensity;
 };
 
 /**
@@ -46,14 +53,26 @@ export const GraviolaLoungeProviders: FC<GraviolaLoungeProvidersProps> = ({
   children,
   intentHandlers,
   modalOverrides,
+  hostCapabilities,
+  defaultViewDensity = "extended",
 }) => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { pathname } = useLocation();
 
+  const resolvedHostCapabilities = useMemo(
+    () => createHostCapabilities(hostCapabilities),
+    [hostCapabilities],
+  );
+
   const baseDispatch = useMemo(
-    () => createLoungeIntentDispatch({ navigate, enqueueSnackbar }),
-    [navigate, enqueueSnackbar],
+    () =>
+      createLoungeIntentDispatch({
+        navigate,
+        enqueueSnackbar,
+        hostCapabilities: resolvedHostCapabilities,
+      }),
+    [navigate, enqueueSnackbar, resolvedHostCapabilities],
   );
 
   const dispatch = useMemo(
@@ -72,16 +91,20 @@ export const GraviolaLoungeProviders: FC<GraviolaLoungeProvidersProps> = ({
   );
 
   return (
-    <SemanticFormSlotProvider Component={SemanticJsonFormNoOps}>
-      <FinderSlotProvider Component={SimilarityFinder}>
-        <PathnameProvider value={pathname}>
-          <ModalRegistryProvider modals={modals}>
-            <GraviolaIntentBusProvider dispatch={dispatch}>
-              {children}
-            </GraviolaIntentBusProvider>
-          </ModalRegistryProvider>
-        </PathnameProvider>
-      </FinderSlotProvider>
-    </SemanticFormSlotProvider>
+    <GraviolaHostCapabilitiesProvider declaration={hostCapabilities}>
+      <ViewDensityProvider defaultDensity={defaultViewDensity}>
+        <SemanticFormSlotProvider Component={SemanticJsonFormNoOps}>
+          <FinderSlotProvider Component={SimilarityFinder}>
+            <PathnameProvider value={pathname}>
+              <ModalRegistryProvider modals={modals}>
+                <GraviolaIntentBusProvider dispatch={dispatch}>
+                  {children}
+                </GraviolaIntentBusProvider>
+              </ModalRegistryProvider>
+            </PathnameProvider>
+          </FinderSlotProvider>
+        </SemanticFormSlotProvider>
+      </ViewDensityProvider>
+    </GraviolaHostCapabilitiesProvider>
   );
 };

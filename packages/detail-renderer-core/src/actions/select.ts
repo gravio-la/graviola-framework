@@ -1,60 +1,80 @@
-import type { ControlElement, JsonSchema } from "@jsonforms/core";
+import type { EntityActionDef } from "@graviola/edb-core-types";
 import type { JSONSchema7 } from "json-schema";
 
-import type { CardActionDef } from "@graviola/edb-core-types";
-
 import type {
-  CardActionEntry,
-  DetailTesterContext,
-  ResolvedCardAction,
-} from "../types";
+  EntityActionContext,
+  EntityActionEntry,
+  ResolvedEntityAction,
+} from "./types";
 
 const TESTER_NOT_APPLICABLE = -1;
 
+function passesSurfaceGate(
+  entry: EntityActionEntry,
+  surface: EntityActionContext["surface"],
+): boolean {
+  if (!entry.surfaces?.length) return true;
+  return entry.surfaces.includes(surface);
+}
+
+function passesCapabilityGate(
+  entry: EntityActionEntry,
+  ctx: EntityActionContext,
+): boolean {
+  if (!entry.requiresCapabilities?.length) return true;
+  const target = ctx.targets[0];
+  return entry.requiresCapabilities.every((cap) =>
+    ctx.capabilities.has(cap, target),
+  );
+}
+
 /**
- * Evaluate all registry entries against schema+data.
+ * Evaluate registry entries against schema + context.
  * Returns ranked applicable actions (highest rank first).
  */
-export function selectCardActions(
-  registry: CardActionEntry[],
+export function selectEntityActions(
+  registry: EntityActionEntry[],
   schema: JSONSchema7,
-  data: unknown,
-  ctx: DetailTesterContext,
-): ResolvedCardAction[] {
+  ctx: EntityActionContext,
+): ResolvedEntityAction[] {
   if (!registry.length) return [];
 
-  const uischema = { type: "Control", scope: "#" } as ControlElement;
-  const testerCtx = {
-    rootSchema: ctx.rootSchema as JsonSchema,
-    config: ctx,
-  };
-
-  const ranked: Array<{ rank: number; resolved: ResolvedCardAction }> = [];
+  const ranked: ResolvedEntityAction[] = [];
 
   for (const entry of registry) {
-    const rank = entry.tester(
-      uischema as never,
-      schema as unknown as JsonSchema,
-      testerCtx as never,
-    );
+    if (!passesSurfaceGate(entry, ctx.surface)) continue;
+    if (!passesCapabilityGate(entry, ctx)) continue;
+
+    const rank = entry.tester(schema, ctx);
     if (rank <= TESTER_NOT_APPLICABLE) continue;
 
-    const def = entry.computeAction(schema, data);
+    const def = entry.build(ctx);
     if (!def) continue;
 
-    ranked.push({
-      rank,
-      resolved: { def, entry },
-    });
+    ranked.push({ def, entry, rank });
   }
 
   ranked.sort((a, b) => b.rank - a.rank);
-  return ranked.map((r) => r.resolved);
+  return ranked;
 }
 
-/** Map declared {@link CardActionDef}s from cardPresentation to resolved actions. */
-export function declaredCardActions(
-  actions: CardActionDef[] | undefined,
-): ResolvedCardAction[] {
-  return (actions ?? []).map((def) => ({ def, entry: null }));
+/** Map declared {@link EntityActionDef}s from presentation config. */
+export function declaredEntityActions(
+  actions: EntityActionDef[] | undefined,
+): ResolvedEntityAction[] {
+  return (actions ?? []).map((def) => ({
+    def,
+    entry: null,
+    rank: def.primary ? 100 : 50,
+  }));
+}
+
+export function splitByImportance(
+  actions: ResolvedEntityAction[],
+  maxVisible = 2,
+): { inline: ResolvedEntityAction[]; overflow: ResolvedEntityAction[] } {
+  return {
+    inline: actions.slice(0, maxVisible),
+    overflow: actions.slice(maxVisible),
+  };
 }

@@ -122,14 +122,23 @@ export * from "./testers";
 export { resolveChipRenderer } from "./chips/select";
 export type { ChipResolution } from "./chips/select";
 
-// Card actions
-export { declaredCardActions, selectCardActions } from "./actions/select";
+// Entity actions
+export {
+  declaredEntityActions,
+  selectEntityActions,
+  splitByImportance,
+} from "./actions/select";
 export type {
-  CardActionEntry,
-  CardActionRendererProps,
-  CardActionsConfig,
-  ResolvedCardAction,
-} from "./types";
+  ActionSurface,
+  EntityActionContext,
+  EntityActionEntry,
+  EntityActionTarget,
+  EntityActionsConfig,
+  EntityIntent,
+  EntityIntentDispatch,
+  ResolvedEntityAction,
+} from "./actions/types";
+export type { EntityActionRendererProps } from "./types";
 
 // Combinators (for custom renderers)
 export { pickAnyOfBranch, pickOneOfBranch } from "./combinators/pickBranch";

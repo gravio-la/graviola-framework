@@ -85,6 +85,7 @@ export type TableActionRegistry = TableActionRegistryEntry[];
 
 export type SemanticTableViewProps = {
   typeName: string;
+  layout?: SemanticTableLayout;
   /** Used in row callbacks; defaults to empty string if omitted (callers should pass when using callbacks). */
   typeIRI?: string;
   columns: MRT_ColumnDef<any>[];
@@ -126,9 +127,29 @@ export type SemanticTableViewProps = {
       | MRT_VisibilityState
       | ((old: MRT_VisibilityState) => MRT_VisibilityState),
   ) => void;
+  /** Top/bottom toolbar visibility. Default `static`. */
+  toolbarDisplay?: SemanticTableToolbarDisplay;
+  /** Row-selection checkbox column + bulk-action toolbar. Default true. */
+  enableRowSelection?: boolean;
+  /** Initial MRT row density. Default `comfortable`. */
+  density?: SemanticTableDensity;
+  /** Horizontal sizing. Default `full-width`. */
+  width?: SemanticTableWidth;
 };
 
 export type SemanticTableDataMode = "sparql-select" | "jsonld";
+
+/** `fill` = flex parent with explicit height; `embedded` = inline/markdown embeds. */
+export type SemanticTableLayout = "fill" | "embedded";
+
+/** `static` = always visible; `hover` = hidden until hover; `never` = no top/bottom toolbars. */
+export type SemanticTableToolbarDisplay = "static" | "hover" | "never";
+
+/** MRT row density. */
+export type SemanticTableDensity = "comfortable" | "compact" | "spacious";
+
+/** Horizontal sizing — `auto` fits content up to parent width. */
+export type SemanticTableWidth = "full-width" | "auto";
 
 export type SemanticTableJsonLdCellOptions = {
   ChipComponent?: ComponentType<JsonLdChipComponentProps>;
@@ -143,10 +164,21 @@ export type SemanticTableProps = {
   onShowEntry?: (id: string, typeIRI: string) => void;
   onEditEntry?: (id: string, typeIRI: string) => void;
   rowShape?: SemanticTableDataMode;
+  layout?: SemanticTableLayout;
+  /** JSON-LD mode: forwarded to `Store.filterMany` (where, limit, searchString, …). */
+  filterManyOptions?: Record<string, unknown>;
   filterMode?: "client" | "server";
   tableUiSchema?: TableUiSchema;
   columnRegistry?: TableColumnRegistry;
   actionRegistry?: TableActionRegistry;
   /** Injection seam for JSON-LD row cells (chips + custom value renderers). */
   jsonLdCell?: SemanticTableJsonLdCellOptions;
+  /** Top/bottom toolbar visibility. Default `static`. */
+  toolbarDisplay?: SemanticTableToolbarDisplay;
+  /** Row-selection checkbox column + bulk-action toolbar. Default true. */
+  enableRowSelection?: boolean;
+  /** Initial MRT row density. Default `comfortable`. */
+  density?: SemanticTableDensity;
+  /** Horizontal sizing. Default `full-width`. */
+  width?: SemanticTableWidth;
 };

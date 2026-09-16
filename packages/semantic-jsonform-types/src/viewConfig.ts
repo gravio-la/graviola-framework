@@ -33,8 +33,8 @@ export interface GenerateDefaultViewUISchemaOptions {
 /** Card-specific options on {@link ViewConfig.options} (merged with `cardPresentation` registry). */
 export interface CardViewConfigOptions {
   cardPresentation?: CardPresentation;
-  /** Fired for `custom` card actions and optional telemetry. */
-  onCardAction?: (
+  /** Fired for `custom` entity actions and optional telemetry. */
+  onEntityAction?: (
     actionId: string,
     ctx: {
       entityIRI?: string;
@@ -43,6 +43,8 @@ export interface CardViewConfigOptions {
       data: unknown;
     },
   ) => void;
+  /** @deprecated Use {@link onEntityAction}. */
+  onCardAction?: CardViewConfigOptions["onEntityAction"];
 }
 
 export interface ViewConfig {

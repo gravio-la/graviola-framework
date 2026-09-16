@@ -301,7 +301,7 @@ const EntityDetailDataWrapper: FC<{
       registerModal(modalID, EditEntityModal);
       NiceModal.show(modalID, {
         entityIRI: entityIRI,
-        typeIRI: typeIRI,
+        typeIRI: typeIRI ?? classIRI,
         data,
         disableLoad: true,
       }).catch((e) => {

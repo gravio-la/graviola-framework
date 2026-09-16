@@ -164,7 +164,10 @@ export type GlobalAppConfig<DeclarativeMappingType> = GlobalSemanticConfig & {
   /** @deprecated Use `viewConfig.detail.options` */
   detailViewConfig?: import("./viewConfig").DetailViewConfigOptions;
   tableColumnRegistry?: TableColumnRegistry;
+  /** @deprecated Use {@link entityActionRegistry}. */
   tableActionRegistry?: any[];
+  entityActionRegistry?: import("@graviola/edb-detail-renderer-core").EntityActionEntry[];
+  defaultViewDensity?: import("@graviola/edb-core-types").ViewDensity;
 };
 
 export type EditEntityModalProps = {

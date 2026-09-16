@@ -27,6 +27,7 @@ import {
   useAdbContext,
   useEntityPreview,
   useExtendedSchema,
+  useViewDensity,
 } from "@graviola/edb-state-hooks";
 import type {
   CardViewConfigOptions,
@@ -131,6 +132,7 @@ export function SemanticViewCore({
   humanLabel?: string;
 }) {
   const adb = useAdbContext();
+  const { density: viewDensity } = useViewDensity();
   const typeIRI = useMemo(
     () =>
       typeIRIProp ??
@@ -184,16 +186,20 @@ export function SemanticViewCore({
       cardPresentation: (
         viewConfigSlice?.options as CardViewConfigOptions | undefined
       )?.cardPresentation,
+      onEntityAction: (
+        viewConfigSlice?.options as CardViewConfigOptions | undefined
+      )?.onEntityAction,
       onCardAction: (
         viewConfigSlice?.options as CardViewConfigOptions | undefined
       )?.onCardAction,
+      density: configProp?.density ?? viewDensity,
     };
     return {
       ...fromView,
       ...(configProp ?? {}),
       typeIRIToTypeName: adb.typeIRIToTypeName,
     };
-  }, [viewConfigSlice, configProp, adb.typeIRIToTypeName]);
+  }, [viewConfigSlice, configProp, adb.typeIRIToTypeName, viewDensity]);
 
   const resolvedConfig = useMemo(
     () => resolveConfigForType(baseConfig, typeIRI, typeName),
@@ -287,6 +293,7 @@ export function SemanticViewCore({
       depth: 0,
       maxDepth: resolvedConfig.maxDepth ?? 3,
       viewSize,
+      density: resolvedConfig.density ?? viewDensity,
       frame: schema ? rootFrame(schema) : undefined,
       typeIRI,
       typeName,
@@ -332,6 +339,8 @@ export function SemanticViewCore({
       resolvedConfig.nesting,
       resolvedConfig.article,
       viewSize,
+      viewDensity,
+      resolvedConfig.density,
       typeIRI,
       typeName,
       adb.typeIRIToTypeName,
@@ -359,6 +368,8 @@ export function SemanticViewCore({
       config: {
         ...resolvedConfig,
         cardPresentation: cardPresentation ?? resolvedConfig.cardPresentation,
+        onEntityAction:
+          resolvedConfig.onEntityAction ?? cardViewOptions?.onEntityAction,
         onCardAction:
           resolvedConfig.onCardAction ?? cardViewOptions?.onCardAction,
       },
@@ -370,6 +381,7 @@ export function SemanticViewCore({
       data,
       resolvedConfig,
       cardPresentation,
+      cardViewOptions?.onEntityAction,
       cardViewOptions?.onCardAction,
     ],
   );

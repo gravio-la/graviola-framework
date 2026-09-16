@@ -12,7 +12,11 @@ import {
 } from "@graviola/edb-state-hooks";
 import type { EntityDetailModalProps } from "@graviola/semantic-jsonform-types";
 import { queryOptionMixinBasedOnEntity } from "@graviola/edb-ui-utils";
-import { Close as CloseIcon, Edit as EditIcon } from "@mui/icons-material";
+import {
+  Close as CloseIcon,
+  Edit as EditIcon,
+  MoreVert as MoreVertIcon,
+} from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -30,6 +34,7 @@ import type { ComponentType } from "react";
 import { createContext, useCallback, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useEntityContextMenu } from "./entity-actions/EntityContextMenu";
 import { DetailRenderer } from "./DetailRenderer";
 
 /**
@@ -194,6 +199,22 @@ function DetailModalBody({
   const HeaderActionsSlot = staticConfig?.headerActionsSlot;
   const showEditButton = !readonly && !staticConfig?.hideEditButton;
 
+  const { openContextMenu, contextMenu: entityContextMenu } =
+    useEntityContextMenu({
+      surface: "detail",
+      schema: typeSchema,
+      targets: [
+        {
+          entityIRI,
+          typeIRI: classIRI,
+          typeName,
+          data,
+        },
+      ],
+      typeName,
+      typeIRI: classIRI,
+    });
+
   if (!typeSchema) {
     return (
       <Dialog
@@ -237,6 +258,17 @@ function DetailModalBody({
       {HeaderActionsSlot ? (
         <HeaderActionsSlot entityIRI={entityIRI} typeIRI={classIRI} />
       ) : null}
+      {typeSchema ? (
+        <IconButton
+          size="medium"
+          onClick={openContextMenu}
+          color="inherit"
+          aria-label={t("actions")}
+          sx={solidIconButtonSx}
+        >
+          <MoreVertIcon fontSize="small" />
+        </IconButton>
+      ) : null}
       {showEditButton && (
         <IconButton
           size="medium"
@@ -275,6 +307,7 @@ function DetailModalBody({
       >
         {headerActions}
       </Box>
+      {entityContextMenu}
       <DetailRenderer
         schema={typeSchema}
         data={data}
@@ -319,6 +352,10 @@ function DetailModalBody({
   );
 }
 
+function shouldSkipDetailLoad(disableLoad?: boolean): boolean {
+  return Boolean(disableLoad);
+}
+
 function DetailEntityDataWrapper({
   classIRI,
   entityIRI,
@@ -327,6 +364,7 @@ function DetailEntityDataWrapper({
   defaultData,
   readonly,
   disableInlineEditing,
+  disableLoad,
   staticConfig,
   onClose,
 }: {
@@ -337,6 +375,7 @@ function DetailEntityDataWrapper({
   defaultData?: unknown;
   readonly?: boolean;
   disableInlineEditing?: boolean;
+  disableLoad?: boolean;
   staticConfig: DetailEntityModalStaticConfig | undefined;
   onClose: () => void;
 }) {
@@ -344,15 +383,17 @@ function DetailEntityDataWrapper({
   const dispatchIntent = useDispatchIntent();
   const { t } = useTranslation();
 
+  const skipLoad = shouldSkipDetailLoad(disableLoad);
+
   const {
     loadQuery: { data: rawData },
   } = useCRUDWithQueryClient({
     entityIRI,
     typeIRI: classIRI,
     queryOptions: {
-      enabled: true,
-      refetchOnMount: "always",
-      refetchOnWindowFocus: true,
+      enabled: !skipLoad,
+      refetchOnMount: skipLoad ? false : "always",
+      refetchOnWindowFocus: !skipLoad,
       ...queryOptionMixinBasedOnEntity(defaultData),
     },
     loadQueryKey: "show",
@@ -425,6 +466,7 @@ function DetailEntityClassWrapper({
   defaultData,
   readonly,
   disableInlineEditing,
+  disableLoad,
   staticConfig,
   onClose,
 }: {
@@ -433,13 +475,15 @@ function DetailEntityClassWrapper({
   defaultData?: unknown;
   readonly?: boolean;
   disableInlineEditing?: boolean;
+  disableLoad?: boolean;
   staticConfig: DetailEntityModalStaticConfig | undefined;
   onClose: () => void;
 }) {
   const { typeIRIToTypeName } = useAdbContext();
   const { t } = useTranslation();
 
-  const classIRI = useTypeIRIFromEntity(entityIRI, typeIRI, false);
+  const skipLoad = shouldSkipDetailLoad(disableLoad);
+  const classIRI = useTypeIRIFromEntity(entityIRI, typeIRI, skipLoad);
 
   if (!classIRI) {
     return (
@@ -461,6 +505,7 @@ function DetailEntityClassWrapper({
       defaultData={defaultData}
       readonly={readonly}
       disableInlineEditing={disableInlineEditing}
+      disableLoad={disableLoad}
       staticConfig={staticConfig}
       onClose={onClose}
     />
@@ -481,6 +526,7 @@ export function DetailEntityModalView({
   data: defaultData,
   readonly,
   disableInlineEditing,
+  disableLoad,
   onClose,
 }: DetailEntityModalViewProps) {
   const handleClose = onClose ?? (() => undefined);
@@ -492,6 +538,7 @@ export function DetailEntityModalView({
       defaultData={defaultData}
       readonly={readonly}
       disableInlineEditing={disableInlineEditing}
+      disableLoad={disableLoad}
       staticConfig={staticConfig}
       onClose={handleClose}
     />
@@ -513,6 +560,7 @@ export function createDetailEntityModal(
       data: defaultData,
       readonly,
       disableInlineEditing,
+      disableLoad,
       onClose: onCloseFromProps,
     }: EntityDetailModalProps) => {
       const modal = useModal();
@@ -534,6 +582,7 @@ export function createDetailEntityModal(
           data={defaultData}
           readonly={readonly}
           disableInlineEditing={disableInlineEditing}
+          disableLoad={disableLoad}
           onClose={handleClose}
           staticConfig={staticConfig}
         />

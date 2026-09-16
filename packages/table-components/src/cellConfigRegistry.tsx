@@ -23,6 +23,11 @@ import {
   PrimaryColumnContent,
 } from "./listHelper";
 import {
+  formatDateTimeValue,
+  formatDateValue,
+} from "@graviola/edb-detail-renderer";
+
+import {
   isObjectWithRefControl,
   isPrimitiveControl,
   mkAccessor,
@@ -34,6 +39,28 @@ import {
 } from "./tableRegistryHelper";
 
 export const cellConfigRegistry: MuiTableColumnDefinitionRegistryEntry[] = [
+  {
+    tester: rankWith(5, and(isControl, formatIs("date-time"))),
+    columnDef: (typeName, key, schemaDef, t, path) => ({
+      ...singleValueColumnStub(path, key, t, titleOf(schemaDef)),
+      Cell: ({ cell, table }) => (
+        <OverflowContainer density={table.getState().density}>
+          {formatDateTimeValue(cell.getValue())}
+        </OverflowContainer>
+      ),
+    }),
+  },
+  {
+    tester: rankWith(5, and(isControl, formatIs("date"))),
+    columnDef: (typeName, key, schemaDef, t, path) => ({
+      ...singleValueColumnStub(path, key, t, titleOf(schemaDef)),
+      Cell: ({ cell, table }) => (
+        <OverflowContainer density={table.getState().density}>
+          {formatDateValue(cell.getValue())}
+        </OverflowContainer>
+      ),
+    }),
+  },
   {
     tester: rankWith(1, isPrimitiveControl),
     columnDef: (typeName, key, schemaDef, t, path, primaryFields) => ({
@@ -160,7 +187,7 @@ export const cellConfigRegistry: MuiTableColumnDefinitionRegistryEntry[] = [
                 }
                 alignItems={"center"}
               >
-                <Grid >
+                <Grid>
                   {table.getState().columnFilters.find((cf) => cf.id === id) ? (
                     <OverflowContainer>{renderedCellValue}</OverflowContainer>
                   ) : (
@@ -171,7 +198,7 @@ export const cellConfigRegistry: MuiTableColumnDefinitionRegistryEntry[] = [
                   count > 0 &&
                   parseMarkdownLinks(group).map(({ label, url }, index) => {
                     return (
-                      <Grid  key={url + index} sx={{ m: 0.5 }}>
+                      <Grid key={url + index} sx={{ m: 0.5 }}>
                         <Link>
                           <OverflowChip entityIRI={url} label={label} />
                         </Link>

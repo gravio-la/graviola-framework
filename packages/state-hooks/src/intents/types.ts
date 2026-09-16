@@ -13,6 +13,7 @@ export type GraviolaIntent =
       typeIRI?: string;
       entityIRI: string;
       data?: unknown;
+      presentation?: "modal" | "route" | "new-tab" | "new-window";
     }>
   | WithOrigin<{ kind: "create-entity"; typeName: string; entityIRI?: string }>
   | WithOrigin<{ kind: "list-entities"; typeName: string }>

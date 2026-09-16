@@ -1,5 +1,6 @@
 import NiceModal from "@ebay/nice-modal-react";
 import { encodeIRI } from "@graviola/edb-core-utils";
+import type { HostCapabilities } from "@graviola/edb-core-types";
 import type { GraviolaIntent, IntentHandler } from "@graviola/edb-state-hooks";
 import { MODAL_ENTITY_DETAIL } from "@graviola/edb-state-hooks";
 import type { NavigateFunction } from "react-router-dom";
@@ -8,7 +9,20 @@ import type { LoungeSnackbar } from "./lounge-types";
 export function createLoungeIntentDispatch(opts: {
   navigate: NavigateFunction;
   enqueueSnackbar: LoungeSnackbar["enqueueSnackbar"];
+  hostCapabilities?: HostCapabilities;
 }): IntentHandler {
+  const showEntityModal = (
+    intent: Extract<GraviolaIntent, { kind: "show-entity" }>,
+  ) => {
+    void NiceModal.show(MODAL_ENTITY_DETAIL, {
+      entityIRI: intent.entityIRI,
+      typeIRI: intent.typeIRI,
+      data: intent.data,
+      readonly: true,
+      disableInlineEditing: true,
+    });
+  };
+
   return (intent: GraviolaIntent) => {
     switch (intent.kind) {
       case "edit-entity":
@@ -22,15 +36,33 @@ export function createLoungeIntentDispatch(opts: {
       case "list-entities":
         void opts.navigate(`/list/${intent.typeName}`);
         break;
-      case "show-entity":
-        void NiceModal.show(MODAL_ENTITY_DETAIL, {
+      case "show-entity": {
+        const presentation = intent.presentation ?? "modal";
+        const href = opts.hostCapabilities?.entityHref({
           entityIRI: intent.entityIRI,
           typeIRI: intent.typeIRI,
+          typeName: intent.typeName,
           data: intent.data,
-          readonly: true,
-          disableInlineEditing: true,
         });
+        if (presentation === "new-tab" && href) {
+          window.open(href, "_blank", "noopener,noreferrer");
+          break;
+        }
+        if (presentation === "new-window" && href) {
+          window.open(
+            href,
+            "_blank",
+            "noopener,noreferrer,width=1200,height=800",
+          );
+          break;
+        }
+        if (presentation === "route" && href) {
+          void opts.navigate(href);
+          break;
+        }
+        showEntityModal(intent);
         break;
+      }
       case "navigate":
         void opts.navigate(intent.href);
         break;
