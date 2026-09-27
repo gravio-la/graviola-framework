@@ -104,3 +104,11 @@ apps/datastore-tests/graphdb.license
 
 # Local runtime data for the portal-server databases registry
 platform/portal-server/data/
+
+# package-graph review tool: generated data and temporary review notes
+apps/package-graph/data/
+apps/package-graph/public/data/
+apps/package-graph/generated/
+apps/package-graph/reviews/
+# jscpd default report dir
+report/
