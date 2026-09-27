@@ -184,15 +184,41 @@ export async function materializePlan(
 }
 
 /**
- * Cache-validity check for one computed slot: fresh iff any statement's
- * wasGeneratedBy.inputFingerprint equals the current one.
+ * The statement that currently holds a computed slot's value: the latest
+ * generatedAt wins; missing or equal timestamps fall back to the last node in
+ * array order. Older nodes are kept as history and must not be used.
  */
+export function currentStatement(
+  statements: StatementNode[],
+): StatementNode | undefined {
+  if (statements.length === 0) return undefined;
+  return statements.reduce((latest, statement) => {
+    const latestGeneratedAt =
+      latest.generatedAt === undefined
+        ? undefined
+        : Date.parse(latest.generatedAt);
+    const generatedAt =
+      statement.generatedAt === undefined
+        ? undefined
+        : Date.parse(statement.generatedAt);
+    if (
+      latestGeneratedAt === undefined ||
+      generatedAt === undefined ||
+      generatedAt >= latestGeneratedAt
+    ) {
+      return statement;
+    }
+    return latest;
+  });
+}
+
+/** Cache-validity check for one computed slot against its current statement. */
 export function isMaterializationFresh(
   statements: StatementNode[],
   currentInputFingerprint: string,
 ): boolean {
-  if (statements.length === 0) return false;
-  return statements.some(
-    (stmt) => stmt.wasGeneratedBy?.inputFingerprint === currentInputFingerprint,
+  return (
+    currentStatement(statements)?.wasGeneratedBy?.inputFingerprint ===
+    currentInputFingerprint
   );
 }

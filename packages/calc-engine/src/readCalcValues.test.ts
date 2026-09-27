@@ -17,6 +17,7 @@ import { evaluateForRoots } from "./evaluateForRoots";
 
 const GARDEN_IRI = "https://example.org/garden/1";
 const MISSING_IRI = "https://example.org/garden/missing";
+const SIBLING_GARDEN_IRI = "https://example.org/garden/2";
 
 type WarmableStore = ReadCalcValuesStore & {
   writeStatements: (
@@ -87,6 +88,16 @@ async function evaluatedDoc(
 const originalDoc = (): Record<string, unknown> =>
   structuredClone(gardenFeeSampleData) as Record<string, unknown>;
 
+function withInverseStubs(
+  doc: Record<string, unknown>,
+): Record<string, unknown> {
+  doc.contains = [
+    { "@id": GARDEN_IRI, "@type": "Garden" },
+    { "@id": SIBLING_GARDEN_IRI, "@type": "Garden" },
+  ];
+  return doc;
+}
+
 const mutatedDoc = (
   doc: Record<string, unknown>,
   multiplier: number,
@@ -126,6 +137,77 @@ describe("readCalcValues", () => {
     );
     // 1 filterMany + 4 loadStatements (Garden, Patch, Plot x2).
     expect(result.queriesIssued).toBe(5);
+  });
+
+  it("fresh: serves the latest statement when older history comes first", async () => {
+    const statements = makeStatementsMap();
+    const doc = await evaluatedDoc(profile);
+    const store = makeStoreView(statements, () => structuredClone(doc));
+    await warm(store as never, profile, "Garden", gardenFeeSchema, {
+      rootIRIs: [GARDEN_IRI],
+    });
+
+    // Some backends return statement history oldest first.
+    const gardenStatements = statements.get(`Garden::${GARDEN_IRI}`)!;
+    const [current] = gardenStatements.annual_fee!;
+    gardenStatements.annual_fee = [
+      {
+        ...current!,
+        value: -1,
+        generatedAt: "2000-01-01T00:00:00.000Z",
+        wasGeneratedBy: {
+          ...current!.wasGeneratedBy!,
+          inputFingerprint: "outdated",
+        },
+      },
+      current!,
+    ];
+
+    const result = await readCalcValues(
+      store,
+      profile,
+      "Garden",
+      gardenFeeSchema,
+      GARDEN_IRI,
+    );
+
+    expect(result.provenance.freshness).toBe("fresh");
+    expect(result.data?.annual_fee).toBe(gardenFeeExpected.gardenAnnualFee);
+  });
+
+  it("stays fresh when a deep load contains inverse relation stubs", async () => {
+    const statements = makeStatementsMap();
+    const doc = await evaluatedDoc(profile);
+    const base = makeStoreView(statements, () => structuredClone(doc));
+    const loadStatementCalls: string[] = [];
+    const store: WarmableStore = {
+      ...base,
+      loadOne: async () => withInverseStubs(structuredClone(doc)),
+      loadStatements: async (typeName, entityIRI, paths) => {
+        loadStatementCalls.push(`${typeName}::${entityIRI}`);
+        return base.loadStatements(typeName, entityIRI, paths);
+      },
+    };
+
+    await warm(store as never, profile, "Garden", gardenFeeSchema, {
+      rootIRIs: [GARDEN_IRI],
+    });
+    loadStatementCalls.length = 0;
+
+    const result = await readCalcValues(
+      store,
+      profile,
+      "Garden",
+      gardenFeeSchema,
+      GARDEN_IRI,
+    );
+
+    expect(result.provenance.freshness).toBe("fresh");
+    expect(result.data?.annual_fee).toBe(gardenFeeExpected.gardenAnnualFee);
+    expect(
+      loadStatementCalls.filter((key) => key === `Garden::${GARDEN_IRI}`),
+    ).toHaveLength(1);
+    expect(loadStatementCalls).not.toContain(`Garden::${SIBLING_GARDEN_IRI}`);
   });
 
   it("stale: source changed since warm, recomputes without writing through", async () => {

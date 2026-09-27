@@ -29,6 +29,7 @@ import {
 import { fingerprintForEntity, warm } from "./warm";
 
 const GARDEN_IRI = "https://example.org/garden/1";
+const SIBLING_GARDEN_IRI = "https://example.org/garden/2";
 const PLOT_SERVER_SCOPE = "#/definitions/Plot/properties/billable_area";
 
 function withSlotOverrides(
@@ -91,12 +92,24 @@ describe("warm", () => {
 
   it("writes per owning entity and re-warm issues zero writes", async () => {
     const statements = new Map<string, Record<string, StatementNode[]>>();
+    const loadStatementCalls: string[] = [];
     let writes = 0;
 
     const store = {
       filterMany: async () => [
         structuredClone(gardenFeeSampleData) as Record<string, unknown>,
       ],
+      loadOne: async () => {
+        const doc = structuredClone(gardenFeeSampleData) as Record<
+          string,
+          unknown
+        >;
+        doc.contains = [
+          { "@id": GARDEN_IRI, "@type": "Garden" },
+          { "@id": SIBLING_GARDEN_IRI, "@type": "Garden" },
+        ];
+        return doc;
+      },
       writeStatements: async (
         typeName: string,
         entityIRI: string,
@@ -111,6 +124,7 @@ describe("warm", () => {
         statements.set(key, existing);
       },
       loadStatements: async (typeName: string, entityIRI: string) => {
+        loadStatementCalls.push(`${typeName}::${entityIRI}`);
         return statements.get(`${typeName}::${entityIRI}`) ?? {};
       },
     };
@@ -125,11 +139,12 @@ describe("warm", () => {
         agent: "http://ex/agent",
       },
     );
-    expect(first.queriesIssued).toBe(1);
+    expect(first.queriesIssued).toBe(2);
     expect(first.writesIssued).toBeGreaterThan(0);
     expect(first.warmed).toBeGreaterThan(0);
 
     const writesAfterFirst = writes;
+    loadStatementCalls.length = 0;
 
     const second = await warm(
       store as never,
@@ -144,6 +159,12 @@ describe("warm", () => {
     expect(second.writesIssued).toBe(0);
     expect(second.skippedFresh).toBeGreaterThan(0);
     expect(writes).toBe(writesAfterFirst);
+    expect(loadStatementCalls).toContain("Plot::https://example.org/plot/1");
+    expect(loadStatementCalls).toContain("Plot::https://example.org/plot/2");
+    expect(
+      loadStatementCalls.filter((key) => key === `Garden::${GARDEN_IRI}`),
+    ).toHaveLength(1);
+    expect(loadStatementCalls).not.toContain(`Garden::${SIBLING_GARDEN_IRI}`);
 
     // Garden annual_fee materialized
     const gardenStmts = statements.get("Garden::https://example.org/garden/1");

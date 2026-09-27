@@ -15,6 +15,7 @@ import {
 import { compileCalcProfile } from "@graviola/formula-dependency";
 import {
   createSparqlAffectedPlanner,
+  readCalcValues,
   subscribeCalcInvalidation,
   warm,
 } from "@graviola/calc-engine";
@@ -98,6 +99,57 @@ export function runCalcWarmSuite(
       });
       expect(second.writesIssued).toBe(0);
       expect(second.skippedFresh).toBe(first.warmed);
+    });
+
+    test("A→B→A re-warm compares freshness with the latest statement", async () => {
+      const store = getCalcWarmStore();
+      const garden = await seedGarden(store);
+      const plot = (garden.patch as Record<string, any>).plots[0] as Record<
+        string,
+        any
+      >;
+
+      await warm(store, profile, "Garden", gardenFeeSchema, {
+        rootIRIs: [GARDEN_IRI],
+      });
+
+      await store.upsert("Plot", plot["@id"], {
+        ...plot,
+        width_m: (plot.width_m as number) * 2,
+      });
+      const changed = await warm(store, profile, "Garden", gardenFeeSchema, {
+        rootIRIs: [GARDEN_IRI],
+        skipFresh: true,
+      });
+      expect(changed.writesIssued).toBeGreaterThan(0);
+      // Materialized read must serve the latest statement, not the oldest one.
+      const storedB = await store.filterOne("Garden", GARDEN_IRI, {
+        select: { annual_fee: true },
+      } as never);
+      const readB = await readCalcValues(
+        store,
+        profile,
+        "Garden",
+        gardenFeeSchema,
+        GARDEN_IRI,
+      );
+      expect(readB.provenance.freshness).toBe("fresh");
+      expect(readB.data?.annual_fee).not.toBe(
+        gardenFeeExpected.gardenAnnualFee,
+      );
+      expect(readB.data?.annual_fee).toBe(storedB?.annual_fee);
+
+      await store.upsert("Plot", plot["@id"], plot);
+      const restored = await warm(store, profile, "Garden", gardenFeeSchema, {
+        rootIRIs: [GARDEN_IRI],
+        skipFresh: true,
+      });
+
+      expect(restored.writesIssued).toBeGreaterThan(0);
+      const stored = await store.filterOne("Garden", GARDEN_IRI, {
+        select: { annual_fee: true },
+      } as never);
+      expect(stored?.annual_fee).toBe(gardenFeeExpected.gardenAnnualFee);
     });
 
     test("upsert-driven invalidation re-warms the affected root (coarse dirtying)", async () => {

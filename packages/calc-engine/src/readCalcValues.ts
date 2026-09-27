@@ -10,7 +10,10 @@ import {
   evaluateCompiledProfileMany,
   selectLiveEvalSlots,
 } from "@graviola/formula-runtime";
-import { isMaterializationFresh } from "@graviola/formula-materialization";
+import {
+  currentStatement,
+  isMaterializationFresh,
+} from "@graviola/formula-materialization";
 import type { StatementNode } from "@graviola/provenance-types";
 import { definitionNameFromScope } from "@graviola/json-schema-utils";
 import type {
@@ -20,7 +23,7 @@ import type {
   StoreId,
 } from "@graviola/store-core";
 import type { CalcEngineStore } from "./evaluateForRoots";
-import { collectEntities, fingerprintForEntity } from "./warm";
+import { collectCalcTargets, fingerprintForEntity } from "./warm";
 
 export type ReadCalcValuesStore = CalcEngineStore & {
   loadStatements: (
@@ -179,8 +182,9 @@ async function readCalcValuesForRoot(
   let statementsFound = false;
   let allFresh = true;
   const statementsByEntity = new Map<string, Record<string, StatementNode[]>>();
+  const calcTargets = collectCalcTargets(workingDoc, profile);
 
-  for (const target of collectEntities(workingDoc)) {
+  for (const target of calcTargets) {
     const relevantSlots = Object.values(profile.slots).filter(
       (slot) => definitionNameFromScope(slot.entityScope) === target.typeName,
     );
@@ -220,11 +224,12 @@ async function readCalcValuesForRoot(
       : "stale";
 
   if (freshness === "fresh") {
-    for (const target of collectEntities(workingDoc)) {
+    for (const target of calcTargets) {
       const stmts = statementsByEntity.get(target.entityIRI);
       if (!stmts) continue;
       for (const [path, nodes] of Object.entries(stmts)) {
-        if (nodes[0]) target.entity[path] = nodes[0].value;
+        const current = currentStatement(nodes);
+        if (current) target.entity[path] = current.value;
       }
     }
     return buildReport(

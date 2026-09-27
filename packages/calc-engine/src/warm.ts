@@ -62,9 +62,14 @@ function entityId(value: unknown): string | undefined {
 function collectPathValues(
   doc: Record<string, unknown>,
   path: string,
-): { values: CollectedPathValue[]; arrayDerived: boolean } {
+): {
+  values: CollectedPathValue[];
+  arrayDerived: boolean;
+  sourcePresent: boolean;
+} {
   const segments = toPath(path);
   let arrayDerived = false;
+  let sourcePresent = false;
 
   const visit = (
     value: unknown,
@@ -73,11 +78,13 @@ function collectPathValues(
   ): CollectedPathValue[] => {
     if (Array.isArray(value)) {
       arrayDerived = true;
+      if (value.length === 0) sourcePresent = true;
       return value.flatMap((item) =>
         visit(item, segmentIndex, entityId(item) ?? ownerId),
       );
     }
     if (segmentIndex === segments.length) {
+      if (value !== undefined) sourcePresent = true;
       return [{ value, ownerId }];
     }
     if (!value || typeof value !== "object") {
@@ -91,7 +98,11 @@ function collectPathValues(
     );
   };
 
-  return { values: visit(doc, 0, entityId(doc)), arrayDerived };
+  return {
+    values: visit(doc, 0, entityId(doc)),
+    arrayDerived,
+    sourcePresent,
+  };
 }
 
 function stableJson(value: unknown): string {
@@ -197,6 +208,76 @@ export function collectEntities(
   return out;
 }
 
+function presentSourceCount(
+  profile: CompiledProfile,
+  typeName: string,
+  entity: Record<string, unknown>,
+): number {
+  const relevantSlots = (Object.values(profile.slots) as CompiledSlot[]).filter(
+    (slot) => definitionNameFromScope(slot.entityScope) === typeName,
+  );
+  let present = 0;
+  for (const slot of relevantSlots) {
+    for (const source of slot.sources) {
+      const sourcePath = toPath(source);
+      if (
+        sourcePath.length === 1 &&
+        relevantSlots.some(
+          (candidate) => candidate.propertyName === sourcePath[0],
+        )
+      ) {
+        continue;
+      }
+      if (collectPathValues(entity, source).sourcePresent) {
+        present += 1;
+      }
+    }
+  }
+  return present;
+}
+
+/**
+ * Collect named entities that carry calc inputs, once per IRI.
+ * Relation stubs contain only identity fields and are not calc targets.
+ */
+export function collectCalcTargets(
+  root: Record<string, unknown>,
+  profile: CompiledProfile,
+): EntityWriteTarget[] {
+  const targets = new Map<
+    string,
+    EntityWriteTarget & { presentSources: number; isRoot: boolean }
+  >();
+
+  for (const target of collectEntities(root)) {
+    const presentSources = presentSourceCount(
+      profile,
+      target.typeName,
+      target.entity,
+    );
+    const isRoot = target.entity === root;
+    if (!isRoot && presentSources === 0) continue;
+
+    const existing = targets.get(target.entityIRI);
+    if (
+      !existing ||
+      (!existing.isRoot && (isRoot || presentSources > existing.presentSources))
+    ) {
+      targets.set(target.entityIRI, {
+        ...target,
+        presentSources,
+        isRoot,
+      });
+    }
+  }
+
+  return Array.from(targets.values(), ({ typeName, entityIRI, entity }) => ({
+    typeName,
+    entityIRI,
+    entity,
+  }));
+}
+
 function planForEntity(
   profile: CompiledProfile,
   typeName: string,
@@ -266,7 +347,7 @@ export async function warm(
   let writesIssued = 0;
 
   for (const doc of evaluated.values) {
-    for (const target of collectEntities(doc)) {
+    for (const target of collectCalcTargets(doc, profile)) {
       const fingerprint = fingerprintForEntity(
         profile,
         target.typeName,

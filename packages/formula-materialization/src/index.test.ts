@@ -9,6 +9,7 @@ import type { StatementNode } from "@graviola/provenance-types";
 import {
   buildMaterializationPlan,
   buildStatementWrites,
+  currentStatement,
   isMaterializationFresh,
   planInvalidation,
   scopeToDotPath,
@@ -96,21 +97,88 @@ describe("formula-materialization", () => {
     expect(() => buildStatementWrites(plan)).toThrow(/non-primitive/);
   });
 
-  it("isMaterializationFresh matches fingerprint on hot fields", () => {
-    const fresh: StatementNode[] = [
+  it("checks freshness against only the latest statement", () => {
+    const statements: StatementNode[] = [
+      {
+        value: 1,
+        generatedAt: "2026-01-01T00:00:00.000Z",
+        wasGeneratedBy: { inputFingerprint: "fp-a" },
+      },
+      {
+        value: 2,
+        generatedAt: "2026-01-02T00:00:00.000Z",
+        wasGeneratedBy: { inputFingerprint: "fp-b" },
+      },
+    ];
+
+    expect(isMaterializationFresh(statements, "fp-b")).toBe(true);
+    expect(isMaterializationFresh(statements, "fp-a")).toBe(false);
+  });
+
+  it("keeps single-statement freshness behavior", () => {
+    const statements: StatementNode[] = [
       {
         value: 1,
         wasGeneratedBy: { inputFingerprint: "fp-1" },
       },
     ];
-    const stale: StatementNode[] = [
+
+    expect(isMaterializationFresh(statements, "fp-1")).toBe(true);
+    expect(isMaterializationFresh(statements, "fp-old")).toBe(false);
+    expect(isMaterializationFresh([], "fp-1")).toBe(false);
+  });
+
+  it("uses the last statement when generatedAt is missing", () => {
+    const statements: StatementNode[] = [
       {
         value: 1,
-        wasGeneratedBy: { inputFingerprint: "fp-old" },
+        wasGeneratedBy: { inputFingerprint: "fp-a" },
+      },
+      {
+        value: 2,
+        wasGeneratedBy: { inputFingerprint: "fp-b" },
       },
     ];
-    expect(isMaterializationFresh(fresh, "fp-1")).toBe(true);
-    expect(isMaterializationFresh(stale, "fp-1")).toBe(false);
-    expect(isMaterializationFresh([], "fp-1")).toBe(false);
+
+    expect(isMaterializationFresh(statements, "fp-b")).toBe(true);
+    expect(isMaterializationFresh(statements, "fp-a")).toBe(false);
+  });
+
+  it("uses the last statement when generatedAt is equal", () => {
+    const generatedAt = "2026-01-01T00:00:00.000Z";
+    const statements: StatementNode[] = [
+      {
+        value: 1,
+        generatedAt,
+        wasGeneratedBy: { inputFingerprint: "fp-a" },
+      },
+      {
+        value: 2,
+        generatedAt,
+        wasGeneratedBy: { inputFingerprint: "fp-b" },
+      },
+    ];
+
+    expect(isMaterializationFresh(statements, "fp-b")).toBe(true);
+    expect(isMaterializationFresh(statements, "fp-a")).toBe(false);
+  });
+});
+
+describe("currentStatement", () => {
+  const node = (value: number, generatedAt?: string): StatementNode =>
+    ({ value, generatedAt }) as StatementNode;
+
+  it("returns the node with the latest generatedAt, regardless of order", () => {
+    const newer = node(2, "2026-01-02T00:00:00.000Z");
+    const older = node(1, "2026-01-01T00:00:00.000Z");
+    expect(currentStatement([newer, older])).toBe(newer);
+    expect(currentStatement([older, newer])).toBe(newer);
+  });
+
+  it("falls back to the last node without timestamps and is undefined when empty", () => {
+    const a = node(1);
+    const b = node(2);
+    expect(currentStatement([a, b])).toBe(b);
+    expect(currentStatement([])).toBeUndefined();
   });
 });
