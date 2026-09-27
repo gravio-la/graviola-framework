@@ -7,6 +7,8 @@ import type {
 } from "@graviola/store-core";
 import type { StatementWrite } from "@graviola/provenance-types";
 
+import { decodeAndValidateEntityIri } from "./validateIris.js";
+
 /** MIME negotiation for ReadResult envelope (v1 wire contract). */
 export const GRAVIOLA_STORE_ENVELOPE_ACCEPT =
   "application/vnd.graviola-store.envelope+json";
@@ -172,13 +174,8 @@ const decodeEntityIri = (
   typeName: string,
   segment: string,
   ctx: DecodePathContext,
-): string => {
-  const localId = decodePathSegment(segment);
-  if (ctx.iriHandling.includes("localId") && ctx.localIdToIri) {
-    return ctx.localIdToIri(typeName, localId);
-  }
-  return localId;
-};
+): string =>
+  decodeAndValidateEntityIri(typeName, segment, ctx, decodePathSegment);
 
 const isKnownType = (typeName: string, typeNames: string[]): boolean =>
   typeNames.includes(typeName);

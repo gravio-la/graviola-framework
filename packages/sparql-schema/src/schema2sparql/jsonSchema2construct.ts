@@ -8,6 +8,8 @@ import {
 import { Variable } from "@rdfjs/types";
 import { JSONSchema7, JSONSchema7Definition } from "json-schema";
 
+import { iriRef } from "../sparqlTerms";
+
 const propertiesContainStopSymbol = (
   properties: object,
   stopSymbols: string[],
@@ -24,7 +26,7 @@ const makePrefixed = (key: string) => (key.includes(":") ? key : `:${key}`);
 const makePrefixedProperyPath = (path: string[]) =>
   path.map((key) => makePrefixed(key)).join("/");
 const mkSubject = (subjectURI: string) =>
-  subjectURI.startsWith("?") ? subjectURI : `<${subjectURI}>`;
+  subjectURI.startsWith("?") ? subjectURI : iriRef(subjectURI);
 
 /**
  * Resolve the object sub-schema a property points at (via `$ref`, inline

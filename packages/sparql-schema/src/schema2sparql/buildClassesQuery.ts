@@ -19,6 +19,7 @@ import df from "@rdfjs/data-model";
 import { filterToSparql } from "@/filters/filterToSparql";
 import type { FilterContext } from "@/filters/types";
 import { convertIRIToNode } from "@/utils";
+import { toSparqlVariableName } from "../sparqlTerms";
 import { prefixes2sparqlPrefixDeclaration } from "./prefixes2sparqlPrefixDeclaration";
 
 /**
@@ -33,16 +34,6 @@ export interface BuildClassesQueryOptions {
   flavour?: SPARQLFlavour;
 
   defaultPrefix?: string;
-}
-
-/**
- * Sanitize variable name to be valid in SPARQL
- * Only allow alphanumeric and underscore
- */
-function sanitizeVariableName(name: string): string {
-  // Remove any characters that aren't alphanumeric or underscore
-  // Replace colons and other special chars with underscore
-  return name.replace(/[^a-zA-Z0-9_]/g, "_");
 }
 
 /**
@@ -107,7 +98,7 @@ export function buildClassesWithFilterQuery(
 
       // Create predicate and variable for this property
       const predicate = convertIRIToNode(propertyName, prefixMap);
-      const propVarName = sanitizeVariableName(propertyName);
+      const propVarName = toSparqlVariableName(propertyName);
       const propVar = df.variable(propVarName);
 
       // Create filter context for this property

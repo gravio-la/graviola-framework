@@ -2,6 +2,8 @@ import { QueryBuilderOptions } from "@graviola/edb-core-types";
 import { filterUndefOrNull } from "@graviola/edb-core-utils";
 import { Term } from "@rdfjs/types";
 
+import { iriRef, sparqlStringLiteral } from "../sparqlTerms";
+
 /** SPARQL JSON binding cell or RDF/JS Term. */
 type BindingCell =
   | Term
@@ -17,9 +19,6 @@ export type FindEntityByAuthorityIRIFn = (
   limit?: number,
   options?: QueryBuilderOptions,
 ) => Promise<string[]>;
-
-const escapeLiteral = (value: string): string =>
-  value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 
 const subjectIriFromBinding = (cell: BindingCell): string | undefined => {
   if (!cell || typeof cell !== "object" || typeof cell.value !== "string") {
@@ -51,20 +50,22 @@ export const findEntityByAuthorityIRI: FindEntityByAuthorityIRIFn = async (
   options,
 ) => {
   const defaultPrefix = options?.defaultPrefix ?? "";
-  const typePattern = typeIRI ? `  ?subject a <${typeIRI}> .` : "";
-  const literal = escapeLiteral(authorityIRI);
+  const typePattern = typeIRI ? `  ?subject a ${iriRef(typeIRI)} .` : "";
+  const authorityRef = iriRef(authorityIRI);
+  const defaultPrefixDecl = defaultPrefix
+    ? `PREFIX : ${iriRef(defaultPrefix)}\n`
+    : "";
 
-  const query = `PREFIX : <${defaultPrefix}>
-PREFIX owl: <http://www.w3.org/2002/07/owl#>
+  const query = `${defaultPrefixDecl}PREFIX owl: <http://www.w3.org/2002/07/owl#>
 SELECT DISTINCT ?subject WHERE {
   {
-    ?subject :idAuthority/:id <${authorityIRI}> .
+    ?subject :idAuthority/:id ${authorityRef} .
   } UNION {
-    ?subject :sameAs <${authorityIRI}> .
+    ?subject :sameAs ${authorityRef} .
   } UNION {
-    ?subject :sameAs "${literal}" .
+    ?subject :sameAs ${sparqlStringLiteral(authorityIRI)} .
   } UNION {
-    ?subject owl:sameAs <${authorityIRI}> .
+    ?subject owl:sameAs ${authorityRef} .
   }
 ${typePattern}
 }

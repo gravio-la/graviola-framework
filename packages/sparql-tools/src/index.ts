@@ -1,3 +1,4 @@
+import { assertSafeIri } from "@graviola/edb-core-utils";
 import {
   graphStoreUrl,
   normalizeSparqlBase,
@@ -98,6 +99,7 @@ export async function clearGraph({
   graph,
 }: ClearGraphOptions): Promise<void> {
   const { update } = sparqlEndpointUrls(endpoint);
+  if (graph) assertSafeIri(graph);
   const updateQuery = graph ? `CLEAR GRAPH <${graph}>` : "CLEAR DEFAULT";
   const res = await fetch(update, {
     method: "POST",

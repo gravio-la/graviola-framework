@@ -6,6 +6,7 @@ import {
   makeSPARQLWherePart,
   buildQueryWithPrefixAndGraph,
 } from "@/crud/makeSPARQLWherePart";
+import { iriRef } from "../sparqlTerms";
 
 export const makeSPARQLRestoreFromTrashQuery = (
   entityIRI: string | string[],
@@ -19,7 +20,7 @@ export const makeSPARQLRestoreFromTrashQuery = (
     flavour: options.queryBuildOptions?.sparqlFlavour,
   });
   const deleteInsertQuery = DELETE` ${s} a ?class_trash `
-    .INSERT` ${s} a <${typeIRI}> `.WHERE`
+    .INSERT` ${s} a ${iriRef(typeIRI)} `.WHERE`
     ${wherePart}
     `;
 

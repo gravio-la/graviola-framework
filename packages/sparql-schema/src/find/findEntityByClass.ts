@@ -1,4 +1,5 @@
 import { withDefaultPrefix } from "@/crud";
+import { iriRef } from "../sparqlTerms";
 import { Entity, QueryOptions } from "@graviola/edb-core-types";
 import df from "@rdfjs/data-model";
 import { SELECT, sparql } from "@tpluscode/sparql-builder";
@@ -88,7 +89,7 @@ export const findEntityByClass: FindEntityByClassFn = async (
             `;
     query = SELECT.DISTINCT` ${subjectV} (SAMPLE(${oneOfLabelOrDesc}) AS ${firstOneOfTitleV}) (SAMPLE(${imageV}) AS ${firstImageV}) (SAMPLE(${descriptionV}) AS ${firstDescriptionV})`
       .WHERE`
-          ${subjectV} a <${typeIRI}> .
+          ${subjectV} a ${iriRef(typeIRI)} .
             OPTIONAL {${subjectV} ${labelPredicate} ${nameV} .}
             OPTIONAL {${subjectV} ${titlePredicate} ${titleV} .}
             OPTIONAL {${subjectV} ${descriptionPredicate} ${descriptionV} .}
@@ -109,7 +110,7 @@ export const findEntityByClass: FindEntityByClassFn = async (
   } else {
     query = SELECT.DISTINCT` ${subjectV} (SAMPLE(${oneOfLabelOrDesc}) AS ${firstOneOfTitleV}) (SAMPLE(${imageV}) AS ${firstImageV}) (SAMPLE(${descriptionV}) AS ${firstDescriptionV})`
       .WHERE`
-          ${subjectV} a <${typeIRI}> .
+          ${subjectV} a ${iriRef(typeIRI)} .
             OPTIONAL {${subjectV} ${labelPredicate} ${nameV} .}
             OPTIONAL {${subjectV} ${titlePredicate} ${titleV} .}
             OPTIONAL {${subjectV} ${descriptionPredicate} ${descriptionV} .}

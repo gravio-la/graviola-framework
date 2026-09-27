@@ -5,6 +5,7 @@ import {
 } from "./makeSPARQLInverseSyncQuery";
 import { SPARQLCRUDOptions } from "@graviola/edb-core-types";
 import { InversePropertyData } from "@graviola/json-schema-utils";
+import { InvalidIriError } from "@graviola/edb-core-utils";
 
 describe("makeSPARQLInverseSyncQuery", () => {
   const mockOptions: SPARQLCRUDOptions = {
@@ -21,6 +22,44 @@ describe("makeSPARQLInverseSyncQuery", () => {
   };
 
   const entityIRI = "http://example.com/person/123";
+
+  describe("when entity or relation IRIs are unsafe", () => {
+    it("throws InvalidIriError for a malicious entity IRI", () => {
+      expect(() =>
+        makeSPARQLInverseSyncQuery(
+          "http://example.com/person/123> ; DROP ALL ; #",
+          [
+            {
+              path: ["subscribers"],
+              typeName: "MailingList",
+              typeIRI: "http://example.com/MailingList",
+              schema: undefined,
+              entityIRIs: ["http://example.com/mailinglist/tech"],
+            },
+          ],
+          mockOptions,
+        ),
+      ).toThrow(InvalidIriError);
+    });
+
+    it("throws InvalidIriError for a malicious relation target IRI", () => {
+      expect(() =>
+        makeSPARQLInverseSyncQuery(
+          entityIRI,
+          [
+            {
+              path: ["subscribers"],
+              typeName: "MailingList",
+              typeIRI: "http://example.com/MailingList",
+              schema: undefined,
+              entityIRIs: ["http://example.com/list/1> ; DROP ALL ; #"],
+            },
+          ],
+          mockOptions,
+        ),
+      ).toThrow(InvalidIriError);
+    });
+  });
 
   describe("when inverseProperties array is empty", () => {
     it("should return null", () => {

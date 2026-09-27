@@ -4,6 +4,7 @@ import { Variable } from "@rdfjs/types";
 import { SELECT } from "@tpluscode/sparql-builder";
 
 import { makeSPARQLWherePart } from "@/crud/makeSPARQLWherePart";
+import { iriRef } from "../sparqlTerms";
 
 type FieldIriWithVar = {
   predicate: string;
@@ -30,7 +31,7 @@ export const basicFieldsQuery: (
     ${wherePart}
     ${fieldIRIs.map(
       ({ predicate, variable }) =>
-        `OPTIONAL { ?${subject.value} <${predicate}> ?${variable.value} . } `,
+        `OPTIONAL { ?${subject.value} ${iriRef(predicate)} ?${variable.value} . } `,
     )}`.build(queryBuildOptions);
   return query;
 };

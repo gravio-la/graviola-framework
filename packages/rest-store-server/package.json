@@ -36,6 +36,7 @@
     "test": "bun test src"
   },
   "dependencies": {
+    "@graviola/edb-core-utils": "workspace:*",
     "@graviola/store-core": "workspace:*",
     "@graviola/provenance-types": "workspace:*"
   },

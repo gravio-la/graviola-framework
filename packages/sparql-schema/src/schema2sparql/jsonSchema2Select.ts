@@ -14,6 +14,7 @@ import {
 } from "@graviola/json-schema-utils";
 import { JSONSchema7, JSONSchema7Definition } from "json-schema";
 
+import { iriRef } from "../sparqlTerms";
 import type { AnnotationSelectFragments } from "./annotationProjectionsToSparql";
 
 const makeWherePart = (queryClause: string, required: boolean) =>
@@ -312,7 +313,7 @@ export const jsonSchema2Select = (
     features,
     minimal,
   );
-  const matchType = typeIRI ? `?entity a <${typeIRI}> .` : "";
+  const matchType = typeIRI ? `?entity a ${iriRef(typeIRI)} .` : "";
   const sparqlFinish =
     sparqlSelectOptions && !countResults
       ? `GROUP BY ${variable} \n ${sparqlPartFromOptions(sparqlSelectOptions)}`

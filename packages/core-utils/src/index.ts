@@ -1,4 +1,5 @@
 export * from "./encodeIRI";
+export * from "./iriValidation";
 export * from "./graviolaOntology";
 export * from "./filterUndefOrNull";
 export * from "./irisToData";

@@ -29,6 +29,9 @@
     "db:load": "bun run src/cli.ts load",
     "db:clear": "bun run src/cli.ts clear"
   },
+  "dependencies": {
+    "@graviola/edb-core-utils": "workspace:*"
+  },
   "devDependencies": {
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",

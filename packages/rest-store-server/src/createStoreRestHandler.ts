@@ -29,6 +29,7 @@ import {
   type GraviolaIriHandlingMode,
   type GraviolaStoreHandshakeResponse,
 } from "./handshake.js";
+import { InvalidIriError, validateCommandIris } from "./validateIris.js";
 
 const extractFacetFieldsByType = (
   store: unknown,
@@ -373,12 +374,25 @@ export const createStoreRestHandler = <R extends SchemaRegistry>(
       return extMatch.route.handler(req, extMatch.params, ctx);
     }
 
-    const decoded = decodeStorePath(req.method, relative, req, {
-      typeNames,
-      iriHandling,
-      localIdToIri: opts.localIdToIri,
-      maxLimit: opts.pagination?.maxLimit,
-    });
+    let decoded: ReturnType<typeof decodeStorePath>;
+    try {
+      decoded = decodeStorePath(req.method, relative, req, {
+        typeNames,
+        iriHandling,
+        localIdToIri: opts.localIdToIri,
+        maxLimit: opts.pagination?.maxLimit,
+      });
+    } catch (err) {
+      if (err instanceof InvalidIriError) {
+        return problemResponse(
+          400,
+          "invalid_entity_iri",
+          "Invalid entity IRI",
+          err.message,
+        );
+      }
+      throw err;
+    }
 
     if (decoded === null) {
       return problemResponse(404, "not_found", "Route not found");
@@ -405,6 +419,20 @@ export const createStoreRestHandler = <R extends SchemaRegistry>(
       cmd = await enrichCommandFromBody(cmd, req);
     }
 
+    try {
+      validateCommandIris(cmd);
+    } catch (err) {
+      if (err instanceof InvalidIriError) {
+        return problemResponse(
+          400,
+          "invalid_entity_iri",
+          "Invalid entity IRI",
+          err.message,
+        );
+      }
+      throw err;
+    }
+
     const cap = commandCapability(cmd) as CapabilityName;
     if (!hasCapabilityInDescriptor(store.capabilities, cap)) {
       return problemResponse(
@@ -418,6 +446,14 @@ export const createStoreRestHandler = <R extends SchemaRegistry>(
       const result = await runCommand(cmd as StoreCommand<R>, ctx);
       return encodeCommandResult(cmd, result);
     } catch (err) {
+      if (err instanceof InvalidIriError) {
+        return problemResponse(
+          400,
+          "invalid_entity_iri",
+          "Invalid entity IRI",
+          err.message,
+        );
+      }
       const e = err as { status?: number; code?: string; message?: string };
       if (e?.status === 501) {
         return problemResponse(

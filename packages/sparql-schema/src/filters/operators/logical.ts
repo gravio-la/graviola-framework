@@ -10,12 +10,7 @@ import type { FilterContext, FilterResult } from "../types";
 import { filterToSparql } from "../filterToSparql";
 import { convertIRIToNode } from "../../utils/iriConverter";
 
-/**
- * Sanitize variable name (remove special characters)
- */
-function sanitizeVariableName(name: string): string {
-  return name.replace(/[^a-zA-Z0-9_]/g, "_");
-}
+import { toSparqlVariableName } from "../../sparqlTerms";
 
 /**
  * Create a predicate node from a property name
@@ -102,7 +97,7 @@ function processMultiPropertyFilter(
       propertyName,
       baseContext.prefixMap,
     );
-    const propertyVar = df.variable(sanitizeVariableName(propertyName));
+    const propertyVar = df.variable(toSparqlVariableName(propertyName));
 
     // Create context for this specific property with proper predicate and variable
     const propertyContext: FilterContext = {

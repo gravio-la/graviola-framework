@@ -41,6 +41,7 @@ import {
 } from "@/base";
 import { filterToSparql } from "@/filters/filterToSparql";
 import type { FilterContext } from "@/filters/types";
+import { toSparqlVariableName } from "../sparqlTerms";
 
 /**
  * Context for query construction
@@ -1059,16 +1060,6 @@ function createPredicate(
 }
 
 /**
- * Sanitize variable name to be valid in SPARQL
- * Only allow alphanumeric and underscore
- */
-function sanitizeVariableName(name: string): string {
-  const cleaned = name.replace(/[^a-zA-Z0-9_]/g, "_");
-  if (!/^[a-zA-Z]/.test(cleaned)) return `var_${cleaned}`;
-  return cleaned;
-}
-
-/**
  * Single gateway for creating SPARQL variables with globally unique names.
  * Always routes through df.variable() to prevent injection from weird schema property names.
  */
@@ -1076,5 +1067,5 @@ function createUniqueVar(
   name: string,
   ctx: QueryConstructionContext,
 ): Variable {
-  return df.variable(`${sanitizeVariableName(name)}_${ctx.varCounter.value++}`);
+  return df.variable(`${toSparqlVariableName(name)}_${ctx.varCounter.value++}`);
 }

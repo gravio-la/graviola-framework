@@ -2,6 +2,8 @@ import { SPARQLCRUDOptions } from "@graviola/edb-core-types";
 import df from "@rdfjs/data-model";
 import { SELECT } from "@tpluscode/sparql-builder";
 
+import { iriRef } from "../sparqlTerms";
+
 export const getClasses = async (
   entityIRI: string,
   selectFetch: (query: string) => Promise<any>,
@@ -10,7 +12,7 @@ export const getClasses = async (
   const { queryBuildOptions } = options;
   const classes = df.variable("classes");
   const query = SELECT`${classes}`.WHERE`
-      <${entityIRI}> a ${classes} .
+      ${iriRef(entityIRI)} a ${classes} .
     `.build(queryBuildOptions);
   try {
     const result = await selectFetch(query);

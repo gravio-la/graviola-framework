@@ -6,6 +6,8 @@ import {
 import df from "@rdfjs/data-model";
 import { SELECT } from "@tpluscode/sparql-builder";
 
+import { iriRef, sparqlStringLiteral } from "../sparqlTerms";
+
 type OwnOptions = {
   typeIRItoTypeName: IRIToStringFn;
   primaryFields: PrimaryFieldExtractDeclaration;
@@ -23,16 +25,17 @@ export const searchEntityByLabel = async (
   const typeName = typeIRItoTypeName(typeIRI);
   const primaryField = primaryFields[typeName];
   const labelField = primaryField?.label || "label";
-  const escapedLabel = label.replace(/"/g, '\\"');
   let query = SELECT.DISTINCT` ${subjectV}`.WHERE`
-    ${subjectV} :${labelField} "${escapedLabel}" .
-    ${subjectV} a <${typeIRI}> .
+    ${subjectV} :${labelField} ${sparqlStringLiteral(label)} .
+    ${subjectV} a ${iriRef(typeIRI)} .
   `
     .LIMIT(limit)
     .build({ prefixes });
 
-  query = `PREFIX : <${defaultPrefix}>
+  if (defaultPrefix) {
+    query = `PREFIX : ${iriRef(defaultPrefix)}
   ${query}`;
+  }
 
   try {
     const bindings = await doQuery(query);

@@ -16,6 +16,7 @@ import {
   withDefaultPrefix,
 } from "@/crud";
 import { jsonSchema2construct } from "@/schema2sparql";
+import { iriRef } from "../sparqlTerms";
 
 type SaveOptions = SPARQLCRUDOptions & {
   skipRemove?: boolean;
@@ -40,7 +41,7 @@ export const save = async (
 
     // Add WITH clause manually if defaultUpdateGraph is provided
     if (options.defaultUpdateGraph) {
-      insertQuery = `WITH <${options.defaultUpdateGraph}>\n${insertQuery}`;
+      insertQuery = `WITH ${iriRef(options.defaultUpdateGraph)}\n${insertQuery}`;
     }
 
     // Apply prefix

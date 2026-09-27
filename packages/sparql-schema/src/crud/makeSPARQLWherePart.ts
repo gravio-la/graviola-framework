@@ -8,6 +8,8 @@ import { WITH } from "@tpluscode/sparql-builder";
 import type { DeleteInsertQuery } from "@tpluscode/sparql-builder/lib/DeleteBuilder.js";
 import type { InsertQuery } from "@tpluscode/sparql-builder/lib/InsertBuilder.js";
 
+import { iriRef } from "../sparqlTerms";
+
 type SPARQLWherePartOptions = {
   useBind?: boolean;
   flavour?: SPARQLFlavour;
@@ -30,15 +32,15 @@ export const makeSPARQLWherePart = (
 
   if (entityIRIList.length === 1 && shouldUseBind) {
     // Use BIND for single entity IRI (better performance for Oxigraph)
-    const entityIRIValue = `<${entityIRIList[0]}>`;
+    const entityIRIValue = iriRef(entityIRIList[0]);
     return typeIRI
-      ? ` BIND(${entityIRIValue} AS ${s}) . ${s} a <${typeIRI}> . `
+      ? ` BIND(${entityIRIValue} AS ${s}) . ${s} a ${iriRef(typeIRI)} . `
       : ` BIND(${entityIRIValue} AS ${s}) . ${s} a ?type . `;
   } else {
     // Use VALUES for multiple entity IRIs or when BIND is not enabled
-    const entityIRIValueString = `<${entityIRIList.join("> <")}>`;
+    const entityIRIValueString = entityIRIList.map(iriRef).join(" ");
     return typeIRI
-      ? ` VALUES ${s} { ${entityIRIValueString} } ${s} a <${typeIRI}> . `
+      ? ` VALUES ${s} { ${entityIRIValueString} } ${s} a ${iriRef(typeIRI)} . `
       : ` VALUES ${s} { ${entityIRIValueString} } ${s} a ?type . `;
   }
 };
@@ -57,10 +59,10 @@ export const withDefaultPrefix = (
     // Insert PREFIX after BASE
     const baseDecl = match[0];
     const rest = query.slice(baseDecl.length);
-    return `${baseDecl}\nPREFIX : <${prefix}>\n\n${rest}`;
+    return `${baseDecl}\nPREFIX : ${iriRef(prefix)}\n\n${rest}`;
   } else {
     // No BASE, PREFIX goes at the top
-    return `PREFIX : <${prefix}>\n\n${query}`;
+    return `PREFIX : ${iriRef(prefix)}\n\n${query}`;
   }
 };
 

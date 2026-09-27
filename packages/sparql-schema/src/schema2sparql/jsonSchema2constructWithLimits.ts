@@ -6,6 +6,8 @@ import {
 import { Variable } from "@rdfjs/types";
 import { JSONSchema7 } from "json-schema";
 
+import { iriRef } from "../sparqlTerms";
+
 const MAX_RECURSION = 4;
 const DEFAULT_LIMIT = 10;
 
@@ -14,7 +16,7 @@ const mkSubject = (subjectURI: string | Variable) =>
   typeof subjectURI === "string"
     ? subjectURI.startsWith("?")
       ? subjectURI
-      : `<${subjectURI}>`
+      : iriRef(subjectURI)
     : `?${subjectURI.value}`;
 
 const propertiesContainStopSymbol = (

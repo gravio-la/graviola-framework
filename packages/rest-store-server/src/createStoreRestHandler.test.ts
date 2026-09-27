@@ -231,6 +231,57 @@ describe("createStoreRestHandler contract", () => {
     } satisfies Partial<GraviolaRestError>);
   });
 
+  test("malicious entityIRIs in _query body → 400 invalid_entity_iri", async () => {
+    const mem = createInMemoryStore<DemoSchema>({
+      identifies,
+      typeNames: [...TYPE_NAMES],
+    });
+    const handler = createStoreRestHandler({
+      store: mem,
+      typeNames: [...TYPE_NAMES],
+      basePath: "/api/graviola",
+    });
+
+    const response = await handler(
+      new Request(`${BASE_URL}/api/graviola/Person/_query`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          entityIRIs: [
+            "http://example.org/x> } UNION { ?entity ?p ?o . FILTER(isIRI(?entity)) } #",
+          ],
+        }),
+      }),
+    );
+    expect(response?.status).toBe(400);
+    expect(await response?.json()).toMatchObject({
+      code: "invalid_entity_iri",
+    });
+  });
+
+  test("crafted path segment → 400 invalid_entity_iri", async () => {
+    const mem = createInMemoryStore<DemoSchema>({
+      identifies,
+      typeNames: [...TYPE_NAMES],
+    });
+    const handler = createStoreRestHandler({
+      store: mem,
+      typeNames: [...TYPE_NAMES],
+      basePath: "/api/graviola",
+    });
+
+    const maliciousIri = encodeURIComponent(
+      "http://example.org/x> } UNION { ?entity ?p ?o .",
+    );
+    const response = await handler(
+      new Request(`${BASE_URL}/api/graviola/Person/${maliciousIri}`),
+    );
+    expect(response?.status).toBe(400);
+    expect(await response?.json()).toMatchObject({
+      code: "invalid_entity_iri",
+    });
+  });
+
   test("unknown type → 404 unknown_type", async () => {
     const mem = createInMemoryStore<DemoSchema>({
       identifies,

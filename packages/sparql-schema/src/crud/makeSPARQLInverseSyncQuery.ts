@@ -4,6 +4,8 @@ import { DELETE } from "@tpluscode/sparql-builder";
 import { InversePropertyData } from "@graviola/json-schema-utils";
 import { sparql } from "@tpluscode/rdf-string";
 
+import { iriRef } from "../sparqlTerms";
+
 const makePrefixed = (key: string) => (key.includes(":") ? key : `:${key}`);
 const makePrefixedProperyPath = (path: string[]) =>
   path.map((key) => makePrefixed(key)).join("/");
@@ -47,22 +49,21 @@ export const makeSPARQLInverseSyncQuery: (
     const targetTypeIRI = inverseProp.typeIRI;
 
     // DELETE pattern: Remove entity from all current targets
-    deletePatterns.push(
-      `${oldTargetVar} ${targetPropertyPath} <${entityIRI}> .`,
-    );
+    const entityRef = iriRef(entityIRI);
+    deletePatterns.push(`${oldTargetVar} ${targetPropertyPath} ${entityRef} .`);
 
     // INSERT pattern: Add entity to new targets (only if there are targets)
     if (inverseProp.entityIRIs.length > 0) {
       insertPatterns.push(
-        `${newTargetVar} ${targetPropertyPath} <${entityIRI}> .`,
+        `${newTargetVar} ${targetPropertyPath} ${entityRef} .`,
       );
     }
 
     // WHERE part for finding existing targets to delete
     whereParts.push(`{
       # Find existing targets to delete
-      ${oldTargetVar} a <${targetTypeIRI}> ;
-        ${targetPropertyPath} <${entityIRI}> .
+      ${oldTargetVar} a ${iriRef(targetTypeIRI)} ;
+        ${targetPropertyPath} ${entityRef} .
     } UNION {
       # If no existing targets, bind to a dummy value to ensure variable is bound
       BIND(<http://dummy> AS ${oldTargetVar})
@@ -71,7 +72,7 @@ export const makeSPARQLInverseSyncQuery: (
     // Define new targets to add (only if there are targets)
     if (inverseProp.entityIRIs.length > 0) {
       const valuesClause = inverseProp.entityIRIs
-        .map((iri) => `<${iri}>`)
+        .map((iri) => iriRef(iri))
         .join("\n    ");
       whereParts.push(`VALUES ${newTargetVar} {\n    ${valuesClause}\n  }`);
     }
