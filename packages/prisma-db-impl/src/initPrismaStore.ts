@@ -827,6 +827,10 @@ export function initPrismaStore<
     .store;
 }
 
+/**
+ * @deprecated Use {@link initPrismaStore} instead.
+ * See the `@graviola/store-core` README for the migration path.
+ */
 export function initPrismaAbstractDatastore<
   TPrisma extends AbstractPrismaClient = AbstractPrismaClient,
 >(

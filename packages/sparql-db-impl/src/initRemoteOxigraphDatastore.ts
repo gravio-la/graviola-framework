@@ -13,7 +13,12 @@ export type InitRemoteOxigraphDatastoreOptions = Omit<
   endpoint: string;
 };
 
-/** Non-React convenience initializer for CLI and server consumers. */
+/**
+ * Non-React convenience initializer for CLI and server consumers.
+ *
+ * @deprecated Use {@link initSPARQLStore} instead.
+ * See the `@graviola/store-core` README for the migration path.
+ */
 export function initRemoteOxigraphDatastore(
   opts: InitRemoteOxigraphDatastoreOptions,
 ): AbstractDatastore {

@@ -145,6 +145,11 @@ export type AbstractDatastoreIterable<
   >;
 };
 
+/**
+ * @deprecated Use the capability-composed `Store` from `@graviola/store-core`
+ * (e.g. `BaseStore<R> & Loads<R> & Writes<R>`) instead.
+ * See the `@graviola/store-core` README for the migration path.
+ */
 export type AbstractDatastore<
   TypeName extends string = string,
   DocumentResultTypeMap extends Record<string, any> = Record<string, any>,

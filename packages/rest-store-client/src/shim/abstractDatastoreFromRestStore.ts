@@ -35,6 +35,9 @@ const queryToFilterManyOpts = <R extends SchemaRegistry>(
 /**
  * Thin {@link AbstractDatastore} façade over a HTTP-backed {@link Store}-shaped client.
  * Used by legacy code paths; React {@link CrudProviderContext} is now typed on {@link CrudDatastoreStore}.
+ *
+ * @deprecated Use {@link createRESTClientStore} or {@link createRESTClientStoreClient} instead.
+ * See the `@graviola/store-core` README for the migration path.
  */
 export const abstractDatastoreFromRestStore = <
   R extends SchemaRegistry = SchemaRegistry,

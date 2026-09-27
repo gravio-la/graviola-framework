@@ -1049,6 +1049,9 @@ export function initSPARQLStore(
 
 /**
  * Legacy {@link AbstractDatastore} — use for contract tests and adapters not yet migrated to `Store`.
+ *
+ * @deprecated Use {@link initSPARQLStore} instead.
+ * See the `@graviola/store-core` README for the migration path.
  */
 export function initSPARQLAbstractDatastore(
   config: SPARQLDataStoreConfig,
