@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import type { JSONSchema7 } from "json-schema";
 import {
+  applyStatementRetention,
   applyStatementWrites,
   compactStatementNodeForPersistence,
   dedupeStatementNodes,
@@ -100,6 +101,49 @@ describe("dedupeStatementNodes", () => {
     ]);
     expect(nodes).toHaveLength(2);
     expect(nodes.find((n) => n.value === 10)?.source).toBe("restored");
+  });
+});
+
+describe("applyStatementRetention", () => {
+  test("orders by generatedAt and keeps the requested newest nodes", () => {
+    const nodes = applyStatementRetention(
+      [
+        { value: 30, generatedAt: "2026-03-03T00:00:00.000Z" },
+        { value: 10, generatedAt: "2026-03-01T00:00:00.000Z" },
+        { value: 20, generatedAt: "2026-03-02T00:00:00.000Z" },
+      ],
+      { keepLast: 2 },
+    );
+    expect(nodes.map(({ value }) => value)).toEqual([20, 30]);
+  });
+
+  test("uses array order to break timestamp ties", () => {
+    const generatedAt = "2026-03-01T00:00:00.000Z";
+    const nodes = applyStatementRetention(
+      [
+        { value: 10, generatedAt },
+        { value: 20, generatedAt },
+        { value: 30, generatedAt },
+      ],
+      { keepLast: 2 },
+    );
+    expect(nodes.map(({ value }) => value)).toEqual([20, 30]);
+  });
+
+  test("always keeps the current node", () => {
+    const current = {
+      value: 30,
+      generatedAt: "2026-03-01T00:00:00.000Z",
+    };
+    const nodes = applyStatementRetention(
+      [
+        { value: 10, generatedAt: "2026-03-02T00:00:00.000Z" },
+        { value: 20 },
+        current,
+      ],
+      "latest",
+    );
+    expect(nodes).toEqual([current]);
   });
 });
 

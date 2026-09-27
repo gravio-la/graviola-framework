@@ -27,6 +27,7 @@ export type EntityMetaProfile = {
 
 export type StatementMetaProfile = {
   encoding: "statement-node" | "rdf-12" | "side-table" | "named-graph" | "none";
+  retention?: "all" | "latest" | { keepLast: number };
 };
 
 /**

@@ -4,11 +4,12 @@ import {
   type EntityIdentityOptions,
   schemaHasEntityIdentity,
 } from "@graviola/json-schema-utils";
-import type {
-  StatementNode,
-  StatementValue,
-  StatementWrite,
-  StatementWritePolicy,
+import {
+  compareStatementRecency,
+  type StatementNode,
+  type StatementValue,
+  type StatementWrite,
+  type StatementWritePolicy,
 } from "@graviola/provenance-types";
 
 export type {
@@ -25,6 +26,12 @@ export const STATEMENT_PERSISTENCE_SUFFIX = "__stmt";
 
 /** Keys are `<DefinitionName>.<dot.path>`, e.g. "Item.price". */
 export type StatementPolicyMap = Record<string, StatementWritePolicy>;
+
+/**
+ * Controls how many distinct statement nodes remain after a write.
+ * The default is `"all"`.
+ */
+export type StatementHistoryRetention = "all" | "latest" | { keepLast: number };
 
 export type DeriveProvenanceSchemaOptions = EntityIdentityOptions & {
   policies?: StatementPolicyMap;
@@ -322,22 +329,16 @@ function isStatementNodeShape(item: unknown): item is StatementNode {
   return item != null && typeof item === "object" && "value" in item;
 }
 
-function isNewerOrSame(candidate: StatementNode, kept: StatementNode): boolean {
-  const candidateAt =
-    candidate.generatedAt === undefined
-      ? undefined
-      : Date.parse(candidate.generatedAt);
-  const keptAt =
-    kept.generatedAt === undefined ? undefined : Date.parse(kept.generatedAt);
-  if (candidateAt === undefined || keptAt === undefined) return true;
-  return candidateAt >= keptAt;
-}
-
 /**
  * Collapse CONSTRUCT join duplicates: one node per distinct value hash. Among
  * nodes with the same value the latest `generatedAt` wins (array order only
  * breaks ties), because backends return history in no guaranteed order.
  * History with different values is preserved.
+ *
+ * Known limitation (accepted for the first release): nodes are keyed by value
+ * only, so a value that returns (A → B → A) collapses into one A node even
+ * with retention "all"; the audit trail keeps A and B but not the fact that A
+ * came back. A complete trail would key real duplicates by value + generatedAt.
  */
 export function dedupeStatementNodes(nodes: StatementNode[]): StatementNode[] {
   const byValueHash = new Map<string, StatementNode>();
@@ -353,11 +354,51 @@ export function dedupeStatementNodes(nodes: StatementNode[]): StatementNode[] {
     if (!kept) {
       order.push(hash);
       byValueHash.set(hash, node);
-    } else if (isNewerOrSame(node, kept)) {
+    } else if (compareStatementRecency(node, kept) >= 0) {
       byValueHash.set(hash, node);
     }
   }
   return order.map((hash) => byValueHash.get(hash)!);
+}
+
+/**
+ * Order statement history from oldest to newest and apply its retention cap.
+ * `generatedAt` determines recency, with array order breaking equal or missing
+ * timestamps. The current node follows `currentStatement` semantics and is
+ * always retained.
+ */
+export function applyStatementRetention(
+  nodes: StatementNode[],
+  retention: StatementHistoryRetention = "all",
+): StatementNode[] {
+  if (nodes.length === 0) return [];
+
+  const indexed = nodes.map((node, index) => ({ node, index }));
+  const compareByGeneratedAt = (
+    a: (typeof indexed)[number],
+    b: (typeof indexed)[number],
+  ) => compareStatementRecency(a.node, b.node) || a.index - b.index;
+  const current = indexed.reduce((latest, candidate) =>
+    compareStatementRecency(candidate.node, latest.node) >= 0
+      ? candidate
+      : latest,
+  );
+  const ordered = [...indexed].sort(compareByGeneratedAt);
+
+  const requested =
+    retention === "all"
+      ? ordered.length
+      : retention === "latest"
+        ? 1
+        : Math.max(1, Math.floor(retention.keepLast));
+  const limit = Number.isFinite(requested)
+    ? Math.min(requested, ordered.length)
+    : ordered.length;
+  let kept = ordered.slice(-limit);
+  if (!kept.some(({ index }) => index === current.index)) {
+    kept = [current, ...kept.slice(1)].sort(compareByGeneratedAt);
+  }
+  return kept.map(({ node }) => node);
 }
 
 /**
@@ -611,10 +652,14 @@ export type StatementMetaEncoding =
   | "named-graph"
   | "none";
 
-export function resolveStatementMetaProfile(encoding: StatementMetaEncoding): {
+export function resolveStatementMetaProfile(
+  encoding: StatementMetaEncoding,
+  retention: StatementHistoryRetention = "all",
+): {
   encoding: StatementMetaEncoding;
+  retention: StatementHistoryRetention;
 } {
-  return { encoding };
+  return { encoding, retention };
 }
 
 /** Collect all dot paths with policy "always" for a type. */

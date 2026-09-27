@@ -42,15 +42,19 @@ import {
   resolveEntityMetaProfile,
   resolveSparqlMetaStamping,
 } from "@graviola/meta-schema";
-import type { StatementWrite } from "@graviola/provenance-types";
+import type { StatementNode, StatementWrite } from "@graviola/provenance-types";
 import {
   alwaysStatementPathsForType,
+  applyStatementRetention,
   applyStatementWrites,
+  dedupeStatementNodes,
   deriveProvenanceSchema,
+  normalizeStatementValue,
   remapStatementsForPersistence,
   remapStatementsFromPersistence,
   resolveStatementMetaProfile,
   resolveStatementPolicy,
+  STATEMENT_JSON_SUFFIX,
   statementValueHash,
   statementsForPath,
   stripClientStatements,
@@ -58,6 +62,7 @@ import {
 import {
   buildRdf12StatementDelete,
   buildRdf12StatementInsert,
+  buildRdf12StatementMetadataDelete,
   buildRdf12StatementSelect,
   parseRdf12StatementBindings,
   propertyIriFromPath,
@@ -125,6 +130,38 @@ export function initSPARQLDatastorePair(
     : undefined;
 
   const statementEncoding = statementMeta?.encoding ?? "statement-node";
+  const statementRetentionForPath = (typeName: string, path: string) =>
+    statementMeta?.retentionByPath?.[`${typeName}.${path}`] ??
+    statementMeta?.retention ??
+    "all";
+  const retainDocumentStatements = (
+    document: Record<string, unknown>,
+    typeName: string,
+    writes: StatementWrite[],
+  ) => {
+    for (const write of writes) {
+      const segments = write.path.split(".").filter(Boolean);
+      const lastSegment = segments.pop();
+      if (!lastSegment) continue;
+      let parent: Record<string, unknown> | undefined = document;
+      for (const segment of segments) {
+        const next: unknown = parent?.[segment];
+        parent =
+          next && typeof next === "object" && !Array.isArray(next)
+            ? (next as Record<string, unknown>)
+            : undefined;
+      }
+      if (!parent) continue;
+      const statementKey = `${lastSegment}${STATEMENT_JSON_SUFFIX}`;
+      const nodes = parent[statementKey];
+      if (!Array.isArray(nodes)) continue;
+      parent[statementKey] = applyStatementRetention(
+        dedupeStatementNodes(nodes as StatementNode[]),
+        statementRetentionForPath(typeName, write.path),
+      );
+    }
+    return document;
+  };
 
   let persistenceSchema = effectiveMetaStamping
     ? rootSchema.definitions?.EntityMeta
@@ -725,7 +762,10 @@ export function initSPARQLDatastorePair(
           : {}),
         ...(statementMeta
           ? {
-              statementMeta: resolveStatementMetaProfile(statementEncoding),
+              statementMeta: resolveStatementMetaProfile(
+                statementEncoding,
+                statementMeta.retention ?? "all",
+              ),
             }
           : {}),
       },
@@ -879,8 +919,40 @@ export function initSPARQLDatastorePair(
 
             if (statementEncoding === "rdf-12") {
               for (const write of writes) {
+                const existingRaw = (await selectFetch(
+                  withDefaultPrefix(
+                    defaultPrefix,
+                    buildRdf12StatementSelect(entityIRI, [write.path]),
+                  ),
+                  { withHeaders: true },
+                )) as {
+                  results?: {
+                    bindings?: Record<string, { value: string }>[];
+                  };
+                };
+                const existing =
+                  parseRdf12StatementBindings(
+                    existingRaw.results?.bindings ?? [],
+                  )[write.path] ?? [];
                 const propIri = propertyIriFromPath(defaultPrefix, write.path);
                 const hash = statementValueHash(write.value);
+                const nextNode: StatementNode = {
+                  value: normalizeStatementValue(write.value),
+                  ...write.statement,
+                };
+                const candidates = dedupeStatementNodes([
+                  ...existing.filter(
+                    (node) => statementValueHash(node.value) !== hash,
+                  ),
+                  nextNode,
+                ]);
+                const retained = applyStatementRetention(
+                  candidates,
+                  statementRetentionForPath(typeName, write.path),
+                );
+                const retainedHashes = new Set(
+                  retained.map((node) => statementValueHash(node.value)),
+                );
                 await updateFetch(
                   withDefaultPrefix(
                     defaultPrefix,
@@ -903,6 +975,20 @@ export function initSPARQLDatastorePair(
                     ),
                   ),
                 );
+                for (const candidate of candidates) {
+                  const candidateHash = statementValueHash(candidate.value);
+                  if (retainedHashes.has(candidateHash)) continue;
+                  await updateFetch(
+                    withDefaultPrefix(
+                      defaultPrefix,
+                      buildRdf12StatementMetadataDelete(
+                        entityIRI,
+                        write.path,
+                        candidateHash,
+                      ),
+                    ),
+                  );
+                }
               }
               const current =
                 ((await loadDocument(typeName, entityIRI)) as Record<
@@ -932,7 +1018,11 @@ export function initSPARQLDatastorePair(
                 string,
                 unknown
               > | null) ?? {};
-            const merged = applyStatementWrites({ ...current }, writes);
+            const merged = retainDocumentStatements(
+              applyStatementWrites({ ...current }, writes),
+              typeName,
+              writes,
+            );
             await updateFetch(
               buildStatementNodeSidecarDelete(entityIRI, defaultPrefix),
             );

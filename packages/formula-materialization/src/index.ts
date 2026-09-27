@@ -1,9 +1,10 @@
 import type { CompiledProfile } from "@graviola/formula-dependency";
 import { evaluateCompiledProfileDeterministic } from "@graviola/formula-runtime";
-import type {
-  GenerationActivity,
-  StatementNode,
-  StatementWrite,
+import {
+  currentStatement,
+  type GenerationActivity,
+  type StatementNode,
+  type StatementWrite,
 } from "@graviola/provenance-types";
 import type { EntityChangeEvent } from "@graviola/store-core";
 
@@ -181,35 +182,6 @@ export async function materializePlan(
   if (store.emit) {
     emitMaterializationChanges(store.emit, entityIRI, typeName, typeIRI, plan);
   }
-}
-
-/**
- * The statement that currently holds a computed slot's value: the latest
- * generatedAt wins; missing or equal timestamps fall back to the last node in
- * array order. Older nodes are kept as history and must not be used.
- */
-export function currentStatement(
-  statements: StatementNode[],
-): StatementNode | undefined {
-  if (statements.length === 0) return undefined;
-  return statements.reduce((latest, statement) => {
-    const latestGeneratedAt =
-      latest.generatedAt === undefined
-        ? undefined
-        : Date.parse(latest.generatedAt);
-    const generatedAt =
-      statement.generatedAt === undefined
-        ? undefined
-        : Date.parse(statement.generatedAt);
-    if (
-      latestGeneratedAt === undefined ||
-      generatedAt === undefined ||
-      generatedAt >= latestGeneratedAt
-    ) {
-      return statement;
-    }
-    return latest;
-  });
 }
 
 /** Cache-validity check for one computed slot against its current statement. */

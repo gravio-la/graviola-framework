@@ -10,11 +10,11 @@ import {
   evaluateCompiledProfileMany,
   selectLiveEvalSlots,
 } from "@graviola/formula-runtime";
+import { isMaterializationFresh } from "@graviola/formula-materialization";
 import {
   currentStatement,
-  isMaterializationFresh,
-} from "@graviola/formula-materialization";
-import type { StatementNode } from "@graviola/provenance-types";
+  type StatementNode,
+} from "@graviola/provenance-types";
 import { definitionNameFromScope } from "@graviola/json-schema-utils";
 import type {
   CalcValuesEntry,

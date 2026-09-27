@@ -99,6 +99,29 @@ WHERE {
 }`.toString();
 }
 
+/** Delete one retained-history candidate without changing the current truthy value. */
+export function buildRdf12StatementMetadataDelete(
+  entityIRI: string,
+  path: string,
+  valueHash: string,
+): string {
+  const entity = named(entityIRI);
+  const r = df.variable("r");
+  const mp = df.variable("mp");
+  const mo = df.variable("mo");
+
+  return sparql`
+DELETE {
+  ${r} ${mp} ${mo} .
+}
+WHERE {
+  ${r} ${named(STMT.about)} ${entity} ;
+     ${named(STMT.path)} ${df.literal(path)} ;
+     ${named(STMT.valueHash)} ${df.literal(valueHash)} ;
+     ${mp} ${mo} .
+}`.toString();
+}
+
 export type Rdf12InsertOptions = {
   includeTripleTerm?: boolean;
 };

@@ -6,7 +6,10 @@ import type {
 } from "@graviola/edb-core-types";
 import type { DatastoreBaseConfig } from "@graviola/edb-global-types";
 import type { MetaStampingConfig } from "@graviola/meta-schema";
-import type { StatementPolicyMap } from "@graviola/statement-meta";
+import type {
+  StatementHistoryRetention,
+  StatementPolicyMap,
+} from "@graviola/statement-meta";
 import type { StoreFilterTraversalOptions } from "@graviola/store-core";
 import type { JSONSchema7 } from "json-schema";
 
@@ -30,6 +33,10 @@ export type StatementMetaStoreConfig = {
   statementSchema?: JSONSchema7;
   /** default "statement-node"; "rdf-12" requires an RDF 1.2 engine (Oxigraph ≥ 0.5). */
   encoding?: "statement-node" | "rdf-12";
+  /** Statement history retained after each write. Default: "all". */
+  retention?: StatementHistoryRetention;
+  /** Per-path retention overrides keyed as `"<TypeName>.<dot.path>"`. */
+  retentionByPath?: Record<string, StatementHistoryRetention>;
 };
 
 export type SPARQLDataStoreConfig = {

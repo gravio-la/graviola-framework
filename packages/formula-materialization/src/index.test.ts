@@ -9,7 +9,6 @@ import type { StatementNode } from "@graviola/provenance-types";
 import {
   buildMaterializationPlan,
   buildStatementWrites,
-  currentStatement,
   isMaterializationFresh,
   planInvalidation,
   scopeToDotPath,
@@ -161,24 +160,5 @@ describe("formula-materialization", () => {
 
     expect(isMaterializationFresh(statements, "fp-b")).toBe(true);
     expect(isMaterializationFresh(statements, "fp-a")).toBe(false);
-  });
-});
-
-describe("currentStatement", () => {
-  const node = (value: number, generatedAt?: string): StatementNode =>
-    ({ value, generatedAt }) as StatementNode;
-
-  it("returns the node with the latest generatedAt, regardless of order", () => {
-    const newer = node(2, "2026-01-02T00:00:00.000Z");
-    const older = node(1, "2026-01-01T00:00:00.000Z");
-    expect(currentStatement([newer, older])).toBe(newer);
-    expect(currentStatement([older, newer])).toBe(newer);
-  });
-
-  it("falls back to the last node without timestamps and is undefined when empty", () => {
-    const a = node(1);
-    const b = node(2);
-    expect(currentStatement([a, b])).toBe(b);
-    expect(currentStatement([])).toBeUndefined();
   });
 });

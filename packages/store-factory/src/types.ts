@@ -92,6 +92,8 @@ export type CreateStoreFromSpecOptions<
   statementMeta?: {
     policies: Record<string, "always" | "never">;
     encoding?: "statement-node" | "rdf-12";
+    retention?: "all" | "latest" | { keepLast: number };
+    retentionByPath?: Record<string, "all" | "latest" | { keepLast: number }>;
   };
   /**
    * Calc materialization config. When present (together with `statementMeta`

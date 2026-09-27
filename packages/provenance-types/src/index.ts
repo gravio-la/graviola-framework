@@ -94,3 +94,37 @@ export function generationActivityToPredicates(
   if (activity.generatedAt) out[PROV.generatedAtTime] = activity.generatedAt;
   return out;
 }
+
+function generatedAtMs(node: StatementNode): number | undefined {
+  if (node.generatedAt === undefined) return undefined;
+  const ms = Date.parse(node.generatedAt);
+  return Number.isFinite(ms) ? ms : undefined;
+}
+
+/**
+ * Recency of two statement nodes by `generatedAt`: negative when `a` is older.
+ * Returns 0 when either timestamp is missing or both are equal; callers then
+ * fall back to array order (later wins).
+ */
+export function compareStatementRecency(
+  a: StatementNode,
+  b: StatementNode,
+): number {
+  const aAt = generatedAtMs(a);
+  const bAt = generatedAtMs(b);
+  return aAt === undefined || bAt === undefined ? 0 : aAt - bAt;
+}
+
+/**
+ * The statement node that currently holds a slot's value: the latest
+ * `generatedAt`; equal or missing timestamps fall back to the last node in
+ * array order. Older nodes are history.
+ */
+export function currentStatement(
+  statements: StatementNode[],
+): StatementNode | undefined {
+  if (statements.length === 0) return undefined;
+  return statements.reduce((latest, statement) =>
+    compareStatementRecency(statement, latest) >= 0 ? statement : latest,
+  );
+}
