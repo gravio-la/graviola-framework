@@ -1,4 +1,4 @@
-/** UI presentation vocabulary. Pure types, no React dependency (icons are typed structurally). Candidate for extraction into its own package; see apps/package-graph/reviews/plans/core-types-presentation-split.md. */
+/** UI presentation vocabulary. Pure types, no React dependency (icons are typed structurally). Candidate for extraction into its own package. */
 
 import type { EntityActionDef } from "./entityActions";
 

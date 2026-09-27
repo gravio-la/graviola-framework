@@ -1,4 +1,4 @@
-/** App-shell ↔ UI entity action contract. Pure types, no React dependency (icons are typed structurally). Candidate for extraction into its own package; see apps/package-graph/reviews/plans/core-types-presentation-split.md. */
+/** App-shell ↔ UI entity action contract. Pure types, no React dependency (icons are typed structurally). Candidate for extraction into its own package. */
 
 /** Host capability identifiers negotiated between shell and entity actions. */
 export type HostCapabilityId =
