@@ -7,11 +7,16 @@ import {
 } from "@graviola/calc-fixtures";
 import { compileCalcProfile } from "@graviola/formula-dependency";
 import type { StatementNode } from "@graviola/provenance-types";
-import { readCalcValues, type ReadCalcValuesStore } from "./readCalcValues";
+import {
+  readCalcValues,
+  readCalcValuesMany,
+  type ReadCalcValuesStore,
+} from "./readCalcValues";
 import { warm } from "./warm";
 import { evaluateForRoots } from "./evaluateForRoots";
 
 const GARDEN_IRI = "https://example.org/garden/1";
+const MISSING_IRI = "https://example.org/garden/missing";
 
 type WarmableStore = ReadCalcValuesStore & {
   writeStatements: (
@@ -114,9 +119,9 @@ describe("readCalcValues", () => {
       GARDEN_IRI,
     );
 
-    expect(result.freshness).toBe("fresh");
-    expect(result.value?.annual_fee).toBe(gardenFeeExpected.gardenAnnualFee);
-    expect(result.value?.total_billable).toBe(
+    expect(result.provenance.freshness).toBe("fresh");
+    expect(result.data?.annual_fee).toBe(gardenFeeExpected.gardenAnnualFee);
+    expect(result.data?.total_billable).toBe(
       gardenFeeExpected.gardenTotalBillable,
     );
     // 1 filterMany + 4 loadStatements (Garden, Patch, Plot x2).
@@ -143,10 +148,8 @@ describe("readCalcValues", () => {
       GARDEN_IRI,
     );
 
-    expect(result.freshness).toBe("stale");
-    expect(result.value?.annual_fee).not.toBe(
-      gardenFeeExpected.gardenAnnualFee,
-    );
+    expect(result.provenance.freshness).toBe("stale");
+    expect(result.data?.annual_fee).not.toBe(gardenFeeExpected.gardenAnnualFee);
 
     // No write-through: the persisted statement is still the pre-mutation value.
     const persisted = statements.get(`Garden::${GARDEN_IRI}`);
@@ -167,8 +170,8 @@ describe("readCalcValues", () => {
       GARDEN_IRI,
     );
 
-    expect(result.freshness).toBe("unknown");
-    expect(result.value?.annual_fee).toBe(gardenFeeExpected.gardenAnnualFee);
+    expect(result.provenance.freshness).toBe("unknown");
+    expect(result.data?.annual_fee).toBe(gardenFeeExpected.gardenAnnualFee);
   });
 
   it("missing root: returns null", async () => {
@@ -185,7 +188,118 @@ describe("readCalcValues", () => {
       GARDEN_IRI,
     );
 
-    expect(result.value).toBeNull();
-    expect(result.freshness).toBe("unknown");
+    expect(result.data).toBeNull();
+    expect(result.provenance.freshness).toBe("unknown");
+  });
+});
+
+describe("readCalcValuesMany", () => {
+  const profile = compileCalcProfile(gardenFeeSidecar, gardenFeeSchema);
+
+  it("returns one entry per requested IRI in order; absent roots have data null", async () => {
+    const statements = makeStatementsMap();
+    const doc = await evaluatedDoc(profile);
+    const store = makeStoreView(statements, () => structuredClone(doc));
+    await warm(store as never, profile, "Garden", gardenFeeSchema, {
+      rootIRIs: [GARDEN_IRI],
+    });
+
+    const entityIRIs = [GARDEN_IRI, MISSING_IRI, GARDEN_IRI];
+    const results = await readCalcValuesMany(
+      store,
+      profile,
+      "Garden",
+      gardenFeeSchema,
+      entityIRIs,
+    );
+
+    expect(results).toHaveLength(3);
+    expect(results.map((r) => r.entityIRI)).toEqual(entityIRIs);
+    expect(results[0]!.data?.annual_fee).toBe(
+      gardenFeeExpected.gardenAnnualFee,
+    );
+    expect(results[1]!.data).toBeNull();
+    expect(results[1]!.provenance.freshness).toBe("unknown");
+    expect(results[2]!.data?.annual_fee).toBe(
+      gardenFeeExpected.gardenAnnualFee,
+    );
+  });
+
+  it("issues exactly one filterMany for the whole batch", async () => {
+    const statements = makeStatementsMap();
+    const doc = await evaluatedDoc(profile);
+    let filterManyCalls = 0;
+    const base = makeStoreView(statements, () => structuredClone(doc));
+    const store: WarmableStore = {
+      ...base,
+      filterMany: async (typeName, options) => {
+        filterManyCalls += 1;
+        return base.filterMany(typeName, options);
+      },
+    };
+    await warm(store as never, profile, "Garden", gardenFeeSchema, {
+      rootIRIs: [GARDEN_IRI],
+    });
+    filterManyCalls = 0;
+
+    await readCalcValuesMany(store, profile, "Garden", gardenFeeSchema, [
+      GARDEN_IRI,
+      MISSING_IRI,
+      GARDEN_IRI,
+    ]);
+
+    expect(filterManyCalls).toBe(1);
+  });
+
+  it("fresh and stale entries match single-root readCalcValues values", async () => {
+    const statements = makeStatementsMap();
+    const doc = await evaluatedDoc(profile);
+    const warmStore = makeStoreView(statements, () => structuredClone(doc));
+    await warm(warmStore as never, profile, "Garden", gardenFeeSchema, {
+      rootIRIs: [GARDEN_IRI],
+    });
+
+    const freshSingle = await readCalcValues(
+      warmStore,
+      profile,
+      "Garden",
+      gardenFeeSchema,
+      GARDEN_IRI,
+    );
+    const [freshBatch] = await readCalcValuesMany(
+      warmStore,
+      profile,
+      "Garden",
+      gardenFeeSchema,
+      [GARDEN_IRI],
+    );
+
+    expect(freshBatch!.data).toEqual(freshSingle.data);
+    expect(freshBatch!.provenance.freshness).toBe(
+      freshSingle.provenance.freshness,
+    );
+    expect(freshBatch!.queriesIssued).toBe(freshSingle.queriesIssued);
+
+    const staleStore = makeStoreView(statements, () => mutatedDoc(doc, 2));
+    const staleSingle = await readCalcValues(
+      staleStore,
+      profile,
+      "Garden",
+      gardenFeeSchema,
+      GARDEN_IRI,
+    );
+    const [staleBatch] = await readCalcValuesMany(
+      staleStore,
+      profile,
+      "Garden",
+      gardenFeeSchema,
+      [GARDEN_IRI],
+    );
+
+    expect(staleBatch!.data).toEqual(staleSingle.data);
+    expect(staleBatch!.provenance.freshness).toBe(
+      staleSingle.provenance.freshness,
+    );
+    expect(staleBatch!.queriesIssued).toBe(staleSingle.queriesIssued);
   });
 });

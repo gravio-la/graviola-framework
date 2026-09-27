@@ -5,14 +5,20 @@ import {
   gardenFeeSchema,
   gardenFeeSidecar,
 } from "@graviola/calc-fixtures";
-import { compileCalcProfile } from "@graviola/formula-dependency";
+import {
+  compileCalcProfile,
+  type CompiledProfile,
+  type CompiledSlot,
+} from "@graviola/formula-dependency";
 import { selectLiveEvalSlots } from "@graviola/formula-runtime";
 import type { StatementNode } from "@graviola/provenance-types";
+import type { EntityChangeEvent } from "@graviola/store-core";
 import { evaluateForRoots } from "./evaluateForRoots";
 import {
   climbAffectedRoots,
   dirtyScopesForChange,
   discoverRelationEdges,
+  subscribeCalcInvalidation,
 } from "./delta";
 import {
   assertPushdownEqualsJs,
@@ -20,7 +26,23 @@ import {
   SERVER_CALC_HOST,
   tryPushdownAggregates,
 } from "./pushdown";
-import { warm } from "./warm";
+import { fingerprintForEntity, warm } from "./warm";
+
+const GARDEN_IRI = "https://example.org/garden/1";
+const PLOT_SERVER_SCOPE = "#/definitions/Plot/properties/billable_area";
+
+function withSlotOverrides(
+  profile: CompiledProfile,
+  overrides: Record<string, Partial<CompiledSlot>>,
+): CompiledProfile {
+  const slots = { ...profile.slots };
+  for (const [scope, patch] of Object.entries(overrides)) {
+    const base = slots[scope];
+    if (!base) continue;
+    slots[scope] = { ...base, ...patch };
+  }
+  return { ...profile, slots };
+}
 
 describe("evaluateForRoots", () => {
   const profile = compileCalcProfile(gardenFeeSidecar, gardenFeeSchema);
@@ -93,20 +115,32 @@ describe("warm", () => {
       },
     };
 
-    const first = await warm(store, profile, "Garden", gardenFeeSchema, {
-      rootIRIs: ["https://example.org/garden/1"],
-      agent: "http://ex/agent",
-    });
+    const first = await warm(
+      store as never,
+      profile,
+      "Garden",
+      gardenFeeSchema,
+      {
+        rootIRIs: ["https://example.org/garden/1"],
+        agent: "http://ex/agent",
+      },
+    );
     expect(first.queriesIssued).toBe(1);
     expect(first.writesIssued).toBeGreaterThan(0);
     expect(first.warmed).toBeGreaterThan(0);
 
     const writesAfterFirst = writes;
 
-    const second = await warm(store, profile, "Garden", gardenFeeSchema, {
-      rootIRIs: ["https://example.org/garden/1"],
-      skipFresh: true,
-    });
+    const second = await warm(
+      store as never,
+      profile,
+      "Garden",
+      gardenFeeSchema,
+      {
+        rootIRIs: ["https://example.org/garden/1"],
+        skipFresh: true,
+      },
+    );
     expect(second.writesIssued).toBe(0);
     expect(second.skippedFresh).toBeGreaterThan(0);
     expect(writes).toBe(writesAfterFirst);
@@ -116,6 +150,72 @@ describe("warm", () => {
     expect(
       gardenStmts?.annual_fee?.[0]?.wasGeneratedBy?.inputFingerprint,
     ).toBeTruthy();
+  });
+});
+
+describe("fingerprintForEntity", () => {
+  const profile = compileCalcProfile(gardenFeeSidecar, gardenFeeSchema);
+
+  function patchWithBillableAreas(): Record<string, unknown> {
+    const patch = structuredClone(gardenFeeSampleData.patch) as Record<
+      string,
+      unknown
+    >;
+    const plots = patch.plots as Record<string, unknown>[];
+    plots.forEach((plot, index) => {
+      plot.billable_area = gardenFeeExpected.plotBillable[index];
+    });
+    return patch;
+  }
+
+  it("ignores filled statement sidecars", () => {
+    const plain = patchWithBillableAreas();
+    const withSidecars = structuredClone(plain);
+    const plots = withSidecars.plots as Record<string, unknown>[];
+    plots.forEach((plot, index) => {
+      plot["billable_area$stmt"] = [
+        {
+          value: gardenFeeExpected.plotBillable[index],
+          wasGeneratedBy: { generatedAt: `2026-09-27T00:00:0${index}Z` },
+        },
+      ];
+    });
+
+    expect(fingerprintForEntity(profile, "Patch", withSidecars)).toBe(
+      fingerprintForEntity(profile, "Patch", plain),
+    );
+  });
+
+  it("is independent of array result order", () => {
+    const original = patchWithBillableAreas();
+    const reordered = structuredClone(original);
+    (reordered.plots as unknown[]).reverse();
+
+    expect(fingerprintForEntity(profile, "Patch", reordered)).toBe(
+      fingerprintForEntity(profile, "Patch", original),
+    );
+  });
+
+  it("changes when a nested source value changes", () => {
+    const original = patchWithBillableAreas();
+    const changed = structuredClone(original);
+    const plots = changed.plots as Record<string, unknown>[];
+    plots[0]!.billable_area = 21;
+
+    expect(fingerprintForEntity(profile, "Patch", changed)).not.toBe(
+      fingerprintForEntity(profile, "Patch", original),
+    );
+  });
+
+  it("resolves array paths element-wise", () => {
+    const fingerprint = fingerprintForEntity(
+      profile,
+      "Patch",
+      patchWithBillableAreas(),
+    );
+
+    expect(fingerprint).toContain("plots.billable_area=[20,18]");
+    expect(fingerprint).not.toContain("plots.billable_area=undefined");
   });
 });
 
@@ -189,6 +289,76 @@ describe("dirtyScopesForChange + climbAffectedRoots", () => {
     // One query per hop (Plot→Patch, Patch→Garden) — independent of N gardens
     expect(result.queriesIssued).toBe(2);
     expect(queries).toBe(2);
+  });
+});
+
+describe("subscribeCalcInvalidation", () => {
+  const baseProfile = compileCalcProfile(gardenFeeSidecar, gardenFeeSchema);
+  const profile = withSlotOverrides(baseProfile, {
+    [PLOT_SERVER_SCOPE]: { eval: "server" },
+  });
+  const PLOT_IRI = "https://example.org/plot/1";
+
+  it("passes host: SERVER_CALC_HOST so eval:server slots are materialized", async () => {
+    const statements = new Map<string, Record<string, StatementNode[]>>();
+    const listeners = new Set<(event: EntityChangeEvent) => void>();
+
+    const store = {
+      filterMany: async () => [
+        structuredClone(gardenFeeSampleData) as Record<string, unknown>,
+      ],
+      writeStatements: async (
+        typeName: string,
+        entityIRI: string,
+        batch: { path: string; value: unknown; statement: StatementNode }[],
+      ) => {
+        const key = `${typeName}::${entityIRI}`;
+        const existing = statements.get(key) ?? {};
+        for (const w of batch) {
+          existing[w.path] = [
+            { ...w.statement, value: w.value } as StatementNode,
+          ];
+        }
+        statements.set(key, existing);
+      },
+      loadStatements: async (typeName: string, entityIRI: string) => {
+        return statements.get(`${typeName}::${entityIRI}`) ?? {};
+      },
+      subscribe: (listener: (event: EntityChangeEvent) => void) => {
+        listeners.add(listener);
+        return () => listeners.delete(listener);
+      },
+    };
+
+    const handle = subscribeCalcInvalidation({
+      store: store as never,
+      profile,
+      domainSchema: gardenFeeSchema,
+      rootTypeName: "Garden",
+      host: SERVER_CALC_HOST,
+    });
+
+    try {
+      for (const listener of listeners) {
+        listener({
+          entityIRI: GARDEN_IRI,
+          changeType: "upsert",
+          typeIRI: "https://example.org/Garden",
+          typeName: "Garden",
+        });
+      }
+      await new Promise((r) => setTimeout(r, 0));
+
+      const plotStmts = statements.get(`Plot::${PLOT_IRI}`);
+      expect(plotStmts?.billable_area?.[0]?.value).toBe(
+        gardenFeeExpected.plotBillable[0],
+      );
+      expect(
+        plotStmts?.billable_area?.[0]?.wasGeneratedBy?.inputFingerprint,
+      ).toBeTruthy();
+    } finally {
+      handle.unsubscribe();
+    }
   });
 });
 

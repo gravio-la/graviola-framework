@@ -14,8 +14,10 @@ import { isMaterializationFresh } from "@graviola/formula-materialization";
 import type { StatementNode } from "@graviola/provenance-types";
 import { definitionNameFromScope } from "@graviola/json-schema-utils";
 import type {
+  CalcValuesEntry,
   FreshnessState,
   StoreDocumentsSearchOptions,
+  StoreId,
 } from "@graviola/store-core";
 import type { CalcEngineStore } from "./evaluateForRoots";
 import { collectEntities, fingerprintForEntity } from "./warm";
@@ -32,13 +34,36 @@ export type ReadCalcValuesOptions = {
   host?: CalcHostCapabilities;
 };
 
-export type ReadCalcValuesResult = {
-  /** `null` when the root entity doesn't exist. */
-  value: Record<string, unknown> | null;
-  freshness: FreshnessState;
+export type ReadCalcValuesReport = CalcValuesEntry & {
   queriesIssued: number;
   plan: CalcReadPlan;
 };
+
+function provenanceSources(store: ReadCalcValuesStore): StoreId[] {
+  const id = (store as { storeId?: StoreId }).storeId;
+  return id ? [id] : [];
+}
+
+function buildReport(
+  entityIRI: string,
+  data: Record<string, unknown> | null,
+  freshness: FreshnessState,
+  queriesIssued: number,
+  plan: CalcReadPlan,
+  store: ReadCalcValuesStore,
+): ReadCalcValuesReport {
+  return {
+    entityIRI,
+    data,
+    provenance: {
+      sources: provenanceSources(store),
+      fetchedAt: new Date().toISOString(),
+      freshness,
+    },
+    queriesIssued,
+    plan,
+  };
+}
 
 /**
  * Materialized-first read for one root entity.
@@ -47,9 +72,9 @@ export type ReadCalcValuesResult = {
  * source-only — it fetches exactly what the evaluator needs, which excludes
  * every materialized *output* property (and therefore its `$stmt` sidecar
  * too, since a store only auto-embeds `$stmt` on an *unfiltered* read, not
- * a narrowed `select`). And a nested `include` (needed to reach Patch/Plot
- * at all) does not reliably carry `$stmt` at those nested levels either
- * (verified empirically: empty/duplicated sidecar arrays for entities
+ * a narrowed `select`). And a nested `include` (needed to reach nested
+ * entities at all) does not reliably carry `$stmt` at those nested levels
+ * either (verified empirically: empty/duplicated sidecar arrays for entities
  * reached through `include` — see ESCALATIONS.md). So this does **not**
  * try to get statements "for free" in the same read; it fetches the raw
  * input tree once (`filterMany`, same shape `evaluateForRoots` uses), then
@@ -73,33 +98,89 @@ export async function readCalcValues(
   domainSchema: JSONSchema7,
   rootIRI: string,
   options: ReadCalcValuesOptions = {},
-): Promise<ReadCalcValuesResult> {
+): Promise<ReadCalcValuesReport> {
+  const [entry] = await readCalcValuesMany(
+    store,
+    profile,
+    typeName,
+    domainSchema,
+    [rootIRI],
+    options,
+  );
+  return entry!;
+}
+
+/**
+ * Materialized-first batch read. Issues one `filterMany` for all roots,
+ * `loadOne` per present root when the read plan needs depth > 0, and
+ * `loadStatements` per entity in each tree.
+ */
+export async function readCalcValuesMany(
+  store: ReadCalcValuesStore,
+  profile: CompiledProfile,
+  typeName: string,
+  domainSchema: JSONSchema7,
+  entityIRIs: string[],
+  options: ReadCalcValuesOptions = {},
+): Promise<ReadCalcValuesReport[]> {
   const plan = planCalcReads(profile, typeName, domainSchema);
+  const host = options.host ?? BROWSER_FORM_HOST;
 
   const docsShallow = await store.filterMany(typeName, {
     ...(plan.selection as StoreDocumentsSearchOptions),
-    entityIRIs: [rootIRI],
+    entityIRIs,
   } as StoreDocumentsSearchOptions);
 
-  let queriesIssued = 1;
-  let doc = docsShallow[0];
-  if (!doc) {
-    return { value: null, freshness: "unknown", queriesIssued, plan };
+  const docsByIri = new Map<string, Record<string, unknown>>();
+  for (const doc of docsShallow) {
+    const id = doc["@id"];
+    if (typeof id === "string") docsByIri.set(id, doc);
   }
 
-  // Mirror evaluateForRoots: relation hops (e.g. partOf.name) need loadOne —
-  // SPARQL filterMany is often too shallow for formula bindings / fingerprints.
+  const reports: ReadCalcValuesReport[] = [];
+  for (const entityIRI of entityIRIs) {
+    reports.push(
+      await readCalcValuesForRoot(
+        store,
+        profile,
+        typeName,
+        entityIRI,
+        plan,
+        docsByIri.get(entityIRI),
+        host,
+      ),
+    );
+  }
+  return reports;
+}
+
+async function readCalcValuesForRoot(
+  store: ReadCalcValuesStore,
+  profile: CompiledProfile,
+  typeName: string,
+  entityIRI: string,
+  plan: CalcReadPlan,
+  doc: Record<string, unknown> | undefined,
+  host: CalcHostCapabilities,
+): Promise<ReadCalcValuesReport> {
+  let queriesIssued = 1;
+
+  if (!doc) {
+    return buildReport(entityIRI, null, "unknown", queriesIssued, plan, store);
+  }
+
+  let workingDoc = doc;
   if (plan.depth > 0 && typeof store.loadOne === "function") {
-    const loaded = await store.loadOne(typeName, rootIRI);
+    const loaded = await store.loadOne(typeName, entityIRI);
     queriesIssued += 1;
-    if (loaded) doc = loaded;
+    if (loaded) workingDoc = loaded;
   }
 
   let statementsFound = false;
   let allFresh = true;
   const statementsByEntity = new Map<string, Record<string, StatementNode[]>>();
 
-  for (const target of collectEntities(doc)) {
+  for (const target of collectEntities(workingDoc)) {
     const relevantSlots = Object.values(profile.slots).filter(
       (slot) => definitionNameFromScope(slot.entityScope) === target.typeName,
     );
@@ -139,26 +220,34 @@ export async function readCalcValues(
       : "stale";
 
   if (freshness === "fresh") {
-    for (const target of collectEntities(doc)) {
+    for (const target of collectEntities(workingDoc)) {
       const stmts = statementsByEntity.get(target.entityIRI);
       if (!stmts) continue;
       for (const [path, nodes] of Object.entries(stmts)) {
         if (nodes[0]) target.entity[path] = nodes[0].value;
       }
     }
-    return { value: doc, freshness, queriesIssued, plan };
+    return buildReport(
+      entityIRI,
+      workingDoc,
+      freshness,
+      queriesIssued,
+      plan,
+      store,
+    );
   }
 
-  const host = options.host ?? BROWSER_FORM_HOST;
   const liveProfile = selectLiveEvalSlots(profile, host);
-  const { rows } = evaluateCompiledProfileMany(liveProfile, [doc], {
+  const { rows } = evaluateCompiledProfileMany(liveProfile, [workingDoc], {
     report: false,
   });
 
-  return {
-    value: rows[0] ?? null,
+  return buildReport(
+    entityIRI,
+    rows[0] ?? null,
     freshness,
     queriesIssued,
     plan,
-  };
+    store,
+  );
 }

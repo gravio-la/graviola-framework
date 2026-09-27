@@ -13,7 +13,8 @@ import {
 } from "@graviola/formula-materialization";
 import type { StatementNode } from "@graviola/provenance-types";
 import { entityTypeFromData } from "@graviola/formula-runtime";
-import get from "lodash-es/get";
+import toPath from "lodash-es/toPath";
+import type { CalcWarmResult } from "@graviola/store-core";
 import {
   evaluateForRoots,
   type EvaluateForRootsOptions,
@@ -43,12 +44,108 @@ export type WarmOptions = EvaluateForRootsOptions & {
   skipFresh?: boolean;
 };
 
-export type WarmResult = {
-  warmed: number;
-  skippedFresh: number;
-  writesIssued: number;
-  queriesIssued: number;
+export type WarmResult = CalcWarmResult;
+
+type CollectedPathValue = {
+  value: unknown;
+  ownerId?: string;
 };
+
+function entityId(value: unknown): string | undefined {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return undefined;
+  }
+  const id = (value as Record<string, unknown>)["@id"];
+  return typeof id === "string" ? id : undefined;
+}
+
+function collectPathValues(
+  doc: Record<string, unknown>,
+  path: string,
+): { values: CollectedPathValue[]; arrayDerived: boolean } {
+  const segments = toPath(path);
+  let arrayDerived = false;
+
+  const visit = (
+    value: unknown,
+    segmentIndex: number,
+    ownerId?: string,
+  ): CollectedPathValue[] => {
+    if (Array.isArray(value)) {
+      arrayDerived = true;
+      return value.flatMap((item) =>
+        visit(item, segmentIndex, entityId(item) ?? ownerId),
+      );
+    }
+    if (segmentIndex === segments.length) {
+      return [{ value, ownerId }];
+    }
+    if (!value || typeof value !== "object") {
+      return [{ value: undefined, ownerId }];
+    }
+    const record = value as Record<string, unknown>;
+    return visit(
+      record[segments[segmentIndex]!],
+      segmentIndex + 1,
+      entityId(record) ?? ownerId,
+    );
+  };
+
+  return { values: visit(doc, 0, entityId(doc)), arrayDerived };
+}
+
+function stableJson(value: unknown): string {
+  if (value === undefined) return "undefined";
+  if (value === null || typeof value !== "object") {
+    return JSON.stringify(value) ?? String(value);
+  }
+  if (Array.isArray(value)) {
+    return `[${value
+      .map((item) => stableJson(item))
+      .sort()
+      .join(",")}]`;
+  }
+
+  const record = value as Record<string, unknown>;
+  const id = entityId(record);
+  if (id) return JSON.stringify(id);
+
+  const entries = Object.entries(record)
+    .filter(([key]) => !key.endsWith("$stmt"))
+    .sort(([left], [right]) => left.localeCompare(right));
+  return `{${entries
+    .map(([key, nested]) => `${JSON.stringify(key)}:${stableJson(nested)}`)
+    .join(",")}}`;
+}
+
+function fingerprintSourceValue(
+  doc: Record<string, unknown>,
+  path: string,
+): string {
+  const { values, arrayDerived } = collectPathValues(doc, path);
+  const ordered = values
+    .map(({ value, ownerId }) => ({
+      ownerId,
+      serialized: stableJson(value),
+    }))
+    .sort((left, right) => {
+      const leftKey = left.ownerId
+        ? `0:${left.ownerId}`
+        : `1:${left.serialized}`;
+      const rightKey = right.ownerId
+        ? `0:${right.ownerId}`
+        : `1:${right.serialized}`;
+      return (
+        leftKey.localeCompare(rightKey) ||
+        left.serialized.localeCompare(right.serialized)
+      );
+    });
+
+  if (arrayDerived || ordered.length !== 1) {
+    return `[${ordered.map(({ serialized }) => serialized).join(",")}]`;
+  }
+  return ordered[0]!.serialized;
+}
 
 export function fingerprintForEntity(
   profile: CompiledProfile,
@@ -59,7 +156,7 @@ export function fingerprintForEntity(
   for (const slot of Object.values(profile.slots) as CompiledSlot[]) {
     if (definitionNameFromScope(slot.entityScope) !== typeName) continue;
     for (const src of slot.sources) {
-      parts.push(`${src}=${JSON.stringify(get(doc, src))}`);
+      parts.push(`${src}=${fingerprintSourceValue(doc, src)}`);
     }
   }
   return parts.sort().join("&");

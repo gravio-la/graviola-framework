@@ -4,6 +4,7 @@ import { planInvalidation } from "@graviola/formula-materialization";
 import { definitionNameFromScope } from "@graviola/json-schema-utils";
 import type { EntityChangeEvent, Unsubscribe } from "@graviola/store-core";
 import uniq from "lodash-es/uniq";
+import type { CalcHostCapabilities } from "@graviola/formula-runtime";
 import { evaluateForRoots, type CalcEngineStore } from "./evaluateForRoots";
 import { warm, type WarmStore } from "./warm";
 
@@ -194,6 +195,7 @@ export function subscribeCalcInvalidation(args: {
   rootTypeName: string;
   affectedPlanner?: AffectedInstancePlanner;
   agent?: string;
+  host?: CalcHostCapabilities;
   onError?: (error: unknown) => void;
 }): CalcInvalidationHandle {
   const {
@@ -203,6 +205,7 @@ export function subscribeCalcInvalidation(args: {
     rootTypeName,
     affectedPlanner,
     agent,
+    host,
     onError,
   } = args;
 
@@ -230,6 +233,7 @@ export function subscribeCalcInvalidation(args: {
         await warm(store, profile, rootTypeName, domainSchema, {
           rootIRIs: task.rootIRIs,
           agent,
+          host,
           skipFresh: true,
         });
       } catch (error) {

@@ -16,10 +16,11 @@ export type {
   EntityWriteTarget,
 } from "./warm";
 
-export { readCalcValues } from "./readCalcValues";
+export { readCalcValues, readCalcValuesMany } from "./readCalcValues";
 export type {
   ReadCalcValuesOptions,
-  ReadCalcValuesResult,
+  ReadCalcValuesReport,
+  ReadCalcValuesStore,
 } from "./readCalcValues";
 
 export {
@@ -35,6 +36,8 @@ export type {
   DirtySlotSet,
   RelationEdge,
 } from "./delta";
+
+export { BROWSER_FORM_HOST } from "@graviola/formula-runtime";
 
 export {
   tryPushdownAggregates,
