@@ -1,4 +1,4 @@
-import type { Identifies } from "@graviola/store-core";
+import type { Calc, CalcValuesEntry, Identifies } from "@graviola/store-core";
 import {
   createRESTClientStoreClient,
   createRestTransport,
@@ -28,6 +28,11 @@ type DemoSchema = {
     label?: string;
     _provenance?: unknown;
   };
+};
+
+type CalcSchema = {
+  A: { "@id": string; name: string };
+  B: { "@id": string; name: string };
 };
 
 const identifies: Identifies = {
@@ -74,6 +79,61 @@ const setupClient = async (handler: StoreRestHandler) => {
     iriHandling: "fullIRI",
   });
   return { transport, handshake, client };
+};
+
+const createCalcStore = (rootTypes = ["A"]) => {
+  const mem = createInMemoryStore<CalcSchema>({
+    identifies,
+    typeNames: ["A", "B"],
+  });
+  mem.capabilities.calc = true;
+  mem.capabilities.profiles = {
+    ...mem.capabilities.profiles,
+    calc: {
+      rootTypes,
+      profileFingerprints: Object.fromEntries(
+        rootTypes.map((typeName) => [typeName, `fingerprint-${typeName}`]),
+      ),
+    },
+  };
+
+  const warmCalls: Array<{
+    typeName: string;
+    options?: { rootIRIs?: string[]; skipFresh?: boolean };
+  }> = [];
+  const valueCalls: Array<{ typeName: string; entityIRIs: string[] }> = [];
+  const calc: Calc<CalcSchema> = {
+    calcWarm: async (
+      typeName,
+      options?: { rootIRIs?: string[]; skipFresh?: boolean },
+    ) => {
+      warmCalls.push({ typeName, options });
+      return {
+        warmed: options?.rootIRIs?.length ?? 0,
+        skippedFresh: 0,
+        writesIssued: 1,
+        queriesIssued: 1,
+      };
+    },
+    readCalcValues: async (
+      typeName,
+      entityIRIs: string[],
+    ): Promise<CalcValuesEntry[]> => {
+      valueCalls.push({ typeName, entityIRIs });
+      return entityIRIs.map((entityIRI) => ({
+        entityIRI,
+        data: { computed: `${typeName}:${entityIRI}` },
+        provenance: {
+          sources: [],
+          fetchedAt: "2026-09-27T12:00:00.000Z",
+          freshness: "fresh",
+        },
+      }));
+    },
+  };
+  const store = Object.assign(mem, calc);
+
+  return { store, warmCalls, valueCalls };
 };
 
 describe("createStoreRestHandler contract", () => {
@@ -216,7 +276,11 @@ describe("createStoreRestHandler contract", () => {
       identifies,
       typeNames: [...TYPE_NAMES],
     });
-    const stub = { "@id": "http://example.org/Person/stub", name: "Stubbed" };
+    const stub = {
+      "@id": "http://example.org/Person/stub",
+      "@type": identifies.typeNameToTypeIRI("Person"),
+      name: "Stubbed",
+    };
     const handler = createStoreRestHandler({
       store: mem,
       typeNames: [...TYPE_NAMES],
@@ -281,5 +345,158 @@ describe("createStoreRestHandler contract", () => {
     const { client } = await setupClient(handler);
     const rows = await client.list("Person", 100);
     expect(rows.length).toBeLessThanOrEqual(2);
+  });
+});
+
+describe("createStoreRestHandler calc routes", () => {
+  test("warms a calc root type and rejects a non-root type", async () => {
+    const { store, warmCalls } = createCalcStore();
+    const handler = createStoreRestHandler({
+      store,
+      typeNames: ["A", "B"],
+    });
+
+    const warmResponse = await handler(
+      new Request(`${BASE_URL}/api/graviola/A/_calc/warm`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          rootIRIs: ["urn:a:1"],
+          skipFresh: true,
+        }),
+      }),
+    );
+    expect(warmResponse?.status).toBe(200);
+    expect(warmCalls).toEqual([
+      {
+        typeName: "A",
+        options: { rootIRIs: ["urn:a:1"], skipFresh: true },
+      },
+    ]);
+
+    const nonRootResponse = await handler(
+      new Request(`${BASE_URL}/api/graviola/B/_calc/warm`, {
+        method: "POST",
+        body: "{}",
+      }),
+    );
+    expect(nonRootResponse?.status).toBe(400);
+    expect(await nonRootResponse?.json()).toMatchObject({
+      code: "calc_type_not_supported",
+    });
+  });
+
+  test("returns calc value entries in request order", async () => {
+    const { store, valueCalls } = createCalcStore();
+    const handler = createStoreRestHandler({
+      store,
+      typeNames: ["A", "B"],
+    });
+    const entityIRIs = ["urn:a:2", "urn:a:1"];
+
+    const response = await handler(
+      new Request(`${BASE_URL}/api/graviola/A/_calc/values`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ entityIRIs }),
+      }),
+    );
+    expect(response?.status).toBe(200);
+    const entries = (await response?.json()) as CalcValuesEntry[];
+    expect(entries.map((entry) => entry.entityIRI)).toEqual(entityIRIs);
+    expect(valueCalls).toEqual([{ typeName: "A", entityIRIs }]);
+  });
+
+  test("materialized load applies only to calc root types", async () => {
+    const { store, valueCalls } = createCalcStore();
+    store.documents.set("B::urn:b:1", {
+      "@id": "urn:b:1",
+      name: "Plain B",
+    });
+    const handler = createStoreRestHandler({
+      store,
+      typeNames: ["A", "B"],
+    });
+    const headers = { Accept: "application/vnd.graviola-store.envelope+json" };
+
+    const materializedResponse = await handler(
+      new Request(
+        `${BASE_URL}/api/graviola/A/${encodeURIComponent("urn:a:1")}?materialized=1`,
+        { headers },
+      ),
+    );
+    expect(materializedResponse?.status).toBe(200);
+    expect(await materializedResponse?.json()).toEqual({
+      data: { computed: "A:urn:a:1" },
+      provenance: {
+        sources: [store.storeId],
+        fetchedAt: "2026-09-27T12:00:00.000Z",
+        freshness: "fresh",
+      },
+    });
+
+    const plainResponse = await handler(
+      new Request(
+        `${BASE_URL}/api/graviola/B/${encodeURIComponent("urn:b:1")}?materialized=1`,
+        { headers },
+      ),
+    );
+    expect(plainResponse?.status).toBe(200);
+    expect(await plainResponse?.json()).toMatchObject({
+      data: { "@id": "urn:b:1", name: "Plain B" },
+    });
+    expect(valueCalls).toEqual([{ typeName: "A", entityIRIs: ["urn:a:1"] }]);
+  });
+
+  test("supports the deprecated warm route only for one root type", async () => {
+    const oneRoot = createCalcStore();
+    const oneRootHandler = createStoreRestHandler({
+      store: oneRoot.store,
+      typeNames: ["A", "B"],
+    });
+    const success = await oneRootHandler(
+      new Request(`${BASE_URL}/api/graviola/_calc/warm`, {
+        method: "POST",
+        body: "{}",
+      }),
+    );
+    expect(success?.status).toBe(200);
+    expect(oneRoot.warmCalls[0]?.typeName).toBe("A");
+
+    const twoRoots = createCalcStore(["A", "B"]);
+    const twoRootHandler = createStoreRestHandler({
+      store: twoRoots.store,
+      typeNames: ["A", "B"],
+    });
+    const rejected = await twoRootHandler(
+      new Request(`${BASE_URL}/api/graviola/_calc/warm`, {
+        method: "POST",
+        body: "{}",
+      }),
+    );
+    expect(rejected?.status).toBe(400);
+    expect(await rejected?.text()).toContain("POST /:type/_calc/warm");
+    expect(twoRoots.warmCalls).toHaveLength(0);
+  });
+
+  test("advertises calc root types and profile fingerprints", async () => {
+    const { store } = createCalcStore();
+    const handler = createStoreRestHandler({
+      store,
+      typeNames: ["A", "B"],
+    });
+
+    const response = await handler(
+      new Request(`${BASE_URL}/.well-known/graviola-store`),
+    );
+    expect(await response?.json()).toMatchObject({
+      graviolaStore: {
+        calc: {
+          supported: true,
+          rootTypes: ["A"],
+          profileFingerprints: { A: "fingerprint-A" },
+        },
+      },
+    });
   });
 });

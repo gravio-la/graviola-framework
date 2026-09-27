@@ -8,6 +8,7 @@ Expose **runtime** facts HTTP cannot infer from OpenAPI alone:
 - Effective **base path** and **IRI URL modes**
 - **Auth** and **pagination** modes the server expects
 - **Per-type** capability truth (read-only vs CRUD, search profile, etc.)
+- Store-level calc root types and compiled-profile fingerprints
 
 OpenAPI describes routes and schemas; this descriptor describes **honest Store capability routing**.
 
@@ -50,6 +51,13 @@ Top-level key **`graviolaStore`** — fixed shape for each protocol version.
     "resolves": {
       "supported": true
     },
+    "calc": {
+      "supported": true,
+      "rootTypes": ["Plot"],
+      "profileFingerprints": {
+        "Plot": "sha256:example"
+      }
+    },
     "types": {
       "Plot": {
         "capabilities": {
@@ -82,10 +90,13 @@ Top-level key **`graviolaStore`** — fixed shape for each protocol version.
 | `idempotency`         | Whether `Idempotency-Key` de-duplication is honored                                       |
 | `envelope`            | Whether `Accept: application/vnd.graviola-store.envelope+json` is supported on GET entity |
 | `resolves`            | Whether optional `GET /_resolve-types` (see v1 wire doc) is implemented                   |
+| `calc`                | When present, calc is supported; includes `rootTypes` and optional `profileFingerprints`  |
 | `types`               | Map of logical type name → per-type capability flags                                      |
 | `openapiUrl`          | Optional pointer to **generated** OpenAPI document                                        |
 
 Per-type `capabilities` mirrors Store concerns honestly (`loads`, `lists`, `filters`, `writes`, `removes`, `counts`, `searches`).
+
+`calc` is omitted when the store does not support calc materialization. `calc.rootTypes` lists the logical type names accepted by the type-scoped calc routes. `calc.profileFingerprints`, when present, maps each root type to its compiled profile fingerprint so clients can detect profile drift.
 
 ## Client behaviour
 

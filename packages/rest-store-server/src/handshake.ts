@@ -48,6 +48,8 @@ export type GraviolaStoreHandshakeInner = {
   /** Store-level (not per-type) calc materialization — see `Calc` in `@graviola/store-core`. */
   calc?: {
     supported: boolean;
+    rootTypes: string[];
+    profileFingerprints?: Record<string, string>;
   };
   types: Record<string, { capabilities: GraviolaTypeCapabilities }>;
   openapiUrl?: string;
@@ -142,7 +144,20 @@ export const computeHandshake = (
       ...(opts.idempotency ? { idempotency: opts.idempotency } : {}),
       envelope: { supported: Boolean(descriptor.loads) },
       ...(resolves ? { resolves: { supported: true } } : {}),
-      ...(descriptor.calc ? { calc: { supported: true } } : {}),
+      ...(descriptor.calc
+        ? {
+            calc: {
+              supported: true,
+              rootTypes: descriptor.profiles?.calc?.rootTypes ?? [],
+              ...(descriptor.profiles?.calc?.profileFingerprints
+                ? {
+                    profileFingerprints:
+                      descriptor.profiles.calc.profileFingerprints,
+                  }
+                : {}),
+            },
+          }
+        : {}),
       types,
       ...(opts.openapiUrl ? { openapiUrl: opts.openapiUrl } : {}),
     },

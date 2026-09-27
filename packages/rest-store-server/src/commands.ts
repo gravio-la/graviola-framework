@@ -97,7 +97,17 @@ export type StoreCommand<R extends SchemaRegistry = SchemaRegistry> =
       entityIRI: string;
       paths?: string[];
     }
-  | { kind: "calcWarm"; rootIRIs?: string[]; skipFresh?: boolean };
+  | {
+      kind: "calcWarm";
+      typeName?: keyof R & string;
+      rootIRIs?: string[];
+      skipFresh?: boolean;
+    }
+  | {
+      kind: "readCalcValues";
+      typeName: keyof R & string;
+      entityIRIs: string[];
+    };
 
 export type CommandContext = {
   request: Request;
@@ -213,12 +223,31 @@ export const decodeStorePath = (
     segments.length === 2 &&
     method === "POST"
   ) {
+    /** @deprecated Use POST /:type/_calc/warm. Kept for one minor release. */
     return { kind: "calcWarm" };
   }
 
   const typeName = decodePathSegment(segments[0]);
   if (!isKnownType(typeName, ctx.typeNames)) {
     return "unknown_type";
+  }
+
+  if (
+    segments.length === 3 &&
+    segments[1] === "_calc" &&
+    segments[2] === "warm" &&
+    method === "POST"
+  ) {
+    return { kind: "calcWarm", typeName };
+  }
+
+  if (
+    segments.length === 3 &&
+    segments[1] === "_calc" &&
+    segments[2] === "values" &&
+    method === "POST"
+  ) {
+    return { kind: "readCalcValues", typeName, entityIRIs: [] };
   }
 
   if (segments.length === 2 && segments[1] === "_query" && method === "POST") {
@@ -515,6 +544,20 @@ export const enrichCommandFromBody = async (
       typeof o.skipFresh === "boolean" ? o.skipFresh : undefined;
     return { ...cmd, rootIRIs, skipFresh };
   }
+  if (cmd.kind === "readCalcValues") {
+    let body: unknown = {};
+    try {
+      body = await req.json();
+    } catch {
+      body = {};
+    }
+    const o =
+      body && typeof body === "object" ? (body as Record<string, unknown>) : {};
+    const entityIRIs = Array.isArray(o.entityIRIs)
+      ? o.entityIRIs.filter((x): x is string => typeof x === "string")
+      : [];
+    return { ...cmd, entityIRIs };
+  }
   return cmd;
 };
 
@@ -596,6 +639,8 @@ export const encodeCommandResult = (
       return jsonResponse(result && typeof result === "object" ? result : {});
     case "calcWarm":
       return jsonResponse(result ?? {});
+    case "readCalcValues":
+      return jsonResponse(Array.isArray(result) ? result : []);
     case "entitiesWithClasses": {
       // Map → plain object for JSON wire
       if (result instanceof Map) {
@@ -680,6 +725,7 @@ export const commandCapability = (cmd: StoreCommand): CommandCapability => {
     case "loadStatements":
       return "statements";
     case "calcWarm":
+    case "readCalcValues":
       return "calc";
     case "remove":
       return "removes";

@@ -1,4 +1,5 @@
 import {
+  hasCapability,
   hasCapabilityInDescriptor,
   type BaseStore,
   type CapabilityName,
@@ -112,29 +113,32 @@ const composeInterceptors = <R extends SchemaRegistry>(
   };
 };
 
-const executeOnStore = async (
-  store: Record<string, unknown>,
-  cmd: StoreCommand,
+const executeOnStore = async <R extends SchemaRegistry>(
+  store: BaseStore<R> & Record<string, unknown>,
+  cmd: StoreCommand<R>,
 ): Promise<unknown> => {
   switch (cmd.kind) {
     case "loadOne": {
       if (
         cmd.materialized &&
         cmd.withMeta &&
-        typeof store.readCalcValues === "function"
+        hasCapability(store, "calc") &&
+        store.capabilities.profiles?.calc?.rootTypes.includes(cmd.typeName)
       ) {
-        const result = (await (store.readCalcValues as Function)(
+        const [entry] = await store.readCalcValues(cmd.typeName, [
           cmd.entityIRI,
-        )) as { value: Record<string, unknown> | null; freshness: string };
-        if (result.value == null) return null;
-        return {
-          data: result.value,
-          provenance: {
-            sources: [store.storeId ?? "unknown"],
-            fetchedAt: new Date().toISOString(),
-            freshness: result.freshness,
-          },
-        };
+        ]);
+        if (!entry || entry.data == null) return null;
+        const { entityIRI: _entityIRI, ...envelope } = entry;
+        return envelope.provenance.sources.length === 0
+          ? {
+              ...envelope,
+              provenance: {
+                ...envelope.provenance,
+                sources: [store.storeId],
+              },
+            }
+          : envelope;
       }
       if (cmd.withMeta) {
         return (store.loadOne as Function)(cmd.typeName, cmd.entityIRI, {
@@ -245,10 +249,50 @@ const executeOnStore = async (
         cmd.entityIRI,
         cmd.paths,
       );
-    case "calcWarm":
-      return (store.calcWarm as Function)(cmd.rootIRIs, {
+    case "calcWarm": {
+      if (!hasCapability(store, "calc")) {
+        throw Object.assign(new Error("Calc capability not supported"), {
+          status: 501,
+          code: "capability_not_supported",
+        });
+      }
+      const rootTypes = store.capabilities.profiles?.calc?.rootTypes ?? [];
+      const typeName = cmd.typeName ?? rootTypes[0];
+      if (cmd.typeName == null && rootTypes.length !== 1) {
+        throw Object.assign(
+          new Error(
+            "Deprecated POST /_calc/warm requires exactly one calc root type; use POST /:type/_calc/warm",
+          ),
+          { status: 400, code: "calc_type_required" },
+        );
+      }
+      if (!typeName || !rootTypes.includes(typeName)) {
+        throw Object.assign(
+          new Error(`Calc is not configured for type ${typeName ?? "unknown"}`),
+          { status: 400, code: "calc_type_not_supported" },
+        );
+      }
+      return store.calcWarm(typeName, {
         skipFresh: cmd.skipFresh,
+        rootIRIs: cmd.rootIRIs,
       });
+    }
+    case "readCalcValues": {
+      if (!hasCapability(store, "calc")) {
+        throw Object.assign(new Error("Calc capability not supported"), {
+          status: 501,
+          code: "capability_not_supported",
+        });
+      }
+      const rootTypes = store.capabilities.profiles?.calc?.rootTypes ?? [];
+      if (!rootTypes.includes(cmd.typeName)) {
+        throw Object.assign(
+          new Error(`Calc is not configured for type ${cmd.typeName}`),
+          { status: 400, code: "calc_type_not_supported" },
+        );
+      }
+      return store.readCalcValues(cmd.typeName, cmd.entityIRIs);
+    }
     case "entitiesWithClasses": {
       const fn = store.getEntitiesWithClassesByFilter;
       if (typeof fn !== "function") {
@@ -311,7 +355,7 @@ export const createStoreRestHandler = <R extends SchemaRegistry>(
   );
 
   const runCommand = composeInterceptors(interceptors, (cmd) =>
-    executeOnStore(store as Record<string, unknown>, cmd),
+    executeOnStore(store, cmd),
   );
 
   const handleStoreRequest = async (
@@ -355,7 +399,8 @@ export const createStoreRestHandler = <R extends SchemaRegistry>(
       cmd.kind === "entitiesWithClasses" ||
       cmd.kind === "writeStatements" ||
       cmd.kind === "loadStatements" ||
-      cmd.kind === "calcWarm"
+      cmd.kind === "calcWarm" ||
+      cmd.kind === "readCalcValues"
     ) {
       cmd = await enrichCommandFromBody(cmd, req);
     }
@@ -379,6 +424,13 @@ export const createStoreRestHandler = <R extends SchemaRegistry>(
           501,
           e.code ?? "capability_not_supported",
           e.message ?? "Capability not supported",
+        );
+      }
+      if (e?.status === 400) {
+        return problemResponse(
+          400,
+          e.code ?? "invalid_request",
+          e.message ?? "Invalid request",
         );
       }
       throw err;

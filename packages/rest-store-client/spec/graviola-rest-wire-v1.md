@@ -15,6 +15,8 @@ Type-scoped paths (no `/entities` prefix):
 | `/{typeName}/_search`           | Text search (`POST`)                                |
 | `/{typeName}/_search-documents` | Filtered document search (`POST`)                   |
 | `/{typeName}/_facet`            | Facet aggregation (`POST`, capability `aggregates`) |
+| `/{typeName}/_calc/warm`        | Materialize calc values (`POST`)                    |
+| `/{typeName}/_calc/values`      | Read materialized-first calc values (`POST`)        |
 
 Underscore-prefixed segments are **operations**, avoiding collisions with arbitrary type names.
 
@@ -43,6 +45,37 @@ Mismatch MUST surface as handshake/config failure, not silent wrong entity.
 | `searchByLabel` / text row search | `POST`   | `/{typeName}/_search` — body below                                           |
 | `searchDocuments`                 | `POST`   | `/{typeName}/_search-documents` — body below (capability `documentSearches`) |
 | `loadOne` + envelope              | `GET`    | Same URL — `Accept: application/vnd.graviola-store.envelope+json`            |
+| `calcWarm`                        | `POST`   | `/{typeName}/_calc/warm` — body `{ "rootIRIs"?, "skipFresh"? }`              |
+| `readCalcValues`                  | `POST`   | `/{typeName}/_calc/values` — body `{ "entityIRIs": [...] }`                  |
+
+### Calc routes and materialized reads
+
+The calc routes require the store-level `calc` handshake field, and `{typeName}` MUST be one of `calc.rootTypes`.
+
+`POST /{typeName}/_calc/warm` accepts:
+
+```json
+{
+  "rootIRIs": ["https://example.org/entity/1"],
+  "skipFresh": true
+}
+```
+
+Both properties are optional. Omitting `rootIRIs` warms all roots of that type.
+
+`POST /{typeName}/_calc/values` accepts:
+
+```json
+{
+  "entityIRIs": ["https://example.org/entity/2", "https://example.org/entity/1"]
+}
+```
+
+The response is an array of calc value entries in request order. Each entry contains `entityIRI` plus the standard `ReadResult` fields (`data`, `provenance`, and optional metadata). `data: null` means that entity is absent.
+
+`GET /{typeName}/{id}?materialized=1` uses `readCalcValues` only when the request also negotiates the envelope media type and `{typeName}` is in `calc.rootTypes`. Its response is the single entry as a normal `ReadResult` envelope, without `entityIRI`; an entry with `data: null` produces the normal `404 entity_not_found` response. For non-root types, `materialized=1` is ignored and the server performs a plain `loadOne` with metadata.
+
+`POST /_calc/warm` is a deprecated alias retained for one minor release. It works only when the store advertises exactly one calc root type; otherwise it returns `400` and callers must use `POST /{typeName}/_calc/warm`.
 
 ### `_query` body
 
