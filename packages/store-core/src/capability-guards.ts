@@ -35,7 +35,7 @@ export type CapabilityFacets<R extends SchemaRegistry> = {
   counts: Counts<R>;
   writes: Writes<R>;
   statements: Statements<R>;
-  calc: Calc;
+  calc: Calc<R>;
   removes: Removes<R>;
   streams: Streams<R>;
   imports: Imports<R>;

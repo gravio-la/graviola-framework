@@ -18,7 +18,8 @@ export type { Statements } from "./capabilities/statements";
 export type {
   Calc,
   CalcWarmResult,
-  ReadCalcValuesResult,
+  CalcValues,
+  CalcValuesEntry,
 } from "./capabilities/calc";
 export type { Removes } from "./capabilities/removes";
 export type { Streams } from "./capabilities/streams";
@@ -60,6 +61,7 @@ export type {
   EntityMetaProfile,
   StatementMetaProfile,
   NestedPaginationProfile,
+  CalcProfile,
 } from "./descriptor";
 export { hasCapabilityInDescriptor, speaksLanguage } from "./descriptor";
 export type {

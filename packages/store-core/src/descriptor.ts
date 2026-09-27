@@ -38,6 +38,13 @@ export type NestedPaginationProfile = {
   stage: "query" | "extraction";
 };
 
+export type CalcProfile = {
+  /** Root type names with a bound compiled profile. */
+  rootTypes: string[];
+  /** CompiledProfile.schemaIdentity.fingerprint per root type, for client-side drift detection. */
+  profileFingerprints?: Record<string, string>;
+};
+
 export type CapabilityProfiles = {
   searches?: SearchesProfile;
   counts?: CountsProfile;
@@ -46,6 +53,7 @@ export type CapabilityProfiles = {
   entityMeta?: EntityMetaProfile;
   statementMeta?: StatementMetaProfile;
   nestedPagination?: NestedPaginationProfile;
+  calc?: CalcProfile;
   /** Resolved SPARQL dialect features (from engine profile + overrides) */
   sparqlFeatures?: {
     lateralNestedPagination: boolean;

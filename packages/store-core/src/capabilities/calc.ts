@@ -1,4 +1,5 @@
-import type { FreshnessState } from "../envelope";
+import type { ReadResult } from "../envelope";
+import type { SchemaRegistry } from "../registry";
 
 export type CalcWarmResult = {
   warmed: number;
@@ -7,24 +8,30 @@ export type CalcWarmResult = {
   queriesIssued: number;
 };
 
-export type ReadCalcValuesResult = {
-  value: Record<string, unknown> | null;
-  freshness: FreshnessState;
-};
+export type CalcValues = Record<string, unknown>;
+
+/** One entry per requested IRI, in request order. `data === null` → entity absent. */
+export type CalcValuesEntry = {
+  entityIRI: string;
+} & ReadResult<CalcValues | null>;
 
 /**
- * Store-level (not per-type) calc materialization, attached at store-construction
- * time by `@graviola/store-factory` when a calc config is supplied alongside
- * `statementMeta`. Kept loosely typed here (no `CompiledProfile`/`JSONSchema7`
- * import) so Layer 1 (`store-core`) never depends on Layer 2 (`calc-engine`,
- * `formula-dependency`) — the real implementation lives in
- * `@graviola/calc-engine`'s `warm()`/`readCalcValues()`.
+ * This store instance has compiled calc profiles bound per root type and can
+ * materialize and serve computed values, locally or over REST. Requires the
+ * `statements` capability. Attached at store-construction time by
+ * `@graviola/store-factory`; the engine lives in `@graviola/calc-engine`.
+ * Kept loosely typed here (no `CompiledProfile`/`JSONSchema7` import) so Layer 1
+ * (`store-core`) never depends on Layer 2 (`calc-engine`, `formula-dependency`).
  */
-export interface Calc {
-  calcWarm(
-    rootIRIs?: string[],
-    options?: { skipFresh?: boolean },
+export interface Calc<R extends SchemaRegistry = SchemaRegistry> {
+  /** Materialize computed slots for `typeName` roots (all roots when `rootIRIs` omitted). */
+  calcWarm<T extends keyof R & string>(
+    typeName: T,
+    options?: { rootIRIs?: string[]; skipFresh?: boolean },
   ): Promise<CalcWarmResult>;
-  /** Materialized-first read for one root entity — see `readCalcValues()` in `@graviola/calc-engine`. */
-  readCalcValues(rootIRI: string): Promise<ReadCalcValuesResult>;
+  /** Materialized-first batch read; stale/never-materialized entries are re-derived, never written back. */
+  readCalcValues<T extends keyof R & string>(
+    typeName: T,
+    entityIRIs: string[],
+  ): Promise<CalcValuesEntry[]>;
 }
