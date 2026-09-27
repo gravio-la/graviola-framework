@@ -2,9 +2,11 @@ import type { JSONSchema7 } from "json-schema";
 import type { CompiledProfile } from "@graviola/formula-dependency";
 import type { EntityChangeEvent, Unsubscribe } from "@graviola/store-core";
 import {
+  SERVER_CALC_HOST,
   subscribeCalcInvalidation,
   warm,
   type AffectedInstancePlanner,
+  type CalcHostCapabilities,
   type WarmResult,
   type WarmStore,
 } from "@graviola/calc-engine";
@@ -20,6 +22,8 @@ export type CreateCalcWorkerOptions = {
   rootTypeName: string;
   affectedPlanner?: AffectedInstancePlanner;
   agent?: string;
+  /** Calc host capabilities for slot placement filtering. Default `SERVER_CALC_HOST`. */
+  host?: CalcHostCapabilities;
   /** Full sweep of every root before subscribing (cold-start materialization). Default `true`. */
   warmOnStart?: boolean;
 };
@@ -48,12 +52,14 @@ export async function createCalcWorker(
     rootTypeName,
     affectedPlanner,
     agent,
+    host = SERVER_CALC_HOST,
     warmOnStart = true,
   } = opts;
 
   if (warmOnStart) {
     await warm(store, profile, rootTypeName, domainSchema, {
       agent,
+      host,
       skipFresh: true,
     });
   }
@@ -65,6 +71,7 @@ export async function createCalcWorker(
     rootTypeName,
     affectedPlanner,
     agent,
+    host,
   });
 
   return {
@@ -72,6 +79,7 @@ export async function createCalcWorker(
       warm(store, profile, rootTypeName, domainSchema, {
         rootIRIs,
         agent,
+        host,
         skipFresh: false,
       }),
     stop: () => handle.unsubscribe(),
