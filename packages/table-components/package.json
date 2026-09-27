@@ -35,8 +35,8 @@
     "@jsonforms/core": "catalog:jsonforms",
     "notistack": "^3",
     "react": "catalog:",
-    "@graviola/edb-table-renderer-sparql-select": "workspace:*",
-    "@graviola/edb-table-renderer-jsonld": "workspace:*"
+    "@graviola/edb-table-renderer-sparql-select": "workspace:^",
+    "@graviola/edb-table-renderer-jsonld": "workspace:^"
   },
   "peerDependenciesMeta": {
     "@graviola/edb-table-renderer-sparql-select": {

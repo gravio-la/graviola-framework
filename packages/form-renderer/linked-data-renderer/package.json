@@ -29,7 +29,7 @@
     "pack-tarball": "bun pm pack"
   },
   "peerDependencies": {
-    "@graviola/edb-state-hooks": "workspace:*",
+    "@graviola/edb-state-hooks": "workspace:^",
     "@mui/material": "catalog:mui",
     "@mui/icons-material": "catalog:mui",
     "@ebay/nice-modal-react": "^1",

@@ -26,7 +26,7 @@
     "@graviola/store-core": "workspace:*"
   },
   "peerDependencies": {
-    "@graviola/edb-state-hooks": "workspace:*",
+    "@graviola/edb-state-hooks": "workspace:^",
     "@mui/icons-material": "catalog:mui",
     "@mui/material": "catalog:mui",
     "@tanstack/react-query": "^5",

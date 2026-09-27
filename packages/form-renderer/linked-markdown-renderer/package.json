@@ -29,7 +29,7 @@
     "release": "bun publish --access public"
   },
   "peerDependencies": {
-    "@graviola/edb-state-hooks": "workspace:*",
+    "@graviola/edb-state-hooks": "workspace:^",
     "@jsonforms/core": "catalog:jsonforms",
     "@jsonforms/react": "catalog:jsonforms",
     "@jsonforms/material-renderers": "catalog:jsonforms",

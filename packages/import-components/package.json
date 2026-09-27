@@ -23,8 +23,8 @@
     "lint": "tsc --noEmit"
   },
   "peerDependencies": {
-    "@graviola/edb-import-staging": "workspace:*",
-    "@graviola/edb-state-hooks": "workspace:*",
+    "@graviola/edb-import-staging": "workspace:^",
+    "@graviola/edb-state-hooks": "workspace:^",
     "@mui/material": "catalog:mui",
     "@mui/icons-material": "catalog:mui",
     "react": "catalog:"

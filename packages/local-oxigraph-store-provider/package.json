@@ -27,7 +27,7 @@
     "pack-tarball": "bun pm pack"
   },
   "peerDependencies": {
-    "@graviola/edb-state-hooks": "workspace:*",
+    "@graviola/edb-state-hooks": "workspace:^",
     "@tanstack/react-query": "^5",
     "@mui/material": "catalog:mui",
     "@mui/icons-material": "catalog:mui",

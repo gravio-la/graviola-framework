@@ -37,8 +37,8 @@
     "n3": "^1.17.2"
   },
   "peerDependencies": {
-    "@graviola/edb-core-types": "workspace:*",
-    "@graviola/edb-state-hooks": "workspace:*",
+    "@graviola/edb-core-types": "workspace:^",
+    "@graviola/edb-state-hooks": "workspace:^",
     "@rdfjs/types": "catalog:rdf",
     "react": "catalog:"
   },
