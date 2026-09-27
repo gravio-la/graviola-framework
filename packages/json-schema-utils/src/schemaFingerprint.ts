@@ -109,21 +109,7 @@ function sortKeysDeep(value: unknown, excludeKeys: Set<string>): unknown {
 }
 
 async function sha256Hex(text: string): Promise<string> {
-  if (typeof globalThis.Bun !== "undefined") {
-    return sha256HexSync(text);
-  }
-  const encoder =
-    typeof globalThis.TextEncoder !== "undefined"
-      ? new globalThis.TextEncoder()
-      : null;
-  if (!encoder || !globalThis.crypto?.subtle) {
-    return sha256HexSync(text);
-  }
-  const data = encoder.encode(text);
-  const hash = await globalThis.crypto.subtle.digest("SHA-256", data);
-  return [...new Uint8Array(hash)]
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
+  return sha256HexSync(text);
 }
 
 function readDeclaredVersion(schema: JSONSchema7): string | undefined {

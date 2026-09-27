@@ -6,7 +6,7 @@ import { sha256HexSync } from "./sha256Sync";
  * - arrays: element-wise
  * - primitives: JSON.stringify
  */
-export function canonicalMemberJSON(value: unknown): string {
+function canonicalMemberJSON(value: unknown): string {
   if (value === null || typeof value !== "object") {
     return JSON.stringify(value);
   }

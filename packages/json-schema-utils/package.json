@@ -32,18 +32,17 @@
     "pack-tarball": "bun pm pack"
   },
   "devDependencies": {
-    "@graviola/edb-build-helper": "workspace:*",
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
-    "@types/jest": "^29.5.12",
-    "@types/json-schema": "catalog:",
+    "@types/bun": "latest",
     "eslint-config-edb": "workspace:*",
     "typescript": "^5.8.2",
     "tsup": "^8.0.0"
   },
   "dependencies": {
-    "lodash-es": "catalog:",
-    "@graviola/edb-core-utils": "workspace:*"
+    "@noble/hashes": "^2.4.0",
+    "@types/json-schema": "catalog:",
+    "lodash-es": "catalog:"
   },
   "eslintConfig": {
     "root": true,

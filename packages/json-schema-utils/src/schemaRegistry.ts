@@ -2,7 +2,7 @@ import type { JSONSchema7, JSONSchema7Definition } from "json-schema";
 
 import {
   defs,
-  getDefintitionKey,
+  getDefinitionKey,
   isJSONSchema,
   isPrimitive,
 } from "./jsonSchema";
@@ -355,7 +355,7 @@ export function compileSchema(
 ): SchemaRegistry {
   const { maxDepth = 20 } = options;
 
-  const defsKey = getDefintitionKey(rootSchema);
+  const defsKey = getDefinitionKey(rootSchema);
   const definitions = defs(rootSchema);
 
   // -------------------------------------------------------------------------

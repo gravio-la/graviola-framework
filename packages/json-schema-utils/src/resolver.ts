@@ -6,11 +6,20 @@ import { decode } from "./jsonPointer";
 
 export type JsonSchema = JSONSchema7 | JSONSchema4;
 
+type ResolveContext = {
+  rootSchema: JsonSchema;
+  /** (schema object → scope paths) currently being resolved; guards against $ref cycles. */
+  inProgress: Map<JsonSchema, Set<string>>;
+};
+
 const invalidSegment = (pathSegment: string) =>
   pathSegment === "#" || pathSegment === undefined || pathSegment === "";
 
 /**
  * Resolve the given schema path in order to obtain a subschema.
+ *
+ * Algorithm derived from `@jsonforms/core` (MIT). Cycle guard follows JSON Forms 3.7.
+ *
  * @param {JsonSchema} schema_ the root schema from which to start
  * @param {string} schemaPath the schema path to be resolved
  * @param {JsonSchema} rootSchema the actual root schema
@@ -21,14 +30,42 @@ export const resolveSchema = (
   schemaPath: string | undefined,
   rootSchema: JsonSchema,
 ): JsonSchema | undefined => {
-  const segments = schemaPath?.split("/").map(decode) ?? [];
-  return resolveSchemaWithSegments(schema, segments, rootSchema);
+  const ctx: ResolveContext = {
+    rootSchema,
+    inProgress: new Map(),
+  };
+  return resolveWithContext(schema, schemaPath, ctx);
+};
+
+const resolveWithContext = (
+  schema: JsonSchema,
+  schemaPath: string | undefined,
+  ctx: ResolveContext,
+): JsonSchema | undefined => {
+  let paths = ctx.inProgress.get(schema);
+  if (!paths) {
+    paths = new Set();
+    ctx.inProgress.set(schema, paths);
+  }
+
+  const pathKey = schemaPath ?? "";
+  if (paths.has(pathKey)) {
+    return undefined;
+  }
+
+  paths.add(pathKey);
+  try {
+    const segments = schemaPath?.split("/").map(decode) ?? [];
+    return resolveSchemaWithSegments(schema, segments, ctx);
+  } finally {
+    paths.delete(pathKey);
+  }
 };
 
 const resolveSchemaWithSegments = (
   schema_: JsonSchema,
   pathSegments: string[],
-  rootSchema: JsonSchema,
+  ctx: ResolveContext,
 ): JsonSchema | undefined => {
   if (isEmpty(schema_)) {
     return undefined;
@@ -37,7 +74,7 @@ const resolveSchemaWithSegments = (
   let schema: JsonSchema | undefined = schema_;
 
   if (schema.$ref) {
-    schema = resolveSchema(rootSchema, schema.$ref, rootSchema);
+    schema = resolveWithContext(ctx.rootSchema, schema.$ref, ctx);
   }
 
   if (!pathSegments || pathSegments.length === 0) {
@@ -47,7 +84,7 @@ const resolveSchemaWithSegments = (
   const [segment, ...remainingSegments] = pathSegments;
 
   if (invalidSegment(segment) && schema) {
-    return resolveSchemaWithSegments(schema, remainingSegments, rootSchema);
+    return resolveSchemaWithSegments(schema, remainingSegments, ctx);
   }
 
   const singleSegmentResolveSchema = get(schema, segment);
@@ -55,7 +92,7 @@ const resolveSchemaWithSegments = (
   const resolvedSchema = resolveSchemaWithSegments(
     singleSegmentResolveSchema,
     remainingSegments,
-    rootSchema,
+    ctx,
   );
   if (resolvedSchema) {
     return resolvedSchema;
@@ -65,25 +102,24 @@ const resolveSchemaWithSegments = (
     // Let's try to resolve the path, assuming oneOf/allOf/anyOf/then/else was omitted.
     // We only do this when traversing an object or array as we want to avoid
     // following a property which is named oneOf, allOf, anyOf, then or else.
-    let alternativeResolveResult = undefined;
+    let alternativeResolveResult: JsonSchema | undefined;
 
     if (!schema) return undefined;
 
-    const subSchemas = [].concat(
-      // @ts-ignore
-      schema.oneOf ?? [],
-      schema.allOf ?? [],
-      schema.anyOf ?? [],
-      (schema as JSONSchema7).then ?? [],
-      (schema as JSONSchema7).else ?? [],
-    );
+    const schema7 = schema as JSONSchema7;
+    const subSchemas = [
+      ...(schema.oneOf ?? []),
+      ...(schema.allOf ?? []),
+      ...(schema.anyOf ?? []),
+      ...(schema7.then ? [schema7.then as JsonSchema] : []),
+      ...(schema7.else ? [schema7.else as JsonSchema] : []),
+    ] as JsonSchema[];
 
     for (const subSchema of subSchemas) {
-      // @ts-ignore
       alternativeResolveResult = resolveSchemaWithSegments(
         subSchema,
         [segment, ...remainingSegments],
-        rootSchema,
+        ctx,
       );
       if (alternativeResolveResult) {
         break;

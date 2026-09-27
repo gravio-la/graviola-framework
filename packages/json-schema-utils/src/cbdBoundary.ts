@@ -6,7 +6,7 @@ import {
   schemaHasEntityIdentity,
 } from "./entityIdentity";
 import { definitionNameFromScope } from "./definitionScope";
-import { defs, getDefintitionKey } from "./jsonSchema";
+import { defs, getDefinitionKey } from "./jsonSchema";
 
 export type { EntityIdentityOptions } from "./entityIdentity";
 export {
@@ -64,7 +64,7 @@ export function cbdBoundaryScopes(
   const named = defs(schema);
   const names = Object.keys(named);
   if (names.length > 0) {
-    const key = getDefintitionKey(schema);
+    const key = getDefinitionKey(schema);
     for (const [name, def] of Object.entries(named)) {
       if (def && typeof def === "object") {
         visit(def as JSONSchema7, [key, name]);

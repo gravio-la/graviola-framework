@@ -6,7 +6,10 @@ import {
   versionFingerprintDriftWarning,
 } from "./schemaFingerprint";
 
-const baseSchema: JSONSchema7 = {
+/** Graviola schemas carry a top-level `version` keyword, which JSONSchema7 does not declare. */
+type VersionedSchema = JSONSchema7 & { version?: string };
+
+const baseSchema: VersionedSchema = {
   $id: "https://example.org/test",
   version: "1.0.0",
   definitions: {
@@ -23,7 +26,7 @@ const baseSchema: JSONSchema7 = {
 
 describe("schemaFingerprint", () => {
   it("is stable across property order", () => {
-    const shuffled: JSONSchema7 = {
+    const shuffled: VersionedSchema = {
       version: "1.0.0",
       $id: "https://example.org/test",
       definitions: {
@@ -43,7 +46,7 @@ describe("schemaFingerprint", () => {
   });
 
   it("changes on semantic difference", () => {
-    const changed: JSONSchema7 = {
+    const changed: VersionedSchema = {
       ...baseSchema,
       definitions: {
         Item: {
@@ -62,7 +65,7 @@ describe("schemaFingerprint", () => {
   });
 
   it("is stable when $defs is used instead of definitions", () => {
-    const withDefs: JSONSchema7 = {
+    const withDefs: VersionedSchema = {
       $id: "https://example.org/test",
       version: "1.0.0",
       $defs: {

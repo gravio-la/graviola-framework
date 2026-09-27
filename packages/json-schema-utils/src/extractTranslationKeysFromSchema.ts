@@ -1,5 +1,5 @@
 import { JSONSchema7 } from "json-schema";
-import { set } from "lodash-es";
+import set from "lodash-es/set";
 import { walkJSONSchema } from "./walkJSONSchema";
 import { defs } from "./jsonSchema";
 

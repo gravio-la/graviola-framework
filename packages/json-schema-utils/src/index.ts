@@ -1,12 +1,30 @@
 export * from "./jsonSchema";
-export * from "./stubHelper";
+export {
+  extendDefinitionsWithProperties,
+  prepareStubbedSchema,
+} from "./stubHelper";
+export type {
+  GenRequiredPropertiesFunction,
+  GeneratePropertiesFunction,
+  RefAppendOptions,
+  SchemaExpander,
+} from "./stubHelper";
 export * from "./resolver";
-export * from "./defsToDefinitions";
+export { convertDefsToDefinitions } from "./defsToDefinitions";
 export * from "./definitionScope";
-export * from "./propertyExistsWithinSchema";
 export * from "./extendSchema";
 export * from "./getSubschemaByPath";
-export * from "./inversePropertyAnnotations";
+export {
+  getInversePropertyAnnotation,
+  resolveInverseProperties,
+  getInverseProperties,
+} from "./inversePropertyAnnotations";
+export type {
+  InversePropertyAnnotation,
+  JSONSchemaWithInverseProperties,
+  InversePropertyResolution,
+  InversePropertyData,
+} from "./inversePropertyAnnotations";
 export * from "./extractTranslationKeysFromSchema";
 export * from "./walkJSONSchema";
 export * from "./schemaRegistry";
@@ -14,5 +32,5 @@ export * from "./schemaScopeFrame";
 export * from "./schemaFingerprint";
 export * from "./entityIdentity";
 export * from "./cbdBoundary";
-export * from "./skolem";
+export { contentHash8, skolemListMemberIri, assignSkolemIris } from "./skolem";
 export * from "./stripXCalcProperties";

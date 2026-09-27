@@ -58,7 +58,7 @@ const workingCircleRootSchema: JSONSchema7 = {
           "x-inverseOf": {
             inverseOf: ["#/definitions/Person/properties/workingCircles"],
           },
-        },
+        } as JSONSchemaWithInverseProperties,
       },
     },
   },

@@ -3,7 +3,7 @@ import isObject from "lodash-es/isObject";
 
 import {
   defs,
-  getDefintitionKey,
+  getDefinitionKey,
   isJSONSchema,
   isPrimitive,
 } from "./jsonSchema";
@@ -77,7 +77,7 @@ const isEntitySchema = (
   return false;
 };
 
-export const recursivelyFindRefsAndAppendStub: (
+const recursivelyFindRefsAndAppendStub: (
   field: string,
   schema: JSONSchema7,
   options: RefAppendOptions,
@@ -93,7 +93,7 @@ export const recursivelyFindRefsAndAppendStub: (
   if (options?.excludeField?.includes(field)) {
     return schema;
   }
-  const definitionsKey = getDefintitionKey(rootSchema);
+  const definitionsKey = getDefinitionKey(rootSchema);
   if (schema.$ref) {
     if (
       options?.excludeType?.includes(
@@ -170,7 +170,7 @@ export const recursivelyFindRefsAndAppendStub: (
   return schema;
 };
 
-export const definitionsToStubDefinitions = (
+const definitionsToStubDefinitions = (
   definitions: JSONSchema7["definitions"],
   options?: RefAppendOptions,
   rootSchema?: JSONSchema7,
@@ -215,7 +215,7 @@ export const definitionsToStubDefinitions = (
  * @param generateSemanticProperties
  * @param requiredProperties
  */
-export const extendProperties: (
+const extendProperties: (
   typeName: string,
   schema: JSONSchema7,
   generateSemanticProperties?: GeneratePropertiesFunction,
@@ -284,7 +284,7 @@ export const extendDefinitionsWithProperties: (
   }, {}) as JSONSchema7["definitions"];
   return {
     ...schema,
-    [getDefintitionKey(schema)]: newDefs,
+    [getDefinitionKey(schema)]: newDefs,
   } as JSONSchema7;
 };
 export const prepareStubbedSchema = (
@@ -293,7 +293,7 @@ export const prepareStubbedSchema = (
   requiredProperties?: GenRequiredPropertiesFunction,
   options?: RefAppendOptions,
 ) => {
-  const definitionsKey = getDefintitionKey(schema);
+  const definitionsKey = getDefinitionKey(schema);
 
   const stubDefinitions = definitionsToStubDefinitions(
     defs(schema),

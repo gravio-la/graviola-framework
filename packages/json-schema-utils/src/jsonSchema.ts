@@ -1,4 +1,5 @@
 import { JSONSchema7, JSONSchema7Definition } from "json-schema";
+import type { DefinitionsKey } from "./definitionScope";
 
 /**
  * Checks if the given JSON schema definition is not a boolean.
@@ -30,76 +31,6 @@ export const isPrimitive = (type?: string) =>
   type === "integer" ||
   type === "boolean";
 
-/**
- * Filters an object of JSONSchema7 properties for those that are primitive types or arrays of primitive types.
- *
- * @param {JSONSchema7["properties"]} properties - The properties to filter.
- * @returns {object} An object containing only the properties that are primitive types or arrays of primitive types.
- */
-export const filterForPrimitivePropertiesAndArrays = (
-  properties: JSONSchema7["properties"],
-) =>
-  Object.fromEntries(
-    Object.entries(properties || {}).filter(
-      ([, value]) =>
-        typeof value === "object" &&
-        (isPrimitive(String(value.type)) ||
-          value.oneOf ||
-          (value.type === "array" &&
-            typeof value.items === "object" &&
-            isPrimitive(String((value.items as any).type)))),
-    ),
-  );
-/**
- * Removes properties that are of primitive types from an object of JSONSchema7 properties.
- *
- * @param {JSONSchema7["properties"]} properties - The properties to filter out.
- * @returns {object} An object containing only the properties that are not primitive types.
- */
-export const removePrimitiveProperties = (
-  properties: JSONSchema7["properties"],
-) =>
-  Object.fromEntries(
-    Object.entries(properties || {}).filter(
-      ([, value]) =>
-        !(typeof value === "object" && isPrimitive(String(value.type))),
-    ),
-  );
-/**
- * Filters an object of JSONSchema7 properties for those that are primitive types.
- *
- * @param {JSONSchema7["properties"]} properties - The properties to filter.
- * @returns {object} An object containing only the properties that are primitive types.
- */
-export const filterForPrimitiveProperties = (
-  properties: JSONSchema7["properties"],
-) =>
-  Object.fromEntries(
-    Object.entries(properties || {}).filter(
-      ([, value]) =>
-        typeof value === "object" &&
-        value.type !== "object" &&
-        (isPrimitive(String(value.type)) ||
-          value.oneOf ||
-          (value.type === "array" &&
-            typeof value.items === "object" &&
-            isPrimitive(String((value.items as any).type)))),
-    ),
-  );
-/**
- * Filters an object of JSONSchema7 properties for those that are arrays.
- *
- * @param {JSONSchema7["properties"]} properties - The properties to filter.
- * @returns {object} An object containing only the properties that are arrays.
- */
-export const filterForArrayProperties = (
-  properties: JSONSchema7["properties"],
-) =>
-  Object.fromEntries(
-    Object.entries(properties || {}).filter(
-      ([, value]) => typeof value === "object" && value.type === "array",
-    ),
-  );
 /**
  * Moves a specific definition to the top of the JSON schema object.
  *
@@ -165,7 +96,7 @@ export const bringDefinitionToTop: (
  * If no definitions key is found, the default key "definitions" is returned.
  * @param schema
  */
-export const getDefintitionKey = (schema: JSONSchema7) =>
+export const getDefinitionKey = (schema: JSONSchema7): DefinitionsKey =>
   "$defs" in schema ? "$defs" : "definitions";
 
 /**

@@ -1,6 +1,5 @@
 import { JSONSchema7 } from "json-schema";
 import { resolveSchema } from "./resolver";
-import { filterUndefOrNull } from "@graviola/edb-core-utils";
 
 /**
  * Interface for inverse property annotations in JSON Schema
@@ -31,7 +30,7 @@ export interface JSONSchemaWithInverseProperties extends JSONSchema7 {
 /**
  * Type guard to check if a schema has inverse property annotations
  */
-export function hasInversePropertyAnnotation(
+function hasInversePropertyAnnotation(
   schema: JSONSchema7,
 ): schema is JSONSchemaWithInverseProperties {
   return (
@@ -105,9 +104,9 @@ export const getInverseProperties = (
           path: inverse.path,
           typeName: inverse.typeName,
           schema: inverse.schema,
-          entityIRIs: filterUndefOrNull(
-            (Array.isArray(data) ? data : [data]).map((d) => d?.["@id"]),
-          ),
+          entityIRIs: (Array.isArray(data) ? data : [data])
+            .map((d) => d?.["@id"])
+            .filter((iri): iri is string => iri != null),
         };
       });
     }

@@ -1,4 +1,5 @@
 import type { JSONSchema7 } from "json-schema";
+import { getDefinitionKey } from "./jsonSchema";
 
 /** JSON Schema vocabulary key for the named-definition map. */
 export type DefinitionsKey = "definitions" | "$defs";
@@ -8,8 +9,9 @@ const DEF_SEGMENT_RE = /\/(?:definitions|\$defs)\/([^/]+)/;
 function definitionsKeyOf(
   schemaOrKey: JSONSchema7 | DefinitionsKey,
 ): DefinitionsKey {
-  if (typeof schemaOrKey === "string") return schemaOrKey;
-  return "$defs" in schemaOrKey ? "$defs" : "definitions";
+  return typeof schemaOrKey === "string"
+    ? schemaOrKey
+    : getDefinitionKey(schemaOrKey);
 }
 
 /**

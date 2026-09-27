@@ -5,7 +5,7 @@
  * @param obj
  * @param visited
  */
-export const defsToDefinitions = (obj: any, visited = new WeakSet()): any => {
+const defsToDefinitions = (obj: any, visited = new WeakSet()): any => {
   if (obj && typeof obj === "object") {
     if (visited.has(obj)) {
       return obj; // Avoid infinite recursion by returning already visited objects

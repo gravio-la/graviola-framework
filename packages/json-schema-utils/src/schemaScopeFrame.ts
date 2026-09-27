@@ -1,15 +1,7 @@
 import type { JSONSchema7 } from "json-schema";
 
+import { decode, encode } from "./jsonPointer";
 import { resolveSchema, type JsonSchema } from "./resolver";
-
-/** Decode one JSON Pointer segment */
-function decodeSeg(pointerSegment: string): string {
-  return pointerSegment.replace(/~1/g, "/").replace(/~0/g, "~");
-}
-
-function encodeSeg(segment: string): string {
-  return segment.replace(/~/g, "~0").replace(/\//g, "~1");
-}
 
 function normalizeScope(scope: string | undefined): string {
   if (scope == null || scope === "" || scope === "#") return "#";
@@ -125,7 +117,7 @@ export function enterPropertyFrame(
   frame: SchemaScopeFrame,
   propertyKey: string,
 ): SchemaScopeFrame {
-  const enc = encodeSeg(propertyKey);
+  const enc = encode(propertyKey);
   const base =
     frame.scope === "#" ? "#/properties" : `${frame.scope}/properties`;
   return {
@@ -190,7 +182,7 @@ export function dataInFrame(
 export function scopeToDataPathSegments(scope: string | undefined): string[] {
   if (!scope || scope === "#") return [];
   const trimmed = scope.startsWith("#") ? scope.slice(1) : scope;
-  const segments = trimmed.split("/").filter(Boolean).map(decodeSeg);
+  const segments = trimmed.split("/").filter(Boolean).map(decode);
   const path: string[] = [];
   for (let i = 0; i < segments.length; i++) {
     if (segments[i] === "properties" && segments[i + 1] !== undefined) {
@@ -199,12 +191,4 @@ export function scopeToDataPathSegments(scope: string | undefined): string[] {
     }
   }
   return path;
-}
-
-/** @deprecated Use {@link dataInFrame} with a {@link SchemaScopeFrame}. */
-export function dataAtScopeFromFrame(
-  frame: SchemaScopeFrame,
-  rootData: unknown,
-): unknown {
-  return dataInFrame(frame, rootData);
 }
