@@ -65,9 +65,11 @@ import { runReadCalcValuesSuite } from "./suites/readCalcValues.suite";
 import { runMetaSuite } from "./suites/meta.suite";
 import { runFormulaPortabilitySuite } from "./suites/formulaPortability.suite";
 import {
+  runStatementHistoryRetentionSuite,
   runStatementMetaSuite,
   runStatementMetaWithEntityMetaSuite,
 } from "./suites/statement-meta.suite";
+import { runDataVolumeSuite } from "./suites/dataVolume.suite";
 
 // ─── Adapter loop ─────────────────────────────────────────────────────────────
 // Top-level await is supported in bun:test — adapters are resolved before
@@ -167,6 +169,19 @@ for (const adapter of adapters) {
       );
     }
 
+    if (setupResult.countTriples) {
+      runDataVolumeSuite({
+        getStore: () => store,
+        countTriples: setupResult.countTriples,
+        getStatementStore: setupResult.statementStore
+          ? () => setupResult.statementStore!
+          : undefined,
+        getCalcWarmStore: setupResult.calcWarmStore
+          ? () => setupResult.calcWarmStore!
+          : undefined,
+      });
+    }
+
     if (setupResult.statementStore) {
       runStatementMetaSuite(
         () => store,
@@ -188,4 +203,5 @@ for (const adapter of adapters) {
 // runs once, independent of the adapter loop (default backend set only).
 if (!skipDefaultAdaptersEnv()) {
   runCalcFacetSuite();
+  runStatementHistoryRetentionSuite();
 }

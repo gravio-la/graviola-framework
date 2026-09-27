@@ -49,6 +49,16 @@ import type {
   DatastoreContractStoreWithStatements,
 } from "../types";
 
+const TRIPLE_COUNT_QUERY = "SELECT (COUNT(*) AS ?n) WHERE { ?s ?p ?o }";
+
+function countTriplesFromOxigraphStore(store: Store): number {
+  const raw = store.query(TRIPLE_COUNT_QUERY, {
+    results_format: "application/sparql-results+json",
+  }) as string;
+  const parsed = JSON.parse(raw || "{}");
+  return Number(parsed.results?.bindings?.[0]?.n?.value ?? 0);
+}
+
 /** Build CRUDFunctions that delegate to a synchronous Oxigraph Store. */
 function makeSyncStoreCRUDFunctions(store: Store): CRUDFunctions {
   return {
@@ -207,6 +217,7 @@ export function createOxigraphLocalAdapter(): DatastoreAdapter {
         calcStore: calcStore as unknown as DatastoreContractStoreWithFilters,
         calcWarmStore:
           calcWarmStore as unknown as DatastoreContractStoreWithCalcWarm,
+        countTriples: async () => countTriplesFromOxigraphStore(store),
       };
     },
 

@@ -125,6 +125,8 @@ export type DatastoreAdapter = {
      * `@graviola/calc-engine`'s own unit tests.
      */
     calcWarmStore?: DatastoreContractStoreWithCalcWarm;
+    /** SPARQL backends only — total triple count for data-volume contract tests. */
+    countTriples?: () => Promise<number>;
   }>;
   /** Wipe backing data — invoked in beforeEach. */
   clearAll: () => Promise<void>;

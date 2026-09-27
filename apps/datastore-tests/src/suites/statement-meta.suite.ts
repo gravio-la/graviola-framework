@@ -2,17 +2,32 @@
  * Fact-level `$stmt` contract tests (P3 slice 1).
  */
 import { describe, test, expect } from "bun:test";
+import type { CRUDFunctions } from "@graviola/edb-core-types";
 import {
   buildStatementWrites,
   isMaterializationFresh,
 } from "@graviola/formula-materialization";
 import type { StatementWrite } from "@graviola/provenance-types";
-import { STATEMENT_JSON_SUFFIX } from "@graviola/statement-meta";
+import {
+  STATEMENT_JSON_SUFFIX,
+  type StatementHistoryRetention,
+} from "@graviola/statement-meta";
+import { initSPARQLDatastorePair } from "@graviola/sparql-db-impl";
+import datasetFactory from "@rdfjs/dataset";
+import type { Quad } from "@rdfjs/types";
+import { Store } from "oxigraph";
 import type {
   DatastoreContractStore,
   DatastoreContractStoreWithStatements,
 } from "../types";
-import { entityIRI } from "../schema/testSchema";
+import {
+  BASE_IRI,
+  entityIRI,
+  queryBuildOptions,
+  typeNameToTypeIRI,
+} from "../schema/testSchema";
+import { sparqlMetaTestSchema } from "../schema/metaTestConfig";
+import { sparqlStatementNodeMetaConfig } from "../schema/statementTestConfig";
 import { makeItem } from "../fixtures/testData";
 
 type StoreGetter = () => DatastoreContractStore;
@@ -43,6 +58,180 @@ function sampleWrite(
       ...overrides,
     },
   };
+}
+
+function makeRetentionCRUD(store: Store): CRUDFunctions {
+  return {
+    askFetch: async (query) => Boolean(store.query(query)),
+    constructFetch: async (query) =>
+      datasetFactory.dataset((store.query(query) as Quad[]) ?? []),
+    updateFetch: async (query) => {
+      store.update(query);
+    },
+    selectFetch: ((query: string, options?: { withHeaders?: boolean }) => {
+      const raw = store.query(query, {
+        results_format: "application/sparql-results+json",
+      }) as string;
+      const parsed = JSON.parse(raw || "{}");
+      return Promise.resolve(
+        options?.withHeaders ? parsed : (parsed.results?.bindings ?? []),
+      );
+    }) as CRUDFunctions["selectFetch"],
+  };
+}
+
+function countQuery(store: Store, query: string): number {
+  const raw = store.query(query, {
+    results_format: "application/sparql-results+json",
+  }) as string;
+  return Number(JSON.parse(raw).results.bindings[0].c.value);
+}
+
+async function exerciseRetention(
+  testId: string,
+  retention?: StatementHistoryRetention,
+  retentionByPath?: Record<string, StatementHistoryRetention>,
+) {
+  const oxigraph = new Store();
+  const { store } = initSPARQLDatastorePair({
+    schema: sparqlMetaTestSchema as never,
+    defaultPrefix: BASE_IRI,
+    jsonldContext: { "@vocab": BASE_IRI },
+    typeNameToTypeIRI,
+    queryBuildOptions: {
+      ...queryBuildOptions,
+      sparqlFlavour: "oxigraph",
+    },
+    sparqlQueryFunctions: makeRetentionCRUD(oxigraph),
+    defaultLimit: 100,
+    statementMeta: {
+      ...sparqlStatementNodeMetaConfig,
+      ...(retention === undefined ? {} : { retention }),
+      ...(retentionByPath === undefined ? {} : { retentionByPath }),
+    },
+  });
+  const statementStore = store as DatastoreContractStoreWithStatements;
+  const itemId = entityIRI("Item", `stmt-retention-${testId}`);
+  await statementStore.upsert(
+    "Item",
+    itemId,
+    makeItem(`stmt-retention-${testId}`) as never,
+  );
+
+  const tripleCounts: number[] = [];
+  for (let value = 1; value <= 5; value++) {
+    const generatedAt = `2026-03-0${value}T10:00:00.000Z`;
+    await statementStore.writeStatements("Item", itemId, [
+      sampleWrite("price", value, {
+        source: `retention-${value}`,
+        generatedAt,
+        wasGeneratedBy: {
+          formulaId: "test-formula",
+          stratum: 1,
+          inputFingerprint: `fp-retention-${value}`,
+          generatedAt,
+        },
+      }),
+    ]);
+    tripleCounts.push(
+      countQuery(oxigraph, "SELECT (COUNT(*) AS ?c) WHERE { ?s ?p ?o }"),
+    );
+  }
+  await statementStore.writeStatements("Item", itemId, [
+    sampleWrite("price", 5, {
+      source: "retention-repeat",
+      generatedAt: "2026-03-05T10:00:00.000Z",
+      wasGeneratedBy: {
+        formulaId: "test-formula",
+        stratum: 1,
+        inputFingerprint: "fp-retention-5",
+        generatedAt: "2026-03-05T10:00:00.000Z",
+      },
+    }),
+  ]);
+  tripleCounts.push(
+    countQuery(oxigraph, "SELECT (COUNT(*) AS ?c) WHERE { ?s ?p ?o }"),
+  );
+
+  const nodeCount = countQuery(
+    oxigraph,
+    `SELECT (COUNT(DISTINCT ?node) AS ?c) WHERE {
+      <${itemId}> <${BASE_IRI}price__stmt> ?node .
+    }`,
+  );
+  const rows =
+    (await statementStore.loadStatements("Item", itemId, ["price"])).price ??
+    [];
+  const loaded = await statementStore.loadOne("Item", itemId);
+
+  return {
+    descriptorRetention:
+      statementStore.capabilities.profiles?.statementMeta?.retention,
+    nodeCount,
+    tripleCounts,
+    values: rows.map(({ value }) => value),
+    currentValue: loaded?.price,
+  };
+}
+
+export function runStatementHistoryRetentionSuite(): void {
+  describe("statement-node history retention data volume", () => {
+    for (const [label, retention] of [
+      ["default", undefined],
+      ["explicit-all", "all"],
+    ] as const) {
+      test(`${label} keeps five nodes and a repeated value adds no triples`, async () => {
+        const result = await exerciseRetention(label, retention);
+        expect(result.descriptorRetention).toBe("all");
+        expect(result.nodeCount).toBe(5);
+        expect(result.values).toHaveLength(5);
+        expect(result.tripleCounts[5]).toBe(result.tripleCounts[4]);
+        console.info(
+          `statement-retention ${label}: nodes=${result.nodeCount} triples=${result.tripleCounts.join(",")}`,
+        );
+      });
+    }
+
+    test("keepLast 2 caps nodes and triples while retaining the current value", async () => {
+      const result = await exerciseRetention("keep-last-2", { keepLast: 2 });
+      expect(result.descriptorRetention).toEqual({ keepLast: 2 });
+      expect(result.nodeCount).toBe(2);
+      expect(result.values).toContain(5);
+      expect(result.currentValue).toBe(5);
+      expect(
+        result.tripleCounts
+          .slice(2)
+          .every((count) => count === result.tripleCounts[2]),
+      ).toBe(true);
+      console.info(
+        `statement-retention keepLast=2: nodes=${result.nodeCount} triples=${result.tripleCounts.join(",")}`,
+      );
+    });
+
+    test("latest keeps one node", async () => {
+      const result = await exerciseRetention("latest", "latest");
+      expect(result.descriptorRetention).toBe("latest");
+      expect(result.nodeCount).toBe(1);
+      expect(result.values).toEqual([5]);
+      expect(result.currentValue).toBe(5);
+      console.info(
+        `statement-retention latest: nodes=${result.nodeCount} triples=${result.tripleCounts.join(",")}`,
+      );
+    });
+
+    test("per-path retention overrides the global default", async () => {
+      const result = await exerciseRetention("path-override", "latest", {
+        "Item.price": { keepLast: 2 },
+      });
+      expect(result.descriptorRetention).toBe("latest");
+      expect(result.nodeCount).toBe(2);
+      expect(result.values).toContain(5);
+      expect(result.currentValue).toBe(5);
+      console.info(
+        `statement-retention override: nodes=${result.nodeCount} triples=${result.tripleCounts.join(",")}`,
+      );
+    });
+  });
 }
 
 export function runStatementMetaSuite(

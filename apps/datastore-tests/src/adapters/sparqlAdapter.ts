@@ -36,6 +36,8 @@ import type {
   DatastoreContractStoreWithStatements,
 } from "../types";
 
+const TRIPLE_COUNT_QUERY = "SELECT (COUNT(*) AS ?n) WHERE { ?s ?p ?o }";
+
 type EndpointConfig = {
   queryUrl: string;
   updateUrl: string;
@@ -136,6 +138,12 @@ export function createSparqlAdapter(
       return {
         store: store as DatastoreContractStore,
         statementStore: statementStore as DatastoreContractStoreWithStatements,
+        countTriples: async () => {
+          const bindings = (await crudFunctions.selectFetch(
+            TRIPLE_COUNT_QUERY,
+          )) as Array<{ n: { value: string } }>;
+          return Number(bindings[0]?.n?.value ?? 0);
+        },
       };
     },
 
