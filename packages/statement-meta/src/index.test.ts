@@ -2,6 +2,8 @@ import { describe, expect, test } from "bun:test";
 import type { JSONSchema7 } from "json-schema";
 import {
   applyStatementWrites,
+  compactStatementNodeForPersistence,
+  dedupeStatementNodes,
   extendStatementSchema,
   flattenStatementSchemaProfile,
   remapStatementsForPersistence,
@@ -66,6 +68,54 @@ describe("applyStatementWrites", () => {
         { path: "billing.total", value: 1, statement: {} },
       ]),
     ).toThrow(/does not exist/);
+  });
+});
+
+describe("dedupeStatementNodes", () => {
+  test("collapses join duplicates by value hash (last wins)", () => {
+    const nodes = dedupeStatementNodes([
+      { value: 10, source: "old" },
+      { value: 20, source: "a" },
+      { value: 10, source: "new" },
+      { value: 20, source: "b" },
+    ]);
+    expect(nodes).toHaveLength(2);
+    expect(nodes.find((n) => n.value === 10)?.source).toBe("new");
+    expect(nodes.find((n) => n.value === 20)?.source).toBe("b");
+  });
+
+  test("keeps the latest generatedAt per value regardless of array order", () => {
+    const nodes = dedupeStatementNodes([
+      {
+        value: 10,
+        source: "restored",
+        generatedAt: "2026-03-03T00:00:00.000Z",
+      },
+      { value: 20, source: "b", generatedAt: "2026-03-02T00:00:00.000Z" },
+      {
+        value: 10,
+        source: "original",
+        generatedAt: "2026-03-01T00:00:00.000Z",
+      },
+    ]);
+    expect(nodes).toHaveLength(2);
+    expect(nodes.find((n) => n.value === 10)?.source).toBe("restored");
+  });
+});
+
+describe("compactStatementNodeForPersistence", () => {
+  test("drops nested generatedAt when it matches the node timestamp", () => {
+    const compact = compactStatementNodeForPersistence({
+      value: 1,
+      generatedAt: "2026-03-01T10:00:00.000Z",
+      wasGeneratedBy: {
+        formulaId: "f",
+        generatedAt: "2026-03-01T10:00:00.000Z",
+      },
+    });
+    expect(compact.generatedAt).toBe("2026-03-01T10:00:00.000Z");
+    expect(compact.wasGeneratedBy?.generatedAt).toBeUndefined();
+    expect(compact.wasGeneratedBy?.formulaId).toBe("f");
   });
 });
 

@@ -101,6 +101,42 @@ export function runCalcWarmSuite(
       expect(second.skippedFresh).toBe(first.warmed);
     });
 
+    test("warm → change → warm → change back → warm does not multiply annual_fee history", async () => {
+      const store = getCalcWarmStore();
+      const garden = await seedGarden(store);
+      const plot = (garden.patch as Record<string, any>).plots[0] as Record<
+        string,
+        any
+      >;
+
+      await warm(store, profile, "Garden", gardenFeeSchema, {
+        rootIRIs: [GARDEN_IRI],
+      });
+
+      await store.upsert("Plot", plot["@id"], {
+        ...plot,
+        width_m: (plot.width_m as number) * 2,
+      });
+      await warm(store, profile, "Garden", gardenFeeSchema, {
+        rootIRIs: [GARDEN_IRI],
+        skipFresh: true,
+      });
+
+      await store.upsert("Plot", plot["@id"], plot);
+      await warm(store, profile, "Garden", gardenFeeSchema, {
+        rootIRIs: [GARDEN_IRI],
+        skipFresh: true,
+      });
+
+      const rows = await store.loadStatements("Garden", GARDEN_IRI, [
+        "annual_fee",
+      ]);
+      // Two distinct materialized values (before/after plot resize); restore
+      // reuses the original fee so the oldest slot is replaced, not duplicated.
+      expect(rows.annual_fee?.length).toBe(2);
+      expect(rows.annual_fee?.length).toBeLessThanOrEqual(3);
+    });
+
     test("A→B→A re-warm compares freshness with the latest statement", async () => {
       const store = getCalcWarmStore();
       const garden = await seedGarden(store);

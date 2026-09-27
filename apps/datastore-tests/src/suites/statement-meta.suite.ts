@@ -151,6 +151,29 @@ export function runStatementMetaSuite(
           expect(loaded?.price).toBe(20);
         });
 
+        test("four writes on the same path accumulate exactly four statement nodes", async () => {
+          const store = getter();
+          const itemId = entityIRI("Item", "stmt-history-four");
+          await store.upsert(
+            "Item",
+            itemId,
+            makeItem("stmt-history-four") as never,
+          );
+
+          for (let i = 1; i <= 4; i++) {
+            await store.writeStatements("Item", itemId, [
+              sampleWrite("price", i * 10, { source: `write-${i}` }),
+            ]);
+          }
+
+          const rows = (await store.loadStatements("Item", itemId, ["price"]))
+            .price;
+          expect(rows?.length).toBe(4);
+          expect(rows?.map((row) => row.value).sort((a, b) => a - b)).toEqual([
+            10, 20, 30, 40,
+          ]);
+        });
+
         test("client-supplied $stmt on plain upsert is stripped", async () => {
           const store = getter();
           const itemId = entityIRI("Item", "stmt-strip");

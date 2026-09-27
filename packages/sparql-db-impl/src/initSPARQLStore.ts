@@ -62,6 +62,7 @@ import {
   parseRdf12StatementBindings,
   propertyIriFromPath,
 } from "./rdf12Statements";
+import { buildStatementNodeSidecarDelete } from "./statementNodeStatements";
 import type {
   EntityChangeEvent,
   SparqlStore,
@@ -932,6 +933,9 @@ export function initSPARQLDatastorePair(
                 unknown
               > | null) ?? {};
             const merged = applyStatementWrites({ ...current }, writes);
+            await updateFetch(
+              buildStatementNodeSidecarDelete(entityIRI, defaultPrefix),
+            );
             const saved = await persistDocument(typeName, entityIRI, merged, {
               keepStatements: true,
             });

@@ -318,6 +318,69 @@ export function statementValueHash(value: StatementValue): string {
   return contentHash8(normalizeStatementValue(value));
 }
 
+function isStatementNodeShape(item: unknown): item is StatementNode {
+  return item != null && typeof item === "object" && "value" in item;
+}
+
+function isNewerOrSame(candidate: StatementNode, kept: StatementNode): boolean {
+  const candidateAt =
+    candidate.generatedAt === undefined
+      ? undefined
+      : Date.parse(candidate.generatedAt);
+  const keptAt =
+    kept.generatedAt === undefined ? undefined : Date.parse(kept.generatedAt);
+  if (candidateAt === undefined || keptAt === undefined) return true;
+  return candidateAt >= keptAt;
+}
+
+/**
+ * Collapse CONSTRUCT join duplicates: one node per distinct value hash. Among
+ * nodes with the same value the latest `generatedAt` wins (array order only
+ * breaks ties), because backends return history in no guaranteed order.
+ * History with different values is preserved.
+ */
+export function dedupeStatementNodes(nodes: StatementNode[]): StatementNode[] {
+  const byValueHash = new Map<string, StatementNode>();
+  const order: string[] = [];
+  for (const raw of nodes) {
+    if (!isStatementNodeShape(raw)) continue;
+    const node: StatementNode = {
+      ...raw,
+      value: normalizeStatementValue(raw.value),
+    };
+    const hash = statementValueHash(node.value);
+    const kept = byValueHash.get(hash);
+    if (!kept) {
+      order.push(hash);
+      byValueHash.set(hash, node);
+    } else if (isNewerOrSame(node, kept)) {
+      byValueHash.set(hash, node);
+    }
+  }
+  return order.map((hash) => byValueHash.get(hash)!);
+}
+
+/**
+ * Drop redundant nested activity timestamp when it matches the statement node timestamp.
+ * Both map to prov:generatedAtTime in some encodings and multiply CONSTRUCT optional joins.
+ */
+export function compactStatementNodeForPersistence(
+  node: StatementNode,
+): StatementNode {
+  const out: StatementNode = { ...node };
+  const activity = out.wasGeneratedBy;
+  if (
+    activity?.generatedAt != null &&
+    activity.generatedAt === out.generatedAt
+  ) {
+    const { generatedAt: _omit, ...rest } = activity;
+    out.wasGeneratedBy = Object.keys(rest).length
+      ? (rest as StatementNode["wasGeneratedBy"])
+      : undefined;
+  }
+  return out;
+}
+
 function navigateToParent(
   obj: Record<string, unknown>,
   path: string,
@@ -411,35 +474,58 @@ function remapStatementKeysDeep(
   return out;
 }
 
-function normalizeStatementValuesDeep(value: unknown): unknown {
+function normalizeStatementArray(
+  raw: unknown[],
+  forPersistence: boolean,
+): StatementNode[] {
+  const nodes = raw
+    .filter(isStatementNodeShape)
+    .map((node) => {
+      try {
+        const normalized: StatementNode = {
+          ...node,
+          value: normalizeStatementValue(node.value),
+        };
+        return forPersistence
+          ? compactStatementNodeForPersistence(normalized)
+          : normalized;
+      } catch {
+        return null;
+      }
+    })
+    .filter((node): node is StatementNode => node != null);
+  return dedupeStatementNodes(nodes);
+}
+
+function normalizeStatementValuesDeep(
+  value: unknown,
+  parentKey?: string,
+  forPersistence = false,
+): unknown {
   if (value == null || typeof value !== "object") return value;
   if (Array.isArray(value)) {
-    return value.map((item) => {
-      if (item != null && typeof item === "object" && "value" in item) {
-        const node = item as StatementNode;
-        try {
-          return { ...node, value: normalizeStatementValue(node.value) };
-        } catch {
-          return item;
-        }
-      }
-      return normalizeStatementValuesDeep(item);
-    });
+    if (parentKey && isStatementKey(parentKey)) {
+      return normalizeStatementArray(value, forPersistence);
+    }
+    return value.map((item) =>
+      normalizeStatementValuesDeep(item, undefined, forPersistence),
+    );
   }
   const obj = value as Record<string, unknown>;
   const out: Record<string, unknown> = {};
   for (const [key, fieldValue] of Object.entries(obj)) {
-    out[key] = normalizeStatementValuesDeep(fieldValue);
+    out[key] = normalizeStatementValuesDeep(fieldValue, key, forPersistence);
   }
   return out;
 }
 
 export function remapStatementsForPersistence<T>(document: T): T {
-  return remapStatementKeysDeep(
+  const remapped = remapStatementKeysDeep(
     document,
     STATEMENT_JSON_SUFFIX,
     STATEMENT_PERSISTENCE_SUFFIX,
-  ) as T;
+  );
+  return normalizeStatementValuesDeep(remapped, undefined, true) as T;
 }
 
 export function remapStatementsFromPersistence<T>(document: T): T {
@@ -476,15 +562,12 @@ function collectFromObject(
   const key = `${lastSegment}${STATEMENT_JSON_SUFFIX}`;
   const raw = obj[key];
   if (!Array.isArray(raw)) return [];
-  return raw
-    .filter(
-      (item): item is StatementNode =>
-        item != null && typeof item === "object" && "value" in item,
-    )
-    .map((item) => ({
+  return dedupeStatementNodes(
+    raw.filter(isStatementNodeShape).map((item) => ({
       ...item,
       value: normalizeStatementValue(item.value),
-    }));
+    })),
+  );
 }
 
 export function statementsForPath(
