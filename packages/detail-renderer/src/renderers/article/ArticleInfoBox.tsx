@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Paper, Typography } from "@mui/material";
 import type { ControlElement } from "@jsonforms/core";
-import { camelCaseToTitleCase } from "@graviola/edb-core-utils";
+import startCase from "lodash-es/startCase";
 import type {
   DetailDispatch,
   DetailTesterContext,
@@ -60,7 +60,7 @@ export function ArticleInfoBox({
           const propName = path[path.length - 1] ?? "";
           const label =
             (typeof control.label === "string" && control.label) ||
-            camelCaseToTitleCase(propName);
+            startCase(propName);
           const blankLabelControl: ControlElement = {
             ...control,
             label: "",

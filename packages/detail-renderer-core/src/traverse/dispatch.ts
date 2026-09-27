@@ -1,4 +1,4 @@
-import { camelCaseToTitleCase } from "@graviola/edb-core-utils";
+import startCase from "lodash-es/startCase";
 import { extractTypeIRI } from "@graviola/json-schema-utils";
 import { resolveSchema } from "@graviola/json-schema-utils";
 import type {
@@ -193,7 +193,7 @@ export function buildDispatch(
         const label =
           (typeof ce.label === "string" ? ce.label : undefined) ??
           title ??
-          camelCaseToTitleCase(p[p.length - 1] ?? "");
+          startCase(p[p.length - 1] ?? "");
 
         return {
           schema,

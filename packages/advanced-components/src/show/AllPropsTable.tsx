@@ -1,5 +1,6 @@
 import { OverflowContainer } from "@graviola/edb-basic-components";
-import { camelCaseToTitleCase, isValidUrl } from "@graviola/edb-core-utils";
+import { isValidUrl } from "@graviola/edb-core-utils";
+import startCase from "lodash-es/startCase";
 import { useThumbnailUrl } from "@graviola/edb-state-hooks";
 import { specialDate2LocalDate } from "@graviola/edb-ui-utils";
 import {
@@ -185,7 +186,7 @@ const PropertyItem = ({
           <OverflowContainer variant="body2">
             {typeof exists === "function" && exists(property)
               ? t(property)
-              : camelCaseToTitleCase(property)}
+              : startCase(property)}
           </OverflowContainer>
         ) : (
           <>
@@ -202,7 +203,7 @@ const PropertyItem = ({
             >
               {typeof exists === "function" && exists(property)
                 ? t(property)
-                : camelCaseToTitleCase(property)}
+                : startCase(property)}
             </Button>
             <Menu
               id="basic-menu"
@@ -359,7 +360,7 @@ export const AllPropTable: FunctionComponent<Props> = ({
                       <Typography>
                         {typeof exists === "function" && exists(groupKey)
                           ? t(groupKey)
-                          : camelCaseToTitleCase(groupKey)}
+                          : startCase(groupKey)}
                       </Typography>
                     </TableCell>
                   </TableRow>

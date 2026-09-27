@@ -1,10 +1,5 @@
-export type NamedEntityData = {
-  "@id": string;
-  [key: string]: any;
-};
-export type NamedAndTypedEntity = NamedEntityData & {
-  "@type": string;
-};
+import type { NamedAndTypedEntity } from "@graviola/edb-core-types";
+
 export const irisToData = (
   entityIRI?: string,
   typeIRI?: string,

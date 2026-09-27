@@ -1,113 +1,70 @@
-# @graviola/core-utils
+# @graviola/edb-core-utils
 
-A collection of utility functions used across the Graviola project. This package provides common helper functions for string manipulation, data transformation, date handling, and more.
+Small, dependency-light helpers shared across Graviola: IRI encoding for URLs, JSON-LD result shaping, special dates, entity previews and thumbnails, and SPARQL feature flags and query logging.
 
-## Guidelines
+![Layer: 1 (Foundation)](https://img.shields.io/badge/Layer-1%20Foundation-blue)
+![Environment: Universal](https://img.shields.io/badge/Environment-Browser%20%2B%20Bun%20%2B%20Node-green)
 
-Functions added to this package should not have any dependecies or be already provided by lodash. (A negative example would be `camelCaseToTitleCase` which is provided by lodash or `ellipsis` which is provided by `lodash.truncate` but for historical reasons its still in this package and will be removed in the future.)
+## Why this package exists
 
-Also these functions are intendet to be used in the browser and in node.js.
+Graviola packages need the same small operations in many places:
+
+- encode an IRI so it is safe in a URL path or query string
+- strip nullish values from arrays before building queries
+- turn numeric dates (YYYYMMDD) into form-friendly parts
+- resolve entity preview labels and thumbnail URLs from schema-shaped data
+- pick SPARQL dialect features and log queries with optional correlation keys
+
+This package is where those helpers live. **Rule for contributors:** helpers here must not duplicate lodash or the platform. If lodash or a built-in does it, use that instead of adding another export. See "Reuse before reinvent" in the repository's `CLAUDE.md`.
+
+## Position in the framework
+
+The package is in **Layer 1 (Foundation)**. It depends only on `@graviola/edb-core-types` and `lodash-es`, and it must stay that way. It runs unchanged in the browser, in Bun CLIs and in the datastore contract tests. Adding React, MUI or any browser-only API without a Node/Bun fallback is a breaking change for server-side users, even if no test fails.
+
+Typical consumers:
+
+| Area            | Packages                                                                                                   | Uses                                                                                   |
+| --------------- | ---------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Query stack     | `sparql-schema`, `edb-graph-traversal`, `sparql-db-impl`, `remote-query-implementations`, `prisma-db-impl` | `filterUndefOrNull`, `resolveSparqlFeatures`, `QUERY_RESULT_SUBJECT_IRI`, `isValidUrl` |
+| State and views | `edb-state-hooks`, `edb-detail-renderer`                                                                   | `extractEntityPreview`, `resolvePreviewDisplay`, `applyResolveThumbnailUrl`            |
+| Store providers | `sparql-store-provider`, `local-oxigraph-store-provider`                                                   | `sparqlLoggingWrapper`                                                                 |
+| Forms           | `edb-basic-renderer`, `edb-linked-data-renderer`                                                           | special dates, `irisToData`, `makeFormsPath`                                           |
+
+## Key concepts
+
+- **`encodeIRI` / `decodeIRI`.** IRIs are encoded as base64url of their UTF-8 bytes (no padding), so the result is safe in URL paths and query strings and does not crash on non-ASCII characters. `decodeIRI` also accepts legacy standard base64 values, including ones damaged when query-string parsing turned `+` into a space.
+- **Special dates.** Graviola stores partial calendar dates as numbers in YYYYMMDD form (for example `20230915`). The `getDateParts` family splits that into year, month and day components for forms and renderers; `getPaddedDate` and related helpers format parts back into the numeric representation.
+- **SPARQL query logging.** Wrap a store with `sparqlLoggingWrapper` to log each query. For optional correlation with TanStack Query (or any async caller), wrap the query function with `runWithSparqlQueryKey`. Only one concurrent key is tracked; parallel overlapping async work may show the wrong key.
 
 ## Installation
 
 ```bash
-npm install @graviola/core-utils
+bun add @graviola/edb-core-utils
 # or
-yarn add @graviola/core-utils
-# or
-bun add @graviola/core-utils
+npm install @graviola/edb-core-utils
 ```
-
-## Features
-
-### String Manipulation
-
-- `camelCaseToTitleCase`: Convert camelCase strings to Title Case
-
-  ```typescript
-  camelCaseToTitleCase("helloWorld"); // "Hello World"
-  ```
-
-- `ellipsis`: Truncate text with an ellipsis
-
-  ```typescript
-  ellipsis("Long text to truncate", 10); // "Long text…"
-  ```
-
-- `leftpad`: Pad numbers with leading characters
-  ```typescript
-  leftpad(5, 3); // "005"
-  leftpad(7, 4, "x"); // "xxx7"
-  ```
-
-### Date Handling
-
-- `specialDate` utilities for working with numeric date representations (YYYYMMDD format)
-  ```typescript
-  getDatePart(20230915, "year"); // 2023
-  getPaddedDate(new Date("2023-09-15")); // "20230915"
-  ```
-
-### Data Transformation
-
-- `filterJSONLD`: Remove JSON-LD specific properties from objects
-- `replaceJSONLD`: Replace JSON-LD property markers with custom strings
-- `foldInner2Outer`: Transform nested object structures
-- `resolveObj`: Safely access nested object properties
-
-### Markdown Processing
-
-- `parseMarkdownLinks`: Extract links from markdown text
-  ```typescript
-  parseMarkdownLinks("[Google](https://google.com)");
-  // [{ label: "Google", url: "https://google.com" }]
-  ```
-
-### Color Utilities
-
-- `hexToRGBA`: Convert hex color codes to RGBA format
-  ```typescript
-  hexToRGBA("#ff0000", 0.5); // "rgba(255, 0, 0, 0.5)"
-  ```
-
-### SPARQL/RDF Utilities
-
-- `envToSparqlEndpoint`: Convert environment variables to SPARQL endpoint configuration
-- `encodeIRI/decodeIRI`: Encode/decode IRIs to a format that is safe to use in URLs, but unlike `encodeURIComponent` and `decodeURIComponent` just converts the IRI to a base64 string, thus
-
-### Array/Object Utilities
-
-- `filterUndefOrNull`: Remove undefined and null values from arrays
-- `makeColumnDesc`: Generate column descriptors with letter indices
-- `index2letter`: Convert numeric indices to spreadsheet-style column letters (A, B, C, ...)
 
 ## Usage
 
-```typescript
+```ts
 import {
-  camelCaseToTitleCase,
-  ellipsis,
-  hexToRGBA,
-  parseMarkdownLinks,
-} from "@graviola/core-utils";
+  decodeIRI,
+  encodeIRI,
+  filterUndefOrNull,
+} from "@graviola/edb-core-utils";
 
-// Convert camelCase to Title Case
-const title = camelCaseToTitleCase("myVariableName");
-// => "My Variable Name"
+const iri = "http://example.org/Müller/Straße";
+const encoded = encodeIRI(iri);
+console.log(encoded); // aHR0cDovL2V4YW1wbGUub3JnL03DvGxsZXIvU3RyYcOfZQ
+console.log(decodeIRI(encoded)); // http://example.org/Müller/Straße
 
-// Truncate long text
-const truncated = ellipsis("This is a very long text", 10);
-// => "This is a…"
-
-// Convert hex color to rgba
-const color = hexToRGBA("#ff0000", 0.5);
-// => "rgba(255, 0, 0, 0.5)"
-
-// Parse markdown links
-const links = parseMarkdownLinks("[Link](https://example.com)");
-// => [{ label: "Link", url: "https://example.com" }]
+console.log(filterUndefOrNull([1, null, 2, undefined, 3])); // [ 1, 2, 3 ]
 ```
+
+## API reference
+
+The full list of exports is in the generated TypeDoc API documentation (`bun run docs` at the repository root). Every export has a doc comment in `src/`.
 
 ## License
 
-This package is part of the Graviola project.
+MIT

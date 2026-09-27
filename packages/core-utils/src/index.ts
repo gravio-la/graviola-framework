@@ -1,24 +1,13 @@
 export * from "./encodeIRI";
 export * from "./graviolaOntology";
 export * from "./filterUndefOrNull";
-export * from "./foldInner2Outer";
-export * from "./hex-to-rgba";
-export * from "./leftpad";
-export * from "./resolveObj";
-export * from "./specialDate";
 export * from "./irisToData";
 export * from "./makeFormsPath";
-export * from "./ellipsis";
 export * from "./parseMarkdownLink";
-export * from "./filterJSONLD";
 export * from "./numeric2JSDate";
-export * from "./permissions";
 export * from "./envToSparqlEndpoint";
-export * from "./camelCaseToTitleCase";
-export * from "./index2letter";
 export * from "./makeColumnDesc";
 export * from "./formatJSONResult";
-export * from "./replaceJSONLD";
 export * from "./flatResultExtractor";
 export * from "./extractEntityPreview";
 export * from "./resolvePreviewDisplay";
@@ -27,3 +16,12 @@ export * from "./logger";
 export * from "./sparqLoggingWrapper";
 export * from "./sparqAsyncQueryKey";
 export * from "./resolveSparqlFeatures";
+export {
+  getDatePart,
+  getDateParts,
+  getPaddedDatePart,
+  getPaddedDate,
+  getDatePartAsString,
+  makeSpecialDate,
+} from "./specialDate";
+export type { DateParts } from "./specialDate";

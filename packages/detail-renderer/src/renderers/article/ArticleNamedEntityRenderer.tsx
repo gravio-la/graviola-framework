@@ -1,6 +1,6 @@
 import React from "react";
 import type { ControlElement } from "@jsonforms/core";
-import { camelCaseToTitleCase } from "@graviola/edb-core-utils";
+import startCase from "lodash-es/startCase";
 import type { DetailRendererProps } from "@graviola/edb-detail-renderer-core";
 import {
   childArticleContext,
@@ -95,7 +95,7 @@ export function ArticleNamedEntityRenderer({
       const sectionLabel =
         (typeof (propSchema as JSONSchema7).title === "string"
           ? (propSchema as JSONSchema7).title
-          : null) ?? camelCaseToTitleCase(key);
+          : null) ?? startCase(key);
 
       return (
         <ArticleSection

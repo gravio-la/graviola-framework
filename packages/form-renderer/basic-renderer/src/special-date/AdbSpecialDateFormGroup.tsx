@@ -2,7 +2,6 @@ import {
   getDatePart,
   getDatePartAsString,
   getPaddedDatePart,
-  leftpad,
 } from "@graviola/edb-core-utils";
 import { FormGroup, FormGroupProps, TextField } from "@mui/material";
 import React, { useCallback } from "react";
@@ -31,12 +30,8 @@ export const AdbSpecialDateFormGroup = ({
       if (isNaN(newValueNumber) || newValueNumber > maxValue) return;
       const newValue = String(newValueNumber);
       if (newValue.length > maxLength) return;
-      let strData, paddedValue;
-      try {
-        paddedValue = leftpad(newValueNumber, maxLength);
-      } catch (e) {
-        return;
-      }
+      let strData;
+      const paddedValue = String(newValueNumber).padStart(maxLength, "0");
 
       // check if the day is valid, if not, set it to the last day of the month (and handle leap years)
       let changeDay =
@@ -50,7 +45,7 @@ export const AdbSpecialDateFormGroup = ({
           0,
         ).getDate();
         if (Number(changeDay) > lastDayOfMonth) {
-          changeDay = leftpad(lastDayOfMonth, 2);
+          changeDay = String(lastDayOfMonth).padStart(2, "0");
         }
       }
       if (field === "day")

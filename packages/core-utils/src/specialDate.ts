@@ -1,4 +1,5 @@
-import { leftpad } from "./leftpad";
+const leftpad = (number: number, length: number) =>
+  String(number).padStart(length, "0");
 
 /**
  * Extracts a specified part of the date from a given numeric date representation.

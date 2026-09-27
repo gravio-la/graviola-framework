@@ -43,7 +43,8 @@
     "@graviola/edb-data-mapping": "workspace:*",
     "@graviola/edb-state-hooks": "workspace:*",
     "@graviola/edb-ui-utils": "workspace:*",
-    "@graviola/semantic-jsonform-types": "workspace:*"
+    "@graviola/semantic-jsonform-types": "workspace:*",
+    "lodash-es": "catalog:"
   },
   "devDependencies": {
     "@types/react": "catalog:",

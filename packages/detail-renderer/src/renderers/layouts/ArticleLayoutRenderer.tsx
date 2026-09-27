@@ -1,7 +1,7 @@
 import React from "react";
 import { Box } from "@mui/material";
 import type { ControlElement, Layout } from "@jsonforms/core";
-import { camelCaseToTitleCase } from "@graviola/edb-core-utils";
+import startCase from "lodash-es/startCase";
 import type { DetailRendererProps } from "@graviola/edb-detail-renderer-core";
 import {
   partitionArticleElements,
@@ -82,7 +82,7 @@ export function ArticleLayoutRenderer({
             const propName = pathParts[pathParts.length - 1] ?? "";
             const sectionLabel =
               (typeof control.label === "string" && control.label) ||
-              camelCaseToTitleCase(propName);
+              startCase(propName);
             const blankLabelControl: ControlElement = {
               ...control,
               label: "",
