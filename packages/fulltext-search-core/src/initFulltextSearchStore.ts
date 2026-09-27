@@ -90,6 +90,15 @@ export type FulltextSearchStoreConfig<
     typeName: string,
     entity: Record<string, unknown>,
   ) => Promise<Record<string, unknown>>;
+  /**
+   * Batch enricher for `importMany` (one call per listed chunk). When set, it
+   * replaces `enrichEntityForIndex` on that path; single imports and sync keep
+   * using `enrichEntityForIndex`.
+   */
+  enrichEntitiesForIndex?: (
+    typeName: string,
+    entities: Record<string, unknown>[],
+  ) => Promise<Record<string, unknown>[]>;
 };
 
 export type FulltextSearchStore<R extends SchemaRegistry = SchemaRegistry> =
@@ -609,9 +618,21 @@ export function initFulltextSearchStore<R extends SchemaRegistry>(
         unknown
       >[];
 
+      let enrichedEntities: Record<string, unknown>[];
+      if (config.enrichEntitiesForIndex) {
+        enrichedEntities = await config.enrichEntitiesForIndex(
+          typeName,
+          entities,
+        );
+      } else {
+        enrichedEntities = [];
+        for (const entity of entities) {
+          enrichedEntities.push(await prepareEntityForIndex(typeName, entity));
+        }
+      }
+
       const docs: ReturnType<typeof projectEntityToIndexDoc>[] = [];
-      for (const entity of entities) {
-        const enriched = await prepareEntityForIndex(typeName, entity);
+      for (const enriched of enrichedEntities) {
         docs.push(
           projectEntityToIndexDoc(enriched, typeRouting, {
             typeIri: typeIri(typeName),

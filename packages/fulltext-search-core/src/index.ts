@@ -98,7 +98,11 @@ export {
   type ReindexFromStoreResult,
 } from "./lifecycle/lifecycle";
 
-export { createCalcEnrichEntityForIndex } from "./enrich/createCalcEnrichEntityForIndex";
+export {
+  createCalcEnrichEntityForIndex,
+  createCalcEnrichEntitiesForIndex,
+  type CalcEnrichStore,
+} from "./enrich/createCalcEnrichEntityForIndex";
 
 export {
   subscribeFulltextIndexSync,

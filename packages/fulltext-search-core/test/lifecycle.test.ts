@@ -177,10 +177,22 @@ describe("lifecycle with in-memory adapter", () => {
     });
 
     const calcStore = {
-      capabilities: { calc: true as const },
-      readCalcValues: async () => ({
-        value: { title: "Computed Title" },
-      }),
+      capabilities: {
+        identifies: true as const,
+        calc: true as const,
+        profiles: { calc: { rootTypes: ["Exhibition"] } },
+      },
+      readCalcValues: async (_typeName: string, entityIRIs: string[]) => [
+        {
+          entityIRI: entityIRIs[0]!,
+          data: { title: "Computed Title" },
+          provenance: {
+            sources: ["mock"],
+            fetchedAt: "2026-01-01T00:00:00.000Z",
+            freshness: "fresh" as const,
+          },
+        },
+      ],
     };
 
     const primaryStore = {
