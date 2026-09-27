@@ -52,6 +52,8 @@ export type GraviolaStoreHandshakeInner = {
   };
   calc?: {
     supported: boolean;
+    rootTypes?: string[];
+    profileFingerprints?: Record<string, string>;
   };
   types: Record<string, { capabilities: GraviolaTypeCapabilities }>;
   openapiUrl?: string;

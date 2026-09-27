@@ -2,6 +2,8 @@ import type { Entity } from "@graviola/edb-core-types";
 import {
   hasCapabilityInDescriptor,
   type BaseStore,
+  type Calc,
+  type CalcValuesEntry,
   type CapabilityDescriptor,
   type CapabilityName,
   type CalcWarmResult,
@@ -96,14 +98,10 @@ export type RESTClientStore<R extends SchemaRegistry = SchemaRegistry> =
     Searches<R> &
     DocumentSearches<R> &
     Partial<Aggregates<R>> &
+    Partial<Calc<R>> &
     Exists<R> &
     Resolves &
     Statements<R> & {
-      /** Store-level (not per-type) calc materialization — see `Calc` in `@graviola/store-core`. */
-      calcWarm: (
-        rootIRIs?: string[],
-        options?: { skipFresh?: boolean },
-      ) => Promise<CalcWarmResult>;
       /**
        * Resolve local entities by secondary authority identifier
        * (`GET /{type}/_by-authority`). Falls back to `filterMany` on `sameAs`
@@ -554,18 +552,28 @@ export const createRESTClientStoreClient = <
         ? (json as Record<string, StatementNode[]>)
         : {};
     },
-    calcWarm: async (
-      rootIRIs?: string[],
-      warmOptions?: { skipFresh?: boolean },
+    calcWarm: async <T extends keyof R & string>(
+      typeName: T,
+      warmOptions?: { rootIRIs?: string[]; skipFresh?: boolean },
     ): Promise<CalcWarmResult> => {
       capOrThrow(capabilities, "calc");
-      const path = rel("_calc/warm");
+      const path = rel(`${encodeURIComponent(typeName)}/_calc/warm`);
       const res = await opts.transport.postJson(path, {
-        rootIRIs,
+        rootIRIs: warmOptions?.rootIRIs,
         skipFresh: warmOptions?.skipFresh,
       });
       const json: unknown = await res.json();
       return json as CalcWarmResult;
+    },
+    readCalcValues: async <T extends keyof R & string>(
+      typeName: T,
+      entityIRIs: string[],
+    ): Promise<CalcValuesEntry[]> => {
+      capOrThrow(capabilities, "calc");
+      const path = rel(`${encodeURIComponent(typeName)}/_calc/values`);
+      const res = await opts.transport.postJson(path, { entityIRIs });
+      const json: unknown = await res.json();
+      return json as CalcValuesEntry[];
     },
     facet: async <T extends keyof R & string>(
       typeName: T,

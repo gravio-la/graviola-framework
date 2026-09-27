@@ -1,4 +1,4 @@
-import type { Identifies } from "@graviola/store-core";
+import type { CalcValuesEntry, Identifies } from "@graviola/store-core";
 import { describe, expect, test } from "bun:test";
 
 import { capabilityDescriptorFromHandshake } from "./descriptor-from-handshake";
@@ -38,6 +38,41 @@ describe("capabilityDescriptorFromHandshake", () => {
     expect(d.loads).toBe(true);
     expect(d.writes).toBe(true);
     expect(d.identifies).toBe(true);
+  });
+
+  test("fills profiles.calc.rootTypes and keeps profiles.searches", () => {
+    const hs: GraviolaStoreHandshakeResponse = {
+      graviolaStore: {
+        version: "1",
+        basePath: "/api",
+        iriHandling: ["fullIRI"],
+        auth: { modes: ["none"] },
+        pagination: { modes: ["offset"] },
+        calc: {
+          supported: true,
+          rootTypes: ["Plot", "Garden"],
+          profileFingerprints: { Plot: "sha256:abc" },
+        },
+        types: {
+          Plot: {
+            capabilities: {
+              loads: true,
+              searches: { mode: "substring", ranked: true },
+            },
+          },
+        },
+      },
+    };
+    const d = capabilityDescriptorFromHandshake(hs.graviolaStore);
+    expect(d.calc).toBe(true);
+    expect(d.profiles?.searches).toEqual({
+      mode: "substring",
+      ranked: true,
+    });
+    expect(d.profiles?.calc?.rootTypes).toEqual(["Plot", "Garden"]);
+    expect(d.profiles?.calc?.profileFingerprints).toEqual({
+      Plot: "sha256:abc",
+    });
   });
 });
 
@@ -116,6 +151,123 @@ describe("RESTClientStore", () => {
     });
     await store.loadOne("Plot", "http://ex/P");
     expect(calls.some((u) => u.includes("/graviola/Plot/"))).toBe(true);
+  });
+
+  test("calcWarm posts to type-scoped warm route", async () => {
+    const hs: GraviolaStoreHandshakeResponse = {
+      graviolaStore: {
+        version: "1",
+        basePath: "/graviola",
+        iriHandling: ["fullIRI"],
+        auth: { modes: ["none"] },
+        pagination: { modes: ["offset"] },
+        calc: { supported: true, rootTypes: ["A"] },
+        types: { A: { capabilities: { loads: true } } },
+      },
+    };
+    const posts: { url: string; body: unknown }[] = [];
+    const fetchImpl = async (input: RequestInfo | URL, init?: RequestInit) => {
+      const req =
+        input instanceof Request ? input : new Request(input, init ?? {});
+      if (req.method === "POST") {
+        posts.push({
+          url: req.url,
+          body: JSON.parse(await req.clone().text()),
+        });
+      }
+      return new Response(
+        JSON.stringify({
+          warmed: 1,
+          skippedFresh: 0,
+          writesIssued: 1,
+          queriesIssued: 1,
+        }),
+        { status: 200, headers: { "Content-Type": "application/json" } },
+      );
+    };
+    const transport = createRestTransport({
+      baseUrl: "https://api.example.com",
+      auth: { mode: "none" },
+      fetchImpl: fetchImpl as typeof fetch,
+    });
+    transport.advertisedAuthModes = hs.graviolaStore.auth.modes;
+    const store = createRESTClientStoreClient({
+      transport,
+      handshake: hs,
+      identifies,
+      iriHandling: "fullIRI",
+    });
+    const result = await store.calcWarm!("A", { rootIRIs: ["x"] });
+    expect(posts).toHaveLength(1);
+    expect(posts[0].url).toContain("/graviola/A/_calc/warm");
+    expect(posts[0].body).toEqual({ rootIRIs: ["x"] });
+    expect(result.warmed).toBe(1);
+  });
+
+  test("readCalcValues posts to type-scoped values route", async () => {
+    const hs: GraviolaStoreHandshakeResponse = {
+      graviolaStore: {
+        version: "1",
+        basePath: "/graviola",
+        iriHandling: ["fullIRI"],
+        auth: { modes: ["none"] },
+        pagination: { modes: ["offset"] },
+        calc: { supported: true, rootTypes: ["A"] },
+        types: { A: { capabilities: { loads: true } } },
+      },
+    };
+    const entries: CalcValuesEntry[] = [
+      {
+        entityIRI: "x",
+        data: { fee: 10 },
+        provenance: {
+          sources: ["store"],
+          fetchedAt: "2026-01-01T00:00:00.000Z",
+          freshness: "fresh",
+        },
+      },
+      {
+        entityIRI: "y",
+        data: null,
+        provenance: {
+          sources: ["store"],
+          fetchedAt: "2026-01-01T00:00:00.000Z",
+          freshness: "unknown",
+        },
+      },
+    ];
+    const posts: { url: string; body: unknown }[] = [];
+    const fetchImpl = async (input: RequestInfo | URL, init?: RequestInit) => {
+      const req =
+        input instanceof Request ? input : new Request(input, init ?? {});
+      if (req.method === "POST") {
+        posts.push({
+          url: req.url,
+          body: JSON.parse(await req.clone().text()),
+        });
+      }
+      return new Response(JSON.stringify(entries), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    };
+    const transport = createRestTransport({
+      baseUrl: "https://api.example.com",
+      auth: { mode: "none" },
+      fetchImpl: fetchImpl as typeof fetch,
+    });
+    transport.advertisedAuthModes = hs.graviolaStore.auth.modes;
+    const store = createRESTClientStoreClient({
+      transport,
+      handshake: hs,
+      identifies,
+      iriHandling: "fullIRI",
+    });
+    const result = await store.readCalcValues!("A", ["x", "y"]);
+    expect(posts).toHaveLength(1);
+    expect(posts[0].url).toContain("/graviola/A/_calc/values");
+    expect(posts[0].body).toEqual({ entityIRIs: ["x", "y"] });
+    expect(result).toEqual(entries);
   });
 });
 

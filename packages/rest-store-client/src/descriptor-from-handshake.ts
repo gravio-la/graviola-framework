@@ -62,7 +62,16 @@ export const capabilityDescriptorFromHandshake = (
   if (anyType(inner, "aggregates")) desc.aggregates = true;
   if (anyType(inner, "loads")) desc.exists = true;
   if (inner.resolves?.supported) desc.resolves = true;
-  if (inner.calc?.supported) desc.calc = true;
   if (searchesProfile) desc.profiles = { searches: searchesProfile };
+  if (inner.calc?.supported) {
+    desc.calc = true;
+    desc.profiles = {
+      ...desc.profiles,
+      calc: {
+        rootTypes: inner.calc.rootTypes ?? [],
+        profileFingerprints: inner.calc.profileFingerprints,
+      },
+    };
+  }
   return desc;
 };
