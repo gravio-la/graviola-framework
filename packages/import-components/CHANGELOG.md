@@ -1,5 +1,19 @@
 # @graviola/edb-import-components
 
+## 2.0.0
+
+### Patch Changes
+
+- Updated dependencies [f4f4667]
+- Updated dependencies [9d7792f]
+- Updated dependencies [6c6d19c]
+- Updated dependencies [9d7792f]
+- Updated dependencies [8c5c380]
+- Updated dependencies [9d7792f]
+  - @graviola/edb-core-types@1.8.0
+  - @graviola/edb-import-staging@0.3.0
+  - @graviola/edb-state-hooks@1.8.1
+
 ## 1.0.0
 
 ### Minor Changes

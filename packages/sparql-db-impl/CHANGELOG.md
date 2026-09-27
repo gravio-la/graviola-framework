@@ -1,5 +1,60 @@
 # @slub/sparql-db-impl
 
+## 1.9.0
+
+### Minor Changes
+
+- 629d3f5: Configurable statement history retention (`all` by default, `latest`, `{ keepLast }`, per-path overrides). `@graviola/provenance-types` adds `compareStatementRecency` and `currentStatement`.
+
+### Patch Changes
+
+- edf5859: Deprecated `AbstractDatastore` and its factories in favour of the capability-composed `Store` from `@graviola/store-core`. No behaviour change.
+- 7ba3560: fix(sparql-schema): never expand the DELETE template of `save`/`remove` into linked named entities
+
+  `jsonSchema2construct` builds the DELETE side of the DELETE/INSERT issued on every save. Its only
+  recursion boundary was the TBox stop symbol `@id`; schema artifacts that omit `@id` on referenced
+  definitions (e.g. LinkML-generated models without identifier slots) made the template expand up to
+  four levels into linked IRIs and wipe them (`Location.parent` → parent, grand-parent … lost all
+  triples on each save; `Place.location` / `Place.parent` overwrote each other's targets).
+
+  Every nested expansion is now additionally anchored in its own
+  `OPTIONAL { <link> FILTER(isBlank(?o)) … }` group — the Concise Bounded Description proper: only
+  anonymous (blank-node) sub-objects owned by the subject are ever expanded; IRIs are never followed
+  regardless of the schema. Link triples are still matched on their own so stale references are removed.
+  Nested patterns are all OPTIONAL (deletion wants maximal matching), which also fixes stale links that
+  survived when a linked target lacked a schema-`required` property.
+
+  Adds an in-process Oxigraph contract suite (`apps/datastore-tests/src/cbd-boundary.test.ts`) covering
+  both schema shapes (with and without `@id`).
+
+- 92d079e: Statement writes no longer multiply the statement history: old statement sidecar subgraphs are removed before re-persisting, and statement nodes are deduplicated per value (latest `generatedAt` wins).
+- Updated dependencies [c449419]
+- Updated dependencies [f4f4667]
+- Updated dependencies [e46e114]
+- Updated dependencies [edf5859]
+- Updated dependencies [3f5119c]
+- Updated dependencies [35bd287]
+- Updated dependencies [1177e2a]
+- Updated dependencies [ed91138]
+- Updated dependencies [8c5c380]
+- Updated dependencies [7c6208f]
+- Updated dependencies [7ba3560]
+- Updated dependencies [629d3f5]
+- Updated dependencies [92d079e]
+- Updated dependencies [cd5f266]
+  - @graviola/store-core@0.4.0
+  - @graviola/edb-core-types@1.8.0
+  - @graviola/edb-core-utils@1.7.0
+  - @graviola/edb-global-types@1.3.9
+  - @graviola/remote-query-implementations@1.4.9
+  - @graviola/json-schema-utils@1.8.0
+  - @graviola/sparql-schema@1.7.0
+  - @graviola/meta-schema@0.2.0
+  - @graviola/sparql-tools@0.2.1
+  - @graviola/statement-meta@0.2.0
+  - @graviola/provenance-types@0.2.0
+  - @graviola/jsonld-utils@1.6.5
+
 ## 1.8.0
 
 ### Minor Changes

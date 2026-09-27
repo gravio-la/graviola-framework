@@ -1,6 +1,6 @@
 {
   "name": "@graviola/calc-fixtures",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Golden calc-profile fixtures (garden-fee) for unit and contract tests — not a domain model",
   "type": "module",
@@ -15,7 +15,10 @@
       "default": "./dist/index.js"
     }
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsup",
     "lint": "tsc --noEmit"

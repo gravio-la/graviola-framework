@@ -1,5 +1,25 @@
 # @graviola/sparql-store-provider
 
+## 7.0.1
+
+### Patch Changes
+
+- 28b6cad: Fix build: use the shared mapping strategy context, declare the meta-schema dependency, and fix the markdown editor props.
+- Updated dependencies [e46e114]
+- Updated dependencies [edf5859]
+- Updated dependencies [3f5119c]
+- Updated dependencies [6c6d19c]
+- Updated dependencies [ed91138]
+- Updated dependencies [7c6208f]
+- Updated dependencies [7ba3560]
+- Updated dependencies [629d3f5]
+- Updated dependencies [92d079e]
+  - @graviola/edb-core-utils@1.7.0
+  - @graviola/sparql-db-impl@1.9.0
+  - @graviola/remote-query-implementations@1.4.9
+  - @graviola/edb-state-hooks@1.8.1
+  - @graviola/meta-schema@0.2.0
+
 ## 7.0.0
 
 ### Patch Changes

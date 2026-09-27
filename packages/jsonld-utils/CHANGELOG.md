@@ -1,5 +1,15 @@
 # @graviola/jsonld-utils
 
+## 1.6.5
+
+### Patch Changes
+
+- Updated dependencies [e46e114]
+- Updated dependencies [8c5c380]
+- Updated dependencies [7c6208f]
+  - @graviola/edb-core-utils@1.7.0
+  - @graviola/edb-graph-traversal@1.7.0
+
 ## 1.6.4
 
 ### Patch Changes

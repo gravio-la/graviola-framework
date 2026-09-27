@@ -1,5 +1,58 @@
 # testapp
 
+## 0.0.21
+
+### Patch Changes
+
+- Updated dependencies [8b5b89a]
+- Updated dependencies [8b5b89a]
+- Updated dependencies [cafe768]
+- Updated dependencies [cafe768]
+- Updated dependencies [2a6d699]
+- Updated dependencies [2a6d699]
+- Updated dependencies [f4f4667]
+- Updated dependencies [e46e114]
+- Updated dependencies [85bfb6e]
+- Updated dependencies [5363fad]
+- Updated dependencies [3f5119c]
+- Updated dependencies [35bd287]
+- Updated dependencies [6c6d19c]
+- Updated dependencies [ed91138]
+- Updated dependencies [fb7f475]
+- Updated dependencies [5363fad]
+- Updated dependencies [28b6cad]
+- Updated dependencies [629d3f5]
+  - @graviola/calc-engine@0.2.0
+  - @graviola/store-factory@1.0.0
+  - @graviola/edb-core-types@1.8.0
+  - @graviola/edb-advanced-components@1.7.6
+  - @graviola/edb-detail-renderer@0.7.0
+  - @graviola/edb-data-mapping@0.5.0
+  - @graviola/json-schema-utils@1.8.0
+  - @graviola/semantic-json-form@1.6.6
+  - @graviola/edb-state-hooks@1.8.1
+  - @graviola/meta-schema@0.2.0
+  - @graviola/sparql-store-provider@7.0.1
+  - @graviola/local-oxigraph-store-provider@7.0.1
+  - @graviola/rest-server-hono@0.1.1
+  - @graviola/edb-table-components@2.0.4
+  - @graviola/rest-store-provider@1.4.6
+  - @graviola/edb-debug-utils@1.4.6
+  - @graviola/edb-linked-data-renderer@7.0.1
+  - @graviola/graviola-app-config@0.1.7
+  - @graviola/jsonld-utils@1.6.5
+  - @graviola/semantic-jsonform-types@1.5.1
+  - @graviola/semantic-views@0.2.1
+  - @graviola/edb-table-renderer-sparql-select@0.1.7
+  - @graviola/edb-table-renderer-jsonld@0.2.4
+  - @graviola/edb-ui-utils@0.4.5
+  - @graviola/calc-fixtures@0.1.1
+  - @graviola/formula-dependency@0.1.1
+  - @graviola/formula-runtime@0.1.1
+  - @graviola/edb-basic-components@1.5.6
+  - @graviola/edb-table-types@0.2.1
+  - @graviola/formula-runtime-react@0.1.1
+
 ## 0.0.20
 
 ### Patch Changes

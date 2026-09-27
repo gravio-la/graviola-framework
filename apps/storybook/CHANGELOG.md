@@ -1,5 +1,53 @@
 # @graviola/storybook
 
+## 0.0.8
+
+### Patch Changes
+
+- Updated dependencies [f4f4667]
+- Updated dependencies [e46e114]
+- Updated dependencies [5363fad]
+- Updated dependencies [35bd287]
+- Updated dependencies [6c6d19c]
+- Updated dependencies [ae0c83e]
+- Updated dependencies [1177e2a]
+- Updated dependencies [ed91138]
+- Updated dependencies [5363fad]
+- Updated dependencies [28b6cad]
+- Updated dependencies [8c5c380]
+- Updated dependencies [7c6208f]
+- Updated dependencies [7ba3560]
+  - @graviola/edb-core-types@1.8.0
+  - @graviola/edb-core-utils@1.7.0
+  - @graviola/edb-advanced-components@1.7.6
+  - @graviola/edb-detail-renderer-core@0.6.0
+  - @graviola/edb-detail-renderer@0.7.0
+  - @graviola/edb-basic-renderer@4.2.5
+  - @graviola/json-schema-utils@1.8.0
+  - @graviola/semantic-json-form@1.6.6
+  - @graviola/edb-state-hooks@1.8.1
+  - @graviola/edb-markdown-renderer@1.5.0
+  - @graviola/sparql-schema@1.7.0
+  - @graviola/meta-schema@0.2.0
+  - @graviola/sparql-store-provider@7.0.1
+  - @graviola/edb-graph-traversal@1.7.0
+  - @graviola/local-oxigraph-store-provider@7.0.1
+  - @graviola/edb-table-components@2.0.4
+  - @graviola/edb-debug-utils@1.4.6
+  - @graviola/entity-finder@1.5.6
+  - @graviola/edb-linked-data-renderer@7.0.1
+  - @graviola/graviola-app-config@0.1.7
+  - @graviola/sample-data-geo@0.1.1
+  - @graviola/semantic-jsonform-types@1.5.1
+  - @graviola/semantic-views@0.2.1
+  - @graviola/edb-table-renderer-sparql-select@0.1.7
+  - @graviola/portal-ui-components@0.1.1
+  - @graviola/edb-table-renderer-jsonld@0.2.4
+  - @graviola/edb-ui-utils@0.4.5
+  - @graviola/edb-basic-components@1.5.6
+  - @graviola/edb-table-types@0.2.1
+  - @graviola/edb-table-mrt-adapter@0.1.3
+
 ## 0.0.7
 
 ### Patch Changes

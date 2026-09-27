@@ -1,6 +1,6 @@
 {
   "name": "@graviola/sample-data-geo",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Committed Wikidata-derived geographic sample fixtures (schema + Turtle) for Storybook and tests",
   "type": "module",
   "main": "./dist/index.cjs",

@@ -1,5 +1,24 @@
 # @graviola/store-core
 
+## 0.4.0
+
+### Minor Changes
+
+- c449419: Redefine the `Calc` capability as a type-scoped, batch-capable contract (`calcWarm(typeName, …)`, `readCalcValues(typeName, entityIRIs)` returning `ReadResult` entries) and add `CalcProfile` to capability profiles. Removed `ReadCalcValuesResult`.
+- 629d3f5: Configurable statement history retention (`all` by default, `latest`, `{ keepLast }`, per-path overrides). `@graviola/provenance-types` adds `compareStatementRecency` and `currentStatement`.
+- cd5f266: store-core: changes since 0.3.3 plus the wave-1 review cleanup.
+  - New since 0.3.3: `Statements` capability and `statementMeta` descriptor profile, `annotationScopes` in list queries, `entityIRIs` and `selectionDepth` in typed `filterMany`, `Calc` capability with warm results, `DocumentSearches` with facets, SPARQL feature flags in descriptors.
+  - Removed the unused write-document interceptors (`WriteDocumentInterceptor`, `WriteDocumentContext`, `composeWriteDocumentInterceptors`, `noopWriteDocumentInterceptor`).
+
+### Patch Changes
+
+- Updated dependencies [f4f4667]
+- Updated dependencies [629d3f5]
+- Updated dependencies [ae0c83e]
+  - @graviola/edb-core-types@1.8.0
+  - @graviola/provenance-types@0.2.0
+  - @graviola/typed-query-types@0.4.0
+
 ## 0.3.3
 
 ### Patch Changes

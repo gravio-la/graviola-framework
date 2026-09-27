@@ -1,5 +1,12 @@
 # @graviola/edb-table-types
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [ed91138]
+  - @graviola/meta-schema@0.2.0
+
 ## 0.2.0
 
 ### Minor Changes

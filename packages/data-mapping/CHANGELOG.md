@@ -1,5 +1,20 @@
 # @graviola/edb-data-mapping
 
+## 0.5.0
+
+### Minor Changes
+
+- fb7f475: Move makeDefaultMappingStrategyContext from data-mapping-hooks (Layer 3) to edb-data-mapping (Layer 2) for Layer 1/2 compatibility. Re-export from data-mapping-hooks for backward compatibility (deprecated). Introduces MappingStoreProbe interface for minimal store requirements.
+
+### Patch Changes
+
+- 85bfb6e: Add `@graviola/data-acquisition` for declarative fetch/cache/retry/rate-limit/provenance. Export `getViaSourcePath` from `@graviola/edb-data-mapping` for shared path binding.
+- Updated dependencies [f4f4667]
+- Updated dependencies [e46e114]
+- Updated dependencies [7c6208f]
+  - @graviola/edb-core-types@1.8.0
+  - @graviola/edb-core-utils@1.7.0
+
 ## 0.4.3
 
 ### Patch Changes

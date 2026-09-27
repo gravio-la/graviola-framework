@@ -1,5 +1,15 @@
 # @graviola/edb-ui-utils
 
+## 0.4.5
+
+### Patch Changes
+
+- Updated dependencies [e46e114]
+- Updated dependencies [35bd287]
+- Updated dependencies [7c6208f]
+  - @graviola/edb-core-utils@1.7.0
+  - @graviola/json-schema-utils@1.8.0
+
 ## 0.4.4
 
 ### Patch Changes

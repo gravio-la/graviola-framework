@@ -1,5 +1,41 @@
 # @graviola/edb-detail-renderer
 
+## 0.7.0
+
+### Minor Changes
+
+- 5363fad: Add `DetailNestingOptions` and `NestedSection` for compact, foldable detail-view nesting. Opt in via `DetailViewConfig.nesting` or per-scope `options.nesting` in detail UI schemas.
+- 5363fad: Add opt-in `relationVia` UI-schema option and `RelationViaRenderer` for projecting arrays of reification/intermediate nodes onto their target entities with grouped qualifier lines.
+
+### Patch Changes
+
+- e46e114: edb-core-utils: changes since 1.6.1 plus the wave-1 review cleanup.
+  - New since 1.6.1: thumbnail URL helpers (`applyResolveThumbnailUrl`, `thumbnailWidthHint`, …), calc recalculation support, `resolveSparqlFeatures`.
+  - `encodeIRI`/`decodeIRI` now use base64url over UTF-8: safe in URL paths and query strings, no browser crash on non-ASCII IRIs. `decodeIRI` still accepts the old standard-base64 values.
+  - Removed helpers that duplicated lodash or the platform: `camelCaseToTitleCase` (use lodash `startCase`), `leftpad` (use `padStart`), `ellipsis`, `resolveObj`.
+  - Removed unused exports: `hexToRGBA`, `index2letter`, `foldInner2Outer`, `replaceJSONLD`, the permission constants, `isUndefOrEmpty`. `filterJSONLD` and `getJSDate` are no longer exported. `NamedEntityData`/`NamedAndTypedEntity` now come only from `@graviola/edb-core-types`.
+  - Tests run on `bun test`.
+
+  Consumers: property labels now use lodash `startCase` (e.g. "My IRI" instead of "My I R I").
+
+- Updated dependencies [f4f4667]
+- Updated dependencies [e46e114]
+- Updated dependencies [85bfb6e]
+- Updated dependencies [5363fad]
+- Updated dependencies [35bd287]
+- Updated dependencies [6c6d19c]
+- Updated dependencies [fb7f475]
+- Updated dependencies [5363fad]
+- Updated dependencies [7c6208f]
+  - @graviola/edb-core-types@1.8.0
+  - @graviola/edb-core-utils@1.7.0
+  - @graviola/edb-detail-renderer-core@0.6.0
+  - @graviola/edb-data-mapping@0.5.0
+  - @graviola/json-schema-utils@1.8.0
+  - @graviola/edb-state-hooks@1.8.1
+  - @graviola/semantic-jsonform-types@1.5.1
+  - @graviola/edb-ui-utils@0.4.5
+
 ## 0.6.0
 
 ### Minor Changes

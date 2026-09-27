@@ -1,6 +1,6 @@
 {
   "name": "@graviola/formula-runtime",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "HyperFormula-backed evaluation runtime for compiled calc profiles (Layer 2)",
   "type": "module",
   "main": "./dist/index.cjs",

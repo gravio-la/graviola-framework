@@ -1,5 +1,26 @@
 # @graviola/semantic-views
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [f4f4667]
+- Updated dependencies [e46e114]
+- Updated dependencies [5363fad]
+- Updated dependencies [35bd287]
+- Updated dependencies [6c6d19c]
+- Updated dependencies [ed91138]
+- Updated dependencies [5363fad]
+- Updated dependencies [7c6208f]
+  - @graviola/edb-core-types@1.8.0
+  - @graviola/edb-core-utils@1.7.0
+  - @graviola/edb-detail-renderer-core@0.6.0
+  - @graviola/edb-detail-renderer@0.7.0
+  - @graviola/json-schema-utils@1.8.0
+  - @graviola/edb-state-hooks@1.8.1
+  - @graviola/meta-schema@0.2.0
+  - @graviola/semantic-jsonform-types@1.5.1
+
 ## 0.2.0
 
 ### Minor Changes

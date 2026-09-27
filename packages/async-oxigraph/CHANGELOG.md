@@ -1,5 +1,11 @@
 # @graviola/async-oxigraph
 
+## 0.2.9
+
+### Patch Changes
+
+- ae0c83e: Allow LATERAL queries past the sparql.js parse gate.
+
 ## 0.2.8
 
 ### Patch Changes

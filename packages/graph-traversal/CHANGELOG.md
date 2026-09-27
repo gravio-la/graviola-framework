@@ -1,5 +1,26 @@
 # @slub/edb-graph-traversal
 
+## 1.7.0
+
+### Minor Changes
+
+- 8c5c380: Rename schema-prep APIs away from the "normalize" misnomer: dereference + project → traversal schema.
+  - `@graviola/edb-graph-traversal`: `normalizeSchema` → `buildTraversalSchema`, `NormalizedSchema` → `TraversalSchema` (`_traversalSchema`), `resolveAllRefs` → `dereferenceSchema`, `applyFilters` → `projectSchema`; module path `normalizer/` → `traversal-schema/`. Reserve "normalize"/"canonicalize" for true normal-form transforms (e.g. `canonicalizeSchemaForFingerprint`).
+  - `@graviola/sparql-schema`: `normalizedSchema2construct` → `traversalSchema2construct`.
+  - `@graviola/edb-import-staging`: `normalizeStagedDocument` → `prepareStagedDocument`.
+
+  **Breaking:** no legacy aliases — update imports and call sites to the new names.
+
+### Patch Changes
+
+- Updated dependencies [e46e114]
+- Updated dependencies [35bd287]
+- Updated dependencies [7c6208f]
+- Updated dependencies [ae0c83e]
+  - @graviola/edb-core-utils@1.7.0
+  - @graviola/json-schema-utils@1.8.0
+  - @graviola/typed-query-types@0.4.0
+
 ## 1.6.4
 
 ### Patch Changes

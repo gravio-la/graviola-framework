@@ -1,6 +1,6 @@
 {
   "name": "edb-api",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Bun HTTP API: Prisma/Postgres Graviola Store over REST + staged import sessions",
   "type": "module",

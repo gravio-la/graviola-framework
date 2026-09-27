@@ -1,5 +1,11 @@
 # @slub/edb-global-types
 
+## 1.3.9
+
+### Patch Changes
+
+- edf5859: Deprecated `AbstractDatastore` and its factories in favour of the capability-composed `Store` from `@graviola/store-core`. No behaviour change.
+
 ## 1.3.8
 
 ### Patch Changes

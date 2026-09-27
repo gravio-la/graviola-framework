@@ -1,5 +1,20 @@
 # @graviola/semantic-jsonform-types
 
+## 1.5.1
+
+### Patch Changes
+
+- Updated dependencies [f4f4667]
+- Updated dependencies [e46e114]
+- Updated dependencies [edf5859]
+- Updated dependencies [5363fad]
+- Updated dependencies [5363fad]
+  - @graviola/edb-core-types@1.8.0
+  - @graviola/edb-detail-renderer-core@0.6.0
+  - @graviola/edb-global-types@1.3.9
+  - @graviola/formula-dependency@0.1.1
+  - @graviola/edb-table-types@0.2.1
+
 ## 1.5.0
 
 ### Minor Changes

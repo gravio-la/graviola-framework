@@ -1,6 +1,6 @@
 {
   "name": "@graviola/calc-worker",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Calc materialization host: cold-start warm sweep + live invalidation subscription (Layer 2)",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -14,7 +14,10 @@
       "default": "./dist/index.js"
     }
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -40,7 +43,9 @@
   },
   "eslintConfig": {
     "root": true,
-    "extends": ["eslint-config-edb"]
+    "extends": [
+      "eslint-config-edb"
+    ]
   },
   "license": "MIT"
 }

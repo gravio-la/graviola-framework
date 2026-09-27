@@ -1,6 +1,6 @@
 {
   "name": "@graviola/facet-components",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React + MUI facet UI for Graviola faceted search",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -14,7 +14,10 @@
       "default": "./dist/index.js"
     }
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsup",
     "depcheck": "depcheck",
@@ -44,6 +47,8 @@
   },
   "eslintConfig": {
     "root": true,
-    "extends": ["eslint-config-edb"]
+    "extends": [
+      "eslint-config-edb"
+    ]
   }
 }

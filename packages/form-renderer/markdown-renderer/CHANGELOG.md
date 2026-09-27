@@ -1,5 +1,11 @@
 # @graviola/edb-markdown-renderer
 
+## 1.5.0
+
+### Minor Changes
+
+- ae0c83e: The markdown editor is lazy loaded instead of bundling MDEditor eagerly, and `markdownTester` is exported.
+
 ## 1.4.9
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@graviola/formula-dependency",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Calc-profile compiler: dependency graph, stratification, boundary checks (Layer 2)",
   "type": "module",
   "main": "./dist/index.cjs",

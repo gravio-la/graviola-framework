@@ -1,5 +1,48 @@
 # @graviola/edb-advanced-components
 
+## 1.7.6
+
+### Patch Changes
+
+- e46e114: edb-core-utils: changes since 1.6.1 plus the wave-1 review cleanup.
+  - New since 1.6.1: thumbnail URL helpers (`applyResolveThumbnailUrl`, `thumbnailWidthHint`, …), calc recalculation support, `resolveSparqlFeatures`.
+  - `encodeIRI`/`decodeIRI` now use base64url over UTF-8: safe in URL paths and query strings, no browser crash on non-ASCII IRIs. `decodeIRI` still accepts the old standard-base64 values.
+  - Removed helpers that duplicated lodash or the platform: `camelCaseToTitleCase` (use lodash `startCase`), `leftpad` (use `padStart`), `ellipsis`, `resolveObj`.
+  - Removed unused exports: `hexToRGBA`, `index2letter`, `foldInner2Outer`, `replaceJSONLD`, the permission constants, `isUndefOrEmpty`. `filterJSONLD` and `getJSDate` are no longer exported. `NamedEntityData`/`NamedAndTypedEntity` now come only from `@graviola/edb-core-types`.
+  - Tests run on `bun test`.
+
+  Consumers: property labels now use lodash `startCase` (e.g. "My IRI" instead of "My I R I").
+
+- Updated dependencies [c449419]
+- Updated dependencies [e46e114]
+- Updated dependencies [85bfb6e]
+- Updated dependencies [5363fad]
+- Updated dependencies [9d7792f]
+- Updated dependencies [6c6d19c]
+- Updated dependencies [9d7792f]
+- Updated dependencies [fb7f475]
+- Updated dependencies [5363fad]
+- Updated dependencies [28b6cad]
+- Updated dependencies [8c5c380]
+- Updated dependencies [7c6208f]
+- Updated dependencies [9d7792f]
+- Updated dependencies [629d3f5]
+- Updated dependencies [cd5f266]
+  - @graviola/store-core@0.4.0
+  - @graviola/edb-core-utils@1.7.0
+  - @graviola/edb-detail-renderer-core@0.6.0
+  - @graviola/edb-data-mapping@0.5.0
+  - @graviola/edb-import-staging@0.3.0
+  - @graviola/edb-state-hooks@1.8.1
+  - @graviola/data-mapping-hooks@1.3.6
+  - @graviola/edb-import-components@2.0.0
+  - @graviola/jsonld-utils@1.6.5
+  - @graviola/semantic-jsonform-types@1.5.1
+  - @graviola/semantic-views@0.2.1
+  - @graviola/edb-wikidata-utils@1.2.11
+  - @graviola/edb-ui-utils@0.4.5
+  - @graviola/edb-basic-components@1.5.6
+
 ## 1.7.5
 
 ### Patch Changes

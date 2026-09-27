@@ -1,5 +1,14 @@
 # @graviola/sparql-tools
 
+## 0.2.1
+
+### Patch Changes
+
+- 7c6208f: Security: IRIs are validated before they are placed into SPARQL queries and updates, and the REST server rejects invalid entity IRIs with `400 invalid_entity_iri`. `@graviola/edb-core-utils` adds `isSafeIri`, `assertSafeIri` and `InvalidIriError`; `@graviola/sparql-schema` adds `iriRef`, `sparqlStringLiteral` (full escaping) and `toSparqlVariableName` (replacing three local copies).
+- Updated dependencies [e46e114]
+- Updated dependencies [7c6208f]
+  - @graviola/edb-core-utils@1.7.0
+
 ## 0.2.0
 
 ### Minor Changes

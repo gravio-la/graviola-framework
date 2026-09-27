@@ -1,5 +1,28 @@
 # @graviola/edb-state-hooks
 
+## 1.8.1
+
+### Patch Changes
+
+- 6c6d19c: Add `useOptionalFinderSlot` for optional similarity-finder integration. Linked markdown editor gains a knowledge-base search drawer (type tabs + finder slot) and demo home page redesign with service status and live entity counts.
+- Updated dependencies [c449419]
+- Updated dependencies [427ce4c]
+- Updated dependencies [e46e114]
+- Updated dependencies [85bfb6e]
+- Updated dependencies [35bd287]
+- Updated dependencies [fb7f475]
+- Updated dependencies [7c6208f]
+- Updated dependencies [629d3f5]
+- Updated dependencies [cd5f266]
+  - @graviola/store-core@0.4.0
+  - @graviola/fulltext-search-core@0.3.0
+  - @graviola/edb-core-utils@1.7.0
+  - @graviola/edb-data-mapping@0.5.0
+  - @graviola/json-schema-utils@1.8.0
+  - @graviola/jsonld-utils@1.6.5
+  - @graviola/semantic-jsonform-types@1.5.1
+  - @graviola/edb-ui-utils@0.4.5
+
 ## 1.8.0
 
 ### Minor Changes

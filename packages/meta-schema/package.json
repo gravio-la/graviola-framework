@@ -1,6 +1,6 @@
 {
   "name": "@graviola/meta-schema",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Entity-level $meta schema derivation and write stamping (Layer 1)",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -14,7 +14,9 @@
       "default": "./dist/index.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "test": "bun test",
@@ -36,6 +38,8 @@
   },
   "eslintConfig": {
     "root": true,
-    "extends": ["eslint-config-edb"]
+    "extends": [
+      "eslint-config-edb"
+    ]
   }
 }

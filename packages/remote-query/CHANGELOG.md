@@ -1,5 +1,14 @@
 # @slub/remote-query-implementations
 
+## 1.4.9
+
+### Patch Changes
+
+- 3f5119c: Add `@graviola/job-schema` and wire `SparqlBackendSpec.graph` / `defaultGraphUris` so job records can live in a named graph (Oxigraph needs the dataset param for reads — E-0).
+- Updated dependencies [e46e114]
+- Updated dependencies [7c6208f]
+  - @graviola/edb-core-utils@1.7.0
+
 ## 1.4.8
 
 ### Patch Changes

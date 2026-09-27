@@ -1,5 +1,17 @@
 # @graviola/data-mapping-hooks
 
+## 1.3.6
+
+### Patch Changes
+
+- fb7f475: Move makeDefaultMappingStrategyContext from data-mapping-hooks (Layer 3) to edb-data-mapping (Layer 2) for Layer 1/2 compatibility. Re-export from data-mapping-hooks for backward compatibility (deprecated). Introduces MappingStoreProbe interface for minimal store requirements.
+- 28b6cad: Fix build: use the shared mapping strategy context, declare the meta-schema dependency, and fix the markdown editor props.
+- Updated dependencies [85bfb6e]
+- Updated dependencies [6c6d19c]
+- Updated dependencies [fb7f475]
+  - @graviola/edb-data-mapping@0.5.0
+  - @graviola/edb-state-hooks@1.8.1
+
 ## 1.3.5
 
 ### Patch Changes

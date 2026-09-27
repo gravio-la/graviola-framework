@@ -1,6 +1,6 @@
 {
   "name": "@graviola/store-factory",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Declarative Store factory — oxigraph / SPARQL / Prisma backends via lazy imports",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -40,14 +40,30 @@
     "oxigraph": "^0.5.0"
   },
   "peerDependenciesMeta": {
-    "@graviola/sparql-db-impl": { "optional": true },
-    "@graviola/prisma-db-impl": { "optional": true },
-    "@graviola/remote-query-implementations": { "optional": true },
-    "@graviola/sparql-tools": { "optional": true },
-    "@graviola/calc-engine": { "optional": true },
-    "@prisma/client": { "optional": true },
-    "@rdfjs/dataset": { "optional": true },
-    "oxigraph": { "optional": true }
+    "@graviola/sparql-db-impl": {
+      "optional": true
+    },
+    "@graviola/prisma-db-impl": {
+      "optional": true
+    },
+    "@graviola/remote-query-implementations": {
+      "optional": true
+    },
+    "@graviola/sparql-tools": {
+      "optional": true
+    },
+    "@graviola/calc-engine": {
+      "optional": true
+    },
+    "@prisma/client": {
+      "optional": true
+    },
+    "@rdfjs/dataset": {
+      "optional": true
+    },
+    "oxigraph": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@graviola/calc-engine": "workspace:*",

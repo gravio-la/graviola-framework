@@ -1,5 +1,29 @@
 # @slub/prisma-db-impl
 
+## 1.7.5
+
+### Patch Changes
+
+- edf5859: Deprecated `AbstractDatastore` and its factories in favour of the capability-composed `Store` from `@graviola/store-core`. No behaviour change.
+- Updated dependencies [c449419]
+- Updated dependencies [e46e114]
+- Updated dependencies [35bd287]
+- Updated dependencies [ed91138]
+- Updated dependencies [7c6208f]
+- Updated dependencies [629d3f5]
+- Updated dependencies [92d079e]
+- Updated dependencies [cd5f266]
+- Updated dependencies [ae0c83e]
+  - @graviola/store-core@0.4.0
+  - @graviola/edb-core-utils@1.7.0
+  - @graviola/json-schema-utils@1.8.0
+  - @graviola/meta-schema@0.2.0
+  - @graviola/statement-meta@0.2.0
+  - @graviola/provenance-types@0.2.0
+  - @graviola/typed-query-types@0.4.0
+  - @graviola/json-schema-prisma-utils@1.4.5
+  - @graviola/jsonld-utils@1.6.5
+
 ## 1.7.4
 
 ### Patch Changes

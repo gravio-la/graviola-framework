@@ -1,6 +1,6 @@
 {
   "name": "@graviola/data-acquisition",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Declarative data-source acquisition: fetch, cache, retry, rate-limit, provenance",
   "type": "module",
   "main": "./dist/index.cjs",

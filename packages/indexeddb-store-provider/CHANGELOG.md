@@ -1,5 +1,32 @@
 # @graviola/indexeddb-store-provider
 
+## 3.0.1
+
+### Patch Changes
+
+- Updated dependencies [c449419]
+- Updated dependencies [f4f4667]
+- Updated dependencies [e46e114]
+- Updated dependencies [edf5859]
+- Updated dependencies [35bd287]
+- Updated dependencies [6c6d19c]
+- Updated dependencies [1177e2a]
+- Updated dependencies [8c5c380]
+- Updated dependencies [7c6208f]
+- Updated dependencies [7ba3560]
+- Updated dependencies [629d3f5]
+- Updated dependencies [92d079e]
+- Updated dependencies [cd5f266]
+  - @graviola/store-core@0.4.0
+  - @graviola/edb-core-types@1.8.0
+  - @graviola/edb-core-utils@1.7.0
+  - @graviola/edb-global-types@1.3.9
+  - @graviola/sparql-db-impl@1.9.0
+  - @graviola/json-schema-utils@1.8.0
+  - @graviola/edb-state-hooks@1.8.1
+  - @graviola/sparql-schema@1.7.0
+  - @graviola/edb-graph-traversal@1.7.0
+
 ## 3.0.0
 
 ### Patch Changes

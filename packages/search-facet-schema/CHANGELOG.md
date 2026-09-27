@@ -1,5 +1,12 @@
 # @graviola/search-facet-schema
 
+## 0.1.3
+
+### Patch Changes
+
+- Updated dependencies [35bd287]
+  - @graviola/json-schema-utils@1.8.0
+
 ## 0.1.2
 
 ### Patch Changes

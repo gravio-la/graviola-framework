@@ -1,5 +1,49 @@
 # @slub/sparql-schema
 
+## 1.7.0
+
+### Minor Changes
+
+- 8c5c380: Rename schema-prep APIs away from the "normalize" misnomer: dereference + project → traversal schema.
+  - `@graviola/edb-graph-traversal`: `normalizeSchema` → `buildTraversalSchema`, `NormalizedSchema` → `TraversalSchema` (`_traversalSchema`), `resolveAllRefs` → `dereferenceSchema`, `applyFilters` → `projectSchema`; module path `normalizer/` → `traversal-schema/`. Reserve "normalize"/"canonicalize" for true normal-form transforms (e.g. `canonicalizeSchemaForFingerprint`).
+  - `@graviola/sparql-schema`: `normalizedSchema2construct` → `traversalSchema2construct`.
+  - `@graviola/edb-import-staging`: `normalizeStagedDocument` → `prepareStagedDocument`.
+
+  **Breaking:** no legacy aliases — update imports and call sites to the new names.
+
+### Patch Changes
+
+- 1177e2a: Fix annotationProjectionsToSparql to correctly walk intermediate path segments for nested meta annotations. Now generates proper triple patterns for scopes like $meta/provenance/activityId instead of skipping intermediate nodes. Deduplicates shared path segments across multiple projections.
+- 7c6208f: Security: IRIs are validated before they are placed into SPARQL queries and updates, and the REST server rejects invalid entity IRIs with `400 invalid_entity_iri`. `@graviola/edb-core-utils` adds `isSafeIri`, `assertSafeIri` and `InvalidIriError`; `@graviola/sparql-schema` adds `iriRef`, `sparqlStringLiteral` (full escaping) and `toSparqlVariableName` (replacing three local copies).
+- 7ba3560: fix(sparql-schema): never expand the DELETE template of `save`/`remove` into linked named entities
+
+  `jsonSchema2construct` builds the DELETE side of the DELETE/INSERT issued on every save. Its only
+  recursion boundary was the TBox stop symbol `@id`; schema artifacts that omit `@id` on referenced
+  definitions (e.g. LinkML-generated models without identifier slots) made the template expand up to
+  four levels into linked IRIs and wipe them (`Location.parent` → parent, grand-parent … lost all
+  triples on each save; `Place.location` / `Place.parent` overwrote each other's targets).
+
+  Every nested expansion is now additionally anchored in its own
+  `OPTIONAL { <link> FILTER(isBlank(?o)) … }` group — the Concise Bounded Description proper: only
+  anonymous (blank-node) sub-objects owned by the subject are ever expanded; IRIs are never followed
+  regardless of the schema. Link triples are still matched on their own so stale references are removed.
+  Nested patterns are all OPTIONAL (deletion wants maximal matching), which also fixes stale links that
+  survived when a linked target lacked a schema-`required` property.
+
+  Adds an in-process Oxigraph contract suite (`apps/datastore-tests/src/cbd-boundary.test.ts`) covering
+  both schema shapes (with and without `@id`).
+
+- Updated dependencies [e46e114]
+- Updated dependencies [35bd287]
+- Updated dependencies [ed91138]
+- Updated dependencies [8c5c380]
+- Updated dependencies [7c6208f]
+  - @graviola/edb-core-utils@1.7.0
+  - @graviola/json-schema-utils@1.8.0
+  - @graviola/meta-schema@0.2.0
+  - @graviola/edb-graph-traversal@1.7.0
+  - @graviola/jsonld-utils@1.6.5
+
 ## 1.6.4
 
 ### Patch Changes

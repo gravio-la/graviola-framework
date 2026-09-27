@@ -1,6 +1,6 @@
 {
   "name": "@graviola/edb-secondary-sources",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Secondary data source declarations, runtime, adapters, and import protocol",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -20,7 +20,9 @@
       "default": "./dist/protocol.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
   "scripts": {
     "build": "tsup",

@@ -1,5 +1,29 @@
 # @graviola/rest-store-client
 
+## 0.4.0
+
+### Minor Changes
+
+- a6df8f7: Implements the type-scoped `Calc` facet (`calcWarm(typeName, …)`, `readCalcValues(typeName, entityIRIs)`) and reads `calc.rootTypes` from the handshake.
+
+### Patch Changes
+
+- edf5859: Deprecated `AbstractDatastore` and its factories in favour of the capability-composed `Store` from `@graviola/store-core`. No behaviour change.
+- Updated dependencies [c449419]
+- Updated dependencies [f4f4667]
+- Updated dependencies [85bfb6e]
+- Updated dependencies [edf5859]
+- Updated dependencies [fb7f475]
+- Updated dependencies [629d3f5]
+- Updated dependencies [cd5f266]
+- Updated dependencies [ae0c83e]
+  - @graviola/store-core@0.4.0
+  - @graviola/edb-core-types@1.8.0
+  - @graviola/edb-data-mapping@0.5.0
+  - @graviola/edb-global-types@1.3.9
+  - @graviola/provenance-types@0.2.0
+  - @graviola/typed-query-types@0.4.0
+
 ## 0.3.2
 
 ### Patch Changes

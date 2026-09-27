@@ -1,5 +1,28 @@
 # @graviola/edb-table-renderer-jsonld
 
+## 0.2.4
+
+### Patch Changes
+
+- Updated dependencies [e46e114]
+- Updated dependencies [5363fad]
+- Updated dependencies [35bd287]
+- Updated dependencies [6c6d19c]
+- Updated dependencies [ed91138]
+- Updated dependencies [5363fad]
+- Updated dependencies [7c6208f]
+  - @graviola/edb-core-utils@1.7.0
+  - @graviola/edb-detail-renderer-core@0.6.0
+  - @graviola/edb-detail-renderer@0.7.0
+  - @graviola/json-schema-utils@1.8.0
+  - @graviola/edb-state-hooks@1.8.1
+  - @graviola/meta-schema@0.2.0
+  - @graviola/jsonld-utils@1.6.5
+  - @graviola/edb-ui-utils@0.4.5
+  - @graviola/edb-basic-components@1.5.6
+  - @graviola/edb-table-types@0.2.1
+  - @graviola/edb-table-mrt-adapter@0.1.3
+
 ## 0.2.3
 
 ### Patch Changes
