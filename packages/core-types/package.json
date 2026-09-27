@@ -25,7 +25,6 @@
   },
   "dependencies": {
     "@graviola/typed-query-types": "workspace:*",
-    "@rdfjs/namespace": "catalog:rdf",
     "@rdfjs/types": "catalog:rdf"
   },
   "typedocOptions": {

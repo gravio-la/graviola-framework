@@ -1,5 +1,4 @@
 // @ts-nocheck
-import type { BasicThingInformation } from "@graviola/edb-core-types";
 import type { Meta, StoryObj } from "@storybook/react";
 import { withGraviolaProvider } from "../../../.storybook/decorators";
 
@@ -13,6 +12,15 @@ export default {
 } as Meta<typeof KBListItemRenderer>;
 
 type Story = StoryObj<typeof KBListItemRenderer>;
+
+type BasicThingInformation = {
+  id: string;
+  label: string;
+  secondary?: string;
+  avatar?: string;
+  category?: string;
+  allProps?: Record<string, any>;
+};
 
 const sampleData: BasicThingInformation = {
   id: "example-id",

@@ -1,55 +1,35 @@
 # @graviola/edb-core-types
 
-Core TypeScript type definitions for the Graviola framework.
+The shared TypeScript type vocabulary of the Graviola framework — RDF, SPARQL, entity fields, typed filters, and UI presentation contracts.
 
-![Environment: Universal](https://img.shields.io/badge/Environment-Universal-green)
+![Layer: 1 (Foundation)](https://img.shields.io/badge/Layer-1%20Foundation-blue)
+![Environment: types only](https://img.shields.io/badge/Environment-types%20only-lightgrey)
+![Environment: Universal](https://img.shields.io/badge/Environment-Browser%20%2B%20Bun%20%2B%20Node-green)
 
-## Overview
+## Why this package exists
 
-This package provides essential TypeScript type definitions used throughout the Graviola framework. It defines the core data structures, interfaces, and types for working with RDF data, SPARQL queries, entity management, and application settings.
+Graviola is spread across dozens of packages. They all need to agree on the same shapes — a SPARQL endpoint config, a primary-field declaration, a typed filter, a card presentation option — without importing each other's runtime code.
 
-## Ecosystem Integration
+This package is that shared vocabulary. It exports **types only**; there is no runtime code here. Query builders, datastore adapters, mapping engines, and UI packages import from here so their interfaces stay aligned.
 
-### Position in the Graviola Framework
+## Position in the framework
 
-The core-types package is a foundational component of the Graviola framework, providing type definitions that are used across almost all other packages. It establishes a common type system for working with RDF data, SPARQL endpoints, entity definitions, and more. This package is essential for maintaining type safety and consistency throughout the framework.
+The package is in **Layer 1 (Foundation)**. It depends on `@rdfjs/types` and `@graviola/typed-query-types` (typed filters are re-exported from the latter). It must never gain runtime or React dependencies — adding either would break the browser/server symmetry that Layer 1 guarantees.
 
-### Dependency Graph
+Typical consumers:
 
-```mermaid
-flowchart TD
-    A[graviola/edb-core-types] --> B[@rdfjs/types]
-    A --> C[@rdfjs/namespace]
-    D[graviola/sparql-schema] --> A
-    E[graviola/core-utils] --> A
-    F[graviola/state-hooks] --> A
-    G[graviola/data-mapping] --> A
-    H[graviola/prisma-db-impl] --> A
-    I[graviola/sparql-db-impl] --> A
-    J[graviola/remote-query] --> A
-    K[graviola/entity-finder] --> A
-    L[many other packages...] --> A
+| Area         | Packages                                                                                       | Uses                                                                                                                    |
+| ------------ | ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Query stack  | `sparql-schema`, `sparql-db-impl`, `remote-query-implementations`, `edb-graph-traversal`       | `SparqlEndpoint`, `SPARQLFlavour`, `CRUDFunctions`, `SparqlBuildOptions`, `WalkerOptions`, pagination and typed filters |
+| Mapping      | `edb-data-mapping`                                                                             | `NormDataMapping(s)`, `PrimaryField*`                                                                                   |
+| UI and state | `edb-state-hooks`, `edb-detail-renderer(-core)`, `graviola-app-config`, `edb-table-components` | Presentation and entity-action types                                                                                    |
 
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-```
+## Key concepts
 
-### Package Relationships
-
-- **Peer Dependencies**:
-
-  - `@rdfjs/namespace`: RDF/JS namespace builder
-  - `@rdfjs/types`: RDF/JS type definitions
-
-- **Used By**:
-  - Most packages in the Graviola framework, including:
-    - `@graviola/sparql-schema`: For SPARQL and RDF type definitions
-    - `@graviola/core-utils`: For entity and data structure types
-    - `@graviola/state-hooks`: For state management types
-    - `@graviola/data-mapping`: For field mapping types
-    - `@graviola/prisma-db-impl`: For database implementation types
-    - `@graviola/sparql-db-impl`: For SPARQL database implementation types
-    - `@graviola/remote-query`: For remote query types
-    - And many more...
+- **Three modules.** The foundation types live in `index.ts` (RDF/SPARQL, entity fields, mapping, pagination, logging). Presentation types (`CardPresentation`, `IconComponentLike`, thumbnail/preview vocabulary) live in `presentation.ts`. Entity-action types (`EntityActionDef`, `HostCapabilities`, …) live in `entityActions.ts`. All three are re-exported from the package entry point; import paths are unchanged. Presentation and entity-action types are UI vocabulary kept here for now — they may move to their own package later.
+- **Primary fields.** A `PrimaryFieldDeclaration` maps entity type names to the property names that serve as label, description and image when rendering chips, cards and autocomplete suggestions. `PrimaryFieldExtract` and `PrimaryFieldResults` cover the extraction side in mapping and graph traversal.
+- **The SPARQL vocabulary.** `SparqlEndpoint` describes a query endpoint (URL, auth, provider). `SPARQLFlavour` selects an engine profile (`default`, `oxigraph`, `blazegraph`, `allegro`, `jena`). `SparqlFeatureFlags` / `ResolvedSparqlFeatureFlags` express the resolved capability flags query code branches on. `CRUDFunctions` and `SparqlBuildOptions` wire the query stack together.
+- **`IconComponentLike`.** Icons in presentation and entity-action types are typed structurally — a render function, an MUI `OverridableComponent`, or a plain object with `muiName` / `$$typeof` — so no React dependency is needed in this Layer 1 package.
 
 ## Installation
 
@@ -57,72 +37,16 @@ flowchart TD
 bun add @graviola/edb-core-types
 # or
 npm install @graviola/edb-core-types
-# or
-yarn add @graviola/edb-core-types
 ```
-
-## Features
-
-### RDF and SPARQL Types
-
-- **Prefixes**: Type definitions for RDF prefixes and namespace builders
-- **SparqlEndpoint**: Interface for SPARQL endpoint configuration
-- **SPARQLFlavour**: Type for different SPARQL implementation flavors
-- **CRUDFunctions**: Interface for CRUD operations on RDF data
-- **RDFSelectResult**: Type for SPARQL SELECT query results
-- **QueryOptions**: Type for SPARQL query options
-
-### Entity Types
-
-- **NamedEntityData**: Interface for entities with an ID
-- **NamedAndTypedEntity**: Interface for entities with an ID and type
-- **Entity**: Comprehensive entity interface with label, description, and image
-- **BasicThingInformation**: Simplified entity information for UI display
-
-### Field Extraction and Mapping
-
-- **FieldExtractDeclaration**: Type for field extraction definitions
-- **PrimaryField**: Interface for primary entity fields (label, description, image)
-- **PrimaryFieldExtract**: Interface for extracting primary fields from entities
-- **PrimaryFieldResults**: Interface for extraction results
-
-### Settings and Configuration
-
-- **Settings**: Interface for application settings
-- **Features**: Interface for feature flags
-- **SparqlEndpoint**: Interface for SPARQL endpoint configuration
-- **OpenAIConfig**: Interface for OpenAI integration settings
-- **GoogleDriveConfig**: Interface for Google Drive integration settings
-- **ExternalAuthorityConfig**: Interface for external authority configuration
-
-### Utility Types
-
-- **Permission**: Interface for view/edit permissions
-- **PermissionDeclaration**: Type for declaring permissions by entity type
-- **ColumnDesc**: Type for column descriptions
-- **WalkerOptions**: Options for graph traversal
-- **AutocompleteSuggestion**: Type for autocomplete suggestions
 
 ## Usage
 
-Import types from this package in your TypeScript files:
-
-```typescript
+```ts
 import type {
-  NamedAndTypedEntity,
+  PrimaryFieldDeclaration,
   SparqlEndpoint,
-  PrimaryField,
 } from "@graviola/edb-core-types";
 
-// Define a typed entity
-const person: NamedAndTypedEntity = {
-  "@id": "http://example.org/person/1",
-  "@type": "http://example.org/ontology#Person",
-  name: "John Doe",
-  age: 30,
-};
-
-// Configure a SPARQL endpoint
 const endpoint: SparqlEndpoint = {
   label: "Local Oxigraph",
   endpoint: "http://localhost:7878/query",
@@ -130,81 +54,16 @@ const endpoint: SparqlEndpoint = {
   provider: "oxigraph",
 };
 
-// Define primary fields for an entity type
-const personFields: PrimaryField = {
-  label: "name",
-  description: "bio",
-  image: "photo",
+const primaryFields: PrimaryFieldDeclaration = {
+  Person: { label: "name", description: "bio", image: "photo" },
+  Organisation: { label: "legalName", image: "logo" },
 };
 ```
 
-### Settings Types
+## API reference
 
-Import settings types for application configuration:
-
-```typescript
-import type { Settings, Features } from "@graviola/edb-core-types/settings";
-
-// Define application features
-const features: Features = {
-  enablePreview: true,
-  enableDebug: false,
-  enableBackdrop: true,
-  enableStylizedCard: true,
-};
-
-// Define application settings
-const settings: Settings = {
-  lockedEndpoint: false,
-  sparqlEndpoints: [
-    {
-      label: "Local Oxigraph",
-      endpoint: "http://localhost:7878/query",
-      active: true,
-      provider: "oxigraph",
-    },
-  ],
-  features,
-  openai: {
-    apiKey: process.env.OPENAI_API_KEY,
-  },
-  googleDrive: {},
-  externalAuthority: {},
-};
-```
-
-## Internal Usage
-
-This package is used throughout the Graviola framework to provide type definitions. Here's an example from the sparql-schema package:
-
-```typescript
-// From packages/sparql-schema/src/crud/load.ts
-import type {
-  CRUDFunctions,
-  NamedAndTypedEntity,
-  SPARQLCRUDOptions,
-} from "@graviola/edb-core-types";
-import { JSONSchema7 } from "json-schema";
-
-export async function load({
-  entityIRI,
-  typeIRI,
-  schema,
-  sparqlEndpoint,
-  crudFunctions,
-  options,
-}: {
-  entityIRI: string;
-  typeIRI: string;
-  schema: JSONSchema7;
-  sparqlEndpoint: string;
-  crudFunctions?: CRUDFunctions;
-  options?: SPARQLCRUDOptions;
-}): Promise<NamedAndTypedEntity> {
-  // Implementation...
-}
-```
+The full list of exports is in the generated TypeDoc API documentation (`bun run docs` at the repository root). Every export has a doc comment in `src/`.
 
 ## License
 
-This package is part of the Graviola project.
+MIT

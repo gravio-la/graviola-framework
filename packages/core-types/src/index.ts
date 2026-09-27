@@ -1,7 +1,7 @@
 import type { Bindings, DatasetCore, Quad, ResultStream } from "@rdfjs/types";
-import type { NamespaceBuilder } from "@rdfjs/namespace";
 import type { TypedGraphTraversalFilterOptions } from "./typed-filters";
-export type * from "./settings";
+export type * from "./entityActions";
+export type * from "./presentation";
 export type * from "./typed-filters";
 
 export type Prefixes = {
@@ -19,10 +19,6 @@ export type AuthConfig = {
   username?: string;
   password?: string;
   token?: string;
-};
-
-export type NamespaceBuilderPrefixes = {
-  prefixes: Record<string, NamespaceBuilder>;
 };
 
 export type FieldExtractDeclaration<T = any> =
@@ -44,104 +40,6 @@ export type PrimaryFieldDeclaration<Key extends string = string> = Partial<
   Record<Key, PrimaryField>
 >;
 
-/** M3 card surface variant. */
-export type CardVariant = "elevated" | "filled" | "outlined";
-
-/** Card layout orientation — vertical (media top) or horizontal (media side). */
-export type CardOrientation = "vertical" | "horizontal";
-
-/** Density / padding scale for cards in grids vs. lists. */
-export type CardSize = "compact" | "standard" | "comfortable";
-
-/** Listing density for chip / listItem / card surfaces. */
-export type ViewDensity = "condensed" | "extended";
-
-/** Host capability identifiers negotiated between shell and entity actions. */
-export type HostCapabilityId =
-  | "open-in-modal"
-  | "open-in-route"
-  | "open-in-new-tab"
-  | "open-in-window"
-  | "edit-entity"
-  | "download"
-  | (string & {});
-
-export type ActionTarget = {
-  entityIRI?: string;
-  typeIRI?: string;
-  typeName?: string;
-  data?: unknown;
-};
-
-/** What an application shell declares it can do. */
-export type HostCapabilityDeclaration = {
-  supports: HostCapabilityId[];
-  entityRoute?: (target: ActionTarget & { entityIRI: string }) => string | null;
-};
-
-/** Resolved capabilities consumed by entity action selection. */
-export type HostCapabilities = {
-  has: (id: HostCapabilityId, target?: ActionTarget) => boolean;
-  entityHref: (target: ActionTarget) => string | null;
-};
-
-/** Built-in entity action intents; `custom` is dispatched via `onEntityAction`. */
-export type EntityActionIntent =
-  | "show"
-  | "edit"
-  | "open-in-route"
-  | "open-in-new-tab"
-  | "open-in-window"
-  | "custom";
-
-export interface EntityActionDef {
-  id: string;
-  label: string;
-  /** Emoji or short label icon hint for storybook / simple cases. */
-  icon?: string;
-  intent: EntityActionIntent;
-  /** When true, render as M3 filled button; otherwise tonal/text. */
-  primary?: boolean;
-  destructive?: boolean;
-  /** Menu section label for context menus. */
-  section?: string;
-  /** Direct href for download / external links. */
-  href?: string;
-  /** Imperative handler — takes precedence over {@link intent}. */
-  run?: (targets: ActionTarget[]) => void | Promise<void>;
-}
-
-/** How secondary (non-primary) leaf properties are laid out on a card. */
-export type CardSecondaryDisplay = "inline" | "stats";
-
-/**
- * Per-type card presentation — parallel to {@link PrimaryField} for hero slots.
- * Configured on `AdbProvider.cardPresentation` or `viewConfig.card.options`.
- */
-export interface CardPresentation {
-  /** Explicit secondary property names (leaf literals). */
-  secondaryFields?: string[];
-  /** Max secondary fields when inferring from schema (default 3). */
-  secondaryFieldLimit?: number;
-  secondaryDisplay?: CardSecondaryDisplay;
-  actions?: EntityActionDef[];
-  variant?: CardVariant;
-  orientation?: CardOrientation;
-  size?: CardSize;
-  /** Reveal secondary fields in-place via expand affordance (not detail modal). */
-  expandable?: boolean;
-  /** CSS aspect-ratio for hero media (default `16 / 9`). */
-  mediaAspectRatio?: string;
-  /** Overlay headline/subhead on hero media with gradient scrim. */
-  mediaOverlay?: boolean;
-  /** Property name for a banner/header image (profile-card pattern). */
-  banner?: string;
-  /** Hide labels on secondary property rows for a cleaner card body. */
-  hidePropertyLabels?: boolean;
-}
-
-export type CardPresentationRegistry = Record<string, CardPresentation>;
-
 export type PrimaryFieldExtractDeclaration<
   T = any,
   Key extends string = string,
@@ -152,145 +50,6 @@ export type PrimaryFieldResults<T> = {
   description: T | null;
   image: T | null;
 };
-
-/** Props passed to app-supplied icon components (MUI SvgIcon, @mui/icons-material, etc.). */
-export type PreviewIconProps = {
-  fontSize?: number | string;
-  color?: string;
-  className?: string;
-};
-
-/**
- * React component (incl. MUI forwardRef/memo / OverridableComponent),
- * render function, or plain object component.
- *
- * MUI `@mui/icons-material` icons are `OverridableComponent`s whose call
- * overloads are not assignable to `(props: PreviewIconProps) => unknown`.
- * They are accepted via the structural arms (`muiName` / `$$typeof`).
- */
-export type IconComponentLike =
-  | ((props: PreviewIconProps) => unknown)
-  | Record<string, unknown>
-  | { readonly muiName: string }
-  | { readonly $$typeof: unknown };
-
-/**
- * Type-level or MIME-level icon: emoji/label string, component, render fn, or
- * resolver evaluated per entity instance.
- */
-export type IconRef = string | IconComponentLike | PreviewIconResolver;
-
-/** Resolve an icon from instance `data` (e.g. pick MIME-specific icon). */
-export type PreviewIconResolver = (
-  ctx: PreviewMediaContext,
-) => IconRef | undefined;
-
-/**
- * Optional per-instance image URL (thumbnail service, derived URL, base64).
- * For size-aware display rewriting, use {@link ResolveThumbnailUrl} on GlobalAppConfig.
- */
-export type PreviewImageResolver = (
-  ctx: PreviewMediaContext,
-) => string | undefined;
-
-export type PreviewMediaContext = {
-  data: unknown;
-  typeName: string;
-  typeIRI?: string;
-  mimeType?: string;
-};
-
-/** Aligns with ViewSize. Call sites almost always pass only `sizeCategory`. */
-export type ThumbnailSizeCategory = "chip" | "listItem" | "card" | "detail";
-
-/** Named 2D size; either side optional (e.g. width-only thumbs). */
-export type Size2D = Partial<{ width: number; height: number }>;
-
-/**
- * Desired thumbnail geometry. If every field is omitted / size arg is omitted,
- * the framework treats it as `{ sizeCategory: "detail" }`.
- */
-export type ThumbnailSizeOptions = {
-  /** Exact pixel box (width and/or height). */
-  dimension?: Size2D;
-  /** Desired aspect ratio as named sides (e.g. `{ width: 16, height: 9 }`). */
-  aspect?: Size2D;
-  /** Named slot; preferred for chips, lists, cards, detail heroes. */
-  sizeCategory?: ThumbnailSizeCategory;
-};
-
-/** Entity/view metadata for {@link ResolveThumbnailUrl}; size lives on the size arg only. */
-export type ThumbnailResolveContext = {
-  viewSize?: ThumbnailSizeCategory;
-  typeName?: string;
-  typeIRI?: string;
-  entityIRI?: string;
-  data?: unknown;
-};
-
-/**
- * App-supplied display-time image URL rewrite (CDN / Commons / proxy).
- * Return `undefined` to keep the original URL.
- */
-export type ResolveThumbnailUrl = (
-  imageUrl: string,
-  size: ThumbnailSizeOptions,
-  context?: ThumbnailResolveContext,
-) => string | undefined;
-
-export type MimeIconMatcherMap = Record<string, IconRef>;
-export type MimeIconMatcherFn = (
-  mimeType: string,
-  ctx: PreviewMediaContext,
-) => IconRef | undefined;
-export type MimeIconMatchers = MimeIconMatcherMap | MimeIconMatcherFn;
-
-export interface TypePresentation {
-  /** Default icon for this type (all instances unless MIME rule matches). */
-  icon?: IconRef;
-  /**
-   * Same-type shape variants (e.g. files): map MIME type → icon, or a matcher fn.
-   * Keys may be exact (`image/png`) or major (`image/*`).
-   */
-  iconByMime?: MimeIconMatchers;
-  /** Dot-path on instance data for MIME type; default `mimeType`. */
-  mimeTypePath?: string;
-  /**
-   * App-provided image URL when instance primary field is not used.
-   * Size-aware CDN rewrite belongs on GlobalAppConfig.resolveThumbnailUrl.
-   */
-  image?: PreviewImageResolver;
-  color?: string;
-  backgroundPattern?: string;
-  pluralLabel?: string;
-  /** Shallow-merged on top of registry defaults after instance fields are read. */
-  override?: (data: unknown) => Partial<EntityPreview>;
-}
-
-export type TypePresentationRegistry = Record<string, TypePresentation>;
-
-export type PreviewDisplayMedia = "image" | "icon" | "initial" | "none";
-
-/** Combined label/description/image (instance) + icon/color (type-level). */
-export interface EntityPreview {
-  label?: string;
-  description?: string;
-  /** Raw instance image from `primaryFields` or override (may not be shown if icon wins). */
-  image?: string;
-  /** Type-level icon ref before display precedence is applied. */
-  icon?: IconRef;
-  color?: string;
-  backgroundPattern?: string;
-  pluralLabel?: string;
-  extras?: Record<string, unknown>;
-  /**
-   * Resolved chip/list avatar slot after precedence:
-   * MIME icon → type icon → explicit image → initial letter → none.
-   */
-  displayMedia?: PreviewDisplayMedia;
-  displayImage?: string;
-  displayIcon?: IconRef;
-}
 
 export type NamedEntityData = {
   "@id": string;
@@ -311,7 +70,7 @@ export interface SparqlBuildOptions {
   primaryFieldExtracts: PrimaryFieldExtractDeclaration;
   /** Engine/vendor profile id — resolved to {@link SparqlFeatureFlags} via resolveSparqlFeatures */
   sparqlFlavour?: SPARQLFlavour;
-  /** Partial overrides merged on top of the flavour’s default feature bag */
+  /** Partial overrides merged on top of the flavour's default feature bag */
   sparqlFeatures?: Partial<SparqlFeatureFlags>;
 }
 export interface SelectFetchOptions {
@@ -349,14 +108,12 @@ export type SPARQLCRUDLogger = {
   ) => void;
 };
 
-export type ResultBindings = any[];
-
 export type RDFSelectResult = {
   head: {
     vars: string[];
   };
   results: {
-    bindings: ResultBindings;
+    bindings: any[];
   };
 };
 
@@ -368,7 +125,7 @@ export type SelectFetchOverload = {
   (
     query: string,
     options?: { withHeaders?: false } & SPARQLQueryOptions,
-  ): Promise<ResultBindings>;
+  ): Promise<any[]>;
 };
 
 export type CRUDFunctions = {
@@ -457,27 +214,9 @@ export type QueryOptions = {
   queryBuildOptions: SparqlBuildOptions;
 };
 
-export type BasicThingInformation = {
-  id: string;
-  label: string;
-  secondary?: string;
-  avatar?: string;
-  category?: string;
-  allProps?: Record<string, any>;
-};
-
 export type QueryBuilderOptions = {
   prefixes: Prefixes;
   defaultPrefix: string;
-};
-
-export type Permission = {
-  view: boolean;
-  edit: boolean;
-};
-
-export type PermissionDeclaration<T extends string> = {
-  [typeName in T]: Permission;
 };
 
 export type SameAsTypeMap = Record<string, string | string[]>;
@@ -569,7 +308,7 @@ export type PaginationMetadata = PaginationOptions & {
 
 /**
  * Include pattern for relationships with support for nested includes and pagination
- * - Set to `true` to include the relationship with default settings
+ * - Set to `true` to include the relationship with defaults
  * - Set to an object to configure pagination and nested includes
  *
  * @template T - The type to derive include pattern from (optional, defaults to any for backward compatibility)
@@ -633,25 +372,6 @@ export type Entity = {
   label?: string;
   description?: string;
   image?: string;
-};
-
-// Legacy runtime (non-typed) filter operators - kept for backward compatibility
-// @deprecated Use the typed versions above instead
-export type WhereOperators = {
-  equals?: any;
-  not?: any;
-  in?: any[];
-  notIn?: any[];
-  // String operators
-  contains?: string;
-  startsWith?: string;
-  endsWith?: string;
-  mode?: "default" | "insensitive";
-  // Numeric operators
-  lt?: number;
-  lte?: number;
-  gt?: number;
-  gte?: number;
 };
 
 /**
