@@ -1,5 +1,6 @@
 {
   "name": "eslint-config-edb",
+  "private": true,
   "version": "0.1.4",
   "main": "index.js",
   "exports": {
