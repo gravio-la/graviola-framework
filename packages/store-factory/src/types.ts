@@ -95,19 +95,28 @@ export type CreateStoreFromSpecOptions<
   };
   /**
    * Calc materialization config. When present (together with `statementMeta`
-   * — `calcWarm` needs `writeStatements`/`loadStatements`), the built store
-   * gets a `calcWarm(rootIRIs?, { skipFresh? })` method (backed by
-   * `@graviola/calc-engine`'s `warm()`, dynamically imported) and
-   * `capabilities.calc = true`. `profile` is typed as `unknown` — the real
-   * shape is `CompiledProfile` from `@graviola/formula-dependency` — to avoid
-   * a hard Layer 2 dependency in `store-factory` itself; it is passed through
-   * opaquely to `warm()`.
+   * — calc materialization needs `writeStatements`/`loadStatements`), the
+   * built store gets the typed `Calc` facet, with one profile binding per root
+   * type, and advertises it through `capabilities.calc` and `profiles.calc`.
+   * `profile` and `host` stay `unknown` at this public Layer 1/2 boundary so
+   * the exported factory options do not expose calc-engine/formula-dependency
+   * types or create a runtime dependency; attachment validates them through
+   * type-only casts before calling the lazily imported engine.
    */
   calc?: {
-    profile: unknown;
-    domainSchema: JSONSchema7;
-    rootTypeName: string;
-    agent?: string;
+    bindings: Array<{
+      rootTypeName: string;
+      profile: unknown;
+      domainSchema: JSONSchema7;
+      agent?: string;
+    }>;
+    /**
+     * Calc host capabilities for slot placement filtering (`CalcHostCapabilities`
+     * from `@graviola/calc-engine`). Typed as `unknown` here to avoid a hard Layer
+     * 2 dependency in `store-factory`. When omitted, defaults to
+     * `SERVER_CALC_HOST` in Bun/Node and `BROWSER_FORM_HOST` in the browser.
+     */
+    host?: unknown;
   };
 };
 

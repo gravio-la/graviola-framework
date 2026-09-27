@@ -43,10 +43,14 @@ export function createGardenFeeStore(): Promise<CreateStoreResult> {
     primaryFields: { Garden: { label: "name" } },
     statementMeta: { policies: gardenFeeStatementPolicies },
     calc: {
-      profile: gardenFeeCalcProfile,
-      domainSchema: gardenFeeSchema,
-      rootTypeName: "Garden",
-      agent: "https://graviola.dev/agents/calc-worker",
+      bindings: [
+        {
+          profile: gardenFeeCalcProfile,
+          domainSchema: gardenFeeSchema,
+          rootTypeName: "Garden",
+          agent: "https://graviola.dev/agents/calc-worker",
+        },
+      ],
     },
   });
 }
