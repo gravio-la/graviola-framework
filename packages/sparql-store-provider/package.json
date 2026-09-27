@@ -31,6 +31,7 @@
     "react": "catalog:"
   },
   "dependencies": {
+    "@graviola/meta-schema": "workspace:*",
     "@graviola/edb-core-utils": "workspace:*",
     "@graviola/remote-query-implementations": "workspace:*",
     "@graviola/sparql-db-impl": "workspace:*"

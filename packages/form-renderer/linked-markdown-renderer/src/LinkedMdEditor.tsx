@@ -87,11 +87,23 @@ export function LinkedMdEditor({
     [onChange, value],
   );
 
+  const syncTextareaRef = useCallback(() => {
+    const el = containerRef.current?.querySelector("textarea");
+    if (el instanceof HTMLTextAreaElement) {
+      textareaRef.current = el;
+    }
+  }, []);
+
   const handleChange = useCallback(
-    (next?: string) => {
+    (next?: string, event?: ChangeEvent<HTMLTextAreaElement>) => {
       const v = next ?? "";
       onChange(v);
 
+      if (event?.currentTarget) {
+        textareaRef.current = event.currentTarget;
+      } else {
+        syncTextareaRef();
+      }
       const textarea = textareaRef.current;
       if (!textarea) return;
       const cursor = textarea.selectionStart ?? v.length;
@@ -105,7 +117,7 @@ export function LinkedMdEditor({
         setSuggestQuery("");
       }
     },
-    [onChange],
+    [onChange, syncTextareaRef],
   );
 
   const linkEntityCommand = useMemo(
@@ -117,10 +129,11 @@ export function LinkedMdEditor({
       execute: () => {
         setSuggestQuery("");
         setSuggestOpen(true);
+        syncTextareaRef();
         textareaRef.current?.focus();
       },
     }),
-    [],
+    [syncTextareaRef],
   );
 
   const searchKnowledgeBaseCommand = useMemo(
@@ -134,10 +147,11 @@ export function LinkedMdEditor({
       icon: <TravelExplore style={{ width: 14, height: 14 }} />,
       execute: () => {
         setFinderOpen(true);
+        syncTextareaRef();
         textareaRef.current?.focus();
       },
     }),
-    [],
+    [syncTextareaRef],
   );
 
   const handleSuggestSelect = useCallback(
@@ -182,7 +196,6 @@ export function LinkedMdEditor({
           components: previewComponents,
         }}
         textareaProps={{
-          ref: textareaRef,
           onChange: (e: ChangeEvent<HTMLTextAreaElement>) => {
             textareaRef.current = e.currentTarget;
           },

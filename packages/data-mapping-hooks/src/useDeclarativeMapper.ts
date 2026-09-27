@@ -1,13 +1,12 @@
 import type { NormDataMapping } from "@graviola/edb-core-types";
 import {
   type DeclarativeMapping,
+  makeDefaultMappingStrategyContext,
   mapByConfig,
 } from "@graviola/edb-data-mapping";
 import { useAdbContext, useDataStore } from "@graviola/edb-state-hooks";
 import type { MapDataFromAuthorityFn } from "@graviola/semantic-jsonform-types";
 import { useCallback } from "react";
-
-import { makeDefaultMappingStrategyContext } from "./makeDefaultMappingStrategyContext";
 
 const getMappingConfig = (
   normDataMapping: Record<string, NormDataMapping<DeclarativeMapping>>,

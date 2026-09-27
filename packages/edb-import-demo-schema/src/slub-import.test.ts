@@ -1,6 +1,8 @@
 import { describe, expect, test } from "bun:test";
-import { makeDefaultMappingStrategyContext } from "@graviola/data-mapping-hooks";
-import { mapByConfig } from "@graviola/edb-data-mapping";
+import {
+  makeDefaultMappingStrategyContext,
+  mapByConfig,
+} from "@graviola/edb-data-mapping";
 import { availableAuthorityMappings } from "./mappings/availableAuthorityMappings";
 import { SLUB_LOD_AUTHORITY } from "./mappings/slubLodAccess";
 import { slubPersonMapping } from "./mappings/slubLodMappings";

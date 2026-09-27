@@ -1,5 +1,7 @@
-import { makeDefaultMappingStrategyContext } from "@graviola/data-mapping-hooks";
-import { mapByConfig } from "@graviola/edb-data-mapping";
+import {
+  makeDefaultMappingStrategyContext,
+  mapByConfig,
+} from "@graviola/edb-data-mapping";
 import { availableAuthorityMappings } from "../mappings/availableAuthorityMappings";
 import { wikidataMappings } from "../mappings/wikidataMappings";
 import { primaryFields } from "../primaryFields";
