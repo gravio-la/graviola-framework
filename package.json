@@ -54,7 +54,10 @@
     "build:prisma": "turbo run build:prisma && sed -i \"s/env(\\\"DATABASE_PROVIDER\\\")/\\\"${DATABASE_PROVIDER:-sqlite}\\\"/g\" ./prisma/*.prisma",
     "purge": "rm -rf node_modules && find -maxdepth 3 -name node_modules | xargs rm -rf",
     "syncpack:mismatches": "syncpack list-mismatches --types prod",
-    "depcheck": "turbo run depcheck --filter='./packages/*' --continue"
+    "depcheck": "turbo run depcheck --filter='./packages/*' --continue",
+    "knip": "DATABASE_URL=file:./tmp.db DATABASE_PROVIDER=sqlite knip",
+    "depcruise:json": "depcruise packages apps --config .dependency-cruiser.js --output-type json",
+    "depcruise:archi": "depcruise packages --config .dependency-cruiser.js --output-type archi --output-to dependency-graph.archi.svg"
   },
   "workspaces": {
     "packages": [
@@ -109,7 +112,8 @@
     "@changesets/cli": "^2.27.12",
     "@turbo/gen": "^2.4.0",
     "depcheck": "^1.4.7",
-    "dependency-cruiser": "^16.10.0",
+    "dependency-cruiser": "^18.4.0",
+    "knip": "^5.62.0",
     "eslint": "^8.57.1",
     "husky": "^8.0.0",
     "hygen": "^6.2.11",

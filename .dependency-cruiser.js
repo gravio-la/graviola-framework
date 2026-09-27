@@ -381,4 +381,4 @@ module.exports = {
     },
   },
 };
-// generated: dependency-cruiser@16.10.0 on 2025-02-18T03:34:48.379Z
+// generated: dependency-cruiser@16.10.0 on 2025-02-18T03:34:48.379Z (upgraded to v18 in root package.json)

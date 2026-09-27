@@ -1,0 +1,28 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "ignoreWorkspaces": ["platform/*", "apps/test-prisma-cli", "apps/datastore-tests"],
+  "entry": [
+    "packages/*/src/index.ts",
+    "packages/form-renderer/*/src/index.ts",
+    "apps/*/src/main.tsx",
+    "apps/*/src/index.ts"
+  ],
+  "project": [
+    "packages/**/*.{ts,tsx}",
+    "packages/form-renderer/**/*.{ts,tsx}",
+    "apps/**/*.{ts,tsx}"
+  ],
+  "ignore": [
+    "packages/indexeddb-dataset/**",
+    "packages/indexeddb-store-provider/**",
+    "platform/**",
+    "**/*.stories.{ts,tsx}",
+    "**/*.test.{ts,tsx}",
+    "**/dist/**"
+  ],
+  "ignoreDependencies": [
+    "eslint-config-edb",
+    "@graviola/edb-tsconfig",
+    "@graviola/edb-tsup-config"
+  ]
+}
