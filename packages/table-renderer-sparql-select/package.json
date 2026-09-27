@@ -57,7 +57,8 @@
     "eslint-config-edb": "workspace:*",
     "tsup": "^8.0.0",
     "typescript": "^5.8.2",
-    "i18next": "^23.7.7"
+    "i18next": "^23.7.7",
+    "@types/bun": "latest"
   },
   "eslintConfig": {
     "root": true,

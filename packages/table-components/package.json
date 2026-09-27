@@ -77,7 +77,8 @@
     "eslint-config-edb": "workspace:*",
     "tsup": "^8.0.0",
     "typescript": "^5.8.2",
-    "@types/json-schema": "catalog:"
+    "@types/json-schema": "catalog:",
+    "@types/bun": "latest"
   },
   "eslintConfig": {
     "root": true,

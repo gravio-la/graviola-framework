@@ -36,7 +36,8 @@
     "eslint-config-edb": "workspace:*",
     "expect-type": "^1.1.0",
     "tsup": "^8.0.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "@types/bun": "latest"
   },
   "eslintConfig": {
     "root": true,

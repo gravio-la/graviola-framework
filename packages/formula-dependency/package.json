@@ -40,7 +40,8 @@
     "@types/json-schema": "catalog:",
     "eslint-config-edb": "workspace:*",
     "tsup": "^8.0.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "@types/bun": "latest"
   },
   "eslintConfig": {
     "root": true,

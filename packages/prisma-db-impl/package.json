@@ -39,7 +39,8 @@
     "@graviola/edb-global-types": "workspace:*",
     "@types/json-schema": "catalog:",
     "eslint-config-edb": "workspace:*",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "@types/bun": "latest"
   },
   "dependencies": {
     "@graviola/store-core": "workspace:*",

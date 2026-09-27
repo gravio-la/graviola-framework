@@ -58,7 +58,8 @@
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
     "eslint-config-edb": "workspace:*",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "@types/bun": "latest"
   },
   "eslintConfig": {
     "root": true,

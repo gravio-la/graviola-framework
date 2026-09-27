@@ -42,7 +42,8 @@
     "tsup": "^8.0.0",
     "dayjs": "^1.11.11",
     "react": "catalog:",
-    "@types/json-schema": "catalog:"
+    "@types/json-schema": "catalog:",
+    "@types/bun": "latest"
   },
   "peerDependencies": {
     "@jsonforms/core": "catalog:jsonforms",

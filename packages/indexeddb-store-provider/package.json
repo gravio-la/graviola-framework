@@ -47,6 +47,7 @@
     "@graviola/edb-tsup-config": "workspace:*",
     "@types/json-schema": "catalog:",
     "fake-indexeddb": "^6.0.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "@types/bun": "latest"
   }
 }

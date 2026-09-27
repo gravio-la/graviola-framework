@@ -59,7 +59,8 @@
     "typescript": "^5.8.2",
     "zod": "^4.1.12",
     "ajv": "^8.12",
-    "ajv-formats": "^3.0.1"
+    "ajv-formats": "^3.0.1",
+    "@types/bun": "latest"
   },
   "peerDependencies": {
     "@rdfjs/data-model": "catalog:rdf",
