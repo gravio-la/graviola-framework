@@ -61,14 +61,6 @@ export type {
   StatementMetaProfile,
   NestedPaginationProfile,
 } from "./descriptor";
-export type {
-  WriteDocumentContext,
-  WriteDocumentInterceptor,
-} from "./write-hooks";
-export {
-  noopWriteDocumentInterceptor,
-  composeWriteDocumentInterceptors,
-} from "./write-hooks";
 export { hasCapabilityInDescriptor, speaksLanguage } from "./descriptor";
 export type {
   CapabilityFacets,
