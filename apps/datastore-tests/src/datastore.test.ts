@@ -30,7 +30,11 @@ import { describe, afterAll, beforeEach } from "bun:test";
 import { hasCapability } from "@graviola/store-core";
 import type { CapabilityName } from "@graviola/store-core";
 
-import { getActiveAdapters, createSourceOxigraphStore } from "./adapters";
+import {
+  getActiveAdapters,
+  createSourceOxigraphStore,
+  skipDefaultAdaptersEnv,
+} from "./adapters";
 import type {
   DatastoreContractStore,
   DatastoreContractStoreWithCounts,
@@ -56,6 +60,7 @@ import {
   runCalcEngineRealStoreSuite,
 } from "./suites/calcEngine.suite";
 import { runCalcWarmSuite } from "./suites/calcWarm.suite";
+import { runCalcFacetSuite } from "./suites/calcFacet.suite";
 import { runReadCalcValuesSuite } from "./suites/readCalcValues.suite";
 import { runMetaSuite } from "./suites/meta.suite";
 import { runFormulaPortabilitySuite } from "./suites/formulaPortability.suite";
@@ -177,4 +182,10 @@ for (const adapter of adapters) {
       );
     }
   });
+}
+
+// Builds its own stores through store-factory on in-process Oxigraph, so it
+// runs once, independent of the adapter loop (default backend set only).
+if (!skipDefaultAdaptersEnv()) {
+  runCalcFacetSuite();
 }

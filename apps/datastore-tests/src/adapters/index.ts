@@ -5,7 +5,7 @@ import { createPrismaAdapter } from "./prismaAdapter";
 import { createRestAdapter } from "./restAdapter";
 
 /** True when SKIP_DEFAULT_ADAPTER is set to a truthy value (1, true, yes; not 0/false/no). */
-function skipDefaultAdaptersEnv(): boolean {
+export function skipDefaultAdaptersEnv(): boolean {
   const v = process.env.SKIP_DEFAULT_ADAPTER;
   if (v === undefined || v === "") return false;
   return !["0", "false", "no"].includes(v.trim().toLowerCase());

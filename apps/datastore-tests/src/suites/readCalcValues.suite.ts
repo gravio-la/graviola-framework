@@ -104,11 +104,11 @@ export function runReadCalcValuesSuite(
         GARDEN_IRI,
       );
 
-      expect(result.freshness).toBe("fresh");
+      expect(result.provenance.freshness).toBe("fresh");
       // One filterMany for the raw tree; no extra one from evaluation
       // (skipped entirely on the fresh path).
       expect(filterCalls).toBe(1);
-      expect(result.value?.annual_fee).toBe(gardenFeeExpected.gardenAnnualFee);
+      expect(result.data?.annual_fee).toBe(gardenFeeExpected.gardenAnnualFee);
     });
 
     test("stale: source changed without a re-warm, recomputes live without writing through", async () => {
@@ -138,8 +138,8 @@ export function runReadCalcValuesSuite(
         GARDEN_IRI,
       );
 
-      expect(result.freshness).toBe("stale");
-      expect(result.value?.annual_fee).not.toBe(
+      expect(result.provenance.freshness).toBe("stale");
+      expect(result.data?.annual_fee).not.toBe(
         gardenFeeExpected.gardenAnnualFee,
       );
 
@@ -164,8 +164,8 @@ export function runReadCalcValuesSuite(
         GARDEN_IRI,
       );
 
-      expect(result.freshness).toBe("unknown");
-      expect(result.value?.annual_fee).toBe(gardenFeeExpected.gardenAnnualFee);
+      expect(result.provenance.freshness).toBe("unknown");
+      expect(result.data?.annual_fee).toBe(gardenFeeExpected.gardenAnnualFee);
     });
   });
 }

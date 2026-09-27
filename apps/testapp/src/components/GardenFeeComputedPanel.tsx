@@ -25,8 +25,14 @@ export function GardenFeeComputedPanel({
   const { dataStore, ready } = useDataStore();
   const { calcProfile } = useAdbContext();
   const entityIRI = document?.["@id"] as string | undefined;
+  const calcRootType =
+    (
+      dataStore as {
+        capabilities?: { profiles?: { calc?: { rootTypes?: string[] } } };
+      }
+    ).capabilities?.profiles?.calc?.rootTypes?.[0] ?? "Garden";
   const canEvaluate =
-    typeName === "Garden" &&
+    typeName === calcRootType &&
     Boolean(entityIRI) &&
     Boolean(calcProfile) &&
     ready &&
@@ -39,14 +45,14 @@ export function GardenFeeComputedPanel({
       evaluateForRoots(
         dataStore as never,
         calcProfile!,
-        "Garden",
+        calcRootType,
         gardenFeeSchema as JSONSchema7,
         { rootIRIs: [entityIRI!] },
       ),
     enabled: canEvaluate,
   });
 
-  if (typeName !== "Garden") return null;
+  if (typeName !== calcRootType) return null;
 
   const computed = (data?.values?.[0] ?? {}) as Record<string, unknown>;
 

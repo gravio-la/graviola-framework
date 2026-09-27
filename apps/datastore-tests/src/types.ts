@@ -1,5 +1,6 @@
 import type {
   BaseStore,
+  Calc,
   Counts,
   Exists,
   FlatResultSet,
@@ -67,8 +68,10 @@ export type DatastoreContractStoreWithStatements = DatastoreContractStore &
  * requires {@link Filters}, {@link Statements}, and a `subscribe` method
  * (present on every store-factory-style backend's change bus
  * unconditionally). `@graviola/calc-engine`'s `warm()`/
- * `subscribeCalcInvalidation()` are called directly against this store by the
- * contract suite — no `Calc` capability method needed here.
+ * `subscribeCalcInvalidation()` are called directly against this adapter
+ * variant by the calc-warm / readCalcValues suites. The typed {@link Calc}
+ * facet (`calcWarm` / `readCalcValues` on the store) is exercised separately
+ * via store-factory-built stores in `calcFacet.suite.ts`.
  */
 export type DatastoreContractStoreWithCalcWarm = DatastoreContractStore &
   Filters<TestSchemaRegistry> &

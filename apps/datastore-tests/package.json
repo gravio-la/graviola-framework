@@ -43,6 +43,7 @@
     "pg": "^8.20.0"
   },
   "devDependencies": {
+    "@graviola/store-factory": "workspace:*",
     "@graviola/edb-tsconfig": "workspace:*",
     "@types/json-schema": "catalog:",
     "prisma": "catalog:prisma",
