@@ -1,5 +1,11 @@
 # @graviola/edb-state-hooks
 
+## 1.8.2
+
+### Patch Changes
+
+- @graviola/jsonld-utils@1.6.6
+
 ## 1.8.1
 
 ### Patch Changes

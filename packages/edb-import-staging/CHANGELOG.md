@@ -1,5 +1,15 @@
 # @graviola/edb-import-staging
 
+## 0.3.1
+
+### Patch Changes
+
+- Updated dependencies [34ce6b4]
+- Updated dependencies [34ce6b4]
+- Updated dependencies [34ce6b4]
+  - @graviola/edb-graph-traversal@1.8.0
+  - @graviola/data-mapping-hooks@1.3.7
+
 ## 0.3.0
 
 ### Minor Changes

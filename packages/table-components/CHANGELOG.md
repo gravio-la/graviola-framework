@@ -1,5 +1,20 @@
 # @graviola/edb-table-components
 
+## 2.1.0
+
+### Minor Changes
+
+- 34ce6b4: Remove the 'Move to trash' action: it never trashed anything. Soft delete will return as a store capability.
+
+### Patch Changes
+
+- Updated dependencies [34ce6b4]
+  - @graviola/edb-detail-renderer@0.8.0
+  - @graviola/edb-basic-components@1.6.0
+  - @graviola/edb-table-renderer-jsonld@0.2.5
+  - @graviola/edb-table-renderer-sparql-select@0.1.8
+  - @graviola/edb-state-hooks@1.8.2
+
 ## 2.0.4
 
 ### Patch Changes

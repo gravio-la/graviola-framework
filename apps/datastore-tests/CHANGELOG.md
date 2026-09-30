@@ -1,5 +1,15 @@
 # @graviola/datastore-tests
 
+## 0.1.7
+
+### Patch Changes
+
+- Updated dependencies [34ce6b4]
+- Updated dependencies [34ce6b4]
+  - @graviola/remote-query-implementations@1.5.0
+  - @graviola/sparql-db-impl@1.9.1
+  - @graviola/prisma-db-impl@1.7.6
+
 ## 0.1.6
 
 ### Patch Changes

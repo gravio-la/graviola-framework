@@ -1,5 +1,18 @@
 # @graviola/edb-advanced-components
 
+## 1.7.7
+
+### Patch Changes
+
+- Updated dependencies [34ce6b4]
+  - @graviola/edb-basic-components@1.6.0
+  - @graviola/edb-import-staging@0.3.1
+  - @graviola/jsonld-utils@1.6.6
+  - @graviola/edb-wikidata-utils@1.2.12
+  - @graviola/semantic-views@0.2.2
+  - @graviola/edb-state-hooks@1.8.2
+  - @graviola/data-mapping-hooks@1.3.7
+
 ## 1.7.6
 
 ### Patch Changes

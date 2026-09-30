@@ -1,5 +1,14 @@
 # @graviola/entity-finder
 
+## 1.5.7
+
+### Patch Changes
+
+- Updated dependencies [34ce6b4]
+  - @graviola/edb-basic-components@1.6.0
+  - @graviola/edb-state-hooks@1.8.2
+  - @graviola/data-mapping-hooks@1.3.7
+
 ## 1.5.6
 
 ### Patch Changes

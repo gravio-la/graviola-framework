@@ -1,5 +1,17 @@
 # @graviola/graviola-app-config
 
+## 0.1.8
+
+### Patch Changes
+
+- Updated dependencies [34ce6b4]
+  - @graviola/edb-detail-renderer@0.8.0
+  - @graviola/edb-advanced-components@1.7.7
+  - @graviola/entity-finder@1.5.7
+  - @graviola/semantic-json-form@1.6.7
+  - @graviola/edb-state-hooks@1.8.2
+  - @graviola/edb-debug-utils@1.4.7
+
 ## 0.1.7
 
 ### Patch Changes

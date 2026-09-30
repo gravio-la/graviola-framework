@@ -1,5 +1,11 @@
 # @graviola/sparql-tools
 
+## 0.2.2
+
+### Patch Changes
+
+- 34ce6b4: Integration test is opt-in via SPARQL_TOOLS_TEST_ENDPOINT; unit tests and README.
+
 ## 0.2.1
 
 ### Patch Changes

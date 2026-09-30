@@ -1,5 +1,11 @@
 # @slub/remote-query-implementations
 
+## 1.5.0
+
+### Minor Changes
+
+- 34ce6b4: One endpoint CRUD factory with Allegro/QLever/Oxigraph presets; fetch and auth internals are no longer exported; `resolveSparqlFeatures` is no longer re-exported (use `@graviola/edb-core-utils`).
+
 ## 1.4.9
 
 ### Patch Changes

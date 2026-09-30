@@ -1,5 +1,13 @@
 # @graviola/edb-import-demo-schema
 
+## 0.2.2
+
+### Patch Changes
+
+- @graviola/edb-wikidata-utils@1.2.12
+- @graviola/edb-state-hooks@1.8.2
+- @graviola/data-mapping-hooks@1.3.7
+
 ## 0.2.1
 
 ### Patch Changes

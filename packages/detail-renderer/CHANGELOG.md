@@ -1,5 +1,15 @@
 # @graviola/edb-detail-renderer
 
+## 0.8.0
+
+### Minor Changes
+
+- 34ce6b4: Remove the 'Move to trash' action: it never trashed anything. Soft delete will return as a store capability.
+
+### Patch Changes
+
+- @graviola/edb-state-hooks@1.8.2
+
 ## 0.7.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "calc-worker",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "description": "Reference calc-tier deployment: garden-fee schema over REST, live materialization via @graviola/calc-worker",
   "type": "module",

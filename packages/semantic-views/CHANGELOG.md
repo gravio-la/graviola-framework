@@ -1,5 +1,13 @@
 # @graviola/semantic-views
 
+## 0.2.2
+
+### Patch Changes
+
+- Updated dependencies [34ce6b4]
+  - @graviola/edb-detail-renderer@0.8.0
+  - @graviola/edb-state-hooks@1.8.2
+
 ## 0.2.1
 
 ### Patch Changes

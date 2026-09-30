@@ -1,5 +1,11 @@
 # @graviola/edb-basic-renderer
 
+## 4.2.6
+
+### Patch Changes
+
+- @graviola/edb-state-hooks@1.8.2
+
 ## 4.2.5
 
 ### Patch Changes

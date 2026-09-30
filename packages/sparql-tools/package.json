@@ -1,6 +1,6 @@
 {
   "name": "@graviola/sparql-tools",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Endpoint-agnostic SPARQL Graph Store Protocol dump/load/clear utilities",
   "type": "module",
   "main": "./dist/index.cjs",

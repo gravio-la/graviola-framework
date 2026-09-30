@@ -1,5 +1,11 @@
 # @slub/prisma-db-impl
 
+## 1.7.6
+
+### Patch Changes
+
+- @graviola/jsonld-utils@1.6.6
+
 ## 1.7.5
 
 ### Patch Changes

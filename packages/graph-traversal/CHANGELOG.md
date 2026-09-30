@@ -1,5 +1,16 @@
 # @slub/edb-graph-traversal
 
+## 1.8.0
+
+### Minor Changes
+
+- 34ce6b4: Remove unused exports and the alias `extractCBDShouldHalt`; internal helpers are no longer exported; selection-depth helpers are imported from `@graviola/typed-query-types` directly; tests run on bun; `edb-core-types`/`edb-global-types` are regular dependencies.
+- 34ce6b4: Remove unused exports (cast helpers, variable helpers, trash queries, field-mapping select, loadEntityBasics); internal query builders and filter operators are no longer exported. Filters use CONTAINS/STRSTARTS instead of REGEX, and LIMIT/OFFSET must be non-negative integers. graph-traversal exports `isNestedFilterOptions` and `extractNestedFilterOptions`.
+
+### Patch Changes
+
+- 34ce6b4: README rewrite.
+
 ## 1.7.0
 
 ### Minor Changes

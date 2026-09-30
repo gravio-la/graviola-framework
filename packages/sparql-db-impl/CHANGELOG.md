@@ -1,5 +1,20 @@
 # @slub/sparql-db-impl
 
+## 1.9.1
+
+### Patch Changes
+
+- 34ce6b4: Add README.
+- Updated dependencies [34ce6b4]
+- Updated dependencies [34ce6b4]
+- Updated dependencies [34ce6b4]
+- Updated dependencies [34ce6b4]
+- Updated dependencies [34ce6b4]
+  - @graviola/sparql-schema@1.8.0
+  - @graviola/remote-query-implementations@1.5.0
+  - @graviola/sparql-tools@0.2.2
+  - @graviola/jsonld-utils@1.6.6
+
 ## 1.9.0
 
 ### Minor Changes

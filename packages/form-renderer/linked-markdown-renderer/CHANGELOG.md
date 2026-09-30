@@ -1,5 +1,13 @@
 # @graviola/linked-markdown-renderer
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [34ce6b4]
+  - @graviola/entity-embed@0.2.0
+  - @graviola/edb-state-hooks@1.8.2
+
 ## 0.2.0
 
 ### Minor Changes
