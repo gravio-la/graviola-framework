@@ -51,17 +51,17 @@ Configure the endpoint URL in the app's settings modal, or set it via environmen
 
 ## Development commands
 
-| Command | Purpose |
-|---|---|
-| `bun run build` | Build all packages and apps |
-| `bun run build:packages` | Build library packages only |
-| `bun run dev:testapp` | Run the testapp in watch mode |
-| `bun run dev:storybook` | Run the component Storybook |
-| `bun run dev:packages` | Watch-build all library packages |
-| `bun run test` | Run all tests |
-| `bun run lint` | Lint the entire monorepo |
-| `bun run lint:fix` | Lint and auto-fix |
-| `bun run format` | Format all source files with Prettier |
+| Command                  | Purpose                               |
+| ------------------------ | ------------------------------------- |
+| `bun run build`          | Build all packages and apps           |
+| `bun run build:packages` | Build library packages only           |
+| `bun run dev:testapp`    | Run the testapp in watch mode         |
+| `bun run dev:storybook`  | Run the component Storybook           |
+| `bun run dev:packages`   | Watch-build all library packages      |
+| `bun run test`           | Run all tests                         |
+| `bun run lint`           | Lint the entire monorepo              |
+| `bun run lint:fix`       | Lint and auto-fix                     |
+| `bun run format`         | Format all source files with Prettier |
 
 ### Committing
 
@@ -82,14 +82,31 @@ If you are using this framework in a production environment with sensitive data,
 
 ### Test Pages CI locally with act
 
-Use the Nix dev shell (includes `act`) and run the non-deploy jobs locally:
+The Nix dev shell includes [`act`](https://github.com/nektos/act). Run the build jobs from `.github/workflows/storybook-to-pages.yml` (skip `deploy` — it needs GitHub Pages secrets):
 
 ```bash
-nix develop
-act -W .github/workflows/storybook-to-pages.yml -j build_storybook
-act -W .github/workflows/storybook-to-pages.yml -j build_typedoc
-act -W .github/workflows/storybook-to-pages.yml -j build_testapp
+mkdir -p /tmp/act-artifacts
+
+# from nix develop (act on PATH):
+act push \
+  -W .github/workflows/storybook-to-pages.yml \
+  -j build_storybook \
+  --container-architecture linux/amd64 \
+  -P ubuntu-latest=catthehacker/ubuntu:act-22.04 \
+  --artifact-server-path /tmp/act-artifacts
+
+# or without entering the shell:
+nix run nixpkgs#act -- push \
+  -W .github/workflows/storybook-to-pages.yml \
+  -j build_storybook \
+  --container-architecture linux/amd64 \
+  -P ubuntu-latest=catthehacker/ubuntu:act-22.04 \
+  --artifact-server-path /tmp/act-artifacts
 ```
+
+Swap `-j build_storybook` for `build_typedoc` or `build_testapp`. List jobs with `act --list -W .github/workflows/storybook-to-pages.yml`.
+
+Build steps (`bun install`, `build:packages`, and the app/docs build) mirror CI. The artifact upload step may fail under act with `upload-artifact@v7` (`mime_type` not supported by act’s artifact server) — that is an act limitation, not a workflow bug. Real GitHub Actions runs are unaffected.
 
 Create a temporary preview directory using the same build commands as CI:
 
@@ -135,7 +152,7 @@ All packages are scoped under `@graviola/` and are designed to be consumed indiv
 
 ## Documentation
 
-- **[Graviola conceptual documentation](https://gravio-la.github.io/graviola-concept-documentation/)** — architecture, design rationale, capabilities, and the framework's conceptual trajectory. Start here if you want to understand *why* decisions were made the way they were.
+- **[Graviola conceptual documentation](https://gravio-la.github.io/graviola-concept-documentation/)** — architecture, design rationale, capabilities, and the framework's conceptual trajectory. Start here if you want to understand _why_ decisions were made the way they were.
 - **Storybook** (`bun run dev:storybook`) — interactive examples for individual components.
 - **`apps/testapp`** — the simplest complete usage example in the codebase.
 

@@ -30,7 +30,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 22
       - uses: actions/cache@v6
         with:
           path: ~/.bun/install/cache
@@ -65,7 +65,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 22
       - uses: actions/cache@v6
         with:
           path: ~/.bun/install/cache
@@ -102,7 +102,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 22
       - uses: actions/cache@v6
         with:
           path: ~/.bun/install/cache
