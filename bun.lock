@@ -27,7 +27,7 @@
     },
     "apps/calc-worker": {
       "name": "calc-worker",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "dependencies": {
         "@graviola/calc-fixtures": "workspace:*",
         "@graviola/calc-worker": "workspace:*",
@@ -46,7 +46,7 @@
     },
     "apps/datastore-tests": {
       "name": "@graviola/datastore-tests",
-      "version": "0.1.6",
+      "version": "0.1.7",
       "dependencies": {
         "@graviola/calc-engine": "workspace:*",
         "@graviola/calc-fixtures": "workspace:*",
@@ -110,7 +110,7 @@
     },
     "apps/storybook": {
       "name": "@graviola/storybook",
-      "version": "0.0.8",
+      "version": "0.0.9",
       "dependencies": {
         "@chenfengyuan/datepicker": "^1.0.10",
         "@ebay/nice-modal-react": "^1.2.13",
@@ -195,7 +195,7 @@
     },
     "apps/testapp": {
       "name": "testapp",
-      "version": "0.0.21",
+      "version": "0.0.22",
       "dependencies": {
         "@ebay/nice-modal-react": "^1.2.11",
         "@emotion/react": "catalog:",
@@ -269,7 +269,7 @@
     },
     "packages/advanced-components": {
       "name": "@graviola/edb-advanced-components",
-      "version": "1.7.6",
+      "version": "1.7.7",
       "dependencies": {
         "@graviola/data-mapping-hooks": "workspace:*",
         "@graviola/edb-basic-components": "workspace:*",
@@ -335,7 +335,7 @@
     },
     "packages/basic-components": {
       "name": "@graviola/edb-basic-components",
-      "version": "1.5.6",
+      "version": "1.6.0",
       "dependencies": {
         "@graviola/edb-state-hooks": "workspace:*",
       },
@@ -516,7 +516,7 @@
     },
     "packages/data-mapping-hooks": {
       "name": "@graviola/data-mapping-hooks",
-      "version": "1.3.6",
+      "version": "1.3.7",
       "dependencies": {
         "@graviola/edb-data-mapping": "workspace:*",
         "@graviola/edb-state-hooks": "workspace:*",
@@ -538,7 +538,7 @@
     },
     "packages/debug-utils": {
       "name": "@graviola/edb-debug-utils",
-      "version": "1.4.6",
+      "version": "1.4.7",
       "dependencies": {
         "@graviola/edb-core-types": "workspace:*",
         "@graviola/edb-state-hooks": "workspace:*",
@@ -568,7 +568,7 @@
     },
     "packages/detail-renderer": {
       "name": "@graviola/edb-detail-renderer",
-      "version": "0.7.0",
+      "version": "0.8.0",
       "dependencies": {
         "@graviola/edb-core-types": "workspace:*",
         "@graviola/edb-core-utils": "workspace:*",
@@ -665,7 +665,7 @@
     },
     "packages/edb-import-demo-schema": {
       "name": "@graviola/edb-import-demo-schema",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "dependencies": {
         "@graviola/data-mapping-hooks": "workspace:*",
         "@graviola/edb-authorities": "workspace:*",
@@ -687,7 +687,7 @@
     },
     "packages/edb-import-staging": {
       "name": "@graviola/edb-import-staging",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "dependencies": {
         "@graviola/data-mapping-hooks": "workspace:*",
         "@graviola/edb-core-types": "workspace:*",
@@ -710,7 +710,7 @@
     },
     "packages/entity-embed": {
       "name": "@graviola/entity-embed",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "dependencies": {
         "@graviola/edb-advanced-components": "workspace:*",
         "@graviola/edb-state-hooks": "workspace:*",
@@ -738,7 +738,7 @@
     },
     "packages/entity-finder": {
       "name": "@graviola/entity-finder",
-      "version": "1.5.6",
+      "version": "1.5.7",
       "dependencies": {
         "@graviola/data-mapping-hooks": "workspace:*",
         "@graviola/edb-basic-components": "workspace:*",
@@ -852,7 +852,7 @@
     },
     "packages/file-import": {
       "name": "@graviola/edb-file-import",
-      "version": "1.2.5",
+      "version": "1.2.6",
       "dependencies": {
         "@graviola/edb-maintenance-utils": "workspace:*",
         "@graviola/jsonld-utils": "workspace:*",
@@ -878,7 +878,7 @@
     },
     "packages/form-renderer/basic-renderer": {
       "name": "@graviola/edb-basic-renderer",
-      "version": "4.2.5",
+      "version": "4.2.6",
       "dependencies": {
         "@graviola/edb-core-utils": "workspace:*",
         "@graviola/edb-state-hooks": "workspace:*",
@@ -942,7 +942,7 @@
     },
     "packages/form-renderer/linked-data-renderer": {
       "name": "@graviola/edb-linked-data-renderer",
-      "version": "7.0.1",
+      "version": "7.0.2",
       "dependencies": {
         "@graviola/edb-advanced-components": "workspace:*",
         "@graviola/edb-basic-components": "workspace:*",
@@ -988,7 +988,7 @@
     },
     "packages/form-renderer/linked-markdown-renderer": {
       "name": "@graviola/linked-markdown-renderer",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "dependencies": {
         "@graviola/edb-markdown-renderer": "workspace:*",
         "@graviola/entity-embed": "workspace:*",
@@ -1169,7 +1169,7 @@
     },
     "packages/graph-traversal": {
       "name": "@graviola/edb-graph-traversal",
-      "version": "1.7.0",
+      "version": "1.8.0",
       "dependencies": {
         "@graviola/edb-core-types": "workspace:*",
         "@graviola/edb-core-utils": "workspace:*",
@@ -1211,7 +1211,7 @@
     },
     "packages/graviola-app-config": {
       "name": "@graviola/graviola-app-config",
-      "version": "0.1.7",
+      "version": "0.1.8",
       "dependencies": {
         "@graviola/edb-advanced-components": "workspace:*",
         "@graviola/edb-core-types": "workspace:*",
@@ -1296,7 +1296,7 @@
     },
     "packages/indexeddb-store-provider": {
       "name": "@graviola/indexeddb-store-provider",
-      "version": "3.0.1",
+      "version": "3.0.2",
       "dependencies": {
         "@comunica/query-sparql-rdfjs": "^4.0.0",
         "@graviola/edb-core-utils": "workspace:*",
@@ -1391,7 +1391,7 @@
     },
     "packages/jsonld-utils": {
       "name": "@graviola/jsonld-utils",
-      "version": "1.6.5",
+      "version": "1.6.6",
       "dependencies": {
         "@graviola/edb-core-utils": "workspace:*",
         "@graviola/edb-graph-traversal": "workspace:*",
@@ -1415,7 +1415,7 @@
     },
     "packages/local-oxigraph-store-provider": {
       "name": "@graviola/local-oxigraph-store-provider",
-      "version": "7.0.1",
+      "version": "7.0.2",
       "dependencies": {
         "@graviola/async-oxigraph": "workspace:*",
         "@graviola/edb-core-utils": "workspace:*",
@@ -1451,7 +1451,7 @@
     },
     "packages/maintenance-utils": {
       "name": "@graviola/edb-maintenance-utils",
-      "version": "1.3.5",
+      "version": "1.3.6",
       "dependencies": {
         "@graviola/edb-graph-traversal": "workspace:*",
         "@graviola/json-schema-utils": "workspace:*",
@@ -1516,7 +1516,7 @@
     },
     "packages/prisma-db-impl": {
       "name": "@graviola/prisma-db-impl",
-      "version": "1.7.5",
+      "version": "1.7.6",
       "dependencies": {
         "@graviola/edb-core-utils": "workspace:*",
         "@graviola/json-schema-prisma-utils": "workspace:*",
@@ -1558,7 +1558,7 @@
     },
     "packages/remote-query": {
       "name": "@graviola/remote-query-implementations",
-      "version": "1.4.9",
+      "version": "1.5.0",
       "dependencies": {
         "@graviola/edb-core-utils": "workspace:*",
         "@rdfjs/dataset": "^2.0.2",
@@ -1622,7 +1622,7 @@
     },
     "packages/rest-store-provider": {
       "name": "@graviola/rest-store-provider",
-      "version": "1.4.6",
+      "version": "1.4.7",
       "dependencies": {
         "@graviola/edb-state-hooks": "workspace:*",
         "@graviola/rest-store-client": "workspace:*",
@@ -1731,7 +1731,7 @@
     },
     "packages/semantic-json-form": {
       "name": "@graviola/semantic-json-form",
-      "version": "1.6.6",
+      "version": "1.6.7",
       "dependencies": {
         "@graviola/edb-advanced-components": "workspace:*",
         "@graviola/edb-basic-components": "workspace:*",
@@ -1791,7 +1791,7 @@
     },
     "packages/semantic-views": {
       "name": "@graviola/semantic-views",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "dependencies": {
         "@graviola/edb-core-types": "workspace:*",
         "@graviola/edb-core-utils": "workspace:*",
@@ -1835,7 +1835,7 @@
     },
     "packages/sparql-db-impl": {
       "name": "@graviola/sparql-db-impl",
-      "version": "1.9.0",
+      "version": "1.9.1",
       "dependencies": {
         "@graviola/edb-core-types": "workspace:*",
         "@graviola/edb-core-utils": "workspace:*",
@@ -1870,7 +1870,7 @@
     },
     "packages/sparql-schema": {
       "name": "@graviola/sparql-schema",
-      "version": "1.7.0",
+      "version": "1.8.0",
       "dependencies": {
         "@graviola/edb-core-utils": "workspace:*",
         "@graviola/edb-graph-traversal": "workspace:*",
@@ -1905,7 +1905,7 @@
     },
     "packages/sparql-store-provider": {
       "name": "@graviola/sparql-store-provider",
-      "version": "7.0.1",
+      "version": "7.0.2",
       "dependencies": {
         "@graviola/edb-core-utils": "workspace:*",
         "@graviola/meta-schema": "workspace:*",
@@ -1929,7 +1929,7 @@
     },
     "packages/sparql-tools": {
       "name": "@graviola/sparql-tools",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "bin": {
         "sparql-tools": "./dist/cli.cjs",
       },
@@ -1946,7 +1946,7 @@
     },
     "packages/state-hooks": {
       "name": "@graviola/edb-state-hooks",
-      "version": "1.8.1",
+      "version": "1.8.2",
       "dependencies": {
         "@graviola/edb-core-utils": "workspace:*",
         "@graviola/edb-data-mapping": "workspace:*",
@@ -2059,7 +2059,7 @@
     },
     "packages/table-components": {
       "name": "@graviola/edb-table-components",
-      "version": "2.0.4",
+      "version": "2.1.0",
       "dependencies": {
         "@graviola/edb-basic-components": "workspace:*",
         "@graviola/edb-core-types": "workspace:*",
@@ -2131,7 +2131,7 @@
     },
     "packages/table-renderer-jsonld": {
       "name": "@graviola/edb-table-renderer-jsonld",
-      "version": "0.2.4",
+      "version": "0.2.5",
       "dependencies": {
         "@graviola/edb-basic-components": "workspace:*",
         "@graviola/edb-core-utils": "workspace:*",
@@ -2167,7 +2167,7 @@
     },
     "packages/table-renderer-sparql-select": {
       "name": "@graviola/edb-table-renderer-sparql-select",
-      "version": "0.1.7",
+      "version": "0.1.8",
       "dependencies": {
         "@graviola/edb-basic-components": "workspace:*",
         "@graviola/edb-core-types": "workspace:*",
@@ -2284,7 +2284,7 @@
     },
     "packages/virtualized-components": {
       "name": "@graviola/edb-virtualized-components",
-      "version": "1.2.6",
+      "version": "1.2.7",
       "dependencies": {
         "@graviola/edb-detail-renderer-core": "workspace:*",
         "@graviola/edb-state-hooks": "workspace:*",
@@ -2306,7 +2306,7 @@
     },
     "packages/wikidata-utils": {
       "name": "@graviola/edb-wikidata-utils",
-      "version": "1.2.11",
+      "version": "1.2.12",
       "dependencies": {
         "@graviola/sparql-schema": "workspace:*",
         "@rdfjs/dataset": "^2.0.1",
