@@ -1,5 +1,5 @@
 import { Prefixes } from "@graviola/edb-core-types";
-import { describe, expect, test } from "@jest/globals";
+import { describe, expect, test } from "bun:test";
 import { CONSTRUCT } from "@tpluscode/sparql-builder";
 import { JSONSchema7 } from "json-schema";
 

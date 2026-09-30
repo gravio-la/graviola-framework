@@ -1,52 +1,32 @@
 # @graviola/sparql-schema
 
-A utility for converting JSON Schema to SPARQL queries and performing CRUD operations with RDF data.
+JSON Schema → SPARQL translation and CRUD helpers for RDF triple stores.
 
-![Environment: Universal](https://img.shields.io/badge/Environment-Universal-green)
+![Layer: 2 (Schema → Query)](https://img.shields.io/badge/Layer-2%20Schema%20to%20Query-blue)
+![Environment: Universal](https://img.shields.io/badge/Environment-Browser%20%2B%20Bun%20%2B%20Node-green)
 
-## Overview
+## Why this package exists
 
-This package provides tools for bridging the gap between JSON Schema and SPARQL, enabling seamless interaction with RDF data stores using familiar JSON Schema definitions. It converts JSON Schema structures to SPARQL queries, handles CRUD operations, and provides utilities for finding and manipulating RDF data.
+Graviola stores entities as RDF graphs, but applications work with JSON shaped by a JSON Schema. This package turns those schema definitions into SPARQL: **CONSTRUCT** for loading entity graphs, **SELECT** for lists and filters, and **INSERT/DELETE** for saves, plus the CRUD helpers that run them against a SPARQL endpoint. It is the query layer under `@graviola/sparql-db-impl`.
 
-## Ecosystem Integration
+## Position in the framework
 
-### Position in the Graviola Framework
+The package is in **Layer 2 (Schema → Query)**. It has no React. It depends on `@graviola/edb-core-utils`, `@graviola/json-schema-utils`, `@graviola/edb-graph-traversal`, `@graviola/meta-schema`, `@graviola/jsonld-utils`, and the `@tpluscode/*` SPARQL builder stack. It runs unchanged in the browser, in Bun CLIs, and in the datastore contract tests. Adding React, MUI, or any browser-only dependency here is a breaking change for server-side users, even if no test fails.
 
-The sparql-schema package is a core component of the Graviola framework's data layer when using Triple or Quad Stores and SPARQL endpoints. It serves as the bridge between JSON Schema definitions and SPARQL queries, enabling applications to interact with RDF data stores using familiar JSON Schema structures. This package is essential for applications that need to store and retrieve linked data from SPARQL endpoints.
+Typical consumers:
 
-### Dependency Graph
+| Area             | Packages                                                                        | Uses                                                                   |
+| ---------------- | ------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Store backends   | `sparql-db-impl`, `indexeddb-store-provider`, `store-factory` (via SPARQL impl) | `load`, `save`, `remove`, `filterTypedDocuments`, typed filter queries |
+| Authority lookup | `wikidata-utils`                                                                | `prefixes2sparqlPrefixDeclaration`                                     |
 
-```mermaid
-flowchart TD
-    A[graviola/sparql-schema] --> B[graviola/edb-core-utils]
-    A --> C[graviola/jsonld-utils]
-    A --> D[graviola/json-schema-utils]
-    A --> E[graviola/edb-graph-traversal]
-    G[graviola/sparql-db-impl] --> A
-    H[graviola/sparql-store-provider] --> A
+## Key concepts
 
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-```
-
-### Package Relationships
-
-- **Dependencies**:
-  - `@graviola/edb-core-utils`: Provides utility functions for working with IRIs and other core operations
-  - `@graviola/jsonld-utils`: Provides utilities for working with JSON-LD data
-  - `@graviola/json-schema-utils`: Provides utilities for working with JSON Schema
-  - `@graviola/edb-graph-traversal`: Provides utilities for traversing graph data structures
-
-- **Peer Dependencies**:
-  - `@rdfjs/data-model`: RDF/JS data model implementation (used throughout query construction)
-  - `jsonld-context-parser`: types such as `JsonLdContext` on load/CRUD options (`crud/load.ts`)
-
-  Direct dependencies include `@tpluscode/sparql-builder`, `lodash-es`, etc.; see `package.json`.
-
-  JSON-LD processing (`jsonld`) is provided transitively via `@graviola/jsonld-utils`; consumers should depend on `jsonld` only when calling `@graviola/jsonld-utils` APIs directly.
-
-- **Used By**:
-  - `@graviola/sparql-db-impl`: Implements database operations using sparql-schema
-  - `@graviola/sparql-store-provider`: Provides a store interface using sparql-schema
+- **Schema → CONSTRUCT.** `jsonSchema2construct` builds the DELETE/INSERT CBD template for writes. `traversalSchema2construct` (with `buildTraversalSchema` from graph-traversal) builds the read CONSTRUCT, honouring `include`/`select` shapes and `maxRecursion`.
+- **Typed filters → SPARQL.** `filterToSparql` translates Prisma-style `where` clauses into SPARQL patterns; `buildFilterableSPARQLQuery` assembles a full SELECT for list and filter operations.
+- **CRUD over fetch functions.** `load`, `save`, `remove`, and `exists` take a `constructFetch` / `updateFetch` / `askFetch` pair instead of hard-coding an endpoint URL, so the same code runs against Oxigraph, Fuseki, or an in-memory store.
+- **Finding entities.** `findEntityByClass`, `findEntityByAuthorityIRI`, and `searchEntityByLabel` cover common lookup patterns over a SELECT fetch function.
+- **SPARQL safety.** Every IRI goes through `iriRef` (validated with `isSafeIri` from `@graviola/edb-core-utils`), literals through `sparqlStringLiteral`, variable names through `toSparqlVariableName`. Code that builds SPARQL outside this package should use them too.
 
 ## Installation
 
@@ -54,217 +34,71 @@ flowchart TD
 bun add @graviola/sparql-schema
 # or
 npm install @graviola/sparql-schema
-# or
-yarn add @graviola/sparql-schema
 ```
-
-## Features
-
-### JSON Schema to SPARQL Conversion
-
-- **jsonSchema2construct**: Convert JSON Schema to SPARQL CONSTRUCT queries
-- **jsonSchema2Select**: Convert JSON Schema to SPARQL SELECT queries
-- **jsonSchema2constructWithLimits**: Convert JSON Schema to SPARQL CONSTRUCT queries with limits
-- **prefixes2sparqlPrefixDeclaration**: Convert prefix mappings to SPARQL PREFIX declarations
-
-### CRUD Operations
-
-- **save**: Save an entity to the RDF store
-- **load**: Load an entity from the RDF store
-- **remove**: Remove an entity from the RDF store
-- **exists**: Check if an entity exists in the RDF store
-- **getClasses**: Get all classes from the RDF store
-- **moveToTrash**: Move an entity to the trash
-- **restoreFromTrash**: Restore an entity from the trash
-
-### Entity Finding
-
-- **findEntityByClass**: Find entities by their class
-- **searchEntityByLabel**: Search for entities by their label
-- **findEntityByAuthorityIRI**: Find entities by their authority IRI
-
-### SPARQL Query Generation
-
-- **makeSPARQLConstructQuery**: Create a SPARQL CONSTRUCT query
-- **makeSPARQLDeleteQuery**: Create a SPARQL DELETE query
-- **makeSPARQLWherePart**: Create the WHERE part of a SPARQL query
-- **makeSPARQLToTrashQuery**: Create a query to move an entity to trash
-- **makeSPARQLRestoreFromTrashQuery**: Create a query to restore an entity from trash
 
 ## Usage
 
-### Converting JSON Schema to SPARQL CONSTRUCT Query
+```ts
+import {
+  buildSPARQLConstructQuery,
+  jsonSchema2construct,
+  load,
+  traversalSchema2construct,
+} from "@graviola/sparql-schema";
+import { buildTraversalSchema } from "@graviola/edb-graph-traversal";
+import type { JSONSchema7 } from "json-schema";
 
-```typescript
-import { jsonSchema2construct } from "@graviola/sparql-schema";
-import { JSONSchema7 } from "json-schema";
+const defaultPrefix = "http://example.org/";
+const typeIRI = "http://example.org/Person";
+const entityIRI = "http://example.org/person/1";
 
-// Define a JSON Schema
-const schema: JSONSchema7 = {
-  type: "object",
-  properties: {
-    name: { type: "string" },
-    age: { type: "number" },
-    email: { type: "string" },
-  },
-  required: ["name"],
-};
-
-// Convert to SPARQL CONSTRUCT query parts
-const { construct, whereOptionals, whereRequired } = jsonSchema2construct(
-  "?person", // Subject variable
-  schema, // JSON Schema
-);
-
-console.log(construct);
-// Output:
-// ?person a ?__type_0 .
-// ?person :name ?name_1 .
-// ?person :age ?age_2 .
-// ?person :email ?email_3 .
-
-console.log(whereOptionals);
-// Output:
-// OPTIONAL { ?person a ?__type_0 . }
-// OPTIONAL { ?person :age ?age_2 . }
-// OPTIONAL { ?person :email ?email_3 . }
-```
-
-### Saving an Entity
-
-```typescript
-import { save } from "@graviola/sparql-schema";
-import { JSONSchema7 } from "json-schema";
-
-// Define a JSON Schema
 const schema: JSONSchema7 = {
   type: "object",
   properties: {
     "@id": { type: "string" },
-    "@type": { type: "string" },
+    "@type": { const: typeIRI },
     name: { type: "string" },
-    age: { type: "number" },
   },
-  required: ["@id", "@type", "name"],
 };
 
-// Define an entity
-const person = {
-  "@id": "http://example.org/person/1",
-  "@type": "http://example.org/ontology#Person",
-  name: "John Doe",
-  age: 30,
+// Read path: traversal schema → CONSTRUCT query
+const traversal = buildTraversalSchema(schema);
+const constructResult = traversalSchema2construct(
+  entityIRI,
+  typeIRI,
+  traversal,
+  {
+    prefixMap: { "": defaultPrefix },
+    maxRecursion: 2,
+  },
+);
+const query = buildSPARQLConstructQuery(constructResult, { "": defaultPrefix });
+
+// Write path: CBD DELETE/INSERT template (stops at nested @id boundaries)
+const { construct: deleteTemplate } = jsonSchema2construct(entityIRI, schema, [
+  "@id",
+]);
+
+// load runs the CONSTRUCT through your fetch function and extracts JSON
+const constructFetch = async (sparqlQuery: string) => {
+  // Same closure shape as sparql-db-impl: POST the query, return RDF/JS DatasetCore.
+  return endpoint.construct(sparqlQuery);
 };
 
-// Save the entity
-const sparqlEndpoint = "http://localhost:3030/dataset/sparql";
-const sparqlUpdateEndpoint = "http://localhost:3030/dataset/update";
-
-const result = await save({
-  entity: person,
-  schema,
-  sparqlEndpoint,
-  sparqlUpdateEndpoint,
+const { document } = await load(entityIRI, typeIRI, schema, constructFetch, {
+  defaultPrefix,
 });
-
-console.log(result);
-// Output: { success: true }
 ```
 
-### Finding Entities by Class
+## API reference
 
-```typescript
-import { findEntityByClass } from "@graviola/sparql-schema";
+The full list of exports is in the generated TypeDoc API documentation (`bun run docs` at the repository root). Every export has a doc comment in `src/`.
 
-// Find all Person entities
-const sparqlEndpoint = "http://localhost:3030/dataset/sparql";
-const persons = await findEntityByClass({
-  classIRI: "http://example.org/ontology#Person",
-  sparqlEndpoint,
-  limit: 10,
-  offset: 0,
-});
+## Known issues before the next release
 
-console.log(persons);
-// Output: [{ '@id': 'http://example.org/person/1', '@type': 'http://example.org/ontology#Person', name: 'John Doe', ... }, ...]
-```
-
-### Searching Entities by Label
-
-```typescript
-import { searchEntityByLabel } from "@graviola/sparql-schema";
-
-// Search for entities with label containing "John"
-const sparqlEndpoint = "http://localhost:3030/dataset/sparql";
-const results = await searchEntityByLabel({
-  searchText: "John",
-  sparqlEndpoint,
-  limit: 10,
-  offset: 0,
-});
-
-console.log(results);
-// Output: [{ '@id': 'http://example.org/person/1', '@type': 'http://example.org/ontology#Person', label: 'John Doe', ... }, ...]
-```
-
-## API Reference
-
-### Schema to SPARQL Conversion
-
-#### jsonSchema2construct(subjectURI, rootSchema, stopSymbols?, excludedProperties?, maxRecursion?)
-
-Converts a JSON Schema to a SPARQL CONSTRUCT query.
-
-- **Parameters**:
-  - `subjectURI`: The subject URI or variable
-  - `rootSchema`: The JSON Schema to convert
-  - `stopSymbols?`: Array of property names to stop recursion at
-  - `excludedProperties?`: Array of property names to exclude
-  - `maxRecursion?`: Maximum recursion depth (default: 4)
-
-- **Returns**: Object with `construct`, `whereRequired`, and `whereOptionals` strings
-
-#### jsonSchema2Select(fields, where, limit?, offset?, orderBy?)
-
-Creates a SPARQL SELECT query.
-
-- **Parameters**:
-  - `fields`: Array of field names to select
-  - `where`: WHERE clause of the query
-  - `limit?`: Maximum number of results
-  - `offset?`: Offset for pagination
-  - `orderBy?`: Array of fields to order by
-
-- **Returns**: SPARQL SELECT query string
-
-### CRUD Operations
-
-#### save(options)
-
-Saves an entity to the RDF store.
-
-- **Parameters**:
-  - `options`: Object with `entity`, `schema`, `sparqlEndpoint`, and `sparqlUpdateEndpoint`
-
-- **Returns**: Promise resolving to the save result
-
-#### load(options)
-
-Loads an entity from the RDF store.
-
-- **Parameters**:
-  - `options`: Object with `entityIRI`, `typeIRI`, `schema`, and `sparqlEndpoint`
-
-- **Returns**: Promise resolving to the loaded entity
-
-#### remove(options)
-
-Removes an entity from the RDF store.
-
-- **Parameters**:
-  - `options`: Object with `entityIRI`, `typeIRI`, `schema`, `sparqlEndpoint`, and `sparqlUpdateEndpoint`
-
-- **Returns**: Promise resolving to the remove result
+- **42 % line coverage** — many CRUD and filter paths are only exercised indirectly through store backends.
+- **Remaining generic template sites** — SPARQL is still assembled through tagged-template interpolations in several internal builders; LIMIT/OFFSET and filter literals are guarded, but the template count should keep shrinking.
+- **`any` density** — legacy CRUD result types and filter dispatch still carry explicit `any` annotations that should be narrowed.
 
 ## License
 

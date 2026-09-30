@@ -2,7 +2,7 @@
  * Unit tests for string filter operators
  */
 
-import { describe, expect, test } from "@jest/globals";
+import { describe, expect, test } from "bun:test";
 import df from "@rdfjs/data-model";
 import type { FilterContext } from "../types";
 import { applyStringOperator } from "./string";
@@ -45,7 +45,7 @@ describe("String Operators", () => {
       expect(filterStr).toContain("CONTAINS");
     });
 
-    test("should generate REGEX filter for case-insensitive", () => {
+    test("should generate case-insensitive CONTAINS with LCASE", () => {
       const context = createMockContext();
       const result = applyStringOperator(
         "contains",
@@ -59,8 +59,9 @@ describe("String Operators", () => {
 
       const filterStr = result.filters[0].toString();
       expect(filterStr).toContain("FILTER");
-      expect(filterStr).toContain("REGEX");
-      expect(filterStr).toContain('"i"');
+      expect(filterStr).toContain("CONTAINS");
+      expect(filterStr).toContain("LCASE");
+      expect(filterStr).not.toContain("REGEX");
     });
   });
 
@@ -82,7 +83,7 @@ describe("String Operators", () => {
       expect(filterStr).toContain("STRSTARTS");
     });
 
-    test("should generate REGEX filter with ^ for case-insensitive", () => {
+    test("should generate case-insensitive STRSTARTS with LCASE", () => {
       const context = createMockContext();
       const result = applyStringOperator(
         "startsWith",
@@ -95,8 +96,9 @@ describe("String Operators", () => {
       expect(result.filters).toHaveLength(1);
 
       const filterStr = result.filters[0].toString();
-      expect(filterStr).toContain("REGEX");
-      expect(filterStr).toContain("^admin");
+      expect(filterStr).toContain("STRSTARTS");
+      expect(filterStr).toContain("LCASE");
+      expect(filterStr).not.toContain("REGEX");
     });
   });
 
@@ -118,7 +120,7 @@ describe("String Operators", () => {
       expect(filterStr).toContain("STRENDS");
     });
 
-    test("should generate REGEX filter with $ for case-insensitive", () => {
+    test("should generate case-insensitive STRENDS with LCASE", () => {
       const context = createMockContext();
       const result = applyStringOperator(
         "endsWith",
@@ -131,8 +133,9 @@ describe("String Operators", () => {
       expect(result.filters).toHaveLength(1);
 
       const filterStr = result.filters[0].toString();
-      expect(filterStr).toContain("REGEX");
-      expect(filterStr).toContain(".com$");
+      expect(filterStr).toContain("STRENDS");
+      expect(filterStr).toContain("LCASE");
+      expect(filterStr).not.toContain("REGEX");
     });
   });
 
@@ -153,7 +156,6 @@ describe("String Operators", () => {
 
     test("should handle special regex characters in search string", () => {
       const context = createMockContext();
-      // This tests that we properly handle strings that might have regex special chars
       const result = applyStringOperator(
         "contains",
         "test.example",
@@ -163,6 +165,11 @@ describe("String Operators", () => {
 
       expect(result.patterns).toHaveLength(1);
       expect(result.filters).toHaveLength(1);
+
+      const filterStr = result.filters[0].toString();
+      expect(filterStr).toContain("CONTAINS");
+      expect(filterStr).toContain("LCASE");
+      expect(filterStr).not.toContain("REGEX");
     });
   });
 });

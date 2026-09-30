@@ -6,7 +6,7 @@
  * what the type system prevents.
  */
 
-import { describe, it, expect } from "@jest/globals";
+import { describe, it, expect } from "bun:test";
 import type {
   TypedWhereInput,
   TypedIncludePattern,

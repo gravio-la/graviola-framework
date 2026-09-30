@@ -17,9 +17,7 @@ import type { EntityQueryViewProps } from "./types";
 const embedTableCallbacks = {
   onCreateEntry: undefined,
   onRemoveEntry: undefined,
-  onMoveToTrashEntry: undefined,
   onRemoveSelected: undefined,
-  onMoveToTrashSelected: undefined,
   onToggleLoadAll: undefined,
 };
 

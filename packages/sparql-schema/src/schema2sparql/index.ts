@@ -1,10 +1,12 @@
 export * from "./jsonSchema2construct";
 export * from "./jsonSchema2Select";
 export * from "./annotationProjectionsToSparql";
-export * from "./selectQuery";
-export * from "./primitives";
+export * from "./fieldMapping";
 export * from "./prefixes2sparqlPrefixDeclaration";
 export * from "./traversalSchema2construct";
 export * from "./buildSPARQLConstructQuery";
 export * from "./buildTypedSPARQLQuery";
-export * from "./buildClassesQuery";
+export type {
+  BuildClassesQueryOptions,
+  ClassesQueryResult,
+} from "./buildClassesQuery";

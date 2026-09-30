@@ -530,31 +530,3 @@ export function projectSchema<T = any>(
 
   return newSchema;
 }
-
-/**
- * Extracts pagination options for a specific property from include pattern
- * @template T - The type to derive filter patterns from
- * @param propertyName The property name
- * @param include The include pattern
- * @returns Pagination options if specified
- */
-export function extractPaginationOptions<T = any>(
-  propertyName: string,
-  include?: IncludePattern<T>,
-): PaginationOptions | undefined {
-  if (!include || !(propertyName in include)) {
-    return undefined;
-  }
-
-  const includeValue = include[propertyName];
-
-  if (typeof includeValue === "object" && includeValue !== null) {
-    return {
-      take: includeValue.take,
-      skip: includeValue.skip,
-      orderBy: includeValue.orderBy, // Include orderBy for pagination
-    };
-  }
-
-  return undefined;
-}

@@ -25,9 +25,12 @@ import type {
 import { resolveSparqlFeatures } from "@graviola/edb-core-utils";
 import {
   applyIncludeOrderByAndSlice,
-  resolveEffectiveMaxRecursion,
   traverseGraphExtractBySchema,
 } from "@graviola/edb-graph-traversal";
+import {
+  resolveEffectiveMaxRecursion,
+  type IncludeTree,
+} from "@graviola/typed-query-types";
 import { buildFilterableSPARQLQuery } from "../schema2sparql/buildTypedSPARQLQuery";
 import type { BuildFilterableSPARQLQueryOptions } from "../schema2sparql/buildTypedSPARQLQuery";
 import {
@@ -107,9 +110,7 @@ export async function filterTypedDocuments<T = any>(
   const features = resolveSparqlFeatures(flavour, sparqlFeatures);
 
   const maxRecursion = resolveEffectiveMaxRecursion({
-    include: include as
-      | Record<string, import("@graviola/edb-graph-traversal").IncludeTree>
-      | undefined,
+    include: include as Record<string, IncludeTree> | undefined,
     maxRecursion: explicitMaxRecursion,
   });
 

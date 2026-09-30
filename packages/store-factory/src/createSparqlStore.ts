@@ -65,6 +65,10 @@ export async function createSparqlStore(
           } as never,
         }
       : {}),
+    ...(opts.walkerOptions ? { walkerOptions: opts.walkerOptions } : {}),
+    ...(opts.sparqlLoadOptions
+      ? { defaultLoadOptions: opts.sparqlLoadOptions }
+      : {}),
   });
 
   const result = {

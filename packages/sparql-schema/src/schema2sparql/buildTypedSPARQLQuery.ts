@@ -20,10 +20,11 @@ import type {
   SPARQLFlavour,
   SparqlFeatureFlags,
 } from "@graviola/edb-core-types";
+import { buildTraversalSchema } from "@graviola/edb-graph-traversal";
 import {
-  buildTraversalSchema,
   resolveEffectiveMaxRecursion,
-} from "@graviola/edb-graph-traversal";
+  type IncludeTree,
+} from "@graviola/typed-query-types";
 import { traversalSchema2construct } from "./traversalSchema2construct";
 import { buildSPARQLConstructQuery } from "./buildSPARQLConstructQuery";
 import type { ConstructResult } from "./traversalSchema2construct";
@@ -131,9 +132,7 @@ export function buildFilterableSPARQLQuery<T = any>(
   } = options;
 
   const maxRecursion = resolveEffectiveMaxRecursion({
-    include: filterOptions.include as
-      | Record<string, import("@graviola/edb-graph-traversal").IncludeTree>
-      | undefined,
+    include: filterOptions.include as Record<string, IncludeTree> | undefined,
     maxRecursion: explicitMaxRecursion,
   });
 

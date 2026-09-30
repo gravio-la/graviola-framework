@@ -3,6 +3,7 @@ import { filterUndefOrNull } from "@graviola/edb-core-utils";
 import { Term } from "@rdfjs/types";
 
 import { iriRef, sparqlStringLiteral } from "../sparqlTerms";
+import { assertNonNegativeInteger } from "../utils/assertNonNegativeInteger";
 
 /** SPARQL JSON binding cell or RDF/JS Term. */
 type BindingCell =
@@ -49,6 +50,7 @@ export const findEntityByAuthorityIRI: FindEntityByAuthorityIRIFn = async (
   limit = 10,
   options,
 ) => {
+  const safeLimit = assertNonNegativeInteger("limit", limit);
   const defaultPrefix = options?.defaultPrefix ?? "";
   const typePattern = typeIRI ? `  ?subject a ${iriRef(typeIRI)} .` : "";
   const authorityRef = iriRef(authorityIRI);
@@ -69,7 +71,7 @@ SELECT DISTINCT ?subject WHERE {
   }
 ${typePattern}
 }
-LIMIT ${limit}`;
+LIMIT ${safeLimit}`;
 
   const bindings = await doQuery(query);
   return filterUndefOrNull(

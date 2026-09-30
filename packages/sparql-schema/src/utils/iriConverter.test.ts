@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "bun:test";
 import { convertIRIToNode } from "./iriConverter";
 import df from "@rdfjs/data-model";
 

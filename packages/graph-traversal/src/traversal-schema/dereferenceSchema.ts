@@ -3,7 +3,7 @@ import { resolveSchema, isJSONSchema } from "@graviola/json-schema-utils";
 import {
   resolveEffectiveMaxRecursion,
   type IncludeTree,
-} from "./selectionDepth";
+} from "@graviola/typed-query-types";
 import type { DereferenceContext } from "./types";
 
 /**

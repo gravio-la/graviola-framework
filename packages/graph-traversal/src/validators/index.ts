@@ -7,7 +7,6 @@
 
 export {
   validateFilter,
-  validateNestedFilter,
   type FilterValidationError,
   type FilterValidationResult,
 } from "./filterValidator";

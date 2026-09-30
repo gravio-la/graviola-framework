@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@jest/globals";
+import { describe, expect, test } from "bun:test";
 import datasetFactory from "@rdfjs/dataset";
 import type { JSONSchema7 } from "json-schema";
 import clownface from "clownface";

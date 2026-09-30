@@ -123,6 +123,7 @@ export function initSPARQLDatastorePair(
     metaStamping,
     statementMeta,
     defaultFilterOptions,
+    defaultLoadOptions,
   } = dataStoreConfig;
 
   const effectiveMetaStamping = metaStamping
@@ -243,7 +244,9 @@ export function initSPARQLDatastorePair(
       defaultPrefix,
       queryBuildOptions,
       walkerOptions,
-      maxRecursion: walkerOptions?.maxRecursion,
+      maxRecursion:
+        defaultLoadOptions?.maxRecursion ?? walkerOptions?.maxRecursion,
+      includeRelationsByDefault: defaultLoadOptions?.includeRelationsByDefault,
       resolveInverseMaxDepth: (
         queryBuildOptions as { resolveInverseMaxDepth?: number } | undefined
       )?.resolveInverseMaxDepth,

@@ -1,7 +1,6 @@
 import {
   CloudDone,
   CloudSync,
-  Delete,
   DeleteForever,
   Edit,
   FileDownload,
@@ -124,10 +123,8 @@ export function SemanticTableView({
     onShowEntry,
     onEditEntry,
     onRemoveEntry,
-    onMoveToTrashEntry,
     onCreateEntry,
     onRemoveSelected,
-    onMoveToTrashSelected,
     onToggleLoadAll,
   } = callbacks;
 
@@ -250,25 +247,10 @@ export function SemanticTableView({
     [onRemoveSelected],
   );
 
-  const handleBulkMoveToTrash = useCallback(
-    (table_: MRT_TableInstance<any>) => {
-      if (!onMoveToTrashSelected) return;
-      const ids = filterIdsFromTable(table_);
-      void onMoveToTrashSelected(ids);
-    },
-    [onMoveToTrashSelected],
-  );
-
   const hasRowActions = Boolean(
-    onShowEntry ||
-    onEditEntry ||
-    onRemoveEntry ||
-    onMoveToTrashEntry ||
-    rowActions.length > 0,
+    onShowEntry || onEditEntry || onRemoveEntry || rowActions.length > 0,
   );
-  const hasBulkActions = Boolean(
-    onRemoveSelected || onMoveToTrashSelected || bulkActions.length > 0,
-  );
+  const hasBulkActions = Boolean(onRemoveSelected || bulkActions.length > 0);
 
   const embedded = layout === "embedded";
   const hoverToolbars = toolbarDisplay === "hover";
@@ -412,18 +394,6 @@ export function SemanticTableView({
                 sx={{ fontWeight: "bold" }}
               />
 
-              {onMoveToTrashSelected ? (
-                <Tooltip title={t("move to trash")}>
-                  <IconButton
-                    onClick={() => handleBulkMoveToTrash(table)}
-                    color="warning"
-                    size="small"
-                  >
-                    <Delete />
-                  </IconButton>
-                </Tooltip>
-              ) : null}
-
               {onRemoveSelected ? (
                 <Tooltip title={t("delete permanently")}>
                   <IconButton
@@ -563,20 +533,6 @@ export function SemanticTableView({
                     <Edit />
                   </ListItemIcon>
                   {t("edit")}
-                </MenuItem>,
-              );
-            }
-            if (onMoveToTrashEntry) {
-              items.push(
-                <MenuItem
-                  key="moveToTrash"
-                  onClick={() => void onMoveToTrashEntry(row.id)}
-                  sx={{ minWidth: 200 }}
-                >
-                  <ListItemIcon>
-                    <Delete />
-                  </ListItemIcon>
-                  {t("move to trash")}
                 </MenuItem>,
               );
             }

@@ -2,7 +2,7 @@
  * Unit tests for numeric filter operators
  */
 
-import { describe, expect, test } from "@jest/globals";
+import { describe, expect, test } from "bun:test";
 import df from "@rdfjs/data-model";
 import type { FilterContext } from "../types";
 import { applyNumericOperator } from "./numeric";

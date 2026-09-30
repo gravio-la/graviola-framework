@@ -15,6 +15,7 @@ import {
 import { JSONSchema7, JSONSchema7Definition } from "json-schema";
 
 import { iriRef } from "../sparqlTerms";
+import { assertNonNegativeInteger } from "../utils/assertNonNegativeInteger";
 import type { AnnotationSelectFragments } from "./annotationProjectionsToSparql";
 
 const makeWherePart = (queryClause: string, required: boolean) =>
@@ -264,11 +265,15 @@ const sparqlPartFromOptions = (options: SPARQLSelectOptions) => {
     );
   }
   sparqlParts.push(` ASC(?entity) `);
-  if (options.limit) {
-    sparqlParts.push(`LIMIT ${options.limit}`);
+  if (options.limit !== undefined) {
+    sparqlParts.push(
+      `LIMIT ${assertNonNegativeInteger("limit", options.limit)}`,
+    );
   }
-  if (options.offset) {
-    sparqlParts.push(`OFFSET ${options.offset}`);
+  if (options.offset !== undefined) {
+    sparqlParts.push(
+      `OFFSET ${assertNonNegativeInteger("offset", options.offset)}`,
+    );
   }
   return sparqlParts.join("\n");
 };

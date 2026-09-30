@@ -14,7 +14,7 @@ import type {
   TypedSelectPattern,
   TypedOmitPattern,
   TypedGraphTraversalFilterOptions,
-} from ".";
+} from "./typed-filters";
 import type { PaginationOptions } from "@graviola/edb-core-types";
 
 // ============================================================================

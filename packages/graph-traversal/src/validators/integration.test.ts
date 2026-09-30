@@ -2,7 +2,7 @@
  * Integration tests for filter validation with buildTraversalSchema
  */
 
-import { describe, it, expect } from "@jest/globals";
+import { describe, it, expect } from "bun:test";
 import { buildTraversalSchema } from "../traversal-schema";
 import type { JSONSchema7 } from "json-schema";
 import type { GraphTraversalFilterOptions } from "@graviola/edb-core-types";

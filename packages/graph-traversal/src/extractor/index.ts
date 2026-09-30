@@ -14,20 +14,5 @@
  * @module extractor
  */
 
-// Main extraction function
 export { extractFromGraph } from "./extract";
-
-// Component extractors (for advanced use cases)
-export { extractObject } from "./extractObject";
-export { extractLiteral } from "./extractLiteral";
-
-// Utilities
-export { expandPropertyName } from "./expandPropertyName";
-
-// Types
-export type {
-  ExtractionContext,
-  ExtractedValue,
-  PropertyExtractor,
-  PaginationMetadata,
-} from "./types";
+export type { ExtractionContext, PaginationMetadata } from "./types";

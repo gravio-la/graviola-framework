@@ -1,8 +1,10 @@
 import type {
   PrimaryFieldDeclaration,
+  SPARQLCRUDOptions,
   SPARQLFlavour,
   StringToIRIFn,
   IRIToStringFn,
+  WalkerOptions,
 } from "@graviola/edb-core-types";
 import type { MetaStampingConfig } from "@graviola/meta-schema";
 import type { BaseStore, SchemaRegistry } from "@graviola/store-core";
@@ -78,6 +80,13 @@ export type CreateStoreFromSpecOptions<
   backend: StoreBackendSpec;
   /** Optional SPARQL queryBuildOptions overrides (flavour, primaryFields, …). */
   queryBuildOptions?: Record<string, unknown>;
+  /** Graph extraction options for loadOne / CONSTRUCT hydration. */
+  walkerOptions?: Partial<WalkerOptions>;
+  /** Defaults for loadOne CONSTRUCT (maxRecursion, includeRelationsByDefault, …). */
+  sparqlLoadOptions?: Pick<
+    SPARQLCRUDOptions,
+    "maxRecursion" | "includeRelationsByDefault"
+  >;
   /** System-asserted entity `$meta` stamping on upsert (SPARQL / Oxigraph backends). */
   metaStamping?: MetaStampingConfig;
   /**

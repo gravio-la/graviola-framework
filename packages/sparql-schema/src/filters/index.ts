@@ -18,6 +18,3 @@
 
 export * from "./types";
 export * from "./filterToSparql";
-export * from "./operators";
-export * from "./utils";
-export * from "./flavours";

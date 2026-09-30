@@ -3,7 +3,7 @@
  * Tests: some, every, none
  */
 
-import { describe, expect, test } from "@jest/globals";
+import { describe, expect, test } from "bun:test";
 import df from "@rdfjs/data-model";
 import type { FilterContext } from "../types";
 import {

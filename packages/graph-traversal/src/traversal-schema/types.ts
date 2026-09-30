@@ -1,6 +1,6 @@
 import type { JSONSchema7 } from "json-schema";
 import type { GraphTraversalFilterOptions } from "@graviola/edb-core-types";
-import type { IncludeTree } from "./selectionDepth";
+import type { IncludeTree } from "@graviola/typed-query-types";
 
 /**
  * Schema with all `$ref` targets inlined (definitions denormalized into use sites).

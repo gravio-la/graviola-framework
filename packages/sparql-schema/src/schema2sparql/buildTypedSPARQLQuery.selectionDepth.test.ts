@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import type { JSONSchema7 } from "json-schema";
-import { SelectionTruncationError } from "@graviola/edb-graph-traversal";
+import { SelectionTruncationError } from "@graviola/typed-query-types";
 import { buildFilterableSPARQLQuery } from "./buildTypedSPARQLQuery";
 
 /** Synthetic 5-level chain: L1 → L2 → L3 → L4 → L5 */

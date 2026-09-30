@@ -6,31 +6,10 @@ import type { ExtractionContext } from "./types";
 import { expandPropertyName } from "./expandPropertyName";
 import { extractLiteral } from "./extractLiteral";
 import { sortObjectArrayByOrderBy } from "../applyOrderBy";
-
-/**
- * Type guard to check if a value is a nested filter options object (not boolean)
- */
-function isNestedFilterOptions(value: unknown): value is Record<string, any> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
-/**
- * Extract nested filter options from include value
- * Removes pagination properties (take, skip, orderBy, _stage) and returns only filter options
- */
-function extractNestedFilterOptions(
-  includeValue: boolean | Record<string, any> | undefined,
-): Record<string, any> {
-  if (!includeValue || includeValue === true) {
-    return {};
-  }
-  if (isNestedFilterOptions(includeValue)) {
-    // Extract only the filter-related properties (not pagination)
-    const { take, skip, orderBy, _stage, ...filterOptions } = includeValue;
-    return filterOptions;
-  }
-  return {};
-}
+import {
+  extractNestedFilterOptions,
+  isNestedFilterOptions,
+} from "../nestedFilterOptions";
 
 /**
  * Build nested extraction context with filter options

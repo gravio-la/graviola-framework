@@ -38,14 +38,12 @@ export type SemanticTableCallbacks = {
   onShowEntry?: (id: string, typeIRI: string) => void;
   onEditEntry?: (id: string, typeIRI: string) => void;
   onRemoveEntry?: (id: string) => Promise<void> | void;
-  onMoveToTrashEntry?: (id: string) => Promise<void> | void;
 
   /** Top toolbar */
   onCreateEntry?: () => void;
 
   /** Bulk selection toolbar */
   onRemoveSelected?: (ids: string[]) => Promise<void> | void;
-  onMoveToTrashSelected?: (ids: string[]) => Promise<void> | void;
 
   /** Load-all toggle */
   onToggleLoadAll?: () => void;

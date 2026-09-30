@@ -49,8 +49,6 @@ export {
 export {
   createDeleteBulkEntry,
   createDeleteRowEntry,
-  createMoveToTrashBulkEntry,
-  createMoveToTrashRowEntry,
 } from "./entity-actions/tableActionFactories";
 export { EntityActionsBar } from "./entity-actions/EntityActionsBar";
 export { useEntityContextMenu } from "./entity-actions/EntityContextMenu";

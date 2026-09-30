@@ -1,3 +1,4 @@
+import { describe, expect, test } from "bun:test";
 import type { WalkerOptions } from "@graviola/edb-core-types";
 import datasetFactory from "@rdfjs/dataset";
 import namespace from "@rdfjs/namespace";

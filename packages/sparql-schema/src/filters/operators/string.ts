@@ -18,27 +18,18 @@ export function applyStringOperator(
 ): FilterResult {
   const { subject, predicateNode, propertyVar } = context;
 
-  let filterExpr: any;
   const valueLiteral = df.literal(value);
+  const func =
+    operator === "contains"
+      ? "CONTAINS"
+      : operator === "startsWith"
+        ? "STRSTARTS"
+        : "STRENDS";
 
-  if (mode === "insensitive") {
-    // Use REGEX with 'i' flag for case-insensitive
-    const pattern =
-      operator === "contains"
-        ? value
-        : operator === "startsWith"
-          ? `^${value}`
-          : `${value}$`;
-    filterExpr = sparql`FILTER(REGEX(${propertyVar}, ${df.literal(pattern)}, "i"))`;
-  } else {
-    const func =
-      operator === "contains"
-        ? "CONTAINS"
-        : operator === "startsWith"
-          ? "STRSTARTS"
-          : "STRENDS";
-    filterExpr = sparql`FILTER(${func}(${propertyVar}, ${valueLiteral}))`;
-  }
+  const filterExpr =
+    mode === "insensitive"
+      ? sparql`FILTER(${func}(LCASE(STR(${propertyVar})), LCASE(${valueLiteral})))`
+      : sparql`FILTER(${func}(${propertyVar}, ${valueLiteral}))`;
 
   return {
     patterns: [sparql`${subject} ${predicateNode} ${propertyVar} .`],

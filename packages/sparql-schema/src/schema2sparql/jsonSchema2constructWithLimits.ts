@@ -7,6 +7,7 @@ import { Variable } from "@rdfjs/types";
 import { JSONSchema7 } from "json-schema";
 
 import { iriRef } from "../sparqlTerms";
+import { assertNonNegativeInteger } from "../utils/assertNonNegativeInteger";
 
 const MAX_RECURSION = 4;
 const DEFAULT_LIMIT = 10;
@@ -69,6 +70,7 @@ export const jsonSchema2constructWithLimits = (
   construct: string;
   countQueries: string;
 } => {
+  assertNonNegativeInteger("defaultLimit", defaultLimit);
   let construct = "",
     whereOptionals = "",
     countQueries = "",

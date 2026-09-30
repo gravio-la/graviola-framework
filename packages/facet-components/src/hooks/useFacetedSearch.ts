@@ -9,6 +9,7 @@ import {
 import { usePagedSearch } from "@graviola/edb-state-hooks";
 import type {
   FacetBucket,
+  FacetFilter,
   FacetStats,
   SchemaRegistry,
 } from "@graviola/store-core";
@@ -25,6 +26,12 @@ export type UseFacetedSearchParams<R extends SchemaRegistry = SchemaRegistry> =
     descriptors: FacetDescriptor[];
     /** Scopes to request in-band (quick row + expanded drawer sections) */
     visibleScopes: string[];
+    /**
+     * Always-on filters ANDed with the facet selection and not shown as active facets.
+     * Use for a discriminator when several types share one index (e.g. `__type`), or for a
+     * fixed scope such as one folder subtree.
+     */
+    baseFilters?: FacetFilter[];
     hydrate?: boolean;
     enabled?: boolean;
     onPageChange: (page: number) => void;
@@ -47,6 +54,7 @@ export function useFacetedSearch<R extends SchemaRegistry>(
     selection,
     descriptors,
     visibleScopes,
+    baseFilters,
     hydrate = false,
     enabled = true,
     onPageChange,
@@ -55,8 +63,13 @@ export function useFacetedSearch<R extends SchemaRegistry>(
   const primaryType = typeNames[0];
   const filters = useMemo(() => {
     if (!primaryType) return [];
-    return selectionToFacetFilters(selection, descriptors, primaryType);
-  }, [selection, descriptors, primaryType]);
+    const selected = selectionToFacetFilters(
+      selection,
+      descriptors,
+      primaryType,
+    );
+    return baseFilters?.length ? [...baseFilters, ...selected] : selected;
+  }, [selection, descriptors, primaryType, baseFilters]);
 
   const facets = useMemo(() => {
     const names = new Set<string>();

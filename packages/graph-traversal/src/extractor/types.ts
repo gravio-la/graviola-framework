@@ -1,5 +1,4 @@
 import type { DatasetCore } from "@rdfjs/types";
-import type { JSONSchema7 } from "json-schema";
 import type {
   ExtendedWalkerOptions,
   PaginationMetadata,
@@ -30,19 +29,3 @@ export type ExtractionContext = {
   /** Logger for debugging and monitoring */
   logger: Logger;
 };
-
-/**
- * The result of extracting a value from the graph
- * Can be any valid JSON value
- */
-export type ExtractedValue = any;
-
-/**
- * Function signature for property extractors
- * Each extractor handles a specific type of property (literal, object, array, etc.)
- */
-export type PropertyExtractor = (
-  node: any, // clownface.GraphPointer
-  propertySchema: JSONSchema7,
-  ctx: ExtractionContext,
-) => ExtractedValue;

@@ -89,9 +89,7 @@ export const SemanticTableViewWithActions: StoryObj<typeof SemanticTableView> =
             onCreateEntry: () => {},
             onShowEntry: () => {},
             onEditEntry: () => {},
-            onMoveToTrashEntry: () => {},
             onRemoveEntry: () => {},
-            onMoveToTrashSelected: () => {},
             onRemoveSelected: () => {},
           }}
         />

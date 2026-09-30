@@ -1,7 +1,8 @@
 import { describe, expect, test } from "bun:test";
-import { clearGraph, dumpQuads, isEndpointReachable, loadQuads } from "./index";
+import { clearGraph, dumpQuads, loadQuads } from "./index";
 
-const ENDPOINT = process.env.SPARQL_ENDPOINT ?? "http://localhost:7878";
+const ENDPOINT = process.env.SPARQL_TOOLS_TEST_ENDPOINT?.trim();
+const integrationTest = ENDPOINT ? test : test.skip;
 
 const SAMPLE_NQUADS = [
   '<http://example.org/s> <http://example.org/p> "roundtrip" .',
@@ -9,22 +10,21 @@ const SAMPLE_NQUADS = [
 ].join("\n");
 
 describe("sparql-tools round-trip", () => {
-  test("load, dump, clear", async () => {
-    const reachable = await isEndpointReachable(ENDPOINT);
-    if (!reachable) {
-      console.log(`Skipping round-trip test: ${ENDPOINT} is not reachable`);
-      return;
-    }
+  integrationTest(
+    "load, dump, clear (set SPARQL_TOOLS_TEST_ENDPOINT to run against a SPARQL server)",
+    async () => {
+      const endpoint = ENDPOINT!;
 
-    await clearGraph({ endpoint: ENDPOINT });
-    await loadQuads({ endpoint: ENDPOINT, nquads: SAMPLE_NQUADS });
+      await clearGraph({ endpoint });
+      await loadQuads({ endpoint, nquads: SAMPLE_NQUADS });
 
-    const dumped = await dumpQuads({ endpoint: ENDPOINT });
-    expect(dumped).toContain("roundtrip");
-    expect(dumped).toContain("sparql-tools");
+      const dumped = await dumpQuads({ endpoint });
+      expect(dumped).toContain("roundtrip");
+      expect(dumped).toContain("sparql-tools");
 
-    await clearGraph({ endpoint: ENDPOINT });
-    const afterClear = await dumpQuads({ endpoint: ENDPOINT });
-    expect(afterClear.trim()).toBe("");
-  });
+      await clearGraph({ endpoint });
+      const afterClear = await dumpQuads({ endpoint });
+      expect(afterClear.trim()).toBe("");
+    },
+  );
 });

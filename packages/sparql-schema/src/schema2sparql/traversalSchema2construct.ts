@@ -19,6 +19,10 @@ import { rdf } from "@tpluscode/rdf-ns-builders";
 import { JSONSchema7 } from "json-schema";
 import { isJSONSchema } from "@graviola/json-schema-utils";
 import type { TraversalSchema } from "@graviola/edb-graph-traversal";
+import {
+  extractNestedFilterOptions,
+  normalizeOrderBy,
+} from "@graviola/edb-graph-traversal";
 import type {
   Prefixes,
   OrderByClause,
@@ -32,7 +36,6 @@ import type {
 import { resolveSparqlFeatures } from "@graviola/edb-core-utils";
 import df from "@rdfjs/data-model";
 import type { NamedNode, Variable } from "@rdfjs/types";
-import get from "lodash-es/get";
 import { convertIRIToNode, createBindOrValuesPattern } from "@/utils";
 import {
   isNilOrEmpty,
@@ -230,32 +233,6 @@ type NestedFilterOptions = {
 };
 
 /**
- * Type guard to check if a value is a nested filter options object (not boolean)
- */
-function isNestedFilterOptions(value: unknown): value is NestedFilterOptions {
-  return typeof value === "object" && value !== null;
-}
-
-/**
- * Extract nested filter options from include value
- * Uses lodash get for safe property access
- */
-function extractNestedFilterOptions(
-  includeValue: unknown,
-): Partial<GraphTraversalFilterOptions> {
-  if (!isNestedFilterOptions(includeValue)) {
-    return {};
-  }
-
-  return {
-    include: get(includeValue, "include"),
-    select: get(includeValue, "select"),
-    omit: get(includeValue, "omit"),
-    where: get(includeValue, "where"),
-  };
-}
-
-/**
  * True if this include value or any nested `include` subtree has a `where` clause.
  * Used to promote the relationship traversal to a required WHERE spine (not OPTIONAL),
  * so filters actually constrain the solution set instead of living only inside OPTIONAL.
@@ -403,8 +380,11 @@ function createNestedContext(
   nestedSchema?: TraversalSchema,
 ): QueryConstructionContext {
   const includeValue = ctx.filterOptions.include?.[propertyName];
-  const nestedFilterOptions: Partial<GraphTraversalFilterOptions> =
-    extractNestedFilterOptions(includeValue);
+  const nestedFilterOptions: Partial<GraphTraversalFilterOptions> = {
+    ...extractNestedFilterOptions(
+      includeValue as boolean | Record<string, unknown> | undefined,
+    ),
+  };
 
   const branchMaxRecursion =
     typeof includeValue === "object" &&
@@ -434,20 +414,6 @@ function createNestedContext(
     depth: ctx.depth + 1,
     maxRecursion,
   };
-}
-
-/**
- * Normalize orderBy to array format
- * Converts single object or array of objects to consistent array format
- * Example: { name: 'asc' } => [{ name: 'asc' }]
- */
-function normalizeOrderBy(
-  orderBy: OrderByClause | OrderByClause[] | undefined,
-): OrderByClause[] {
-  if (!orderBy) {
-    return [];
-  }
-  return Array.isArray(orderBy) ? orderBy : [orderBy];
 }
 
 /**

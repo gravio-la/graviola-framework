@@ -6,8 +6,6 @@ import type {
 } from "@graviola/edb-core-types";
 import { resolveSparqlFeatures } from "@graviola/edb-core-utils";
 
-export { resolveSparqlFeatures };
-
 /**
  * Recommended SPARQL engine profile for an endpoint provider.
  *

@@ -60,4 +60,9 @@ export type SPARQLDataStoreConfig = {
    * per call.
    */
   defaultFilterOptions?: SPARQLDefaultFilterOptions;
+  /** Defaults merged into every `loadOne` / CONSTRUCT hydration path. */
+  defaultLoadOptions?: Pick<
+    import("@graviola/edb-core-types").SPARQLCRUDOptions,
+    "maxRecursion" | "includeRelationsByDefault"
+  >;
 } & DatastoreBaseConfig;

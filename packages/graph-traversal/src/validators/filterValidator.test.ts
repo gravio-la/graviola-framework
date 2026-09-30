@@ -2,7 +2,7 @@
  * Tests for filter validation
  */
 
-import { describe, it, expect } from "@jest/globals";
+import { describe, it, expect } from "bun:test";
 import { validateFilter } from "./filterValidator";
 import type { JSONSchema7 } from "json-schema";
 

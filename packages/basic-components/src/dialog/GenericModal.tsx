@@ -16,12 +16,6 @@ import { useTranslation } from "next-i18next";
 
 const modalContent = [
   {
-    modalType: "moveToTrash",
-    title: "Eintrag in den Papierkorb verschieben",
-    text: "Eintrag in den Papierkorb verschieben?",
-    action: "Verschieben",
-  },
-  {
     modalType: "deleteSelected",
     title: "Gewählte Einträge Löschen",
     text: "Einträge dauerthaft löschen?",

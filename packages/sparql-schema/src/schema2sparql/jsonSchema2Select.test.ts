@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@jest/globals";
+import { describe, expect, test } from "bun:test";
 import { JSONSchema7 } from "json-schema";
 
 import { jsonSchema2Select } from "./jsonSchema2Select";

@@ -1,4 +1,4 @@
-import { describe, expect, test, beforeAll } from "@jest/globals";
+import { describe, expect, test, beforeAll } from "bun:test";
 import datasetFactory from "@rdfjs/dataset";
 import N3Parser from "@rdfjs/parser-n3";
 import type { Dataset } from "@rdfjs/types";

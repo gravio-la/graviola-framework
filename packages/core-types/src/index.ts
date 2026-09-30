@@ -81,6 +81,8 @@ export type SPARQLCRUDOptions = {
   queryBuildOptions?: SparqlBuildOptions;
   defaultPrefix: string;
   maxRecursion?: number;
+  /** When false, CONSTRUCT/load only expands explicitly included relations (Prisma-like). */
+  includeRelationsByDefault?: boolean;
   /** Max depth at which inverse (x-inverseOf) properties are resolved. Default 0 = root only. */
   resolveInverseMaxDepth?: number;
   defaultUpdateGraph?: string;

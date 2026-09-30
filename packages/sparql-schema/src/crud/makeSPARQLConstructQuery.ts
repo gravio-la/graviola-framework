@@ -24,7 +24,7 @@ export const makeSPARQLConstructQuery = (
   // Build the traversal schema first
   // Note: maxRecursion is handled internally by buildTraversalSchema during ref resolution
   const traversal = buildTraversalSchema(schema, {
-    includeRelationsByDefault: true,
+    includeRelationsByDefault: options.includeRelationsByDefault ?? true,
   });
 
   // Generate SPARQL patterns using new implementation

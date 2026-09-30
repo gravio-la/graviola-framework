@@ -3,7 +3,7 @@
  * Tests filters working together with schema processing
  */
 
-import { describe, expect, test } from "@jest/globals";
+import { describe, expect, test } from "bun:test";
 import df from "@rdfjs/data-model";
 import type { FilterContext } from "./types";
 import { filterToSparql } from "./filterToSparql";
@@ -133,8 +133,9 @@ describe("Filter Integration Tests", () => {
       expect(result.filters).toHaveLength(1);
 
       const filterStr = result.filters[0].toString();
-      expect(filterStr).toContain("REGEX");
-      expect(filterStr).toContain('"i"');
+      expect(filterStr).toContain("CONTAINS");
+      expect(filterStr).toContain("LCASE");
+      expect(filterStr).not.toContain("REGEX");
     });
   });
 

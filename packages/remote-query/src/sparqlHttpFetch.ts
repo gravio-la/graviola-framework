@@ -2,6 +2,10 @@ import type { AuthConfig, FetchConfig } from "@graviola/edb-core-types";
 
 import { createAuthHeaders, hasAuth } from "./authHelpers";
 
+export type SparqlFetchConfig = FetchConfig & {
+  bodyFormat?: "raw" | "form-urlencoded";
+};
+
 export const sparqlFetchConfigs = {
   ntriples: {
     accept: "application/n-triples,*/*;q=0.9",
@@ -22,10 +26,10 @@ export const sparqlFetchConfigs = {
     accept: "*/*",
     contentType: "application/sparql-update",
   },
-} as const;
+} as const satisfies Record<string, SparqlFetchConfig>;
 
 export const createSparqlFetchFunction =
-  (config: FetchConfig) =>
+  (config: SparqlFetchConfig) =>
   (
     query: string,
     endpoint: string,
@@ -33,6 +37,10 @@ export const createSparqlFetchFunction =
     additionalHeaders?: Record<string, string>,
   ) => {
     const requestMode = config.cors || "cors";
+    const body =
+      config.bodyFormat === "form-urlencoded"
+        ? `query=${encodeURIComponent(query)}`
+        : query;
     return fetch(endpoint, {
       headers: createAuthHeaders(
         {
@@ -42,7 +50,7 @@ export const createSparqlFetchFunction =
         auth,
         additionalHeaders,
       ),
-      body: query,
+      body,
       method: "POST",
       mode: requestMode,
       ...(requestMode === "cors" && {

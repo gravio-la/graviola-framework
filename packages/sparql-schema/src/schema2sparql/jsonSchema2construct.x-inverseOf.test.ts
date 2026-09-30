@@ -2,7 +2,7 @@
  * Tests read (CONSTRUCT) and write (UPDATE) behaviour for x-inverseOf on an array property.
  * Covers jsonSchema2construct only; traversalSchema2construct does not implement x-inverseOf.
  */
-import { describe, expect, test } from "@jest/globals";
+import { describe, expect, test } from "bun:test";
 import type { JSONSchema7 } from "json-schema";
 import { getInverseProperties } from "@graviola/json-schema-utils";
 import { removeInversePropertiesFromSchema } from "@graviola/jsonld-utils";

@@ -41,8 +41,3 @@ export function buildSPARQLConstructQuery(
 
   return query.build().toString();
 }
-
-/**
- * Alias for backward compatibility
- */
-export const constructResultToSPARQL = buildSPARQLConstructQuery;

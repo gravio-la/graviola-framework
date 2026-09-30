@@ -1,6 +1,5 @@
 import NiceModal from "@ebay/nice-modal-react";
 import { GenericModal } from "@graviola/edb-basic-components";
-import { filterUndefOrNull } from "@graviola/edb-core-utils";
 import {
   MODAL_ENTITY_DETAIL,
   useAdbContext,
@@ -32,8 +31,6 @@ import {
 import {
   createDeleteBulkEntry,
   createDeleteRowEntry,
-  createMoveToTrashBulkEntry,
-  createMoveToTrashRowEntry,
   defaultEntityActionRegistry,
   defaultValueRenderers,
 } from "@graviola/edb-detail-renderer";
@@ -393,14 +390,6 @@ export const SemanticTable = ({
   );
 
   const queryClient = useQueryClient();
-  const { mutateAsync: moveToTrashAsync, isPending: aboutToMoveToTrash } =
-    useMutation({
-      mutationKey: ["moveToTrash", (id: string | string[]) => id],
-      mutationFn: async (id: string | string[]) => id,
-      onSuccess: async () => {
-        queryClient.invalidateQueries({ queryKey: ["type", typeIRI] });
-      },
-    });
   const { mutateAsync: removeEntity, isPending: aboutToRemove } = useMutation({
     mutationKey: ["remove", (id: string) => id],
     mutationFn: async (id: string) => {
@@ -424,15 +413,6 @@ export const SemanticTable = ({
     [removeEntity],
   );
 
-  const handleMoveToTrash = useCallback(
-    async (id: string) => {
-      NiceModal.show(GenericModal, { type: "moveToTrash" }).then(async () => {
-        await moveToTrashAsync(id);
-      });
-    },
-    [moveToTrashAsync],
-  );
-
   const handleRemoveSelected = useCallback(
     async (ids: string[]) => {
       const c = ids.length;
@@ -446,28 +426,13 @@ export const SemanticTable = ({
     [removeEntity, t],
   );
 
-  const handleMoveToTrashSelected = useCallback(
-    async (ids: string[]) => {
-      const c = ids.length;
-      NiceModal.show(GenericModal, {
-        type: "moveToTrash",
-        extraMessage: t("move selected entries to trash", { count: c }),
-      }).then(async () => {
-        await moveToTrashAsync(filterUndefOrNull(ids));
-      });
-    },
-    [moveToTrashAsync, t],
-  );
-
   const storeCallbacks = useMemo<SemanticTableCallbacks>(
     () => ({
       onCreateEntry: () => editEntry(createEntityIRI(typeName)),
       onShowEntry: (id, _iri) => showEntry(id),
       onEditEntry: (id, _iri) => editEntry(id),
       onRemoveEntry: (id) => void handleRemove(id),
-      onMoveToTrashEntry: (id) => void handleMoveToTrash(id),
       onRemoveSelected: (ids) => void handleRemoveSelected(ids),
-      onMoveToTrashSelected: (ids) => void handleMoveToTrashSelected(ids),
       onToggleLoadAll: handleToggleLoadAll,
     }),
     [
@@ -476,9 +441,7 @@ export const SemanticTable = ({
       createEntityIRI,
       typeName,
       handleRemove,
-      handleMoveToTrash,
       handleRemoveSelected,
-      handleMoveToTrashSelected,
       handleToggleLoadAll,
     ],
   );
@@ -502,16 +465,6 @@ export const SemanticTable = ({
       ...((tableActionRegistry as unknown as EntityActionEntry[] | undefined) ??
         []),
     ];
-    if (mergedCallbacks.onMoveToTrashEntry) {
-      entries.push(
-        createMoveToTrashRowEntry(mergedCallbacks.onMoveToTrashEntry),
-      );
-    }
-    if (mergedCallbacks.onMoveToTrashSelected) {
-      entries.push(
-        createMoveToTrashBulkEntry(mergedCallbacks.onMoveToTrashSelected),
-      );
-    }
     if (mergedCallbacks.onRemoveEntry) {
       entries.push(createDeleteRowEntry(mergedCallbacks.onRemoveEntry));
     }
@@ -523,8 +476,6 @@ export const SemanticTable = ({
     entityActionRegistry,
     actionRegistry,
     tableActionRegistry,
-    mergedCallbacks.onMoveToTrashEntry,
-    mergedCallbacks.onMoveToTrashSelected,
     mergedCallbacks.onRemoveEntry,
     mergedCallbacks.onRemoveSelected,
   ]);
@@ -623,7 +574,7 @@ export const SemanticTable = ({
       rowCount={rowCount}
       columnOrder={columnOrder}
       isLoading={isLoading}
-      isActionPending={aboutToRemove || aboutToMoveToTrash}
+      isActionPending={aboutToRemove}
       loadAllAtOnce={loadAllAtOnce}
       loadAllUpperLimit={upperLimit}
       pagination={pagination}

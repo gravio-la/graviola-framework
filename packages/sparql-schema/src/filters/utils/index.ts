@@ -1,7 +1,6 @@
 /**
- * Filter utilities exports
+ * Filter utilities (internal — not re-exported from package entry).
  */
 
 export * from "./datatype";
-export * from "./variable";
 export * from "./cast";

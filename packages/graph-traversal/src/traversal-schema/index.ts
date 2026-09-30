@@ -1,9 +1,9 @@
 import type { JSONSchema7 } from "json-schema";
 import type { GraphTraversalFilterOptions } from "@graviola/edb-core-types";
+import type { IncludeTree } from "@graviola/typed-query-types";
 import type { TraversalSchema, DereferenceContext } from "./types";
 import { dereferenceSchema } from "./dereferenceSchema";
 import { projectSchema } from "./projectSchema";
-import type { IncludeTree } from "./selectionDepth";
 
 /**
  * Prepare a JSON Schema for graph traversal / SPARQL CONSTRUCT generation.
@@ -77,24 +77,5 @@ export function buildTraversalSchema<T = any>(
   } as TraversalSchema;
 }
 
-export type {
-  TraversalSchema,
-  DereferencedSchema,
-  ProjectedSchema,
-  DereferenceContext,
-} from "./types";
-export { dereferenceSchema, isRelationshipSchema } from "./dereferenceSchema";
-export {
-  projectSchema,
-  referencedRootWhereFilterProperties,
-  shouldIncludeProperty,
-  extractPaginationOptions,
-  orderByPropertyKeys,
-} from "./projectSchema";
-export {
-  selectionDepth,
-  truncatedSelectionPaths,
-  resolveEffectiveMaxRecursion,
-  SelectionTruncationError,
-} from "./selectionDepth";
-export type { IncludeTree } from "./selectionDepth";
+export type { TraversalSchema, ProjectedSchema } from "./types";
+export { projectSchema } from "./projectSchema";

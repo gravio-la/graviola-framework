@@ -14,7 +14,7 @@ import {
   makeSPARQLWherePart,
   buildQueryWithPrefixAndGraph,
   withDefaultPrefix,
-} from "@/crud";
+} from "./makeSPARQLWherePart";
 import { jsonSchema2construct } from "@/schema2sparql";
 import { iriRef } from "../sparqlTerms";
 

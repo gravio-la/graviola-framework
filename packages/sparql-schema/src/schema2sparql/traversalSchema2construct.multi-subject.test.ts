@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "bun:test";
 import { traversalSchema2construct } from "./traversalSchema2construct";
 import type { TraversalSchema } from "@graviola/edb-graph-traversal";
 

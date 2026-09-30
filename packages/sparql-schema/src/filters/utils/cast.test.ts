@@ -1,13 +1,8 @@
-import { describe, test, expect } from "@jest/globals";
+import { describe, test, expect } from "bun:test";
 import { sparql } from "@tpluscode/sparql-builder";
 import df from "@rdfjs/data-model";
 import { xsd } from "@tpluscode/rdf-ns-builders";
-import {
-  castVariable,
-  castToInteger,
-  castToDecimal,
-  castToBoolean,
-} from "./cast";
+import { castVariable, castToInteger } from "./cast";
 
 describe("castVariable", () => {
   test("generates correct XSD constructor function call", () => {
@@ -28,24 +23,6 @@ describe("castVariable", () => {
     const resultString = result.toString();
     expect(resultString).toContain("integer");
     expect(resultString).toContain("?count");
-  });
-
-  test("castToDecimal convenience function", () => {
-    const variable = df.variable("price");
-    const result = castToDecimal(variable);
-
-    const resultString = result.toString();
-    expect(resultString).toContain("decimal");
-    expect(resultString).toContain("?price");
-  });
-
-  test("castToBoolean convenience function", () => {
-    const variable = df.variable("active");
-    const result = castToBoolean(variable);
-
-    const resultString = result.toString();
-    expect(resultString).toContain("boolean");
-    expect(resultString).toContain("?active");
   });
 
   test("works in FILTER expression", () => {

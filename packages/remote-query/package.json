@@ -16,10 +16,12 @@
   },
   "files": [
     "dist",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "README.md"
   ],
   "scripts": {
     "depcheck": "depcheck",
+    "test": "bun test",
     "build": "tsup",
     "dev": "tsup --watch",
     "lint": "eslint src/**/*.ts",
@@ -33,6 +35,7 @@
     "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
+    "@types/bun": "latest",
     "@types/lodash-es": "^4.17.12",
     "eslint-config-edb": "workspace:*",
     "typescript": "^5.8.2",
