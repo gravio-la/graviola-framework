@@ -204,7 +204,6 @@ The framework is layered. Each layer consumes only from layers below it.
 | `@graviola/search-facet-schema` | `SearchFacetSchema` types + AJV loader for FTS/facets (Layer 1, no React)                                                                                   |
 | `@graviola/typed-query-types`   | Recursive Prisma-style query types (`TypedWhereInput`, …) shared by Store Filters and graph traversal                                                       |
 | `@graviola/json-schema-utils`   | JSON Schema manipulation (`bringDefinitionToTop`, `$ref` resolve, `definitionScope` / `definitionNameFromScope`, `stripXCalcProperties`, CBD boundaries, …) |
-| `@graviola/jsonld-utils`        | JSON-LD ↔ RDF conversion utilities                                                                                                                          |
 | `@graviola/edb-build-helper`    | Build / dependency analysis helpers (`get-dependencies.js`)                                                                                                 |
 | `@graviola/edb-config-helper`   | Configuration helpers                                                                                                                                       |
 | `@graviola/edb-tsconfig`        | Shared `tsconfig` bases                                                                                                                                     |
@@ -233,6 +232,7 @@ The framework is layered. Each layer consumes only from layers below it.
 | `@graviola/edb-wikidata-utils`           | Lookup helpers for Wikidata                                                                                          |
 | `@graviola/edb-file-import`              | RDF file import (Turtle/N-Quads/JSON-LD via n3, jsonld)                                                              |
 | `@graviola/edb-maintenance-utils`        | Document and graph loading utilities for maintenance tasks                                                           |
+| `@graviola/jsonld-utils`                 | JSON-LD ↔ RDF conversion utilities; `cleanJSONLD` uses graph traversal                                               |
 
 **Read pipeline (typical):**
 

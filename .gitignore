@@ -34,9 +34,6 @@ yarn-error.log*
 
 # local env files
 .env*.local
-# host-specific env files carrying real credentials (not templates)
-apps/fulltext-sd/.env.klonixe
-
 # vercel
 .vercel
 
@@ -67,10 +64,6 @@ yalc.lock
 coverage
 
 out
-# Committed Turtle outputs for sample-data domains (overrides root `out`)
-!apps/sample-data/**/out/
-!apps/sample-data/**/out/**
-
 apps/exhibition-live/exhibition-live
 
 packages/icons/src/assets/svgs
@@ -102,13 +95,22 @@ apps/datastore-tests/prisma/prisma/
 .claude
 apps/datastore-tests/graphdb.license
 
-# Local runtime data for the portal-server databases registry
-platform/portal-server/data/
+# Extracted to separate repositories (nested git checkouts)
+platform/
+apps/fulltext-sd/
+apps/parliament-map/
+apps/package-graph/
+apps/semantic-desktop-mcp/
+apps/landtag-ingest/
+apps/lehrplan-und-konzept/
+apps/fts-cli/
+apps/fts-geo-onboarding/
+apps/sample-data/
+apps/linked-markdown-demo/
+apps/metadata-explorer/
+apps/school-management-app/
 
-# package-graph review tool: generated data and temporary review notes
-apps/package-graph/data/
-apps/package-graph/public/data/
-apps/package-graph/generated/
-apps/package-graph/reviews/
+# Local agent / extraction notes (not for commit)
+.local/
 # jscpd default report dir
 report/

@@ -1,6 +1,6 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
-  "ignoreWorkspaces": ["platform/*", "apps/test-prisma-cli", "apps/datastore-tests"],
+  "ignoreWorkspaces": ["apps/datastore-tests"],
   "entry": [
     "packages/*/src/index.ts",
     "packages/form-renderer/*/src/index.ts",
@@ -15,7 +15,6 @@
   "ignore": [
     "packages/indexeddb-dataset/**",
     "packages/indexeddb-store-provider/**",
-    "platform/**",
     "**/*.stories.{ts,tsx}",
     "**/*.test.{ts,tsx}",
     "**/dist/**"
