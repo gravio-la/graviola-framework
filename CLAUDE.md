@@ -29,7 +29,7 @@ The following are not stylistic preferences; they constrain what does and does n
 
 - **JSON Schema is the runtime single source of truth.** The form, the table, the detail view, the SPARQL query, the validator, and the type definitions all derive from it. The schema travels with the data.
 - **Storage-agnostic core.** A concrete `AbstractDatastore` implementation supplies CRUD; the rest of the framework programs against the interface in `@graviola/edb-global-types`. Implementations: SPARQL (over Oxigraph / remote endpoints), Prisma, REST, in-memory, plus a contract test suite (`apps/datastore-tests`).
-- **Browser/server symmetry.** The foundation and schema-to-query layers (Layer 1, Layer 2 below) **must run identically in browser and on Bun**. They are consumed by command-line tools (`@graviola/edb-cli-creator`, `apps/json-schema-cli`, `apps/test-prisma-cli`) and the `apps/datastore-tests` Bun test suite. **Adding React, MUI, or any browser-only dependency to those layers is a breaking change** even if no test fails.
+- **Browser/server symmetry.** The foundation and schema-to-query layers (Layer 1, Layer 2 below) **must run identically in browser and on Bun**. They are consumed by command-line tools (`@graviola/edb-cli-creator`, `apps/json-schema-cli`) and the `apps/datastore-tests` Bun test suite. **Adding React, MUI, or any browser-only dependency to those layers is a breaking change** even if no test fails.
 - **Structural dispatch.** UI rendering, mapping, validation, and lens application are bound to the **shape** declared by a schema (or a property carried by an entity), not to a nominal type. JSON Forms exemplifies the pattern at field level; Graviola extends it to detail views, chips, mappings.
 - **Scope vs. binding path.** A _scope_ (`#/properties/birthDate`) is a JSON Pointer into a **schema document** — TBox. A _binding path_ (`patch.lane.owner.id`) is a runtime traversal of **instance data** shaped by the schema — ABox. Renderers, testers, and UI schema use scopes. Calculated-field formulas, mapping selectors, and data extractors use binding paths. Confusing the two is a category error.
 - **Reasoning-compatible, reasoner-optional.** Conceptual model is description-logic-shaped (property-driven class derivation, transitive `sameAs`, `x-inverseOf`), but the framework ships no reasoner. Inference, where required, is delegated to the underlying store or to application code.
@@ -63,7 +63,7 @@ graviola-framework/
 │   ├── storybook/                  # Storybook 10 + Vitest browser tests (Playwright)
 │   ├── datastore-tests/            # Contract tests for AbstractDatastore implementations (Bun)
 │   ├── json-schema-cli/            # JSON Schema utilities CLI
-│   └── test-prisma-cli/            # Prisma adapter playground CLI
+│   └── calc-worker/                # Calc worker for browser/server materialization
 ├── _templates/                     # Hygen code-generation templates (edb/, generator/, init/)
 ├── _site/                          # Aggregated Pages output (storybook + typedoc + testapp)
 ├── prisma/                         # Generated Prisma schema files
@@ -73,7 +73,7 @@ graviola-framework/
 └── preview-pages.sh                # Local preview of the combined Pages site
 ```
 
-> **Note:** `apps/edb-api/` and `apps/edb-cli/` directories exist but contain no source today. Domain-specific SLUB applications and schemas live in a separate repository. The canonical example in this repo is `apps/testapp`.
+> **Note:** `apps/edb-cli/` is inactive (no source). Satellite sample apps and domain schemas live in separate GitLab repositories (nested checkouts under `apps/*`, gitignored). The canonical example in this repo is `apps/testapp`.
 >
 > **Note:** `packages/indexeddb-store-provider/` and `packages/indexeddb-dataset/` are inactive (no source); do not add them as dependencies.
 
@@ -323,7 +323,7 @@ Each provider wires `AdbProvider` (from `edb-state-hooks`) into a concrete `Abst
 | `apps/storybook`            | Storybook 10 with `library-docs/` (sparql-schema, graph-traversal) and `packages/` story sets                                                            |
 | `apps/datastore-tests`      | Bun test suite running shared CRUD/query/import suites against every active backend (Oxigraph, Fuseki, Blazegraph, Prisma SQLite/Postgres/MariaDB/Mongo) |
 | `apps/json-schema-cli`      | CLI for JSON Schema operations                                                                                                                           |
-| `apps/test-prisma-cli`      | Playground CLI for Prisma adapter behavior                                                                                                               |
+| `apps/calc-worker`          | Calc materialization worker (browser + server)                                                                                                           |
 
 ### Ideas / experimental
 
@@ -611,7 +611,7 @@ The shell also exposes a `pages-preview` alias (calls `./preview-pages.sh`) for 
 
 - **Domain-specific SLUB applications and schemas.** Maintained in a separate repository; not part of this core monorepo.
 - **`packages/ideas/`.** Experimental / incubating; APIs are unstable.
-- **`packages/indexeddb-store-provider/`, `packages/indexeddb-dataset/`, `apps/edb-api/`, `apps/edb-cli/`.** Empty / inactive directories at present.
+- **`packages/indexeddb-store-provider/`, `packages/indexeddb-dataset/`, `apps/edb-cli/`.** Empty / inactive directories at present. Extracted sample apps under `apps/*` are gitignored nested checkouts.
 - **Trajectory features still incomplete (lenses, signed states, query-scoped aggregates).** See [conceptual docs trajectory chapter](https://gravio-la.github.io/graviola-concept-documentation/trajectory.html). Calculated fields have a working Layer 2 stack (`formula-dependency`, `formula-runtime`, `calc-engine`, `calc-fixtures`) — do not reintroduce domain demos into those packages.
 
 The **canonical reference implementation** is `apps/testapp` — a small Vite + React app with three example schemas (`item-schema`, `metal-schema`, `course-schema`) demonstrating `GenericForm`, `SemanticTable`, `DetailRenderer`, and `LocalOxigraphStoreProvider`.

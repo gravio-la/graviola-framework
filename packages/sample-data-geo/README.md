@@ -10,10 +10,12 @@ Hierarchy edges:
   waiting on `x-inverseOf` / issue #5). Wikidata analogue: P150.
 - `parts` — schema-only `x-inverseOf` → `partOf` (filter path still broken)
 
-**Do not regenerate this package in CI.** The Turtle is synced from
-`apps/sample-data/domains/geo/out/geo.ttl` into a TypeScript string module so
-consumers can `import { geoTurtle } from "@graviola/sample-data-geo"` with no
-fetch and no bundler plugin.
+**Do not regenerate this package in CI.** The Turtle is synced from the
+[`wikidata-geo-data-mapper`](https://git.gra.one/graviola-next/samples/wikidata-geo-data-mapper)
+checkout (`apps/sample-data/domains/geo/out/geo.ttl` when nested beside this
+monorepo) into a TypeScript string module so consumers can
+`import { geoTurtle } from "@graviola/sample-data-geo"` with no fetch and no
+bundler plugin.
 
 ## Exports
 
@@ -30,8 +32,9 @@ fetch and no bundler plugin.
 ## Sync after regenerating sample data
 
 ```bash
-bun run sample:geo                              # regenerate apps/sample-data/.../out/geo.ttl
+cd apps/sample-data && bun run generate:geo      # wikidata-geo-data-mapper nested checkout
 bun run --filter @graviola/sample-data-geo sync # refresh src/geo.turtle.generated.ts
+# or: GRAVIOLA_GEO_TTL=/path/to/geo.ttl bun run --filter @graviola/sample-data-geo sync
 # update geoStats in src/stats.ts if counts changed
 bun run --filter @graviola/sample-data-geo test
 bun run --filter @graviola/sample-data-geo build

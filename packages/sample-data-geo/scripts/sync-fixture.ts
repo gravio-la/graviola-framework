@@ -1,20 +1,48 @@
 /**
- * Sync apps/sample-data/domains/geo/out/geo.ttl → src/geo.turtle.generated.ts
+ * Sync wikidata-geo-data-mapper geo.ttl → src/geo.turtle.generated.ts
  *
- * Run after regenerating geo sample data:
- *   bun run --filter @graviola/sample-data generate:geo
+ * Run after regenerating geo sample data in the extracted repo:
+ *   cd apps/sample-data && bun run generate:geo
  *   bun run --filter @graviola/sample-data-geo sync
+ *
+ * Override source path: GRAVIOLA_GEO_TTL=/path/to/geo.ttl
  */
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const packageRoot = join(here, "..");
-const sourceTtl = join(
-  packageRoot,
-  "../../apps/sample-data/domains/geo/out/geo.ttl",
-);
+
+function resolveSourceTtl(): string {
+  const fromEnv = process.env.GRAVIOLA_GEO_TTL;
+  if (fromEnv) {
+    if (!existsSync(fromEnv)) {
+      throw new Error(`GRAVIOLA_GEO_TTL not found: ${fromEnv}`);
+    }
+    return fromEnv;
+  }
+
+  const candidates = [
+    join(packageRoot, "../../apps/sample-data/domains/geo/out/geo.ttl"),
+    join(
+      packageRoot,
+      "../../../samples/wikidata-geo-data-mapper/domains/geo/out/geo.ttl",
+    ),
+  ];
+
+  for (const candidate of candidates) {
+    if (existsSync(candidate)) {
+      return candidate;
+    }
+  }
+
+  throw new Error(
+    "geo.ttl not found. Clone wikidata-geo-data-mapper as apps/sample-data or set GRAVIOLA_GEO_TTL.",
+  );
+}
+
+const sourceTtl = resolveSourceTtl();
 const outFile = join(packageRoot, "src/geo.turtle.generated.ts");
 
 const turtle = readFileSync(sourceTtl, "utf8");
@@ -26,7 +54,7 @@ const escaped = turtle
 const banner = `/* eslint-disable */
 /**
  * AUTO-GENERATED — do not edit by hand.
- * Source: apps/sample-data/domains/geo/out/geo.ttl
+ * Source: wikidata-geo-data-mapper domains/geo/out/geo.ttl
  * Regenerate: bun run sync  (from packages/sample-data-geo)
  */
 `;
