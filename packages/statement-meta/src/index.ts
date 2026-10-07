@@ -569,6 +569,97 @@ export function remapStatementsForPersistence<T>(document: T): T {
   return normalizeStatementValuesDeep(remapped, undefined, true) as T;
 }
 
+function sidecarAtPropertyPath(
+  document: unknown,
+  propertyPath: string,
+): unknown[] | undefined {
+  const segments = propertyPath.split(".").filter(Boolean);
+  if (segments.length === 0) return undefined;
+  let current: unknown = document;
+  for (let i = 0; i < segments.length - 1; i++) {
+    if (!isPlainObject(current)) return undefined;
+    current = current[segments[i]!];
+  }
+  if (!isPlainObject(current)) return undefined;
+  const last = segments[segments.length - 1]!;
+  const key = `${last}${STATEMENT_PERSISTENCE_SUFFIX}`;
+  const raw = current[key];
+  return Array.isArray(raw) ? raw : undefined;
+}
+
+function collectStatementSidecarPaths(
+  value: unknown,
+  dotPrefix: string,
+  out: Array<{ propertyPath: string; nodes: unknown[] }>,
+): void {
+  if (!isPlainObject(value)) return;
+  for (const [key, fieldValue] of Object.entries(value)) {
+    if (key.startsWith("@")) continue;
+    if (isStatementKey(key) && Array.isArray(fieldValue)) {
+      const baseKey = key.endsWith(STATEMENT_PERSISTENCE_SUFFIX)
+        ? key.slice(0, -STATEMENT_PERSISTENCE_SUFFIX.length)
+        : key.slice(0, -STATEMENT_JSON_SUFFIX.length);
+      const propertyPath = dotPrefix ? `${dotPrefix}.${baseKey}` : baseKey;
+      out.push({ propertyPath, nodes: fieldValue });
+      continue;
+    }
+    // A nested object with an `@id` is another entity: it is persisted as a
+    // reference only, and its statements belong to its own document.
+    if (isPlainObject(fieldValue) && typeof fieldValue["@id"] !== "string") {
+      const nextPrefix = dotPrefix ? `${dotPrefix}.${key}` : key;
+      collectStatementSidecarPaths(fieldValue, nextPrefix, out);
+    }
+  }
+}
+
+function statementValuesEqual(source: unknown, cleaned: unknown): boolean {
+  if (source === cleaned) return true;
+  if (source == null || cleaned == null) return source === cleaned;
+  return String(source) === String(cleaned);
+}
+
+function statementNodePersisted(source: unknown, cleaned: unknown): boolean {
+  if (!isPlainObject(source) || !isPlainObject(cleaned)) return false;
+  if (!statementValuesEqual(source.value, cleaned.value)) return false;
+  if (source.wasGeneratedBy != null && cleaned.wasGeneratedBy == null) {
+    return false;
+  }
+  return true;
+}
+
+/**
+ * Throws when `cleanJSONLD` truncated any statement sidecar that `source`
+ * carries — i.e. the sidecar exceeds the store's write depth.
+ */
+export function assertStatementSidecarsPersisted(
+  source: unknown,
+  cleaned: unknown,
+): void {
+  const sidecars: Array<{ propertyPath: string; nodes: unknown[] }> = [];
+  collectStatementSidecarPaths(source, "", sidecars);
+  for (const { propertyPath, nodes } of sidecars) {
+    if (nodes.length === 0) continue;
+    // The cleaned document went through RDF, which keeps no array order:
+    // every source node needs a counterpart of its own, wherever it ended up.
+    const remaining = [...(sidecarAtPropertyPath(cleaned, propertyPath) ?? [])];
+    const allPersisted =
+      remaining.length === nodes.length &&
+      nodes.every((node) => {
+        const match = remaining.findIndex((candidate) =>
+          statementNodePersisted(node, candidate),
+        );
+        if (match === -1) return false;
+        remaining.splice(match, 1);
+        return true;
+      });
+    if (!allPersisted) {
+      throw new Error(
+        `persistDocument: statements at '${propertyPath}' exceed the depth this store persists (walkerOptions.maxRecursion)`,
+      );
+    }
+  }
+}
+
 export function remapStatementsFromPersistence<T>(document: T): T {
   const remapped = remapStatementKeysDeep(
     document,
@@ -594,6 +685,35 @@ function stripStatementKeysDeep(value: unknown): unknown {
 
 export function stripClientStatements<T>(document: T): T {
   return stripStatementKeysDeep(document) as T;
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return value != null && typeof value === "object" && !Array.isArray(value);
+}
+
+/**
+ * Statements are system-mediated: a plain upsert neither adds nor removes
+ * them. Copies the stored `$stmt` sidecars of `previous` onto `next`, at the
+ * same paths, so re-saving a document keeps the provenance of its facts.
+ * Nested objects are followed where both documents have one; arrays are not.
+ */
+export function carryOverStatements<T extends Record<string, unknown>>(
+  next: T,
+  previous: Record<string, unknown> | null | undefined,
+): T {
+  if (!previous) return next;
+  const out: Record<string, unknown> = { ...next };
+  for (const [key, value] of Object.entries(previous)) {
+    if (isStatementKey(key)) {
+      out[key] = cloneJson(value);
+    } else if (isPlainObject(value) && isPlainObject(out[key])) {
+      out[key] = carryOverStatements(
+        out[key] as Record<string, unknown>,
+        value,
+      );
+    }
+  }
+  return out as T;
 }
 
 function collectFromObject(

@@ -1,8 +1,10 @@
 import { describe, expect, test } from "bun:test";
 import type { JSONSchema7 } from "json-schema";
 import {
+  assertStatementSidecarsPersisted,
   applyStatementRetention,
   applyStatementWrites,
+  carryOverStatements,
   compactStatementNodeForPersistence,
   dedupeStatementNodes,
   extendStatementSchema,
@@ -221,5 +223,105 @@ describe("extendStatementSchema", () => {
       extendStatementSchema(base, ext),
     );
     expect(merged.properties?.importBatch).toBeDefined();
+  });
+});
+
+describe("carryOverStatements", () => {
+  const stored = {
+    "@id": "ex:1",
+    price: 10,
+    price$stmt: [{ value: 10, source: "catalog" }],
+    billing: { total: 5, total$stmt: [{ value: 5, source: "invoice" }] },
+    tags: [{ name: "a", name$stmt: [{ value: "a" }] }],
+  };
+
+  test("stored sidecars are copied onto the next document at the same paths", () => {
+    const next = carryOverStatements(
+      { "@id": "ex:1", price: 12, billing: { total: 5 }, label: "new" },
+      stored,
+    );
+    expect(next).toEqual({
+      "@id": "ex:1",
+      price: 12,
+      price$stmt: [{ value: 10, source: "catalog" }],
+      billing: { total: 5, total$stmt: [{ value: 5, source: "invoice" }] },
+      label: "new",
+    });
+    // Copies, not references into the stored document.
+    expect((next as Record<string, unknown>).price$stmt).not.toBe(
+      stored.price$stmt,
+    );
+  });
+
+  test("a nested object missing from the next document is not recreated; arrays are not traversed", () => {
+    const next = carryOverStatements(
+      { "@id": "ex:1", tags: [{ name: "a" }] },
+      stored,
+    );
+    expect(next).toEqual({
+      "@id": "ex:1",
+      price$stmt: [{ value: 10, source: "catalog" }],
+      tags: [{ name: "a" }],
+    });
+  });
+
+  test("no previous document: unchanged", () => {
+    const doc = { "@id": "ex:1", price: 1 };
+    expect(carryOverStatements(doc, null)).toBe(doc);
+  });
+});
+
+describe("assertStatementSidecarsPersisted", () => {
+  const node = (value: number, generated = true) => ({
+    value,
+    ...(generated ? { wasGeneratedBy: { activity: "calc" } } : {}),
+  });
+
+  test("passes when every sidecar node is still there", () => {
+    const doc = { "@id": "ex:1", price: 2, price__stmt: [node(1), node(2)] };
+    expect(() => assertStatementSidecarsPersisted(doc, doc)).not.toThrow();
+  });
+
+  test("does not depend on the order of the nodes", () => {
+    const source = { "@id": "ex:1", price__stmt: [node(1), node(2), node(2)] };
+    const cleaned = { "@id": "ex:1", price__stmt: [node(2), node(1), node(2)] };
+    expect(() =>
+      assertStatementSidecarsPersisted(source, cleaned),
+    ).not.toThrow();
+  });
+
+  test("throws when a nested sidecar was cut off", () => {
+    const source = {
+      "@id": "ex:1",
+      billing: { detail: { net: 1, net__stmt: [node(1)] } },
+    };
+    const lostNode = { "@id": "ex:1", billing: { detail: { net: 1 } } };
+    const lostActivity = {
+      "@id": "ex:1",
+      billing: { detail: { net: 1, net__stmt: [node(1, false)] } },
+    };
+    expect(() => assertStatementSidecarsPersisted(source, lostNode)).toThrow(
+      /billing\.detail\.net/,
+    );
+    expect(() =>
+      assertStatementSidecarsPersisted(source, lostActivity),
+    ).toThrow(/billing\.detail\.net/);
+  });
+
+  test("throws when a node is missing among equal-looking ones", () => {
+    const source = { "@id": "ex:1", price__stmt: [node(1), node(1)] };
+    const cleaned = { "@id": "ex:1", price__stmt: [node(1)] };
+    expect(() => assertStatementSidecarsPersisted(source, cleaned)).toThrow();
+  });
+
+  test("ignores statements of a linked entity, which is saved as a reference", () => {
+    const source = {
+      "@id": "ex:membership",
+      patch: { "@id": "ex:patch", area: 5, area__stmt: [node(5)] },
+    };
+    const cleaned = { "@id": "ex:membership", patch: { "@id": "ex:patch" } };
+    expect(() =>
+      assertStatementSidecarsPersisted(source, cleaned),
+    ).not.toThrow();
   });
 });
