@@ -30,8 +30,8 @@
     "@graviola/edb-data-mapping": "workspace:*",
     "@graviola/edb-graph-traversal": "workspace:*",
     "@graviola/json-schema-utils": "workspace:*",
+    "@graviola/jsonld-utils": "workspace:*",
     "@rdfjs/types": "catalog:rdf",
-    "jsonld": "^8.3.3",
     "n3": "^1.23.1"
   },
   "devDependencies": {

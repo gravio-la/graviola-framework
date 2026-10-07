@@ -1,5 +1,5 @@
-import { Parser, Store, type Quad } from "n3";
-import jsonld from "jsonld";
+import { Parser, Store } from "n3";
+import { jsonld2DataSet } from "@graviola/jsonld-utils";
 
 const extensionOf = (fileName: string): string =>
   fileName.includes(".") ? fileName.split(".").pop()!.toLowerCase() : "";
@@ -36,9 +36,12 @@ export async function parseRdfContentToStore(
     }
     case "json":
     case "jsonld": {
-      const quads = (await jsonld.toRDF(JSON.parse(content))) as Quad[];
-      for (const quad of quads) {
-        store.addQuad(quad as Quad);
+      const ds = await jsonld2DataSet(JSON.parse(content), {
+        strict: false,
+        allowRemoteContexts: true,
+      });
+      for (const quad of ds) {
+        store.addQuad(quad);
       }
       break;
     }

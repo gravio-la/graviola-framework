@@ -33,15 +33,15 @@
   },
   "dependencies": {
     "@graviola/edb-core-utils": "workspace:*",
-    "@graviola/edb-graph-traversal": "workspace:*"
+    "@graviola/edb-graph-traversal": "workspace:*",
+    "jsonld-streaming-parser": "^5.0.1",
+    "rdf-data-factory": "^2.0.0"
   },
   "peerDependencies": {
-    "jsonld": "catalog:",
     "@rdfjs/dataset": "^2.0.2",
     "n3": "^1.17.2"
   },
   "devDependencies": {
-    "jsonld": "catalog:",
     "@graviola/edb-build-helper": "workspace:*",
     "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-tsconfig": "workspace:*",

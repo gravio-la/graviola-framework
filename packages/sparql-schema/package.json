@@ -45,7 +45,6 @@
     "lodash-es": "catalog:"
   },
   "devDependencies": {
-    "jsonld": "catalog:",
     "@comunica/types": "^2.10.0",
     "@graviola/edb-build-helper": "workspace:*",
     "@graviola/edb-core-types": "workspace:*",

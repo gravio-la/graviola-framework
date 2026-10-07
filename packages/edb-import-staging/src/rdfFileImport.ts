@@ -1,9 +1,9 @@
 import type { WalkerOptions } from "@graviola/edb-core-types";
 import { traverseGraphExtractBySchema } from "@graviola/edb-graph-traversal";
 import { bringDefinitionToTop, defs } from "@graviola/json-schema-utils";
+import { jsonld2DataSet } from "@graviola/jsonld-utils";
 import type { JSONSchema7 } from "json-schema";
-import jsonld from "jsonld";
-import { DataFactory, Parser, Store, type Quad } from "n3";
+import { DataFactory, Parser, Store } from "n3";
 import type { StagedChangeSet, StagedEntity } from "./types";
 
 const { namedNode } = DataFactory;
@@ -58,9 +58,12 @@ export const parseRdfContentToStore = async (
     }
     case "json":
     case "jsonld": {
-      const quads = (await jsonld.toRDF(JSON.parse(content))) as Quad[];
-      for (const quad of quads) {
-        store.addQuad(quad as Quad);
+      const ds = await jsonld2DataSet(JSON.parse(content), {
+        strict: false,
+        allowRemoteContexts: true,
+      });
+      for (const quad of ds) {
+        store.addQuad(quad);
       }
       break;
     }

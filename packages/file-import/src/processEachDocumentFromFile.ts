@@ -4,11 +4,11 @@ import {
   processAllDocumentsFromDataset,
 } from "@graviola/edb-maintenance-utils";
 import mime from "mime-types";
-import { DatasetCore, Quad } from "@rdfjs/types";
+import { DatasetCore } from "@rdfjs/types";
 import datasetFactory from "@rdfjs/dataset";
 import N3 from "n3";
 import * as fs from "fs";
-import jsonld from "jsonld";
+import { jsonld2DataSet } from "@graviola/jsonld-utils";
 
 export const processEachDocumentFromFile = async (
   file: string,
@@ -29,10 +29,10 @@ export const processEachDocumentFromFile = async (
       ds = datasetFactory.dataset(reader.parse(fs.readFileSync(file, "utf-8")));
       break;
     case "application/json":
-      const quads = (await jsonld.toRDF(
-        JSON.parse(fs.readFileSync(file, "utf-8")),
-      )) as Quad[];
-      ds = datasetFactory.dataset(quads);
+      ds = await jsonld2DataSet(JSON.parse(fs.readFileSync(file, "utf-8")), {
+        strict: false,
+        allowRemoteContexts: true,
+      });
       break;
     default:
       throw new Error(`Unsupported file type: ${mimeType}`);

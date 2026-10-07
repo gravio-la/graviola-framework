@@ -62,10 +62,10 @@
       "apps/datastore-tests",
       "apps/json-schema-cli",
       "apps/storybook",
-      "apps/testapp"
+      "apps/testapp",
+      "platform/*"
     ],
     "catalog": {
-      "jsonld": "^9.0.0",
       "react": "^19",
       "react-dom": "^19.0.0",
       "react-router-dom": "^7.1.5",
