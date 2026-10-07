@@ -9,7 +9,7 @@ import {
   bringDefinitionToTop,
   getInverseProperties,
 } from "@graviola/json-schema-utils";
-import { cleanJSONLD } from "@graviola/jsonld-utils";
+import { cleanJSONLD, defaultWalkerOptions } from "@graviola/jsonld-utils";
 import {
   exists,
   findEntityByAuthorityIRI,
@@ -47,9 +47,11 @@ import {
   alwaysStatementPathsForType,
   applyStatementRetention,
   applyStatementWrites,
+  carryOverStatements,
   dedupeStatementNodes,
   deriveProvenanceSchema,
   normalizeStatementValue,
+  assertStatementSidecarsPersisted,
   remapStatementsForPersistence,
   remapStatementsFromPersistence,
   resolveStatementMetaProfile,
@@ -67,7 +69,6 @@ import {
   parseRdf12StatementBindings,
   propertyIriFromPath,
 } from "./rdf12Statements";
-import { buildStatementNodeSidecarDelete } from "./statementNodeStatements";
 import type {
   EntityChangeEvent,
   SparqlStore,
@@ -216,6 +217,9 @@ export function initSPARQLDatastorePair(
     ? ("query" as const)
     : ("extraction" as const);
 
+  const writeWalkerOptions = { ...defaultWalkerOptions, ...walkerOptions };
+  const deleteDepth = Math.max(4, writeWalkerOptions.maxRecursion ?? 0);
+
   const changeBus = createChangeBus();
   const storeId = `sparql:${flavour}` as StoreId;
 
@@ -268,16 +272,34 @@ export function initSPARQLDatastorePair(
       "@type": typeNameToTypeIRI(typeName),
     };
 
+    // Loaded at most once; both statement carry-over and meta stamping need it.
+    let previousDocument: Promise<Record<string, unknown> | null> | undefined;
+    const loadPrevious = () =>
+      (previousDocument ??= loadDocument(typeName, entityIRI)
+        .then((d) => (d as Record<string, unknown> | null | undefined) ?? null)
+        .catch(() => null));
+
     if (statementMeta) {
-      doc = opts?.keepStatements
-        ? remapStatementsForPersistence(doc)
-        : stripClientStatements(doc);
+      if (opts?.keepStatements) {
+        doc = remapStatementsForPersistence(doc);
+      } else {
+        doc = stripClientStatements(doc);
+        // A plain upsert rewrites the entity, sidecars included. Statements
+        // are system-mediated, so the stored ones are written back unchanged;
+        // otherwise every form save would drop the provenance of all facts.
+        if (statementEncoding === "statement-node") {
+          const previous = await loadPrevious();
+          if (previous) {
+            doc = remapStatementsForPersistence(
+              carryOverStatements(doc, previous),
+            );
+          }
+        }
+      }
     }
 
     if (effectiveMetaStamping) {
-      const previous = await loadDocument(typeName, entityIRI).catch(
-        () => null,
-      );
+      const previous = await loadPrevious();
       doc = applyMetaStampingOnWrite(
         doc,
         typeName,
@@ -297,12 +319,17 @@ export function initSPARQLDatastorePair(
         keepContext: true,
         removeInverseProperties: true,
         pruneLinkedDocuments: true,
+        walkerOptions: writeWalkerOptions,
       },
     );
+    if (statementMeta && statementEncoding === "statement-node") {
+      assertStatementSidecarsPersisted(doc, cleanData);
+    }
     await save(cleanData, schema, updateFetch, {
       defaultPrefix,
       queryBuildOptions,
       defaultUpdateGraph,
+      maxRecursion: deleteDepth,
     });
 
     if (enableInversePropertiesFeature) {
@@ -432,10 +459,7 @@ export function initSPARQLDatastorePair(
       return await exists(entityIRI, typeNameToTypeIRI(typeName), askFetch);
     },
     removeDocument: async (typeName, entityIRI) => {
-      const schema = bringDefinitionToTop(
-        makeStubSchema ? makeStubSchema(rootSchema) : rootSchema,
-        typeName,
-      ) as JSONSchema7;
+      const schema = schemaForType(typeName);
       return await remove(
         entityIRI,
         typeNameToTypeIRI(typeName),
@@ -445,6 +469,7 @@ export function initSPARQLDatastorePair(
           defaultPrefix,
           queryBuildOptions,
           defaultUpdateGraph,
+          maxRecursion: deleteDepth,
         },
       );
     },
@@ -1025,9 +1050,6 @@ export function initSPARQLDatastorePair(
               applyStatementWrites({ ...current }, writes),
               typeName,
               writes,
-            );
-            await updateFetch(
-              buildStatementNodeSidecarDelete(entityIRI, defaultPrefix),
             );
             const saved = await persistDocument(typeName, entityIRI, merged, {
               keepStatements: true,
