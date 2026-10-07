@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { JSONSchema7 } from "json-schema";
 import { buildTraversalSchema } from "@graviola/edb-graph-traversal";
 
+import { buildSPARQLConstructQuery } from "./buildSPARQLConstructQuery";
 import { traversalSchema2construct } from "./traversalSchema2construct";
 
 describe("traversalSchema2construct - Step 1: Basic Types & Variable Handling", () => {
@@ -159,7 +160,15 @@ describe("traversalSchema2construct - Step 2: Property Type Handlers", () => {
 
     // Should create patterns for nested properties
     expect(result.constructPatterns.length).toBeGreaterThan(2); // subject, name, address
-    expect(result.wherePatterns.length).toBeGreaterThan(2);
+    // WHERE: the subject binding, and one OPTIONAL holding all optional
+    // properties (nested ones inside the address branch).
+    expect(result.wherePatterns.length).toBe(2);
+    const where = buildSPARQLConstructQuery(result, {
+      "": "http://example.com/",
+    });
+    expect(where).toMatch(
+      /\{ \?subject :address \?address_\d+ \.\nOPTIONAL \{[\s\S]*\?address_\d+ :street \?street_\d+ \.[\s\S]*\?address_\d+ :city \?city_\d+ \./,
+    );
   });
 
   test("handles array properties", () => {

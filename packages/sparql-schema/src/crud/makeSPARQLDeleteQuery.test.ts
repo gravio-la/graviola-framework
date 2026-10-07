@@ -1,13 +1,19 @@
 /**
  * Tests for makeSPARQLDeleteQuery
  *
- * Key bug: the DELETE query recursively expands all $ref schemas (up to maxRecursion=4),
- * causing it to include properties of referenced entities (e.g. Volunteer's name/email)
- * in the DELETE clause. This would corrupt data in the triplestore when removing an entity
- * that has $ref-linked relations.
+ * Two bugs meet here, and the query has to avoid both:
  *
- * The fix: pass `options.maxRecursion ?? 0` to jsonSchema2construct so that the DELETE
- * query only covers the direct properties of the root entity being deleted.
+ * 1. Deleting too much: the DELETE once expanded all $ref schemas without any
+ *    guard, so removing a Reaction also removed the name/email of the Volunteer
+ *    it linked to. The first fix limited the DELETE to the entity's direct
+ *    properties (`maxRecursion ?? 0`).
+ * 2. Deleting too little: with depth 0 the anonymous objects an entity owns
+ *    (blank nodes: an address, a date range) stayed behind as orphans after
+ *    every remove.
+ *
+ * What holds both: nested objects are followed, but only behind a blank-node
+ * guard (`FILTER(isBlank(?o))`), and never into a definition that declares
+ * `@id`. A named entity is never touched, whatever the schema says.
  */
 
 import { describe, test, expect } from "bun:test";
@@ -74,37 +80,57 @@ describe("makeSPARQLDeleteQuery", () => {
     expect(query.length).toBeGreaterThan(0);
   });
 
-  test("DELETE query should NOT include properties of $ref-referenced entities", () => {
+  test("properties of a $ref-referenced object are only matched behind a blank-node guard", () => {
     const query = makeSPARQLDeleteQuery(
       entityIRI,
       typeIRI,
       reactionLikeSchema,
       options,
     );
+    const where = query.substring(query.indexOf("WHERE"));
 
     // Direct properties of Reaction → must be present
-    expect(query).toContain(":reactionType");
-    expect(query).toContain(":createdAt");
-    expect(query).toContain(":createdBy"); // the IRI link is fine
+    expect(where).toContain(":reactionType");
+    expect(where).toContain(":createdAt");
+    expect(where).toContain(":createdBy"); // the link itself is always removed
 
-    // Properties of the referenced User entity → must NOT appear
-    // These would corrupt the User's data if executed
+    // The schema declares no `@id` on User and Tag, so they may be anonymous
+    // objects owned by the Reaction. Their properties are matched — but every
+    // nested subject is guarded: a User that is a named node is not touched.
+    const nestedSubjects = new Set(
+      [...where.matchAll(/(\?[A-Za-z]+_\d+) (?:a|:\w+) \?/g)].map((m) => m[1]),
+    );
+    expect([...nestedSubjects].some((v) => v.startsWith("?createdBy_"))).toBe(
+      true,
+    );
+    for (const v of nestedSubjects) {
+      expect(where, `guard for ${v}`).toContain(`FILTER(isBlank(${v}))`);
+    }
+  });
+
+  test("a referenced definition that declares @id is never expanded", () => {
+    const named = structuredClone(reactionLikeSchema);
+    (named.definitions!.User as JSONSchema7).properties!["@id"] = {
+      type: "string",
+    };
+    const query = makeSPARQLDeleteQuery(entityIRI, typeIRI, named, options);
+
+    expect(query).toContain(":createdBy"); // the link is removed
+    // Nothing of the User (and so nothing of its Tags) appears at all
     expect(query).not.toContain(":name");
     expect(query).not.toContain(":email");
     expect(query).not.toContain(":tags");
-
-    // Properties of User's referenced Tag entity → must NOT appear either
     expect(query).not.toContain(":title");
     expect(query).not.toContain(":color");
+    expect(query).not.toContain("isBlank");
   });
 
-  test("DELETE clause should have at most 4 triple patterns for a 3-property entity", () => {
-    const query = makeSPARQLDeleteQuery(
-      entityIRI,
-      typeIRI,
-      reactionLikeSchema,
-      options,
-    );
+  test("DELETE clause has 4 triple patterns for a 3-property entity with a named reference", () => {
+    const named = structuredClone(reactionLikeSchema);
+    (named.definitions!.User as JSONSchema7).properties!["@id"] = {
+      type: "string",
+    };
+    const query = makeSPARQLDeleteQuery(entityIRI, typeIRI, named, options);
 
     // Extract DELETE { ... } block (non-greedy match)
     const deleteBlockMatch = query.match(/DELETE\s*\{([\s\S]*?)\}/);
@@ -122,27 +148,39 @@ describe("makeSPARQLDeleteQuery", () => {
       "\n",
     );
 
-    // Expected max 4: ?__type_0, :reactionType, :createdAt, :createdBy
-    // Before fix this generates 20+ patterns including User/Tag properties
-    expect(deleteTriples.length).toBeLessThanOrEqual(4);
+    // Exactly 4: ?__type_0, :reactionType, :createdAt, :createdBy
+    expect(deleteTriples.length).toBe(4);
   });
 
-  test("DELETE query should be stable with maxRecursion: 0 passed explicitly", () => {
-    const queryDefault = makeSPARQLDeleteQuery(
+  test("the WHERE is a UNION of independent branches: no chain of OPTIONALs, nothing required", () => {
+    const query = makeSPARQLDeleteQuery(
       entityIRI,
       typeIRI,
       reactionLikeSchema,
       options,
     );
-    const queryExplicit0 = makeSPARQLDeleteQuery(
+    const where = query.substring(query.indexOf("WHERE"));
+    // A chain of OPTIONALs would make the cost the product of all stored values.
+    expect(where).not.toContain("OPTIONAL");
+    expect((where.match(/\nUNION\n/g) ?? []).length).toBeGreaterThanOrEqual(3);
+    const open = (where.match(/{/g) ?? []).length;
+    const close = (where.match(/}/g) ?? []).length;
+    expect(open).toBe(close);
+  });
+
+  test("maxRecursion: 0 passed explicitly limits the DELETE to the entity's direct properties", () => {
+    const query = makeSPARQLDeleteQuery(
       entityIRI,
       typeIRI,
       reactionLikeSchema,
       { ...options, maxRecursion: 0 },
     );
 
-    // Both should produce the same result — maxRecursion: 0 is the expected default for DELETE
-    expect(queryDefault).toEqual(queryExplicit0);
+    expect(query).toContain(":reactionType");
+    expect(query).toContain(":createdBy");
+    expect(query).not.toContain(":name");
+    expect(query).not.toContain(":email");
+    expect(query).not.toContain("isBlank");
   });
 
   test("maxRecursion: 1 should include User properties but NOT Tag properties", () => {

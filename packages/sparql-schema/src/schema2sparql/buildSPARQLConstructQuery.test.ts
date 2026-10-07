@@ -54,7 +54,10 @@ describe("buildCompleteSPARQLQuery", () => {
     // Subject is now a variable with VALUES clause binding it to the IRI
     expect(query).toContain("VALUES ?subject");
     expect(query).toContain("<http://example.com/person/1>");
-    expect(query).toMatch(/OPTIONAL \{ \?subject :name \?name_\d+ \. \}/);
+    // Optional properties are branches of one OPTIONAL, each with its dot.
+    expect(query).toMatch(
+      /OPTIONAL \{[\s\S]*\{ \?subject :name \?name_\d+ \. \}\nUNION\n\{ \?subject :email \?email_\d+ \. \} \}/,
+    );
   });
 
   it("should handle pagination with LATERAL correctly", () => {

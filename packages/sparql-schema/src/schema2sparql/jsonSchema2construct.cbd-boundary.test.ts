@@ -7,9 +7,12 @@
  * TBox stop-symbol guard never fired and the DELETE template expanded four
  * levels into *linked named entities*.
  *
- * The builder now additionally anchors every nested expansion in an
- * `OPTIONAL { <link> FILTER(isBlank(?o)) … }` group: only anonymous
+ * The builder now additionally anchors every nested expansion in a
+ * `{ <link> FILTER(isBlank(?o)) … }` branch: only anonymous
  * (blank-node) objects — the actual CBD of the subject — are ever expanded.
+ *
+ * The patterns are the branches of one UNION (not a chain of OPTIONALs), so
+ * the number of solutions is the sum of the stored values, not their product.
  */
 import { describe, expect, test } from "bun:test";
 import type { JSONSchema7 } from "json-schema";
@@ -67,11 +70,11 @@ describe("jsonSchema2construct — CBD boundary guard", () => {
 
     // parent link is matched on its own (so a stale IRI link is still deleted)…
     expect(whereOptionals).toContain(
-      `OPTIONAL {\n<${SUBJECT}> :parent ?parent_7 .\n}`,
+      `{\n<${SUBJECT}> :parent ?parent_7 .\n}\nUNION`,
     );
-    // …and the expansion into ?parent_7 is a separate group, guarded by isBlank
+    // …and the expansion into ?parent_7 is a separate branch, guarded by isBlank
     expect(whereOptionals).toContain(
-      `OPTIONAL {\n<${SUBJECT}> :parent ?parent_7 .\nFILTER(isBlank(?parent_7))\n`,
+      `{\n<${SUBJECT}> :parent ?parent_7 .\nFILTER(isBlank(?parent_7))\n`,
     );
 
     // no nested subject is ever expanded without a blank-node guard
@@ -86,25 +89,38 @@ describe("jsonSchema2construct — CBD boundary guard", () => {
     }
   });
 
-  test("nested patterns are all OPTIONAL — `required` only applies to the root level", () => {
-    const { whereOptionals } = jsonSchema2construct(
+  test("no pattern is required: every property is a UNION branch of its own", () => {
+    const { whereOptionals, whereRequired } = jsonSchema2construct(
       SUBJECT,
       schemaWithoutIds,
       ["@id"],
       ["@id", "@type"],
     );
-    // root-level required title stays mandatory
-    expect(whereOptionals).toContain(`<${SUBJECT}> :title ?title_`);
-    expect(whereOptionals).not.toContain(
-      `OPTIONAL {\n<${SUBJECT}> :title ?title_`,
+    // `title` is required in the schema. For a DELETE that must not matter: a
+    // stored entity without a title still has to lose its other triples.
+    expect(whereRequired).toBe("");
+    expect(whereOptionals).toContain(
+      `{\n<${SUBJECT}> :title ?title_1 .\n}\nUNION`,
     );
-    // nested Location.title (required in schema) is optional inside the guard
+    // nested Location.title (required in schema) is a branch inside the guard
     const nestedTitle = blocksOf(whereOptionals).find((l) =>
       /^\?parent_\d+ :title/.test(l),
     );
     expect(nestedTitle).toBeDefined();
     const idx = whereOptionals.indexOf(nestedTitle!);
-    expect(whereOptionals.slice(idx - 11, idx)).toBe("OPTIONAL {\n");
+    expect(whereOptionals.slice(idx - 2, idx)).toBe("{\n");
+
+    // Sibling OPTIONALs would make the cost the product of all stored values.
+    expect(whereOptionals).not.toContain("OPTIONAL");
+    // Every top-level branch is separated by UNION: type, title, country,
+    // idAuthority (link + nested), parent (link + nested).
+    const topLevel = whereOptionals
+      .split("\n")
+      .filter(
+        (line) =>
+          line.startsWith(`<${SUBJECT}>`) || line.includes(`{ <${SUBJECT}> a `),
+      );
+    expect(topLevel).toHaveLength(7);
   });
 
   test("balanced braces", () => {

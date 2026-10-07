@@ -4,6 +4,10 @@
  * These tests verify that the tree-structured WherePart system correctly
  * generates nested OPTIONAL blocks, preventing the flat structure bug
  * where nested property patterns appeared outside their parent OPTIONAL.
+ *
+ * The optional properties of one level are the branches of a single
+ * `OPTIONAL { { … } UNION { … } }`, so the number of solutions is the sum of
+ * their matches, not the product (see `materializeWhereParts`).
  */
 
 import { describe, test, expect } from "bun:test";
@@ -44,8 +48,10 @@ describe("traversalSchema2construct - Proper OPTIONAL Nesting", () => {
       console.log("\n=== Single-level optional object ===");
       console.log(query);
 
-      // address pattern should be in OPTIONAL
-      expect(query).toMatch(/OPTIONAL \{[^}]*:address[^}]*\?address_\d+/);
+      // address pattern should be a branch inside the OPTIONAL
+      expect(query).toMatch(
+        /OPTIONAL \{[\s\S]*\{ \?subject :address \?address_\d+ \./,
+      );
 
       // Nested properties should be inside the parent OPTIONAL
       // The pattern should look like: OPTIONAL { ?subject :address ?address_0 . ... nested patterns ... }
@@ -158,8 +164,14 @@ describe("traversalSchema2construct - Proper OPTIONAL Nesting", () => {
 
       const whereSection = query.substring(query.indexOf("WHERE"));
 
-      // Department should be in OPTIONAL
-      expect(whereSection).toMatch(/OPTIONAL \{[^}]*:department/);
+      // Department should be a branch inside the OPTIONAL
+      expect(whereSection).toMatch(
+        /OPTIONAL \{[\s\S]*\{ \?subject :department \?department_\d+ \./,
+      );
+      // Manager is nested inside department's branch, in an OPTIONAL of its own level
+      expect(whereSection).toMatch(
+        /\?subject :department \?department_\d+ \.\nOPTIONAL \{[\s\S]*\{ \?department_\d+ :manager \?manager_\d+ \./,
+      );
 
       // Manager should be nested inside department's OPTIONAL
       // This is complex to verify with regex, but we can check the structure
@@ -306,8 +318,11 @@ describe("traversalSchema2construct - Proper OPTIONAL Nesting", () => {
 
       const whereSection = query.substring(query.indexOf("WHERE"));
 
-      // Address should be in OPTIONAL
-      expect(whereSection).toMatch(/OPTIONAL \{[^}]*:address/);
+      // Address should be a branch inside the OPTIONAL, with the required
+      // street joined right after it (required IF address exists)
+      expect(whereSection).toMatch(
+        /OPTIONAL \{[\s\S]*\{ \?subject :address \?address_\d+ \.\n\?address_\d+ :street \?street_\d+ \./,
+      );
 
       // Within the address OPTIONAL block, street should NOT be in a nested OPTIONAL
       // (it's required IF address exists)
@@ -470,8 +485,10 @@ describe("traversalSchema2construct - Proper OPTIONAL Nesting", () => {
         /OPTIONAL \{[^}]*\?subject :name \?name_\d+/,
       );
 
-      // Verify patches (optional) is in OPTIONAL
-      expect(whereSection).toMatch(/OPTIONAL \{[^}]*:patches/);
+      // Verify patches (optional) is a branch inside the OPTIONAL
+      expect(whereSection).toMatch(
+        /OPTIONAL \{[\s\S]*\{ \?subject :patches \?patches_\d+ \./,
+      );
 
       // Verify patches.name (required within patches) appears inside patches OPTIONAL
       // but NOT in its own OPTIONAL
@@ -604,7 +621,7 @@ describe("traversalSchema2construct - Proper OPTIONAL Nesting", () => {
   });
 
   describe("Edge cases", () => {
-    test("all properties optional creates nested OPTIONALs", () => {
+    test("all properties optional: one OPTIONAL whose branches are the properties", () => {
       const schema: JSONSchema7 = {
         type: "object",
         properties: {
@@ -628,14 +645,17 @@ describe("traversalSchema2construct - Proper OPTIONAL Nesting", () => {
 
       const whereSection = query.substring(query.indexOf("WHERE"));
 
-      // Each property should have its own OPTIONAL block
-      expect(whereSection).toMatch(/OPTIONAL \{[^}]*:name/);
-      expect(whereSection).toMatch(/OPTIONAL \{[^}]*:email/);
-      expect(whereSection).toMatch(/OPTIONAL \{[^}]*:phone/);
+      // Each property is a branch of its own
+      expect(whereSection).toContain("{ ?subject :name ?name_0 . }");
+      expect(whereSection).toContain("{ ?subject :email ?email_1 . }");
+      expect(whereSection).toContain("{ ?subject :phone ?phone_2 . }");
 
-      // Should have at least 3 separate OPTIONAL blocks
+      // One OPTIONAL for the level; type and the three properties are its
+      // four branches. Separate OPTIONALs would multiply the solutions.
       const optionalCount = (whereSection.match(/OPTIONAL/g) || []).length;
-      expect(optionalCount).toBeGreaterThanOrEqual(3);
+      expect(optionalCount).toBe(1);
+      const unionCount = (whereSection.match(/\nUNION\n/g) || []).length;
+      expect(unionCount).toBe(3);
     });
 
     test("all properties required creates no OPTIONAL except for type", () => {

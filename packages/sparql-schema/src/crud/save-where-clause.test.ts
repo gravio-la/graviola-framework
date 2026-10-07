@@ -19,6 +19,7 @@ describe("save - WHERE Clause Correctness", () => {
     };
 
     const dataToBeSaved = {
+      "@context": { "@vocab": "https://ontology.semantic-desk.top/garden#" },
       "@id": "https://ontology.semantic-desk.top/garden#Patch/z5l793voljs",
       "@type": "https://ontology.semantic-desk.top/garden#Patch",
       name: "Test Patch",
@@ -80,6 +81,7 @@ describe("save - WHERE Clause Correctness", () => {
     };
 
     const dataToBeSaved = {
+      "@context": { "@vocab": "https://example.com/" },
       "@id": "https://example.com/entity/123",
       "@type": "https://example.com/Entity",
       name: "Test",
@@ -103,5 +105,133 @@ describe("save - WHERE Clause Correctness", () => {
     // The required property (name) should be checked
     const whereClause = capturedQuery.substring(capturedQuery.indexOf("WHERE"));
     expect(whereClause).toContain("name");
+  });
+});
+
+describe("save - delete and insert are separate operations", () => {
+  const schema: JSONSchema7 = {
+    type: "object",
+    properties: {
+      name: { type: "string" },
+      tags: { type: "array", items: { type: "string" } },
+    },
+    required: ["name"],
+  };
+  const data = {
+    "@context": { "@vocab": "https://example.org/" },
+    "@id": "https://example.org/Item/1",
+    "@type": "https://example.org/Item",
+    name: "One",
+    tags: ["a", "b"],
+  };
+
+  const capture = async (options: Record<string, unknown>) => {
+    let query = "";
+    await save(
+      data,
+      schema,
+      async (q: string) => {
+        query = q;
+        return {};
+      },
+      {
+        defaultPrefix: "https://example.org/",
+        queryBuildOptions: {} as never,
+        ...options,
+      },
+    );
+    return query;
+  };
+
+  test("the new state is inserted with INSERT DATA, outside the DELETE's WHERE", async () => {
+    const query = await capture({});
+    const [deletePart, insertPart] = query.split(/\s;\s*\n/);
+    expect(deletePart).toContain("DELETE");
+    expect(deletePart).toContain("WHERE");
+    // An INSERT sharing the WHERE runs once per solution and multiplies blank nodes.
+    expect(deletePart).not.toContain("INSERT");
+    expect(insertPart).toMatch(/^INSERT DATA \{/);
+    expect(insertPart).not.toContain("WHERE");
+    expect(insertPart).toContain('"One"');
+  });
+
+  test("a named graph scopes both operations", async () => {
+    const query = await capture({ defaultUpdateGraph: "urn:graph:items" });
+    const [deletePart, insertPart] = query.split(/\s;\s*\n/);
+    expect(deletePart).toContain("WITH <urn:graph:items>");
+    expect(insertPart).toMatch(/^INSERT DATA \{\s*GRAPH <urn:graph:items> \{/);
+  });
+
+  test("skipRemove sends only the INSERT DATA", async () => {
+    const query = await capture({
+      skipRemove: true,
+      defaultUpdateGraph: "urn:graph:items",
+    });
+    expect(query).not.toContain("DELETE");
+    expect(query).toMatch(/INSERT DATA \{\s*GRAPH <urn:graph:items> \{/);
+  });
+
+  test("maxRecursion reaches deeper nesting in the DELETE", async () => {
+    const nestedSchema: JSONSchema7 = {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+        billing: {
+          type: "object",
+          properties: {
+            total: { type: "number" },
+            detail: {
+              type: "object",
+              properties: {
+                net: { type: "number" },
+              },
+            },
+          },
+        },
+      },
+      required: ["name"],
+    };
+    const nestedData = {
+      "@context": { "@vocab": "https://example.org/" },
+      "@id": "https://example.org/Order/1",
+      "@type": "https://example.org/Order",
+      name: "One",
+      billing: { total: 1, detail: { net: 1 } },
+    };
+
+    let shallowQuery = "";
+    await save(
+      nestedData,
+      nestedSchema,
+      async (q) => {
+        shallowQuery = q;
+        return {};
+      },
+      {
+        defaultPrefix: "https://example.org/",
+        queryBuildOptions: {},
+        maxRecursion: 0,
+      },
+    );
+
+    let deepQuery = "";
+    await save(
+      nestedData,
+      nestedSchema,
+      async (q) => {
+        deepQuery = q;
+        return {};
+      },
+      {
+        defaultPrefix: "https://example.org/",
+        queryBuildOptions: {},
+        maxRecursion: 3,
+      },
+    );
+
+    const shallowDelete = shallowQuery.split(/\s;\s*\n/)[0]!;
+    const deepDelete = deepQuery.split(/\s;\s*\n/)[0]!;
+    expect(shallowDelete).not.toContain("net");
+    expect(deepDelete).toContain("net");
   });
 });

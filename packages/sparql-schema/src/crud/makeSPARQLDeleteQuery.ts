@@ -20,12 +20,17 @@ export const makeSPARQLDeleteQuery = (
         flavour: options.queryBuildOptions?.sparqlFlavour,
       })
     : "";
+  // Same boundary as the DELETE of a save: the entity's own triples and the
+  // anonymous (blank-node) objects it owns, never a named entity it links to.
+  // The blank-node guard in the patterns enforces that on the data, so the
+  // nested objects must be followed here — with depth 0 they stayed behind as
+  // orphans after every remove.
   const { construct, whereRequired, whereOptionals } = jsonSchema2construct(
     entityIRI,
     schema,
     ["@id"],
     ["@id", "@type"],
-    options.maxRecursion ?? 0,
+    options.maxRecursion,
   );
   const deleteQuery = DELETE` ${construct} `
     .WHERE`${wherePart} ${whereRequired}\n${whereOptionals}`;

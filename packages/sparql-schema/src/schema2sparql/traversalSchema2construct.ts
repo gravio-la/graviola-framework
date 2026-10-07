@@ -108,6 +108,12 @@ export type RequiredWherePart = {
   required: true;
   whereTemplates: SparqlTemplateResult[];
   children?: WherePart[];
+  /**
+   * The templates use a variable that a sibling part binds (a FILTER on a
+   * property's object variable). Such a level cannot be turned into a UNION:
+   * in a UNION every row carries the variables of one branch only.
+   */
+  usesSiblingBindings?: boolean;
 };
 
 /**
@@ -159,16 +165,35 @@ function addWherePattern(
   );
 }
 
+const joinPatterns = (patterns: SparqlTemplateResult[]): SparqlTemplateResult =>
+  patterns.reduce((acc, pattern, idx) => {
+    if (idx === 0) return pattern;
+    return sparql`${acc}\n${pattern}`;
+  }, patterns[0]);
+
 /**
  * Materialize WHERE tree structure into properly nested SPARQL patterns
  *
  * This function converts the tree structure of WhereParts into a flat array
- * of SparqlTemplateResults with proper nesting of OPTIONAL blocks.
+ * of SparqlTemplateResults.
  *
  * Key behaviors:
  * - Required parts: patterns added directly, children processed recursively
- * - Optional parts: all patterns and children wrapped in single OPTIONAL block
+ * - Optional parts of one level: their patterns and children become the
+ *   branches of ONE `OPTIONAL { { … } UNION { … } }` block
  * - Preserves semantic nesting from schema hierarchy
+ *
+ * Why a UNION and not one OPTIONAL per part: a chain of sibling OPTIONALs
+ * yields one solution per *combination* of their matches. An entity with
+ * five multi-valued properties of seven values each produces 7^5 = 16 807
+ * solutions for 35 triples, and every further such property multiplies again.
+ * With a UNION every solution carries the variables of one branch only, so
+ * the number of solutions is the *sum* of the matches. A CONSTRUCT template
+ * skips triples with unbound variables, so the constructed graph is the same.
+ *
+ * A level keeps the chain of OPTIONALs when one of its parts uses a variable
+ * that a sibling binds (`usesSiblingBindings`, a FILTER on a property's
+ * value): there the row-wise combination is what the filter relies on.
  *
  * @param parts - Array of WherePart nodes to materialize
  * @param indentLevel - Current indentation level (for debugging/readability)
@@ -180,6 +205,19 @@ function materializeWhereParts(
 ): SparqlTemplateResult[] {
   const results: SparqlTemplateResult[] = [];
 
+  /** Patterns of an optional part with its nested children, not yet wrapped. */
+  const optionalBody = (part: OptionalWherePart): SparqlTemplateResult[] => [
+    ...part.whereTemplates,
+    ...(part.children && part.children.length > 0
+      ? materializeWhereParts(part.children, indentLevel + 1)
+      : []),
+  ];
+
+  const optionalParts = parts.filter(isOptional);
+  const unionOptionals =
+    optionalParts.length > 1 &&
+    !parts.some((part) => isRequired(part) && part.usesSiblingBindings);
+
   for (const part of parts) {
     if (isRequired(part)) {
       // Required: Add patterns directly without OPTIONAL wrapper
@@ -189,30 +227,26 @@ function materializeWhereParts(
       if (part.children && part.children.length > 0) {
         results.push(...materializeWhereParts(part.children, indentLevel));
       }
-    } else {
+    } else if (!unionOptionals) {
       // Optional: Wrap patterns and children in single OPTIONAL block
-      const childPatterns: SparqlTemplateResult[] = [];
-
-      // Add this level's patterns first
-      childPatterns.push(...part.whereTemplates);
-
-      // Then add nested children (which may contain their own OPTIONALs)
-      if (part.children && part.children.length > 0) {
-        childPatterns.push(
-          ...materializeWhereParts(part.children, indentLevel + 1),
-        );
+      const body = optionalBody(part);
+      if (body.length > 0) {
+        results.push(sparql`OPTIONAL { ${joinPatterns(body)} }`);
       }
+    }
+  }
 
-      // Combine all into single OPTIONAL block
-      if (childPatterns.length > 0) {
-        // Create combined pattern for all child patterns
-        const combined = childPatterns.reduce((acc, pattern, idx) => {
-          if (idx === 0) return pattern;
-          return sparql`${acc}\n${pattern}`;
-        }, childPatterns[0]);
-
-        results.push(sparql`OPTIONAL { ${combined} }`);
-      }
+  if (unionOptionals) {
+    // After the required patterns, which bind what the branches join on.
+    const branches = optionalParts
+      .map(optionalBody)
+      .filter((body) => body.length > 0)
+      .map((body) => sparql`{ ${joinPatterns(body)} }`);
+    if (branches.length > 0) {
+      const union = branches.reduce((acc, branch, idx) =>
+        idx === 0 ? branch : sparql`${acc}\nUNION\n${branch}`,
+      );
+      results.push(sparql`OPTIONAL { ${union} }`);
     }
   }
 
@@ -614,6 +648,8 @@ export function traversalSchema2construct(
               ...logicalResult.patterns,
               ...logicalResult.filters,
             ],
+            // Conservative: a filtered query keeps the row-wise form.
+            usesSiblingBindings: true,
           });
         }
       }
@@ -685,6 +721,8 @@ export function traversalSchema2construct(
             whereParts.push({
               required: true,
               whereTemplates: filterPatterns,
+              // The filter reads the property's object variable.
+              usesSiblingBindings: true,
             });
           }
         }

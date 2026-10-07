@@ -96,10 +96,30 @@ const resolveNestedObjectSchema = (
  *    `Location.parent` pointing at another `Location`) from being wiped when
  *    the schema artifact omits `@id` on referenced definitions.
  *
- * The link triple itself (`<s> :p ?o`) is always matched in a separate
- * OPTIONAL so stale references are removed even when the target is an IRI.
- * Inside nested (level > 0) groups every pattern is OPTIONAL: for deletion we
- * want maximal matching, `required` is irrelevant there.
+ * The link triple itself (`<s> :p ?o`) is always matched in a branch of its
+ * own, so stale references are removed even when the target is an IRI.
+ *
+ * Shape of the WHERE patterns — a UNION, not a chain of OPTIONALs:
+ *
+ * ```sparql
+ * { <s> a ?__type_0 . }
+ * UNION { <s> :title ?title_1 . }
+ * UNION { <s> :parent ?parent_2 . }
+ * UNION { <s> :parent ?parent_2 . FILTER(isBlank(?parent_2))
+ *         { ?parent_2 a ?__type_3 . } UNION { ?parent_2 :title ?title_4 . } }
+ * ```
+ *
+ * - Every solution binds the variables of one branch, so the number of
+ *   solutions is the *sum* of the stored values. A chain of sibling OPTIONALs
+ *   yields their *product*: an entity with a few multi-valued properties made
+ *   every save and remove pay for thousands of solutions.
+ * - No pattern is required. A DELETE wants maximal matching: a stored entity
+ *   that lacks a property the schema calls `required` must still have its
+ *   other triples removed, otherwise a save leaves the old state in place and
+ *   adds the new one next to it.
+ *
+ * A DELETE template skips triples with unbound variables, so each solution
+ * removes exactly the triples of its branch.
  */
 export const jsonSchema2construct: (
   subjectURI: string | Variable,
@@ -115,35 +135,36 @@ export const jsonSchema2construct: (
   maxRecursion = MAX_RECURSION,
 ) => {
   let construct = "",
-    whereOptionals = "",
     varIndex = 0;
   const whereRequired = "";
   const s = mkSubject(
     typeof subjectURI === "string" ? subjectURI : `?${subjectURI.value}`,
   );
+  const union = (branches: string[]) => branches.join("\nUNION\n");
+
+  /** The UNION branches that match the triples of `sP`, as described by `subSchema`. */
   const propertiesToSPARQLPatterns = (
     sP: string,
     subSchema: JSONSchemaWithInverseProperties,
     level: number,
-  ) => {
+  ): string[] => {
     if (level > maxRecursion) {
-      return;
+      return [];
     }
     if (
       level > 0 &&
       propertiesContainStopSymbol(subSchema.properties || {}, stopSymbols)
     ) {
-      return;
+      return [];
     }
+    const branches: string[] = [];
     const __type = `?__type_${varIndex++}`;
-    whereOptionals += `OPTIONAL { ${sP} a ${__type} . }\n`;
+    branches.push(`{ ${sP} a ${__type} . }`);
     construct += `${sP} a ${__type} .\n`;
     Object.entries(subSchema.properties || {}).forEach(([property, schema]) => {
       if (!isJSONSchema(schema) || excludedProperties.includes(property)) {
         return;
       }
-      // Nested levels are always optional: DELETE wants maximal matching.
-      const required = level === 0 && subSchema.required?.includes(property);
       const p = makePrefixed(property);
       const o = `?${property}_${varIndex++}`;
 
@@ -162,7 +183,7 @@ export const jsonSchema2construct: (
       }
       for (const link of linkPatterns) {
         construct += `${sP} ${p} ${o} .\n`;
-        whereOptionals += required ? `${link}\n` : `OPTIONAL {\n${link}\n}\n`;
+        branches.push(`{\n${link}\n}`);
       }
 
       // 2. nested expansion, guarded to anonymous (blank-node) objects only
@@ -175,22 +196,31 @@ export const jsonSchema2construct: (
       ) {
         return;
       }
+      const nestedBranches = propertiesToSPARQLPatterns(o, nested, level + 1);
+      if (nestedBranches.length === 0) {
+        return;
+      }
       const anchor =
         linkPatterns.length === 1
           ? linkPatterns[0]
           : linkPatterns.map((link) => `{ ${link} }`).join(" UNION ");
-      whereOptionals += `OPTIONAL {\n${anchor}\nFILTER(isBlank(${o}))\n`;
-      propertiesToSPARQLPatterns(o, nested, level + 1);
-      whereOptionals += "}\n";
+      branches.push(
+        `{\n${anchor}\nFILTER(isBlank(${o}))\n${union(nestedBranches)}\n}`,
+      );
     });
+    return branches;
   };
-  propertiesToSPARQLPatterns(s, rootSchema, 0);
+  const branches = propertiesToSPARQLPatterns(s, rootSchema, 0);
   if (
     isJSONSchemaDefinition(rootSchema.items) &&
     isJSONSchema(rootSchema.items) &&
     rootSchema.items.properties
   ) {
-    propertiesToSPARQLPatterns(s, rootSchema.items, 0);
+    branches.push(...propertiesToSPARQLPatterns(s, rootSchema.items, 0));
   }
-  return { construct, whereRequired, whereOptionals };
+  return {
+    construct,
+    whereRequired,
+    whereOptionals: branches.length > 0 ? `${union(branches)}\n` : "",
+  };
 };
