@@ -125,6 +125,12 @@ export type DatastoreAdapter = {
      * `@graviola/calc-engine`'s own unit tests.
      */
     calcWarmStore?: DatastoreContractStoreWithCalcWarm;
+    /**
+     * Same backing data; store bound to `richShapeSchema` (several multi-valued
+     * fields, anonymous nested objects, relations). Data-volume and query-cost
+     * tests for the shapes the canonical schema leaves out.
+     */
+    richShapeStore?: DatastoreContractStore;
     /** SPARQL backends only — total triple count for data-volume contract tests. */
     countTriples?: () => Promise<number>;
   }>;

@@ -25,6 +25,10 @@ import {
   BASE_IRI,
 } from "../schema/testSchema";
 import {
+  richShapeQueryBuildOptions,
+  richShapeSchema,
+} from "../schema/richShapeSchema";
+import {
   sparqlMetaStampingConfig,
   sparqlMetaStampingDatabaseNativeConfig,
   sparqlMetaStampingLifecycleOff,
@@ -202,8 +206,22 @@ export function createOxigraphLocalAdapter(): DatastoreAdapter {
         statementMeta: gardenFeeSparqlStatementMetaConfig,
       });
 
+      const { store: richShapeStore } = initSPARQLDatastorePair({
+        schema: richShapeSchema as any,
+        defaultPrefix: BASE_IRI,
+        jsonldContext: { "@vocab": BASE_IRI },
+        typeNameToTypeIRI,
+        queryBuildOptions: {
+          ...richShapeQueryBuildOptions,
+          sparqlFlavour: "oxigraph",
+        },
+        sparqlQueryFunctions: crudFunctions,
+        defaultLimit: 100,
+      });
+
       return {
         store: pair.store as DatastoreContractStore,
+        richShapeStore: richShapeStore as DatastoreContractStore,
         metaStampingStore: metaStampingStore as DatastoreContractStore,
         metaStampingStores: {
           lifecycleOff: lifecycleOffStore as DatastoreContractStore,

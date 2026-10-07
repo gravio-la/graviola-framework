@@ -29,6 +29,10 @@ import {
   queryBuildOptions,
   BASE_IRI,
 } from "../schema/testSchema";
+import {
+  richShapeQueryBuildOptions,
+  richShapeSchema,
+} from "../schema/richShapeSchema";
 import { sparqlStatementNodeMetaConfig } from "../schema/statementTestConfig";
 import type {
   DatastoreAdapter,
@@ -135,8 +139,22 @@ export function createSparqlAdapter(
         statementMeta: sparqlStatementNodeMetaConfig,
       });
 
+      const { store: richShapeStore } = initSPARQLDatastorePair({
+        schema: richShapeSchema as any,
+        defaultPrefix: BASE_IRI,
+        jsonldContext: { "@vocab": BASE_IRI },
+        typeNameToTypeIRI,
+        queryBuildOptions: {
+          ...richShapeQueryBuildOptions,
+          sparqlFlavour: cfg.flavour,
+        },
+        sparqlQueryFunctions: crudFunctions,
+        defaultLimit: 100,
+      });
+
       return {
         store: store as DatastoreContractStore,
+        richShapeStore: richShapeStore as DatastoreContractStore,
         statementStore: statementStore as DatastoreContractStoreWithStatements,
         countTriples: async () => {
           const bindings = (await crudFunctions.selectFetch(
