@@ -101,6 +101,12 @@ export type CreateStoreFromSpecOptions<
   statementMeta?: {
     policies: Record<string, "always" | "never">;
     encoding?: "statement-node" | "rdf-12";
+    /**
+     * StatementSchema profile (base profile extended by a fact-level meta
+     * model). Extension fields only persist when the profile declares them;
+     * omitted → framework base profile. SPARQL / Oxigraph backends.
+     */
+    statementSchema?: JSONSchema7;
     retention?: "all" | "latest" | { keepLast: number };
     retentionByPath?: Record<string, "all" | "latest" | { keepLast: number }>;
   };

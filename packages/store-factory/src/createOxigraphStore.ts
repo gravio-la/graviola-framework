@@ -85,6 +85,9 @@ export async function createOxigraphStore(
           statementMeta: {
             policies: opts.statementMeta.policies,
             encoding: opts.statementMeta.encoding ?? "statement-node",
+            ...(opts.statementMeta.statementSchema
+              ? { statementSchema: opts.statementMeta.statementSchema }
+              : {}),
           } as never,
         }
       : {}),
