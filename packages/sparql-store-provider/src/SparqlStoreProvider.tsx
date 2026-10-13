@@ -6,7 +6,10 @@ import type {
 } from "@graviola/edb-core-types";
 import { sparqlLoggingWrapper } from "@graviola/edb-core-utils";
 import { CrudProviderContext, useAdbContext } from "@graviola/edb-state-hooks";
-import { initSPARQLStore } from "@graviola/sparql-db-impl";
+import {
+  initSPARQLStore,
+  type SPARQLDataStoreConfig,
+} from "@graviola/sparql-db-impl";
 import type { MetaStampingConfig } from "@graviola/meta-schema";
 import type { JSONSchema7 } from "json-schema";
 import { type FunctionComponent, type ReactNode, useMemo } from "react";
@@ -25,6 +28,10 @@ export type SparqlStoreProviderProps = {
    * Schema for store init (writes + persistence). Defaults to {@link useAdbContext} `schema`.
    */
   storeSchema?: JSONSchema7;
+  /** Defaults merged into every `loadOne` / CONSTRUCT hydration (e.g. `maxRecursion`). */
+  defaultLoadOptions?: SPARQLDataStoreConfig["defaultLoadOptions"];
+  /** Defaults for typed-filter queries, merged under per-call options. */
+  defaultFilterOptions?: SPARQLDataStoreConfig["defaultFilterOptions"];
 };
 export const SparqlStoreProvider: FunctionComponent<
   SparqlStoreProviderProps
@@ -36,6 +43,8 @@ export const SparqlStoreProvider: FunctionComponent<
   enableInversePropertiesFeature,
   metaStamping,
   storeSchema: storeSchemaOverride,
+  defaultLoadOptions,
+  defaultFilterOptions,
 }) => {
   const rawCrud = useMemo<CRUDFunctions | null>(() => {
     return tripleStoreImplementations[endpoint.provider](endpoint);
@@ -72,6 +81,8 @@ export const SparqlStoreProvider: FunctionComponent<
       enableInversePropertiesFeature,
       defaultUpdateGraph: endpoint.defaultUpdateGraph,
       metaStamping,
+      defaultLoadOptions,
+      defaultFilterOptions,
     });
   }, [
     crudOptions,
@@ -86,6 +97,8 @@ export const SparqlStoreProvider: FunctionComponent<
     makeStubSchema,
     enableInversePropertiesFeature,
     metaStamping,
+    defaultLoadOptions,
+    defaultFilterOptions,
   ]);
 
   return (
