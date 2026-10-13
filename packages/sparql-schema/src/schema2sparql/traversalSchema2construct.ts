@@ -114,6 +114,12 @@ export type RequiredWherePart = {
    * in a UNION every row carries the variables of one branch only.
    */
   usesSiblingBindings?: boolean;
+  /**
+   * The templates hold a LATERAL window (`take` / `skip` / `orderBy`). It must
+   * not be repeated in a UNION branch, so the optional parts below such a part
+   * keep their own block (see `materializeWhereParts`).
+   */
+  paginated?: boolean;
 };
 
 /**
@@ -172,15 +178,32 @@ const joinPatterns = (patterns: SparqlTemplateResult[]): SparqlTemplateResult =>
   }, patterns[0]);
 
 /**
+ * True if a level, or a required part below it, carries `usesSiblingBindings`.
+ * Optional parts stay out of the search: they are materialized as their own level.
+ */
+function usesSiblingBindingsInSpine(parts: WherePart[]): boolean {
+  return parts.some(
+    (part) =>
+      isRequired(part) &&
+      (part.usesSiblingBindings ||
+        (part.children !== undefined &&
+          usesSiblingBindingsInSpine(part.children))),
+  );
+}
+
+/**
  * Materialize WHERE tree structure into properly nested SPARQL patterns
  *
  * This function converts the tree structure of WhereParts into a flat array
  * of SparqlTemplateResults.
  *
  * Key behaviors:
- * - Required parts: patterns added directly, children processed recursively
- * - Optional parts of one level: their patterns and children become the
- *   branches of ONE `OPTIONAL { { … } UNION { … } }` block
+ * - Required parts: patterns added directly, in order, children processed
+ *   recursively. The required patterns of a level and of its required
+ *   descendants (the "spine") all come first.
+ * - Optional parts of one level, and the optional parts hanging under its
+ *   required descendants, become the branches of ONE
+ *   `OPTIONAL { { … } UNION { … } }` block after the spine
  * - Preserves semantic nesting from schema hierarchy
  *
  * Why a UNION and not one OPTIONAL per part: a chain of sibling OPTIONALs
@@ -191,65 +214,123 @@ const joinPatterns = (patterns: SparqlTemplateResult[]): SparqlTemplateResult =>
  * the number of solutions is the *sum* of the matches. A CONSTRUCT template
  * skips triples with unbound variables, so the constructed graph is the same.
  *
- * A level keeps the chain of OPTIONALs when one of its parts uses a variable
- * that a sibling binds (`usesSiblingBindings`, a FILTER on a property's
- * value): there the row-wise combination is what the filter relies on.
+ * Why the optional parts of required descendants are lifted into the block of
+ * the level: a required child (a back-reference such as `locatedIn`, which the
+ * model marks as required) with optional properties of its own used to emit
+ * its own `OPTIONAL` block in front of the block of the level. Two blocks in
+ * one group multiply again, once per row of the spine, and the block under a
+ * back-reference re-expands the whole parent entity. The branches only join on
+ * variables the spine binds, and no required pattern reads a variable an
+ * optional part binds, so moving the required patterns in front of the
+ * optional ones changes neither the solutions that carry a branch nor the
+ * constructed triples.
+ *
+ * Why a lifted branch restates the required path from the level's anchor to
+ * its own variable (`?track :trackOf ?station . ?station :name ?n`): a UNION
+ * whose branches have no variable in common is not evaluated with the bindings
+ * of the spine pushed in. Oxigraph then scans the predicate of every branch
+ * over the whole store (NormStatement, 38 branches, 2 lifted levels: 95 ms
+ * against 4 ms with the restated path, 5-30 ms with nested blocks, and a
+ * Betriebsstelle at depth 2 was killed at 4 GB), and QLever drops the rows of
+ * the branches whose variable the others lack. With the anchor of the level in
+ * every branch both engines push the spine in. The restated patterns are the
+ * spine's own, so the join with the spine is the identity.
+ *
+ * A part with a LATERAL window (`paginated`) is not restated, a pagination
+ * window must not be evaluated once per branch: the optional parts below it
+ * are merged in a block of their own level, not in the block of this one.
+ *
+ * A level keeps the chain of OPTIONALs in part order when one of its parts uses
+ * a variable that a sibling binds (`usesSiblingBindings`, a FILTER on a
+ * property's value): there the row-wise combination is what the filter relies
+ * on, and neither merging nor reordering is safe.
  *
  * @param parts - Array of WherePart nodes to materialize
  * @param indentLevel - Current indentation level (for debugging/readability)
  * @returns Flat array of properly nested SPARQL patterns
  */
-function materializeWhereParts(
+export function materializeWhereParts(
   parts: WherePart[],
   indentLevel: number = 0,
 ): SparqlTemplateResult[] {
+  if (usesSiblingBindingsInSpine(parts)) {
+    return materializeWherePartsInOrder(parts, indentLevel);
+  }
+
+  const required: SparqlTemplateResult[] = [];
+  // `path`: required patterns from the anchor of this level to the part
+  const branches: {
+    path: SparqlTemplateResult[];
+    body: SparqlTemplateResult[];
+  }[] = [];
+
+  const collect = (level: WherePart[], path: SparqlTemplateResult[]) => {
+    for (const part of level) {
+      if (isRequired(part)) {
+        required.push(...part.whereTemplates);
+        if (part.children && part.children.length > 0) {
+          if (part.paginated) {
+            required.push(...materializeWhereParts(part.children, indentLevel));
+          } else {
+            collect(part.children, [...path, ...part.whereTemplates]);
+          }
+        }
+      } else {
+        const body = [
+          ...part.whereTemplates,
+          ...(part.children && part.children.length > 0
+            ? materializeWhereParts(part.children, indentLevel + 1)
+            : []),
+        ];
+        if (body.length > 0) {
+          branches.push({ path, body });
+        }
+      }
+    }
+  };
+  collect(parts, []);
+
+  const results = [...required];
+  if (branches.length === 1) {
+    // No UNION, nothing to anchor: the spine is already in front.
+    results.push(sparql`OPTIONAL { ${joinPatterns(branches[0].body)} }`);
+  } else if (branches.length > 1) {
+    const union = branches
+      .map(({ path, body }) => sparql`{ ${joinPatterns([...path, ...body])} }`)
+      .reduce((acc, branch) => sparql`${acc}\nUNION\n${branch}`);
+    results.push(sparql`OPTIONAL { ${union} }`);
+  }
+  return results;
+}
+
+/**
+ * The row-wise form: required parts and optional parts in part order, one
+ * OPTIONAL block per optional part. Only used for levels with
+ * `usesSiblingBindings` (filters), see `materializeWhereParts`.
+ */
+function materializeWherePartsInOrder(
+  parts: WherePart[],
+  indentLevel: number,
+): SparqlTemplateResult[] {
   const results: SparqlTemplateResult[] = [];
-
-  /** Patterns of an optional part with its nested children, not yet wrapped. */
-  const optionalBody = (part: OptionalWherePart): SparqlTemplateResult[] => [
-    ...part.whereTemplates,
-    ...(part.children && part.children.length > 0
-      ? materializeWhereParts(part.children, indentLevel + 1)
-      : []),
-  ];
-
-  const optionalParts = parts.filter(isOptional);
-  const unionOptionals =
-    optionalParts.length > 1 &&
-    !parts.some((part) => isRequired(part) && part.usesSiblingBindings);
-
   for (const part of parts) {
     if (isRequired(part)) {
-      // Required: Add patterns directly without OPTIONAL wrapper
       results.push(...part.whereTemplates);
-
-      // Recursively add children
       if (part.children && part.children.length > 0) {
         results.push(...materializeWhereParts(part.children, indentLevel));
       }
-    } else if (!unionOptionals) {
-      // Optional: Wrap patterns and children in single OPTIONAL block
-      const body = optionalBody(part);
+    } else {
+      const body = [
+        ...part.whereTemplates,
+        ...(part.children && part.children.length > 0
+          ? materializeWhereParts(part.children, indentLevel + 1)
+          : []),
+      ];
       if (body.length > 0) {
         results.push(sparql`OPTIONAL { ${joinPatterns(body)} }`);
       }
     }
   }
-
-  if (unionOptionals) {
-    // After the required patterns, which bind what the branches join on.
-    const branches = optionalParts
-      .map(optionalBody)
-      .filter((body) => body.length > 0)
-      .map((body) => sparql`{ ${joinPatterns(body)} }`);
-    if (branches.length > 0) {
-      const union = branches.reduce((acc, branch, idx) =>
-        idx === 0 ? branch : sparql`${acc}\nUNION\n${branch}`,
-      );
-      results.push(sparql`OPTIONAL { ${union} }`);
-    }
-  }
-
   return results;
 }
 
@@ -560,7 +641,7 @@ export function traversalSchema2construct(
     features,
     prefixMap: options?.prefixMap || {},
     depth: 0,
-    maxRecursion: options?.maxRecursion || 4,
+    maxRecursion: options?.maxRecursion ?? 4,
     excludedProperties: options?.excludedProperties || [],
     resolveInverseMaxDepth: options?.resolveInverseMaxDepth ?? 0,
     varCounter: { value: 0 },
@@ -937,6 +1018,7 @@ function createPropertyPatterns(
       required: useLateral || isRequired || hasFilterAnywhere,
       whereTemplates: relationshipPatterns,
       children: nestedWhereParts.length > 0 ? nestedWhereParts : undefined,
+      paginated: useLateral,
     };
 
     const paginationWithStage: PaginationMetadata | undefined = paginationMeta
