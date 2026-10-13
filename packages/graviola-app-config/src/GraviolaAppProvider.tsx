@@ -129,6 +129,11 @@ export type GraviolaAppProviderProps = {
    * Optional display-time image URL rewrite forwarded to `AdbProvider`.
    */
   resolveThumbnailUrl?: ResolveThumbnailUrl;
+  /**
+   * SPARQL engine profile forwarded to `queryBuildOptions.sparqlFlavour`
+   * (and from there to `initSPARQLStore`). Unset keeps the "default" flavour.
+   */
+  sparqlFlavour?: import("@graviola/edb-core-types").SPARQLFlavour;
 };
 
 /**
@@ -155,6 +160,7 @@ export const GraviolaAppProvider: FC<GraviolaAppProviderProps> = ({
   resolveThumbnailUrl,
   hostCapabilities,
   defaultViewDensity,
+  sparqlFlavour,
 }) => {
   const {
     baseIRI,
@@ -240,6 +246,7 @@ export const GraviolaAppProvider: FC<GraviolaAppProviderProps> = ({
       },
       queryBuildOptions: {
         ...c.queryBuildOptions,
+        ...(sparqlFlavour ? { sparqlFlavour } : {}),
         primaryFields,
         typeIRItoTypeName: resolveTypeName,
       },
@@ -250,6 +257,7 @@ export const GraviolaAppProvider: FC<GraviolaAppProviderProps> = ({
     primaryFields,
     definitionToTypeIRI,
     typeIRIToTypeName,
+    sparqlFlavour,
   ]);
 
   const makeStubSchema = useMemo(
