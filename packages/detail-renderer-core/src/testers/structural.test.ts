@@ -1,6 +1,7 @@
 import { describe, expect, it } from "bun:test";
 import type { JSONSchema7 } from "json-schema";
 
+import { resolvePropertySchema } from "../traverse/dispatch";
 import {
   isArrayOfInlineObjects,
   isArrayOfNamedEntitys,
@@ -8,6 +9,40 @@ import {
   isInlineObject,
   isNamedEntity,
 } from "./structural";
+
+/** LinkML `gra:anonymous` — `@type` only, no `@id` (CBD blank nodes). */
+const linkmlAnonymousRecipeSchema: JSONSchema7 = {
+  $defs: {
+    Rezept: {
+      type: "object",
+      properties: {
+        "@id": { type: "string" },
+        "@type": { const: "https://ex.org/Rezept" },
+        titel: { type: "string" },
+        schritte: {
+          type: "array",
+          items: { $ref: "#/$defs/RezeptSchritt" },
+        },
+        herkunft: { $ref: "#/$defs/Herkunft" },
+      },
+    },
+    RezeptSchritt: {
+      type: "object",
+      properties: {
+        "@type": { const: "https://ex.org/RezeptSchritt" },
+        rang: { type: "integer" },
+        text: { type: "string" },
+      },
+    },
+    Herkunft: {
+      type: "object",
+      properties: {
+        "@type": { const: "https://ex.org/Herkunft" },
+        name: { type: "string" },
+      },
+    },
+  },
+};
 
 describe("isEntityLikeObjectSchema", () => {
   it("matches objects with @id", () => {
@@ -19,13 +54,13 @@ describe("isEntityLikeObjectSchema", () => {
     ).toBe(true);
   });
 
-  it("matches objects with @type", () => {
+  it("does not treat @type-only objects as named entities", () => {
     expect(
       isEntityLikeObjectSchema({
         type: "object",
         properties: { "@type": { type: "string" } },
       }),
-    ).toBe(true);
+    ).toBe(false);
   });
 
   it("rejects plain embedded objects", () => {
@@ -52,16 +87,16 @@ describe("entity structural testers", () => {
     properties: { year: { type: "integer" } },
   };
 
-  it("routes typed objects to named entity renderer", () => {
+  it("routes @type-only objects to inline renderer (anonymous / blank node)", () => {
     expect(
       isNamedEntity(undefined as never, typedEntity, undefined as never),
-    ).toBe(true);
+    ).toBe(false);
     expect(
       isInlineObject(undefined as never, typedEntity, undefined as never),
-    ).toBe(false);
+    ).toBe(true);
   });
 
-  it("routes typed object arrays to array entity renderer", () => {
+  it("routes @type-only object arrays to inline array renderer", () => {
     const arraySchema: JSONSchema7 = {
       type: "array",
       items: typedEntity,
@@ -72,14 +107,14 @@ describe("entity structural testers", () => {
         arraySchema,
         undefined as never,
       ),
-    ).toBe(true);
+    ).toBe(false);
     expect(
       isArrayOfInlineObjects(
         undefined as never,
         arraySchema,
         undefined as never,
       ),
-    ).toBe(false);
+    ).toBe(true);
   });
 
   it("keeps anonymous objects on inline renderers", () => {
@@ -89,5 +124,28 @@ describe("entity structural testers", () => {
     expect(
       isNamedEntity(undefined as never, inlineObject, undefined as never),
     ).toBe(false);
+  });
+});
+
+describe("LinkML gra:anonymous classes (blank nodes)", () => {
+  const root = linkmlAnonymousRecipeSchema;
+  const rezeptProps = linkmlAnonymousRecipeSchema.$defs!.Rezept!
+    .properties as Record<string, JSONSchema7>;
+
+  const neverCtx = undefined as never;
+
+  it("treats @type-only defs as inline, named Rezept as entity", () => {
+    const herkunft = resolvePropertySchema(rezeptProps.herkunft, root);
+    const schritte = resolvePropertySchema(rezeptProps.schritte, root);
+    const rezept = linkmlAnonymousRecipeSchema.$defs!.Rezept as JSONSchema7;
+
+    expect(isInlineObject(neverCtx, herkunft, neverCtx)).toBe(true);
+    expect(isNamedEntity(neverCtx, herkunft, neverCtx)).toBe(false);
+
+    expect(isArrayOfInlineObjects(neverCtx, schritte, neverCtx)).toBe(true);
+    expect(isArrayOfNamedEntitys(neverCtx, schritte, neverCtx)).toBe(false);
+
+    expect(isInlineObject(neverCtx, rezept, neverCtx)).toBe(false);
+    expect(isNamedEntity(neverCtx, rezept, neverCtx)).toBe(true);
   });
 });

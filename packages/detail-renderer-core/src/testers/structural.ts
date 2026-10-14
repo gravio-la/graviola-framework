@@ -18,13 +18,13 @@ function schemaObjectProperties(
   return schema?.properties as Record<string, unknown> | undefined;
 }
 
-/** Object schema declares RDF entity markers (`@id` and/or `@type`). */
+/** Object schema declares a named RDF entity (`@id`). `@type`-only objects are anonymous / inline. */
 export function isEntityLikeObjectSchema(
   schema: JSONSchema7 | undefined,
 ): boolean {
   if (schema?.type !== "object") return false;
   const props = schemaObjectProperties(schema);
-  return Boolean(props?.["@id"] || props?.["@type"]);
+  return Boolean(props?.["@id"]);
 }
 
 export const isNamedEntity: Tester = (_uischema, schema) =>
