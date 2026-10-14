@@ -14,9 +14,15 @@ import { Card, CardContent, Grid } from "@mui/material";
 import { merge } from "lodash-es";
 import { useTranslation } from "next-i18next";
 import type { JSONSchema7 } from "json-schema";
-import React, { FunctionComponent, useCallback, useMemo } from "react";
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useMemo,
+} from "react";
 
 import { OptionsModal } from "./OptionsModal";
+import { useOrderedArrayData } from "./helper/useOrderedArrayData";
 
 const WithCard = ({
   children,
@@ -60,14 +66,39 @@ export const SemanticJsonFormNoOps: FunctionComponent<
     uischemata,
     queryBuildOptions: { typeIRItoTypeName },
   } = useAdbContext();
+  const typeName = useMemo(
+    () => typeIRItoTypeName(typeIRI) ?? "",
+    [typeIRItoTypeName, typeIRI],
+  );
+  const { sortForLoad, applyUserChange, syncPrevData, prevDataRef } =
+    useOrderedArrayData({
+      typeName,
+      schema: schema as JSONSchema7 | undefined,
+      uischemata,
+    });
+
+  const formData = useMemo(
+    () => sortForLoad((data ?? {}) as Record<string, unknown>),
+    [data, sortForLoad],
+  );
+
+  useEffect(() => {
+    syncPrevData(formData);
+  }, [formData, syncPrevData]);
+
   const SimilarityFinder = useFinderSlot();
 
   const handleFormChange = useCallback(
     (state: Pick<JsonFormsCore, "data" | "errors">) => {
-      onChange?.(state.data, "user");
+      const next = applyUserChange(
+        prevDataRef.current as Record<string, unknown>,
+        state.data as Record<string, unknown>,
+      );
+      syncPrevData(next);
+      onChange?.(next, "user");
       if (onError) onError(state.errors);
     },
-    [onChange, onError],
+    [onChange, onError, applyUserChange, syncPrevData, prevDataRef],
   );
 
   const { hideFinder } = useSimilarityFinderModal();
@@ -181,7 +212,7 @@ export const SemanticJsonFormNoOps: FunctionComponent<
   const similarityFinderProps = useMemo(
     () => ({
       finderId: formsPath ?? "semantic-json-form",
-      data,
+      data: formData,
       classIRI: typeIRI,
       jsonSchema: schema as JSONSchema7,
       onEntityIRIChange: handleEntityIRIChange,
@@ -194,7 +225,7 @@ export const SemanticJsonFormNoOps: FunctionComponent<
     }),
     [
       formsPath,
-      data,
+      formData,
       typeIRI,
       schema,
       handleEntityIRIChange,
@@ -216,7 +247,7 @@ export const SemanticJsonFormNoOps: FunctionComponent<
             <WithCard wrapWithinCard={wrapWithinCard}>
               {toolbar && React.isValidElement(toolbar) ? toolbar : null}
               <JsonForms
-                data={data}
+                data={formData}
                 renderers={allRenderer}
                 cells={allCellRenderer}
                 onChange={handleFormChange}
@@ -231,7 +262,7 @@ export const SemanticJsonFormNoOps: FunctionComponent<
               <SimilarityFinder
                 finderId={formsPath}
                 search={searchText}
-                data={data}
+                data={formData}
                 classIRI={typeIRI}
                 jsonSchema={schema}
                 onEntityIRIChange={handleEntityIRIChange}

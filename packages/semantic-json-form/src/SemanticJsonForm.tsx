@@ -6,6 +6,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import type { JSONSchema7 } from "json-schema";
 
 import {
   MODAL_ENTITY_DETAIL,
@@ -25,6 +26,7 @@ import type {
   SemanticJsonFormProps,
   LoadResult,
 } from "@graviola/semantic-jsonform-types";
+import { useOrderedArrayData } from "./helper/useOrderedArrayData";
 
 export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
   entityIRI,
@@ -50,17 +52,29 @@ export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
     [managedEditMode, forceEditMode],
   );
 
-  const { typeIRIToTypeName, calcProfile } = useAdbContext();
+  const { typeIRIToTypeName, calcProfile, uischemata } = useAdbContext();
+  const typeName = useMemo(
+    () => typeIRIToTypeName(typeIRI) ?? "",
+    [typeIRIToTypeName, typeIRI],
+  );
+  const fetchKey = useMemo(
+    () => `${entityIRI}-${typeIRI}`,
+    [entityIRI, typeIRI],
+  );
+  const { sortForLoad, syncPrevData } = useOrderedArrayData({
+    typeName,
+    schema: schema as JSONSchema7 | undefined,
+    uischemata,
+  });
   // Live computed-fields overlay (display only): x-calc properties are
   // stripped again at the persist boundary (useCRUDWithQueryClient).
   const { data: displayData } = useLiveCalcOverlay(calcProfile, data);
   const dispatchIntent = useDispatchIntent();
   const detailModal = useGraviolaModal(MODAL_ENTITY_DETAIL);
 
-  const typeName = useMemo(
-    () => typeIRIToTypeName(typeIRI) ?? "",
-    [typeIRIToTypeName, typeIRI],
-  );
+  useEffect(() => {
+    syncPrevData({});
+  }, [fetchKey, syncPrevData]);
 
   const { saveMutation, removeMutation, loadEntity } = useCRUDWithQueryClient({
     entityIRI,
@@ -72,10 +86,6 @@ export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
   const [isSaving, setIsSaving] = useState(false);
   const [isReloading, setIsReloading] = useState(false);
   const [initialFetchKey, setInitialFetchKey] = useState<string | null>(null);
-  const fetchKey = useMemo(
-    () => `${entityIRI}-${typeIRI}`,
-    [entityIRI, typeIRI],
-  );
   const [initiallyLoaded, setInitiallyLoaded] = useState(false);
   const isInitialLoading = Boolean(
     shouldLoadInitially && entityIRI && typeIRI && !initiallyLoaded,
@@ -89,8 +99,9 @@ export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
     return loadEntity(entityIRI, typeIRI)
       .then((loadResult: LoadResult | null) => {
         if (loadResult !== null && loadResult?.document) {
-          const data = loadResult.document;
-          onChange(data);
+          const loaded = sortForLoad(loadResult.document);
+          syncPrevData(loaded);
+          onChange(loaded);
         }
       })
       .catch((error: unknown) => {
@@ -103,7 +114,7 @@ export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
           error,
         });
       });
-  }, [loadEntity, entityIRI, typeIRI, schema, onChange]);
+  }, [loadEntity, entityIRI, typeIRI, onChange, sortForLoad, syncPrevData]);
 
   useEffect(() => {
     if (!shouldLoadInitially) {
@@ -178,7 +189,9 @@ export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
           loadEntity(entityIRI, typeIRI)
             .then((data) => {
               if (data?.document) {
-                return onChange(data.document);
+                const loaded = sortForLoad(data.document);
+                syncPrevData(loaded);
+                return onChange(loaded);
               }
             })
             .finally(() => {
@@ -187,7 +200,9 @@ export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
             });
         } else {
           const iri = mainDocument?.["@id"] as string | undefined;
-          onChange(mainDocument);
+          const saved = sortForLoad(mainDocument);
+          syncPrevData(saved);
+          onChange(saved);
           emitSaveSuccess({
             entityIRI: iri ?? "",
             created: true,
@@ -208,6 +223,8 @@ export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
     loadEntity,
     typeIRI,
     entityIRI,
+    sortForLoad,
+    syncPrevData,
   ]);
 
   const handleRemove = useCallback(async () => {
@@ -277,6 +294,9 @@ export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
         (reason === "mapping" && !isLoading) ||
         (reason === "reload" && isReloading)
       ) {
+        if (reason === "user") {
+          syncPrevData(data);
+        }
         onChange(data);
       }
     },
@@ -287,6 +307,7 @@ export const SemanticJsonForm: FunctionComponent<SemanticJsonFormProps> = ({
       isReloading,
       shouldLoadInitially,
       initiallyLoaded,
+      syncPrevData,
     ],
   );
 

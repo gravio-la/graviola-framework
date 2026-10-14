@@ -24,6 +24,7 @@
     "dev": "tsup --watch",
     "lint": "eslint src/**/*.{ts,tsx}",
     "lint-fix": "eslint --fix src/**/*.{ts,tsx}",
+    "test": "bun test",
     "release": "bun publish --access public",
     "pack-tarball": "bun pm pack"
   },
@@ -39,6 +40,7 @@
     "react-json-view-lite": "^2.4.1"
   },
   "dependencies": {
+    "@graviola/edb-core-utils": "workspace:*",
     "@graviola/formula-runtime-react": "workspace:*",
     "@graviola/edb-state-hooks": "workspace:*",
     "@graviola/json-schema-utils": "workspace:*",

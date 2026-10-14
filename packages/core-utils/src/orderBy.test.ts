@@ -1,11 +1,14 @@
 import { describe, expect, test } from "bun:test";
 
 import {
+  applyUserOrderedFormChange,
   compareOrderValues,
   fillNewItemOrderValues,
   nextOrderValue,
+  normalizeOrderValues,
   orderSpecsFromUiSchema,
   orderValue,
+  renumberOrderField,
   sortByOrderField,
   sortDataByOrderSpecs,
   sortIndexedByOrderField,
@@ -237,5 +240,84 @@ describe("fillNewItemOrderValues", () => {
     const prev = { steps: [{ position: 1 }, { position: 2 }] };
     const next = { steps: [{ position: 1 }, { position: 99 }] };
     expect(fillNewItemOrderValues(prev, next, specs, integerFields)).toBe(next);
+  });
+});
+
+describe("renumberOrderField", () => {
+  const spec = { field: "position", direction: "asc" as const };
+  const specDesc = { field: "position", direction: "desc" as const };
+  const integerFields = new Set(["position"]);
+
+  test("asc: renumbers on pure reorder", () => {
+    const a = { "@id": "a", position: 9 };
+    const b = { "@id": "b", position: 8 };
+    const c = { "@id": "c", position: 7 };
+    const prev = [a, b, c];
+    const next = [c, a, b];
+    const out = renumberOrderField(prev, next, spec, integerFields);
+    expect(out).toEqual([
+      { "@id": "c", position: 1 },
+      { "@id": "a", position: 2 },
+      { "@id": "b", position: 3 },
+    ]);
+  });
+
+  test("desc: renumbers n..1 on pure reorder", () => {
+    const a = { position: 1 };
+    const b = { position: 2 };
+    const prev = [a, b];
+    const next = [b, a];
+    const out = renumberOrderField(prev, next, specDesc, integerFields);
+    expect(out).toEqual([{ position: 2 }, { position: 1 }]);
+  });
+
+  test("unchanged when item added or removed", () => {
+    const prev = [{ position: 1 }, { position: 2 }];
+    const next = [{ position: 1 }, { position: 2 }, { position: 3 }];
+    expect(renumberOrderField(prev, next, spec, integerFields)).toBe(next);
+  });
+
+  test("unchanged for non-integer order field", () => {
+    const prev = [{ title: "a" }, { title: "b" }];
+    const next = [{ title: "b" }, { title: "a" }];
+    expect(renumberOrderField(prev, next, spec, new Set())).toBe(next);
+  });
+});
+
+describe("normalizeOrderValues", () => {
+  test("renumbers when duplicates or missing", () => {
+    const items = [{ n: 3 }, { n: 3 }, { n: undefined }];
+    const out = normalizeOrderValues(items, "n");
+    expect(out).toEqual([{ n: 1 }, { n: 2 }, { n: 3 }]);
+  });
+
+  test("unchanged when all unique and present", () => {
+    const items = [{ n: 5 }, { n: 2 }];
+    expect(normalizeOrderValues(items, "n")).toBe(items);
+  });
+});
+
+describe("applyUserOrderedFormChange", () => {
+  test("fills appended item", () => {
+    const specs = { steps: { field: "position", direction: "asc" as const } };
+    const integerFields = new Set(["position"]);
+    const prev = { steps: [{ position: 1 }] };
+    const next = { steps: [{ position: 1 }, {}] };
+    const out = applyUserOrderedFormChange(prev, next, specs, integerFields);
+    expect(out.steps[1]).toEqual({ position: 2 });
+  });
+
+  test("renumbers on up/down reorder", () => {
+    const specs = { steps: { field: "position", direction: "asc" as const } };
+    const integerFields = new Set(["position"]);
+    const a = { "@id": "a", position: 9 };
+    const b = { "@id": "b", position: 8 };
+    const prev = { steps: [a, b] };
+    const next = { steps: [b, a] };
+    const out = applyUserOrderedFormChange(prev, next, specs, integerFields);
+    expect(out.steps).toEqual([
+      { "@id": "b", position: 1 },
+      { "@id": "a", position: 2 },
+    ]);
   });
 });

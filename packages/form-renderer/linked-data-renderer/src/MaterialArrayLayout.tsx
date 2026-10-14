@@ -27,11 +27,12 @@ import { Box, Grid, IconButton, List, Paper, Tooltip } from "@mui/material";
 import { ErrorObject } from "ajv";
 import { JSONSchema7 } from "json-schema";
 import { JSONSchema } from "json-schema-to-ts";
-import { cloneDeep, orderBy, uniqBy } from "lodash-es";
+import cloneDeep from "lodash-es/cloneDeep";
 import merge from "lodash-es/merge";
 import { useTranslation } from "next-i18next";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import { buildArrayLayoutEntries } from "./arrayLayoutEntries";
 import { ArrayLayoutToolbar } from "./ArrayToolbar";
 import { SemanticFormsInline } from "./SemanticFormsInline";
 import { SimpleExpandPanelRenderer } from "./SimpleExpandPanelRenderer";
@@ -52,7 +53,18 @@ const uiSchemaOptionsSchema = {
       type: "boolean",
     },
     orderBy: {
-      type: "string",
+      oneOf: [
+        { type: "string" },
+        {
+          type: "object",
+          properties: {
+            field: { type: "string" },
+            direction: { enum: ["asc", "desc"] },
+          },
+          required: ["field"],
+          additionalProperties: false,
+        },
+      ],
     },
     autoFocusOnValid: {
       type: "boolean",
@@ -286,44 +298,53 @@ export const MaterialArrayLayout = (props: ArrayLayoutProps) => {
     setFormData(irisToData(createEntityIRI(typeName), typeIRI));
   }, [formsPath, typeIRI, createEntityIRI, typeName, setFormData]);
 
+  const orderBySpec = useMemo(() => {
+    const raw = orderByPropertyPath;
+    if (
+      raw &&
+      typeof raw === "object" &&
+      typeof (raw as { field?: string }).field === "string"
+    ) {
+      const spec = raw as { field: string; direction?: "asc" | "desc" };
+      return {
+        field: spec.field,
+        direction: spec.direction ?? ("asc" as const),
+      };
+    }
+    return undefined;
+  }, [orderByPropertyPath]);
+
   const orderedAndUniqueData = useMemo(() => {
-    return orderBy(
-      uniqBy(
-        realData?.map((childData, index) => {
-          const fieldDecl = primaryFieldExtracts[typeName];
-          const id = context?.getID
-            ? context.getID(childData)
-            : childData?.["@id"];
-          if (childData && fieldDecl) {
-            let label = childData.label || childData.__label || id;
-            const extractedInfo = applyToEachField(
-              childData,
-              fieldDecl,
-              extractFieldIfString,
-            );
-            if (extractedInfo.label) {
-              label = extractedInfo.label;
-            }
-          }
-          return {
-            id,
+    const fieldDecl = primaryFieldExtracts[typeName];
+    return buildArrayLayoutEntries(realData, {
+      orderBySpec,
+      getItemId: (childData) =>
+        context?.getID
+          ? context.getID(childData)
+          : (childData as { "@id"?: string } | undefined)?.["@id"],
+      getItemLabel: (childData, index) => {
+        const id = context?.getID
+          ? context.getID(childData)
+          : (childData as { "@id"?: string } | undefined)?.["@id"];
+        let itemLabel =
+          (childData as { label?: string; __label?: string } | undefined)
+            ?.label ||
+          (childData as { __label?: string } | undefined)?.__label ||
+          id;
+        if (childData && fieldDecl) {
+          const extractedInfo = applyToEachField(
             childData,
-            index,
-            label,
-          };
-        }),
-        "id",
-      ),
-      ["label", "asc"],
-    );
-  }, [
-    realData,
-    orderByPropertyPath,
-    primaryFieldExtracts,
-    typeIRI,
-    typeName,
-    context?.getID,
-  ]);
+            fieldDecl,
+            extractFieldIfString,
+          );
+          if (extractedInfo.label) {
+            itemLabel = extractedInfo.label;
+          }
+        }
+        return itemLabel ?? index;
+      },
+    });
+  }, [realData, orderBySpec, primaryFieldExtracts, typeName, context?.getID]);
 
   const handleAddItem = useCallback(
     (path: string, data: any) => {
