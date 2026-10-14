@@ -45,7 +45,11 @@ export function renderValueWithRow(
   if (content == null) return null;
 
   if (shouldWrapValueInPropertyRow(ctx)) {
-    return <PropertyRow label={label}>{content}</PropertyRow>;
+    return (
+      <PropertyRow label={label} stacked={ctx.depth >= 1}>
+        {content}
+      </PropertyRow>
+    );
   }
 
   return content;

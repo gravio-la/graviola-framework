@@ -8,14 +8,32 @@ import { Box, Typography } from "@mui/material";
 export function PropertyRow({
   label,
   children,
+  stacked,
 }: {
   label: string;
   children: React.ReactNode;
+  /** Label above value (nested detail rows). */
+  stacked?: boolean;
 }) {
   const showLabelColumn = typeof label === "string" && label.trim().length > 0;
 
   if (!showLabelColumn) {
     return <Box sx={{ py: 0.25 }}>{children}</Box>;
+  }
+
+  if (stacked) {
+    return (
+      <Box sx={{ py: 0.25 }}>
+        <Typography
+          variant="caption"
+          color="text.secondary"
+          sx={{ fontWeight: 500, display: "block", mb: 0.25 }}
+        >
+          {label}
+        </Typography>
+        <Box>{children}</Box>
+      </Box>
+    );
   }
 
   return (

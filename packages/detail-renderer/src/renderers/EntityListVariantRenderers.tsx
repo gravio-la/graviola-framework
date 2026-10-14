@@ -1,5 +1,6 @@
 import React from "react";
 import type { ControlElement } from "@jsonforms/core";
+import type { OrderBySpec } from "@graviola/edb-core-types";
 import type {
   DetailRendererProps,
   ViewSize,
@@ -12,6 +13,9 @@ import {
   ContainedEntityView,
   containedAsFromUiSchema,
 } from "./ContainedEntityView";
+import { sortIndexedByOrderField } from "@graviola/edb-core-utils";
+
+import { readOrderByFromControl } from "../utils/readOrderByFromControl";
 import { PropertyRow } from "./PropertyRow";
 import type { ListVariant } from "./listVariantTesters";
 
@@ -38,11 +42,13 @@ function EntityListVariantBody({
   itemSchema,
   containedAs,
   ctx,
+  orderSpec,
 }: {
   data: unknown[];
   itemSchema: JSONSchema7 | undefined;
   containedAs: ViewSize;
   ctx: DetailRendererProps["ctx"];
+  orderSpec?: OrderBySpec;
 }) {
   return (
     <Stack
@@ -51,7 +57,7 @@ function EntityListVariantBody({
       gap={containedAs === "card" ? 1 : 0.75}
       sx={{ width: containedAs === "card" ? "100%" : undefined }}
     >
-      {data.map((item, index) => {
+      {sortIndexedByOrderField(data, orderSpec).map(({ item, index }) => {
         if (item == null || typeof item !== "object") return null;
         const d = item as Record<string, unknown>;
         if (!isEntityLikeData(d)) return null;
@@ -81,6 +87,7 @@ function makeListVariantRenderer(variant: ListVariant) {
   }: DetailRendererProps) {
     if (!Array.isArray(data) || data.length === 0) return null;
     const itemSchema = resolveItemSchema(schema as JSONSchema7);
+    const orderSpec = readOrderByFromControl(uiSchema);
     const containedAs = containedAsForVariant(
       variant,
       uiSchema as ControlElement,
@@ -91,6 +98,7 @@ function makeListVariantRenderer(variant: ListVariant) {
         itemSchema={itemSchema}
         containedAs={containedAs}
         ctx={ctx}
+        orderSpec={orderSpec}
       />
     );
 

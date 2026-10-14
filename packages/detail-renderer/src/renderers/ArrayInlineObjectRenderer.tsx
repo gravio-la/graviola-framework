@@ -7,14 +7,17 @@ import {
   DETAIL_ARRAY_INLINE_OPTIONS_KEY,
   readNestingOptions,
   childNestingContext,
+  isEntityLikeObjectSchema,
   type DetailArrayInlineControlOptions,
   type DetailRendererProps,
   type GenerateDefaultDetailUISchemaOptions,
 } from "@graviola/edb-detail-renderer-core";
+import { orderValue, sortIndexedByOrderField } from "@graviola/edb-core-utils";
 import { Box } from "@mui/material";
 import type { JSONSchema7 } from "json-schema";
 
 import { useDetailRendererContext } from "../context";
+import { readOrderByFromControl } from "../utils/readOrderByFromControl";
 import {
   itemVirtualRoot,
   renderDetailInlineObjectBody,
@@ -41,9 +44,18 @@ function readDetailArrayInlineOpts(
   return bundle && typeof bundle === "object" ? bundle : undefined;
 }
 
+function orderFieldIsNumeric(
+  itemSchemaRoot: JSONSchema7,
+  field: string,
+): boolean {
+  const prop = itemSchemaRoot.properties?.[field] as JSONSchema7 | undefined;
+  return prop?.type === "integer" || prop?.type === "number";
+}
+
 function computeItemGenerateOptions(
   itemSchemaRoot: JSONSchema7,
   opts: DetailArrayInlineControlOptions | undefined,
+  omitPropertyNames: string[] = [],
 ):
   | Pick<GenerateDefaultDetailUISchemaOptions, "skipScope" | "scopeOverride">
   | undefined {
@@ -53,6 +65,9 @@ function computeItemGenerateOptions(
       : null;
 
   const skipScope: string[] = [];
+  for (const propName of omitPropertyNames) {
+    skipScope.push(`#/properties/${encode(propName)}`);
+  }
   if (include) {
     const props = itemSchemaRoot.properties;
     if (props && typeof props === "object") {
@@ -97,9 +112,33 @@ function itemLabel(
 ): string {
   const schemaTitle =
     typeof itemSchema.title === "string" ? itemSchema.title : undefined;
-  // Prefer schema title; otherwise index. Callers that need a primary-field
-  // label should pass it via uiSchema options / ContainedEntityView preview.
   return schemaTitle ?? `Item ${index + 1}`;
+}
+
+function OrderBadge({ value }: { value: unknown }) {
+  if (value == null || value === "") return null;
+  return (
+    <Box
+      component="span"
+      data-testid="order-badge"
+      sx={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        minWidth: 28,
+        height: 28,
+        borderRadius: "50%",
+        bgcolor: "action.selected",
+        color: "text.primary",
+        fontWeight: 600,
+        fontSize: "0.875rem",
+        mr: 1,
+        flexShrink: 0,
+      }}
+    >
+      {String(value)}
+    </Box>
+  );
 }
 
 /**
@@ -114,11 +153,12 @@ export function ArrayInlineObjectRenderer({
   uiSchema,
 }: DetailRendererProps) {
   const { registry, rootSchema } = useDetailRendererContext();
-  const presentOpts = readDetailArrayInlineOpts(uiSchema);
+  const explicitInlineOpts = readDetailArrayInlineOpts(uiSchema);
   const optionsDetail = readOptionsDetail(uiSchema);
   const arrayScope = (uiSchema as ControlElement).scope;
   const nesting = readNestingOptions(uiSchema, ctx);
   const childCtx = childNestingContext(uiSchema, ctx);
+  const orderSpec = readOrderByFromControl(uiSchema);
 
   if (!Array.isArray(data) || data.length === 0) return null;
 
@@ -127,14 +167,32 @@ export function ArrayInlineObjectRenderer({
   if (!rawItems || typeof rawItems === "boolean") return null;
   const itemSchema = rawItems as JSONSchema7;
 
+  const isAnonymousItem = !isEntityLikeObjectSchema(itemSchema);
+  const presentOpts: DetailArrayInlineControlOptions | undefined =
+    explicitInlineOpts ??
+    (isAnonymousItem
+      ? { compactItems: true, hidePropertyLabels: true }
+      : undefined);
+
+  const showOrderBadge = Boolean(
+    orderSpec && orderFieldIsNumeric(itemSchema, orderSpec.field),
+  );
+  const omitFromBody = showOrderBadge && orderSpec ? [orderSpec.field] : [];
+
   const virtualRoot = itemVirtualRoot(itemSchema, rootSchema);
-  const itemGenOpts = computeItemGenerateOptions(itemSchema, presentOpts);
+  const itemGenOpts = computeItemGenerateOptions(
+    itemSchema,
+    presentOpts,
+    omitFromBody,
+  );
 
   const compact = Boolean(presentOpts?.compactItems);
   const rowLike = presentOpts?.itemLayout === "row";
   const useCollapsible = Boolean(nesting.collapsible) && !compact;
 
-  const rows = data.map((item: unknown, index: number) => {
+  const indexedItems = sortIndexedByOrderField(data, orderSpec);
+
+  const rows = indexedItems.map(({ item, index }) => {
     if (item == null || typeof item !== "object") return null;
 
     let body: React.ReactNode;
@@ -161,6 +219,17 @@ export function ArrayInlineObjectRenderer({
 
     const itemData = item as Record<string, unknown>;
     const rowLabel = itemLabel(itemData, index, itemSchema);
+    const badgeValue =
+      showOrderBadge && orderSpec
+        ? orderValue(itemData, orderSpec.field)
+        : undefined;
+
+    const itemChrome = (
+      <>
+        {badgeValue != null ? <OrderBadge value={badgeValue} /> : null}
+        <Box sx={{ flex: 1, minWidth: 0 }}>{body}</Box>
+      </>
+    );
 
     if (useCollapsible) {
       return (
@@ -170,7 +239,7 @@ export function ArrayInlineObjectRenderer({
           defaultExpanded={nesting.defaultExpanded ?? true}
           flat={nesting.flat}
         >
-          {body}
+          {itemChrome}
         </NestedSection>
       );
     }
@@ -178,10 +247,18 @@ export function ArrayInlineObjectRenderer({
     return (
       <Box
         key={index}
+        data-original-index={index}
         sx={
           compact
-            ? { display: "inline-flex", flexShrink: 0 }
+            ? {
+                display: "flex",
+                alignItems: "flex-start",
+                flexShrink: 0,
+                width: rowLike ? undefined : "100%",
+              }
             : {
+                display: "flex",
+                alignItems: "flex-start",
                 pl: 2,
                 borderLeft: "2px solid",
                 borderColor: "divider",
@@ -190,7 +267,7 @@ export function ArrayInlineObjectRenderer({
               }
         }
       >
-        {body}
+        {itemChrome}
       </Box>
     );
   });
@@ -224,5 +301,9 @@ export function ArrayInlineObjectRenderer({
     );
   }
 
-  return <PropertyRow label={label}>{listBody}</PropertyRow>;
+  return (
+    <PropertyRow label={label} stacked={ctx.depth >= 1}>
+      {listBody}
+    </PropertyRow>
+  );
 }

@@ -15,6 +15,9 @@ import {
   containedAsFromUiSchema,
 } from "./ContainedEntityView";
 import { isEntityLikeData } from "./entityLike";
+import { sortIndexedByOrderField } from "@graviola/edb-core-utils";
+
+import { readOrderByFromControl } from "../utils/readOrderByFromControl";
 import { PropertyRow } from "./PropertyRow";
 import { nestingGuideSx } from "./NestedSection";
 
@@ -36,6 +39,9 @@ export function ArrayEntityRenderer({
   );
 
   if (!Array.isArray(data) || data.length === 0) return null;
+
+  const orderSpec = readOrderByFromControl(uiSchema);
+  const indexedData = sortIndexedByOrderField(data, orderSpec);
 
   const rawItems = (schema as JSONSchema7).items;
   const itemSchema =
@@ -61,7 +67,7 @@ export function ArrayEntityRenderer({
     return (
       <PropertyRow label={label}>
         <Stack direction={stackDirection} flexWrap="wrap" gap={stackGap}>
-          {(data as unknown[]).map((item: unknown, index: number) => {
+          {indexedData.map(({ item, index }) => {
             if (item == null || typeof item !== "object") return null;
             const d = item as Record<string, unknown>;
             const key =
@@ -83,7 +89,7 @@ export function ArrayEntityRenderer({
     );
   }
 
-  const rows = data.map((item: unknown, index: number) => {
+  const rows = indexedData.map(({ item, index }) => {
     if (item == null || typeof item !== "object") return null;
     const d = item as Record<string, unknown>;
     const typeIRI = d["@type"];

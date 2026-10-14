@@ -27,7 +27,6 @@ import {
   OneOfDetailRenderer,
 } from "@graviola/edb-detail-renderer-core";
 
-import { FallbackRenderer } from "./FallbackRenderer";
 import { NumberRenderer } from "./NumberRenderer";
 import { BooleanRenderer } from "./BooleanRenderer";
 import { DateRenderer, DateTimeRenderer } from "./DateRenderer";
@@ -37,6 +36,10 @@ import { NamedEntityRenderer } from "./NamedEntityRenderer";
 import { ArrayInlineObjectRenderer } from "./ArrayInlineObjectRenderer";
 import { ArrayEntityRenderer } from "./ArrayEntityRenderer";
 import { ArrayPrimitiveRenderer } from "./ArrayPrimitiveRenderer";
+import { ImageGalleryRenderer } from "./ImageGalleryRenderer";
+import { arrayOfImageUrisTester } from "./arrayOfImagesTester";
+import { FallbackRenderer } from "./FallbackRenderer";
+import { markdownControlTester } from "../value-renderers/markdownValueTester";
 import { ObjectRenderer } from "./ObjectRenderer";
 import { VerticalLayoutRenderer } from "./layouts/VerticalLayoutRenderer";
 import { HorizontalLayoutRenderer } from "./layouts/HorizontalLayoutRenderer";
@@ -127,12 +130,14 @@ function buildRegistry(primaryLayout: {
     { tester: dateTimeTester, renderer: DateTimeRenderer },
     { tester: enumTester, renderer: EnumRenderer },
     { tester: relationViaTester, renderer: RelationViaRenderer },
+    { tester: arrayOfImageUrisTester, renderer: ImageGalleryRenderer },
     { tester: arrayPrimitiveTester, renderer: ArrayPrimitiveRenderer },
     { tester: arrayInlineObjectTester, renderer: ArrayInlineObjectRenderer },
     { tester: booleanTester, renderer: BooleanRenderer },
     { tester: uriTester, renderer: UriRenderer },
     { tester: inlineObjectTester, renderer: ObjectRenderer },
     { tester: numberTester, renderer: NumberRenderer },
+    { tester: markdownControlTester, renderer: FallbackRenderer },
     { tester: stringTester, renderer: FallbackRenderer },
   ];
 }

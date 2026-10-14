@@ -1,21 +1,17 @@
 import React from "react";
-import { Link, Typography } from "@mui/material";
+import { Link } from "@mui/material";
 import type { ValueRendererProps } from "@graviola/edb-detail-renderer-core";
 
-function displayUriLabel(href: string): string {
-  return decodeURIComponent(
-    href.substring(
-      Math.max(href.lastIndexOf("/"), href.lastIndexOf("#")) + 1,
-    ) || href,
-  );
-}
+import { formatUriLinkText } from "../utils/formatUriLinkText";
 
 export function UriValueRenderer({ value }: ValueRendererProps) {
   if (value == null || value === "") return null;
   const href = String(value);
+  const linkText = formatUriLinkText(href);
   return (
     <Link
       href={href}
+      title={href}
       target="_blank"
       rel="noopener noreferrer"
       variant="inherit"
@@ -27,7 +23,7 @@ export function UriValueRenderer({ value }: ValueRendererProps) {
         maxWidth: "100%",
       }}
     >
-      {displayUriLabel(href)}
+      {linkText}
     </Link>
   );
 }

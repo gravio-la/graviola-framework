@@ -20,6 +20,8 @@ import { HistoricalDateValueRenderer } from "./HistoricalDateValueRenderer";
 import { ImageValueRenderer } from "./ImageValueRenderer";
 import { LocalizedNumberValueRenderer } from "./LocalizedNumberValueRenderer";
 import { UriValueRenderer } from "./UriValueRenderer";
+import { MarkdownValueRenderer } from "./MarkdownValueRenderer";
+import { markdownValueTester } from "./markdownValueTester";
 
 const nameOnlyTester = () => -1;
 
@@ -53,6 +55,11 @@ export const defaultValueRenderers: ValueRendererEntry[] = [
     name: "image",
     tester: imageUriTester,
     renderer: ImageValueRenderer,
+  },
+  {
+    name: "markdown",
+    tester: markdownValueTester,
+    renderer: MarkdownValueRenderer,
   },
   {
     name: "uri",

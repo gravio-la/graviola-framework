@@ -20,12 +20,14 @@ import {
 } from "./registries";
 import { InlineEntityRefChip } from "./InlineEntityRefChip";
 
-const REGISTRY_BY_SIZE = {
-  chip: defaultChipRenderers,
-  listItem: defaultListItemRenderers,
-  card: defaultCardRenderers,
-  detail: defaultDetailRenderers,
-} as const;
+/** Resolved lazily: `./registries` imports this module (cycle), so it must not be read at module load. */
+const registryBySize = () =>
+  ({
+    chip: defaultChipRenderers,
+    listItem: defaultListItemRenderers,
+    card: defaultCardRenderers,
+    detail: defaultDetailRenderers,
+  }) as const;
 
 export type ContainedEntityViewProps = {
   data: Record<string, unknown>;
@@ -89,7 +91,7 @@ export function ContainedEntityView({
     primaryFields,
   });
 
-  const registry = REGISTRY_BY_SIZE[containedAs];
+  const registry = registryBySize()[containedAs];
   const uiSchema = generateDefaultViewUISchema(containedAs, schema, pf, {
     layoutType:
       containedAs === "detail" ? "TopLevelLayout" : `${containedAs}Layout`,

@@ -1,7 +1,7 @@
 {
   "extends": "@graviola/edb-tsconfig/react-library.json",
   "include": ["src"],
-  "exclude": ["dist", "build", "node_modules"],
+  "exclude": ["dist", "build", "node_modules", "**/*.test.tsx"],
   "compilerOptions": {
     "strict": false,
     "resolveJsonModule": true
