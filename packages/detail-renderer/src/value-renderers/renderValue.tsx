@@ -8,6 +8,7 @@ import {
 } from "@graviola/edb-detail-renderer-core";
 
 import { PropertyRow } from "../renderers/PropertyRow";
+import { shouldStackPropertyRow } from "../utils/isTopLevelSection";
 import { defaultValueRenderers } from "./defaults";
 
 export function shouldWrapValueInPropertyRow(
@@ -46,7 +47,7 @@ export function renderValueWithRow(
 
   if (shouldWrapValueInPropertyRow(ctx)) {
     return (
-      <PropertyRow label={label} stacked={ctx.depth >= 1}>
+      <PropertyRow label={label} stacked={shouldStackPropertyRow(ctx)}>
         {content}
       </PropertyRow>
     );

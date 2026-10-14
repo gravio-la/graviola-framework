@@ -50,9 +50,10 @@ async function renderArrayInline(options?: Record<string, unknown>) {
   };
   const ctx: DetailTesterContext = {
     rootSchema,
-    depth: 0,
+    depth: 1,
     maxDepth: 8,
     valueRenderers: undefined,
+    viewSize: "detail",
   };
   const dispatch = buildDispatch(
     defaultDetailRenderers,
@@ -159,9 +160,10 @@ async function renderLeafIngredients(
   };
   const ctx: DetailTesterContext = {
     rootSchema: rootSchema as DetailTesterContext["rootSchema"],
-    depth: 0,
+    depth: 1,
     maxDepth: 8,
     valueRenderers: undefined,
+    viewSize: "detail",
     ...ctxExtras,
   };
   const dispatch = buildDispatch(
@@ -380,7 +382,7 @@ describe("ArrayInlineObjectRenderer leaf-only inline row", () => {
 });
 
 describe("ArrayInlineObjectRenderer section heading", () => {
-  it("uses DetailSectionHeading at depth 0 in detail view", async () => {
+  it("uses DetailSectionHeading for top-level controls (depth 1) in detail view", async () => {
     const html = await renderArrayInline();
     expect(html).toContain("Steps");
     expect(html).toContain("h2");
@@ -426,8 +428,9 @@ describe("ArrayInlineObjectRenderer nested class orderBy", () => {
     const { defaultDetailRenderers } = await import("./registries");
     const ctx: DetailTesterContext = {
       rootSchema,
-      depth: 0,
+      depth: 1,
       maxDepth: 8,
+      viewSize: "detail",
       orderBy: {
         LineItem: {
           steps: { field: "reihenfolge", direction: "asc" },

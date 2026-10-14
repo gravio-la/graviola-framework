@@ -16,7 +16,8 @@ describe("ObjectRenderer", () => {
     };
     const ctx: DetailTesterContext = {
       rootSchema: schema,
-      depth: 0,
+      depth: 1,
+      viewSize: "detail",
       maxDepth: 8,
     };
     const uiSchema = { type: "Control", scope: "#" };

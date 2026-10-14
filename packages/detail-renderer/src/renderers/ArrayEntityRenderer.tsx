@@ -21,6 +21,7 @@ import { readOrderByFromControl } from "../utils/readOrderByFromControl";
 import { PropertyRow } from "./PropertyRow";
 import { nestingGuideSx } from "./NestedSection";
 import { DetailSectionHeading } from "../components/DetailSectionHeading";
+import { isTopLevelSection } from "../utils/isTopLevelSection";
 
 /**
  * Schema-typed entity arrays render as chips when items carry `@type` and/or `@id`.
@@ -63,8 +64,7 @@ export function ArrayEntityRenderer({
 
   const stackDirection = containedAs === "card" ? "row" : "row";
   const stackGap = containedAs === "card" ? 1.5 : 0.5;
-  const topSection =
-    ctx.viewSize === "detail" && ctx.depth === 0 && label.trim().length > 0;
+  const topSection = isTopLevelSection(ctx, label);
 
   const wrapSection = (body: React.ReactNode) =>
     topSection ? (

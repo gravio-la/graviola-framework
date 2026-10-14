@@ -20,7 +20,7 @@ export function CompactNumericSpan({
         compactNumericColumn
           ? {
               display: "inline-block",
-              minWidth: "4ch",
+              minWidth: "6ch",
               textAlign: "right",
               fontVariantNumeric: "tabular-nums",
             }

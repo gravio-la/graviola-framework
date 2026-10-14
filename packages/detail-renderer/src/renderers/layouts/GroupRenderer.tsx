@@ -9,6 +9,7 @@ import {
 
 import { NestedSection } from "../NestedSection";
 import { DetailSectionHeading } from "../../components/DetailSectionHeading";
+import { isTopLevelSection } from "../../utils/isTopLevelSection";
 
 export function GroupRenderer({
   uiSchema,
@@ -38,11 +39,7 @@ export function GroupRenderer({
     );
   }
 
-  const topSection =
-    ctx.viewSize === "detail" &&
-    ctx.depth === 0 &&
-    layout.label &&
-    layout.label.trim().length > 0;
+  const topSection = isTopLevelSection(ctx, layout.label);
 
   return (
     <Box>

@@ -1,4 +1,5 @@
 import { describe, expect, it, mock } from "bun:test";
+import { buildDispatch } from "@graviola/edb-detail-renderer-core";
 
 mock.module("@graviola/edb-state-hooks", () => ({
   useAdbContext: () => ({}),
@@ -15,6 +16,7 @@ import { DetailMetaStrip } from "../components/DetailMetaStrip";
 import { TopLevelLayoutRenderer } from "./layouts/TopLevelLayoutRenderer";
 import { DetailHero } from "./layouts/DetailHero";
 import { DetailHeroImage } from "../components/DetailHeroImage";
+import { DetailRendererContext } from "../context";
 import { ObjectRenderer } from "./ObjectRenderer";
 import { PropertyRow } from "./PropertyRow";
 import { DetailPresentationProvider } from "../detailPresentationContext";
@@ -176,10 +178,11 @@ describe("detail presentation", () => {
         }}
         rootSchema={baseCtx.rootSchema}
         rootData={{}}
-        ctx={baseCtx}
+        ctx={{ ...baseCtx, depth: 1 }}
       />,
     );
     expect(html).toContain("Quelle");
+    expect(html).toContain("h2");
     expect(html).toContain("graviola-detail-compact-object");
     expect(html).toContain("Web");
     expect(html).toContain("https://example.org");
@@ -187,6 +190,97 @@ describe("detail presentation", () => {
     expect(html).not.toContain("grid-template-columns:30%");
     expect(html).not.toMatch(/>\s*Art\s*</);
     expect(html).not.toMatch(/>\s*URL\s*</);
+  });
+
+  it("ObjectRenderer compact object counts rendered values not schema properties", () => {
+    const schema = {
+      type: "object" as const,
+      properties: {
+        art: { type: "string" as const, title: "Art" },
+        titel: { type: "string" as const },
+        url: { type: "string" as const, format: "uri", title: "URL" },
+        autor: { type: "string" as const },
+        seite: { type: "string" as const },
+        notiz: { type: "string" as const },
+      },
+    };
+    expect(isCompactLeafObjectSchema(schema)).toBe(true);
+    const html = wrap(
+      <ObjectRenderer
+        label="Quelle"
+        schema={schema}
+        data={{ art: "Website", url: "https://example.org" }}
+        path={["quelle"]}
+        uiSchema={{ type: "Control", scope: "#/properties/quelle" }}
+        dispatch={({ uiSchema: childUi }) => {
+          const scope = (childUi as { scope?: string }).scope ?? "";
+          if (scope.endsWith("/art")) return <span>Website</span>;
+          if (scope.endsWith("/url")) return <span>https://example.org</span>;
+          return null;
+        }}
+        rootSchema={{ type: "object", properties: { quelle: schema } }}
+        rootData={{}}
+        ctx={{ ...baseCtx, depth: 1 }}
+      />,
+    );
+    expect(html).toContain("Website");
+    expect(html).toContain("https://example.org");
+    expect(html).not.toMatch(/>\s*Art\s*</);
+    expect(html).not.toMatch(/>\s*URL\s*</);
+  });
+
+  it("TopLevelLayout dispatch renders section headings for array and object controls", async () => {
+    const { defaultDetailRenderers } = await import("./registries");
+    const rootSchema = {
+      type: "object" as const,
+      properties: {
+        zutaten: {
+          type: "array" as const,
+          title: "Zutaten",
+          items: {
+            type: "object" as const,
+            properties: {
+              name: { type: "string" as const },
+            },
+          },
+        },
+        quelle: baseCtx.rootSchema.properties!.quelle,
+      },
+    };
+    const data = {
+      zutaten: [{ name: "Mehl" }],
+      quelle: { art: "Web", url: "https://example.org" },
+    };
+    const ctx: DetailTesterContext = {
+      ...baseCtx,
+      rootSchema,
+      depth: 0,
+      maxDepth: 8,
+    };
+    const run = buildDispatch(defaultDetailRenderers, rootSchema, data, ctx);
+    const uiSchema = {
+      type: "TopLevelLayout" as const,
+      elements: [
+        { type: "Control" as const, scope: "#/properties/zutaten" },
+        { type: "Control" as const, scope: "#/properties/quelle" },
+      ],
+    };
+    const html = wrap(
+      <DetailRendererContext.Provider
+        value={{
+          registry: defaultDetailRenderers,
+          config: {},
+          rootSchema,
+          rootData: data,
+        }}
+      >
+        {run(uiSchema)}
+      </DetailRendererContext.Provider>,
+    );
+    expect(html).toContain("Zutaten");
+    expect(html).toContain("Quelle");
+    const h2Count = (html.match(/<h2/g) ?? []).length;
+    expect(h2Count).toBeGreaterThanOrEqual(2);
   });
 
   it("PropertyRow meta strip avoids 30% grid", () => {

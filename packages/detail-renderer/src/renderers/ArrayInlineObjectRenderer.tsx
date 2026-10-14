@@ -20,6 +20,10 @@ import type { JSONSchema7 } from "json-schema";
 import { useDetailRendererContext } from "../context";
 import { readOrderByFromControl } from "../utils/readOrderByFromControl";
 import {
+  isTopLevelSection,
+  shouldStackPropertyRow,
+} from "../utils/isTopLevelSection";
+import {
   classLevelInlineGenerateOptions,
   mergeInlineItemGenerateOptions,
 } from "../utils/inlineItemClassConfig";
@@ -359,10 +363,7 @@ export function ArrayInlineObjectRenderer({
     );
   }
 
-  const topSection =
-    (!ctx.viewSize || ctx.viewSize === "detail") &&
-    ctx.depth === 0 &&
-    label.trim().length > 0;
+  const topSection = isTopLevelSection(ctx, label);
 
   if (topSection) {
     return (
@@ -374,7 +375,7 @@ export function ArrayInlineObjectRenderer({
   }
 
   return (
-    <PropertyRow label={label} stacked={ctx.depth >= 1}>
+    <PropertyRow label={label} stacked={shouldStackPropertyRow(ctx)}>
       {listBody}
     </PropertyRow>
   );

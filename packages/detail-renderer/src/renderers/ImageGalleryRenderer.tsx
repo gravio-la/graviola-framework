@@ -5,6 +5,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useThumbnailUrl } from "@graviola/edb-state-hooks";
 
 import { PropertyRow } from "./PropertyRow";
+import { shouldStackPropertyRow } from "../utils/isTopLevelSection";
 
 function GalleryThumb({
   href,
@@ -102,7 +103,7 @@ export function ImageGalleryRenderer({
 
   return (
     <>
-      <PropertyRow label={label} stacked={ctx.depth >= 1}>
+      <PropertyRow label={label} stacked={shouldStackPropertyRow(ctx)}>
         {grid}
       </PropertyRow>
       <Dialog

@@ -12,6 +12,7 @@ import type { DetailRendererProps } from "@graviola/edb-detail-renderer-core";
 import { DetailSectionHeading } from "../components/DetailSectionHeading";
 import { DetailPresentationProvider } from "../detailPresentationContext";
 import { isCompactLeafObjectSchema } from "../utils/detailSchemaPresentation";
+import { isTopLevelSection } from "../utils/isTopLevelSection";
 import { NestedSection } from "./NestedSection";
 
 export function ObjectRenderer({
@@ -40,18 +41,16 @@ export function ObjectRenderer({
         type: "Control",
         scope: childScope,
       };
-      return (
-        <React.Fragment key={childScope}>
-          {dispatch({ uiSchema: childUi, ctx: childCtx })}
-        </React.Fragment>
-      );
+      const node = dispatch({ uiSchema: childUi, ctx: childCtx });
+      if (node == null) return null;
+      return <React.Fragment key={childScope}>{node}</React.Fragment>;
     })
     .filter(Boolean);
 
   if (children.length === 0) return null;
 
   const isDetail = !ctx.viewSize || ctx.viewSize === "detail";
-  const topSection = isDetail && ctx.depth === 0 && label.trim().length > 0;
+  const topSection = isTopLevelSection(ctx, label);
   const compact =
     isDetail && isCompactLeafObjectSchema(s) && !nesting.collapsible;
 
@@ -74,8 +73,8 @@ export function ObjectRenderer({
   }
 
   if (compact) {
-    const hideInlineLabels = propertyEntries.length <= 3;
-    const visibleChildren = children.filter(Boolean);
+    const hideInlineLabels = children.length <= 3;
+    const visibleChildren = children;
     return (
       <Box>
         {topSection ? (

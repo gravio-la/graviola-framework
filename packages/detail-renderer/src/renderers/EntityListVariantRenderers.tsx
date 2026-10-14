@@ -17,6 +17,7 @@ import { sortIndexedByOrderField } from "@graviola/edb-core-utils";
 
 import { readOrderByFromControl } from "../utils/readOrderByFromControl";
 import { DetailSectionHeading } from "../components/DetailSectionHeading";
+import { isTopLevelSection } from "../utils/isTopLevelSection";
 import { PropertyRow } from "./PropertyRow";
 import type { ListVariant } from "./listVariantTesters";
 
@@ -104,10 +105,7 @@ function makeListVariantRenderer(variant: ListVariant) {
     );
 
     const topSection =
-      ctx.viewSize === "detail" &&
-      ctx.depth === 0 &&
-      typeof label === "string" &&
-      label.trim().length > 0;
+      typeof label === "string" && isTopLevelSection(ctx, label);
 
     if (variant === "cards") {
       return (
