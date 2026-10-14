@@ -36,13 +36,19 @@ function controlForScope(
 }
 
 describe("generateDefaultUISchema inline array elementLabelProp", () => {
-  test("sets elementLabelProp to first string/number/integer leaf on inline object items", () => {
+  test("sets elementLabelProps in declaration order including reference props", () => {
     const ui = generateDefaultUISchema(
       inlineIngredientArraySchema,
       {},
     ) as Layout;
 
     const zutaten = controlForScope(ui, "#/properties/zutaten");
+    expect(zutaten?.options?.elementLabelProps).toEqual([
+      "zutatRef",
+      "zutatFreitext",
+      "menge",
+      "einheit",
+    ]);
     expect(zutaten?.options?.elementLabelProp).toBe("zutatFreitext");
   });
 
@@ -62,9 +68,9 @@ describe("generateDefaultUISchema inline array elementLabelProp", () => {
       },
     }) as Layout;
 
-    expect(
-      controlForScope(ui, "#/properties/zutaten")?.options?.elementLabelProp,
-    ).toBe("menge");
+    const zutaten = controlForScope(ui, "#/properties/zutaten");
+    expect(zutaten?.options?.elementLabelProp).toBe("menge");
+    expect(zutaten?.options?.elementLabelProps?.[0]).toBe("menge");
   });
 
   test("does not set elementLabelProp for arrays of named entities", () => {
@@ -88,6 +94,9 @@ describe("generateDefaultUISchema inline array elementLabelProp", () => {
     expect(
       controlForScope(ui, "#/properties/tags")?.options?.elementLabelProp,
     ).toBeUndefined();
+    expect(
+      controlForScope(ui, "#/properties/tags")?.options?.elementLabelProps,
+    ).toBeUndefined();
   });
 
   test("keeps explicit elementLabelProp from scopeOverride", () => {
@@ -104,5 +113,8 @@ describe("generateDefaultUISchema inline array elementLabelProp", () => {
     expect(
       controlForScope(ui, "#/properties/zutaten")?.options?.elementLabelProp,
     ).toBe("einheit");
+    expect(
+      controlForScope(ui, "#/properties/zutaten")?.options?.elementLabelProps,
+    ).toBeUndefined();
   });
 });

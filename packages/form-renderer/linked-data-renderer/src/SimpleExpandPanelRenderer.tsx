@@ -10,27 +10,196 @@ import {
   useThumbnailUrl,
 } from "@graviola/edb-state-hooks";
 import {
+  composeInlineArrayElementLabel,
+  formatInlineArrayElementLabelValue,
   queryOptionMixinBasedOnEntity,
   specialDate2LocalDate,
   withEllipsis,
 } from "@graviola/edb-ui-utils";
-import { JsonSchema, update } from "@jsonforms/core";
-import { useJsonForms } from "@jsonforms/react";
-import { Clear, Save } from "@mui/icons-material";
 import {
+  ArrayTranslations,
+  composePaths,
+  computeChildLabel,
+  ControlElement,
+  createId,
+  findUISchema,
+  JsonFormsCellRendererRegistryEntry,
+  JsonFormsRendererRegistryEntry,
+  JsonFormsUISchemaRegistryEntry,
+  JsonSchema,
+  moveDown,
+  moveUp,
+  removeId,
+  Resolve,
+  update,
+  UpdateArrayContext,
+} from "@jsonforms/core";
+import {
+  JsonFormsDispatch,
+  JsonFormsStateContext,
+  useJsonForms,
+  withJsonFormsContext,
+} from "@jsonforms/react";
+import {
+  ArrowDownward,
+  ArrowUpward,
+  Clear,
+  Delete,
+  ExpandMore,
+  Save,
+} from "@mui/icons-material";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Avatar,
+  Box,
+  Grid,
   IconButton,
   ListItem,
   ListItemAvatar,
   ListItemButton,
   ListItemText,
   Stack,
+  Tooltip,
 } from "@mui/material";
 import dot from "dot";
-import { JSONSchema7 } from "json-schema";
 import get from "lodash-es/get";
+import merge from "lodash-es/merge";
 import { useTranslation } from "next-i18next";
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, {
+  ComponentType,
+  Dispatch,
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+
+export type ResolveInlineArrayItemDisplayLabelParams = {
+  data: unknown;
+  childLabelTemplate?: string;
+  elementLabelProps?: string[];
+  elementLabelProp?: string;
+  entityLabel?: string;
+  locale?: string;
+  index: number;
+};
+
+/** Collapsed label for inline array rows (template → composed props → legacy fallbacks). */
+export function resolveInlineArrayItemDisplayLabel(
+  params: ResolveInlineArrayItemDisplayLabelParams,
+): string {
+  const {
+    data,
+    childLabelTemplate,
+    elementLabelProps,
+    elementLabelProp,
+    entityLabel,
+    locale,
+    index,
+  } = params;
+
+  if (childLabelTemplate && data && typeof data === "object") {
+    try {
+      const template = dot.template(childLabelTemplate);
+      const modifiedData = Object.fromEntries(
+        Object.entries(data as Record<string, unknown>).map(
+          ([key, value]: [string, unknown]) => {
+            if (
+              key.toLowerCase().includes("date") &&
+              typeof value === "number"
+            ) {
+              return [key, specialDate2LocalDate(value, locale ?? "en")];
+            }
+            return [key, value];
+          },
+        ),
+      );
+      const rendered = template(modifiedData);
+      if (rendered && String(rendered).trim()) {
+        return String(rendered);
+      }
+    } catch (e) {
+      console.warn("could not render childLabelTemplate", e);
+    }
+  }
+
+  if (elementLabelProps?.length) {
+    const composed = composeInlineArrayElementLabel(data, elementLabelProps);
+    if (composed) return composed;
+  }
+
+  if (elementLabelProp && data != null) {
+    const formatted = formatInlineArrayElementLabelValue(
+      get(data, elementLabelProp),
+    );
+    if (formatted) return formatted;
+  }
+
+  if (entityLabel) return entityLabel;
+  if (data && typeof data === "object") {
+    const draftLabel = (data as { __label?: string }).__label;
+    if (draftLabel && String(draftLabel).trim()) {
+      return String(draftLabel);
+    }
+  }
+
+  return `Item ${index + 1}`;
+}
+
+type ArrayPanelIconActionProps = {
+  ariaLabel: string;
+  disabled?: boolean;
+  onActivate: (event: React.MouseEvent | React.KeyboardEvent) => void;
+  children: React.ReactNode;
+};
+
+/** Avoid nested &lt;button&gt; inside MUI AccordionSummary (which is a button). */
+export function ArrayPanelIconAction({
+  ariaLabel,
+  disabled,
+  onActivate,
+  children,
+}: ArrayPanelIconActionProps) {
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (disabled) return;
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      event.stopPropagation();
+      onActivate(event);
+    }
+  };
+
+  return (
+    <Box
+      component="span"
+      role="button"
+      tabIndex={disabled ? -1 : 0}
+      aria-label={ariaLabel}
+      aria-disabled={disabled || undefined}
+      onClick={(event) => {
+        if (disabled) return;
+        event.stopPropagation();
+        onActivate(event);
+      }}
+      onKeyDown={handleKeyDown}
+      sx={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        p: 1,
+        cursor: disabled ? "default" : "pointer",
+        opacity: disabled ? 0.38 : 1,
+        borderRadius: "50%",
+        "&:hover": disabled ? undefined : { bgcolor: "action.hover" },
+      }}
+    >
+      {children}
+    </Box>
+  );
+}
 
 type SimpleExpandPanelRendererProps = {
   data: any;
@@ -47,15 +216,17 @@ type SimpleExpandPanelRendererProps = {
   childLabelTemplate?: string;
   elementDetailItemPath?: string;
   elementLabelProp?: string;
+  elementLabelProps?: string[];
   imagePath?: string;
   formsPath?: string;
   primaryFields: PrimaryFieldDeclaration;
   mapData?: (data: any) => any;
 };
+
 export const SimpleExpandPanelRenderer = (
   props: SimpleExpandPanelRendererProps,
 ) => {
-  const { dispatch, config } = useJsonForms();
+  useJsonForms();
   const {
     data: initialData,
     entityIRI,
@@ -64,18 +235,13 @@ export const SimpleExpandPanelRenderer = (
     childLabelTemplate,
     imagePath,
     elementLabelProp,
+    elementLabelProps,
     elementDetailItemPath,
     typeIRI,
     typeName,
     primaryFields,
     mapData,
   } = props;
-  const onData = useCallback(
-    (_data) => {
-      dispatch(update(props.path, () => (mapData ? mapData(_data) : _data)));
-    },
-    [mapData],
-  );
   const detailModal = useGraviolaModal(MODAL_ENTITY_DETAIL);
 
   const {
@@ -86,7 +252,7 @@ export const SimpleExpandPanelRenderer = (
     entityIRI,
     typeIRI,
     queryOptions: {
-      enabled: true, //!data?.__draft && !data?.__label,
+      enabled: true,
       refetchOnWindowFocus: true,
       ...queryOptionMixinBasedOnEntity(initialData),
     },
@@ -101,13 +267,12 @@ export const SimpleExpandPanelRenderer = (
 
   const draft = data?.__draft && !saveMutation.isSuccess;
 
-  // @ts-ignore
   const { label, description, image } = useMemo(() => {
     let imageUrl = null;
     if (imagePath) {
       imageUrl = get(data, imagePath);
     }
-    if (!typeName) return {};
+    if (!typeName) return { image: imageUrl };
     const fieldDecl = primaryFields[typeName];
     if (data && fieldDecl) {
       const extratedInfo = applyToEachField(
@@ -117,38 +282,35 @@ export const SimpleExpandPanelRenderer = (
       );
       return {
         image: imageUrl || extratedInfo.image,
-        ...extratedInfo,
+        label: extratedInfo.label,
+        description: extratedInfo.description,
       };
     }
     return { image: imageUrl };
-  }, [data, typeName, entityIRI]);
+  }, [data, typeName, imagePath, primaryFields]);
 
-  const realLabel = useMemo(() => {
-    if (childLabelTemplate) {
-      try {
-        const template = dot.template(childLabelTemplate);
-        //we would need a middleware but it is hard to get the date converted correctly here
-        const modifiedData = Object.fromEntries(
-          Object.entries(data).map(([key, value]: [string, any]) => {
-            if (
-              key.toLowerCase().includes("date") &&
-              typeof value === "number"
-            ) {
-              return [key, specialDate2LocalDate(value, locale)];
-            }
-            return [key, value];
-          }),
-        );
-        return template(modifiedData);
-      } catch (e) {
-        console.warn("could not render childLabelTemplate", e);
-      }
-    } else if (elementLabelProp) {
-      const label_ = get(data, elementLabelProp);
-      if (label_) return label_;
-    }
-    return label || data?.__label;
-  }, [childLabelTemplate, elementLabelProp, data, label, locale]);
+  const realLabel = useMemo(
+    () =>
+      resolveInlineArrayItemDisplayLabel({
+        data,
+        childLabelTemplate,
+        elementLabelProps,
+        elementLabelProp,
+        entityLabel: label,
+        locale,
+        index: count,
+      }),
+    [
+      childLabelTemplate,
+      elementLabelProps,
+      elementLabelProp,
+      data,
+      label,
+      locale,
+      count,
+    ],
+  );
+
   const handleSave = useCallback(async () => {
     if (!saveMutation) return;
     saveMutation.mutate(data);
@@ -233,3 +395,324 @@ export const SimpleExpandPanelRenderer = (
     </ListItem>
   );
 };
+
+interface OwnPropsOfGraviolaExpandPanel {
+  enabled: boolean;
+  index: number;
+  path: string;
+  uischema: ControlElement;
+  schema: JsonSchema;
+  expanded: boolean;
+  renderers?: JsonFormsRendererRegistryEntry[];
+  cells?: JsonFormsCellRendererRegistryEntry[];
+  uischemas?: JsonFormsUISchemaRegistryEntry[];
+  rootSchema: JsonSchema;
+  enableMoveUp: boolean;
+  enableMoveDown: boolean;
+  config: any;
+  childLabelProp?: string;
+  handleExpansion(panel: string): (event: unknown, expanded: boolean) => void;
+  translations: ArrayTranslations;
+  disableRemove?: boolean;
+}
+
+interface GraviolaExpandPanelProps extends OwnPropsOfGraviolaExpandPanel {
+  childLabel: string;
+  childPath: string;
+  removeItems(
+    path: string,
+    toDelete: number[],
+  ): (event: React.MouseEvent) => void;
+  moveUp(path: string, toMove: number): (event: React.MouseEvent) => void;
+  moveDown(path: string, toMove: number): (event: React.MouseEvent) => void;
+}
+
+export const GraviolaExpandPanelRendererComponent = (
+  props: GraviolaExpandPanelProps,
+) => {
+  const [labelHtmlId] = useState<string>(() => createId("expand-panel"));
+
+  useEffect(() => {
+    return () => {
+      removeId(labelHtmlId);
+    };
+  }, [labelHtmlId]);
+
+  const {
+    enabled,
+    childLabel,
+    childPath,
+    index,
+    expanded,
+    moveDown,
+    moveUp,
+    enableMoveDown,
+    enableMoveUp,
+    handleExpansion,
+    removeItems,
+    path,
+    rootSchema,
+    schema,
+    uischema,
+    uischemas,
+    renderers,
+    cells,
+    config,
+    translations,
+    disableRemove,
+  } = props;
+
+  const foundUISchema = useMemo(
+    () =>
+      findUISchema(
+        uischemas,
+        schema,
+        uischema.scope,
+        path,
+        undefined,
+        uischema,
+        rootSchema,
+      ),
+    [uischemas, schema, uischema.scope, path, uischema, rootSchema],
+  );
+
+  const appliedUiSchemaOptions = merge({}, config, uischema.options);
+  const showSortButtons =
+    appliedUiSchemaOptions.showSortButtons ||
+    appliedUiSchemaOptions.showArrayLayoutSortButtons;
+
+  return (
+    <Accordion
+      aria-labelledby={labelHtmlId}
+      expanded={expanded}
+      onChange={handleExpansion(childPath)}
+    >
+      <AccordionSummary expandIcon={<ExpandMore />}>
+        <Grid container sx={{ width: "100%" }} alignItems={"center"}>
+          <Grid size={{ xs: 7, md: 9 }}>
+            <Grid container alignItems={"center"}>
+              <Grid size={{ xs: 2, md: 1 }}>
+                <Avatar aria-label="Index">{index + 1}</Avatar>
+              </Grid>
+              <Grid size={{ xs: 10, md: 11 }}>
+                <span id={labelHtmlId}>{childLabel}</span>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid size={{ xs: 5, md: 3 }}>
+            <Grid container justifyContent="flex-end">
+              <Grid>
+                <Grid
+                  container
+                  direction="row"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  {showSortButtons && enabled ? (
+                    <Fragment>
+                      <Grid>
+                        <Tooltip
+                          title={translations.up}
+                          placement="bottom"
+                          open={enableMoveUp ? undefined : false}
+                        >
+                          <ArrayPanelIconAction
+                            ariaLabel={translations.upAriaLabel}
+                            disabled={!enableMoveUp}
+                            onActivate={moveUp(path, index)}
+                          >
+                            <ArrowUpward />
+                          </ArrayPanelIconAction>
+                        </Tooltip>
+                      </Grid>
+                      <Grid>
+                        <Tooltip
+                          title={translations.down}
+                          placement="bottom"
+                          open={enableMoveDown ? undefined : false}
+                        >
+                          <ArrayPanelIconAction
+                            ariaLabel={translations.downAriaLabel}
+                            disabled={!enableMoveDown}
+                            onActivate={moveDown(path, index)}
+                          >
+                            <ArrowDownward />
+                          </ArrayPanelIconAction>
+                        </Tooltip>
+                      </Grid>
+                    </Fragment>
+                  ) : null}
+                  {enabled && !disableRemove ? (
+                    <Grid>
+                      <Tooltip
+                        title={translations.removeTooltip}
+                        placement="bottom"
+                      >
+                        <ArrayPanelIconAction
+                          ariaLabel={translations.removeAriaLabel}
+                          onActivate={removeItems(path, [index])}
+                        >
+                          <Delete />
+                        </ArrayPanelIconAction>
+                      </Tooltip>
+                    </Grid>
+                  ) : null}
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </AccordionSummary>
+      <AccordionDetails>
+        <JsonFormsDispatch
+          enabled={enabled}
+          schema={schema}
+          uischema={foundUISchema}
+          path={childPath}
+          key={childPath}
+          renderers={renderers}
+          cells={cells}
+        />
+      </AccordionDetails>
+    </Accordion>
+  );
+};
+
+export const ctxDispatchToGraviolaExpandPanelProps = (
+  dispatch: Dispatch<unknown>,
+) => ({
+  removeItems:
+    (path: string, toDelete: number[]) => (event: React.MouseEvent) => {
+      event.stopPropagation();
+      dispatch(
+        update(
+          path,
+          (array) => {
+            toDelete
+              .sort()
+              .reverse()
+              .forEach((idx) => array.splice(idx, 1));
+            return array;
+          },
+          { type: "REMOVE", indices: toDelete } as UpdateArrayContext,
+        ),
+      );
+    },
+  moveUp: (path: string, toMove: number) => (event: React.MouseEvent) => {
+    event.stopPropagation();
+    dispatch(
+      update(
+        path,
+        (array) => {
+          moveUp(array, toMove);
+          return array;
+        },
+        {
+          type: "MOVE",
+          moves: [{ from: toMove, to: toMove - 1 }],
+        } as UpdateArrayContext,
+      ),
+    );
+  },
+  moveDown: (path: string, toMove: number) => (event: React.MouseEvent) => {
+    event.stopPropagation();
+    dispatch(
+      update(
+        path,
+        (array) => {
+          moveDown(array, toMove);
+          return array;
+        },
+        {
+          type: "MOVE",
+          moves: [{ from: toMove, to: toMove + 1 }],
+        } as UpdateArrayContext,
+      ),
+    );
+  },
+});
+
+export const withContextToGraviolaExpandPanelProps = (
+  Component: ComponentType<GraviolaExpandPanelProps>,
+): ComponentType<{
+  ctx: JsonFormsStateContext;
+  props: OwnPropsOfGraviolaExpandPanel;
+}> => {
+  return function WithContextToGraviolaExpandPanelProps({
+    ctx,
+    props,
+  }: {
+    ctx: JsonFormsStateContext;
+    props: OwnPropsOfGraviolaExpandPanel;
+  }) {
+    const dispatchProps = ctxDispatchToGraviolaExpandPanelProps(ctx.dispatch);
+    const { childLabelProp, schema, uischema, rootSchema, path, index } = props;
+    const childPath = composePaths(path, `${index}`);
+    const appliedUiSchemaOptions = merge({}, props.config, uischema.options);
+
+    const childLabel = useMemo(() => {
+      const childData = Resolve.data(ctx.core?.data, childPath);
+      const elementLabelProps = appliedUiSchemaOptions.elementLabelProps as
+        | string[]
+        | undefined;
+      const elementLabelTemplate =
+        appliedUiSchemaOptions.elementLabelTemplate as string | undefined;
+      const elementLabelPropResolved =
+        childLabelProp ??
+        (appliedUiSchemaOptions.elementLabelProp as string | undefined);
+
+      const composed = resolveInlineArrayItemDisplayLabel({
+        data: childData,
+        childLabelTemplate: elementLabelTemplate,
+        elementLabelProps,
+        elementLabelProp: elementLabelPropResolved,
+        index,
+      });
+      if (composed && !composed.startsWith("Item ")) {
+        return composed;
+      }
+
+      const legacy = computeChildLabel(
+        ctx.core?.data,
+        childPath,
+        elementLabelPropResolved,
+        schema,
+        rootSchema,
+        ctx.i18n.translate,
+        uischema,
+      );
+      if (legacy) return legacy;
+
+      return composed;
+    }, [
+      ctx.core?.data,
+      childPath,
+      childLabelProp,
+      schema,
+      rootSchema,
+      ctx.i18n.translate,
+      uischema,
+      appliedUiSchemaOptions,
+      index,
+    ]);
+
+    return (
+      <Component
+        {...props}
+        {...dispatchProps}
+        childLabel={childLabel}
+        childPath={childPath}
+        uischemas={props.uischemas}
+      />
+    );
+  };
+};
+
+export const withJsonFormsGraviolaExpandPanelProps = (
+  Component: ComponentType<GraviolaExpandPanelProps>,
+): ComponentType<OwnPropsOfGraviolaExpandPanel> =>
+  withJsonFormsContext(withContextToGraviolaExpandPanelProps(Component));
+
+export const GraviolaExpandPanelRenderer = React.memo(
+  withJsonFormsGraviolaExpandPanelProps(GraviolaExpandPanelRendererComponent),
+);

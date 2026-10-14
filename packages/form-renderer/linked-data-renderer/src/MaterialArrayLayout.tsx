@@ -84,6 +84,10 @@ const uiSchemaOptionsSchema = {
     elementLabelProp: {
       type: "string",
     },
+    elementLabelProps: {
+      type: "array",
+      items: { type: "string" },
+    },
     imagePath: {
       type: "string",
     },
@@ -177,7 +181,8 @@ export const MaterialArrayLayout = (props: ArrayLayoutProps) => {
     additionalKnowledgeSources,
     elementDetailItemPath,
     elementLabelTemplate,
-    elementLabelProp = "label",
+    elementLabelProp: elementLabelPropOption,
+    elementLabelProps,
     imagePath,
     labelAsHeadline,
     hideRequiredAsterisk,
@@ -208,6 +213,9 @@ export const MaterialArrayLayout = (props: ArrayLayoutProps) => {
       };
     }
   }, [config, uischema.options]);
+
+  const elementLabelProp =
+    elementLabelPropOption ?? (elementLabelProps?.length ? undefined : "label");
 
   const prepareNewEntityDataFinal = useCallback(
     (stub: any) => {
@@ -463,6 +471,7 @@ export const MaterialArrayLayout = (props: ArrayLayoutProps) => {
                     elementDetailItemPath={elementDetailItemPath}
                     childLabelTemplate={elementLabelTemplate}
                     elementLabelProp={elementLabelProp}
+                    elementLabelProps={elementLabelProps}
                     formsPath={formsPath}
                     primaryFields={primaryFields}
                     mapData={context?.mapData}

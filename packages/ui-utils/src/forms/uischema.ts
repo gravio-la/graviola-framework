@@ -192,6 +192,37 @@ function isLabelLeafPropertySchema(schema: JsonSchema): boolean {
   return types.some((t) => t === "string" || t === "number" || t === "integer");
 }
 
+const MAX_INLINE_ARRAY_ELEMENT_LABEL_PROPS = 4;
+
+function resolvePropertySchema(
+  propSchema: JsonSchema,
+  rootSchema: JsonSchema | undefined,
+): JsonSchema {
+  if (propSchema.$ref !== undefined) {
+    return resolveSchema(rootSchema, propSchema.$ref, rootSchema) as JsonSchema;
+  }
+  return propSchema;
+}
+
+/** Inline reference / nested pickers (object with `@id`, not a full entity row). */
+function isReferencePropertySchema(
+  schema: JsonSchema,
+  rootSchema: JsonSchema | undefined,
+): boolean {
+  const resolved = resolvePropertySchema(schema, rootSchema);
+  if (resolved.type !== "object") return false;
+  return Boolean(resolved.properties?.["@id"]);
+}
+
+function isLabelCandidatePropertySchema(
+  schema: JsonSchema,
+  rootSchema: JsonSchema | undefined,
+): boolean {
+  const resolved = resolvePropertySchema(schema, rootSchema);
+  if (isLabelLeafPropertySchema(resolved)) return true;
+  return isReferencePropertySchema(schema, rootSchema);
+}
+
 function propertyNamesInRankOrder(
   properties: Record<string, JsonSchema>,
   scopePrefix: string,
@@ -231,7 +262,14 @@ function applyInlineArrayElementLabelProp(
   rootSchema: JsonSchema | undefined,
   overrideOptions?: OverrideOptions,
 ): void {
-  if (control.options?.elementLabelProp) return;
+  const existingOptions = control.options ?? {};
+  if (
+    existingOptions.elementLabelProp ||
+    (Array.isArray(existingOptions.elementLabelProps) &&
+      existingOptions.elementLabelProps.length > 0)
+  ) {
+    return;
+  }
 
   let items = arraySchema.items as JsonSchema | undefined;
   if (!items || typeof items === "boolean") return;
@@ -250,23 +288,30 @@ function applyInlineArrayElementLabelProp(
     overrideOptions,
   );
 
+  const elementLabelProps: string[] = [];
+  let firstLeafProp: string | undefined;
+
   for (const propName of orderedNames) {
-    let propSchema = props[propName];
-    if (propSchema.$ref !== undefined) {
-      propSchema = resolveSchema(
-        rootSchema,
-        propSchema.$ref,
-        rootSchema,
-      ) as JsonSchema;
+    const propSchema = props[propName];
+    if (!isLabelCandidatePropertySchema(propSchema, rootSchema)) continue;
+    if (elementLabelProps.length < MAX_INLINE_ARRAY_ELEMENT_LABEL_PROPS) {
+      elementLabelProps.push(propName);
     }
-    if (isLabelLeafPropertySchema(propSchema)) {
-      control.options = {
-        ...(control.options ?? {}),
-        elementLabelProp: propName,
-      };
-      return;
+    if (
+      !firstLeafProp &&
+      isLabelLeafPropertySchema(resolvePropertySchema(propSchema, rootSchema))
+    ) {
+      firstLeafProp = propName;
     }
   }
+
+  if (elementLabelProps.length === 0) return;
+
+  control.options = {
+    ...existingOptions,
+    elementLabelProps,
+    elementLabelProp: firstLeafProp ?? elementLabelProps[0],
+  };
 }
 
 const generateUISchema = (
