@@ -411,6 +411,8 @@ interface OwnPropsOfGraviolaExpandPanel {
   enableMoveDown: boolean;
   config: any;
   childLabelProp?: string;
+  elementLabelProps?: string[];
+  elementLabelTemplate?: string;
   handleExpansion(panel: string): (event: unknown, expanded: boolean) => void;
   translations: ArrayTranslations;
   disableRemove?: boolean;
@@ -646,17 +648,27 @@ export const withContextToGraviolaExpandPanelProps = (
     props: OwnPropsOfGraviolaExpandPanel;
   }) {
     const dispatchProps = ctxDispatchToGraviolaExpandPanelProps(ctx.dispatch);
-    const { childLabelProp, schema, uischema, rootSchema, path, index } = props;
+    const {
+      childLabelProp,
+      elementLabelProps: elementLabelPropsProp,
+      elementLabelTemplate: elementLabelTemplateProp,
+      schema,
+      uischema,
+      rootSchema,
+      path,
+      index,
+    } = props;
     const childPath = composePaths(path, `${index}`);
     const appliedUiSchemaOptions = merge({}, props.config, uischema.options);
 
     const childLabel = useMemo(() => {
       const childData = Resolve.data(ctx.core?.data, childPath);
-      const elementLabelProps = appliedUiSchemaOptions.elementLabelProps as
-        | string[]
-        | undefined;
+      const elementLabelProps =
+        elementLabelPropsProp ??
+        (appliedUiSchemaOptions.elementLabelProps as string[] | undefined);
       const elementLabelTemplate =
-        appliedUiSchemaOptions.elementLabelTemplate as string | undefined;
+        elementLabelTemplateProp ??
+        (appliedUiSchemaOptions.elementLabelTemplate as string | undefined);
       const elementLabelPropResolved =
         childLabelProp ??
         (appliedUiSchemaOptions.elementLabelProp as string | undefined);
@@ -693,6 +705,8 @@ export const withContextToGraviolaExpandPanelProps = (
       ctx.i18n.translate,
       uischema,
       appliedUiSchemaOptions,
+      elementLabelPropsProp,
+      elementLabelTemplateProp,
       index,
     ]);
 
