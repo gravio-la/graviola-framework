@@ -26,4 +26,49 @@ describe("loadGraviolaSideSchema", () => {
       }),
     ).toThrow(/Invalid Graviola side-schema/);
   });
+
+  test("accepts valid orderBy", () => {
+    const loaded = loadGraviolaSideSchema({
+      schemaName: "demo",
+      orderBy: {
+        Rezept: {
+          schritte: { field: "reihenfolge", direction: "asc" },
+        },
+      },
+    });
+    expect(loaded.orderBy?.Rezept?.schritte).toEqual({
+      field: "reihenfolge",
+      direction: "asc",
+    });
+  });
+
+  test("rejects orderBy with bad direction", () => {
+    expect(() =>
+      loadGraviolaSideSchema({
+        schemaName: "demo",
+        orderBy: {
+          Rezept: {
+            schritte: { field: "reihenfolge", direction: "sideways" },
+          },
+        },
+      }),
+    ).toThrow(/Invalid Graviola side-schema/);
+  });
+
+  test("rejects orderBy spec with unknown inner keys", () => {
+    expect(() =>
+      loadGraviolaSideSchema({
+        schemaName: "demo",
+        orderBy: {
+          Rezept: {
+            schritte: {
+              field: "reihenfolge",
+              direction: "asc",
+              extra: true,
+            },
+          },
+        },
+      }),
+    ).toThrow(/Invalid Graviola side-schema/);
+  });
 });

@@ -1,4 +1,7 @@
-import type { PrimaryFieldDeclaration } from "@graviola/edb-core-types";
+import type {
+  OrderByConfig,
+  PrimaryFieldDeclaration,
+} from "@graviola/edb-core-types";
 import type { GenerateDefaultDetailUISchemaOptions } from "@graviola/edb-detail-renderer-core";
 import type { GenerateUISchemaOptions } from "@graviola/edb-ui-utils";
 import type {
@@ -121,6 +124,8 @@ export type SchemaConfig = {
    * Fed into `AdbProvider.viewConfig` by {@link GraviolaAppProvider}.
    */
   viewConfig?: SideSchemaViewConfig;
+  /** Per-type multivalued slot sort specs from `gra:orderBy` (side schema). */
+  orderBy?: OrderByConfig;
 };
 
 /**
@@ -168,4 +173,6 @@ export type GraviolaSideSchema = {
   menuSidebarConfig?: SidebarConfig;
   /** JSON-serializable detail/view defaults (no renderer registries). */
   viewConfig?: SideSchemaViewConfig;
+  /** Per-type multivalued slot sort specs from `gra:orderBy`. */
+  orderBy?: OrderByConfig;
 };

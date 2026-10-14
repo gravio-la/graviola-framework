@@ -1,5 +1,15 @@
 import type { JSONSchema7 } from "json-schema";
 
+const orderBySpecSchema: JSONSchema7 = {
+  type: "object",
+  properties: {
+    field: { type: "string" },
+    direction: { enum: ["asc", "desc"] },
+  },
+  required: ["field"],
+  additionalProperties: false,
+};
+
 /**
  * AJV meta-schema for `.gra.side-schema.json` documents
  * ({@link GraviolaSideSchema}).
@@ -58,6 +68,13 @@ export const graviolaSideSchemaDefinition: JSONSchema7 = {
     tableUiSchema: { type: "object" },
     menuUISchema: { type: "object" },
     menuSidebarConfig: { type: "object" },
+    orderBy: {
+      type: "object",
+      additionalProperties: {
+        type: "object",
+        additionalProperties: orderBySpecSchema,
+      },
+    },
     viewConfig: {
       type: "object",
       additionalProperties: false,

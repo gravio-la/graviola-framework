@@ -8,12 +8,21 @@ import type {
   Layout,
   UISchemaElement,
 } from "@jsonforms/core";
-import { deriveTypes, encode, isGroup, resolveSchema } from "@jsonforms/core";
+import {
+  decode,
+  deriveTypes,
+  encode,
+  isGroup,
+  resolveSchema,
+} from "@jsonforms/core";
+import type { OrderBySpec } from "@graviola/edb-core-types";
 import { isGraviolaDetailLayout } from "../layouts/graviolaLayouts";
 
 export type OverrideOptions = {
   scopeOverride?: Record<string, Partial<ControlElement>>;
   skipScope?: string[];
+  /** Root-definition slot name → sort spec (from side schema / Adb context). */
+  orderBy?: Record<string, OrderBySpec>;
 };
 
 export type GenerateDefaultDetailUISchemaOptions = OverrideOptions & {
@@ -32,16 +41,41 @@ const createLayout = (layoutType: string): Layout => ({
   elements: [],
 });
 
+function slotNameFromPropertyScope(scope: string): string | undefined {
+  const prefix = "#/properties/";
+  if (!scope.startsWith(prefix)) return undefined;
+  const encoded = scope.slice(prefix.length);
+  if (!encoded || encoded.includes("/")) return undefined;
+  try {
+    return decode(encoded);
+  } catch {
+    return encoded;
+  }
+}
+
 export const createControlElement = (
   ref: string,
   overrideOptions?: OverrideOptions,
 ): ControlElement => {
-  const override = overrideOptions?.scopeOverride?.[ref] || {};
-  return {
+  const override: Partial<ControlElement> =
+    overrideOptions?.scopeOverride?.[ref] ?? {};
+  const slot = slotNameFromPropertyScope(ref);
+  const orderSpec =
+    slot && overrideOptions?.orderBy
+      ? overrideOptions.orderBy[slot]
+      : undefined;
+  const control: ControlElement = {
     type: "Control",
     scope: ref,
     ...override,
-  } as ControlElement;
+  };
+  if (orderSpec) {
+    control.options = {
+      ...(override.options ?? {}),
+      orderBy: orderSpec,
+    };
+  }
+  return control;
 };
 
 const wrapInLayoutIfNecessary = (
@@ -205,7 +239,11 @@ export function generateDefaultDetailUISchema(
     for (const scope of Object.keys(scopeOverride)) {
       if (skipScope.includes(scope)) continue;
       layout.elements.push(
-        createControlElement(scope, { scopeOverride, skipScope }),
+        createControlElement(scope, {
+          scopeOverride,
+          skipScope,
+          orderBy: options.orderBy,
+        }),
       );
     }
     return layout;
@@ -215,6 +253,7 @@ export function generateDefaultDetailUISchema(
     generateUISchema(jsonSchema, [], prefix, "", layoutType, rootSchema, {
       scopeOverride,
       skipScope,
+      orderBy: options.orderBy,
     }),
     layoutType,
   );

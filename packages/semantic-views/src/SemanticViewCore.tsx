@@ -270,6 +270,7 @@ export function SemanticViewCore({
           : `${viewSize}Layout`,
       rootSchema: schema as JsonSchema,
       ...viewConfigSlice?.defaultGenerationOptions,
+      orderBy: typeName ? adb.orderBy?.[typeName] : undefined,
       cardPresentation:
         viewSize === "card"
           ? (cardPresentation ?? resolvedConfig.cardPresentation)
@@ -285,6 +286,7 @@ export function SemanticViewCore({
     viewSize,
     primaryFields,
     cardPresentation,
+    adb.orderBy,
   ]);
 
   const initialCtx = useMemo(

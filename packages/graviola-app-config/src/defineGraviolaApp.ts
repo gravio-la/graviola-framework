@@ -85,6 +85,8 @@ export function defineGraviolaApp(input: DefineGraviolaAppInput): SchemaConfig {
 
   let detailUiSchemata: SchemaConfig["detailUiSchemata"];
 
+  const orderByForType = (typeName: string) => config.orderBy?.[typeName];
+
   if (
     detailUiSchemaScopeOverrides &&
     Object.keys(detailUiSchemaScopeOverrides).length > 0
@@ -96,7 +98,7 @@ export function defineGraviolaApp(input: DefineGraviolaAppInput): SchemaConfig {
       generated[typeName] = detailUiSchemaForDefinition(
         config.schema,
         typeName,
-        opts,
+        { ...opts, orderBy: orderByForType(typeName) },
       );
     }
     detailUiSchemata = { ...generated, ...explicitDetailUiSchemata };
@@ -112,15 +114,27 @@ export function defineGraviolaApp(input: DefineGraviolaAppInput): SchemaConfig {
   ) {
     const generated: NonNullable<SchemaConfig["uischemata"]> = {};
     for (const [typeName, opts] of Object.entries(uischemaScopeOverrides)) {
-      generated[typeName] = uiSchemaForDefinition(
-        config.schema,
-        typeName,
-        opts,
-      );
+      generated[typeName] = uiSchemaForDefinition(config.schema, typeName, {
+        ...opts,
+        orderBy: orderByForType(typeName),
+      });
     }
     uischemata = { ...generated, ...explicitUischemata };
   } else {
     uischemata = explicitUischemata;
+  }
+
+  if (config.orderBy && Object.keys(config.orderBy).length > 0) {
+    const next: NonNullable<SchemaConfig["uischemata"]> = {
+      ...(uischemata ?? {}),
+    };
+    for (const typeName of Object.keys(config.orderBy)) {
+      if (next[typeName]) continue;
+      next[typeName] = uiSchemaForDefinition(config.schema, typeName, {
+        orderBy: config.orderBy[typeName],
+      });
+    }
+    uischemata = next;
   }
 
   return {
@@ -191,6 +205,7 @@ export function schemaConfigFromSidecars(
     menuUISchema: sideSchema.menuUISchema,
     menuSidebarConfig: sideSchema.menuSidebarConfig,
     viewConfig: sideSchema.viewConfig,
+    orderBy: sideSchema.orderBy,
   };
 
   let resolved = defineGraviolaApp(overridable);

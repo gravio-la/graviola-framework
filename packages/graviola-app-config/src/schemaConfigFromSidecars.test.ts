@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import type { JSONSchema7 } from "json-schema";
-import type { Layout } from "@jsonforms/core";
+import type { ControlElement, Layout } from "@jsonforms/core";
 import {
   schemaConfigFromSidecars,
   defineGraviolaApp,
@@ -123,6 +123,87 @@ describe("schemaConfigFromSidecars", () => {
       uischemaScopeOverrides: sideSchema.uischemaScopeOverrides,
     });
     expect(config.uischemata?.Person).toBeDefined();
+  });
+
+  test("keeps orderBy from side schema", () => {
+    const config = schemaConfigFromSidecars({
+      schema,
+      sideSchema: {
+        schemaName: "ordered",
+        orderBy: {
+          Item: {
+            tags: { field: "label", direction: "desc" },
+          },
+        },
+      },
+    });
+    expect(config.orderBy?.Item?.tags).toEqual({
+      field: "label",
+      direction: "desc",
+    });
+  });
+
+  test("defineGraviolaApp generates form uischema with options.orderBy for orderBy-only classes", () => {
+    const orderedSchema = {
+      type: "object",
+      definitions: {
+        Rezept: {
+          type: "object",
+          properties: {
+            "@id": { type: "string" },
+            titel: { type: "string" },
+            schritte: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  reihenfolge: { type: "integer" },
+                  text: { type: "string" },
+                },
+              },
+            },
+          },
+        },
+        Other: {
+          type: "object",
+          properties: {
+            "@id": { type: "string" },
+            name: { type: "string" },
+          },
+        },
+      },
+    } as JSONSchema7;
+
+    const config = defineGraviolaApp({
+      schemaName: "kochbuch",
+      label: "Kochbuch",
+      description: "",
+      version: "0.1.0",
+      storageKey: "kochbuch",
+      baseIRI: "http://example.org/",
+      entityBaseIRI: "http://example.org/",
+      schema: orderedSchema,
+      primaryFields: {},
+      typeNameLabelMap: {},
+      typeNameUiSchemaOptionsMap: {},
+      orderBy: {
+        Rezept: {
+          schritte: { field: "reihenfolge", direction: "asc" },
+        },
+      },
+    });
+
+    expect(config.uischemata?.Other).toBeUndefined();
+
+    const rezeptUi = config.uischemata?.Rezept as Layout;
+    const schritteControl = rezeptUi.elements.find(
+      (e) => (e as ControlElement).scope === "#/properties/schritte",
+    ) as ControlElement;
+    expect(schritteControl?.options?.orderBy).toEqual({
+      field: "reihenfolge",
+      direction: "asc",
+    });
+    expect(schritteControl?.options?.showSortButtons).toBe(true);
   });
 
   test("attaches validated searchFacetSchema from sidecar", () => {

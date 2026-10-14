@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 import type {
   IRIToStringFn,
   NormDataMapping,
+  OrderByConfig,
   ResolveThumbnailUrl,
   SparqlBuildOptions,
   StringToIRIFn,
@@ -151,6 +152,8 @@ export type GlobalAppConfig<DeclarativeMappingType> = GlobalSemanticConfig & {
   rendererRegistry?: JsonFormsRendererRegistryEntry[];
   cellRendererRegistry?: JsonFormsCellRendererRegistryEntry[];
   uischemata?: Record<string, any>;
+  /** Side-schema `orderBy`: type name → slot → `{ field, direction }`. */
+  orderBy?: OrderByConfig;
   viewConfig?: import("./viewConfig").ViewConfigSet;
   typePresentation?: TypePresentationRegistry;
   /**

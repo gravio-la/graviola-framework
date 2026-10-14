@@ -176,6 +176,7 @@ export const GraviolaAppProvider: FC<GraviolaAppProviderProps> = ({
     menuUISchema,
     menuSidebarConfig,
     viewConfig: sideViewConfig,
+    orderBy,
   } = schemaConfig;
 
   const schemaAsJson = schema as JSONSchema7;
@@ -309,6 +310,7 @@ export const GraviolaAppProvider: FC<GraviolaAppProviderProps> = ({
         rendererRegistry={rendererRegistry}
         cellRendererRegistry={cellRegistry}
         uischemata={uischemata}
+        orderBy={orderBy}
         viewConfig={viewConfig}
         tableActionRegistry={tableActions}
         entityActionRegistry={entityActions}
