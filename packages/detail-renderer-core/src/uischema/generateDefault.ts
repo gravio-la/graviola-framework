@@ -114,6 +114,42 @@ const isCombinator = (jsonSchema: JsonSchema): boolean => {
   );
 };
 
+type ControlWithRank = ControlElement & { rank?: number };
+
+function rankOnControl(element: UISchemaElement): number | undefined {
+  if (element.type !== "Control") return undefined;
+  const rank = (element as ControlWithRank).rank;
+  return typeof rank === "number" ? rank : undefined;
+}
+
+/** Stable-sort direct Control children: ranked by ascending rank, then unranked. */
+export function sortLayoutControlsByRank(elements: UISchemaElement[]): void {
+  const controlIndices: number[] = [];
+  for (let i = 0; i < elements.length; i++) {
+    if (elements[i].type === "Control") controlIndices.push(i);
+  }
+  if (controlIndices.length === 0) return;
+  if (!controlIndices.some((i) => rankOnControl(elements[i]) !== undefined)) {
+    return;
+  }
+
+  const controls = controlIndices.map((i) => elements[i]);
+  const sorted = [...controls].sort((a, b) => {
+    const ra = rankOnControl(a);
+    const rb = rankOnControl(b);
+    const aRanked = ra !== undefined;
+    const bRanked = rb !== undefined;
+    if (aRanked && bRanked) return ra - rb;
+    if (aRanked && !bRanked) return -1;
+    if (!aRanked && bRanked) return 1;
+    return 0;
+  });
+
+  controlIndices.forEach((idx, j) => {
+    elements[idx] = sorted[j];
+  });
+}
+
 const generateUISchema = (
   jsonSchema: JsonSchema,
   schemaElements: UISchemaElement[],
@@ -192,6 +228,7 @@ const generateUISchema = (
           overrideOptions,
         );
       });
+      sortLayoutControlsByRank(layout.elements);
     }
 
     return layout;
@@ -246,6 +283,7 @@ export function generateDefaultDetailUISchema(
         }),
       );
     }
+    sortLayoutControlsByRank(layout.elements);
     return layout;
   }
 

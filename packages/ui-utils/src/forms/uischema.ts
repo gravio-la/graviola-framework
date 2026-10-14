@@ -143,6 +143,132 @@ const isCombinator = (jsonSchema: JsonSchema): boolean => {
   );
 };
 
+type ControlWithRank = ControlElement & { rank?: number };
+
+function rankOnControl(element: UISchemaElement): number | undefined {
+  if (element.type !== "Control") return undefined;
+  const rank = (element as ControlWithRank).rank;
+  return typeof rank === "number" ? rank : undefined;
+}
+
+/** Stable-sort direct Control children: ranked by ascending rank, then unranked. */
+export function sortLayoutControlsByRank(elements: UISchemaElement[]): void {
+  const controlIndices: number[] = [];
+  for (let i = 0; i < elements.length; i++) {
+    if (elements[i].type === "Control") controlIndices.push(i);
+  }
+  if (controlIndices.length === 0) return;
+  if (!controlIndices.some((i) => rankOnControl(elements[i]) !== undefined)) {
+    return;
+  }
+
+  const controls = controlIndices.map((i) => elements[i]);
+  const sorted = [...controls].sort((a, b) => {
+    const ra = rankOnControl(a);
+    const rb = rankOnControl(b);
+    const aRanked = ra !== undefined;
+    const bRanked = rb !== undefined;
+    if (aRanked && bRanked) return ra - rb;
+    if (aRanked && !bRanked) return -1;
+    if (!aRanked && bRanked) return 1;
+    return 0;
+  });
+
+  controlIndices.forEach((idx, j) => {
+    elements[idx] = sorted[j];
+  });
+}
+
+const LINKED_DATA = new Set(["@id", "@type"]);
+
+function isEntityLikeObjectSchema(schema: JsonSchema | undefined): boolean {
+  if (schema?.type !== "object") return false;
+  const props = schema.properties;
+  return Boolean(props?.["@id"]);
+}
+
+function isLabelLeafPropertySchema(schema: JsonSchema): boolean {
+  const types = deriveTypes(schema);
+  return types.some((t) => t === "string" || t === "number" || t === "integer");
+}
+
+function propertyNamesInRankOrder(
+  properties: Record<string, JsonSchema>,
+  scopePrefix: string,
+  overrideOptions?: OverrideOptions,
+): string[] {
+  const declarationOrder = Object.keys(properties).filter(
+    (name) => !LINKED_DATA.has(name),
+  );
+  const hasRank = declarationOrder.some((name) => {
+    const scope = `${scopePrefix}/properties/${encode(name)}`;
+    const rank = (overrideOptions?.scopeOverride?.[scope] as ControlWithRank)
+      ?.rank;
+    return typeof rank === "number";
+  });
+  if (!hasRank) return declarationOrder;
+
+  return [...declarationOrder].sort((a, b) => {
+    const scopeA = `${scopePrefix}/properties/${encode(a)}`;
+    const scopeB = `${scopePrefix}/properties/${encode(b)}`;
+    const ra = (overrideOptions?.scopeOverride?.[scopeA] as ControlWithRank)
+      ?.rank;
+    const rb = (overrideOptions?.scopeOverride?.[scopeB] as ControlWithRank)
+      ?.rank;
+    const aRanked = typeof ra === "number";
+    const bRanked = typeof rb === "number";
+    if (aRanked && bRanked) return ra - rb;
+    if (aRanked && !bRanked) return -1;
+    if (!aRanked && bRanked) return 1;
+    return 0;
+  });
+}
+
+function applyInlineArrayElementLabelProp(
+  control: ControlElement,
+  arraySchema: JsonSchema,
+  arrayScope: string,
+  rootSchema: JsonSchema | undefined,
+  overrideOptions?: OverrideOptions,
+): void {
+  if (control.options?.elementLabelProp) return;
+
+  let items = arraySchema.items as JsonSchema | undefined;
+  if (!items || typeof items === "boolean") return;
+  if (items.$ref !== undefined) {
+    items = resolveSchema(rootSchema, items.$ref, rootSchema) as JsonSchema;
+  }
+  if (items.type !== "object" || isEntityLikeObjectSchema(items)) return;
+
+  const props = items.properties;
+  if (!props) return;
+
+  const itemScopePrefix = `${arrayScope}/items`;
+  const orderedNames = propertyNamesInRankOrder(
+    props,
+    itemScopePrefix,
+    overrideOptions,
+  );
+
+  for (const propName of orderedNames) {
+    let propSchema = props[propName];
+    if (propSchema.$ref !== undefined) {
+      propSchema = resolveSchema(
+        rootSchema,
+        propSchema.$ref,
+        rootSchema,
+      ) as JsonSchema;
+    }
+    if (isLabelLeafPropertySchema(propSchema)) {
+      control.options = {
+        ...(control.options ?? {}),
+        elementLabelProp: propName,
+      };
+      return;
+    }
+  }
+}
+
 const generateUISchema = (
   jsonSchema: JsonSchema,
   schemaElements: UISchemaElement[],
@@ -219,6 +345,7 @@ const generateUISchema = (
           overrideOptions,
         );
       });
+      sortLayoutControlsByRank(layout.elements);
     }
 
     return layout;
@@ -227,7 +354,24 @@ const generateUISchema = (
   switch (types[0]) {
     case "object": // object items will be handled by the object control itself
     /* falls through */
-    case "array": // array items will be handled by the array control itself
+    case "array": {
+      const controlObject: ControlElement = createControlElement(
+        currentRef,
+        overrideOptions,
+      );
+      if (types[0] === "array") {
+        applyInlineArrayElementLabelProp(
+          controlObject,
+          jsonSchema,
+          currentRef,
+          rootSchema,
+          overrideOptions,
+        );
+      }
+      schemaElements.push(controlObject);
+
+      return controlObject;
+    }
     /* falls through */
     case "string":
     /* falls through */
@@ -282,6 +426,7 @@ export const generateDefaultUISchema = (
         }),
       );
     }
+    sortLayoutControlsByRank(layout.elements);
     return layout;
   }
 

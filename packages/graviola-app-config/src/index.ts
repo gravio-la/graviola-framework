@@ -1,4 +1,9 @@
 export * from "./types";
+export type {
+  TableUiSchema,
+  TableUiSchemaColumn,
+  TableUiSchemaDefaultSort,
+} from "@graviola/edb-table-types";
 export * from "./defineGraviolaApp";
 export * from "./loadGraviolaSideSchema";
 export * from "./sideSchemaDefinition";
