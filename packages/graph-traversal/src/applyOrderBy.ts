@@ -5,23 +5,13 @@
  * restored after graph extraction whenever `include.*.orderBy` is set.
  */
 import type { OrderByClause } from "@graviola/edb-core-types";
+import { compareOrderValues } from "@graviola/edb-core-utils";
 
 export function normalizeOrderBy(
   orderBy: OrderByClause | OrderByClause[] | undefined,
 ): OrderByClause[] {
   if (!orderBy) return [];
   return Array.isArray(orderBy) ? orderBy : [orderBy];
-}
-
-function compareValues(a: unknown, b: unknown): number {
-  if (a == null && b == null) return 0;
-  if (a == null) return 1;
-  if (b == null) return -1;
-  if (typeof a === "number" && typeof b === "number") return a - b;
-  return String(a).localeCompare(String(b), undefined, {
-    numeric: true,
-    sensitivity: "base",
-  });
 }
 
 /**
@@ -35,7 +25,7 @@ export function compareByOrderBy(
   for (const clause of normalizeOrderBy(orderBy)) {
     for (const [property, direction] of Object.entries(clause)) {
       if (!direction) continue;
-      const cmp = compareValues(a?.[property], b?.[property]);
+      const cmp = compareOrderValues(a?.[property], b?.[property]);
       if (cmp !== 0) return direction === "desc" ? -cmp : cmp;
     }
   }

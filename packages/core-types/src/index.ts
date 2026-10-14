@@ -261,6 +261,12 @@ export type WalkerOptions = {
  */
 export type SortOrder = "asc" | "desc";
 
+/** Item-slot sort spec from side schema or UI schema `options.orderBy`. */
+export type OrderBySpec = { field: string; direction: SortOrder };
+
+/** Side-schema `orderBy`: type name → slot name → spec. */
+export type OrderByConfig = Record<string, Record<string, OrderBySpec>>;
+
 /**
  * Order by clause for a single property (Prisma-style)
  * Example: { name: 'asc' } or { createdAt: 'desc' }

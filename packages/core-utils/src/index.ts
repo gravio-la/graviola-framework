@@ -26,3 +26,4 @@ export {
   makeSpecialDate,
 } from "./specialDate";
 export type { DateParts } from "./specialDate";
+export * from "./orderBy";
