@@ -153,6 +153,11 @@ export type GraviolaSideSchema = {
   baseIRI?: string;
   entityBaseIRI?: string;
   primaryFields?: PrimaryFieldDeclaration;
+  /** Identifier slot per class (`gra:identifierMode`): `iri` = the slot is `@id`, `mirror` = read-only copy of `@id`, `key` = stored business key. */
+  identifiers?: Record<
+    string,
+    { slot: string; mode: "iri" | "mirror" | "key" }
+  >;
   typeNameLabelMap?: Record<string, string>;
   typeNameUiSchemaOptionsMap?: Record<string, unknown>;
   uischemaScopeOverrides?: FormUiSchemaScopeOverrides;

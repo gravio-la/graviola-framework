@@ -32,6 +32,18 @@ export const graviolaSideSchemaDefinition: JSONSchema7 = {
         additionalProperties: true,
       },
     },
+    identifiers: {
+      type: "object",
+      additionalProperties: {
+        type: "object",
+        required: ["slot", "mode"],
+        properties: {
+          slot: { type: "string" },
+          mode: { enum: ["iri", "mirror", "key"] },
+        },
+        additionalProperties: false,
+      },
+    },
     typeNameLabelMap: {
       type: "object",
       additionalProperties: { type: "string" },
