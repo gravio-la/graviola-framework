@@ -1,0 +1,93 @@
+{
+  "schema": {
+    "type": "object",
+    "definitions": {
+      "Einheit": {
+        "type": "object",
+        "properties": {
+          "@id": { "type": "string" },
+          "@type": {
+            "const": "https://graviola.gra.one/models/kochbuch/Einheit",
+            "type": "string"
+          },
+          "name": { "title": "Bezeichnung", "type": "string" },
+          "abkuerzung": { "title": "Abkürzung", "type": "string" }
+        }
+      },
+      "Zutat": {
+        "type": "object",
+        "properties": {
+          "@id": { "type": "string" },
+          "@type": {
+            "const": "https://graviola.gra.one/models/kochbuch/Zutat",
+            "type": "string"
+          },
+          "name": { "title": "Name", "type": "string" }
+        }
+      },
+      "ZutatInRezept": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "https://graviola.gra.one/models/kochbuch/ZutatInRezept",
+            "type": "string"
+          },
+          "zutatRef": {
+            "$ref": "#/definitions/Zutat",
+            "title": "Zutat (Inventar)"
+          },
+          "zutatFreitext": {
+            "title": "Zutat (Freitext)",
+            "type": "string"
+          },
+          "menge": { "title": "Menge", "type": "string" },
+          "einheit": {
+            "$ref": "#/definitions/Einheit",
+            "title": "Einheit"
+          }
+        }
+      }
+    },
+    "properties": {
+      "zutaten": {
+        "title": "Zutaten",
+        "type": "array",
+        "items": { "$ref": "#/definitions/ZutatInRezept" }
+      }
+    }
+  },
+  "sideSchema": {
+    "entityBaseIRI": "https://graviola.gra.one/models/kochbuch/",
+    "primaryFields": {
+      "Zutat": { "label": "name" },
+      "Einheit": { "label": "name" }
+    },
+    "detailUiSchemaScopeOverrides": {
+      "ZutatInRezept": {
+        "mode": "override",
+        "scopeOverride": {
+          "#/properties/menge": {
+            "type": "Control",
+            "scope": "#/properties/menge",
+            "rank": 1
+          },
+          "#/properties/einheit": {
+            "type": "Control",
+            "scope": "#/properties/einheit",
+            "rank": 2
+          },
+          "#/properties/zutatRef": {
+            "type": "Control",
+            "scope": "#/properties/zutatRef",
+            "rank": 3
+          },
+          "#/properties/zutatFreitext": {
+            "type": "Control",
+            "scope": "#/properties/zutatFreitext",
+            "rank": 4
+          }
+        }
+      }
+    }
+  }
+}

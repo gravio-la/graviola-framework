@@ -9,20 +9,18 @@ import {
   useGraviolaModal,
   useThumbnailUrl,
 } from "@graviola/edb-state-hooks";
+import { extractEntityPreview } from "@graviola/edb-core-utils";
 import {
-  composeInlineArrayElementLabel,
-  formatInlineArrayElementLabelValue,
   queryOptionMixinBasedOnEntity,
   specialDate2LocalDate,
   withEllipsis,
 } from "@graviola/edb-ui-utils";
+import { extractTypeIRI } from "@graviola/json-schema-utils";
 import {
   ArrayTranslations,
   composePaths,
-  computeChildLabel,
   ControlElement,
   createId,
-  findUISchema,
   JsonFormsCellRendererRegistryEntry,
   JsonFormsRendererRegistryEntry,
   JsonFormsUISchemaRegistryEntry,
@@ -66,6 +64,8 @@ import {
 import dot from "dot";
 import get from "lodash-es/get";
 import merge from "lodash-es/merge";
+
+import { resolveInlineArrayItemDetailUISchema } from "./inlineArrayItemDetailUISchema";
 import { useTranslation } from "next-i18next";
 import React, {
   ComponentType,
@@ -85,7 +85,86 @@ export type ResolveInlineArrayItemDisplayLabelParams = {
   entityLabel?: string;
   locale?: string;
   index: number;
+  primaryFields?: PrimaryFieldDeclaration;
+  entityBaseIRI?: string;
 };
+
+const UUID_LIKE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+function looksLikeOpaqueId(value: string): boolean {
+  const trimmed = value.trim();
+  if (!trimmed) return false;
+  if (UUID_LIKE.test(trimmed)) return true;
+  if (/^urn:uuid:/i.test(trimmed)) return true;
+  return false;
+}
+
+/** Label part for one inline-array field; never falls back to raw IRIs / UUIDs. */
+export function formatInlineArrayLabelPart(
+  value: unknown,
+  options?: {
+    primaryFields?: PrimaryFieldDeclaration;
+    entityBaseIRI?: string;
+  },
+): string | undefined {
+  if (value === undefined || value === null) return undefined;
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (!trimmed || looksLikeOpaqueId(trimmed)) return undefined;
+    return trimmed;
+  }
+  if (typeof value === "number") {
+    return String(value);
+  }
+  if (typeof value !== "object" || Array.isArray(value)) return undefined;
+
+  const obj = value as Record<string, unknown>;
+  for (const key of ["__label", "label", "prefLabel", "name"] as const) {
+    const candidate = obj[key];
+    if (typeof candidate === "string" && candidate.trim()) {
+      return candidate.trim();
+    }
+  }
+
+  const typeIRI = extractTypeIRI(obj);
+  const typeName = typeIRI
+    ? typeIRI.split(/[#/]/).filter(Boolean).pop()
+    : undefined;
+  if (typeName && options?.primaryFields) {
+    const preview = extractEntityPreview({
+      data: value,
+      typeName,
+      typeIRI,
+      primaryFields: options.primaryFields,
+    });
+    if (preview.label?.trim()) {
+      return preview.label.trim();
+    }
+  }
+
+  return undefined;
+}
+
+function composeInlineArrayElementLabelSafe(
+  data: unknown,
+  propNames: string[] | undefined,
+  options?: {
+    primaryFields?: PrimaryFieldDeclaration;
+    entityBaseIRI?: string;
+  },
+): string | undefined {
+  if (!propNames?.length || data == null || typeof data !== "object") {
+    return undefined;
+  }
+  const parts: string[] = [];
+  for (const propName of propNames) {
+    const part = formatInlineArrayLabelPart(get(data, propName), options);
+    if (part) parts.push(part);
+  }
+  if (parts.length === 0) return undefined;
+  return parts.join(" ");
+}
 
 /** Collapsed label for inline array rows (template → composed props → legacy fallbacks). */
 export function resolveInlineArrayItemDisplayLabel(
@@ -99,7 +178,11 @@ export function resolveInlineArrayItemDisplayLabel(
     entityLabel,
     locale,
     index,
+    primaryFields,
+    entityBaseIRI,
   } = params;
+
+  const labelOptions = { primaryFields, entityBaseIRI };
 
   if (childLabelTemplate && data && typeof data === "object") {
     try {
@@ -127,13 +210,18 @@ export function resolveInlineArrayItemDisplayLabel(
   }
 
   if (elementLabelProps?.length) {
-    const composed = composeInlineArrayElementLabel(data, elementLabelProps);
+    const composed = composeInlineArrayElementLabelSafe(
+      data,
+      elementLabelProps,
+      labelOptions,
+    );
     if (composed) return composed;
   }
 
   if (elementLabelProp && data != null) {
-    const formatted = formatInlineArrayElementLabelValue(
+    const formatted = formatInlineArrayLabelPart(
       get(data, elementLabelProp),
+      labelOptions,
     );
     if (formatted) return formatted;
   }
@@ -411,6 +499,8 @@ interface OwnPropsOfGraviolaExpandPanel {
   enableMoveDown: boolean;
   config: any;
   childLabelProp?: string;
+  elementLabelProps?: string[];
+  elementLabelTemplate?: string;
   handleExpansion(panel: string): (event: unknown, expanded: boolean) => void;
   translations: ArrayTranslations;
   disableRemove?: boolean;
@@ -462,24 +552,28 @@ export const GraviolaExpandPanelRendererComponent = (
     disableRemove,
   } = props;
 
+  const itemSchema = useMemo(
+    () => Resolve.schema(schema, "items", rootSchema) as JsonSchema | undefined,
+    [schema, rootSchema],
+  );
+
   const foundUISchema = useMemo(
     () =>
-      findUISchema(
-        uischemas,
-        schema,
-        uischema.scope,
-        path,
-        undefined,
-        uischema,
+      resolveInlineArrayItemDetailUISchema({
+        arraySchema: schema,
+        arrayControl: uischema,
         rootSchema,
-      ),
-    [uischemas, schema, uischema.scope, path, uischema, rootSchema],
+        path: childPath,
+        uischemas,
+        config,
+      }),
+    [schema, uischema, rootSchema, childPath, uischemas, config],
   );
 
   const appliedUiSchemaOptions = merge({}, config, uischema.options);
   const showSortButtons =
-    appliedUiSchemaOptions.showSortButtons ||
-    appliedUiSchemaOptions.showArrayLayoutSortButtons;
+    appliedUiSchemaOptions.showSortButtons !== false &&
+    appliedUiSchemaOptions.showArrayLayoutSortButtons !== false;
 
   return (
     <Accordion
@@ -566,7 +660,7 @@ export const GraviolaExpandPanelRendererComponent = (
       <AccordionDetails>
         <JsonFormsDispatch
           enabled={enabled}
-          schema={schema}
+          schema={itemSchema ?? schema}
           uischema={foundUISchema}
           path={childPath}
           key={childPath}
@@ -646,54 +740,56 @@ export const withContextToGraviolaExpandPanelProps = (
     props: OwnPropsOfGraviolaExpandPanel;
   }) {
     const dispatchProps = ctxDispatchToGraviolaExpandPanelProps(ctx.dispatch);
-    const { childLabelProp, schema, uischema, rootSchema, path, index } = props;
+    const {
+      childLabelProp,
+      elementLabelProps: elementLabelPropsProp,
+      elementLabelTemplate: elementLabelTemplateProp,
+      schema,
+      uischema,
+      rootSchema,
+      path,
+      index,
+    } = props;
     const childPath = composePaths(path, `${index}`);
     const appliedUiSchemaOptions = merge({}, props.config, uischema.options);
+    const configRecord = props.config as Record<string, unknown> | undefined;
+    const primaryFields = configRecord?.primaryFields as
+      | PrimaryFieldDeclaration
+      | undefined;
+    const entityBaseIRI = configRecord?.entityBaseIRI as string | undefined;
 
     const childLabel = useMemo(() => {
       const childData = Resolve.data(ctx.core?.data, childPath);
-      const elementLabelProps = appliedUiSchemaOptions.elementLabelProps as
-        | string[]
-        | undefined;
+      const elementLabelProps =
+        elementLabelPropsProp ??
+        (appliedUiSchemaOptions.elementLabelProps as string[] | undefined);
       const elementLabelTemplate =
-        appliedUiSchemaOptions.elementLabelTemplate as string | undefined;
+        elementLabelTemplateProp ??
+        (appliedUiSchemaOptions.elementLabelTemplate as string | undefined);
       const elementLabelPropResolved =
         childLabelProp ??
         (appliedUiSchemaOptions.elementLabelProp as string | undefined);
 
-      const composed = resolveInlineArrayItemDisplayLabel({
+      return resolveInlineArrayItemDisplayLabel({
         data: childData,
         childLabelTemplate: elementLabelTemplate,
         elementLabelProps,
         elementLabelProp: elementLabelPropResolved,
         index,
+        primaryFields,
+        entityBaseIRI,
       });
-      if (composed && !composed.startsWith("Item ")) {
-        return composed;
-      }
-
-      const legacy = computeChildLabel(
-        ctx.core?.data,
-        childPath,
-        elementLabelPropResolved,
-        schema,
-        rootSchema,
-        ctx.i18n.translate,
-        uischema,
-      );
-      if (legacy) return legacy;
-
-      return composed;
     }, [
       ctx.core?.data,
       childPath,
       childLabelProp,
-      schema,
-      rootSchema,
-      ctx.i18n.translate,
       uischema,
       appliedUiSchemaOptions,
+      elementLabelPropsProp,
+      elementLabelTemplateProp,
       index,
+      primaryFields,
+      entityBaseIRI,
     ]);
 
     return (

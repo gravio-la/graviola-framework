@@ -6,6 +6,8 @@ import {
   materialArrayChipsLayoutTester,
   MaterialArrayOfLinkedItemChipsRenderer,
   MaterialArrayOfLinkedItemRenderer,
+  MaterialArrayInlineObjectRenderer,
+  materialArrayInlineObjectWithNestingTester,
   materialArrayOfLinkedItemTester,
   materialLinkedObjectControlTester,
   MaterialLinkedObjectRenderer,
@@ -36,6 +38,10 @@ export const graviolaRenderers: JsonFormsRendererRegistryEntry[] = [
   {
     tester: materialArrayOfLinkedItemTester,
     renderer: MaterialArrayOfLinkedItemRenderer,
+  },
+  {
+    tester: materialArrayInlineObjectWithNestingTester,
+    renderer: MaterialArrayInlineObjectRenderer,
   },
   {
     tester: rankWith(10, scopeEndsWith("@id")),

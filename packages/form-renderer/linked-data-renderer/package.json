@@ -70,7 +70,13 @@
     "eslint-config-edb": "workspace:*",
     "tsup": "^8.0.0",
     "typescript": "^5.8.2",
-    "@types/json-schema": "catalog:"
+    "@types/json-schema": "catalog:",
+    "@jsonforms/material-renderers": "catalog:jsonforms",
+    "@jsonforms/react": "catalog:jsonforms",
+    "@jsonforms/core": "catalog:jsonforms",
+    "@mui/material": "catalog:mui",
+    "@mui/icons-material": "catalog:mui",
+    "happy-dom": "^20.0.0"
   },
   "eslintConfig": {
     "root": true,

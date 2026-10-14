@@ -31,6 +31,16 @@ describe("buildArrayLayoutEntries", () => {
     expect(entries.map((e) => e.label)).toEqual(["Alpha", "Zebra"]);
   });
 
+  test("preserveDataOrder keeps array index order", () => {
+    const data = [{ label: "Zebra" }, { label: "Alpha" }, { label: "Middle" }];
+    const entries = buildArrayLayoutEntries(data, {
+      preserveDataOrder: true,
+      getItemId: (_, index) => index,
+      getItemLabel: (child) => (child as { label: string }).label,
+    });
+    expect(entries.map((e) => e.label)).toEqual(["Zebra", "Alpha", "Middle"]);
+  });
+
   test("keeps anonymous items distinct for uniqBy", () => {
     const data = [{ n: 1 }, { n: 2 }, { n: 3 }];
     const entries = buildArrayLayoutEntries(data, {

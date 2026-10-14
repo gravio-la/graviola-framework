@@ -12,6 +12,8 @@ export type ArrayLayoutEntry = {
 
 export type BuildArrayLayoutEntriesOptions = {
   orderBySpec?: OrderBySpec;
+  /** When true, keep array index order instead of sorting by label. */
+  preserveDataOrder?: boolean;
   getItemId: (childData: unknown, index: number) => unknown;
   getItemLabel: (childData: unknown, index: number) => unknown;
 };
@@ -46,5 +48,8 @@ export function buildArrayLayoutEntries(
   }));
 
   const unique = uniqBy(mapped, (entry) => entry.id ?? entry.index);
+  if (options.preserveDataOrder) {
+    return unique;
+  }
   return orderBy(unique, ["label"], ["asc"]);
 }

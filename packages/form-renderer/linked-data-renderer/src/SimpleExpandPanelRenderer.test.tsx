@@ -25,6 +25,27 @@ describe("resolveInlineArrayItemDisplayLabel", () => {
     ).toBe("Roggenvollkornmehl 512 g");
   });
 
+  test("omits raw UUID ref values from composed labels", () => {
+    expect(
+      resolveInlineArrayItemDisplayLabel({
+        index: 0,
+        elementLabelProps: ["zutatRef", "menge", "einheit"],
+        data: {
+          zutatRef: {
+            "@id": "1eb3a7c6-4923-42e2-a8d3-5e0ae685da1a",
+            "@type": "https://graviola.gra.one/models/kochbuch/Zutat",
+          },
+          menge: "512",
+          einheit: {
+            "@id": "26324800-1385-43ae-9b2d-123456789abc",
+            "@type": "https://graviola.gra.one/models/kochbuch/Einheit",
+            abkuerzung: "g",
+          },
+        },
+      }),
+    ).toBe("512");
+  });
+
   test("falls back to Item N", () => {
     expect(
       resolveInlineArrayItemDisplayLabel({
