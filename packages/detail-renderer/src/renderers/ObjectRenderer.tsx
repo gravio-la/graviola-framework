@@ -34,7 +34,11 @@ export function ObjectRenderer({
         type: "Control",
         scope: childScope,
       };
-      return dispatch({ uiSchema: childUi, ctx: childCtx });
+      return (
+        <React.Fragment key={childScope}>
+          {dispatch({ uiSchema: childUi, ctx: childCtx })}
+        </React.Fragment>
+      );
     })
     .filter(Boolean);
 

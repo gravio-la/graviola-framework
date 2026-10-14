@@ -35,7 +35,7 @@ const defaultInlineDetailSkipScopes: string[] = [
 
 export type RenderDetailInlineObjectBodyGenerateOptions = Pick<
   GenerateDefaultDetailUISchemaOptions,
-  "skipScope" | "scopeOverride"
+  "skipScope" | "scopeOverride" | "layoutType"
 > & {
   /**
    * When `false`, do not prepend default skips for `#/properties/@id` / `@type`.
@@ -73,7 +73,7 @@ export function renderDetailInlineObjectBody({
   const uiSchema = generateDefaultDetailUISchema(
     virtualRootSchema as JsonSchema,
     {
-      layoutType: "VerticalLayout",
+      layoutType: extraGenerateDetailOptions?.layoutType ?? "VerticalLayout",
       prefix: "#",
       rootSchema: virtualRootSchema as JsonSchema,
       skipScope: [

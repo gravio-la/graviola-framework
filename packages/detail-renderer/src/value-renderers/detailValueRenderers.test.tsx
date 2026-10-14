@@ -1,4 +1,8 @@
 import { beforeAll, describe, expect, it, mock } from "bun:test";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Window } from "happy-dom";
 import React from "react";
 import { createRoot } from "react-dom/client";
@@ -75,6 +79,30 @@ describe("markdown value renderer", () => {
     const ui = { type: "Control", scope: "#/properties/body" };
     const entry = pickValueRenderer(defaultValueRenderers, ui, schema, baseCtx);
     expect(entry?.name).toBe("markdown");
+  });
+
+  it("inherits theme text colour and sets markdown color mode from MUI palette", async () => {
+    const markdownPath = join(
+      dirname(fileURLToPath(import.meta.url)),
+      "MarkdownValueRenderer.tsx",
+    );
+    const source = readFileSync(markdownPath, "utf8");
+    expect(source).toMatch(/color:\s*["']inherit["']/);
+    expect(source).toMatch(/data-color-mode=\{theme\.palette\.mode\}/);
+
+    const { MarkdownValueRenderer } = await import("./MarkdownValueRenderer");
+    const theme = createTheme({ palette: { mode: "light" } });
+    const host = await renderIntoDom(
+      <ThemeProvider theme={theme}>
+        <MarkdownValueRenderer
+          value="plain"
+          schema={{ type: "string", contentMediaType: "text/markdown" }}
+          ctx={baseCtx}
+        />
+      </ThemeProvider>,
+    );
+    const wrapper = host.querySelector(".graviola-detail-markdown");
+    expect(wrapper?.getAttribute("data-color-mode")).toBe("light");
   });
 
   it("renders bold and external links", async () => {

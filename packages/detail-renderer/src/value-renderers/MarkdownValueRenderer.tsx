@@ -2,11 +2,12 @@ import React, { useMemo } from "react";
 import type { MarkdownPreviewProps } from "@uiw/react-markdown-preview";
 import type { ValueRendererProps } from "@graviola/edb-detail-renderer-core";
 import { MDEditorMarkdown } from "@graviola/edb-markdown-renderer";
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import rehypeExternalLinks from "rehype-external-links";
 import rehypeSanitize from "rehype-sanitize";
 
 export function MarkdownValueRenderer({ value }: ValueRendererProps) {
+  const theme = useTheme();
   if (value == null || value === "") return null;
   const source = String(value);
 
@@ -24,8 +25,15 @@ export function MarkdownValueRenderer({ value }: ValueRendererProps) {
   return (
     <Box
       className="graviola-detail-markdown"
+      data-color-mode={theme.palette.mode}
       sx={{
-        "& .wmde-markdown": { fontSize: "inherit", background: "transparent" },
+        color: "inherit",
+        "& .wmde-markdown": {
+          color: "inherit",
+          fontSize: "inherit",
+          background: "transparent",
+          bgcolor: "transparent",
+        },
         "& p": { margin: 0, "& + p": { mt: 0.75 } },
         maxWidth: "100%",
         overflowWrap: "anywhere",

@@ -22,6 +22,7 @@ import {
   itemVirtualRoot,
   renderDetailInlineObjectBody,
 } from "./detailInlineSubDispatch";
+import { isCompactLeafOnlyItemSchema } from "./arrayInlineLeafItem";
 import { NestedSection } from "./NestedSection";
 import { PropertyRow } from "./PropertyRow";
 
@@ -180,11 +181,22 @@ export function ArrayInlineObjectRenderer({
   const omitFromBody = showOrderBadge && orderSpec ? [orderSpec.field] : [];
 
   const virtualRoot = itemVirtualRoot(itemSchema, rootSchema);
-  const itemGenOpts = computeItemGenerateOptions(
+  const leafOnlyInlineRow =
+    explicitInlineOpts == null &&
+    isAnonymousItem &&
+    isCompactLeafOnlyItemSchema(itemSchema, virtualRoot);
+
+  const itemGenOptsBase = computeItemGenerateOptions(
     itemSchema,
     presentOpts,
     omitFromBody,
   );
+  const itemGenOpts =
+    leafOnlyInlineRow && itemGenOptsBase
+      ? { ...itemGenOptsBase, layoutType: "HorizontalLayout" as const }
+      : leafOnlyInlineRow
+        ? { layoutType: "HorizontalLayout" as const }
+        : itemGenOptsBase;
 
   const compact = Boolean(presentOpts?.compactItems);
   const rowLike = presentOpts?.itemLayout === "row";
@@ -248,6 +260,7 @@ export function ArrayInlineObjectRenderer({
       <Box
         key={index}
         data-original-index={index}
+        {...(leafOnlyInlineRow ? { "data-inline-leaf-row": "" } : {})}
         sx={
           compact
             ? {

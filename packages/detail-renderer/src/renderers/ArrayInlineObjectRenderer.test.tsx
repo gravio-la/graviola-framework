@@ -84,6 +84,125 @@ async function renderArrayInline(options?: Record<string, unknown>) {
   );
 }
 
+const zutatDef = {
+  type: "object" as const,
+  properties: {
+    "@id": { type: "string" as const },
+    "@type": { type: "string" as const },
+    name: { type: "string" as const },
+  },
+};
+
+const leafIngredientItemSchema = {
+  type: "object" as const,
+  properties: {
+    zutatRef: { $ref: "#/definitions/Zutat" },
+    zutatFreitext: { type: "string" as const },
+    menge: { type: "number" as const },
+    einheit: { type: "string" as const },
+  },
+};
+
+const leafIngredientData = [
+  {
+    zutatRef: { "@id": "urn:z:1", "@type": "Zutat", name: "Mehl" },
+    menge: 512,
+    einheit: "g",
+  },
+  {
+    zutatFreitext: "Salz",
+    menge: 1,
+    einheit: "Prise",
+  },
+];
+
+async function renderLeafIngredients(
+  itemSchema: typeof leafIngredientItemSchema,
+  data: typeof leafIngredientData,
+) {
+  const { defaultDetailRenderers } = await import("./registries");
+  const rootSchema = {
+    type: "object" as const,
+    definitions: { Zutat: zutatDef },
+    properties: {
+      zutaten: { type: "array" as const, items: itemSchema },
+    },
+  };
+  const ctx: DetailTesterContext = {
+    rootSchema,
+    depth: 0,
+    maxDepth: 8,
+    valueRenderers: undefined,
+  };
+  const dispatch = buildDispatch(
+    defaultDetailRenderers,
+    rootSchema,
+    { zutaten: data },
+    ctx,
+  );
+  const uiSchema = {
+    type: "Control",
+    scope: "#/properties/zutaten",
+  };
+
+  return renderToStaticMarkup(
+    <DetailRendererContext.Provider
+      value={{
+        registry: defaultDetailRenderers,
+        config: {},
+        rootSchema,
+        rootData: { zutaten: data },
+      }}
+    >
+      <ArrayInlineObjectRenderer
+        label="Zutaten"
+        schema={{ type: "array", items: itemSchema }}
+        data={data}
+        path={["zutaten"]}
+        uiSchema={uiSchema}
+        dispatch={dispatch}
+        rootSchema={rootSchema}
+        rootData={{ zutaten: data }}
+        ctx={ctx}
+      />
+    </DetailRendererContext.Provider>,
+  );
+}
+
+describe("ArrayInlineObjectRenderer leaf-only inline row", () => {
+  it("renders each leaf-only item values in one horizontal row without property labels", async () => {
+    const html = await renderLeafIngredients(
+      leafIngredientItemSchema,
+      leafIngredientData,
+    );
+    expect(html.match(/data-inline-leaf-row/g)?.length).toBe(
+      leafIngredientData.length,
+    );
+    expect(html).toContain("512");
+    expect(html).toContain("Mehl");
+    expect(html).not.toContain("zutatRef");
+    expect(html).not.toContain("menge");
+  });
+
+  it("keeps block layout when an item property is markdown", async () => {
+    const itemWithMarkdown = {
+      ...leafIngredientItemSchema,
+      properties: {
+        ...leafIngredientItemSchema.properties,
+        hinweis: { type: "string" as const, contentMediaType: "text/markdown" },
+      },
+    };
+    const data = [
+      {
+        ...leafIngredientData[0],
+        hinweis: "**note**",
+      },
+    ];
+    const html = await renderLeafIngredients(itemWithMarkdown, data);
+    expect(html).not.toContain("data-inline-leaf-row");
+  });
+});
+
 describe("ArrayInlineObjectRenderer orderBy", () => {
   it("keeps store order when options.orderBy is absent", async () => {
     const html = await renderArrayInline();
