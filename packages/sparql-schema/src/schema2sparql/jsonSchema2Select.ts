@@ -27,7 +27,19 @@ const makePrefixedPropertyPath = (path: string[]) =>
   path.map((key) => makePrefixed(key)).join("/");
 
 const makeVariable = (path: string[]) => `?${path.join("_")}`;
+
+type SelectPatternPhase = "full" | "page-subquery" | "page-outer";
+
 const defaultSeparator = "; ";
+
+const unionOptionalBranches = (branches: string[]) => {
+  if (branches.length === 0) return "";
+  if (branches.length === 1) {
+    return makeWherePart(branches[0]!, false);
+  }
+  return ` OPTIONAL { ${branches.map((b) => `{ ${b.trim()} }`).join("\nUNION\n")} } `;
+};
+
 const propertiesToSPARQLSelectPatterns = (
   schema: JSONSchema7,
   rootSchema: JSONSchema7,
@@ -39,12 +51,33 @@ const propertiesToSPARQLSelectPatterns = (
   primaryFields?: PrimaryFieldDeclaration,
   features?: ResolvedSparqlFeatureFlags,
   minimal?: boolean,
+  phase: SelectPatternPhase = "full",
+  orderByProperties: ReadonlySet<string> = new Set(),
+  rootOptionalBranches?: string[],
 ) => {
   let where = "";
   let select = "";
 
   const properties = schema.properties;
   if (!properties) return { where, select };
+
+  const emitWhere = (clause: string, required: boolean) => {
+    const trimmed = clause.trim();
+    if (!trimmed) return;
+    if (level === 0 && phase === "page-outer" && required) {
+      return;
+    }
+    if (
+      level === 0 &&
+      phase === "page-outer" &&
+      !required &&
+      rootOptionalBranches
+    ) {
+      rootOptionalBranches.push(trimmed);
+      return;
+    }
+    where += makeWherePart(trimmed, required);
+  };
 
   Object.entries(properties).forEach(
     ([property, subSchema]: [string, JSONSchema7]) => {
@@ -54,17 +87,24 @@ const propertiesToSPARQLSelectPatterns = (
         (includedProperties?.length && !includedProperties.includes(property))
       )
         return;
-      const subPath = [...path, property],
+      const subPath = [...(path ?? []), property],
         isRequired = Boolean(schema.required?.includes(property)),
         prefixedProperty = makePrefixedProperty(property),
         variable = makeVariable(subPath);
+
+      if (level === 0 && phase === "page-subquery") {
+        if (!isRequired && !orderByProperties.has(property)) {
+          return;
+        }
+      }
+
+      const skipSelectAggregates = phase === "page-subquery";
+
       if (subSchema.type === "array" && !minimal) {
-        //count
         let innerWherePart = "";
         const ref = (subSchema.items as any)?.$ref as string | undefined;
         if (typeof ref === "string") {
           const typeName = ref.substring(ref.lastIndexOf("/") + 1, ref.length);
-          //if typeName within primaryFields expand further
           if (primaryFields && typeName in primaryFields) {
             const fieldDecl = primaryFields[typeName];
             if (fieldDecl.label) {
@@ -90,21 +130,21 @@ const propertiesToSPARQLSelectPatterns = (
                   `,
                     false,
                   );
-                  //make a select that concatenates the entity link with the label to form a list of markdown links link (link1)[label1]; (link2)[label2]; ...)
-                  select += ` (GROUP_CONCAT(DISTINCT CONCAT("[", ${lableVariable}, "](", STR(${variable}), ")"); SEPARATOR="${defaultSeparator}") AS ${lableVariable}_group) `;
-                  //select += ` (GROUP_CONCAT(${lableVariable}; SEPARATOR="${defaultSeparator}") AS ${lableVariable}_group) `;
+                  if (!skipSelectAggregates) {
+                    select += ` (GROUP_CONCAT(DISTINCT CONCAT("[", ${lableVariable}, "](", STR(${variable}), ")"); SEPARATOR="${defaultSeparator}") AS ${lableVariable}_group) `;
+                  }
                 }
               }
             }
           }
         }
-        if (features?.oxigraphEmptyGroupCount) {
-          // Oxigraph empty-group COUNT quirk: compare aggregated string length
-          select += ` (IF(STRLEN(GROUP_CONCAT(DISTINCT STR(${variable}); SEPARATOR=",")) = 0, 0, COUNT(DISTINCT ${variable})) AS ${variable}_count) `;
-        } else {
-          select += ` (COUNT(DISTINCT ${variable}) AS ${variable}_count) `;
+        if (!skipSelectAggregates) {
+          if (features?.oxigraphEmptyGroupCount) {
+            select += ` (IF(STRLEN(GROUP_CONCAT(DISTINCT STR(${variable}); SEPARATOR=",")) = 0, 0, COUNT(DISTINCT ${variable})) AS ${variable}_count) `;
+          } else {
+            select += ` (COUNT(DISTINCT ${variable}) AS ${variable}_count) `;
+          }
         }
-        //select += ` (COUNT(DISTINCT ${variable}) AS ${variable}_count) `;
         if (subSchema["x-inverseOf"]) {
           const resolvedInverse = resolveInverseProperties(
             subSchema,
@@ -112,7 +152,7 @@ const propertiesToSPARQLSelectPatterns = (
           );
           if (resolvedInverse) {
             resolvedInverse.forEach((inverse) => {
-              where += makeWherePart(
+              emitWhere(
                 ` ${variable} ${makePrefixedPropertyPath(inverse.path)} ${currentVariable} . 
                 ${innerWherePart}
                 `,
@@ -121,7 +161,7 @@ const propertiesToSPARQLSelectPatterns = (
             });
           }
         } else {
-          where += makeWherePart(
+          emitWhere(
             ` ${currentVariable} ${prefixedProperty} ${variable} .
             ${innerWherePart}
             `,
@@ -132,14 +172,14 @@ const propertiesToSPARQLSelectPatterns = (
         typeof subSchema.type === "string" &&
         isPrimitive(subSchema.type)
       ) {
-        //primitive (make sure we get only one value)
-        select += ` (SAMPLE(${variable}) AS ${variable}_single) `;
-        where += makeWherePart(
+        if (!skipSelectAggregates) {
+          select += ` (SAMPLE(${variable}) AS ${variable}_single) `;
+        }
+        emitWhere(
           ` ${currentVariable} ${prefixedProperty} ${variable} . `,
           isRequired,
         );
       } else if (subSchema.type === "object" && !subSchema.$ref) {
-        //sub-object
         const { where: subWhere, select: subSelect } =
           propertiesToSPARQLSelectPatterns(
             subSchema,
@@ -152,8 +192,11 @@ const propertiesToSPARQLSelectPatterns = (
             primaryFields,
             features,
             minimal,
+            phase === "page-subquery" ? "full" : phase,
+            orderByProperties,
+            undefined,
           );
-        where += makeWherePart(
+        emitWhere(
           ` ${currentVariable} ${prefixedProperty} ${variable} . \n ${subWhere} `,
           isRequired,
         );
@@ -177,6 +220,9 @@ const propertiesToSPARQLSelectPatterns = (
               primaryFields,
               features,
               true,
+              phase === "page-subquery" ? "full" : phase,
+              orderByProperties,
+              undefined,
             );
           const typeVariable = makeVariable([...subPath, "type"]);
           const typeSampleAlias = makeVariable([...subPath, "rdf_type"]);
@@ -185,7 +231,11 @@ const propertiesToSPARQLSelectPatterns = (
             subSchema.$ref.length,
           );
           let primaryInfoWhere = "";
-          if (primaryFields && typeName in primaryFields) {
+          if (
+            primaryFields &&
+            typeName in primaryFields &&
+            !skipSelectAggregates
+          ) {
             const primaryFieldDeclaration = primaryFields[
               typeName
             ] as PrimaryField;
@@ -194,8 +244,6 @@ const propertiesToSPARQLSelectPatterns = (
                 ...subPath,
                 `${key}_all`,
               ]);
-              // Alias must not reuse the same name as inner row variables (e.g. ?category_name) or
-              // strict SPARQL engines (Jena) reject: "Variable used when already in-scope".
               const primaryAggAlias = makeVariable([...subPath, key, "pri"]);
               primaryInfoWhere += `OPTIONAL { ${variable} ${makePrefixedProperty(value)} ${primaryMultiVariable} . } `;
               select += ` (SAMPLE(${primaryMultiVariable}) AS ${primaryAggAlias}) `;
@@ -208,24 +256,30 @@ const propertiesToSPARQLSelectPatterns = (
             );
             if (resolvedInverse) {
               resolvedInverse.forEach((inverse) => {
-                where += makeWherePart(
+                emitWhere(
                   ` ${variable} ${makePrefixedPropertyPath(inverse.path)} ${currentVariable} . \n ${subWhere} \n ${primaryInfoWhere} `,
                   isRequired,
                 );
               });
             }
           } else {
-            where += makeWherePart(
+            emitWhere(
               ` ${currentVariable} ${prefixedProperty} ${variable} . \n ${variable} a ${typeVariable} . \n ${subWhere} \n ${primaryInfoWhere} `,
               isRequired,
             );
           }
-          select += ` (SAMPLE(${variable}) AS ${variable}_IRI) (SAMPLE(${typeVariable}) AS ${typeSampleAlias}) `;
-          select += subSelect;
+          if (!skipSelectAggregates) {
+            select += ` (SAMPLE(${variable}) AS ${variable}_IRI) (SAMPLE(${typeVariable}) AS ${typeSampleAlias}) `;
+            select += subSelect;
+          }
         }
       }
     },
   );
+
+  if (level === 0 && rootOptionalBranches && rootOptionalBranches.length > 0) {
+    where += unionOptionalBranches(rootOptionalBranches);
+  }
 
   return {
     where,
@@ -246,9 +300,21 @@ type SPARQLSelectOptions = {
   primaryFields?: PrimaryFieldDeclaration;
 };
 
-const sparqlPartFromOptions = (options: SPARQLSelectOptions) => {
-  let sparqlParts = [];
-  //always order by entity
+export const orderByPropertyNames = (
+  orderBy?: string | MultiSortOrder,
+): string[] => {
+  if (!orderBy) return [];
+  if (typeof orderBy === "string") {
+    return [orderBy.replace(/^\?/, "")];
+  }
+  return orderBy.map(({ orderBy: key }) => key.replace(/^\?/, ""));
+};
+
+const sparqlPartFromOptions = (
+  options: SPARQLSelectOptions,
+  includePagination = true,
+) => {
+  const sparqlParts = [];
   sparqlParts.push(` ORDER BY `);
   if (typeof options.orderBy === "string") {
     sparqlParts.push(
@@ -265,15 +331,17 @@ const sparqlPartFromOptions = (options: SPARQLSelectOptions) => {
     );
   }
   sparqlParts.push(` ASC(?entity) `);
-  if (options.limit !== undefined) {
-    sparqlParts.push(
-      `LIMIT ${assertNonNegativeInteger("limit", options.limit)}`,
-    );
-  }
-  if (options.offset !== undefined) {
-    sparqlParts.push(
-      `OFFSET ${assertNonNegativeInteger("offset", options.offset)}`,
-    );
+  if (includePagination) {
+    if (options.limit !== undefined) {
+      sparqlParts.push(
+        `LIMIT ${assertNonNegativeInteger("limit", options.limit)}`,
+      );
+    }
+    if (options.offset !== undefined) {
+      sparqlParts.push(
+        `OFFSET ${assertNonNegativeInteger("offset", options.offset)}`,
+      );
+    }
   }
   return sparqlParts.join("\n");
 };
@@ -306,7 +374,77 @@ export const jsonSchema2Select = (
   if (!rootSchema.properties) return "";
   const variable = "?entity";
   const features = resolveSparqlFeatures(flavour);
-  const { where, select } = propertiesToSPARQLSelectPatterns(
+  const matchType = typeIRI ? `?entity a ${iriRef(typeIRI)} .` : "";
+
+  if (countResults) {
+    return `SELECT (COUNT(DISTINCT ${variable}) AS ?entity_count) WHERE {
+    ${matchType}
+    ${annotation?.where ?? ""}
+}`;
+  }
+
+  const orderByProps = new Set(
+    orderByPropertyNames(sparqlSelectOptions?.orderBy),
+  );
+  const usePagedSubquery =
+    sparqlSelectOptions !== undefined &&
+    (sparqlSelectOptions.limit !== undefined ||
+      sparqlSelectOptions.offset !== undefined);
+
+  let where = "";
+  let select = "";
+
+  if (usePagedSubquery) {
+    const sub = propertiesToSPARQLSelectPatterns(
+      rootSchema,
+      rootSchema,
+      variable,
+      excludeProperties,
+      includedProperties,
+      [],
+      0,
+      sparqlSelectOptions?.primaryFields,
+      features,
+      minimal,
+      "page-subquery",
+      orderByProps,
+    );
+    const outerBranches: string[] = [];
+    const outer = propertiesToSPARQLSelectPatterns(
+      rootSchema,
+      rootSchema,
+      variable,
+      excludeProperties,
+      includedProperties,
+      [],
+      0,
+      sparqlSelectOptions?.primaryFields,
+      features,
+      minimal,
+      "page-outer",
+      orderByProps,
+      outerBranches,
+    );
+    select = outer.select;
+    const subqueryPagination = sparqlPartFromOptions(sparqlSelectOptions, true);
+    const outerOrder = sparqlPartFromOptions(sparqlSelectOptions, false);
+    const sparqlFinish = `GROUP BY ${variable} \n ${outerOrder}`;
+    const finalSelect = `DISTINCT ${variable} ${select}${annotation?.select ?? ""}`;
+    return `SELECT ${finalSelect} WHERE {
+    {
+      SELECT ${variable} WHERE {
+        ${matchType}
+        ${sub.where}
+        ${annotation?.where ?? ""}
+      }
+      ${subqueryPagination}
+    }
+    ${outer.where}
+}
+${sparqlFinish}`;
+  }
+
+  const full = propertiesToSPARQLSelectPatterns(
     rootSchema,
     rootSchema,
     variable,
@@ -317,21 +455,22 @@ export const jsonSchema2Select = (
     sparqlSelectOptions?.primaryFields,
     features,
     minimal,
+    "full",
+    orderByProps,
+    [],
   );
-  const matchType = typeIRI ? `?entity a ${iriRef(typeIRI)} .` : "";
+  where = full.where;
+  select = full.select;
+
   const sparqlFinish =
     sparqlSelectOptions && !countResults
       ? `GROUP BY ${variable} \n ${sparqlPartFromOptions(sparqlSelectOptions)}`
       : "";
-  const finalSelect = countResults
-    ? `(COUNT(DISTINCT ${variable}) AS ?entity_count)`
-    : `DISTINCT ${variable} ${select}${annotation?.select ?? ""}`;
-  const query = `SELECT ${finalSelect} WHERE {
+  const finalSelect = `DISTINCT ${variable} ${select}${annotation?.select ?? ""}`;
+  return `SELECT ${finalSelect} WHERE {
     ${matchType}
     ${where}
     ${annotation?.where ?? ""}
 }
 ${sparqlFinish}`;
-
-  return query;
 };
