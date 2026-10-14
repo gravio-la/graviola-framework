@@ -16,6 +16,7 @@ function TopLevelLayoutSingleCardHeroBleed({
   uiSchema,
   dispatch,
   ctx,
+  rootData,
 }: DetailRendererProps) {
   const layout = uiSchema as Layout & {
     options?: { headline?: string; detail?: unknown; hero?: unknown };
@@ -37,7 +38,13 @@ function TopLevelLayoutSingleCardHeroBleed({
       >
         <Divider sx={{ my: 2 }} />
         <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-          {renderGroupedTopLevelElements(layout, elements, dispatch, ctx)}
+          {renderGroupedTopLevelElements(
+            layout,
+            elements,
+            dispatch,
+            ctx,
+            rootData,
+          )}
         </Box>
         {detailOpts.showIri === "footer" ? (
           <DetailIriFooter entityIRI={ctx.entityIRI} />
@@ -52,7 +59,7 @@ export function TopLevelLayoutRenderer(props: DetailRendererProps) {
     return <TopLevelLayoutSingleCardHeroBleed {...props} />;
   }
 
-  const { uiSchema, dispatch, ctx } = props;
+  const { uiSchema, dispatch, ctx, rootData } = props;
   const layout = uiSchema as Layout & {
     options?: { headline?: string; detail?: unknown; hero?: unknown };
   };
@@ -73,7 +80,13 @@ export function TopLevelLayoutRenderer(props: DetailRendererProps) {
       />
       <Divider sx={{ mb: 2 }} />
       <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-        {renderGroupedTopLevelElements(layout, elements, dispatch, ctx)}
+        {renderGroupedTopLevelElements(
+          layout,
+          elements,
+          dispatch,
+          ctx,
+          rootData,
+        )}
       </Box>
       {detailOpts.showIri === "footer" ? (
         <DetailIriFooter entityIRI={ctx.entityIRI} />

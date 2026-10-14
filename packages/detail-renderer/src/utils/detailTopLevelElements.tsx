@@ -6,8 +6,10 @@ import type {
   DetailDispatch,
   DetailTesterContext,
 } from "@graviola/edb-detail-renderer-core";
+import { dataAtScope } from "@graviola/edb-detail-renderer-core";
 
 import { DetailMetaStrip } from "../components/DetailMetaStrip";
+import { detailDataHasValue } from "./detailDataValue";
 import { isMetaStripEligibleControl } from "./detailSchemaPresentation";
 
 function propertyNameFromScope(scope: string | undefined): string | undefined {
@@ -82,25 +84,35 @@ export function renderGroupedTopLevelElements(
   elements: UISchemaElement[],
   dispatch: DetailDispatch,
   ctx: DetailTesterContext,
+  rootData: unknown,
 ): React.ReactNode[] {
   const groups = groupTopLevelDetailElements(elements, ctx.rootSchema, ctx);
 
-  return groups.map((group) => {
-    if (group.kind === "meta") {
+  return groups
+    .map((group) => {
+      if (group.kind === "meta") {
+        const visible = group.elements.filter((el) => {
+          if (!isControl(el)) return false;
+          const scope = (el as ControlElement).scope;
+          if (!scope) return false;
+          return detailDataHasValue(dataAtScope(rootData, scope));
+        });
+        if (visible.length === 0) return null;
+        return (
+          <DetailMetaStrip key={`meta-${group.indices.join("-")}`}>
+            {visible.map((el, i) => (
+              <React.Fragment key={(el as ControlElement).scope ?? i}>
+                {dispatch({ uiSchema: el, ctx })}
+              </React.Fragment>
+            ))}
+          </DetailMetaStrip>
+        );
+      }
       return (
-        <DetailMetaStrip key={`meta-${group.indices.join("-")}`}>
-          {group.elements.map((el, i) => (
-            <React.Fragment key={group.indices[i] ?? i}>
-              {dispatch({ uiSchema: el, ctx })}
-            </React.Fragment>
-          ))}
-        </DetailMetaStrip>
+        <React.Fragment key={group.index}>
+          {dispatch({ uiSchema: group.el, ctx })}
+        </React.Fragment>
       );
-    }
-    return (
-      <React.Fragment key={group.index}>
-        {dispatch({ uiSchema: group.el, ctx })}
-      </React.Fragment>
-    );
-  });
+    })
+    .filter(Boolean);
 }

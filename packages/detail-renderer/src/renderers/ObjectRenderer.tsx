@@ -11,6 +11,7 @@ import type { DetailRendererProps } from "@graviola/edb-detail-renderer-core";
 
 import { DetailSectionHeading } from "../components/DetailSectionHeading";
 import { DetailPresentationProvider } from "../detailPresentationContext";
+import { detailDataHasValue } from "../utils/detailDataValue";
 import { isCompactLeafObjectSchema } from "../utils/detailSchemaPresentation";
 import { isTopLevelSection } from "../utils/isTopLevelSection";
 import { NestedSection } from "./NestedSection";
@@ -30,9 +31,15 @@ export function ObjectRenderer({
   const nesting = readNestingOptions(uiSchema, ctx);
   const childCtx = childNestingContext(uiSchema, ctx);
   const parentScope = (uiSchema as ControlElement).scope ?? "#";
+  const record = data as Record<string, unknown>;
   const propertyEntries = Object.entries(s.properties).filter(
-    ([key]) => !key.startsWith("@"),
+    ([key]) => !key.startsWith("@") && detailDataHasValue(record[key]),
   );
+
+  const childDispatchCtx = {
+    ...childCtx,
+    hideHeaderPrimaryFields: false,
+  };
 
   const children = propertyEntries
     .map(([key]) => {
@@ -41,7 +48,7 @@ export function ObjectRenderer({
         type: "Control",
         scope: childScope,
       };
-      const node = dispatch({ uiSchema: childUi, ctx: childCtx });
+      const node = dispatch({ uiSchema: childUi, ctx: childDispatchCtx });
       if (node == null) return null;
       return <React.Fragment key={childScope}>{node}</React.Fragment>;
     })
@@ -73,7 +80,7 @@ export function ObjectRenderer({
   }
 
   if (compact) {
-    const hideInlineLabels = children.length <= 3;
+    const hideInlineLabels = propertyEntries.length <= 3;
     const visibleChildren = children;
     return (
       <Box>

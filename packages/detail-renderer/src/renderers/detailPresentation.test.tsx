@@ -17,7 +17,6 @@ import { TopLevelLayoutRenderer } from "./layouts/TopLevelLayoutRenderer";
 import { DetailHero } from "./layouts/DetailHero";
 import { DetailHeroImage } from "../components/DetailHeroImage";
 import { DetailRendererContext } from "../context";
-import { ObjectRenderer } from "./ObjectRenderer";
 import { PropertyRow } from "./PropertyRow";
 import { DetailPresentationProvider } from "../detailPresentationContext";
 import {
@@ -160,41 +159,11 @@ describe("detail presentation", () => {
     expect(html).toContain("30");
   });
 
-  it("ObjectRenderer compact leaf object uses inline row with dot separators", () => {
-    const schema = baseCtx.rootSchema.properties!.quelle as object;
-    expect(isCompactLeafObjectSchema(schema as never)).toBe(true);
-    const html = wrap(
-      <ObjectRenderer
-        label="Quelle"
-        schema={schema as never}
-        data={{ art: "Web", url: "https://example.org" }}
-        path={["quelle"]}
-        uiSchema={{ type: "Control", scope: "#/properties/quelle" }}
-        dispatch={({ uiSchema: childUi }) => {
-          const scope = (childUi as { scope?: string }).scope ?? "";
-          if (scope.endsWith("/art")) return <span>Web</span>;
-          if (scope.endsWith("/url")) return <span>https://example.org</span>;
-          return null;
-        }}
-        rootSchema={baseCtx.rootSchema}
-        rootData={{}}
-        ctx={{ ...baseCtx, depth: 1 }}
-      />,
-    );
-    expect(html).toContain("Quelle");
-    expect(html).toContain("h2");
-    expect(html).toContain("graviola-detail-compact-object");
-    expect(html).toContain("Web");
-    expect(html).toContain("https://example.org");
-    expect(html).toContain("·");
-    expect(html).not.toContain("grid-template-columns:30%");
-    expect(html).not.toMatch(/>\s*Art\s*</);
-    expect(html).not.toMatch(/>\s*URL\s*</);
-  });
-
-  it("ObjectRenderer compact object counts rendered values not schema properties", () => {
-    const schema = {
+  it("compact nested object via buildDispatch renders three values inline without captions", async () => {
+    const { defaultDetailRenderers } = await import("./registries");
+    const quelleSchema = {
       type: "object" as const,
+      title: "Quelle",
       properties: {
         art: { type: "string" as const, title: "Art" },
         titel: { type: "string" as const },
@@ -204,29 +173,174 @@ describe("detail presentation", () => {
         notiz: { type: "string" as const },
       },
     };
-    expect(isCompactLeafObjectSchema(schema)).toBe(true);
+    expect(isCompactLeafObjectSchema(quelleSchema)).toBe(true);
+    const rootSchema = {
+      type: "object" as const,
+      properties: { quelle: quelleSchema },
+    };
+    const data = {
+      quelle: {
+        art: "Website",
+        titel: "Roggen-Gelbkorn-Brot",
+        url: "https://example.org/recipe",
+      },
+    };
+    const ctx: DetailTesterContext = {
+      ...baseCtx,
+      rootSchema,
+      depth: 0,
+      maxDepth: 8,
+      hideHeaderPrimaryFields: true,
+      headerPrimaryFieldNames: ["titel"],
+    };
+    const run = buildDispatch(defaultDetailRenderers, rootSchema, data, ctx);
+    const uiSchema = {
+      type: "VerticalLayout" as const,
+      elements: [{ type: "Control" as const, scope: "#/properties/quelle" }],
+    };
     const html = wrap(
-      <ObjectRenderer
-        label="Quelle"
-        schema={schema}
-        data={{ art: "Website", url: "https://example.org" }}
-        path={["quelle"]}
-        uiSchema={{ type: "Control", scope: "#/properties/quelle" }}
-        dispatch={({ uiSchema: childUi }) => {
-          const scope = (childUi as { scope?: string }).scope ?? "";
-          if (scope.endsWith("/art")) return <span>Website</span>;
-          if (scope.endsWith("/url")) return <span>https://example.org</span>;
-          return null;
+      <DetailRendererContext.Provider
+        value={{
+          registry: defaultDetailRenderers,
+          config: {},
+          rootSchema,
+          rootData: data,
         }}
-        rootSchema={{ type: "object", properties: { quelle: schema } }}
-        rootData={{}}
-        ctx={{ ...baseCtx, depth: 1 }}
-      />,
+      >
+        {run(uiSchema)}
+      </DetailRendererContext.Provider>,
     );
+    expect(html).toContain("graviola-detail-compact-object");
     expect(html).toContain("Website");
-    expect(html).toContain("https://example.org");
+    expect(html).toContain("Roggen-Gelbkorn-Brot");
+    expect(html).toContain("https://example.org/recipe");
+    expect(html).toContain("·");
     expect(html).not.toMatch(/>\s*Art\s*</);
     expect(html).not.toMatch(/>\s*URL\s*</);
+  });
+
+  it("compact nested object shows captions when more than three values", async () => {
+    const { defaultDetailRenderers } = await import("./registries");
+    const quelleSchema = {
+      type: "object" as const,
+      title: "Quelle",
+      properties: {
+        art: { type: "string" as const, title: "Art" },
+        titel: { type: "string" as const, title: "Titel" },
+        url: { type: "string" as const, format: "uri", title: "URL" },
+        autor: { type: "string" as const, title: "Autor" },
+        seite: { type: "string" as const, title: "Seite" },
+        notiz: { type: "string" as const },
+      },
+    };
+    const rootSchema = {
+      type: "object" as const,
+      properties: { quelle: quelleSchema },
+    };
+    const data = {
+      quelle: {
+        art: "Website",
+        titel: "Roggen",
+        url: "https://example.org",
+        autor: "Chef",
+        seite: "12",
+      },
+    };
+    const ctx: DetailTesterContext = {
+      ...baseCtx,
+      rootSchema,
+      depth: 0,
+      maxDepth: 8,
+      hideHeaderPrimaryFields: true,
+      headerPrimaryFieldNames: ["titel"],
+    };
+    const run = buildDispatch(defaultDetailRenderers, rootSchema, data, ctx);
+    const uiSchema = {
+      type: "VerticalLayout" as const,
+      elements: [{ type: "Control" as const, scope: "#/properties/quelle" }],
+    };
+    const html = wrap(
+      <DetailRendererContext.Provider
+        value={{
+          registry: defaultDetailRenderers,
+          config: {},
+          rootSchema,
+          rootData: data,
+        }}
+      >
+        {run(uiSchema)}
+      </DetailRendererContext.Provider>,
+    );
+    expect(html).toContain("Art");
+    expect(html).toContain("Autor");
+    expect(html).not.toContain("·");
+  });
+
+  it("meta strip omitted when all meta controls have empty data", async () => {
+    const { defaultDetailRenderers } = await import("./registries");
+    const rootSchema = baseCtx.rootSchema;
+    const data = { title: "Hefezopf" };
+    const ctx: DetailTesterContext = {
+      ...baseCtx,
+      rootSchema,
+      depth: 0,
+      maxDepth: 8,
+    };
+    const run = buildDispatch(defaultDetailRenderers, rootSchema, data, ctx);
+    const uiSchema = {
+      type: "TopLevelLayout" as const,
+      elements: [
+        { type: "Control" as const, scope: "#/properties/portionen" },
+        { type: "Control" as const, scope: "#/properties/dauer" },
+      ],
+    };
+    const html = wrap(
+      <DetailRendererContext.Provider
+        value={{
+          registry: defaultDetailRenderers,
+          config: {},
+          rootSchema,
+          rootData: data,
+        }}
+      >
+        {run(uiSchema)}
+      </DetailRendererContext.Provider>,
+    );
+    expect(html).not.toContain("graviola-detail-meta-strip");
+  });
+
+  it("meta strip renders when at least one meta control has data", async () => {
+    const { defaultDetailRenderers } = await import("./registries");
+    const rootSchema = baseCtx.rootSchema;
+    const data = { portionen: 4, title: "Roggen" };
+    const ctx: DetailTesterContext = {
+      ...baseCtx,
+      rootSchema,
+      depth: 0,
+      maxDepth: 8,
+    };
+    const run = buildDispatch(defaultDetailRenderers, rootSchema, data, ctx);
+    const uiSchema = {
+      type: "TopLevelLayout" as const,
+      elements: [
+        { type: "Control" as const, scope: "#/properties/portionen" },
+        { type: "Control" as const, scope: "#/properties/dauer" },
+      ],
+    };
+    const html = wrap(
+      <DetailRendererContext.Provider
+        value={{
+          registry: defaultDetailRenderers,
+          config: {},
+          rootSchema,
+          rootData: data,
+        }}
+      >
+        {run(uiSchema)}
+      </DetailRendererContext.Provider>,
+    );
+    expect(html).toContain("graviola-detail-meta-strip");
+    expect(html).toContain("4");
   });
 
   it("TopLevelLayout dispatch renders section headings for array and object controls", async () => {

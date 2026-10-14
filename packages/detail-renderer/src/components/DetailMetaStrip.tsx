@@ -14,6 +14,7 @@ export function DetailMetaStrip({ children }: { children: React.ReactNode }) {
           gap: 3,
           alignItems: "flex-start",
           py: 0.5,
+          "&:empty": { display: "none" },
         }}
       >
         {children}
