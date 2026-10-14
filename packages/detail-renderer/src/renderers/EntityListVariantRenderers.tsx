@@ -16,6 +16,7 @@ import {
 import { sortIndexedByOrderField } from "@graviola/edb-core-utils";
 
 import { readOrderByFromControl } from "../utils/readOrderByFromControl";
+import { DetailSectionHeading } from "../components/DetailSectionHeading";
 import { PropertyRow } from "./PropertyRow";
 import type { ListVariant } from "./listVariantTesters";
 
@@ -102,10 +103,18 @@ function makeListVariantRenderer(variant: ListVariant) {
       />
     );
 
+    const topSection =
+      ctx.viewSize === "detail" &&
+      ctx.depth === 0 &&
+      typeof label === "string" &&
+      label.trim().length > 0;
+
     if (variant === "cards") {
       return (
-        <Box sx={{ width: "100%", mt: 1, mb: 1.5 }}>
-          {typeof label === "string" && label.trim() ? (
+        <Box sx={{ width: "100%", mt: topSection ? 0 : 1, mb: 1.5 }}>
+          {topSection ? (
+            <DetailSectionHeading>{label}</DetailSectionHeading>
+          ) : typeof label === "string" && label.trim() ? (
             <Typography
               variant="caption"
               color="text.secondary"
@@ -114,6 +123,15 @@ function makeListVariantRenderer(variant: ListVariant) {
               {label}
             </Typography>
           ) : null}
+          {body}
+        </Box>
+      );
+    }
+
+    if (topSection) {
+      return (
+        <Box>
+          <DetailSectionHeading>{label}</DetailSectionHeading>
           {body}
         </Box>
       );

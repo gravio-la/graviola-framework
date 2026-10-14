@@ -215,6 +215,76 @@ describe("ArrayInlineObjectRenderer leaf-only inline row", () => {
     expect(html).not.toContain("menge");
   });
 
+  it("orders leaf-only values by class detail ranks for dereferenced item schemas (no $ref)", async () => {
+    const zutatInRezeptInline = {
+      ...leafIngredientItemSchema,
+      properties: {
+        ...leafIngredientItemSchema.properties,
+        "@type": {
+          type: "string" as const,
+          const: "http://example.org/ZutatInRezept",
+        },
+      },
+    };
+    const rootSchema = {
+      type: "object" as const,
+      definitions: {
+        Zutat: zutatDef,
+        ZutatInRezept: leafIngredientItemSchema,
+      },
+      properties: {
+        zutaten: { type: "array" as const, items: zutatInRezeptInline },
+      },
+    };
+    const detailUiSchemata = {
+      ZutatInRezept: generateDefaultDetailUISchema(
+        bringDefinitionToTop(
+          rootSchema as never,
+          "ZutatInRezept",
+        ) as unknown as JsonSchema,
+        {
+          scopeOverride: {
+            "#/properties/menge": { rank: 1 },
+            "#/properties/einheit": { rank: 2 },
+            "#/properties/zutatRef": { rank: 3 },
+            "#/properties/zutatFreitext": { rank: 4 },
+          },
+        },
+      ),
+    };
+    const rowData = [
+      {
+        "@type": "http://example.org/ZutatInRezept",
+        zutatRef: { "@id": "urn:z:1", "@type": "Zutat", name: "Mehl" },
+        menge: 512,
+        einheit: "Gramm",
+      },
+    ];
+    const html = await renderLeafIngredients(
+      zutatInRezeptInline,
+      rowData,
+      {
+        detailUiSchemata,
+        typeIRIToTypeName: (iri) =>
+          iri === "http://example.org/ZutatInRezept"
+            ? "ZutatInRezept"
+            : undefined,
+      },
+      { detailUiSchemata },
+      rootSchema,
+    );
+    const [i512, iEinheit, iMehl] = textIndexOrder(html, [
+      "512",
+      "Gramm",
+      "Mehl",
+    ]);
+    expect(i512).toBeLessThan(iEinheit);
+    expect(iEinheit).toBeLessThan(iMehl);
+    expect(html).toContain("graviola-detail-compact-numeric");
+    expect(html).toContain("graviola-detail-compact-entity-link");
+    expect(html).not.toContain("MuiChip-avatar");
+  });
+
   it("orders leaf-only values by class detail ranks when context uiSchemata provides them", async () => {
     const zutatInRezeptDef = { ...leafIngredientItemSchema };
     const rootSchema = {
@@ -306,6 +376,15 @@ describe("ArrayInlineObjectRenderer leaf-only inline row", () => {
     ];
     const html = await renderLeafIngredients(itemWithMarkdown, data);
     expect(html).not.toContain("data-inline-leaf-row");
+  });
+});
+
+describe("ArrayInlineObjectRenderer section heading", () => {
+  it("uses DetailSectionHeading at depth 0 in detail view", async () => {
+    const html = await renderArrayInline();
+    expect(html).toContain("Steps");
+    expect(html).toContain("h2");
+    expect(html).toMatch(/MuiTypography-subtitle1|subtitle1/);
   });
 });
 

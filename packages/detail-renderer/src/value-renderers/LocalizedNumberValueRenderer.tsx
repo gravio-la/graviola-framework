@@ -1,6 +1,7 @@
 import React from "react";
-import { Typography } from "@mui/material";
 import type { ValueRendererProps } from "@graviola/edb-detail-renderer-core";
+
+import { CompactNumericSpan } from "../components/CompactNumericSpan";
 
 export function formatLocalizedNumber(
   value: unknown,
@@ -23,8 +24,8 @@ export function LocalizedNumberValueRenderer({
 }: ValueRendererProps) {
   if (value == null || value === "") return null;
   return (
-    <Typography variant="inherit" component="span">
+    <CompactNumericSpan>
       {formatLocalizedNumber(value, options)}
-    </Typography>
+    </CompactNumericSpan>
   );
 }

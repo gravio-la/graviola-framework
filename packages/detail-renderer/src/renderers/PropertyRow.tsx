@@ -28,7 +28,15 @@ export function PropertyRow({
 
   if (compactLeafInline) {
     if (hideInlineLabels || !showLabelColumn) {
-      return <Box sx={{ minWidth: 0 }}>{children}</Box>;
+      return (
+        <Box
+          sx={{ minWidth: 0 }}
+          title={showLabelColumn ? label : undefined}
+          aria-label={showLabelColumn ? label : undefined}
+        >
+          {children}
+        </Box>
+      );
     }
     return (
       <Box sx={{ minWidth: 0 }}>

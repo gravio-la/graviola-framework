@@ -74,7 +74,8 @@ export function ObjectRenderer({
   }
 
   if (compact) {
-    const hideInlineLabels = propertyEntries.length <= 2;
+    const hideInlineLabels = propertyEntries.length <= 3;
+    const visibleChildren = children.filter(Boolean);
     return (
       <Box>
         {topSection ? (
@@ -96,11 +97,27 @@ export function ObjectRenderer({
             sx={{
               display: "flex",
               flexWrap: "wrap",
-              gap: 2,
-              alignItems: "flex-start",
+              alignItems: "baseline",
+              gap: hideInlineLabels ? 0 : 2,
             }}
           >
-            {children}
+            {hideInlineLabels
+              ? visibleChildren.flatMap((child, index) =>
+                  index === 0
+                    ? [child]
+                    : [
+                        <Box
+                          component="span"
+                          key={`sep-${index}`}
+                          sx={{ mx: 0.75, color: "text.secondary" }}
+                          aria-hidden
+                        >
+                          ·
+                        </Box>,
+                        child,
+                      ],
+                )
+              : visibleChildren}
           </Box>
         </DetailPresentationProvider>
       </Box>

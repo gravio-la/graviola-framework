@@ -28,6 +28,8 @@ import {
   renderDetailInlineObjectBody,
 } from "./detailInlineSubDispatch";
 import { isCompactLeafOnlyItemSchema } from "./arrayInlineLeafItem";
+import { DetailSectionHeading } from "../components/DetailSectionHeading";
+import { DetailPresentationProvider } from "../detailPresentationContext";
 import { NestedSection } from "./NestedSection";
 import { PropertyRow } from "./PropertyRow";
 
@@ -164,6 +166,7 @@ export function ArrayInlineObjectRenderer({
     config,
     detailUiSchemata,
     orderBy: orderByConfig,
+    typeIRIToTypeName: typeIRIToTypeNameFromCtx,
   } = useDetailRendererContext();
   const explicitInlineOpts = readDetailArrayInlineOpts(uiSchema);
   const optionsDetail = readOptionsDetail(uiSchema);
@@ -207,6 +210,11 @@ export function ArrayInlineObjectRenderer({
     itemSchema,
     detailUiSchemata ?? config.uiSchemata,
     orderByConfig,
+    {
+      rootSchema,
+      resolvedItemSchema,
+      typeIRIToTypeName: ctx.typeIRIToTypeName ?? typeIRIToTypeNameFromCtx,
+    },
   );
   const presentationOpts =
     leafOnlyInlineRow && itemGenOptsBase
@@ -243,13 +251,27 @@ export function ArrayInlineObjectRenderer({
       }
     }
     if (body == null) {
-      body = renderDetailInlineObjectBody({
+      const inlineBody = renderDetailInlineObjectBody({
         registry,
         virtualRootSchema: virtualRoot,
         itemData: item as Record<string, unknown>,
         ctx: childCtx,
         extraGenerateDetailOptions: itemGenOpts,
       });
+      body = leafOnlyInlineRow ? (
+        <DetailPresentationProvider
+          value={{
+            compactLeafInline: true,
+            hideInlineLabels: true,
+            compactNumericColumn: true,
+            compactEntityLink: true,
+          }}
+        >
+          {inlineBody}
+        </DetailPresentationProvider>
+      ) : (
+        inlineBody
+      );
     }
 
     const itemData = item as Record<string, unknown>;
@@ -334,6 +356,20 @@ export function ArrayInlineObjectRenderer({
       >
         {listBody}
       </NestedSection>
+    );
+  }
+
+  const topSection =
+    (!ctx.viewSize || ctx.viewSize === "detail") &&
+    ctx.depth === 0 &&
+    label.trim().length > 0;
+
+  if (topSection) {
+    return (
+      <Box>
+        <DetailSectionHeading>{label}</DetailSectionHeading>
+        {listBody}
+      </Box>
     );
   }
 

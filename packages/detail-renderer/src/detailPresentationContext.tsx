@@ -7,6 +7,10 @@ export type DetailPresentationFlags = {
   compactLeafInline?: boolean;
   /** Hide per-field labels when only a few inline values. */
   hideInlineLabels?: boolean;
+  /** Right-align numbers in a fixed column (compact ingredient rows). */
+  compactNumericColumn?: boolean;
+  /** Entity refs as plain text links without chip avatars. */
+  compactEntityLink?: boolean;
 };
 
 const DetailPresentationContext = createContext<DetailPresentationFlags | null>(

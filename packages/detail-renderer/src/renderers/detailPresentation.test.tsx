@@ -158,7 +158,7 @@ describe("detail presentation", () => {
     expect(html).toContain("30");
   });
 
-  it("ObjectRenderer compact leaf object uses inline row", () => {
+  it("ObjectRenderer compact leaf object uses inline row with dot separators", () => {
     const schema = baseCtx.rootSchema.properties!.quelle as object;
     expect(isCompactLeafObjectSchema(schema as never)).toBe(true);
     const html = wrap(
@@ -168,7 +168,12 @@ describe("detail presentation", () => {
         data={{ art: "Web", url: "https://example.org" }}
         path={["quelle"]}
         uiSchema={{ type: "Control", scope: "#/properties/quelle" }}
-        dispatch={() => <span>leaf</span>}
+        dispatch={({ uiSchema: childUi }) => {
+          const scope = (childUi as { scope?: string }).scope ?? "";
+          if (scope.endsWith("/art")) return <span>Web</span>;
+          if (scope.endsWith("/url")) return <span>https://example.org</span>;
+          return null;
+        }}
         rootSchema={baseCtx.rootSchema}
         rootData={{}}
         ctx={baseCtx}
@@ -176,6 +181,12 @@ describe("detail presentation", () => {
     );
     expect(html).toContain("Quelle");
     expect(html).toContain("graviola-detail-compact-object");
+    expect(html).toContain("Web");
+    expect(html).toContain("https://example.org");
+    expect(html).toContain("·");
+    expect(html).not.toContain("grid-template-columns:30%");
+    expect(html).not.toMatch(/>\s*Art\s*</);
+    expect(html).not.toMatch(/>\s*URL\s*</);
   });
 
   it("PropertyRow meta strip avoids 30% grid", () => {

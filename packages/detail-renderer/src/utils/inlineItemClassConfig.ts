@@ -9,12 +9,92 @@ const TOP_LEVEL_PROPERTY_SCOPE = /^#\/properties\/([^/]+)$/;
 
 type ControlWithRank = ControlElement & { rank?: number };
 
+export type ItemSchemaDefinitionLookup = {
+  rootSchema?: JSONSchema7;
+  /** Dereferenced item schema (for `@type` const and property matching). */
+  resolvedItemSchema?: JSONSchema7;
+  typeIRIToTypeName?: (typeIRI: string) => string | undefined;
+};
+
+function typeConstFromObjectSchema(
+  schema: JSONSchema7 | undefined,
+): string | undefined {
+  if (!schema?.properties) return undefined;
+  const atType = schema.properties["@type"] as JSONSchema7 | undefined;
+  if (!atType || typeof atType !== "object") return undefined;
+  if (typeof atType.const === "string") return atType.const;
+  if (
+    atType.type === "string" &&
+    Array.isArray(atType.enum) &&
+    atType.enum.length === 1 &&
+    typeof atType.enum[0] === "string"
+  ) {
+    return atType.enum[0];
+  }
+  return undefined;
+}
+
+function schemaPropertyKeys(schema: JSONSchema7): Set<string> {
+  const props = schema.properties;
+  if (!props || typeof props !== "object") return new Set();
+  return new Set(Object.keys(props));
+}
+
+function definitionEntries(rootSchema: JSONSchema7): [string, JSONSchema7][] {
+  const defs =
+    rootSchema.definitions ??
+    (rootSchema as { $defs?: Record<string, JSONSchema7> }).$defs;
+  if (!defs || typeof defs !== "object") return [];
+  return Object.entries(defs).map(([name, def]) => [name, def as JSONSchema7]);
+}
+
+function definitionNameBySchemaIdentity(
+  rootSchema: JSONSchema7,
+  itemSchema: JSONSchema7,
+): string | undefined {
+  const itemKeys = schemaPropertyKeys(itemSchema);
+  if (itemKeys.size === 0) return undefined;
+  const itemTypeConst = typeConstFromObjectSchema(itemSchema);
+
+  for (const [name, def] of definitionEntries(rootSchema)) {
+    const defKeys = schemaPropertyKeys(def);
+    if (defKeys.size !== itemKeys.size) continue;
+    let keysMatch = true;
+    for (const key of itemKeys) {
+      if (!defKeys.has(key)) {
+        keysMatch = false;
+        break;
+      }
+    }
+    if (!keysMatch) continue;
+    if (itemTypeConst != null) {
+      const defTypeConst = typeConstFromObjectSchema(def);
+      if (defTypeConst !== itemTypeConst) continue;
+    }
+    return name;
+  }
+  return undefined;
+}
+
 export function definitionNameFromItemSchema(
   itemSchema: JSONSchema7,
+  lookup?: ItemSchemaDefinitionLookup,
 ): string | undefined {
   if (typeof itemSchema.$ref === "string") {
     return definitionNameFromRef(itemSchema.$ref);
   }
+
+  const resolved = lookup?.resolvedItemSchema ?? itemSchema;
+  const typeIRI = typeConstFromObjectSchema(resolved);
+  if (typeIRI && lookup?.typeIRIToTypeName) {
+    const fromIri = lookup.typeIRIToTypeName(typeIRI);
+    if (fromIri) return fromIri;
+  }
+
+  if (lookup?.rootSchema) {
+    return definitionNameBySchemaIdentity(lookup.rootSchema, resolved);
+  }
+
   return undefined;
 }
 
@@ -56,10 +136,11 @@ export function classLevelInlineGenerateOptions(
   itemSchema: JSONSchema7,
   detailUiSchemata: Record<string, UISchemaElement> | undefined,
   orderByConfig: OrderByConfig | undefined,
+  lookup?: ItemSchemaDefinitionLookup,
 ):
   | Pick<GenerateDefaultDetailUISchemaOptions, "scopeOverride" | "orderBy">
   | undefined {
-  const defName = definitionNameFromItemSchema(itemSchema);
+  const defName = definitionNameFromItemSchema(itemSchema, lookup);
   if (!defName) return undefined;
 
   const uiRoot = detailUiSchemata?.[defName];

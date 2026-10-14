@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Chip } from "@mui/material";
+import { Chip, Link } from "@mui/material";
 import { extractEntityPreview } from "@graviola/edb-core-utils";
 
 import type { DetailRendererProps } from "@graviola/edb-detail-renderer-core";
@@ -12,10 +12,14 @@ export function InlineEntityRefChip({
   data,
   ctx,
   onClick,
+  presentation = "chip",
+  hideAvatar = false,
 }: {
   data: Record<string, unknown>;
   ctx: DetailRendererProps["ctx"];
   onClick?: () => void;
+  presentation?: "chip" | "textLink";
+  hideAvatar?: boolean;
 }) {
   const { config } = useDetailRendererContext();
   const typeIRI =
@@ -50,13 +54,36 @@ export function InlineEntityRefChip({
     [typeName, typeIRI, entityIRI, data],
   );
 
+  if (presentation === "textLink") {
+    return (
+      <Link
+        component="button"
+        type="button"
+        variant="body2"
+        underline="hover"
+        onClick={onClick}
+        disabled={!onClick}
+        sx={{
+          verticalAlign: "baseline",
+          fontWeight: "inherit",
+          p: 0,
+          minWidth: 0,
+          textAlign: "left",
+        }}
+        className="graviola-detail-compact-entity-link"
+      >
+        {label}
+      </Link>
+    );
+  }
+
   return (
     <Chip
       size="small"
       onClick={onClick}
       clickable={Boolean(onClick)}
       avatar={
-        preview.image ? (
+        !hideAvatar && preview.image ? (
           <PreviewAvatar
             preview={preview}
             alt={label}

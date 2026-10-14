@@ -25,6 +25,8 @@ export interface DetailRendererContextValue {
   detailUiSchemata?: Record<string, UISchemaElement>;
   /** Side-schema orderBy from Adb context. */
   orderBy?: OrderByConfig;
+  /** Maps entity `@type` IRIs to config type names (inline array item class lookup). */
+  typeIRIToTypeName?: (typeIRI: string) => string | undefined;
   rootSchema: JSONSchema7;
   rootData?: unknown;
   /** Injected by {@link @graviola/semantic-views} for nested entity refs. */

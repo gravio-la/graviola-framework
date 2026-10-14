@@ -367,8 +367,17 @@ export const DetailRenderer = React.memo(function DetailRenderer({
       config: resolvedConfig,
       detailUiSchemata: resolvedConfig.uiSchemata,
       orderBy: adb.orderBy,
+      typeIRIToTypeName,
     }),
-    [registry, schema, data, effectiveUISchema, resolvedConfig, adb.orderBy],
+    [
+      registry,
+      schema,
+      data,
+      effectiveUISchema,
+      resolvedConfig,
+      adb.orderBy,
+      typeIRIToTypeName,
+    ],
   );
 
   return (
