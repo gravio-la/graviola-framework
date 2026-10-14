@@ -1,11 +1,13 @@
 import type {
   EntityActionDef,
   EntityPreview,
+  OrderByConfig,
   ViewDensity,
 } from "@graviola/edb-core-types";
+import type { UISchemaElement } from "@jsonforms/core";
 import type { SchemaScopeFrame } from "@graviola/json-schema-utils";
 import type { JSONSchema7 } from "json-schema";
-import type { RankedTester, UISchemaElement } from "@jsonforms/core";
+import type { RankedTester } from "@jsonforms/core";
 import type React from "react";
 
 export type ViewSize = "chip" | "listItem" | "card" | "detail";
@@ -73,6 +75,13 @@ export interface DetailTesterContext {
   article?: DetailArticleOptions;
   /** Merged registry used by leaf renderers for inline value formatting. */
   valueRenderers?: import("./value-renderers/types").ValueRendererEntry[];
+  /**
+   * Per-type detail UISchema roots from app config (`viewConfig.detail.uiSchemata`).
+   * Used when rendering inline array items (`items.$ref`) with class-level overrides.
+   */
+  detailUiSchemata?: Record<string, UISchemaElement>;
+  /** Side-schema `orderBy`: type name → slot → sort spec (nested arrays on inline items). */
+  orderBy?: OrderByConfig;
 }
 
 export interface DetailRendererRegistryEntry {

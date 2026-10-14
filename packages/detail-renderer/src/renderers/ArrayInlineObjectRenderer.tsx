@@ -8,6 +8,7 @@ import {
   readNestingOptions,
   childNestingContext,
   isEntityLikeObjectSchema,
+  resolvePropertySchema,
   type DetailArrayInlineControlOptions,
   type DetailRendererProps,
   type GenerateDefaultDetailUISchemaOptions,
@@ -18,6 +19,10 @@ import type { JSONSchema7 } from "json-schema";
 
 import { useDetailRendererContext } from "../context";
 import { readOrderByFromControl } from "../utils/readOrderByFromControl";
+import {
+  classLevelInlineGenerateOptions,
+  mergeInlineItemGenerateOptions,
+} from "../utils/inlineItemClassConfig";
 import {
   itemVirtualRoot,
   renderDetailInlineObjectBody,
@@ -153,7 +158,13 @@ export function ArrayInlineObjectRenderer({
   ctx,
   uiSchema,
 }: DetailRendererProps) {
-  const { registry, rootSchema } = useDetailRendererContext();
+  const {
+    registry,
+    rootSchema,
+    config,
+    detailUiSchemata,
+    orderBy: orderByConfig,
+  } = useDetailRendererContext();
   const explicitInlineOpts = readDetailArrayInlineOpts(uiSchema);
   const optionsDetail = readOptionsDetail(uiSchema);
   const arrayScope = (uiSchema as ControlElement).scope;
@@ -167,8 +178,9 @@ export function ArrayInlineObjectRenderer({
   const rawItems = arr.items;
   if (!rawItems || typeof rawItems === "boolean") return null;
   const itemSchema = rawItems as JSONSchema7;
+  const resolvedItemSchema = resolvePropertySchema(itemSchema, rootSchema);
 
-  const isAnonymousItem = !isEntityLikeObjectSchema(itemSchema);
+  const isAnonymousItem = !isEntityLikeObjectSchema(resolvedItemSchema);
   const presentOpts: DetailArrayInlineControlOptions | undefined =
     explicitInlineOpts ??
     (isAnonymousItem
@@ -176,27 +188,38 @@ export function ArrayInlineObjectRenderer({
       : undefined);
 
   const showOrderBadge = Boolean(
-    orderSpec && orderFieldIsNumeric(itemSchema, orderSpec.field),
+    orderSpec && orderFieldIsNumeric(resolvedItemSchema, orderSpec.field),
   );
   const omitFromBody = showOrderBadge && orderSpec ? [orderSpec.field] : [];
 
-  const virtualRoot = itemVirtualRoot(itemSchema, rootSchema);
+  const virtualRoot = itemVirtualRoot(resolvedItemSchema, rootSchema);
   const leafOnlyInlineRow =
     explicitInlineOpts == null &&
     isAnonymousItem &&
-    isCompactLeafOnlyItemSchema(itemSchema, virtualRoot);
+    isCompactLeafOnlyItemSchema(resolvedItemSchema, virtualRoot);
 
   const itemGenOptsBase = computeItemGenerateOptions(
-    itemSchema,
+    resolvedItemSchema,
     presentOpts,
     omitFromBody,
   );
-  const itemGenOpts =
+  const classLevelOpts = classLevelInlineGenerateOptions(
+    itemSchema,
+    detailUiSchemata ?? config.uiSchemata,
+    orderByConfig,
+  );
+  const presentationOpts =
     leafOnlyInlineRow && itemGenOptsBase
       ? { ...itemGenOptsBase, layoutType: "HorizontalLayout" as const }
       : leafOnlyInlineRow
         ? { layoutType: "HorizontalLayout" as const }
         : itemGenOptsBase;
+  const mergedItemGen = mergeInlineItemGenerateOptions(
+    classLevelOpts,
+    presentationOpts,
+  );
+  const itemGenOpts =
+    Object.keys(mergedItemGen).length > 0 ? mergedItemGen : undefined;
 
   const compact = Boolean(presentOpts?.compactItems);
   const rowLike = presentOpts?.itemLayout === "row";
@@ -230,7 +253,7 @@ export function ArrayInlineObjectRenderer({
     }
 
     const itemData = item as Record<string, unknown>;
-    const rowLabel = itemLabel(itemData, index, itemSchema);
+    const rowLabel = itemLabel(itemData, index, resolvedItemSchema);
     const badgeValue =
       showOrderBadge && orderSpec
         ? orderValue(itemData, orderSpec.field)

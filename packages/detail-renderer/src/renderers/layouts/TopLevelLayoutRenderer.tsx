@@ -4,6 +4,12 @@ import type { Layout } from "@jsonforms/core";
 import type { DetailRendererProps } from "@graviola/edb-detail-renderer-core";
 
 import { DetailHero } from "./DetailHero";
+import { DetailIriFooter } from "../../components/DetailIriFooter";
+import {
+  detailContentMaxWidthSx,
+  readDetailLayoutOptions,
+} from "../../utils/detailLayoutOptions";
+import { renderGroupedTopLevelElements } from "../../utils/detailTopLevelElements";
 
 /** Single surface: edge-to-edge hero image (rounded top), headline, subtitle, divider, properties. */
 function TopLevelLayoutSingleCardHeroBleed({
@@ -12,22 +18,30 @@ function TopLevelLayoutSingleCardHeroBleed({
   ctx,
 }: DetailRendererProps) {
   const layout = uiSchema as Layout & {
-    options?: { headline?: string };
+    options?: { headline?: string; detail?: unknown; hero?: unknown };
   };
   const elements = layout.elements ?? [];
   const headline = layout.options?.headline;
+  const detailOpts = readDetailLayoutOptions(layout.options);
+  const widthSx = detailContentMaxWidthSx(
+    ctx.viewSize === "detail" ? detailOpts.maxWidth : "none",
+  );
 
   return (
-    <Box>
-      <DetailHero ctx={ctx} headline={headline} variant="bleed">
+    <Box sx={widthSx}>
+      <DetailHero
+        ctx={ctx}
+        headline={headline}
+        variant="bleed"
+        showIri={detailOpts.showIri}
+      >
         <Divider sx={{ my: 2 }} />
         <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-          {elements.map((el, i) => (
-            <React.Fragment key={i}>
-              {dispatch({ uiSchema: el, ctx })}
-            </React.Fragment>
-          ))}
+          {renderGroupedTopLevelElements(layout, elements, dispatch, ctx)}
         </Box>
+        {detailOpts.showIri === "footer" ? (
+          <DetailIriFooter entityIRI={ctx.entityIRI} />
+        ) : null}
       </DetailHero>
     </Box>
   );
@@ -40,22 +54,30 @@ export function TopLevelLayoutRenderer(props: DetailRendererProps) {
 
   const { uiSchema, dispatch, ctx } = props;
   const layout = uiSchema as Layout & {
-    options?: { headline?: string };
+    options?: { headline?: string; detail?: unknown; hero?: unknown };
   };
   const elements = layout.elements ?? [];
   const headline = layout.options?.headline;
+  const detailOpts = readDetailLayoutOptions(layout.options);
+  const widthSx = detailContentMaxWidthSx(
+    ctx.viewSize === "detail" ? detailOpts.maxWidth : "none",
+  );
 
   return (
-    <Box>
-      <DetailHero ctx={ctx} headline={headline} variant="card" />
+    <Box sx={widthSx}>
+      <DetailHero
+        ctx={ctx}
+        headline={headline}
+        variant="card"
+        showIri={detailOpts.showIri}
+      />
       <Divider sx={{ mb: 2 }} />
       <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-        {elements.map((el, i) => (
-          <React.Fragment key={i}>
-            {dispatch({ uiSchema: el, ctx })}
-          </React.Fragment>
-        ))}
+        {renderGroupedTopLevelElements(layout, elements, dispatch, ctx)}
       </Box>
+      {detailOpts.showIri === "footer" ? (
+        <DetailIriFooter entityIRI={ctx.entityIRI} />
+      ) : null}
     </Box>
   );
 }

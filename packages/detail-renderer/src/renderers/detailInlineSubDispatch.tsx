@@ -35,7 +35,7 @@ const defaultInlineDetailSkipScopes: string[] = [
 
 export type RenderDetailInlineObjectBodyGenerateOptions = Pick<
   GenerateDefaultDetailUISchemaOptions,
-  "skipScope" | "scopeOverride" | "layoutType"
+  "skipScope" | "scopeOverride" | "layoutType" | "orderBy"
 > & {
   /**
    * When `false`, do not prepend default skips for `#/properties/@id` / `@type`.
@@ -83,6 +83,9 @@ export function renderDetailInlineObjectBody({
       scopeOverride: {
         ...(extraGenerateDetailOptions?.scopeOverride ?? {}),
       },
+      ...(extraGenerateDetailOptions?.orderBy
+        ? { orderBy: extraGenerateDetailOptions.orderBy }
+        : {}),
     },
   );
   return run(uiSchema);

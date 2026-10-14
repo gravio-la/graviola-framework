@@ -12,6 +12,11 @@ import {
 import { extractEntityPreview } from "@graviola/edb-core-utils";
 import type { TypePresentationRegistry } from "@graviola/edb-core-types";
 import { useAdbContext } from "@graviola/edb-state-hooks";
+import type {
+  DetailViewConfigOptions,
+  ViewConfig,
+  ViewConfigSet,
+} from "@graviola/semantic-jsonform-types";
 import { defaultDetailRenderers, defaultArticleRenderers } from "./renderers";
 import { defaultValueRenderers } from "./value-renderers";
 import { DetailRendererContext } from "./context";
@@ -53,6 +58,59 @@ function getHeaderPrimaryFieldNames(primaryDecl: unknown): string[] {
       .map(fieldNameFromPrimaryDeclarationPart)
       .filter((x): x is string => Boolean(x)),
   );
+}
+
+function resolveViewConfig(
+  viewConfig: ViewConfigSet | undefined,
+  legacyDetailOptions?: DetailViewConfigOptions,
+): ViewConfig | undefined {
+  const base = viewConfig?.detail;
+  if (!legacyDetailOptions) return base;
+  return {
+    ...(base ?? {}),
+    options: {
+      ...(base?.options ?? {}),
+      ...legacyDetailOptions,
+    },
+  };
+}
+
+function detailViewConfigFromViewSlice(
+  slice: ViewConfig | undefined,
+): Partial<DetailViewConfig> {
+  const legacy = slice?.options as DetailViewConfigOptions | undefined;
+  return {
+    maxDepth: slice?.maxDepth,
+    extraRenderers: slice?.extraRenderers as
+      | DetailViewConfig["extraRenderers"]
+      | undefined,
+    overrideRenderers: slice?.overrideRenderers as
+      | DetailViewConfig["overrideRenderers"]
+      | undefined,
+    valueRenderers: slice?.valueRenderers,
+    overrideValueRenderers: slice?.overrideValueRenderers,
+    uiSchemata: slice?.uiSchemata,
+    uiSchemataByTypeIRI: slice?.uiSchemataByTypeIRI,
+    typeNameOverrides: slice?.typeNameOverrides as
+      | DetailViewConfig["typeNameOverrides"]
+      | undefined,
+    typeIRIOverrides: slice?.typeIRIOverrides as
+      | DetailViewConfig["typeIRIOverrides"]
+      | undefined,
+    detailLayoutType: slice?.detailLayoutType,
+    nesting: slice?.nesting,
+    article: slice?.article,
+    hideLinkedDataProperties:
+      slice?.hideLinkedDataProperties ?? legacy?.hideLinkedDataProperties,
+    linkedDataPropertyNames:
+      slice?.linkedDataPropertyNames ?? legacy?.linkedDataPropertyNames,
+    hideHeaderPrimaryFields:
+      slice?.hideHeaderPrimaryFields ?? legacy?.hideHeaderPrimaryFields,
+    hiddenPropertyNames:
+      slice?.hiddenPropertyNames ?? legacy?.hiddenPropertyNames,
+    alwaysShowPropertyNames:
+      slice?.alwaysShowPropertyNames ?? legacy?.alwaysShowPropertyNames,
+  };
 }
 
 function mergeDetailViewConfigs(
@@ -130,12 +188,17 @@ export const DetailRenderer = React.memo(function DetailRenderer({
   isLoading,
 }: DetailRendererRootProps) {
   const adb = useAdbContext();
-  const detailViewConfigFromAdb = (
-    adb as { detailViewConfig?: DetailViewConfig }
-  ).detailViewConfig;
+  const viewConfigSlice = useMemo(
+    () => resolveViewConfig(adb.viewConfig, adb.detailViewConfig),
+    [adb.viewConfig, adb.detailViewConfig],
+  );
+  const detailConfigFromAdb = useMemo(
+    () => detailViewConfigFromViewSlice(viewConfigSlice),
+    [viewConfigSlice],
+  );
   const baseConfig = useMemo(
-    () => mergeDetailViewConfigs(detailViewConfigFromAdb, configProp),
-    [detailViewConfigFromAdb, configProp],
+    () => mergeDetailViewConfigs(detailConfigFromAdb, configProp),
+    [detailConfigFromAdb, configProp],
   );
   const typeIRIToTypeName =
     baseConfig.typeIRIToTypeName ?? adb.typeIRIToTypeName;
@@ -260,6 +323,8 @@ export const DetailRenderer = React.memo(function DetailRenderer({
       nesting: resolvedConfig.nesting,
       article: resolvedConfig.article,
       valueRenderers,
+      detailUiSchemata: resolvedConfig.uiSchemata,
+      orderBy: adb.orderBy,
     }),
     [
       schema,
@@ -282,6 +347,8 @@ export const DetailRenderer = React.memo(function DetailRenderer({
       resolvedConfig.nesting,
       resolvedConfig.article,
       valueRenderers,
+      resolvedConfig.uiSchemata,
+      adb.orderBy,
     ],
   );
 
@@ -298,8 +365,10 @@ export const DetailRenderer = React.memo(function DetailRenderer({
       rootData: data,
       uiSchema: effectiveUISchema,
       config: resolvedConfig,
+      detailUiSchemata: resolvedConfig.uiSchemata,
+      orderBy: adb.orderBy,
     }),
-    [registry, schema, data, effectiveUISchema, resolvedConfig],
+    [registry, schema, data, effectiveUISchema, resolvedConfig, adb.orderBy],
   );
 
   return (

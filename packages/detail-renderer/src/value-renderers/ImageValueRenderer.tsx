@@ -1,7 +1,41 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
+import ImageNotSupportedOutlinedIcon from "@mui/icons-material/ImageNotSupportedOutlined";
 import { Avatar, Box, Link } from "@mui/material";
 import type { ValueRendererProps } from "@graviola/edb-detail-renderer-core";
 import { useThumbnailUrl } from "@graviola/edb-state-hooks";
+
+import { shouldUseImagePlaceholder } from "../utils/imagePlaceholder";
+
+function ImagePlaceholderBox({
+  sx,
+  size,
+}: {
+  sx?: Record<string, unknown>;
+  size?: number;
+}) {
+  return (
+    <Box
+      className="graviola-detail-image-placeholder"
+      aria-hidden
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        bgcolor: "action.hover",
+        color: "text.disabled",
+        borderRadius: 1,
+        width: size ?? "100%",
+        height: size ?? "auto",
+        minHeight: size ?? 120,
+        ...sx,
+      }}
+    >
+      <ImageNotSupportedOutlinedIcon
+        sx={{ fontSize: size ? size * 0.45 : "2rem", opacity: 0.55 }}
+      />
+    </Box>
+  );
+}
 
 /**
  * Renders an image URL as a thumbnail linking to the full image.
@@ -42,9 +76,15 @@ export function ImageValueRenderer({
     entityIRI: ctx?.entityIRI,
   });
 
+  const [failed, setFailed] = useState(false);
+  const placeholder = shouldUseImagePlaceholder(failed, src ?? raw);
+
   if (raw == null) return null;
 
   if (detailField && typeof options?.size !== "number") {
+    if (placeholder) {
+      return <ImagePlaceholderBox sx={{ maxWidth: "100%", width: "100%" }} />;
+    }
     return (
       <Link
         href={raw}
@@ -57,6 +97,7 @@ export function ImageValueRenderer({
           src={src}
           alt=""
           loading="lazy"
+          onError={() => setFailed(true)}
           sx={{
             display: "block",
             maxWidth: "100%",
@@ -66,6 +107,15 @@ export function ImageValueRenderer({
           }}
         />
       </Link>
+    );
+  }
+
+  if (placeholder) {
+    return (
+      <ImagePlaceholderBox
+        size={size}
+        sx={{ width: size, height: size, minHeight: size }}
+      />
     );
   }
 
@@ -80,6 +130,7 @@ export function ImageValueRenderer({
         variant={variant}
         src={src}
         alt=""
+        imgProps={{ onError: () => setFailed(true) }}
         sx={{ width: size, height: size }}
       />
     </Link>

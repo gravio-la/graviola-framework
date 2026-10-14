@@ -1,6 +1,7 @@
 import { createContext, useContext } from "react";
 import type { JSONSchema7 } from "json-schema";
 import type { UISchemaElement } from "@jsonforms/core";
+import type { OrderByConfig } from "@graviola/edb-core-types";
 import type {
   DetailRendererRegistryEntry,
   DetailViewConfig,
@@ -20,6 +21,10 @@ export interface DetailRendererContextValue {
   registry: DetailRendererRegistryEntry[];
   uiSchema?: UISchemaElement;
   config: DetailViewConfig;
+  /** Same as `config.uiSchemata`; explicit for inline `$ref` array items. */
+  detailUiSchemata?: Record<string, UISchemaElement>;
+  /** Side-schema orderBy from Adb context. */
+  orderBy?: OrderByConfig;
   rootSchema: JSONSchema7;
   rootData?: unknown;
   /** Injected by {@link @graviola/semantic-views} for nested entity refs. */
@@ -38,4 +43,8 @@ export function useDetailRendererContext(): DetailRendererContextValue {
       "useDetailRendererContext must be used inside <DetailRenderer>",
     );
   return ctx;
+}
+
+export function useOptionalDetailRendererContext(): DetailRendererContextValue | null {
+  return useContext(DetailRendererContext);
 }

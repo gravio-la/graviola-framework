@@ -20,6 +20,7 @@ import { sortIndexedByOrderField } from "@graviola/edb-core-utils";
 import { readOrderByFromControl } from "../utils/readOrderByFromControl";
 import { PropertyRow } from "./PropertyRow";
 import { nestingGuideSx } from "./NestedSection";
+import { DetailSectionHeading } from "../components/DetailSectionHeading";
 
 /**
  * Schema-typed entity arrays render as chips when items carry `@type` and/or `@id`.
@@ -62,30 +63,40 @@ export function ArrayEntityRenderer({
 
   const stackDirection = containedAs === "card" ? "row" : "row";
   const stackGap = containedAs === "card" ? 1.5 : 0.5;
+  const topSection =
+    ctx.viewSize === "detail" && ctx.depth === 0 && label.trim().length > 0;
+
+  const wrapSection = (body: React.ReactNode) =>
+    topSection ? (
+      <Box>
+        <DetailSectionHeading>{label}</DetailSectionHeading>
+        {body}
+      </Box>
+    ) : (
+      <PropertyRow label={label}>{body}</PropertyRow>
+    );
 
   if (allEntityLikeChips) {
-    return (
-      <PropertyRow label={label}>
-        <Stack direction={stackDirection} flexWrap="wrap" gap={stackGap}>
-          {indexedData.map(({ item, index }) => {
-            if (item == null || typeof item !== "object") return null;
-            const d = item as Record<string, unknown>;
-            const key =
-              (typeof d["@id"] === "string" && d["@id"]) ||
-              (typeof d["@type"] === "string" && `${d["@type"]}-${index}`) ||
-              `item-${index}`;
-            return (
-              <ContainedEntityView
-                key={key}
-                data={d}
-                schema={itemSchema}
-                containedAs={containedAs}
-                ctx={ctx}
-              />
-            );
-          })}
-        </Stack>
-      </PropertyRow>
+    return wrapSection(
+      <Stack direction={stackDirection} flexWrap="wrap" gap={stackGap}>
+        {indexedData.map(({ item, index }) => {
+          if (item == null || typeof item !== "object") return null;
+          const d = item as Record<string, unknown>;
+          const key =
+            (typeof d["@id"] === "string" && d["@id"]) ||
+            (typeof d["@type"] === "string" && `${d["@type"]}-${index}`) ||
+            `item-${index}`;
+          return (
+            <ContainedEntityView
+              key={key}
+              data={d}
+              schema={itemSchema}
+              containedAs={containedAs}
+              ctx={ctx}
+            />
+          );
+        })}
+      </Stack>,
     );
   }
 
@@ -133,11 +144,9 @@ export function ArrayEntityRenderer({
 
   if (!rows.some(Boolean)) return null;
 
-  return (
-    <PropertyRow label={label}>
-      <Stack direction="column" gap={1} alignItems="flex-start">
-        {rows}
-      </Stack>
-    </PropertyRow>
+  return wrapSection(
+    <Stack direction="column" gap={1} alignItems="flex-start">
+      {rows}
+    </Stack>,
   );
 }
