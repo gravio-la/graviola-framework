@@ -1,0 +1,690 @@
+{
+  "schema": {
+    "type": "object",
+    "definitions": {
+      "Einheit": {
+        "description": "Maßeinheit (z. B. Gramm, ml, EL, Stück)",
+        "properties": {
+          "@id": {
+            "type": "string"
+          },
+          "@type": {
+            "const": "https://graviola.gra.one/models/kochbuch/Einheit",
+            "type": "string"
+          },
+          "name": {
+            "title": "Bezeichnung",
+            "type": "string"
+          },
+          "abkuerzung": {
+            "title": "Abkürzung",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "Quelle": {
+        "description": "Herkunft eines Rezepts (Website, Buch, Person, …). Wird direkt am Rezept als CBD-Annotation gespeichert, kein separates Provenance-Modell.",
+        "properties": {
+          "@type": {
+            "const": "https://graviola.gra.one/models/kochbuch/Quelle",
+            "type": "string"
+          },
+          "art": {
+            "description": "z. B. „Website\", „Buch\", „Oma\", „eigene Kreation\" …",
+            "title": "Art",
+            "type": "string"
+          },
+          "titel": {
+            "description": "Name des Buchs, der Website oder der Person.",
+            "title": "Titel / Name",
+            "type": "string"
+          },
+          "url": {
+            "description": "Link zur Quelle (optional).",
+            "format": "uri",
+            "title": "URL",
+            "type": "string"
+          },
+          "autor": {
+            "title": "Autor / Urheber",
+            "type": "string"
+          },
+          "seite": {
+            "description": "Seitenangabe bei Büchern (optional).",
+            "title": "Seite / Kapitel",
+            "type": "string"
+          },
+          "notiz": {
+            "description": "Freie Anmerkung zur Herkunft.",
+            "title": "Notiz",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "Rezept": {
+        "description": "Ein Kochrezept mit Zutaten, Zubereitung und Metadaten.",
+        "properties": {
+          "@id": {
+            "type": "string"
+          },
+          "@type": {
+            "const": "https://graviola.gra.one/models/kochbuch/Rezept",
+            "type": "string"
+          },
+          "titel": {
+            "title": "Titel",
+            "type": "string"
+          },
+          "bild": {
+            "format": "uri",
+            "title": "Bild",
+            "type": "string"
+          },
+          "beschreibung": {
+            "contentMediaType": "text/markdown",
+            "description": "Allgemeine Beschreibung / Einleitung (Markdown).",
+            "title": "Beschreibung",
+            "type": "string"
+          },
+          "portionen": {
+            "title": "Portionen",
+            "type": "integer"
+          },
+          "zubereitungszeit": {
+            "title": "Zubereitungszeit",
+            "type": "string"
+          },
+          "kategorien": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Kategorien",
+            "type": "array"
+          },
+          "zutaten": {
+            "items": {
+              "$ref": "#/definitions/ZutatInRezept"
+            },
+            "title": "Zutaten",
+            "type": "array"
+          },
+          "schritte": {
+            "items": {
+              "$ref": "#/definitions/Zubereitungsschritt"
+            },
+            "title": "Zubereitungsschritte",
+            "type": "array"
+          },
+          "quelle": {
+            "$ref": "#/definitions/Quelle",
+            "description": "Woher stammt dieses Rezept?",
+            "title": "Quelle"
+          },
+          "bilder": {
+            "description": "Zusätzliche Bilder zum Rezept (Galerie).",
+            "items": {
+              "contentMediaType": "image/*",
+              "format": "uri",
+              "type": "string"
+            },
+            "title": "Weitere Bilder",
+            "type": "array"
+          }
+        },
+        "required": [
+          "titel"
+        ],
+        "type": "object"
+      },
+      "Zubereitungsschritt": {
+        "description": "Ein einzelner Schritt in der Zubereitung (Markdown-Text).",
+        "properties": {
+          "@type": {
+            "const": "https://graviola.gra.one/models/kochbuch/Zubereitungsschritt",
+            "type": "string"
+          },
+          "reihenfolge": {
+            "title": "Schritt Nr.",
+            "type": "integer"
+          },
+          "text": {
+            "contentMediaType": "text/markdown",
+            "description": "Schritttext (Markdown).",
+            "title": "Beschreibung",
+            "type": "string"
+          },
+          "bild": {
+            "contentMediaType": "image/*",
+            "description": "Optionales Bild zu diesem Zubereitungsschritt.",
+            "format": "uri",
+            "title": "Bild",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "type": "object"
+      },
+      "Zutat": {
+        "description": "Inventar-Zutat. Kann eine Standard-Einheit haben, die beim Anlegen von Rezeptzutaten vorgeschlagen wird.",
+        "properties": {
+          "@id": {
+            "type": "string"
+          },
+          "@type": {
+            "const": "https://graviola.gra.one/models/kochbuch/Zutat",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "beschreibung": {
+            "title": "Beschreibung",
+            "type": "string"
+          },
+          "bild": {
+            "format": "uri",
+            "title": "Bild",
+            "type": "string"
+          },
+          "standardEinheit": {
+            "$ref": "#/definitions/Einheit",
+            "description": "Vorgeschlagene Einheit für diese Zutat in Rezepten.",
+            "title": "Standard-Einheit"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "ZutatInRezept": {
+        "description": "Verknüpft eine Zutat mit einem Rezept. Die Zutat kann entweder über einen IRI (n:m-Referenz auf das Zutaten-Inventar) oder als Freitext angegeben werden. Genau eine der beiden Felder sollte befüllt sein.",
+        "properties": {
+          "@type": {
+            "const": "https://graviola.gra.one/models/kochbuch/ZutatInRezept",
+            "type": "string"
+          },
+          "zutatRef": {
+            "$ref": "#/definitions/Zutat",
+            "description": "Verweis auf eine Zutat im Inventar (IRI-Referenz, n:m).",
+            "title": "Zutat (Inventar)"
+          },
+          "zutatFreitext": {
+            "description": "Freitext-Angabe wenn keine Inventar-Zutat verlinkt wird.",
+            "title": "Zutat (Freitext)",
+            "type": "string"
+          },
+          "menge": {
+            "description": "Menge als Zahl oder Bruch (z. B. „1,5\" oder „½\").",
+            "title": "Menge",
+            "type": "string"
+          },
+          "einheit": {
+            "$ref": "#/definitions/Einheit",
+            "description": "Einheit für diese Zutatzeile. Überschreibt ggf. die Standard-Einheit der verlinkten Zutat.\n",
+            "title": "Einheit"
+          }
+        },
+        "type": "object"
+      }
+    },
+    "description": "Ein Kochrezept mit Zutaten, Zubereitung und Metadaten.",
+    "properties": {
+      "@id": {
+        "type": "string"
+      },
+      "@type": {
+        "const": "https://graviola.gra.one/models/kochbuch/Rezept",
+        "type": "string"
+      },
+      "titel": {
+        "title": "Titel",
+        "type": "string"
+      },
+      "bild": {
+        "format": "uri",
+        "title": "Bild",
+        "type": "string"
+      },
+      "beschreibung": {
+        "contentMediaType": "text/markdown",
+        "description": "Allgemeine Beschreibung / Einleitung (Markdown).",
+        "title": "Beschreibung",
+        "type": "string"
+      },
+      "portionen": {
+        "title": "Portionen",
+        "type": "integer"
+      },
+      "zubereitungszeit": {
+        "title": "Zubereitungszeit",
+        "type": "string"
+      },
+      "kategorien": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Kategorien",
+        "type": "array"
+      },
+      "zutaten": {
+        "items": {
+          "$ref": "#/definitions/ZutatInRezept"
+        },
+        "title": "Zutaten",
+        "type": "array"
+      },
+      "schritte": {
+        "items": {
+          "$ref": "#/definitions/Zubereitungsschritt"
+        },
+        "title": "Zubereitungsschritte",
+        "type": "array"
+      },
+      "quelle": {
+        "$ref": "#/definitions/Quelle",
+        "description": "Woher stammt dieses Rezept?",
+        "title": "Quelle"
+      },
+      "bilder": {
+        "description": "Zusätzliche Bilder zum Rezept (Galerie).",
+        "items": {
+          "contentMediaType": "image/*",
+          "format": "uri",
+          "type": "string"
+        },
+        "title": "Weitere Bilder",
+        "type": "array"
+      }
+    },
+    "required": [
+      "titel"
+    ]
+  },
+  "rootSchema": {
+    "type": "object",
+    "definitions": {
+      "Einheit": {
+        "description": "Maßeinheit (z. B. Gramm, ml, EL, Stück)",
+        "properties": {
+          "@id": {
+            "type": "string"
+          },
+          "@type": {
+            "const": "https://graviola.gra.one/models/kochbuch/Einheit",
+            "type": "string"
+          },
+          "name": {
+            "title": "Bezeichnung",
+            "type": "string"
+          },
+          "abkuerzung": {
+            "title": "Abkürzung",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "Quelle": {
+        "description": "Herkunft eines Rezepts (Website, Buch, Person, …). Wird direkt am Rezept als CBD-Annotation gespeichert, kein separates Provenance-Modell.",
+        "properties": {
+          "@type": {
+            "const": "https://graviola.gra.one/models/kochbuch/Quelle",
+            "type": "string"
+          },
+          "art": {
+            "description": "z. B. „Website\", „Buch\", „Oma\", „eigene Kreation\" …",
+            "title": "Art",
+            "type": "string"
+          },
+          "titel": {
+            "description": "Name des Buchs, der Website oder der Person.",
+            "title": "Titel / Name",
+            "type": "string"
+          },
+          "url": {
+            "description": "Link zur Quelle (optional).",
+            "format": "uri",
+            "title": "URL",
+            "type": "string"
+          },
+          "autor": {
+            "title": "Autor / Urheber",
+            "type": "string"
+          },
+          "seite": {
+            "description": "Seitenangabe bei Büchern (optional).",
+            "title": "Seite / Kapitel",
+            "type": "string"
+          },
+          "notiz": {
+            "description": "Freie Anmerkung zur Herkunft.",
+            "title": "Notiz",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "Rezept": {
+        "description": "Ein Kochrezept mit Zutaten, Zubereitung und Metadaten.",
+        "properties": {
+          "@id": {
+            "type": "string"
+          },
+          "@type": {
+            "const": "https://graviola.gra.one/models/kochbuch/Rezept",
+            "type": "string"
+          },
+          "titel": {
+            "title": "Titel",
+            "type": "string"
+          },
+          "bild": {
+            "format": "uri",
+            "title": "Bild",
+            "type": "string"
+          },
+          "beschreibung": {
+            "contentMediaType": "text/markdown",
+            "description": "Allgemeine Beschreibung / Einleitung (Markdown).",
+            "title": "Beschreibung",
+            "type": "string"
+          },
+          "portionen": {
+            "title": "Portionen",
+            "type": "integer"
+          },
+          "zubereitungszeit": {
+            "title": "Zubereitungszeit",
+            "type": "string"
+          },
+          "kategorien": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Kategorien",
+            "type": "array"
+          },
+          "zutaten": {
+            "items": {
+              "$ref": "#/definitions/ZutatInRezept"
+            },
+            "title": "Zutaten",
+            "type": "array"
+          },
+          "schritte": {
+            "items": {
+              "$ref": "#/definitions/Zubereitungsschritt"
+            },
+            "title": "Zubereitungsschritte",
+            "type": "array"
+          },
+          "quelle": {
+            "$ref": "#/definitions/Quelle",
+            "description": "Woher stammt dieses Rezept?",
+            "title": "Quelle"
+          },
+          "bilder": {
+            "description": "Zusätzliche Bilder zum Rezept (Galerie).",
+            "items": {
+              "contentMediaType": "image/*",
+              "format": "uri",
+              "type": "string"
+            },
+            "title": "Weitere Bilder",
+            "type": "array"
+          }
+        },
+        "required": [
+          "titel"
+        ],
+        "type": "object"
+      },
+      "Zubereitungsschritt": {
+        "description": "Ein einzelner Schritt in der Zubereitung (Markdown-Text).",
+        "properties": {
+          "@type": {
+            "const": "https://graviola.gra.one/models/kochbuch/Zubereitungsschritt",
+            "type": "string"
+          },
+          "reihenfolge": {
+            "title": "Schritt Nr.",
+            "type": "integer"
+          },
+          "text": {
+            "contentMediaType": "text/markdown",
+            "description": "Schritttext (Markdown).",
+            "title": "Beschreibung",
+            "type": "string"
+          },
+          "bild": {
+            "contentMediaType": "image/*",
+            "description": "Optionales Bild zu diesem Zubereitungsschritt.",
+            "format": "uri",
+            "title": "Bild",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "type": "object"
+      },
+      "Zutat": {
+        "description": "Inventar-Zutat. Kann eine Standard-Einheit haben, die beim Anlegen von Rezeptzutaten vorgeschlagen wird.",
+        "properties": {
+          "@id": {
+            "type": "string"
+          },
+          "@type": {
+            "const": "https://graviola.gra.one/models/kochbuch/Zutat",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "beschreibung": {
+            "title": "Beschreibung",
+            "type": "string"
+          },
+          "bild": {
+            "format": "uri",
+            "title": "Bild",
+            "type": "string"
+          },
+          "standardEinheit": {
+            "$ref": "#/definitions/Einheit",
+            "description": "Vorgeschlagene Einheit für diese Zutat in Rezepten.",
+            "title": "Standard-Einheit"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "ZutatInRezept": {
+        "description": "Verknüpft eine Zutat mit einem Rezept. Die Zutat kann entweder über einen IRI (n:m-Referenz auf das Zutaten-Inventar) oder als Freitext angegeben werden. Genau eine der beiden Felder sollte befüllt sein.",
+        "properties": {
+          "@type": {
+            "const": "https://graviola.gra.one/models/kochbuch/ZutatInRezept",
+            "type": "string"
+          },
+          "zutatRef": {
+            "$ref": "#/definitions/Zutat",
+            "description": "Verweis auf eine Zutat im Inventar (IRI-Referenz, n:m).",
+            "title": "Zutat (Inventar)"
+          },
+          "zutatFreitext": {
+            "description": "Freitext-Angabe wenn keine Inventar-Zutat verlinkt wird.",
+            "title": "Zutat (Freitext)",
+            "type": "string"
+          },
+          "menge": {
+            "description": "Menge als Zahl oder Bruch (z. B. „1,5\" oder „½\").",
+            "title": "Menge",
+            "type": "string"
+          },
+          "einheit": {
+            "$ref": "#/definitions/Einheit",
+            "description": "Einheit für diese Zutatzeile. Überschreibt ggf. die Standard-Einheit der verlinkten Zutat.\n",
+            "title": "Einheit"
+          }
+        },
+        "type": "object"
+      }
+    }
+  },
+  "sideSchema": {
+    "schemaName": "kochbuch",
+    "label": "Kochbuch",
+    "description": "Vollständige Rezeptdatenbank mit Zutaten-Inventar, Einheiten (mit Standard-Einheit pro Zutat), Mengenangaben, Freitext-Fallback, Markdown-Beschreibung und schrittweiser Zubereitung. Alle Labels auf Deutsch.\n",
+    "version": "0.1.0",
+    "entityBaseIRI": "https://graviola.gra.one/models/kochbuch/",
+    "primaryFields": {
+      "Zutat": {
+        "label": "name",
+        "image": "bild"
+      },
+      "Rezept": {
+        "label": "titel",
+        "description": "beschreibung",
+        "image": "bild"
+      }
+    },
+    "typeNameLabelMap": {
+      "Einheit": "Einheit",
+      "Zutat": "Zutat",
+      "Rezept": "Rezept"
+    },
+    "uischemaScopeOverrides": {
+      "Rezept": {
+        "mode": "override",
+        "scopeOverride": {
+          "#/properties/beschreibung": {
+            "type": "Control",
+            "scope": "#/properties/beschreibung",
+            "options": {
+              "markdown": true
+            }
+          }
+        }
+      },
+      "Zubereitungsschritt": {
+        "mode": "override",
+        "scopeOverride": {
+          "#/properties/text": {
+            "type": "Control",
+            "scope": "#/properties/text",
+            "options": {
+              "markdown": true
+            }
+          }
+        }
+      }
+    },
+    "detailUiSchemaScopeOverrides": {
+      "Rezept": {
+        "mode": "override",
+        "scopeOverride": {
+          "#/properties/beschreibung": {
+            "type": "Control",
+            "scope": "#/properties/beschreibung",
+            "options": {
+              "markdown": true
+            }
+          }
+        }
+      },
+      "ZutatInRezept": {
+        "mode": "override",
+        "scopeOverride": {
+          "#/properties/zutatRef": {
+            "type": "Control",
+            "scope": "#/properties/zutatRef",
+            "rank": 3
+          },
+          "#/properties/zutatFreitext": {
+            "type": "Control",
+            "scope": "#/properties/zutatFreitext",
+            "rank": 4
+          },
+          "#/properties/menge": {
+            "type": "Control",
+            "scope": "#/properties/menge",
+            "rank": 1
+          },
+          "#/properties/einheit": {
+            "type": "Control",
+            "scope": "#/properties/einheit",
+            "rank": 2
+          }
+        }
+      },
+      "Zubereitungsschritt": {
+        "mode": "override",
+        "scopeOverride": {
+          "#/properties/text": {
+            "type": "Control",
+            "scope": "#/properties/text",
+            "options": {
+              "markdown": true
+            }
+          }
+        }
+      }
+    },
+    "menuUISchema": {
+      "Einheit": {
+        "title": "Einheit"
+      },
+      "Zutat": {
+        "title": "Zutat"
+      },
+      "Rezept": {
+        "title": "Rezept"
+      }
+    },
+    "menuSidebarConfig": {
+      "hiddenDefinitions": [
+        "Quelle",
+        "Zubereitungsschritt",
+        "ZutatInRezept"
+      ]
+    },
+    "identifiers": {
+      "Einheit": {
+        "slot": "id",
+        "mode": "iri"
+      },
+      "Zutat": {
+        "slot": "id",
+        "mode": "iri"
+      },
+      "Rezept": {
+        "slot": "id",
+        "mode": "iri"
+      }
+    },
+    "orderBy": {
+      "Rezept": {
+        "schritte": {
+          "field": "reihenfolge",
+          "direction": "asc"
+        }
+      }
+    }
+  }
+}

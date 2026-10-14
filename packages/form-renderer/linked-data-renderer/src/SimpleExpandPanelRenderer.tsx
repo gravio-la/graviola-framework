@@ -65,7 +65,10 @@ import dot from "dot";
 import get from "lodash-es/get";
 import merge from "lodash-es/merge";
 
-import { resolveInlineArrayItemDetailUISchema } from "./inlineArrayItemDetailUISchema";
+import {
+  resolveInlineArrayItemDetailUISchema,
+  resolveInlineArrayItemSchema,
+} from "./inlineArrayItemDetailUISchema";
 import { useTranslation } from "next-i18next";
 import React, {
   ComponentType,
@@ -489,7 +492,10 @@ interface OwnPropsOfGraviolaExpandPanel {
   index: number;
   path: string;
   uischema: ControlElement;
+  /** Resolved array item schema (JSON Forms array layout `schema` prop). */
   schema: JsonSchema;
+  /** Original array schema when supplied by JSON Forms (`arraySchema` prop). */
+  arraySchema?: JsonSchema;
   expanded: boolean;
   renderers?: JsonFormsRendererRegistryEntry[];
   cells?: JsonFormsCellRendererRegistryEntry[];
@@ -543,6 +549,7 @@ export const GraviolaExpandPanelRendererComponent = (
     path,
     rootSchema,
     schema,
+    arraySchema,
     uischema,
     uischemas,
     renderers,
@@ -553,21 +560,21 @@ export const GraviolaExpandPanelRendererComponent = (
   } = props;
 
   const itemSchema = useMemo(
-    () => Resolve.schema(schema, "items", rootSchema) as JsonSchema | undefined,
+    () => resolveInlineArrayItemSchema(schema, rootSchema),
     [schema, rootSchema],
   );
 
   const foundUISchema = useMemo(
     () =>
       resolveInlineArrayItemDetailUISchema({
-        arraySchema: schema,
+        arraySchema: itemSchema ?? schema,
         arrayControl: uischema,
         rootSchema,
         path: childPath,
         uischemas,
         config,
       }),
-    [schema, uischema, rootSchema, childPath, uischemas, config],
+    [itemSchema, schema, uischema, rootSchema, childPath, uischemas, config],
   );
 
   const appliedUiSchemaOptions = merge({}, config, uischema.options);
@@ -661,11 +668,13 @@ export const GraviolaExpandPanelRendererComponent = (
         <JsonFormsDispatch
           enabled={enabled}
           schema={itemSchema ?? schema}
+          rootSchema={rootSchema}
           uischema={foundUISchema}
           path={childPath}
           key={childPath}
           renderers={renderers}
           cells={cells}
+          config={config}
         />
       </AccordionDetails>
     </Accordion>

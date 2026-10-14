@@ -13,10 +13,21 @@ import type {
   ControlElement,
   JsonFormsUISchemaRegistryEntry,
 } from "@jsonforms/core";
-import isEmpty from "lodash-es/isEmpty";
 import merge from "lodash-es/merge";
 
 const DEFAULT_SKIP_ITEM_SCOPES = ["#/properties/@id", "#/properties/@type"];
+
+/** JSON Forms array layouts pass the item schema as `schema`; legacy callers may pass the array schema. */
+export function resolveInlineArrayItemSchema(
+  schemaOrArray: JsonSchema,
+  rootSchema: JsonSchema,
+): JsonSchema | undefined {
+  if (schemaOrArray.type === "array") {
+    const resolved = Resolve.schema(schemaOrArray, "items", rootSchema);
+    return typeof resolved === "boolean" ? undefined : resolved;
+  }
+  return schemaOrArray;
+}
 
 function layoutHasControls(uischema: UISchemaElement | undefined): boolean {
   if (!uischema || !isLayout(uischema)) return false;
@@ -52,11 +63,12 @@ export function resolveInlineArrayItemDetailUISchema(
     return explicitDetail as UISchemaElement;
   }
 
-  const itemSchema = Resolve.schema(arraySchema, "items", rootSchema) as
-    | JsonSchema
-    | undefined;
-  if (!itemSchema || typeof itemSchema === "boolean") {
-    return explicitDetail ?? { type: "VerticalLayout", elements: [] };
+  const itemSchema = resolveInlineArrayItemSchema(arraySchema, rootSchema);
+  if (!itemSchema) {
+    if (layoutHasControls(explicitDetail)) {
+      return explicitDetail as UISchemaElement;
+    }
+    return { type: "VerticalLayout", elements: [] };
   }
 
   const scopeOverride =
@@ -96,10 +108,14 @@ export function resolveInlineArrayItemDetailUISchema(
     return stripLeadingAtIdControl(generated as Layout);
   }
 
-  if (!isEmpty(path)) {
-    const fallback = Generate.uiSchema(itemSchema, "VerticalLayout") as Layout;
+  const fallback = Generate.uiSchema(itemSchema, "VerticalLayout") as Layout;
+  if (layoutHasControls(fallback)) {
     return stripLeadingAtIdControl(fallback);
   }
 
-  return { type: "VerticalLayout", elements: [] };
+  if (layoutHasControls(explicitDetail)) {
+    return explicitDetail as UISchemaElement;
+  }
+
+  return fallback;
 }

@@ -47,6 +47,7 @@ const MaterialArrayInlineObjectLayoutComponent = (
     data,
     path,
     schema,
+    arraySchema,
     uischema,
     errors,
     addItem,
@@ -139,6 +140,7 @@ const MaterialArrayInlineObjectLayoutComponent = (
               index={index}
               expanded={isExpanded(index)}
               schema={schema}
+              arraySchema={arraySchema}
               path={path}
               handleExpansion={handleChange}
               uischema={uischema}
