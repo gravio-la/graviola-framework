@@ -26,6 +26,14 @@ import {
 
 let relationalPreference: "dropdown" | "finder" | undefined;
 let finderAccept: ((iri: string, data: { label?: string }) => void) | undefined;
+let mockPrimaryFields: Record<string, { label: string }> = {
+  LinkedEntity: { label: "name" },
+};
+let mockTypeName = "LinkedEntity";
+
+const TYPE_IRI = "http://example.org/LinkedEntity";
+const EINHEIT_IRI = "http://example.org/Einheit";
+const ZUTAT_IRI = "http://example.org/z/existing";
 
 mock.module("@graviola/edb-state-hooks", () => ({
   MODAL_EDIT_ENTITY: "edit-entity",
@@ -33,12 +41,10 @@ mock.module("@graviola/edb-state-hooks", () => ({
   useAdbContext: () => ({
     relationalInputDefault: undefined,
     queryBuildOptions: {
-      primaryFields: {
-        LinkedEntity: { label: "name" },
-      },
+      primaryFields: mockPrimaryFields,
       primaryFieldExtracts: {},
     },
-    typeIRIToTypeName: () => "LinkedEntity",
+    typeIRIToTypeName: () => mockTypeName,
     createEntityIRI: () => "http://example.org/new",
     prepareNewEntityDataFinal: (d: unknown) => d,
   }),
@@ -97,6 +103,15 @@ mock.module("@graviola/edb-state-hooks", () => ({
     saveMutation: { mutate: () => {} },
     loadQuery: { data: undefined },
   }),
+  useDataStore: () => ({
+    dataStore: {
+      loadOne: async (_typeName: string, iri: string) => ({
+        "@id": iri,
+        "@type": TYPE_IRI,
+        name: "Geladen",
+      }),
+    },
+  }),
   useThumbnailUrl: () => undefined,
   useTypeIRIFromEntity: (_iri: string, typeIRI?: string) => typeIRI,
 }));
@@ -147,9 +162,6 @@ mock.module("@graviola/edb-advanced-components", () => ({
 mock.module("@graviola/edb-basic-components", () => ({
   SearchbarWithFloatingButton: () => null,
 }));
-
-const TYPE_IRI = "http://example.org/LinkedEntity";
-const ZUTAT_IRI = "http://example.org/z/existing";
 
 const linkedRefSchema: JsonSchema = {
   type: "object",
@@ -238,6 +250,8 @@ beforeEach(() => {
   cleanup();
   relationalPreference = "dropdown";
   finderAccept = undefined;
+  mockPrimaryFields = { LinkedEntity: { label: "name" } };
+  mockTypeName = "LinkedEntity";
 });
 
 describe("RelationalFieldRenderer JsonForms integration", () => {
@@ -309,6 +323,89 @@ describe("RelationalFieldRenderer JsonForms integration", () => {
       expect(
         JSON.parse(getByTestId("form-errors").textContent ?? "[]"),
       ).toEqual([]);
+    });
+  });
+
+  test("Einheit without primaryFields shows name label on chip and write", async () => {
+    relationalPreference = "dropdown";
+    mockPrimaryFields = {};
+    mockTypeName = "Einheit";
+
+    const einheitSchema: JsonSchema = {
+      type: "object",
+      properties: {
+        standardEinheit: {
+          type: "object",
+          properties: {
+            "@id": { type: "string" },
+            "@type": { const: EINHEIT_IRI, type: "string" },
+            name: { type: "string" },
+          },
+        },
+      },
+    };
+    const scope = "#/properties/standardEinheit/properties/@id";
+    function EinheitHarness({
+      initialData,
+    }: {
+      initialData: Record<string, unknown>;
+    }) {
+      const [data, setData] = useState(initialData);
+      return (
+        <ThemeProvider theme={theme}>
+          <JsonForms
+            schema={einheitSchema}
+            uischema={{
+              type: "VerticalLayout",
+              elements: [
+                {
+                  type: "Control",
+                  scope,
+                  options: { inline: true, context: { typeIRI: EINHEIT_IRI } },
+                },
+              ],
+            }}
+            data={data}
+            renderers={renderers}
+            onChange={({ data: d }) => setData(d as Record<string, unknown>)}
+            config={{}}
+          />
+          <pre data-testid="form-data">{JSON.stringify(data)}</pre>
+        </ThemeProvider>
+      );
+    }
+
+    const { getByTestId } = render(
+      <EinheitHarness
+        initialData={{
+          standardEinheit: {
+            "@id": ZUTAT_IRI,
+            "@type": EINHEIT_IRI,
+            name: "ml",
+          },
+        }}
+      />,
+    );
+    await waitFor(() => {
+      expect(getByTestId("entity-detail-list-item").textContent).toContain(
+        "ml",
+      );
+    });
+
+    cleanup();
+    const empty = render(<EinheitHarness initialData={{}} />);
+    act(() => {
+      fireEvent.click(empty.getByTestId("discover-simulate-select"));
+    });
+    await waitFor(() => {
+      const parsed = JSON.parse(
+        empty.getByTestId("form-data").textContent ?? "{}",
+      );
+      expect(parsed.standardEinheit).toEqual({
+        "@id": "http://example.org/z/new",
+        "@type": EINHEIT_IRI,
+        name: "Zucker",
+      });
     });
   });
 

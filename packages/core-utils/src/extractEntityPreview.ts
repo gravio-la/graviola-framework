@@ -8,6 +8,7 @@ import type {
 import get from "lodash-es/get";
 
 import { resolvePreviewDisplay } from "./resolvePreviewDisplay";
+import { resolveLinkedReferenceLabel } from "./linkedReferenceLabel";
 
 function readPrimaryString(
   data: unknown,
@@ -49,8 +50,16 @@ export function extractEntityPreview(input: {
   const tp: TypePresentation | undefined = typePresentation?.[typeName];
   const fromOverride = tp?.override?.(data) ?? {};
 
+  const labelFromPrimary = readPrimaryString(data, pf?.label);
   const preview: EntityPreview = {
-    label: readPrimaryString(data, pf?.label),
+    label:
+      labelFromPrimary ??
+      resolveLinkedReferenceLabel({
+        data,
+        typeName,
+        primaryFields,
+        includeLegacyLabelFields: true,
+      }),
     description: readPrimaryString(data, pf?.description),
     image: readPrimaryString(data, pf?.image),
     icon: tp?.icon,

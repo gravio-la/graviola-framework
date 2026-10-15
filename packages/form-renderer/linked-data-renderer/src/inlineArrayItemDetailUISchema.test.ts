@@ -7,6 +7,7 @@ import type { ControlElement, JsonSchema, Layout } from "@jsonforms/core";
 import { prepareStubbedSchema } from "@graviola/json-schema-utils";
 import type { JSONSchema7 } from "json-schema";
 import { generateDefaultUISchema } from "@graviola/edb-ui-utils";
+import { defineGraviolaApp } from "../../../graviola-app-config/src/defineGraviolaApp";
 
 import { resolveInlineArrayItemDetailUISchema } from "./inlineArrayItemDetailUISchema";
 
@@ -20,6 +21,7 @@ const bundleFixture = JSON.parse(
   schema: JSONSchema;
   rootSchema: JsonSchema;
   sideSchema: {
+    schemaName: string;
     entityBaseIRI: string;
     typeNameLabelMap: Record<string, string>;
     detailUiSchemaScopeOverrides: Record<
@@ -72,25 +74,47 @@ function zutatenArrayControl(schema: JsonSchema, rootSchema: JsonSchema) {
   if (!control) {
     throw new Error("expected zutaten control");
   }
-  const itemOverride =
-    bundleFixture.sideSchema.detailUiSchemaScopeOverrides.ZutatInRezept
-      ?.scopeOverride;
   return {
     ...control,
     options: {
       ...control.options,
-      itemScopeOverride: itemOverride,
+      showSortButtons: true,
     },
   };
 }
 
+const zutatInRezeptFormOverrides = {
+  mode: "override" as const,
+  scopeOverride:
+    bundleFixture.sideSchema.detailUiSchemaScopeOverrides.ZutatInRezept
+      ?.scopeOverride,
+};
+
 describe("resolveInlineArrayItemDetailUISchema", () => {
-  test("uses generated item layout when registry has anonymous @type stub", () => {
+  test("uses class form uischema from app config (not array itemScopeOverride)", () => {
     const schema = stubbedSchema();
     const rootSchema = bundleFixture.rootSchema as JsonSchema;
     const { registry: uischemas } = createUISchemata(schema, {
       typeNameLabelMap: bundleFixture.sideSchema.typeNameLabelMap,
       definitionToTypeIRI,
+    });
+
+    const appConfig = defineGraviolaApp({
+      schemaName: bundleFixture.sideSchema.schemaName ?? "kochbuch",
+      label: "Kochbuch",
+      description: "",
+      version: "0.1.0",
+      storageKey: "kochbuch",
+      baseIRI: bundleFixture.sideSchema.entityBaseIRI,
+      entityBaseIRI: bundleFixture.sideSchema.entityBaseIRI,
+      schema: bundleFixture.schema as JSONSchema7,
+      primaryFields: {},
+      typeNameLabelMap: bundleFixture.sideSchema.typeNameLabelMap,
+      typeNameUiSchemaOptionsMap: {},
+      uischemaScopeOverrides: {
+        ZutatInRezept: zutatInRezeptFormOverrides,
+      },
+      orderBy: bundleFixture.sideSchema.orderBy,
     });
 
     const arrayControl = zutatenArrayControl(schema, rootSchema);
@@ -102,6 +126,13 @@ describe("resolveInlineArrayItemDetailUISchema", () => {
       rootSchema,
       path: "zutaten",
       uischemas,
+      config: {
+        uischemata: appConfig.uischemata,
+        uischemaScopeOverrides: appConfig.uischemaScopeOverrides,
+        orderBy: appConfig.orderBy,
+        typeIRIToTypeName: (iri: string) =>
+          iri.replace(bundleFixture.sideSchema.entityBaseIRI, ""),
+      },
     }) as Layout;
 
     const scopes = (detail.elements ?? []).map(

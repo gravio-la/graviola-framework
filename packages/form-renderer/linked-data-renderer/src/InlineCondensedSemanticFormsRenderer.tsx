@@ -1,21 +1,19 @@
 import { EntityDetailListItem } from "@graviola/edb-advanced-components";
 import { SearchbarWithFloatingButton } from "@graviola/edb-basic-components";
 import { AutocompleteSuggestion } from "@graviola/edb-core-types";
-import { PrimaryField } from "@graviola/edb-core-types";
 import { makeFormsPath } from "@graviola/edb-core-utils";
-import { extractFieldIfString } from "@graviola/edb-data-mapping";
+import {
+  resolveLinkedReferenceLabel,
+  resolveLinkedReferenceLabelKey,
+} from "@graviola/edb-core-utils";
 import {
   useAdbContext,
+  useDataStore,
   useGlobalSearchWithHelper,
   useKeyEventForSimilarityFinder,
   useSimilarityFinderModal,
 } from "@graviola/edb-state-hooks";
-import {
-  ControlProps,
-  JsonSchema,
-  Resolve,
-  resolveSchema,
-} from "@jsonforms/core";
+import { ControlProps, JsonSchema, resolveSchema } from "@jsonforms/core";
 import type { SchemaRegistry } from "@graviola/json-schema-utils";
 import { useJsonForms, withJsonFormsControlProps } from "@jsonforms/react";
 import {
@@ -35,8 +33,13 @@ import { useFormHelper } from "./formHelper";
 import {
   clearLinkedEntityAtPath,
   resolveLabelKey,
+  resolveAcceptedLinkedEntityLabel,
   writeLinkedEntitySelection,
 } from "./relationalControlPathWrite";
+import {
+  readParentReferenceObject,
+  resolveRelationalDisplayLabel,
+} from "./relationalFieldLabel";
 
 export const InlineCondensedSemanticFormsRendererComponent = (
   props: ControlProps,
@@ -60,6 +63,7 @@ export const InlineCondensedSemanticFormsRendererComponent = (
     typeIRIToTypeName,
     queryBuildOptions: { primaryFields },
   } = useAdbContext();
+  const { dataStore } = useDataStore();
   const appliedUiSchemaOptions = merge({}, config, uischema.options);
   const enableResultDetailPopper =
     appliedUiSchemaOptions.enableResultDetailPopper as boolean | undefined;
@@ -133,13 +137,25 @@ export const InlineCondensedSemanticFormsRendererComponent = (
       if (path.endsWith("@id")) {
         const nextId = typeof data === "string" ? data : data?.["@id"];
         if (v.value !== nextId) {
-          writeLinkedEntitySelection(handleChange, path, typeIRI, labelKey, v);
+          writeLinkedEntitySelection(handleChange, path, typeIRI, labelKey, v, {
+            typeName,
+            primaryFields,
+          });
         }
       } else {
         const _data = mapData ? mapData(v.value) : v.value;
         if (!isEqual(_data, data)) handleChange(path, _data);
       }
-      setRealLabel(v.label);
+      setRealLabel(
+        resolveRelationalDisplayLabel({
+          coreData: ctx?.core?.data,
+          path,
+          idValue: v.value,
+          typeName,
+          primaryFields,
+          cachedLabel: v.label,
+        }),
+      );
     },
     [
       path,
@@ -150,26 +166,32 @@ export const InlineCondensedSemanticFormsRendererComponent = (
       mapData,
       typeIRI,
       labelKey,
+      typeName,
+      primaryFields,
+      ctx?.core?.data,
     ],
   );
 
   useEffect(() => {
     setRealLabel((_old) => {
       if ((_old && _old.length > 0) || !entityIRI) return _old;
-      const parentData = Resolve.data(
-        ctx?.core?.data,
-        path.substring(0, path.length - ("@id".length + 1)),
-      );
-      const fieldDecl = primaryFields[typeName] as PrimaryField | undefined;
-      let label = "";
-      if (fieldDecl?.label)
-        label = extractFieldIfString(parentData, fieldDecl.label);
-      if (typeof label === "object") {
-        return "";
-      }
-      return label;
+      return resolveRelationalDisplayLabel({
+        coreData: ctx?.core?.data,
+        path,
+        idValue: data,
+        typeName,
+        primaryFields,
+      });
     });
-  }, [entityIRI, ctx?.core?.data, path, setRealLabel, primaryFields, typeName]);
+  }, [
+    entityIRI,
+    ctx?.core?.data,
+    path,
+    setRealLabel,
+    primaryFields,
+    typeName,
+    data,
+  ]);
 
   const mappedDataAcceptedRef = useRef<(newData: any) => void>(() => {});
 
@@ -205,14 +227,37 @@ export const InlineCondensedSemanticFormsRendererComponent = (
   mappedDataAcceptedRef.current = handleMappedDataAccepted;
 
   const handleExistingEntityAccepted = useCallback(
-    (entityIRI: string, _data: any) => {
-      handleSelectedChange({
-        value: entityIRI,
-        label: _data.label || entityIRI,
+    (acceptedIri: string, acceptedData: Record<string, unknown>) => {
+      const labelKey = resolveLinkedReferenceLabelKey(typeName, primaryFields);
+      const immediateLabel = resolveLinkedReferenceLabel({
+        data: acceptedData,
+        typeName,
+        primaryFields,
+        labelKey,
       });
-      handleSearchStringChange("");
+      const finish = (label: string) => {
+        handleSelectedChange({ value: acceptedIri, label });
+        handleSearchStringChange("");
+      };
+      if (immediateLabel) {
+        finish(immediateLabel);
+        return;
+      }
+      void resolveAcceptedLinkedEntityLabel({
+        entityIRI: acceptedIri,
+        acceptedData,
+        typeName,
+        primaryFields,
+        loadEntity: dataStore?.loadOne?.bind(dataStore),
+      }).then(({ label }) => finish(label));
     },
-    [handleSelectedChange, handleSearchStringChange],
+    [
+      handleSelectedChange,
+      handleSearchStringChange,
+      typeName,
+      primaryFields,
+      dataStore,
+    ],
   );
 
   const handleMappedDataIntermediate = useCallback(
@@ -304,11 +349,29 @@ export const InlineCondensedSemanticFormsRendererComponent = (
 
   const detailsData = useMemo(() => {
     if (!selected.value) return;
+    const parent = readParentReferenceObject(ctx?.core?.data, path, data);
+    const displayLabel = resolveRelationalDisplayLabel({
+      coreData: ctx?.core?.data,
+      path,
+      idValue: data,
+      typeName,
+      primaryFields,
+      cachedLabel: selected.label,
+    });
     return {
+      ...(parent ?? {}),
       "@id": selected.value,
-      [labelKey]: selected.label,
+      [labelKey]: displayLabel,
     };
-  }, [selected, labelKey]);
+  }, [
+    selected,
+    labelKey,
+    ctx?.core?.data,
+    path,
+    data,
+    typeName,
+    primaryFields,
+  ]);
 
   const {
     isValid,

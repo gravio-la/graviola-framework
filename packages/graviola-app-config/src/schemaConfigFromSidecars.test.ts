@@ -160,6 +160,74 @@ describe("schemaConfigFromSidecars", () => {
     });
   });
 
+  test("generates form uischema from detailUiSchemaScopeOverrides when form override is absent", () => {
+    const nestedSchema = {
+      type: "object",
+      definitions: {
+        Rezept: {
+          type: "object",
+          properties: {
+            "@id": { type: "string" },
+            zutaten: {
+              type: "array",
+              items: { $ref: "#/definitions/ZutatInRezept" },
+            },
+          },
+        },
+        ZutatInRezept: {
+          type: "object",
+          properties: {
+            "@id": { type: "string" },
+            menge: { type: "string" },
+            einheit: { type: "string" },
+          },
+        },
+      },
+    } as JSONSchema7;
+
+    const config = defineGraviolaApp({
+      schemaName: "kochbuch",
+      label: "Kochbuch",
+      description: "",
+      version: "0.1.0",
+      storageKey: "kochbuch",
+      baseIRI: "http://example.org/",
+      entityBaseIRI: "http://example.org/",
+      schema: nestedSchema,
+      primaryFields: {},
+      typeNameLabelMap: {},
+      typeNameUiSchemaOptionsMap: {},
+      detailUiSchemaScopeOverrides: {
+        ZutatInRezept: {
+          mode: "override",
+          scopeOverride: {
+            "#/properties/menge": {
+              type: "Control",
+              scope: "#/properties/menge",
+              rank: 1,
+            },
+            "#/properties/einheit": {
+              type: "Control",
+              scope: "#/properties/einheit",
+              rank: 2,
+            },
+          },
+        },
+      },
+    });
+
+    const ui = config.uischemata?.ZutatInRezept as Layout;
+    expect(ui).toBeDefined();
+    expect(
+      ui.elements
+        .map((e) => (e as { scope: string }).scope)
+        .filter(
+          (scope) =>
+            scope !== "#/properties/@id" && scope !== "#/properties/@type",
+        ),
+    ).toEqual(["#/properties/menge", "#/properties/einheit"]);
+  });
+
   test("defineGraviolaApp generates form uischema with options.orderBy for orderBy-only classes", () => {
     const orderedSchema = {
       type: "object",

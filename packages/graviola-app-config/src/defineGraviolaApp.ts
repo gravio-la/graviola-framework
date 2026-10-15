@@ -137,10 +137,31 @@ export function defineGraviolaApp(input: DefineGraviolaAppInput): SchemaConfig {
     uischemata = next;
   }
 
+  if (
+    detailUiSchemaScopeOverrides &&
+    Object.keys(detailUiSchemaScopeOverrides).length > 0
+  ) {
+    const next: NonNullable<SchemaConfig["uischemata"]> = {
+      ...(uischemata ?? {}),
+    };
+    for (const [typeName, opts] of Object.entries(
+      detailUiSchemaScopeOverrides,
+    )) {
+      if (next[typeName]) continue;
+      next[typeName] = uiSchemaForDefinition(config.schema, typeName, {
+        ...opts,
+        orderBy: orderByForType(typeName),
+      } as Parameters<typeof uiSchemaForDefinition>[2]);
+    }
+    uischemata = next;
+  }
+
   return {
     ...rest,
     uischemata,
     detailUiSchemata,
+    uischemaScopeOverrides,
+    detailUiSchemaScopeOverrides,
   };
 }
 

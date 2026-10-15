@@ -67,7 +67,10 @@ export const SemanticJsonFormNoOps: FunctionComponent<
     rendererRegistry,
     cellRendererRegistry,
     uischemata,
-    queryBuildOptions: { typeIRItoTypeName },
+    orderBy,
+    uischemaScopeOverrides,
+    typeIRIToTypeName,
+    queryBuildOptions: { typeIRItoTypeName, primaryFields },
     derivedDefaults,
   } = useAdbContext();
   const typeName = useMemo(
@@ -211,6 +214,11 @@ export const SemanticJsonFormNoOps: FunctionComponent<
         formsPath,
         typeIRI,
         registry,
+        uischemata,
+        orderBy,
+        uischemaScopeOverrides,
+        typeIRIToTypeName: typeIRIToTypeName ?? typeIRItoTypeName,
+        primaryFields: config?.primaryFields ?? primaryFields,
       },
     };
   }, [
@@ -222,6 +230,12 @@ export const SemanticJsonFormNoOps: FunctionComponent<
     uischemata,
     typeIRItoTypeName,
     registry,
+    uischemata,
+    orderBy,
+    uischemaScopeOverrides,
+    typeIRIToTypeName,
+    typeIRItoTypeName,
+    primaryFields,
   ]);
   const allRenderer = useMemo(
     () => [...(rendererRegistry || []), ...(jfpRenderers || [])],

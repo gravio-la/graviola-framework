@@ -108,6 +108,10 @@ export type SchemaConfig = {
   uischemata?: Record<string, UISchemaElement>;
   /** Optional pre-built UISchemaElement roots used for the schema-driven detail view. */
   detailUiSchemata?: Record<string, UISchemaElement>;
+  /** Resolved form scope overrides (authoring input to {@link defineGraviolaApp}). */
+  uischemaScopeOverrides?: FormUiSchemaScopeOverrides;
+  /** Resolved detail scope overrides (authoring input to {@link defineGraviolaApp}). */
+  detailUiSchemaScopeOverrides?: DetailUiSchemaScopeOverrides;
   /** Optional per-typeName table UI schemas. */
   tableUiSchemaByType?: Record<string, TableUiSchema>;
   /** Optional single table UI schema (legacy / shared). */

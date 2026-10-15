@@ -156,6 +156,14 @@ export type GlobalAppConfig<DeclarativeMappingType> = GlobalSemanticConfig & {
   rendererRegistry?: JsonFormsRendererRegistryEntry[];
   cellRendererRegistry?: JsonFormsCellRendererRegistryEntry[];
   uischemata?: Record<string, any>;
+  /** Side-schema form UI scope overrides (resolved apps also keep this for inline rows). */
+  uischemaScopeOverrides?: Record<
+    string,
+    {
+      mode?: "override" | "exclusive";
+      scopeOverride?: Record<string, unknown>;
+    }
+  >;
   /** Side-schema `orderBy`: type name → slot → `{ field, direction }`. */
   orderBy?: OrderByConfig;
   /** Side-schema `defaults`: type name → target slot → `{ path }`. */

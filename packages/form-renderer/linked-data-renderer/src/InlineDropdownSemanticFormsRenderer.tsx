@@ -6,10 +6,14 @@ import { SearchbarWithFloatingButton } from "@graviola/edb-basic-components";
 import { AutocompleteSuggestion } from "@graviola/edb-core-types";
 import { PrimaryField } from "@graviola/edb-core-types";
 import { makeFormsPath } from "@graviola/edb-core-utils";
-import { extractFieldIfString } from "@graviola/edb-data-mapping";
+import {
+  resolveLinkedReferenceLabel,
+  resolveLinkedReferenceLabelKey,
+} from "@graviola/edb-core-utils";
 import {
   MODAL_EDIT_ENTITY,
   useAdbContext,
+  useDataStore,
   useGlobalSearch,
   useGlobalSearchWithHelper,
   useGraviolaModal,
@@ -17,12 +21,7 @@ import {
   useSimilarityFinderModal,
 } from "@graviola/edb-state-hooks";
 import { hidden } from "@graviola/edb-ui-utils";
-import {
-  ControlProps,
-  JsonSchema,
-  Resolve,
-  resolveSchema,
-} from "@jsonforms/core";
+import { ControlProps, JsonSchema, resolveSchema } from "@jsonforms/core";
 import type { SchemaRegistry } from "@graviola/json-schema-utils";
 import { useJsonForms, withJsonFormsControlProps } from "@jsonforms/react";
 import ManageSearchIcon from "@mui/icons-material/ManageSearch";
@@ -45,9 +44,14 @@ import cloneDeep from "lodash-es/cloneDeep";
 import {
   clearLinkedEntityAtPath,
   resolveLabelKey,
+  resolveAcceptedLinkedEntityLabel,
   writeLinkedEntityFromModalData,
   writeLinkedEntitySelection,
 } from "./relationalControlPathWrite";
+import {
+  readParentReferenceObject,
+  resolveRelationalDisplayLabel,
+} from "./relationalFieldLabel";
 
 export const InlineDropdownSemanticFormsRendererComponent = (
   props: ControlProps,
@@ -72,6 +76,7 @@ export const InlineDropdownSemanticFormsRendererComponent = (
     createEntityIRI,
     queryBuildOptions: { primaryFields },
   } = useAdbContext();
+  const { dataStore } = useDataStore();
   const appliedUiSchemaOptions = merge({}, config, uischema.options);
   const ctx = useJsonForms();
   const registry = (ctx?.config as any)?.registry as SchemaRegistry | undefined;
@@ -161,40 +166,80 @@ export const InlineDropdownSemanticFormsRendererComponent = (
       }
       const nextId = path.endsWith("@id") ? data : data?.["@id"];
       if (v.value !== nextId) {
-        writeLinkedEntitySelection(handleChange, path, typeIRI, labelKey, v);
+        writeLinkedEntitySelection(handleChange, path, typeIRI, labelKey, v, {
+          typeName,
+          primaryFields,
+        });
       }
-      setRealLabel(v.label);
+      setRealLabel(
+        resolveRelationalDisplayLabel({
+          coreData: ctx?.core?.data,
+          path,
+          idValue: v.value,
+          typeName,
+          primaryFields,
+          cachedLabel: v.label,
+        }),
+      );
     },
-    [path, handleChange, data, setRealLabel, hideFinder, typeIRI, labelKey],
+    [
+      path,
+      handleChange,
+      data,
+      setRealLabel,
+      hideFinder,
+      typeIRI,
+      labelKey,
+      typeName,
+      primaryFields,
+      ctx?.core?.data,
+    ],
   );
   const handleAcceptNewEntity = useCallback(
     (accepted: Record<string, unknown>) => {
-      writeLinkedEntityFromModalData(handleChange, path, labelKey, accepted);
-      const label =
-        (typeof accepted.label === "string" && accepted.label) ||
-        (typeof accepted[labelKey] === "string" && accepted[labelKey]) ||
-        (typeof accepted["@id"] === "string" && accepted["@id"]) ||
-        "";
-      setRealLabel(label as string);
+      writeLinkedEntityFromModalData(handleChange, path, labelKey, accepted, {
+        typeName,
+        primaryFields,
+      });
+      setRealLabel(
+        resolveRelationalDisplayLabel({
+          coreData: ctx?.core?.data,
+          path,
+          idValue: accepted["@id"],
+          typeName,
+          primaryFields,
+          cachedLabel:
+            (typeof accepted.label === "string" && accepted.label) ||
+            resolveLinkedReferenceLabel({
+              data: accepted,
+              typeName,
+              primaryFields,
+              labelKey,
+            }),
+        }),
+      );
     },
-    [path, handleChange, setRealLabel, labelKey],
+    [
+      path,
+      handleChange,
+      setRealLabel,
+      labelKey,
+      typeName,
+      primaryFields,
+      ctx?.core?.data,
+    ],
   );
 
   useEffect(() => {
     setRealLabel((_old) => {
       if ((_old && _old.length > 0) || !data) return _old;
-      const parentData = Resolve.data(
-        ctx?.core?.data,
-        path.substring(0, path.length - ("@id".length + 1)),
-      );
-      const fieldDecl = primaryFields[typeName] as PrimaryField | undefined;
-      let label = "";
-      if (fieldDecl?.label)
-        label = extractFieldIfString(parentData, fieldDecl.label);
-      if (typeof label === "object") {
-        return "";
-      }
-      return label;
+      return resolveRelationalDisplayLabel({
+        coreData: ctx?.core?.data,
+        path,
+        idValue: data,
+        typeName,
+        primaryFields,
+      });
     });
   }, [data, ctx?.core?.data, path, setRealLabel, primaryFields, typeName]);
 
@@ -233,14 +278,37 @@ export const InlineDropdownSemanticFormsRendererComponent = (
   mappedDataAcceptedRef.current = handleMappedDataAccepted;
 
   const handleExistingEntityAccepted = useCallback(
-    (entityIRI: string, data: any) => {
-      handleSelectedChange({
-        value: entityIRI,
-        label: data.label || entityIRI,
+    (entityIRI: string, acceptedData: Record<string, unknown>) => {
+      const labelKey = resolveLinkedReferenceLabelKey(typeName, primaryFields);
+      const immediateLabel = resolveLinkedReferenceLabel({
+        data: acceptedData,
+        typeName,
+        primaryFields,
+        labelKey,
       });
-      handleSearchStringChange("");
+      const finish = (label: string) => {
+        handleSelectedChange({ value: entityIRI, label });
+        handleSearchStringChange("");
+      };
+      if (immediateLabel) {
+        finish(immediateLabel);
+        return;
+      }
+      void resolveAcceptedLinkedEntityLabel({
+        entityIRI,
+        acceptedData,
+        typeName,
+        primaryFields,
+        loadEntity: dataStore?.loadOne?.bind(dataStore),
+      }).then(({ label }) => finish(label));
     },
-    [handleSelectedChange, handleSearchStringChange],
+    [
+      handleSelectedChange,
+      handleSearchStringChange,
+      typeName,
+      primaryFields,
+      dataStore,
+    ],
   );
 
   const handleMappedDataIntermediate = useCallback(
@@ -297,7 +365,10 @@ export const InlineDropdownSemanticFormsRendererComponent = (
     const fieldDefinitions = primaryFields[typeName] as
       | PrimaryField
       | undefined;
-    const defaultLabelKey = fieldDefinitions?.label || "title";
+    const defaultLabelKey = resolveLinkedReferenceLabelKey(
+      typeName,
+      primaryFields,
+    );
     const entityIRI = createEntityIRI(typeName);
     setDisabled(true);
     const newItemStub = {
@@ -384,11 +455,29 @@ export const InlineDropdownSemanticFormsRendererComponent = (
 
   const detailsData = useMemo(() => {
     if (!selected.value) return;
+    const parent = readParentReferenceObject(ctx?.core?.data, path, data);
+    const displayLabel = resolveRelationalDisplayLabel({
+      coreData: ctx?.core?.data,
+      path,
+      idValue: data,
+      typeName,
+      primaryFields,
+      cachedLabel: selected.label,
+    });
     return {
+      ...(parent ?? {}),
       "@id": selected.value,
-      [labelKey]: selected.label,
+      [labelKey]: displayLabel,
     };
-  }, [selected, labelKey]);
+  }, [
+    selected,
+    labelKey,
+    ctx?.core?.data,
+    path,
+    data,
+    typeName,
+    primaryFields,
+  ]);
 
   const {
     isValid,

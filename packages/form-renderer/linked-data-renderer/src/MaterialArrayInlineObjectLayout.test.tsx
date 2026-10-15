@@ -23,6 +23,7 @@ import {
   prepareStubbedSchema,
 } from "@graviola/json-schema-utils";
 import { createUISchemata } from "../../../semantic-json-form/src/helper/createUISchemata";
+import { defineGraviolaApp } from "../../../graviola-app-config/src/defineGraviolaApp";
 import type { JSONSchema7 } from "json-schema";
 
 import { inlineDropdownRendererTester } from "./inlineDropdownTester";
@@ -163,15 +164,11 @@ function rezeptFormUISchemaFromBundle(
     throw new Error("expected zutaten in Rezept form uischema");
   }
   const zutatenControl = ui.elements[zutatenIndex] as ControlElement;
-  const itemOverride =
-    bundleFixture.sideSchema.detailUiSchemaScopeOverrides.ZutatInRezept
-      ?.scopeOverride;
   ui.elements[zutatenIndex] = {
     ...zutatenControl,
     options: {
       ...zutatenControl.options,
       showSortButtons: true,
-      itemScopeOverride: itemOverride,
     },
   };
   return ui;
@@ -314,6 +311,7 @@ function appLikeKochbuchContext(): {
   uischemas: JsonFormsUISchemaRegistryEntry[];
   schemaRegistry: ReturnType<typeof compileSchema>;
   formUi: Layout;
+  jsonFormsConfig: Record<string, unknown>;
 } {
   const schema = stubbedKochbuchSchema();
   const rootSchema = bundleFixture.rootSchema;
@@ -322,25 +320,48 @@ function appLikeKochbuchContext(): {
     definitionToTypeIRI,
   });
   const schemaRegistry = compileSchema(schema);
-  const formUi = rezeptFormUISchemaFromBundle(schema);
-  const zutatenIndex = formUi.elements.findIndex(
-    (el) => (el as ControlElement).scope === "#/properties/zutaten",
-  );
-  if (zutatenIndex >= 0) {
-    const zutatenControl = formUi.elements[zutatenIndex] as ControlElement;
-    const itemOverride =
-      bundleFixture.sideSchema.detailUiSchemaScopeOverrides.ZutatInRezept
-        ?.scopeOverride;
-    formUi.elements[zutatenIndex] = {
-      ...zutatenControl,
-      options: {
-        ...zutatenControl.options,
-        showSortButtons: true,
-        itemScopeOverride: itemOverride,
+  const appConfig = defineGraviolaApp({
+    schemaName: "kochbuch",
+    label: "Kochbuch",
+    description: "",
+    version: "0.1.0",
+    storageKey: "kochbuch",
+    baseIRI: bundleFixture.sideSchema.entityBaseIRI,
+    entityBaseIRI: bundleFixture.sideSchema.entityBaseIRI,
+    schema: bundleFixture.schema as JSONSchema7,
+    primaryFields: bundleFixture.sideSchema.primaryFields,
+    typeNameLabelMap: bundleFixture.sideSchema.typeNameLabelMap,
+    typeNameUiSchemaOptionsMap: {},
+    uischemaScopeOverrides: {
+      Rezept: bundleFixture.sideSchema.uischemaScopeOverrides?.Rezept,
+      ZutatInRezept: {
+        mode: "override",
+        scopeOverride:
+          bundleFixture.sideSchema.detailUiSchemaScopeOverrides.ZutatInRezept
+            ?.scopeOverride,
       },
-    };
-  }
-  return { schema, rootSchema, uischemas, schemaRegistry, formUi };
+    },
+    orderBy: bundleFixture.sideSchema.orderBy,
+  });
+  const formUi = rezeptFormUISchemaFromBundle(schema);
+  const jsonFormsConfig = {
+    primaryFields: appConfig.primaryFields,
+    entityBaseIRI: appConfig.entityBaseIRI,
+    registry: schemaRegistry,
+    uischemata: appConfig.uischemata,
+    uischemaScopeOverrides: appConfig.uischemaScopeOverrides,
+    orderBy: appConfig.orderBy,
+    typeIRIToTypeName: (iri: string) =>
+      iri.replace(bundleFixture.sideSchema.entityBaseIRI, ""),
+  };
+  return {
+    schema,
+    rootSchema,
+    uischemas,
+    schemaRegistry,
+    formUi,
+    jsonFormsConfig,
+  };
 }
 
 function makeFormData() {
@@ -417,6 +438,7 @@ async function renderForm(
     renderers?: typeof baseRenderers;
     uischemas?: JsonFormsUISchemaRegistryEntry[];
     schemaRegistry?: ReturnType<typeof compileSchema>;
+    jsonFormsConfig?: Record<string, unknown>;
   },
 ) {
   const schema = options?.schema ?? trimmedRootSchema;
@@ -441,6 +463,7 @@ async function renderForm(
             primaryFields: sideSchema.primaryFields,
             entityBaseIRI: sideSchema.entityBaseIRI,
             registry: options?.schemaRegistry,
+            ...options?.jsonFormsConfig,
           }}
           onChange={({ data: next }) => {
             if (next) {
@@ -616,6 +639,7 @@ describe("MaterialArrayInlineObjectRenderer (app-like registry)", () => {
       sideSchema: bundleFixture.sideSchema,
       uischemas: ctx.uischemas,
       schemaRegistry: ctx.schemaRegistry,
+      jsonFormsConfig: ctx.jsonFormsConfig,
       renderers: appLikeE2eRenderers,
     });
 
@@ -669,6 +693,7 @@ describe("MaterialArrayInlineObjectRenderer (app-like registry)", () => {
       sideSchema: bundleFixture.sideSchema,
       uischemas: ctx.uischemas,
       schemaRegistry: ctx.schemaRegistry,
+      jsonFormsConfig: ctx.jsonFormsConfig,
       renderers: appLikeE2eRenderers,
       onChange: (data) => {
         latestData = data;

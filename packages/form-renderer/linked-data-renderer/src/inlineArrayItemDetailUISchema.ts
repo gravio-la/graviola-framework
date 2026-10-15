@@ -13,6 +13,7 @@ import type {
   ControlElement,
   JsonFormsUISchemaRegistryEntry,
 } from "@jsonforms/core";
+import type { OrderByConfig } from "@graviola/semantic-jsonform-types";
 import merge from "lodash-es/merge";
 
 const DEFAULT_SKIP_ITEM_SCOPES = ["#/properties/@id", "#/properties/@type"];
@@ -42,6 +43,39 @@ function stripLeadingAtIdControl(layout: Layout): Layout {
   return layout;
 }
 
+function filterSkipScopes(layout: Layout, skipScope: string[]): Layout {
+  const elements = (layout.elements ?? []).filter((el) => {
+    const scope = (el as Scopable).scope;
+    return !scope || !skipScope.includes(scope);
+  });
+  return { ...layout, elements };
+}
+
+type FormScopeOverrideEntry = {
+  mode?: "override" | "exclusive";
+  scopeOverride?: Record<string, ControlElement>;
+};
+
+type InlineArrayJsonFormsConfig = {
+  uischemata?: Record<string, UISchemaElement>;
+  uischemaScopeOverrides?: Record<string, FormScopeOverrideEntry>;
+  orderBy?: OrderByConfig;
+  typeIRIToTypeName?: (typeIRI: string) => string;
+  formScopeOverride?: Record<string, ControlElement>;
+};
+
+function resolveItemTypeName(
+  itemSchema: JsonSchema,
+  config?: InlineArrayJsonFormsConfig,
+): string | undefined {
+  const typeIRI = itemSchema.properties?.["@type"]?.const;
+  if (typeof typeIRI !== "string" || typeIRI.length === 0) return undefined;
+  if (config?.typeIRIToTypeName) {
+    return config.typeIRIToTypeName(typeIRI);
+  }
+  return typeIRI.split(/[#/]/).filter(Boolean).pop();
+}
+
 export type ResolveInlineArrayItemDetailUISchemaParams = {
   arraySchema: JsonSchema;
   arrayControl: ControlElement;
@@ -57,6 +91,7 @@ export function resolveInlineArrayItemDetailUISchema(
 ): UISchemaElement {
   const { arraySchema, arrayControl, rootSchema, path, uischemas, config } =
     params;
+  const formConfig = config as InlineArrayJsonFormsConfig | undefined;
   const appliedOptions = merge({}, config, arrayControl.options);
   const explicitDetail = appliedOptions.detail as UISchemaElement | undefined;
   if (layoutHasControls(explicitDetail)) {
@@ -71,9 +106,23 @@ export function resolveInlineArrayItemDetailUISchema(
     return { type: "VerticalLayout", elements: [] };
   }
 
-  const scopeOverride =
+  const itemTypeName = resolveItemTypeName(itemSchema, formConfig);
+  const classFormOpts =
+    itemTypeName && formConfig?.uischemaScopeOverrides?.[itemTypeName];
+
+  const itemScopeOverride =
     (appliedOptions.itemScopeOverride as Record<string, ControlElement>) ??
-    (config?.formScopeOverride as Record<string, ControlElement> | undefined);
+    (formConfig?.formScopeOverride as
+      | Record<string, ControlElement>
+      | undefined);
+
+  const mergedScopeOverride = merge(
+    {},
+    classFormOpts?.scopeOverride,
+    itemScopeOverride,
+  );
+  const hasMergedScopeOverride =
+    mergedScopeOverride && Object.keys(mergedScopeOverride).length > 0;
 
   const skipScope = [
     ...DEFAULT_SKIP_ITEM_SCOPES,
@@ -84,8 +133,37 @@ export function resolveInlineArrayItemDetailUISchema(
     generateDefaultUISchema(itemSchema, {
       rootSchema,
       skipScope,
-      scopeOverride,
+      scopeOverride: hasMergedScopeOverride ? mergedScopeOverride : undefined,
+      mode:
+        classFormOpts?.mode ??
+        (appliedOptions.itemScopeOverrideMode as
+          | "override"
+          | "exclusive"
+          | undefined) ??
+        "override",
+      orderBy: itemTypeName ? formConfig?.orderBy?.[itemTypeName] : undefined,
     });
+
+  if (
+    itemTypeName &&
+    formConfig?.uischemata?.[itemTypeName] &&
+    !itemScopeOverride
+  ) {
+    const classUi = formConfig.uischemata[itemTypeName];
+    if (isLayout(classUi) && layoutHasControls(classUi)) {
+      return filterSkipScopes(
+        stripLeadingAtIdControl(classUi as Layout),
+        skipScope,
+      );
+    }
+  }
+
+  if (hasMergedScopeOverride) {
+    const generated = generateItemLayout();
+    if (layoutHasControls(generated)) {
+      return generated as UISchemaElement;
+    }
+  }
 
   const itemIsEntityLike =
     typeof itemSchema.properties?.["@id"] !== "undefined";

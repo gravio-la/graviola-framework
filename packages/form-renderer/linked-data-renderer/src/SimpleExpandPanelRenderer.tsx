@@ -9,7 +9,10 @@ import {
   useGraviolaModal,
   useThumbnailUrl,
 } from "@graviola/edb-state-hooks";
-import { extractEntityPreview } from "@graviola/edb-core-utils";
+import {
+  extractEntityPreview,
+  resolveLinkedReferenceLabel,
+} from "@graviola/edb-core-utils";
 import {
   queryOptionMixinBasedOnEntity,
   specialDate2LocalDate,
@@ -122,18 +125,17 @@ export function formatInlineArrayLabelPart(
   }
   if (typeof value !== "object" || Array.isArray(value)) return undefined;
 
-  const obj = value as Record<string, unknown>;
-  for (const key of ["__label", "label", "prefLabel", "name"] as const) {
-    const candidate = obj[key];
-    if (typeof candidate === "string" && candidate.trim()) {
-      return candidate.trim();
-    }
-  }
-
-  const typeIRI = extractTypeIRI(obj);
+  const typeIRI = extractTypeIRI(value as Record<string, unknown>);
   const typeName = typeIRI
     ? typeIRI.split(/[#/]/).filter(Boolean).pop()
     : undefined;
+  const fromLinked = resolveLinkedReferenceLabel({
+    data: value,
+    typeName,
+    primaryFields: options?.primaryFields,
+  });
+  if (fromLinked) return fromLinked;
+
   if (typeName && options?.primaryFields) {
     const preview = extractEntityPreview({
       data: value,
