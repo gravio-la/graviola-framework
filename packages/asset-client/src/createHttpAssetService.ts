@@ -193,7 +193,7 @@ export function createHttpAssetService(
     },
 
     async upload(file, uploadOpts?: UploadOpts) {
-      const url = `${base}/`;
+      const url = base;
       const signal = uploadOpts?.signal;
       const credentials = uploadOpts?.credentials ?? options.credentials;
       const xhrWithCredentials = credentials === "include";
