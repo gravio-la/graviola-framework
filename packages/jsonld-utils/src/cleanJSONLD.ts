@@ -176,7 +176,7 @@ function isInversePropertySchema(
  */
 export const removeInversePropertiesFromSchema = (
   schema: JSONSchema7,
-  options?: RemoveInversePropertiesOptions,
+  options?: RemoveInversePropertiesInternalOptions,
 ) => {
   const internal: RemoveInversePropertiesInternalOptions = {
     ...options,
