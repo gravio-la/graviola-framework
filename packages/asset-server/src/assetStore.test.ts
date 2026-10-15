@@ -1,4 +1,4 @@
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { describe, expect, test } from "bun:test";
@@ -53,6 +53,55 @@ describe("createAssetStore", () => {
 
       const loaded = await store.get("proj", png.assetId);
       expect(loaded?.storageKey).toBe(png.storageKey);
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
+  test("concurrent dedupe creates one binary and sidecar", async () => {
+    const root = await mkdtemp(path.join(tmpdir(), "asset-dedupe-"));
+    try {
+      const storage = FsStorageAdapter({ rootDir: root });
+      const store = createAssetStore({ storage, maxBytes: 1024 * 1024 });
+      const png = tinyPng();
+      const results = await Promise.all(
+        Array.from({ length: 10 }, () =>
+          store.ingest("proj", { body: png, dedupe: true }),
+        ),
+      );
+      const ids = new Set(results.map((r) => r.assetId));
+      expect(ids.size).toBe(1);
+
+      const files = await readdir(path.join(root, "proj"), {
+        recursive: true,
+      });
+      const binaries = files.filter(
+        (f) => typeof f === "string" && f.endsWith(".png"),
+      );
+      const sidecars = files.filter(
+        (f) => typeof f === "string" && f.endsWith(".json"),
+      );
+      expect(binaries.length).toBe(1);
+      expect(sidecars.length).toBe(1);
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
+  test("rejects spoofed image/png when accept is image/*", async () => {
+    const root = await mkdtemp(path.join(tmpdir(), "asset-accept-"));
+    try {
+      const storage = FsStorageAdapter({ rootDir: root });
+      const store = createAssetStore({
+        storage,
+        accept: ["image/*"],
+      });
+      await expect(
+        store.ingest("proj", {
+          body: new TextEncoder().encode("random"),
+          mediaType: "image/png",
+        }),
+      ).rejects.toMatchObject({ code: "not_accepted" });
     } finally {
       await rm(root, { recursive: true, force: true });
     }

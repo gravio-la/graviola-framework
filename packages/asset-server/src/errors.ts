@@ -7,7 +7,8 @@ export class SafeFetchError extends Error {
     | "timeout"
     | "body_too_large"
     | "content_type_rejected"
-    | "fetch_failed";
+    | "fetch_failed"
+    | "bad_status";
 
   constructor(
     code: SafeFetchError["code"],
@@ -21,7 +22,12 @@ export class SafeFetchError extends Error {
 }
 
 export class AssetStoreError extends Error {
-  readonly code: "invalid_key" | "too_large" | "not_accepted" | "not_found";
+  readonly code:
+    | "invalid_key"
+    | "too_large"
+    | "not_accepted"
+    | "not_found"
+    | "invalid_id";
 
   constructor(code: AssetStoreError["code"], message: string) {
     super(message);

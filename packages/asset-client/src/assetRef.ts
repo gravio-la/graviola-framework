@@ -3,42 +3,72 @@ export const ULID_RE = /^[0-9A-HJKMNP-TV-Z]{26}$/i;
 
 const ASSET_IRI_TAIL_RE = /\/asset\/([0-9A-HJKMNP-TV-Z]{26})(?:[\/?#]|$)/i;
 
-export function assetIdFromString(value: string): string | undefined {
+export type AssetRefOptions = {
+  iriPrefix?: string;
+  /** When set, object `storageKey` values must start with `<projectId>/`. */
+  projectId?: string;
+};
+
+function ulidFromPrefixedIri(
+  value: string,
+  iriPrefix: string,
+): string | undefined {
+  const normalized = iriPrefix.replace(/\/?$/, "/");
+  const prefix = `${normalized}asset/`;
+  if (!value.startsWith(prefix)) return undefined;
+  const id = value.slice(prefix.length).split(/[/?#]/)[0] ?? "";
+  return ULID_RE.test(id) ? id.toUpperCase() : undefined;
+}
+
+export function assetIdFromString(
+  value: string,
+  opts?: AssetRefOptions,
+): string | undefined {
+  if (opts?.iriPrefix) {
+    return ulidFromPrefixedIri(value, opts.iriPrefix);
+  }
   const tail = value.match(ASSET_IRI_TAIL_RE);
-  if (tail?.[1]) return tail[1];
-  if (ULID_RE.test(value)) return value;
+  if (tail?.[1]) return tail[1].toUpperCase();
+  if (ULID_RE.test(value)) return value.toUpperCase();
   return undefined;
 }
 
-export function assetIdFromStorageKey(storageKey: string): string | undefined {
+export function assetIdFromStorageKey(
+  storageKey: string,
+  projectId?: string,
+): string | undefined {
+  if (projectId && !storageKey.startsWith(`${projectId}/`)) {
+    return undefined;
+  }
   const base =
     storageKey
       .split("/")
       .pop()
       ?.replace(/\.[^.]+$/, "") ?? "";
-  return ULID_RE.test(base) ? base : undefined;
+  return ULID_RE.test(base) ? base.toUpperCase() : undefined;
 }
 
-export function isAssetRefValue(value: unknown, iriPrefix?: string): boolean {
+export function isAssetRefValue(
+  value: unknown,
+  opts?: AssetRefOptions | string,
+): boolean {
+  const options: AssetRefOptions =
+    typeof opts === "string" ? { iriPrefix: opts } : (opts ?? {});
+
   if (typeof value === "string") {
-    if (assetIdFromString(value)) return true;
-    if (iriPrefix) {
-      const normalized = iriPrefix.replace(/\/?$/, "/");
-      return (
-        value.startsWith(`${normalized}asset/`) &&
-        ULID_RE.test(value.slice(normalized.length + "asset/".length))
-      );
-    }
-    return false;
+    return assetIdFromString(value, options) != null;
   }
   if (value && typeof value === "object") {
     const record = value as Record<string, unknown>;
     const atId = record["@id"];
-    if (typeof atId === "string" && isAssetRefValue(atId, iriPrefix)) {
+    if (typeof atId === "string" && isAssetRefValue(atId, options)) {
       return true;
     }
     const storageKey = record.storageKey;
-    if (typeof storageKey === "string" && assetIdFromStorageKey(storageKey)) {
+    if (
+      typeof storageKey === "string" &&
+      assetIdFromStorageKey(storageKey, options.projectId)
+    ) {
       return true;
     }
   }
@@ -47,30 +77,23 @@ export function isAssetRefValue(value: unknown, iriPrefix?: string): boolean {
 
 export function assetIdOfValue(
   value: unknown,
-  iriPrefix?: string,
+  opts?: AssetRefOptions | string,
 ): string | undefined {
+  const options: AssetRefOptions =
+    typeof opts === "string" ? { iriPrefix: opts } : (opts ?? {});
+
   if (typeof value === "string") {
-    const fromTail = assetIdFromString(value);
-    if (fromTail) return fromTail;
-    if (iriPrefix) {
-      const normalized = iriPrefix.replace(/\/?$/, "/");
-      const prefix = `${normalized}asset/`;
-      if (value.startsWith(prefix)) {
-        const id = value.slice(prefix.length).split(/[/?#]/)[0] ?? "";
-        if (ULID_RE.test(id)) return id;
-      }
-    }
-    return undefined;
+    return assetIdFromString(value, options);
   }
   if (value && typeof value === "object") {
     const record = value as Record<string, unknown>;
     const atId = record["@id"];
     if (typeof atId === "string") {
-      return assetIdOfValue(atId, iriPrefix);
+      return assetIdOfValue(atId, options);
     }
     const storageKey = record.storageKey;
     if (typeof storageKey === "string") {
-      return assetIdFromStorageKey(storageKey);
+      return assetIdFromStorageKey(storageKey, options.projectId);
     }
   }
   return undefined;

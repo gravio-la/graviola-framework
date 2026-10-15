@@ -66,6 +66,37 @@ describe("safeFetch", () => {
     }
   });
 
+  test("rejects IPv4-mapped loopback", async () => {
+    await expect(safeFetch("http://[::ffff:127.0.0.1]/")).rejects.toMatchObject(
+      { code: "private_target" },
+    );
+  });
+
+  test("rejects non-2xx responses", async () => {
+    await expect(
+      safeFetch("http://example.com/missing", {
+        lookup: async () => [{ address: "93.184.216.34" }],
+        fetchImpl: async () => new Response("nope", { status: 404 }),
+      }),
+    ).rejects.toMatchObject({ code: "bad_status" });
+  });
+
+  test("strips sensitive query params from finalUrl", async () => {
+    const result = await safeFetch(
+      "https://example.com/a?token=secret&keep=1",
+      {
+        lookup: async () => [{ address: "93.184.216.34" }],
+        fetchImpl: async () =>
+          new Response(new Uint8Array([0x89, 0x50, 0x4e, 0x47]), {
+            status: 200,
+            headers: { "content-type": "image/png" },
+          }),
+      },
+    );
+    expect(result.finalUrl).not.toContain("token=");
+    expect(result.finalUrl).toContain("keep=1");
+  });
+
   test("rejects wrong content-type", async () => {
     await expect(
       safeFetch("http://example.com/asset.bin", {

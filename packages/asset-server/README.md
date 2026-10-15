@@ -13,6 +13,8 @@ Server-side asset storage on the local filesystem, optional [Picturium](https://
 
 Mount the returned app at `/api/projects/:projectId/assets`. The parent app must expose the `projectId` route param; reads work even when upload policy is disabled.
 
+**Authentication:** this package does not authenticate or authorize callers. The host application must wrap these routes with its own auth (session, API keys, project membership, etc.). Delivery routes are open by design once mounted—your gateway decides who may upload, import from URL, or read bytes. Treat `POST /from-url` as an outbound fetch primitive and restrict it accordingly.
+
 ```ts
 import { Hono } from "hono";
 import {

@@ -13,6 +13,11 @@ import type {
   ThumbnailUrlOptions,
   UploadedAsset,
 } from "./types.js";
+import {
+  assertValidProjectId,
+  assetIdFromRef,
+  normalizeAssetId,
+} from "./validateIds.js";
 
 const PRESET_WIDTH: Record<ThumbnailSizePreset, number> = {
   chip: 48,
@@ -21,8 +26,6 @@ const PRESET_WIDTH: Record<ThumbnailSizePreset, number> = {
   detail: 960,
   full: 1920,
 };
-
-const ULID_RE = /^[0-9A-HJKMNP-TV-Z]{26}$/i;
 
 export interface PicturiumConfig {
   baseUrl: string;
@@ -45,8 +48,6 @@ export interface IngestInput {
   dedupe?: boolean;
 }
 
-type ShaIndex = Record<string, string>;
-
 function metaKey(projectId: string, assetId: string): string {
   return `${projectId}/${assetId}.json`;
 }
@@ -55,14 +56,14 @@ function binaryKey(projectId: string, assetId: string, ext: string): string {
   return `${projectId}/${assetId}.${ext}`;
 }
 
-function shaIndexKey(projectId: string): string {
-  return `${projectId}/_sha256.json`;
+function shaMarkerKey(projectId: string, sha256: string): string {
+  return `${projectId}/_sha/${sha256}`;
 }
 
-async function readJsonFile<T>(
+async function readTextFile(
   storage: StorageAdapter,
   key: string,
-): Promise<T | undefined> {
+): Promise<string | undefined> {
   const st = await storage.stat(key);
   if (!st) return undefined;
   const stream = await storage.getStream(key);
@@ -73,11 +74,19 @@ async function readJsonFile<T>(
     if (done) break;
     if (value) chunks.push(value);
   }
-  const text = new TextDecoder().decode(
+  return new TextDecoder().decode(
     chunks.length === 1
       ? chunks[0]!
       : Uint8Array.from(chunks.flatMap((c) => [...c])),
   );
+}
+
+async function readJsonFile<T>(
+  storage: StorageAdapter,
+  key: string,
+): Promise<T | undefined> {
+  const text = await readTextFile(storage, key);
+  if (text == null) return undefined;
   return JSON.parse(text) as T;
 }
 
@@ -88,6 +97,29 @@ async function writeJsonFile(
 ): Promise<void> {
   const bytes = new TextEncoder().encode(JSON.stringify(value, null, 2));
   await storage.put(key, bytes);
+}
+
+async function waitForAssetByMarker(
+  store: { get: (p: string, id: string) => Promise<UploadedAsset | undefined> },
+  projectId: string,
+  markerKey: string,
+  storage: StorageAdapter,
+  opts?: { requireMarker?: boolean },
+): Promise<UploadedAsset | undefined> {
+  for (let attempt = 0; attempt < 50; attempt++) {
+    const winner = await readTextFile(storage, markerKey);
+    if (!winner) {
+      if (opts?.requireMarker) {
+        await new Promise((r) => setTimeout(r, 5));
+        continue;
+      }
+      return undefined;
+    }
+    const existing = await store.get(projectId, winner.trim());
+    if (existing) return existing;
+    await new Promise((r) => setTimeout(r, 5));
+  }
+  return undefined;
 }
 
 async function bodyToBuffer(
@@ -147,24 +179,28 @@ function matchesAccept(encodingFormat: string, accept?: string[]): boolean {
   });
 }
 
-export function assetIdFromRef(ref: string): string | undefined {
-  const trimmed = ref.trim();
-  if (ULID_RE.test(trimmed)) return trimmed.toUpperCase();
-  const m = /\/asset\/([0-9A-HJKMNP-TV-Z]{26})\/?$/i.exec(trimmed);
-  return m?.[1]?.toUpperCase();
-}
+export { assetIdFromRef };
 
 export function createAssetStore(options: CreateAssetStoreOptions) {
   const { storage, picturium } = options;
   const maxBytes = options.maxBytes ?? 25 * 1024 * 1024;
+
+  const resolveAssetId = async (
+    projectId: string,
+    assetId: string,
+  ): Promise<string> => {
+    assertValidProjectId(projectId);
+    return normalizeAssetId(assetId);
+  };
 
   return {
     async ingest(
       projectId: string,
       input: IngestInput,
     ): Promise<UploadedAsset> {
+      assertValidProjectId(projectId);
       const bytes = await bodyToBuffer(input.body, maxBytes);
-      const sniff = sniffMime(bytes, input.mediaType);
+      const sniff = sniffMime(bytes, input.mediaType, input.fileName);
       if (!matchesAccept(sniff.encodingFormat, options.accept)) {
         throw new AssetStoreError(
           "not_accepted",
@@ -173,18 +209,43 @@ export function createAssetStore(options: CreateAssetStoreOptions) {
       }
 
       const hash = createHash("sha256").update(bytes).digest("hex");
+      const dedupe = input.dedupe !== false;
 
-      if (input.dedupe) {
-        const index =
-          (await readJsonFile<ShaIndex>(storage, shaIndexKey(projectId))) ?? {};
-        const existingId = index[hash];
-        if (existingId) {
-          const existing = await this.get(projectId, existingId);
-          if (existing) return existing;
-        }
+      if (dedupe) {
+        const marker = shaMarkerKey(projectId, hash);
+        const raced = await waitForAssetByMarker(
+          this,
+          projectId,
+          marker,
+          storage,
+        );
+        if (raced) return raced;
       }
 
       const assetId = ulid();
+
+      if (dedupe) {
+        const marker = shaMarkerKey(projectId, hash);
+        const created = await storage.putExclusive(
+          marker,
+          new TextEncoder().encode(assetId),
+        );
+        if (!created) {
+          const existing = await waitForAssetByMarker(
+            this,
+            projectId,
+            marker,
+            storage,
+            { requireMarker: true },
+          );
+          if (existing) return existing;
+          throw new AssetStoreError(
+            "not_found",
+            "dedupe marker present but asset missing",
+          );
+        }
+      }
+
       const storageKey = binaryKey(projectId, assetId, sniff.ext);
       await storage.put(storageKey, bytes);
 
@@ -206,11 +267,6 @@ export function createAssetStore(options: CreateAssetStoreOptions) {
 
       await writeJsonFile(storage, metaKey(projectId, assetId), asset);
 
-      const index =
-        (await readJsonFile<ShaIndex>(storage, shaIndexKey(projectId))) ?? {};
-      index[hash] = assetId;
-      await writeJsonFile(storage, shaIndexKey(projectId), index);
-
       return asset;
     },
 
@@ -218,10 +274,9 @@ export function createAssetStore(options: CreateAssetStoreOptions) {
       projectId: string,
       assetId: string,
     ): Promise<UploadedAsset | undefined> {
-      return readJsonFile<UploadedAsset>(
-        storage,
-        metaKey(projectId, assetId.toUpperCase()),
-      );
+      assertValidProjectId(projectId);
+      const id = await resolveAssetId(projectId, assetId);
+      return readJsonFile<UploadedAsset>(storage, metaKey(projectId, id));
     },
 
     async openOriginal(
@@ -237,16 +292,13 @@ export function createAssetStore(options: CreateAssetStoreOptions) {
     },
 
     async delete(projectId: string, assetId: string): Promise<boolean> {
-      const asset = await this.get(projectId, assetId);
+      assertValidProjectId(projectId);
+      const id = await resolveAssetId(projectId, assetId);
+      const asset = await this.get(projectId, id);
       if (!asset) return false;
       await storage.delete(asset.storageKey);
       await storage.delete(metaKey(projectId, asset.assetId));
-      const index =
-        (await readJsonFile<ShaIndex>(storage, shaIndexKey(projectId))) ?? {};
-      if (index[asset.sha256] === asset.assetId) {
-        delete index[asset.sha256];
-        await writeJsonFile(storage, shaIndexKey(projectId), index);
-      }
+      await storage.delete(shaMarkerKey(projectId, asset.sha256));
       return true;
     },
 
@@ -257,19 +309,28 @@ export function createAssetStore(options: CreateAssetStoreOptions) {
       if (!picturium) return undefined;
       if (asset.encodingFormat === "image/svg+xml") return undefined;
 
-      const dpr = Math.min(Math.max(opts.dpr ?? 1, 1), 3);
-      let w = opts.w;
-      if (w == null && opts.size) {
-        w = PRESET_WIDTH[opts.size];
-      }
-      if (w == null) w = PRESET_WIDTH.card;
-      w = Math.round(w * dpr);
+      const dprRaw = opts.dpr ?? 1;
+      const dpr = [1, 2, 3].includes(Math.round(dprRaw))
+        ? Math.round(dprRaw)
+        : 1;
 
       const params: Record<string, string> = {
         q: "80",
       };
-      if (opts.h != null) params.h = String(Math.round(opts.h * dpr));
-      params.w = String(w);
+
+      let w = opts.w;
+      if (w == null && opts.size) {
+        w = PRESET_WIDTH[opts.size];
+      }
+      if (w != null) {
+        params.w = String(Math.round(w * dpr));
+      }
+      if (opts.h != null) {
+        params.h = String(Math.round(opts.h * dpr));
+      }
+      if (params.w == null && params.h == null) {
+        params.w = String(Math.round(PRESET_WIDTH.card * dpr));
+      }
 
       if (asset.encodingFormat === "application/pdf") {
         params.thumb = "p:1";
@@ -278,8 +339,6 @@ export function createAssetStore(options: CreateAssetStoreOptions) {
       } else {
         return undefined;
       }
-
-      if (opts.format) params.f = opts.format;
 
       const abs = storage.absolutePath(asset.storageKey);
       return buildPicturiumUrl({

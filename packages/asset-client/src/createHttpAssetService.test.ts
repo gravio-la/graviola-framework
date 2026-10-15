@@ -55,9 +55,13 @@ describe("isAssetRef / assetIdOf", () => {
     expect(svc.assetIdOf({ storageKey: `p1/${id}.png` })).toBe(id);
   });
 
-  it("recognizes any IRI ending in /asset/ULID", () => {
-    expect(isAssetRefValue(`https://other.host/foo/asset/${id}`)).toBe(true);
-    expect(assetIdOfValue(`https://other.host/foo/asset/${id}`)).toBe(id);
+  it("rejects other-host IRIs when iriPrefix is configured", () => {
+    expect(isAssetRefValue(`https://other.host/foo/asset/${id}`, IRI)).toBe(
+      false,
+    );
+    expect(assetIdOfValue(`https://other.host/foo/asset/${id}`, IRI)).toBe(
+      undefined,
+    );
   });
 });
 
@@ -69,8 +73,10 @@ describe("error mapping", () => {
       [415, "type_rejected"],
       [422, "fetch_rejected"],
     ] as const) {
-      const fetchImpl = async () =>
-        new Response(JSON.stringify({ error: `err ${status}` }), { status });
+      const fetchImpl = (async () =>
+        new Response(JSON.stringify({ error: `err ${status}` }), {
+          status,
+        })) as unknown as typeof fetch;
       const svc = service(fetchImpl);
       await expect(
         svc.importFromUrl("https://example.com/x.png"),
@@ -82,8 +88,10 @@ describe("error mapping", () => {
   });
 
   it("wraps upload failures", async () => {
-    const fetchImpl = async () =>
-      new Response(JSON.stringify({ error: "nope" }), { status: 415 });
+    const fetchImpl = (async () =>
+      new Response(JSON.stringify({ error: "nope" }), {
+        status: 415,
+      })) as unknown as typeof fetch;
     const svc = service(fetchImpl);
     const file = new File(["x"], "a.bin", { type: "application/octet-stream" });
     await expect(svc.upload(file)).rejects.toBeInstanceOf(AssetHttpError);

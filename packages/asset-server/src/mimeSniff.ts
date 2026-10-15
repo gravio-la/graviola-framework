@@ -14,7 +14,31 @@ const EXT_BY_MIME: Record<string, string> = {
   "image/heif": "heif",
   "image/svg+xml": "svg",
   "application/pdf": "pdf",
+  "text/plain": "txt",
+  "text/csv": "csv",
+  "application/zip": "zip",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+    "docx",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "xlsx",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation":
+    "pptx",
+  "application/vnd.oasis.opendocument.text": "odt",
+  "application/octet-stream": "bin",
 };
+
+const ACTIVE_OR_XML =
+  /^(text\/html|application\/xhtml\+xml|application\/xml|text\/xml|application\/javascript|text\/javascript)/i;
+
+const OFFICE_EXT: Record<string, string> = {
+  docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  pptx: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  odt: "application/vnd.oasis.opendocument.text",
+};
+
+export function stripMimeParameters(mediaType: string): string {
+  return mediaType.split(";")[0]?.trim().toLowerCase() ?? "";
+}
 
 function isFtypAvifOrHeic(bytes: Uint8Array): SniffResult | undefined {
   if (bytes.length < 12) return undefined;
@@ -54,9 +78,67 @@ function sniffSvgText(bytes: Uint8Array): SniffResult | undefined {
   return undefined;
 }
 
+function isZipArchive(bytes: Uint8Array): boolean {
+  return (
+    bytes.length >= 4 &&
+    bytes[0] === 0x50 &&
+    bytes[1] === 0x4b &&
+    (bytes[2] === 0x03 || bytes[2] === 0x05 || bytes[2] === 0x07) &&
+    (bytes[3] === 0x04 || bytes[3] === 0x06 || bytes[3] === 0x08)
+  );
+}
+
+function officeFromFileName(fileName?: string): SniffResult | undefined {
+  if (!fileName) return undefined;
+  const ext = fileName.split(".").pop()?.toLowerCase();
+  if (!ext || !(ext in OFFICE_EXT)) return undefined;
+  const mime = OFFICE_EXT[ext]!;
+  return { encodingFormat: mime, ext, kind: "file" };
+}
+
+function fallbackSniff(
+  bytes: Uint8Array,
+  fallbackMediaType?: string,
+  fileName?: string,
+): SniffResult {
+  const claim = fallbackMediaType ? stripMimeParameters(fallbackMediaType) : "";
+  if (claim && ACTIVE_OR_XML.test(claim)) {
+    return {
+      encodingFormat: "application/octet-stream",
+      ext: "bin",
+      kind: "file",
+    };
+  }
+
+  if (isZipArchive(bytes)) {
+    const office = officeFromFileName(fileName);
+    if (office) return office;
+    return {
+      encodingFormat: "application/zip",
+      ext: "zip",
+      kind: "file",
+    };
+  }
+
+  if (claim === "text/plain" || claim === "text/csv") {
+    const ext = EXT_BY_MIME[claim] ?? "txt";
+    return { encodingFormat: claim, ext, kind: "file" };
+  }
+  if (claim === "application/zip") {
+    return { encodingFormat: "application/zip", ext: "zip", kind: "file" };
+  }
+
+  return {
+    encodingFormat: "application/octet-stream",
+    ext: "bin",
+    kind: "file",
+  };
+}
+
 export function sniffMime(
   bytes: Uint8Array,
   fallbackMediaType?: string,
+  fileName?: string,
 ): SniffResult {
   if (
     bytes.length >= 3 &&
@@ -110,19 +192,9 @@ export function sniffMime(
   const svg = sniffSvgText(bytes);
   if (svg) return svg;
 
-  if (fallbackMediaType) {
-    const ext = EXT_BY_MIME[fallbackMediaType] ?? "bin";
-    const kind = fallbackMediaType.startsWith("image/") ? "image" : "file";
-    return { encodingFormat: fallbackMediaType, ext, kind };
-  }
-
-  return {
-    encodingFormat: "application/octet-stream",
-    ext: "bin",
-    kind: "file",
-  };
+  return fallbackSniff(bytes, fallbackMediaType, fileName);
 }
 
 export function extFromMime(mime: string): string {
-  return EXT_BY_MIME[mime] ?? "bin";
+  return EXT_BY_MIME[stripMimeParameters(mime)] ?? "bin";
 }

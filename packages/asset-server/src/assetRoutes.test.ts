@@ -149,8 +149,9 @@ describe("createAssetRoutes", () => {
         body: tinyPng(),
         fileName: "chip.png",
       });
-      const abs = store.thumbnailUrl(asset, { size: "chip", format: "webp" });
+      const abs = store.thumbnailUrl(asset, { size: "chip" });
       expect(abs).toBeDefined();
+      expect(abs).not.toContain("f=");
 
       const res = await app.request(
         `/api/projects/p1/assets/${asset.assetId}/thumb?size=chip`,
@@ -158,6 +159,8 @@ describe("createAssetRoutes", () => {
       );
       expect(res.status).toBe(200);
       expect(res.headers.get("cache-control")).toContain("immutable");
+      expect(res.headers.get("vary")).toBe("Accept");
+      expect(res.headers.get("x-content-type-options")).toBe("nosniff");
       const bytes = new Uint8Array(await res.arrayBuffer());
       expect(bytes).toEqual(new Uint8Array([9, 8, 7]));
     } finally {
