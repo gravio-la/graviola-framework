@@ -617,7 +617,9 @@ export const GraviolaExpandPanelRendererComponent = (
                         <Tooltip
                           title={translations.up}
                           placement="bottom"
-                          open={enableMoveUp ? undefined : false}
+                          disableHoverListener={!enableMoveUp}
+                          disableFocusListener={!enableMoveUp}
+                          disableTouchListener={!enableMoveUp}
                         >
                           <ArrayPanelIconAction
                             ariaLabel={translations.upAriaLabel}
@@ -632,7 +634,9 @@ export const GraviolaExpandPanelRendererComponent = (
                         <Tooltip
                           title={translations.down}
                           placement="bottom"
-                          open={enableMoveDown ? undefined : false}
+                          disableHoverListener={!enableMoveDown}
+                          disableFocusListener={!enableMoveDown}
+                          disableTouchListener={!enableMoveDown}
                         >
                           <ArrayPanelIconAction
                             ariaLabel={translations.downAriaLabel}

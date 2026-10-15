@@ -399,7 +399,9 @@ export const ArrayLayoutToolbar = ({
           )
         )}
         {!isReifiedStatement && dropdown && finderProps ? (
-          <Tooltip title="Entity Finder">
+          <Tooltip
+            title={t("relationalInput.openFinder", "Entity Finder") || ""}
+          >
             <span>
               <IconButton
                 size="small"
@@ -420,21 +422,23 @@ export const ArrayLayoutToolbar = ({
           </Tooltip>
         ) : null}
         {!isReifiedStatement && dropdownOption === undefined ? (
-          <Tooltip title={toggleLabel}>
-            <IconButton
-              size="small"
-              aria-label={toggleLabel}
-              data-testid="relational-toggle"
-              onClick={() =>
-                setRelationalMode(dropdown ? "finder" : "dropdown")
-              }
-            >
-              {dropdown ? (
-                <ManageSearchIcon fontSize="small" />
-              ) : (
-                <ArrowDropDownCircleIcon fontSize="small" />
-              )}
-            </IconButton>
+          <Tooltip title={toggleLabel || ""}>
+            <span>
+              <IconButton
+                size="small"
+                aria-label={toggleLabel}
+                data-testid="relational-toggle"
+                onClick={() =>
+                  setRelationalMode(dropdown ? "finder" : "dropdown")
+                }
+              >
+                {dropdown ? (
+                  <ManageSearchIcon fontSize="small" />
+                ) : (
+                  <ArrowDropDownCircleIcon fontSize="small" />
+                )}
+              </IconButton>
+            </span>
           </Tooltip>
         ) : null}
         {showCreateButton && (

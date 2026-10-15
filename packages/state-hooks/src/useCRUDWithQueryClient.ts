@@ -6,11 +6,8 @@ import { useCallback } from "react";
 import type { NamedAndTypedEntity } from "@graviola/edb-core-types";
 import type { CrudDatastoreStore } from "./crudDatastoreStore";
 import { crudQueryKey, useQueryCacheScope } from "./queryCacheKeys";
-import {
-  bringDefinitionToTop,
-  stripXCalcProperties,
-} from "@graviola/json-schema-utils";
 import type { JSONSchema7 } from "json-schema";
+import { prepareEntityForPersist } from "./prepareEntityForPersist";
 
 type LoadResult = {
   document: any;
@@ -58,10 +55,13 @@ const storeDraftDocuments: (
     documentsProcessed.push(draftDocument["@id"]);
     const typeName = dataStore.typeIRItoTypeName(draftDocument["@type"]);
     //delete draftDocument.__draft;
+    const persistDraft = prepareEntityForPersist(
+      draftDocument as Record<string, unknown>,
+    );
     const result = await dataStore.upsert(
       typeName,
       draftDocument["@id"],
-      draftDocument,
+      persistDraft,
     );
     results.push(result);
   }
@@ -196,14 +196,13 @@ export const useCRUDWithQueryClient: UseCRUDHook<
       }
       const typeName = dataStore.typeIRItoTypeName(typeIRI);
       const _entityIRI = entityIRI || createEntityIRI(typeName);
-      let persistData = data as Record<string, unknown>;
-      if (adbSchema && typeName) {
-        const typeSchema = bringDefinitionToTop(
-          adbSchema as JSONSchema7,
+      const persistData = prepareEntityForPersist(
+        data as Record<string, unknown>,
+        {
+          adbSchema: adbSchema as JSONSchema7 | undefined,
           typeName,
-        ) as JSONSchema7;
-        persistData = stripXCalcProperties(persistData, typeSchema);
-      }
+        },
+      );
       const draftDocumentsStored = await storeDraftDocuments(
         persistData,
         dataStore,

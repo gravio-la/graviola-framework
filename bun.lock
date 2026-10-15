@@ -1978,6 +1978,7 @@
         "@graviola/fulltext-search-core": "workspace:*",
         "@graviola/json-schema-utils": "workspace:*",
         "@graviola/jsonld-utils": "workspace:*",
+        "@graviola/meta-schema": "workspace:*",
         "@graviola/semantic-jsonform-types": "workspace:*",
         "@graviola/store-core": "workspace:*",
         "lodash-es": "catalog:",

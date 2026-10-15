@@ -61,7 +61,8 @@
     "@graviola/semantic-jsonform-types": "workspace:*",
     "@graviola/edb-data-mapping": "workspace:*",
     "@graviola/edb-ui-utils": "workspace:*",
-    "@graviola/fulltext-search-core": "workspace:*"
+    "@graviola/fulltext-search-core": "workspace:*",
+    "@graviola/meta-schema": "workspace:*"
   },
   "eslintConfig": {
     "root": true,

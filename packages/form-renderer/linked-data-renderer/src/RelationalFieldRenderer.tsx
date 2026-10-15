@@ -95,23 +95,25 @@ export const RelationalFieldRendererComponent = (props: ControlProps) => {
         <Child {...(props as any)} uischema={uischema} />
       </Box>
       {explicitDropdown === undefined ? (
-        <Tooltip title={toggleLabel}>
-          <IconButton
-            className="relational-toggle"
-            size="small"
-            aria-label={toggleLabel}
-            data-testid="relational-toggle"
-            onClick={() =>
-              setPreference(mode === "dropdown" ? "finder" : "dropdown")
-            }
-            sx={{ mt: 1 }}
-          >
-            {mode === "dropdown" ? (
-              <SwapHorizIcon fontSize="small" />
-            ) : (
-              <TuneIcon fontSize="small" />
-            )}
-          </IconButton>
+        <Tooltip title={toggleLabel || ""}>
+          <span>
+            <IconButton
+              className="relational-toggle"
+              size="small"
+              aria-label={toggleLabel}
+              data-testid="relational-toggle"
+              onClick={() =>
+                setPreference(mode === "dropdown" ? "finder" : "dropdown")
+              }
+              sx={{ mt: 1 }}
+            >
+              {mode === "dropdown" ? (
+                <SwapHorizIcon fontSize="small" />
+              ) : (
+                <TuneIcon fontSize="small" />
+              )}
+            </IconButton>
+          </span>
         </Tooltip>
       ) : null}
     </Box>

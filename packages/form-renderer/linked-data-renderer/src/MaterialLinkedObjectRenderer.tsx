@@ -16,6 +16,7 @@ import { FormHelperText } from "@mui/material";
 import { useDerivedDefaultHint } from "./derivedDefaultHintContext";
 import React, { useMemo } from "react";
 import { useTranslation } from "next-i18next";
+import { tWithDefaultInterpolation } from "./i18nDefaultInterpolation";
 
 /** Title on a `$ref` wrapper property (sibling of `$ref`), not on the resolved target. */
 function propertyTitleAtInstancePath(
@@ -131,10 +132,12 @@ const MaterialLinkedObjectRendererComponent = ({
       />
       {derivedHint ? (
         <FormHelperText sx={{ mx: 0 }}>
-          {t("derived default hint", {
-            defaultValue: "übernommen aus {{source}}",
-            source: derivedHint.sourceTitle,
-          })}
+          {tWithDefaultInterpolation(
+            t,
+            "derived default hint",
+            "übernommen aus {{source}}",
+            { source: derivedHint.sourceTitle },
+          )}
         </FormHelperText>
       ) : null}
     </>

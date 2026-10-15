@@ -418,7 +418,7 @@ export const MaterialArrayLayout = (props: ArrayLayoutProps) => {
             <Grid>
               <Tooltip
                 title={
-                  inlineErrors && (
+                  inlineErrors && inlineErrors.length > 0 ? (
                     <>
                       <div>{t("some error")}</div>
                       <div>
@@ -427,10 +427,14 @@ export const MaterialArrayLayout = (props: ArrayLayoutProps) => {
                         ))}
                       </div>
                     </>
+                  ) : (
+                    ""
                   )
                 }
                 onClose={() => setTooltipEnabled(false)}
-                open={tooltipEnabled && inlineErrors?.length > 0}
+                open={Boolean(
+                  tooltipEnabled && inlineErrors && inlineErrors.length > 0,
+                )}
               >
                 <Box onMouseEnter={() => setTooltipEnabled(true)}>
                   <IconButton

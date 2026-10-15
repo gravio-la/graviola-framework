@@ -570,7 +570,9 @@ export const InlineDropdownSemanticFormsRendererComponent = (
       ) : null}
       {!hasValue && finderButton && finderProps ? (
         <Tooltip
-          title={t("relationalInput.openFinder", "Entity Finder") as string}
+          title={
+            (t("relationalInput.openFinder", "Entity Finder") as string) || ""
+          }
         >
           <span>
             <IconButton
