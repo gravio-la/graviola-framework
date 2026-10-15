@@ -10,6 +10,19 @@ const orderBySpecSchema: JSONSchema7 = {
   additionalProperties: false,
 };
 
+const derivedDefaultSpecSchema: JSONSchema7 = {
+  type: "object",
+  properties: {
+    path: {
+      type: "array",
+      items: { type: "string" },
+      minItems: 1,
+    },
+  },
+  required: ["path"],
+  additionalProperties: false,
+};
+
 /**
  * AJV meta-schema for `.gra.side-schema.json` documents
  * ({@link GraviolaSideSchema}).
@@ -73,6 +86,13 @@ export const graviolaSideSchemaDefinition: JSONSchema7 = {
       additionalProperties: {
         type: "object",
         additionalProperties: orderBySpecSchema,
+      },
+    },
+    defaults: {
+      type: "object",
+      additionalProperties: {
+        type: "object",
+        additionalProperties: derivedDefaultSpecSchema,
       },
     },
     viewConfig: {

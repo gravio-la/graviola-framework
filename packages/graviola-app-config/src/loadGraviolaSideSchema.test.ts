@@ -55,6 +55,33 @@ describe("loadGraviolaSideSchema", () => {
     ).toThrow(/Invalid Graviola side-schema/);
   });
 
+  test("accepts valid defaults", () => {
+    const loaded = loadGraviolaSideSchema({
+      schemaName: "demo",
+      defaults: {
+        ZutatInRezept: {
+          einheit: { path: ["zutatRef", "standardEinheit"] },
+        },
+      },
+    });
+    expect(loaded.defaults?.ZutatInRezept?.einheit).toEqual({
+      path: ["zutatRef", "standardEinheit"],
+    });
+  });
+
+  test("rejects defaults with empty path", () => {
+    expect(() =>
+      loadGraviolaSideSchema({
+        schemaName: "demo",
+        defaults: {
+          ZutatInRezept: {
+            einheit: { path: [] },
+          },
+        },
+      }),
+    ).toThrow(/Invalid Graviola side-schema/);
+  });
+
   test("rejects orderBy spec with unknown inner keys", () => {
     expect(() =>
       loadGraviolaSideSchema({

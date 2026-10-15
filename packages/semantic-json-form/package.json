@@ -52,6 +52,7 @@
     "@graviola/entity-finder": "workspace:*"
   },
   "devDependencies": {
+    "@testing-library/react": "^16.3.3",
     "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
@@ -60,6 +61,8 @@
     "@types/react": "catalog:",
     "@types/json-schema": "catalog:",
     "eslint-config-edb": "workspace:*",
+    "happy-dom": "^20.0.0",
+    "react-dom": "catalog:",
     "tsup": "^8.0.0"
   },
   "eslintConfig": {

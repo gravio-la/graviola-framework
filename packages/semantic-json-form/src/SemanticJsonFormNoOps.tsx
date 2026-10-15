@@ -19,10 +19,13 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
 } from "react";
+import { DerivedDefaultHintProvider } from "@graviola/edb-linked-data-renderer";
 
 import { OptionsModal } from "./OptionsModal";
 import { useOrderedArrayData } from "./helper/useOrderedArrayData";
+import { useDerivedDefaults } from "./helper/useDerivedDefaults";
 
 const WithCard = ({
   children,
@@ -65,6 +68,7 @@ export const SemanticJsonFormNoOps: FunctionComponent<
     cellRendererRegistry,
     uischemata,
     queryBuildOptions: { typeIRItoTypeName },
+    derivedDefaults,
   } = useAdbContext();
   const typeName = useMemo(
     () => typeIRItoTypeName(typeIRI) ?? "",
@@ -82,6 +86,27 @@ export const SemanticJsonFormNoOps: FunctionComponent<
     [data, sortForLoad],
   );
 
+  const latestDataRef = useRef(formData);
+  useEffect(() => {
+    latestDataRef.current = formData;
+  }, [formData]);
+
+  const notifyDerivedChange = useCallback(
+    (patched: Record<string, unknown>) => {
+      syncPrevData(patched);
+      onChange?.(patched, "user");
+    },
+    [onChange, syncPrevData],
+  );
+
+  const { onUserChange: applyDerivedDefaults, hintContextValue } =
+    useDerivedDefaults({
+      schema: schema as JSONSchema7 | undefined,
+      config: derivedDefaults,
+      onChange: notifyDerivedChange,
+      latestDataRef,
+    });
+
   useEffect(() => {
     syncPrevData(formData);
   }, [formData, syncPrevData]);
@@ -90,15 +115,22 @@ export const SemanticJsonFormNoOps: FunctionComponent<
 
   const handleFormChange = useCallback(
     (state: Pick<JsonFormsCore, "data" | "errors">) => {
-      const next = applyUserChange(
-        prevDataRef.current as Record<string, unknown>,
-        state.data as Record<string, unknown>,
-      );
+      const prev = prevDataRef.current as Record<string, unknown>;
+      let next = applyUserChange(prev, state.data as Record<string, unknown>);
+      next = applyDerivedDefaults(prev, next);
+      latestDataRef.current = next;
       syncPrevData(next);
       onChange?.(next, "user");
       if (onError) onError(state.errors);
     },
-    [onChange, onError, applyUserChange, syncPrevData, prevDataRef],
+    [
+      onChange,
+      onError,
+      applyUserChange,
+      applyDerivedDefaults,
+      syncPrevData,
+      prevDataRef,
+    ],
   );
 
   const { hideFinder } = useSimilarityFinderModal();
@@ -246,15 +278,17 @@ export const SemanticJsonFormNoOps: FunctionComponent<
           >
             <WithCard wrapWithinCard={wrapWithinCard}>
               {toolbar && React.isValidElement(toolbar) ? toolbar : null}
-              <JsonForms
-                data={formData}
-                renderers={allRenderer}
-                cells={allCellRenderer}
-                onChange={handleFormChange}
-                schema={schema as JsonSchema}
-                readonly={disabled}
-                {...finalJsonFormsProps}
-              />
+              <DerivedDefaultHintProvider value={hintContextValue}>
+                <JsonForms
+                  data={formData}
+                  renderers={allRenderer}
+                  cells={allCellRenderer}
+                  onChange={handleFormChange}
+                  schema={schema as JsonSchema}
+                  readonly={disabled}
+                  {...finalJsonFormsProps}
+                />
+              </DerivedDefaultHintProvider>
             </WithCard>
           </Grid>
           {!disableSimilarityFinder && !enableSidebar && searchText && (

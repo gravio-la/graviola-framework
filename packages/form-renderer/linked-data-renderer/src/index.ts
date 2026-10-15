@@ -20,3 +20,4 @@ export * from "./inlineCondensedSemanticFormsTester";
 export * from "./formHelper";
 export * from "./isArrayOfLinkedItems";
 export * from "./RelationalFieldRenderer";
+export * from "./derivedDefaultHintContext";

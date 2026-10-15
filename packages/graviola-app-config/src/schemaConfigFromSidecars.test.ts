@@ -125,6 +125,23 @@ describe("schemaConfigFromSidecars", () => {
     expect(config.uischemata?.Person).toBeDefined();
   });
 
+  test("keeps defaults from side schema", () => {
+    const config = schemaConfigFromSidecars({
+      schema,
+      sideSchema: {
+        schemaName: "derived",
+        defaults: {
+          ZutatInRezept: {
+            einheit: { path: ["zutatRef", "standardEinheit"] },
+          },
+        },
+      },
+    });
+    expect(config.defaults?.ZutatInRezept?.einheit).toEqual({
+      path: ["zutatRef", "standardEinheit"],
+    });
+  });
+
   test("keeps orderBy from side schema", () => {
     const config = schemaConfigFromSidecars({
       schema,

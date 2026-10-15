@@ -267,6 +267,15 @@ export type OrderBySpec = { field: string; direction: SortOrder };
 /** Side-schema `orderBy`: type name → slot name → spec. */
 export type OrderByConfig = Record<string, Record<string, OrderBySpec>>;
 
+/** Side-schema `defaults`: walk `path` from a source slot to fill a target slot. */
+export type DerivedDefaultSpec = { path: string[] };
+
+/** Side-schema `defaults`: type name → target slot → spec. */
+export type DerivedDefaultsConfig = Record<
+  string,
+  Record<string, DerivedDefaultSpec>
+>;
+
 /**
  * Order by clause for a single property (Prisma-style)
  * Example: { name: 'asc' } or { createdAt: 'desc' }

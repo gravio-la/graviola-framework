@@ -206,6 +206,7 @@ export function schemaConfigFromSidecars(
     menuSidebarConfig: sideSchema.menuSidebarConfig,
     viewConfig: sideSchema.viewConfig,
     orderBy: sideSchema.orderBy,
+    defaults: sideSchema.defaults,
   };
 
   let resolved = defineGraviolaApp(overridable);

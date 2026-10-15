@@ -27,3 +27,4 @@ export {
 } from "./specialDate";
 export type { DateParts } from "./specialDate";
 export * from "./orderBy";
+export * from "./derivedDefaults";

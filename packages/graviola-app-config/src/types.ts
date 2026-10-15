@@ -1,4 +1,5 @@
 import type {
+  DerivedDefaultsConfig,
   OrderByConfig,
   PrimaryFieldDeclaration,
 } from "@graviola/edb-core-types";
@@ -126,6 +127,8 @@ export type SchemaConfig = {
   viewConfig?: SideSchemaViewConfig;
   /** Per-type multivalued slot sort specs from `gra:orderBy` (side schema). */
   orderBy?: OrderByConfig;
+  /** Per-type derived default specs from `gra:default` (side schema). */
+  defaults?: DerivedDefaultsConfig;
 };
 
 /**
@@ -175,4 +178,6 @@ export type GraviolaSideSchema = {
   viewConfig?: SideSchemaViewConfig;
   /** Per-type multivalued slot sort specs from `gra:orderBy`. */
   orderBy?: OrderByConfig;
+  /** Per-type derived default specs from `gra:default`. */
+  defaults?: DerivedDefaultsConfig;
 };

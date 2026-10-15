@@ -1771,9 +1771,12 @@
         "@graviola/edb-tsup-config": "workspace:*",
         "@rdfjs/namespace": "catalog:rdf",
         "@storybook/react": "10.0.7",
+        "@testing-library/react": "^16.3.3",
         "@types/json-schema": "catalog:",
         "@types/react": "catalog:",
         "eslint-config-edb": "workspace:*",
+        "happy-dom": "^20.0.0",
+        "react-dom": "catalog:",
         "tsup": "^8.0.0",
       },
       "peerDependencies": {

@@ -12,7 +12,10 @@ import {
 import { JsonFormsDispatch, withJsonFormsDetailProps } from "@jsonforms/react";
 
 import isEmpty from "lodash-es/isEmpty";
+import { FormHelperText } from "@mui/material";
+import { useDerivedDefaultHint } from "./derivedDefaultHintContext";
 import React, { useMemo } from "react";
+import { useTranslation } from "next-i18next";
 
 /** Title on a `$ref` wrapper property (sibling of `$ref`), not on the resolved target. */
 function propertyTitleAtInstancePath(
@@ -70,6 +73,8 @@ const MaterialLinkedObjectRendererComponent = ({
   rootSchema,
   config,
 }: StatePropsOfControlWithDetail) => {
+  const { t } = useTranslation();
+  const derivedHint = useDerivedDefaultHint(path);
   const detailUiSchema = useMemo(() => {
     const controlElement = uischema as ControlElement;
     const explicitUiLabel =
@@ -115,14 +120,24 @@ const MaterialLinkedObjectRendererComponent = ({
   }
 
   return (
-    <JsonFormsDispatch
-      enabled={enabled}
-      schema={schema}
-      uischema={detailUiSchema}
-      path={path}
-      renderers={renderers}
-      cells={cells}
-    />
+    <>
+      <JsonFormsDispatch
+        enabled={enabled}
+        schema={schema}
+        uischema={detailUiSchema}
+        path={path}
+        renderers={renderers}
+        cells={cells}
+      />
+      {derivedHint ? (
+        <FormHelperText sx={{ mx: 0 }}>
+          {t("derived default hint", {
+            defaultValue: "übernommen aus {{source}}",
+            source: derivedHint.sourceTitle,
+          })}
+        </FormHelperText>
+      ) : null}
+    </>
   );
 };
 
