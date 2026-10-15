@@ -1,5 +1,5 @@
 import type { UploadedAsset } from "@graviola/edb-core-types";
-import { ArrayLayoutProps, update } from "@jsonforms/core";
+import { ArrayLayoutProps, Resolve, update } from "@jsonforms/core";
 import { useJsonForms, withJsonFormsArrayLayoutProps } from "@jsonforms/react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
@@ -88,7 +88,10 @@ const AssetGalleryRendererComponent = (props: ArrayLayoutProps) => {
     ],
   );
 
-  const items = normalizeArray(data);
+  // Array layouts receive the item count as `data`; read the items from the form data.
+  const items = normalizeArray(
+    Array.isArray(data) ? data : Resolve.data(rootData, path),
+  );
   const { persistUploaded, assetService } = usePersistUploadedAsset({
     typeIRI: meta.typeIRI,
     typeName: meta.typeName,
