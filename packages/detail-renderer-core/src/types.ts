@@ -6,7 +6,10 @@ import type {
   ViewDensity,
 } from "@graviola/edb-core-types";
 import type { UISchemaElement } from "@jsonforms/core";
-import type { SchemaScopeFrame } from "@graviola/json-schema-utils";
+import type {
+  SchemaRegistry,
+  SchemaScopeFrame,
+} from "@graviola/json-schema-utils";
 import type { JSONSchema7 } from "json-schema";
 import type { RankedTester } from "@jsonforms/core";
 import type React from "react";
@@ -85,6 +88,8 @@ export interface DetailTesterContext {
   orderBy?: OrderByConfig;
   /** Side-schema asset class kinds by definition name. */
   assetClasses?: Record<string, "image" | "file">;
+  /** Compiled schema registry for `$ref` / `@type` → asset class resolution. */
+  schemaRegistry?: SchemaRegistry;
 }
 
 export interface DetailRendererRegistryEntry {

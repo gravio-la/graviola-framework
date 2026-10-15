@@ -5,6 +5,8 @@ export {
   isTypedEntity,
 } from "./structural";
 export * from "./structural";
+export * from "./assetRef";
+export { assetKindForDetailSchema } from "./assetKindForDetailSchema";
 export * from "./typeAware";
 export {
   and,

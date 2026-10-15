@@ -15,6 +15,8 @@ import {
   numberTester,
   oneOfObjectUnionTester,
   relationViaTester,
+  assetRefTester,
+  arrayOfAssetRefsTester,
   stringTester,
   uriTester,
   isArticlePresentation,
@@ -38,6 +40,8 @@ import { ArrayEntityRenderer } from "./ArrayEntityRenderer";
 import { ArrayPrimitiveRenderer } from "./ArrayPrimitiveRenderer";
 import { ImageGalleryRenderer } from "./ImageGalleryRenderer";
 import { arrayOfImageUrisTester } from "./arrayOfImagesTester";
+import { AssetRefRenderer } from "./AssetRefRenderer";
+import { AssetGalleryValueRenderer } from "../value-renderers/AssetGalleryValueRenderer";
 import { FallbackRenderer } from "./FallbackRenderer";
 import { markdownControlTester } from "../value-renderers/markdownValueTester";
 import { ObjectRenderer } from "./ObjectRenderer";
@@ -124,6 +128,8 @@ function buildRegistry(primaryLayout: {
       tester: articleInlineObjectTester,
       renderer: ArticleObjectRenderer,
     },
+    { tester: assetRefTester, renderer: AssetRefRenderer },
+    { tester: arrayOfAssetRefsTester, renderer: AssetGalleryValueRenderer },
     { tester: namedEntityTester, renderer: NamedEntityRenderer },
     { tester: arraynamedEntityTester, renderer: ArrayEntityRenderer },
     { tester: dateTester, renderer: DateRenderer },

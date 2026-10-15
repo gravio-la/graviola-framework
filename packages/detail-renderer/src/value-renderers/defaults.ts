@@ -3,6 +3,7 @@ import {
   and,
   formatIs,
   imageUriTester,
+  assetValueRefTester,
   isBooleanControl,
   isControl,
   isNumberOrIntegerControl,
@@ -18,6 +19,7 @@ import { EnumValueRenderer } from "./EnumValueRenderer";
 import { FallbackStringValueRenderer } from "./FallbackStringValueRenderer";
 import { HistoricalDateValueRenderer } from "./HistoricalDateValueRenderer";
 import { ImageValueRenderer } from "./ImageValueRenderer";
+import { AssetValueRenderer } from "./AssetValueRenderer";
 import { LocalizedNumberValueRenderer } from "./LocalizedNumberValueRenderer";
 import { UriValueRenderer } from "./UriValueRenderer";
 import { MarkdownValueRenderer } from "./MarkdownValueRenderer";
@@ -50,6 +52,11 @@ export const defaultValueRenderers: ValueRendererEntry[] = [
     name: "date",
     tester: rankWith(4, and(isControl, formatIs("date"))),
     renderer: DateValueRenderer,
+  },
+  {
+    name: "asset",
+    tester: assetValueRefTester,
+    renderer: AssetValueRenderer,
   },
   {
     name: "image",

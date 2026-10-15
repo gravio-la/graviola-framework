@@ -33,9 +33,11 @@ const defaultInlineDetailSkipScopes: string[] = [
   `#/properties/${encode("@type")}`,
 ];
 
-export type RenderDetailInlineObjectBodyGenerateOptions = Pick<
-  GenerateDefaultDetailUISchemaOptions,
-  "skipScope" | "scopeOverride" | "layoutType" | "orderBy"
+export type RenderDetailInlineObjectBodyGenerateOptions = Partial<
+  Pick<
+    GenerateDefaultDetailUISchemaOptions,
+    "skipScope" | "scopeOverride" | "layoutType" | "orderBy"
+  >
 > & {
   /**
    * When `false`, do not prepend default skips for `#/properties/@id` / `@type`.

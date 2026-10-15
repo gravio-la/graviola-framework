@@ -164,9 +164,11 @@ export function classLevelInlineGenerateOptions(
   };
 }
 
-export type InlinePresentationGenerateOptions = Pick<
-  GenerateDefaultDetailUISchemaOptions,
-  "skipScope" | "scopeOverride" | "layoutType"
+export type InlinePresentationGenerateOptions = Partial<
+  Pick<
+    GenerateDefaultDetailUISchemaOptions,
+    "skipScope" | "scopeOverride" | "layoutType"
+  >
 >;
 
 export function mergeInlineItemGenerateOptions(

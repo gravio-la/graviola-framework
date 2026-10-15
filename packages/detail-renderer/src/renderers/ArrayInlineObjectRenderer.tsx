@@ -106,9 +106,8 @@ function computeItemGenerateOptions(
     }
   }
 
-  const out: Pick<
-    GenerateDefaultDetailUISchemaOptions,
-    "skipScope" | "scopeOverride"
+  const out: Partial<
+    Pick<GenerateDefaultDetailUISchemaOptions, "skipScope" | "scopeOverride">
   > = {};
 
   if (skipScope.length > 0) out.skipScope = skipScope;

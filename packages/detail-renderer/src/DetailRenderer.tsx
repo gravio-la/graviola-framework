@@ -1,7 +1,11 @@
 import React, { useMemo } from "react";
 import type { JSONSchema7 } from "json-schema";
 import type { JsonSchema, UISchemaElement } from "@jsonforms/core";
-import { extractTypeIRI, rootFrame } from "@graviola/json-schema-utils";
+import {
+  compileSchema,
+  extractTypeIRI,
+  rootFrame,
+} from "@graviola/json-schema-utils";
 import {
   buildDispatch,
   type DetailViewConfig,
@@ -223,6 +227,11 @@ export const DetailRenderer = React.memo(function DetailRenderer({
   );
   const primaryFields = resolvedConfig.primaryFields ?? primaryFieldsFromAdb;
 
+  const schemaRegistry = useMemo(
+    () => (schema ? compileSchema(schema) : undefined),
+    [schema],
+  );
+
   const registry = useMemo(
     () =>
       resolvedConfig.overrideRenderers ?? [
@@ -326,9 +335,11 @@ export const DetailRenderer = React.memo(function DetailRenderer({
       detailUiSchemata: resolvedConfig.uiSchemata,
       orderBy: adb.orderBy,
       assetClasses: adb.assetClasses,
+      schemaRegistry,
     }),
     [
       schema,
+      schemaRegistry,
       resolvedConfig.maxDepth,
       typeIRI,
       typeName,
