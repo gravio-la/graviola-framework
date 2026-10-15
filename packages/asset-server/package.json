@@ -1,0 +1,39 @@
+{
+  "name": "@graviola/asset-server",
+  "version": "0.1.0",
+  "description": "Filesystem asset store with Picturium-signed thumbnails and Hono HTTP routes",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "tsc --noEmit",
+    "test": "bun test src"
+  },
+  "dependencies": {
+    "hono": "^4.7.0",
+    "ulid": "^2.3.0"
+  },
+  "devDependencies": {
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*",
+    "@types/bun": "latest",
+    "tsup": "^8.0.0",
+    "typescript": "5.8.2"
+  },
+  "license": "MIT"
+}

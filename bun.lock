@@ -315,6 +315,21 @@
         "react": "catalog:",
       },
     },
+    "packages/asset-server": {
+      "name": "@graviola/asset-server",
+      "version": "0.1.0",
+      "dependencies": {
+        "hono": "^4.7.0",
+        "ulid": "^2.3.0",
+      },
+      "devDependencies": {
+        "@graviola/edb-tsconfig": "workspace:*",
+        "@graviola/edb-tsup-config": "workspace:*",
+        "@types/bun": "latest",
+        "tsup": "^8.0.0",
+        "typescript": "5.8.2",
+      },
+    },
     "packages/async-oxigraph": {
       "name": "@graviola/async-oxigraph",
       "version": "0.2.9",
@@ -1416,6 +1431,7 @@
       "dependencies": {
         "@graviola/edb-core-utils": "workspace:*",
         "@graviola/edb-graph-traversal": "workspace:*",
+        "@graviola/json-schema-utils": "workspace:*",
         "jsonld-streaming-parser": "^5.0.1",
         "rdf-data-factory": "^2.0.0",
       },
@@ -1800,6 +1816,7 @@
         "@graviola/edb-global-types": "workspace:*",
         "@graviola/edb-table-types": "workspace:*",
         "@graviola/formula-dependency": "workspace:*",
+        "@graviola/json-schema-utils": "workspace:*",
         "@jsonforms/core": "catalog:jsonforms",
         "@jsonforms/react": "catalog:jsonforms",
         "@types/json-schema": "catalog:",
@@ -3453,6 +3470,8 @@
     "@graviola/agent-chat-components": ["@graviola/agent-chat-components@0.3.2", "https://npm.winzlieb.eu/@graviola/agent-chat-components/-/agent-chat-components-0.3.2.tgz", { "peerDependencies": { "@emotion/react": ">=11.0.0", "@emotion/styled": ">=11.0.0", "@mui/icons-material": ">=5.0.0", "@mui/material": ">=5.0.0", "react": ">=18", "react-dom": ">=18" } }, "sha512-vKg2T9iK5RndDgtX1gxKQZezAzaKlba9uaX1bgi8AOTMrr4BYB5wi9OSd+w5p0746+ldKWkR1z/HNLaxNxu4ng=="],
 
     "@graviola/agent-chat-markdown": ["@graviola/agent-chat-markdown@0.2.1", "https://npm.winzlieb.eu/@graviola/agent-chat-markdown/-/agent-chat-markdown-0.2.1.tgz", { "dependencies": { "@graviola/agent-chat-components": "^0.2.0", "mermaid": "^11.0.0", "mui-markdown": "^2.1.1", "prism-react-renderer": "^2.0.0" }, "peerDependencies": { "@mui/material": ">=6", "react": ">=18", "react-dom": ">=18" } }, "sha512-W48sfCQcYs3V7imGTKKeGyr47DpG1ncm8p6Su3KRY1gTq74NTXgEcbMa01WWP3HmbvCUB6PuU2/U296FlZUZZA=="],
+
+    "@graviola/asset-server": ["@graviola/asset-server@workspace:packages/asset-server"],
 
     "@graviola/async-oxigraph": ["@graviola/async-oxigraph@workspace:packages/async-oxigraph"],
 
@@ -6851,6 +6870,8 @@
     "uc.micro": ["uc.micro@2.1.0", "", {}, "sha512-ARDJmphmdvUk6Glw7y9DQ2bFkKBHwQHLi2lsaH6PPmz/Ka9sFOBsBluozhDltWmnv9u/cF6Rt87znRTPV+yp/A=="],
 
     "ufo": ["ufo@1.6.3", "", {}, "sha512-yDJTmhydvl5lJzBmy/hyOAA0d+aqCBuwl818haVdYCRrWV84o7YyeVm4QlVHStqNrrJSTb6jKuFAVqAFsr+K3Q=="],
+
+    "ulid": ["ulid@2.4.0", "", { "bin": { "ulid": "bin/cli.js" } }, "sha512-fIRiVTJNcSRmXKPZtGzFQv9WRrZ3M9eoptl/teFJvjOzmpU+/K/JH6HZ8deBfb5vMEpicJcLn7JmvdknlMq7Zg=="],
 
     "unbash": ["unbash@2.2.0", "", {}, "sha512-X2wH19RAPZE3+ldGicOkoj/SIA83OIxcJ6Cuaw23hf8Xc6fQpvZXY0SftE2JgS0QhYLUG4uwodSI3R53keyh7w=="],
 
