@@ -45,6 +45,13 @@ export function assetKindForRef(
     if (className && assetClasses[className]) {
       return assetClasses[className];
     }
+    // Forms link to `<Class>Stub` definitions (see stubHelper), not to the class itself.
+    const stubbed = className?.endsWith("Stub")
+      ? className.slice(0, -"Stub".length)
+      : undefined;
+    if (stubbed && assetClasses[stubbed]) {
+      return assetClasses[stubbed];
+    }
   }
 
   const typeIRI = extractTypeIRI(schemaOrRef);

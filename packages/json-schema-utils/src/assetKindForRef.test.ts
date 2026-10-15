@@ -22,6 +22,36 @@ const rootSchema: JSONSchema7 = {
 };
 
 describe("assetKindForRef", () => {
+  it("resolves form stub refs (<Class>Stub) to the asset class", () => {
+    const withStub: JSONSchema7 = {
+      definitions: {
+        ...rootSchema.definitions,
+        PhotoStub: {
+          type: "object",
+          properties: {
+            "@id": { type: "string" },
+            "@type": { const: "https://ex.org/Photo" },
+          },
+        },
+      },
+    };
+    const ctx = {
+      config: {
+        registry: compileSchema(withStub),
+        assetClasses: { Photo: "image" as const },
+      },
+    };
+    expect(assetKindForRef(ctx, { $ref: "#/definitions/PhotoStub" })).toBe(
+      "image",
+    );
+    expect(
+      assetKindForRef(ctx, {
+        type: "array",
+        items: { $ref: "#/definitions/PhotoStub" },
+      }),
+    ).toBe("image");
+  });
+
   it("resolves array items $ref via registry and assetClasses", () => {
     const registry = compileSchema(rootSchema);
     const ctx = {
