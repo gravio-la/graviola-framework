@@ -478,6 +478,7 @@ export function initSPARQLDatastorePair(
           queryBuildOptions,
           defaultUpdateGraph,
           maxRecursion: deleteDepth,
+          typeName,
         },
       );
     },
@@ -584,6 +585,8 @@ export function initSPARQLDatastorePair(
           excludeProperties,
           fields,
           {
+            typeName,
+            inverses: queryBuildOptions.inverses,
             primaryFields: queryBuildOptions.primaryFields,
             ...(sorting && sorting.length > 0
               ? {
@@ -623,7 +626,10 @@ export function initSPARQLDatastorePair(
           typeIRI,
           [],
           [],
-          undefined,
+          {
+            typeName,
+            inverses: queryBuildOptions.inverses,
+          },
           true,
           queryBuildOptions.sparqlFlavour,
         ),
@@ -671,6 +677,8 @@ export function initSPARQLDatastorePair(
         ...options,
         defaultPrefix,
         queryBuildOptions,
+        typeName,
+        rootSchema,
         flavour: options.flavour ?? queryBuildOptions.sparqlFlavour,
         sparqlFeatures: queryBuildOptions.sparqlFeatures,
         maxRecursion:
@@ -711,6 +719,8 @@ export function initSPARQLDatastorePair(
         ...restOptions,
         defaultPrefix,
         queryBuildOptions,
+        typeName,
+        rootSchema,
         flavour: options.flavour ?? queryBuildOptions.sparqlFlavour,
         sparqlFeatures: queryBuildOptions.sparqlFeatures,
         maxRecursion:

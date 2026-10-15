@@ -20,6 +20,7 @@ import { JSONSchema7 } from "json-schema";
 import { isJSONSchema } from "@graviola/json-schema-utils";
 import type { TraversalSchema } from "@graviola/edb-graph-traversal";
 import {
+  definitionNameFromRef,
   effectiveInverseMap,
   resolveInverseForProperty,
   type InverseMap,
@@ -530,17 +531,21 @@ function createNestedContext(
       : ctx.maxRecursion;
 
   let childTypeName = ctx.typeName;
-  const typeConst = nestedSchema?.properties?.["@type"] as
-    | JSONSchema7
-    | undefined;
-  if (
-    typeConst &&
-    typeof typeConst === "object" &&
-    "const" in typeConst &&
-    typeof typeConst.const === "string" &&
-    ctx.typeIRItoTypeName
-  ) {
-    childTypeName = ctx.typeIRItoTypeName(typeConst.const) ?? ctx.typeName;
+  if (nestedSchema?.$ref) {
+    childTypeName = definitionNameFromRef(nestedSchema.$ref) ?? childTypeName;
+  } else {
+    const typeConst = nestedSchema?.properties?.["@type"] as
+      | JSONSchema7
+      | undefined;
+    if (
+      typeConst &&
+      typeof typeConst === "object" &&
+      "const" in typeConst &&
+      typeof typeConst.const === "string" &&
+      ctx.typeIRItoTypeName
+    ) {
+      childTypeName = ctx.typeIRItoTypeName(typeConst.const) ?? ctx.typeName;
+    }
   }
 
   return {
@@ -804,13 +809,23 @@ export function traversalSchema2construct(
         // Check if there's a where clause for this property at the top level
         const topLevelWhereClause = ctx.filterOptions.where?.[propertyName];
         if (topLevelWhereClause && propertyPatterns.objectVar) {
-          const predicate = createPredicate(propertyName, ctx.prefixMap);
+          const inversePath = getInversePathFromContext(
+            ctx,
+            propertyName,
+            propertySchema as JSONSchema7,
+          );
+          const useInverseStore =
+            inversePath != null && inversePath.length === 1;
+          const predicate = useInverseStore
+            ? createPredicate(inversePath[0], ctx.prefixMap)
+            : createPredicate(propertyName, ctx.prefixMap);
 
           const filterContext: FilterContext = {
             subject: subject,
             property: propertyName,
             propertyVar: propertyPatterns.objectVar,
             predicateNode: predicate,
+            relationshipLink: useInverseStore ? "inverseStore" : "forward",
             schemaType:
               typeof propertySchema !== "boolean"
                 ? ((propertySchema as JSONSchema7).type as string)
@@ -1036,7 +1051,7 @@ function createPropertyPatterns(
       const nestedPatterns = handleNestedObject(
         objectVar,
         itemSchema as JSONSchema7,
-        createNestedContext(ctx, propertyName),
+        createNestedContext(ctx, propertyName, itemSchema as TraversalSchema),
       );
       construct.push(...nestedPatterns.construct);
       nestedWhereParts.push(...nestedPatterns.whereParts);
@@ -1075,7 +1090,7 @@ function createPropertyPatterns(
     const nestedPatterns = handleNestedObject(
       objectVar,
       propertySchema,
-      createNestedContext(ctx, propertyName),
+      createNestedContext(ctx, propertyName, propertySchema as TraversalSchema),
     );
     construct.push(...nestedPatterns.construct);
 

@@ -13,6 +13,9 @@
     "JobParam": {
       "description": "A single named parameter on a JobRun (SPARQL-queryable).",
       "properties": {
+        "@id": {
+          "type": "string"
+        },
         "@type": {
           "const": "https://graviola.gra.one/schema/job#JobParam",
           "type": "string"
@@ -25,7 +28,6 @@
         }
       },
       "required": [
-        "name",
         "name"
       ],
       "type": "object"
@@ -40,56 +42,17 @@
           "const": "https://graviola.gra.one/schema/job#JobRun",
           "type": "string"
         },
-        "agent": {
-          "type": "string"
-        },
-        "changeSetGraph": {
-          "type": "string"
-        },
-        "dedupeKey": {
-          "type": "string"
-        },
-        "entitiesUpserted": {
-          "type": "integer"
-        },
-        "errorDetail": {
-          "type": "string"
-        },
-        "errorMessage": {
-          "type": "string"
-        },
-        "fetchCount": {
-          "type": "integer"
-        },
-        "fetchErrorCount": {
-          "type": "integer"
-        },
-        "finishedAt": {
-          "type": "string"
-        },
-        "geometriesUpserted": {
-          "type": "integer"
-        },
-        "heartbeatAt": {
-          "type": "string"
-        },
-        "id": {
-          "type": "string"
-        },
-        "inputJson": {
-          "type": "string"
-        },
-        "intervention": {
-          "$ref": "#/definitions/Intervention"
-        },
-        "itemsSeen": {
-          "type": "integer"
-        },
         "kind": {
           "type": "string"
         },
         "label": {
           "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/JobStatus"
+        },
+        "intervention": {
+          "$ref": "#/definitions/Intervention"
         },
         "params": {
           "items": {
@@ -97,28 +60,8 @@
           },
           "type": "array"
         },
-        "parentRun": {
+        "inputJson": {
           "type": "string"
-        },
-        "schemaFingerprint": {
-          "type": "string"
-        },
-        "startedAt": {
-          "type": "string"
-        },
-        "status": {
-          "$ref": "#/definitions/JobStatus"
-        },
-        "steps": {
-          "items": {
-            "$ref": "#/definitions/JobStep"
-          },
-          "type": "array",
-          "x-inverseOf": {
-            "inverseOf": [
-              "#/definitions/JobStep/properties/ofRun"
-            ]
-          }
         },
         "targetEndpoint": {
           "type": "string"
@@ -129,14 +72,65 @@
         "targetSecondaryStore": {
           "type": "string"
         },
-        "tileRevision": {
+        "changeSetGraph": {
+          "type": "string"
+        },
+        "startedAt": {
+          "type": "string"
+        },
+        "finishedAt": {
+          "type": "string"
+        },
+        "heartbeatAt": {
+          "type": "string"
+        },
+        "itemsSeen": {
           "type": "integer"
+        },
+        "entitiesUpserted": {
+          "type": "integer"
+        },
+        "geometriesUpserted": {
+          "type": "integer"
+        },
+        "fetchCount": {
+          "type": "integer"
+        },
+        "fetchErrorCount": {
+          "type": "integer"
+        },
+        "errorMessage": {
+          "type": "string"
+        },
+        "errorDetail": {
+          "type": "string"
+        },
+        "dedupeKey": {
+          "type": "string"
+        },
+        "parentRun": {
+          "type": "string"
+        },
+        "agent": {
+          "type": "string"
+        },
+        "schemaFingerprint": {
+          "type": "string"
+        },
+        "steps": {
+          "items": {
+            "$ref": "#/definitions/JobStep"
+          },
+          "type": "array"
         },
         "touchedEntities": {
           "items": {
             "type": "string"
           },
           "type": "array"
+        },
+        "tileRevision": {
+          "type": "integer"
         }
       },
       "type": "object"
@@ -166,32 +160,6 @@
           "const": "https://graviola.gra.one/schema/job#JobStep",
           "type": "string"
         },
-        "detail": {
-          "type": "string"
-        },
-        "done": {
-          "type": "integer"
-        },
-        "errorMessage": {
-          "type": "string"
-        },
-        "fetches": {
-          "items": {
-            "$ref": "#/definitions/SourceFetch"
-          },
-          "type": "array",
-          "x-inverseOf": {
-            "inverseOf": [
-              "#/definitions/SourceFetch/properties/ofStep"
-            ]
-          }
-        },
-        "finishedAt": {
-          "type": "string"
-        },
-        "id": {
-          "type": "string"
-        },
         "ofRun": {
           "$ref": "#/definitions/JobRun"
         },
@@ -201,17 +169,35 @@
         "phase": {
           "type": "string"
         },
-        "resumeToken": {
-          "type": "string"
-        },
-        "startedAt": {
+        "detail": {
           "type": "string"
         },
         "status": {
           "type": "string"
         },
+        "startedAt": {
+          "type": "string"
+        },
+        "finishedAt": {
+          "type": "string"
+        },
+        "done": {
+          "type": "integer"
+        },
         "total": {
           "type": "integer"
+        },
+        "errorMessage": {
+          "type": "string"
+        },
+        "resumeToken": {
+          "type": "string"
+        },
+        "fetches": {
+          "items": {
+            "$ref": "#/definitions/SourceFetch"
+          },
+          "type": "array"
         }
       },
       "type": "object"
@@ -235,32 +221,17 @@
           "const": "https://graviola.gra.one/schema/job#SourceFetch",
           "type": "string"
         },
-        "attempts": {
-          "type": "integer"
+        "ofStep": {
+          "$ref": "#/definitions/JobStep"
         },
-        "cacheStatus": {
+        "sourceId": {
           "type": "string"
         },
-        "detailJson": {
+        "sourceKind": {
           "type": "string"
-        },
-        "durationMs": {
-          "type": "integer"
         },
         "endpoint": {
           "type": "string"
-        },
-        "errorMessage": {
-          "type": "string"
-        },
-        "httpStatus": {
-          "type": "integer"
-        },
-        "id": {
-          "type": "string"
-        },
-        "ofStep": {
-          "$ref": "#/definitions/JobStep"
         },
         "requestHash": {
           "type": "string"
@@ -271,10 +242,22 @@
         "requestedAt": {
           "type": "string"
         },
-        "sourceId": {
+        "durationMs": {
+          "type": "integer"
+        },
+        "cacheStatus": {
           "type": "string"
         },
-        "sourceKind": {
+        "attempts": {
+          "type": "integer"
+        },
+        "httpStatus": {
+          "type": "integer"
+        },
+        "errorMessage": {
+          "type": "string"
+        },
+        "detailJson": {
           "type": "string"
         }
       },
@@ -290,22 +273,28 @@
           "const": "https://graviola.gra.one/schema/job#StagedEntityRecord",
           "type": "string"
         },
-        "appliedAt": {
+        "entityIRI": {
           "type": "string"
         },
-        "decision": {
+        "typeIRI": {
+          "type": "string"
+        },
+        "ofRun": {
+          "$ref": "#/definitions/JobRun"
+        },
+        "parentIRI": {
           "type": "string"
         },
         "depth": {
           "type": "integer"
         },
-        "entityIRI": {
+        "reviewState": {
+          "$ref": "#/definitions/ReviewState"
+        },
+        "decision": {
           "type": "string"
         },
-        "id": {
-          "type": "string"
-        },
-        "mappingId": {
+        "matchMethod": {
           "type": "string"
         },
         "mappingPath": {
@@ -314,25 +303,16 @@
           },
           "type": "array"
         },
-        "matchMethod": {
-          "type": "string"
-        },
-        "ofRun": {
-          "type": "string"
-        },
-        "parentIRI": {
-          "type": "string"
-        },
         "provenanceMethod": {
           "type": "string"
         },
-        "reviewState": {
-          "$ref": "#/definitions/ReviewState"
+        "mappingId": {
+          "type": "string"
         },
         "sourceRef": {
           "type": "string"
         },
-        "typeIRI": {
+        "appliedAt": {
           "type": "string"
         }
       },

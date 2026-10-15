@@ -203,7 +203,11 @@ export const jsonSchema2construct: (
         return;
       }
       for (const link of linkPatterns) {
-        construct += `${sP} ${p} ${o} .\n`;
+        if (resolvedInverse) {
+          construct += `${link}\n`;
+        } else {
+          construct += `${sP} ${p} ${o} .\n`;
+        }
         branches.push(`{\n${link}\n}`);
       }
 

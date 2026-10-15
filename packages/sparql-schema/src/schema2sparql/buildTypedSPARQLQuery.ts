@@ -19,7 +19,9 @@ import type {
   FilterValidationMode,
   SPARQLFlavour,
   SparqlFeatureFlags,
+  IRIToStringFn,
 } from "@graviola/edb-core-types";
+import type { InverseMap } from "@graviola/json-schema-utils";
 import { buildTraversalSchema } from "@graviola/edb-graph-traversal";
 import {
   resolveEffectiveMaxRecursion,
@@ -56,6 +58,13 @@ export interface BuildFilterableSPARQLQueryOptions<
   flavour?: SPARQLFlavour;
   /** Partial feature overrides merged on top of the flavour defaults */
   sparqlFeatures?: Partial<SparqlFeatureFlags>;
+  /** Entity definition name for inverse-map lookups on this query. */
+  typeName?: string;
+  /** Side-schema inverse map (merged with legacy `x-inverseOf` on rootSchema). */
+  inverseMap?: InverseMap;
+  /** Full schema document (for `$ref` / inverse resolution). Defaults to `schema`. */
+  rootSchema?: JSONSchema7;
+  typeIRItoTypeName?: IRIToStringFn;
 }
 
 /**
@@ -128,6 +137,10 @@ export function buildFilterableSPARQLQuery<T = any>(
     filterValidationMode,
     flavour,
     sparqlFeatures,
+    typeName,
+    inverseMap,
+    rootSchema,
+    typeIRItoTypeName,
     ...filterOptions
   } = options;
 
@@ -156,6 +169,10 @@ export function buildFilterableSPARQLQuery<T = any>(
       filterOptions,
       flavour,
       sparqlFeatures,
+      typeName,
+      inverseMap,
+      rootSchema: rootSchema ?? jsonSchema,
+      typeIRItoTypeName,
     },
   );
 

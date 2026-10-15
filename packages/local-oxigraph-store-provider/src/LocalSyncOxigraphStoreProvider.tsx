@@ -1,13 +1,18 @@
 import { RDFMimetype } from "@graviola/async-oxigraph";
 import type { CRUDFunctions, SparqlEndpoint } from "@graviola/edb-core-types";
 import type { SparqlStore } from "@graviola/store-core";
-import { CrudProviderContext, useAdbContext } from "@graviola/edb-state-hooks";
+import {
+  CrudProviderContext,
+  resolveStoreQueryBuildOptions,
+  useAdbContext,
+} from "@graviola/edb-state-hooks";
 import { initSPARQLStore } from "@graviola/sparql-db-impl";
 import { debounce } from "lodash-es";
 import {
   type FunctionComponent,
   type ReactNode,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 
@@ -49,9 +54,14 @@ export const LocalSyncOxigraphStoreProvider: FunctionComponent<
     schema,
     typeNameToTypeIRI,
     queryBuildOptions,
+    inverses,
     jsonLDConfig: { defaultPrefix, jsonldContext },
     env: { publicBasePath },
   } = useAdbContext();
+  const storeQueryBuildOptions = useMemo(
+    () => resolveStoreQueryBuildOptions(queryBuildOptions, inverses),
+    [queryBuildOptions, inverses],
+  );
   const [dataLoaded, setDataLoaded] = useState(false);
   const [bundle, setBundle] = useState<{
     dataStore: SparqlStore<Record<string, unknown>>;
@@ -103,7 +113,7 @@ export const LocalSyncOxigraphStoreProvider: FunctionComponent<
         defaultPrefix,
         jsonldContext,
         typeNameToTypeIRI,
-        queryBuildOptions,
+        queryBuildOptions: storeQueryBuildOptions,
         walkerOptions: {
           maxRecursion: 3,
           maxRecursionEachRef: 3,
@@ -155,7 +165,7 @@ export const LocalSyncOxigraphStoreProvider: FunctionComponent<
     endpoint,
     schema,
     typeNameToTypeIRI,
-    queryBuildOptions,
+    storeQueryBuildOptions,
     defaultPrefix,
     jsonldContext,
     defaultLimit,

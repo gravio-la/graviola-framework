@@ -52,6 +52,10 @@ export interface TypedFilterOptions<
   defaultPrefix?: string;
   /** Query build options for SPARQL generation */
   queryBuildOptions?: SparqlBuildOptions;
+  /** Root entity definition name (inverse-map lookups). */
+  typeName?: string;
+  /** Full schema document when `schema` is a per-type slice. */
+  rootSchema?: JSONSchema7;
 }
 
 function postProcessDocument<T>(
@@ -96,6 +100,9 @@ export async function filterTypedDocuments<T = any>(
     sparqlFeatures,
     include,
     maxRecursion: explicitMaxRecursion,
+    queryBuildOptions,
+    typeName,
+    rootSchema,
     ...buildOptions
   } = options;
 
@@ -126,6 +133,10 @@ export async function filterTypedDocuments<T = any>(
       flavour,
       sparqlFeatures,
       prefixMap: finalPrefixMap,
+      typeName,
+      inverseMap: queryBuildOptions?.inverses,
+      rootSchema: rootSchema ?? schema,
+      typeIRItoTypeName: queryBuildOptions?.typeIRItoTypeName,
     },
   );
 

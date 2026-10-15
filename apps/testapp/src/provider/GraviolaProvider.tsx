@@ -117,11 +117,16 @@ export const GraviolaProvider: React.FC<GraviolaProviderProps> = ({
 
   const config = useMemo<GlobalSemanticConfig>(() => {
     const c = createSemanticConfig({ baseIRI });
+    const inverses = {
+      Category: { subCategories: "Category.parentCategory" },
+    };
     return {
       ...c,
+      inverses,
       queryBuildOptions: {
         ...c.queryBuildOptions,
         primaryFields,
+        inverses,
       },
     };
   }, [baseIRI, primaryFields]);

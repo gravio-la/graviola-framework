@@ -6,7 +6,11 @@ import type {
   SPARQLQueryOptions,
 } from "@graviola/edb-core-types";
 import { sparqlLoggingWrapper } from "@graviola/edb-core-utils";
-import { CrudProviderContext, useAdbContext } from "@graviola/edb-state-hooks";
+import {
+  CrudProviderContext,
+  resolveStoreQueryBuildOptions,
+  useAdbContext,
+} from "@graviola/edb-state-hooks";
 import { initSPARQLStore } from "@graviola/sparql-db-impl";
 import { debounce } from "lodash-es";
 import {
@@ -128,9 +132,14 @@ export const LocalOxigraphStoreProvider: FunctionComponent<
     schema: contextSchema,
     typeNameToTypeIRI,
     queryBuildOptions,
+    inverses,
     jsonLDConfig: { defaultPrefix, jsonldContext },
   } = useAdbContext();
   const schema = storeSchemaOverride ?? contextSchema;
+  const storeQueryBuildOptions = useMemo(
+    () => resolveStoreQueryBuildOptions(queryBuildOptions, inverses),
+    [queryBuildOptions, inverses],
+  );
   const [dataLoaded, setDataLoaded] = useState(false);
 
   const dataStore = useMemo(() => {
@@ -142,7 +151,7 @@ export const LocalOxigraphStoreProvider: FunctionComponent<
       defaultPrefix,
       jsonldContext,
       typeNameToTypeIRI,
-      queryBuildOptions,
+      queryBuildOptions: storeQueryBuildOptions,
       walkerOptions: {
         maxRecursion: 3,
         maxRecursionEachRef: 3,
@@ -162,7 +171,7 @@ export const LocalOxigraphStoreProvider: FunctionComponent<
     wrappedCrud,
     schema,
     typeNameToTypeIRI,
-    queryBuildOptions,
+    storeQueryBuildOptions,
     defaultPrefix,
     jsonldContext,
     defaultLimit,

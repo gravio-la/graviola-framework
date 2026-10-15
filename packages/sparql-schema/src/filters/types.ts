@@ -25,6 +25,11 @@ export type FilterContext = {
 
   schema?: JSONSchema7; // Full schema for validation
   validationMode?: FilterValidationMode; // How to handle validation errors
+  /**
+   * When `inverseStore`, canonical triples are `(related, predicateNode, subject)`
+   * (side-schema / x-inverseOf). Default is forward `(subject, predicate, related)`.
+   */
+  relationshipLink?: "forward" | "inverseStore";
 };
 
 /**

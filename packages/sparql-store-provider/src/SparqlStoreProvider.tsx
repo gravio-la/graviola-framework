@@ -5,7 +5,11 @@ import type {
   WalkerOptions,
 } from "@graviola/edb-core-types";
 import { sparqlLoggingWrapper } from "@graviola/edb-core-utils";
-import { CrudProviderContext, useAdbContext } from "@graviola/edb-state-hooks";
+import {
+  CrudProviderContext,
+  resolveStoreQueryBuildOptions,
+  useAdbContext,
+} from "@graviola/edb-state-hooks";
 import {
   initSPARQLStore,
   type SPARQLDataStoreConfig,
@@ -62,17 +66,22 @@ export const SparqlStoreProvider: FunctionComponent<
     schema: contextSchema,
     typeNameToTypeIRI,
     queryBuildOptions,
+    inverses,
     jsonLDConfig: { defaultPrefix, jsonldContext },
     makeStubSchema,
   } = useAdbContext();
   const schema = storeSchemaOverride ?? contextSchema;
+  const storeQueryBuildOptions = useMemo(
+    () => resolveStoreQueryBuildOptions(queryBuildOptions, inverses),
+    [queryBuildOptions, inverses],
+  );
 
   const dataStore = useMemo(() => {
     return initSPARQLStore({
       defaultPrefix,
       jsonldContext,
       typeNameToTypeIRI,
-      queryBuildOptions,
+      queryBuildOptions: storeQueryBuildOptions,
       walkerOptions: walkerOptions || {},
       sparqlQueryFunctions: crudOptions,
       schema,
@@ -88,7 +97,7 @@ export const SparqlStoreProvider: FunctionComponent<
     crudOptions,
     schema,
     typeNameToTypeIRI,
-    queryBuildOptions,
+    storeQueryBuildOptions,
     defaultPrefix,
     jsonldContext,
     defaultLimit,

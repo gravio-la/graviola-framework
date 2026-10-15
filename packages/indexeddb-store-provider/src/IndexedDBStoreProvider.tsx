@@ -24,7 +24,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { IndexedDBDataset } from "@graviola/indexeddb-dataset";
 import type { IndexedDBDatasetOptions } from "@graviola/indexeddb-dataset";
 import { initSPARQLStore } from "@graviola/sparql-db-impl";
-import { CrudProviderContext, useAdbContext } from "@graviola/edb-state-hooks";
+import {
+  CrudProviderContext,
+  resolveStoreQueryBuildOptions,
+  useAdbContext,
+} from "@graviola/edb-state-hooks";
 import type { SparqlEndpoint } from "@graviola/edb-core-types";
 import { DEFAULT_DB_NAME } from "@graviola/indexeddb-dataset";
 import { createComunicaCRUDFunctions } from "./comunica-sparql-adapter";
@@ -339,8 +343,13 @@ export const IndexedDBStoreProvider: FunctionComponent<
     schema,
     typeNameToTypeIRI,
     queryBuildOptions,
+    inverses,
     jsonLDConfig: { defaultPrefix, jsonldContext },
   } = useAdbContext();
+  const storeQueryBuildOptions = useMemo(
+    () => resolveStoreQueryBuildOptions(queryBuildOptions, inverses),
+    [queryBuildOptions, inverses],
+  );
 
   const crudOptions = useMemo(() => {
     if (!dataset) return null;
@@ -354,7 +363,7 @@ export const IndexedDBStoreProvider: FunctionComponent<
       jsonldContext,
       typeNameToTypeIRI,
       queryBuildOptions: {
-        ...queryBuildOptions,
+        ...storeQueryBuildOptions,
         // Comunica accepts standard SPARQL 1.1 — not Oxigraph-specific syntax
         sparqlFlavour: "default",
       },
@@ -373,7 +382,7 @@ export const IndexedDBStoreProvider: FunctionComponent<
     crudOptions,
     schema,
     typeNameToTypeIRI,
-    queryBuildOptions,
+    storeQueryBuildOptions,
     defaultPrefix,
     jsonldContext,
     defaultLimit,

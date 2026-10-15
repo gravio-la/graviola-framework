@@ -46,7 +46,7 @@ const inverseMap = {
 
 describe("jsonSchema2construct with InverseMap (no x-inverseOf)", () => {
   test("WHERE uses inverse pattern via side-schema map", () => {
-    const { whereOptionals } = jsonSchema2construct(
+    const { whereOptionals, construct } = jsonSchema2construct(
       SUBJECT_IRI,
       groupSchemaNoKeyword,
       [],
@@ -56,6 +56,8 @@ describe("jsonSchema2construct with InverseMap (no x-inverseOf)", () => {
     );
     expect(whereOptionals).toContain(":groups");
     expect(whereOptionals).toContain(SUBJECT_IRI);
+    expect(construct).toContain(":groups");
+    expect(construct).not.toContain(":members ?");
   });
 
   test("removeInversePropertiesFromSchema strips map-declared inverse slots", () => {

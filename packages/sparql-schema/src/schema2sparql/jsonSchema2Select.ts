@@ -6,6 +6,7 @@ import {
 } from "@graviola/edb-core-types";
 import { resolveSparqlFeatures } from "@graviola/edb-core-utils";
 import {
+  definitionNameFromRef,
   effectiveInverseMap,
   isJSONSchema,
   isJSONSchemaDefinition,
@@ -40,6 +41,26 @@ const unionOptionalBranches = (branches: string[]) => {
     return makeWherePart(branches[0]!, false);
   }
   return ` OPTIONAL { ${branches.map((b) => `{ ${b.trim()} }`).join("\nUNION\n")} } `;
+};
+
+const nestedSelectInverseContext = (
+  parent: { typeName?: string; inverseMap: InverseMap } | undefined,
+  propertySchema: JSONSchema7,
+): { typeName?: string; inverseMap: InverseMap } | undefined => {
+  if (!parent) return parent;
+  let nestedTypeName = parent.typeName;
+  if (
+    propertySchema.type === "array" &&
+    typeof propertySchema.items === "object"
+  ) {
+    nestedTypeName =
+      definitionNameFromRef((propertySchema.items as JSONSchema7).$ref) ??
+      nestedTypeName;
+  } else if (propertySchema.$ref) {
+    nestedTypeName =
+      definitionNameFromRef(propertySchema.$ref) ?? nestedTypeName;
+  }
+  return { ...parent, typeName: nestedTypeName };
 };
 
 const propertiesToSPARQLSelectPatterns = (
@@ -202,7 +223,7 @@ const propertiesToSPARQLSelectPatterns = (
             phase === "page-subquery" ? "full" : phase,
             orderByProperties,
             undefined,
-            selectInverse,
+            nestedSelectInverseContext(selectInverse, subSchema),
           );
         emitWhere(
           ` ${currentVariable} ${prefixedProperty} ${variable} . \n ${subWhere} `,
@@ -231,7 +252,7 @@ const propertiesToSPARQLSelectPatterns = (
               phase === "page-subquery" ? "full" : phase,
               orderByProperties,
               undefined,
-              selectInverse,
+              nestedSelectInverseContext(selectInverse, subSchema),
             );
           const typeVariable = makeVariable([...subPath, "type"]);
           const typeSampleAlias = makeVariable([...subPath, "rdf_type"]);

@@ -4,5 +4,31 @@
   "description": "Persisted background jobs (ingest, reconcile, import) with steps, fetches, and staged-entity review metadata. Lives in its own named graph.",
   "version": "1.0.0",
   "entityBaseIRI": "https://graviola.gra.one/jobs/",
-  "baseIRI": "https://graviola.gra.one/schema/job#"
+  "baseIRI": "https://graviola.gra.one/schema/job#",
+  "identifiers": {
+    "SourceFetch": {
+      "slot": "id",
+      "mode": "iri"
+    },
+    "JobStep": {
+      "slot": "id",
+      "mode": "iri"
+    },
+    "JobRun": {
+      "slot": "id",
+      "mode": "iri"
+    },
+    "StagedEntityRecord": {
+      "slot": "id",
+      "mode": "iri"
+    }
+  },
+  "inverses": {
+    "JobStep": {
+      "fetches": "SourceFetch.ofStep"
+    },
+    "JobRun": {
+      "steps": "JobStep.ofRun"
+    }
+  }
 }

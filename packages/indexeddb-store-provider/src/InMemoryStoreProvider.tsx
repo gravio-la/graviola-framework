@@ -12,7 +12,11 @@ import type { FunctionComponent, ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
 import N3 from "n3";
 import { initSPARQLStore } from "@graviola/sparql-db-impl";
-import { CrudProviderContext, useAdbContext } from "@graviola/edb-state-hooks";
+import {
+  CrudProviderContext,
+  resolveStoreQueryBuildOptions,
+  useAdbContext,
+} from "@graviola/edb-state-hooks";
 import type { SparqlEndpoint } from "@graviola/edb-core-types";
 import { createComunicaCRUDFunctions } from "./comunica-sparql-adapter";
 import { parseTurtle } from "./parseTurtle";
@@ -122,8 +126,13 @@ export const InMemoryStoreProvider: FunctionComponent<
     schema,
     typeNameToTypeIRI,
     queryBuildOptions,
+    inverses,
     jsonLDConfig: { defaultPrefix, jsonldContext },
   } = useAdbContext();
+  const storeQueryBuildOptions = useMemo(
+    () => resolveStoreQueryBuildOptions(queryBuildOptions, inverses),
+    [queryBuildOptions, inverses],
+  );
 
   const crudOptions = useMemo(() => {
     if (!store) return null;
@@ -135,7 +144,7 @@ export const InMemoryStoreProvider: FunctionComponent<
   const dataStore = useMemo(() => {
     if (!crudOptions || !store) return null;
     const qb = {
-      ...queryBuildOptions,
+      ...storeQueryBuildOptions,
       sparqlFlavour: "default" as const,
     };
     const walkers = {
@@ -171,7 +180,7 @@ export const InMemoryStoreProvider: FunctionComponent<
     store,
     schema,
     typeNameToTypeIRI,
-    queryBuildOptions,
+    storeQueryBuildOptions,
     defaultPrefix,
     jsonldContext,
     defaultLimit,

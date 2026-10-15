@@ -2,6 +2,7 @@ import type { NamedEntityData, WalkerOptions } from "@graviola/edb-core-types";
 import { filterUndefOrNull } from "@graviola/edb-core-utils";
 import { traverseGraphExtractBySchema } from "@graviola/edb-graph-traversal";
 import {
+  definitionNameFromRef,
   effectiveInverseMap,
   type InverseMap,
 } from "@graviola/json-schema-utils";
@@ -131,6 +132,29 @@ export type RemoveInversePropertiesOptions = {
   inverseMap?: InverseMap;
 };
 
+type RemoveInversePropertiesInternalOptions = RemoveInversePropertiesOptions & {
+  mergedInverseMap?: InverseMap;
+};
+
+function nestedRemoveInverseOptions(
+  propertySchema: JSONSchema7,
+  options: RemoveInversePropertiesInternalOptions,
+): RemoveInversePropertiesInternalOptions {
+  let nestedTypeName = options.typeName;
+  if (
+    propertySchema.type === "array" &&
+    typeof propertySchema.items === "object"
+  ) {
+    nestedTypeName =
+      definitionNameFromRef((propertySchema.items as JSONSchema7).$ref) ??
+      nestedTypeName;
+  } else if (propertySchema.$ref) {
+    nestedTypeName =
+      definitionNameFromRef(propertySchema.$ref) ?? nestedTypeName;
+  }
+  return { ...options, typeName: nestedTypeName };
+}
+
 function isInversePropertySchema(
   propertyName: string,
   propertySchema: JSONSchema7,
@@ -154,8 +178,13 @@ export const removeInversePropertiesFromSchema = (
   schema: JSONSchema7,
   options?: RemoveInversePropertiesOptions,
 ) => {
-  const mergedInverseMap = effectiveInverseMap(schema, options?.inverseMap);
-  const typeName = options?.typeName;
+  const internal: RemoveInversePropertiesInternalOptions = {
+    ...options,
+    mergedInverseMap:
+      options?.mergedInverseMap ??
+      effectiveInverseMap(schema, options?.inverseMap),
+  };
+  const { mergedInverseMap, typeName } = internal;
 
   if (schema.type === "object" && schema.properties) {
     return {
@@ -168,12 +197,15 @@ export const removeInversePropertiesFromSchema = (
                 key,
                 value as JSONSchema7,
                 typeName,
-                mergedInverseMap,
+                mergedInverseMap!,
               ),
           )
           .map(([key, value]) => [
             key,
-            removeInversePropertiesFromSchema(value as JSONSchema7, options),
+            removeInversePropertiesFromSchema(
+              value as JSONSchema7,
+              nestedRemoveInverseOptions(value as JSONSchema7, internal),
+            ),
           ]),
       ),
     };
@@ -183,7 +215,7 @@ export const removeInversePropertiesFromSchema = (
       ...schema,
       items: removeInversePropertiesFromSchema(
         schema.items as JSONSchema7,
-        options,
+        nestedRemoveInverseOptions(schema.items as JSONSchema7, internal),
       ),
     };
   }

@@ -169,8 +169,12 @@ export function applySomeOperator(
   // Simple case: Direct node reference { '@id': '...' }
   if (isNodeReference(filterValue)) {
     const nodeValue = convertIRIToNode(filterValue["@id"], prefixMap);
+    const triple =
+      context.relationshipLink === "inverseStore"
+        ? sparql`${nodeValue} ${predicateNode} ${subject} .`
+        : sparql`${subject} ${predicateNode} ${nodeValue} .`;
     return {
-      patterns: [sparql`${subject} ${predicateNode} ${nodeValue} .`],
+      patterns: [triple],
       filters: [],
       optional: false,
     };
@@ -178,7 +182,10 @@ export function applySomeOperator(
 
   // Nested filter / field map on the related RDF node (?place :amenities ?rel . ?rel :amenityType "CAFE" .)
   const relatedVar = df.variable(`${context.property}_rel_${context.depth}`);
-  const basePattern = sparql`${subject} ${predicateNode} ${relatedVar} .`;
+  const basePattern =
+    context.relationshipLink === "inverseStore"
+      ? sparql`${relatedVar} ${predicateNode} ${subject} .`
+      : sparql`${subject} ${predicateNode} ${relatedVar} .`;
 
   if (
     typeof filterValue === "object" &&

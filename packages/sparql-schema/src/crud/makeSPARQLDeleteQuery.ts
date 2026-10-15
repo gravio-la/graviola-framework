@@ -31,6 +31,10 @@ export const makeSPARQLDeleteQuery = (
     ["@id"],
     ["@id", "@type"],
     options.maxRecursion,
+    {
+      typeName: options.typeName,
+      inverseMap: queryBuildOptions?.inverses,
+    },
   );
   const deleteQuery = DELETE` ${construct} `
     .WHERE`${wherePart} ${whereRequired}\n${whereOptionals}`;
