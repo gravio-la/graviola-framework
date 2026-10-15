@@ -54,6 +54,7 @@ const AssetGalleryRendererComponent = (props: ArrayLayoutProps) => {
     errors,
     addItem,
     removeItems,
+    uischema,
   } = props;
   const { t } = useTranslation();
   const ctx = useJsonForms();
@@ -68,11 +69,11 @@ const AssetGalleryRendererComponent = (props: ArrayLayoutProps) => {
   const meta = useMemo(
     () =>
       resolveAssetControlMeta(
-        { schema, rootSchema, config },
+        { schema, rootSchema, config, uischema },
         ctx?.config as Record<string, unknown> | undefined,
         typeIRIToTypeName,
       ),
-    [schema, rootSchema, config, ctx?.config, typeIRIToTypeName],
+    [schema, rootSchema, config, uischema, ctx?.config, typeIRIToTypeName],
   );
 
   const items = normalizeArray(data);

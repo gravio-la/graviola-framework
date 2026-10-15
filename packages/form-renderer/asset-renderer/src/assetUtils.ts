@@ -2,11 +2,13 @@ import { AssetHttpError } from "@graviola/asset-client";
 import type { AssetKind } from "@graviola/edb-core-types";
 import {
   assetKindForRef,
+  assetKindForScope,
+  propertySchemaAtScope,
   resolveSchema,
   type JsonSchema,
   type SchemaRegistry,
 } from "@graviola/json-schema-utils";
-import type { ControlProps } from "@jsonforms/core";
+import type { ControlElement, ControlProps } from "@jsonforms/core";
 import type { JSONSchema7 } from "json-schema";
 
 export function jsonFormsConfig(context: { config?: Record<string, unknown> }) {
@@ -49,14 +51,19 @@ export type AssetControlMeta = {
 };
 
 export function resolveAssetControlMeta(
-  props: Pick<ControlProps, "schema" | "rootSchema" | "config">,
+  props: Pick<ControlProps, "schema" | "rootSchema" | "config" | "uischema">,
   ctxConfig: Record<string, unknown> | undefined,
   typeIRIToTypeName: (iri: string) => string | undefined,
 ): AssetControlMeta {
   const mergedConfig = { ...(props.config ?? {}), ...(ctxConfig ?? {}) };
   const registry = mergedConfig.registry as SchemaRegistry | undefined;
   const schema = props.schema as JSONSchema7;
-  const kind = assetKindForRef({ config: mergedConfig }, schema);
+  const rootSchema = (props.rootSchema ?? schema) as JSONSchema7;
+  const scope = (props.uischema as ControlElement | undefined)?.scope;
+  const kindCtx = { config: mergedConfig, rootSchema };
+  const kind =
+    assetKindForScope(kindCtx, rootSchema, scope) ??
+    assetKindForRef({ config: mergedConfig }, schema);
   if (!kind) {
     return {
       kind: "file",
@@ -67,7 +74,21 @@ export function resolveAssetControlMeta(
     };
   }
 
-  const ref = schema.$ref;
+  const atScope =
+    scope && typeof scope === "string"
+      ? propertySchemaAtScope(rootSchema, scope, rootSchema)
+      : undefined;
+  const refSource =
+    atScope && typeof atScope === "object" && !Array.isArray(atScope)
+      ? (atScope as JSONSchema7)
+      : schema;
+  const ref =
+    refSource.$ref ??
+    (refSource.type === "array" &&
+    typeof refSource.items === "object" &&
+    !Array.isArray(refSource.items)
+      ? (refSource.items as JSONSchema7).$ref
+      : undefined);
   let typeIRI: string | undefined = typeConstFromSchema(schema);
   let classSchema: JSONSchema7 | undefined;
 

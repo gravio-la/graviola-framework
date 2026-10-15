@@ -1,6 +1,8 @@
 import type { JSONSchema7 } from "json-schema";
 
-import type { SchemaRegistry } from "./schemaRegistry";
+import { definitionNameFromRef } from "./definitionScope";
+import { propertySchemaAtScope } from "./propertySchemaAtScope";
+import { extractTypeIRI, type SchemaRegistry } from "./schemaRegistry";
 
 export type AssetKind = "image" | "file";
 
@@ -34,12 +36,51 @@ export function assetKindForRef(
   const assetClasses = context?.config?.assetClasses;
   if (!assetClasses) return undefined;
 
-  const ref = refFromSchema(schemaOrRef);
-  if (!ref) return undefined;
-
   const registry = context?.config?.registry;
-  const className = registry?.byPath.get(ref)?.name;
-  if (!className) return undefined;
 
-  return assetClasses[className];
+  const ref = refFromSchema(schemaOrRef);
+  if (ref) {
+    const className =
+      registry?.byPath.get(ref)?.name ?? definitionNameFromRef(ref);
+    if (className && assetClasses[className]) {
+      return assetClasses[className];
+    }
+  }
+
+  const typeIRI = extractTypeIRI(schemaOrRef);
+  if (typeIRI && registry) {
+    const entry = registry.byTypeIRI.get(typeIRI);
+    if (entry && assetClasses[entry.name]) {
+      return assetClasses[entry.name];
+    }
+  }
+
+  if (schemaOrRef.type === "array") {
+    const items = schemaOrRef.items;
+    if (items && typeof items === "object" && !Array.isArray(items)) {
+      return assetKindForRef(context, items as JSONSchema7);
+    }
+  }
+
+  return undefined;
+}
+
+/**
+ * Resolve asset kind for a JSON Forms control from the form root schema and
+ * the control's `scope` (property schema with terminal `$ref` preserved).
+ */
+export function assetKindForScope(
+  context: AssetKindContext | undefined,
+  formSchema: JSONSchema7,
+  scope: string | undefined,
+): AssetKind | undefined {
+  if (!scope) return undefined;
+  const rootSchema =
+    (context as { rootSchema?: JSONSchema7 } | undefined)?.rootSchema ??
+    formSchema;
+  const prop = propertySchemaAtScope(formSchema, scope, rootSchema);
+  if (!prop || typeof prop === "boolean" || Array.isArray(prop)) {
+    return undefined;
+  }
+  return assetKindForRef(context, prop as JSONSchema7);
 }

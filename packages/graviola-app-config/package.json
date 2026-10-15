@@ -63,6 +63,7 @@
     "ajv": "^8.17.1"
   },
   "devDependencies": {
+    "lodash-es": "catalog:",
     "@graviola/edb-tsconfig": "workspace:*",
     "@graviola/edb-tsup-config": "workspace:*",
     "@types/json-schema": "catalog:",

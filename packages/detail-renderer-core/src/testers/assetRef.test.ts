@@ -97,6 +97,26 @@ describe("asset ref testers", () => {
     expect(assetValueRefTester(ui, itemSchema, testerCtx(ctx))).toBe(-1);
   });
 
+  it("matches asset $ref via scope when the form root schema is passed", () => {
+    const entitySchema: JSONSchema7 = {
+      type: "object",
+      properties: {
+        photo: { $ref: "#/definitions/Photo" },
+        photos: {
+          type: "array",
+          items: { $ref: "#/definitions/Photo" },
+        },
+      },
+      definitions: rootSchema.definitions,
+    };
+    const ctx = ctxWithAssets();
+    const testerCtx = { rootSchema: entitySchema, config: ctx };
+    const uiPhoto = { type: "Control", scope: "#/properties/photo" };
+    const uiPhotos = { type: "Control", scope: "#/properties/photos" };
+    expect(assetRefTester(uiPhoto, entitySchema, testerCtx)).toBe(6);
+    expect(arrayOfAssetRefsTester(uiPhotos, entitySchema, testerCtx)).toBe(6);
+  });
+
   it("arrayOfAssetRefsTester matches photo arrays", () => {
     const ctx = ctxWithAssets();
     const ui = { type: "Control", scope: "#" };

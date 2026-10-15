@@ -33,8 +33,9 @@ export type {
   InversePropertyData,
   GetInversePropertiesOptions,
 } from "./inversePropertyAnnotations";
-export { assetKindForRef } from "./assetKindForRef";
+export { assetKindForRef, assetKindForScope } from "./assetKindForRef";
 export type { AssetKind, AssetKindContext } from "./assetKindForRef";
+export { propertySchemaAtScope } from "./propertySchemaAtScope";
 export * from "./extractTranslationKeysFromSchema";
 export * from "./walkJSONSchema";
 export * from "./schemaRegistry";

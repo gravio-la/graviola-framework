@@ -55,6 +55,7 @@ const AssetFieldRendererComponent = (props: ControlProps) => {
     handleChange,
     path,
     rootSchema,
+    uischema,
   } = props;
   const { t } = useTranslation();
   const ctx = useJsonForms();
@@ -68,11 +69,11 @@ const AssetFieldRendererComponent = (props: ControlProps) => {
   const meta = useMemo(
     () =>
       resolveAssetControlMeta(
-        { schema, rootSchema, config },
+        { schema, rootSchema, config, uischema },
         ctx?.config as Record<string, unknown> | undefined,
         typeIRIToTypeName,
       ),
-    [schema, rootSchema, config, ctx?.config, typeIRIToTypeName],
+    [schema, rootSchema, config, uischema, ctx?.config, typeIRIToTypeName],
   );
 
   const linkedIri = assetIriFromValue(data);
