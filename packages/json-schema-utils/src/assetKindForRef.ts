@@ -57,8 +57,17 @@ export function assetKindForRef(
   const typeIRI = extractTypeIRI(schemaOrRef);
   if (typeIRI && registry) {
     const entry = registry.byTypeIRI.get(typeIRI);
-    if (entry && assetClasses[entry.name]) {
-      return assetClasses[entry.name];
+    if (entry) {
+      const className = entry.name;
+      if (className && assetClasses[className]) {
+        return assetClasses[className];
+      }
+      const stubbed = className?.endsWith("Stub")
+        ? className.slice(0, -"Stub".length)
+        : undefined;
+      if (stubbed && assetClasses[stubbed]) {
+        return assetClasses[stubbed];
+      }
     }
   }
 

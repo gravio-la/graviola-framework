@@ -1,11 +1,7 @@
 import React, { useMemo } from "react";
 import type { JSONSchema7 } from "json-schema";
 import type { JsonSchema, UISchemaElement } from "@jsonforms/core";
-import {
-  compileSchema,
-  extractTypeIRI,
-  rootFrame,
-} from "@graviola/json-schema-utils";
+import { extractTypeIRI, rootFrame } from "@graviola/json-schema-utils";
 import {
   buildDispatch,
   type DetailViewConfig,
@@ -25,6 +21,7 @@ import { defaultDetailRenderers, defaultArticleRenderers } from "./renderers";
 import { defaultValueRenderers } from "./value-renderers";
 import { DetailRendererContext } from "./context";
 import type { GenerateDefaultDetailUISchemaOptions } from "@graviola/edb-detail-renderer-core";
+import { useDetailDispatchAssetFields } from "./hooks/useDetailDispatchAssetFields";
 
 function defaultRegistryForConfig(
   config: DetailViewConfig,
@@ -227,9 +224,9 @@ export const DetailRenderer = React.memo(function DetailRenderer({
   );
   const primaryFields = resolvedConfig.primaryFields ?? primaryFieldsFromAdb;
 
-  const schemaRegistry = useMemo(
-    () => (schema ? compileSchema(schema) : undefined),
-    [schema],
+  const { assetClasses, schemaRegistry } = useDetailDispatchAssetFields(
+    schema,
+    adb.assetClasses,
   );
 
   const registry = useMemo(
@@ -334,11 +331,12 @@ export const DetailRenderer = React.memo(function DetailRenderer({
       valueRenderers,
       detailUiSchemata: resolvedConfig.uiSchemata,
       orderBy: adb.orderBy,
-      assetClasses: adb.assetClasses,
+      assetClasses,
       schemaRegistry,
     }),
     [
       schema,
+      assetClasses,
       schemaRegistry,
       resolvedConfig.maxDepth,
       typeIRI,
@@ -361,7 +359,6 @@ export const DetailRenderer = React.memo(function DetailRenderer({
       valueRenderers,
       resolvedConfig.uiSchemata,
       adb.orderBy,
-      adb.assetClasses,
     ],
   );
 
@@ -380,7 +377,7 @@ export const DetailRenderer = React.memo(function DetailRenderer({
       config: resolvedConfig,
       detailUiSchemata: resolvedConfig.uiSchemata,
       orderBy: adb.orderBy,
-      assetClasses: adb.assetClasses,
+      assetClasses,
       typeIRIToTypeName,
     }),
     [
@@ -390,7 +387,7 @@ export const DetailRenderer = React.memo(function DetailRenderer({
       effectiveUISchema,
       resolvedConfig,
       adb.orderBy,
-      adb.assetClasses,
+      assetClasses,
       typeIRIToTypeName,
     ],
   );

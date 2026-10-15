@@ -36,6 +36,10 @@ export type {
 } from "./context";
 
 export { useEntityRefClickHandler } from "./hooks/useEntityRefClickHandler";
+export {
+  useDetailDispatchAssetFields,
+  type DetailDispatchAssetFields,
+} from "./hooks/useDetailDispatchAssetFields";
 
 export {
   defaultEntityActionRegistry,

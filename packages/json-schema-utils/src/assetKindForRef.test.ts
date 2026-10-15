@@ -97,6 +97,36 @@ describe("assetKindForRef", () => {
     ).toBe("image");
   });
 
+  it("resolves inlined stub entity shape via @type when registry entry is *Stub", () => {
+    const withStub: JSONSchema7 = {
+      definitions: {
+        ...rootSchema.definitions,
+        PhotoStub: {
+          type: "object",
+          properties: {
+            "@id": { type: "string" },
+            "@type": { const: "https://ex.org/Photo" },
+          },
+        },
+      },
+    };
+    const ctx = {
+      config: {
+        registry: compileSchema(withStub),
+        assetClasses: { Photo: "image" as const },
+      },
+    };
+    expect(
+      assetKindForRef(ctx, {
+        type: "object",
+        properties: {
+          "@id": { type: "string" },
+          "@type": { const: "https://ex.org/Photo" },
+        },
+      }),
+    ).toBe("image");
+  });
+
   it("returns undefined when class is not in assetClasses", () => {
     const registry = compileSchema(rootSchema);
     expect(

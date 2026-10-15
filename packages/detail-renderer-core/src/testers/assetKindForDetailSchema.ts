@@ -1,4 +1,3 @@
-import { extractTypeIRI } from "@graviola/json-schema-utils";
 import { assetKindForRef, type AssetKind } from "@graviola/json-schema-utils";
 import type { JSONSchema7 } from "json-schema";
 
@@ -25,24 +24,5 @@ export function assetKindForDetailSchema(
   const kindCtx = assetKindContext(ctx);
   if (!kindCtx) return undefined;
 
-  const fromRef = assetKindForRef(kindCtx, schema);
-  if (fromRef) return fromRef;
-
-  const registry = ctx!.schemaRegistry!;
-  const typeIRI = extractTypeIRI(schema);
-  if (typeIRI) {
-    const entry = registry.byTypeIRI.get(typeIRI);
-    if (entry && ctx!.assetClasses![entry.name]) {
-      return ctx!.assetClasses![entry.name];
-    }
-  }
-
-  if (schema.type === "array") {
-    const items = schema.items;
-    if (items && typeof items === "object" && !Array.isArray(items)) {
-      return assetKindForDetailSchema(ctx, items as JSONSchema7);
-    }
-  }
-
-  return undefined;
+  return assetKindForRef(kindCtx, schema);
 }

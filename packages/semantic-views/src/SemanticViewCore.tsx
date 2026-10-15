@@ -22,6 +22,7 @@ import {
   defaultDetailRenderers,
   defaultListItemRenderers,
   defaultValueRenderers,
+  useDetailDispatchAssetFields,
 } from "@graviola/edb-detail-renderer";
 import {
   useAdbContext,
@@ -148,6 +149,10 @@ export function SemanticViewCore({
   );
   const schemaFromHook = useExtendedSchema({ typeName });
   const schema = schemaProp ?? (typeName ? schemaFromHook : undefined);
+  const { assetClasses, schemaRegistry } = useDetailDispatchAssetFields(
+    schema as JSONSchema7 | undefined,
+    adb.assetClasses,
+  );
   const preview = useEntityPreview(data, { typeName, typeIRI });
 
   const viewConfigSlice = resolveViewConfig(
@@ -330,9 +335,13 @@ export function SemanticViewCore({
       topLevelLayoutVariant: resolvedConfig.topLevelLayoutVariant,
       nesting: resolvedConfig.nesting,
       article: resolvedConfig.article,
+      assetClasses,
+      schemaRegistry,
     }),
     [
       schema,
+      assetClasses,
+      schemaRegistry,
       resolvedConfig.maxDepth,
       resolvedConfig.hideLinkedDataProperties,
       resolvedConfig.linkedDataPropertyNames,
@@ -375,6 +384,7 @@ export function SemanticViewCore({
         onCardAction:
           resolvedConfig.onCardAction ?? cardViewOptions?.onCardAction,
       },
+      assetClasses,
       containedEntityComponents: SemanticComponentMap,
     }),
     [
@@ -385,6 +395,7 @@ export function SemanticViewCore({
       cardPresentation,
       cardViewOptions?.onEntityAction,
       cardViewOptions?.onCardAction,
+      assetClasses,
     ],
   );
 
