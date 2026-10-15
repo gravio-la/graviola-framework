@@ -17,6 +17,7 @@ export * from "./usePagedSearch";
 export * from "./useFormData";
 export * from "./useFormEditor";
 export * from "./useFullscreenState";
+export * from "./useRelationalInputPreference";
 export * from "./useGlobalSearch";
 export * from "./useGlobalSearchWithHelper";
 export * from "./useLocalHistory";

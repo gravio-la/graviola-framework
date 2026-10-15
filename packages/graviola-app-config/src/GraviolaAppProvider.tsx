@@ -109,6 +109,8 @@ export type GraviolaAppProviderProps = {
   entityActionRegistry?: import("@graviola/edb-detail-renderer-core").EntityActionEntry[];
   hostCapabilities?: import("@graviola/edb-core-types").HostCapabilityDeclaration;
   defaultViewDensity?: import("@graviola/edb-core-types").ViewDensity;
+  /** App default for relational inputs ("dropdown" | "finder"); user preference wins. */
+  relationalInputDefault?: "dropdown" | "finder";
   /** Show React Query devtools. Defaults to `false`. */
   enableDevtools?: boolean;
   /**
@@ -160,6 +162,7 @@ export const GraviolaAppProvider: FC<GraviolaAppProviderProps> = ({
   resolveThumbnailUrl,
   hostCapabilities,
   defaultViewDensity,
+  relationalInputDefault,
   sparqlFlavour,
 }) => {
   const {
@@ -315,6 +318,7 @@ export const GraviolaAppProvider: FC<GraviolaAppProviderProps> = ({
         tableActionRegistry={tableActions}
         entityActionRegistry={entityActions}
         defaultViewDensity={defaultViewDensity}
+        relationalInputDefault={relationalInputDefault}
         resolveThumbnailUrl={resolveThumbnailUrl}
       >
         <GraviolaLoungeProviders

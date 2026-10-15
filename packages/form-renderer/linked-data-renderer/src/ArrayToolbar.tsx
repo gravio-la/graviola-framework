@@ -9,6 +9,8 @@ import {
   useGlobalSearchWithHelper,
   useGraviolaModal,
   useKeyEventForSimilarityFinder,
+  useRelationalInputPreference,
+  resolveRelationalInputMode,
   useSimilarityFinderModal,
 } from "@graviola/edb-state-hooks";
 import { KnowledgeSources } from "@graviola/semantic-jsonform-types";
@@ -17,11 +19,14 @@ import {
   Box,
   Button,
   FormControl,
+  IconButton,
   TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
+import ArrowDropDownCircleIcon from "@mui/icons-material/ArrowDropDownCircle";
+import ManageSearchIcon from "@mui/icons-material/ManageSearch";
 import { JSONSchema7 } from "json-schema";
 import { useTranslation } from "next-i18next";
 import * as React from "react";
@@ -68,7 +73,7 @@ export const ArrayLayoutToolbar = ({
   formsPath,
   additionalKnowledgeSources,
   typeIRI: _typeIRI,
-  dropdown,
+  dropdown: dropdownOption,
   showCreateButton,
   allowCreateMultiple,
   prepareNewEntityData,
@@ -83,6 +88,10 @@ export const ArrayLayoutToolbar = ({
     queryBuildOptions: { primaryFields },
     typeIRIToTypeName,
   } = useAdbContext();
+  // explicit `dropdown` (true/false) from the model wins; else user preference
+  const [relationalMode, setRelationalMode] = useRelationalInputPreference();
+  const dropdown =
+    resolveRelationalInputMode(dropdownOption, relationalMode) === "dropdown";
   const typeIRI = useMemo(
     () => _typeIRI ?? schema?.properties?.["@type"]?.const,
     [schema, _typeIRI],
@@ -314,7 +323,13 @@ export const ArrayLayoutToolbar = ({
     }
   }, [allowCreateMultiple, typeName, createAndAddItem]);
 
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const toggleLabel = t(
+    "relationalInput.toggle",
+    i18n?.language?.startsWith("de")
+      ? "Suchmodus wechseln"
+      : "Switch search mode",
+  ) as string;
 
   return (
     <Box>
@@ -383,6 +398,45 @@ export const ArrayLayoutToolbar = ({
             </FormControl>
           )
         )}
+        {!isReifiedStatement && dropdown && finderProps ? (
+          <Tooltip title="Entity Finder">
+            <span>
+              <IconButton
+                size="small"
+                disabled={!enabled}
+                aria-label="Entity Finder"
+                data-testid="relational-open-finder"
+                onClick={() => {
+                  if (typeName && formsPath) {
+                    setTypeName(typeName);
+                    setPath(formsPath);
+                  }
+                  void showFinder(finderProps);
+                }}
+              >
+                <ManageSearchIcon fontSize="small" />
+              </IconButton>
+            </span>
+          </Tooltip>
+        ) : null}
+        {!isReifiedStatement && dropdownOption === undefined ? (
+          <Tooltip title={toggleLabel}>
+            <IconButton
+              size="small"
+              aria-label={toggleLabel}
+              data-testid="relational-toggle"
+              onClick={() =>
+                setRelationalMode(dropdown ? "finder" : "dropdown")
+              }
+            >
+              {dropdown ? (
+                <ManageSearchIcon fontSize="small" />
+              ) : (
+                <ArrowDropDownCircleIcon fontSize="small" />
+              )}
+            </IconButton>
+          </Tooltip>
+        ) : null}
         {showCreateButton && (
           <Tooltip title={t("arrayToolbar.createMultiple", { typeName })}>
             <Button

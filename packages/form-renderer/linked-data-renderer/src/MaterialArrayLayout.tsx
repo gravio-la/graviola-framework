@@ -387,7 +387,7 @@ export const MaterialArrayLayout = (props: ArrayLayoutProps) => {
         additionalKnowledgeSources={additionalKnowledgeSources}
         typeIRI={typeIRI}
         prepareNewEntityData={prepareNewEntityDataFinal}
-        dropdown={Boolean(dropdown)}
+        dropdown={typeof dropdown === "boolean" ? dropdown : undefined}
         showCreateButton={showCreateButton}
         allowCreateMultiple={allowCreateMultiple}
         enableResultDetailPopper={enableResultDetailPopper}

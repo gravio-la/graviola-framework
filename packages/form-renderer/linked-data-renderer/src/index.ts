@@ -19,3 +19,4 @@ export * from "./inlineDropdownTester";
 export * from "./inlineCondensedSemanticFormsTester";
 export * from "./formHelper";
 export * from "./isArrayOfLinkedItems";
+export * from "./RelationalFieldRenderer";

@@ -137,6 +137,9 @@ export type {
 /** @deprecated Use `viewConfig.detail.options` via {@link resolveViewConfig}. */
 export type { DetailViewConfigOptions as LegacyDetailViewConfigOptions } from "./viewConfig";
 
+/** How relational (linked entity) fields offer search: dropdown autocomplete or the Entity Finder. */
+export type RelationalInputMode = "dropdown" | "finder";
+
 export type GlobalAppConfig<DeclarativeMappingType> = GlobalSemanticConfig & {
   normDataMapping?: Record<string, NormDataMapping<DeclarativeMappingType>>;
   authorityAccess?: Record<string, AuthorityConfiguration>;
@@ -171,6 +174,11 @@ export type GlobalAppConfig<DeclarativeMappingType> = GlobalSemanticConfig & {
   tableActionRegistry?: any[];
   entityActionRegistry?: import("@graviola/edb-detail-renderer-core").EntityActionEntry[];
   defaultViewDensity?: import("@graviola/edb-core-types").ViewDensity;
+  /**
+   * App default for relational inputs when the user has no stored preference
+   * and the model does not set `dropdown` explicitly. Falls back to "dropdown".
+   */
+  relationalInputDefault?: RelationalInputMode;
 };
 
 export type EditEntityModalProps = {

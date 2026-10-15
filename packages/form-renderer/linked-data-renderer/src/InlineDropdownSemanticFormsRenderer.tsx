@@ -25,14 +25,18 @@ import {
 } from "@jsonforms/core";
 import type { SchemaRegistry } from "@graviola/json-schema-utils";
 import { useJsonForms, withJsonFormsControlProps } from "@jsonforms/react";
+import ManageSearchIcon from "@mui/icons-material/ManageSearch";
 import {
   Box,
   FormControl,
   FormHelperText,
+  IconButton,
   List,
   Theme,
+  Tooltip,
   Typography,
 } from "@mui/material";
+import { useTranslation } from "next-i18next";
 import { JSONSchema7 } from "json-schema";
 import merge from "lodash-es/merge";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -65,6 +69,8 @@ const InlineDropdownSemanticFormsRendererComponent = (props: ControlProps) => {
   const registry = (ctx?.config as any)?.registry as SchemaRegistry | undefined;
   const { $ref } = appliedUiSchemaOptions || {};
   const enableFinder = appliedUiSchemaOptions.enableFinder || false;
+  /** Search adornment that opens the Entity Finder without opening it on focus/typing. */
+  const finderButton = appliedUiSchemaOptions.finderButton === true;
   const enableResultDetailPopper =
     appliedUiSchemaOptions.enableResultDetailPopper as boolean | undefined;
   // Resolve typeIRI: explicit options → schema @type.const → registry O(1) lookup via $ref
@@ -329,7 +335,7 @@ const InlineDropdownSemanticFormsRendererComponent = (props: ControlProps) => {
 
   const finderProps = useMemo(
     () =>
-      typeIRI && enableFinder
+      typeIRI && (enableFinder || finderButton)
         ? {
             finderId: `${formsPath}_${path}`,
             data,
@@ -346,6 +352,7 @@ const InlineDropdownSemanticFormsRendererComponent = (props: ControlProps) => {
     [
       typeIRI,
       enableFinder,
+      finderButton,
       formsPath,
       path,
       data,
@@ -399,6 +406,14 @@ const InlineDropdownSemanticFormsRendererComponent = (props: ControlProps) => {
   }, [onBlur]);
 
   const handleKeyDown = useKeyEventForSimilarityFinder();
+
+  const { t } = useTranslation();
+  const openFinder = useCallback(() => {
+    if (!finderProps || !typeName || !formsPath) return;
+    setTypeName(typeName);
+    setPath(formsPath);
+    void showFinder(finderProps);
+  }, [finderProps, typeName, formsPath, setTypeName, setPath, showFinder]);
 
   const handleFocus = useCallback(() => {
     onFocus();
@@ -459,7 +474,25 @@ const InlineDropdownSemanticFormsRendererComponent = (props: ControlProps) => {
             {secondFormHelperText}
           </FormHelperText>
         </FormControl>
-      ) : (
+      ) : null}
+      {!hasValue && finderButton && finderProps ? (
+        <Tooltip
+          title={t("relationalInput.openFinder", "Entity Finder") as string}
+        >
+          <span>
+            <IconButton
+              size="small"
+              disabled={!enabled}
+              onClick={openFinder}
+              aria-label="Entity Finder"
+              data-testid="relational-open-finder"
+            >
+              <ManageSearchIcon fontSize="small" />
+            </IconButton>
+          </span>
+        </Tooltip>
+      ) : null}
+      {hasValue ? (
         <List sx={{ marginTop: "1em" }} dense>
           <EntityDetailListItem
             entityIRI={selected.value}
@@ -468,7 +501,7 @@ const InlineDropdownSemanticFormsRendererComponent = (props: ControlProps) => {
             data={detailsData}
           />
         </List>
-      )}
+      ) : null}
       {globalPath === formsPath && enableFinder && finderProps ? (
         <SearchbarWithFloatingButton finderProps={finderProps} />
       ) : null}

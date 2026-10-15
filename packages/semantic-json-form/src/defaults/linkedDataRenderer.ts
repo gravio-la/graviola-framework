@@ -1,8 +1,6 @@
 import {
-  InlineCondensedSemanticFormsRenderer,
-  inlineDropdownRendererTester,
-  InlineDropdownSemanticFormsRenderer,
-  inlineSemanticFormsRendererTester,
+  RelationalFieldRenderer,
+  relationalFieldRendererTester,
   materialArrayChipsLayoutTester,
   MaterialArrayOfLinkedItemChipsRenderer,
   MaterialArrayOfLinkedItemRenderer,
@@ -23,13 +21,12 @@ export const graviolaRenderers: JsonFormsRendererRegistryEntry[] = [
     tester: materialArrayChipsLayoutTester,
     renderer: MaterialArrayOfLinkedItemChipsRenderer,
   },
+  // Dispatches between dropdown search and Entity Finder (explicit option >
+  // user preference > app default). Replaces the separate inline (15) and
+  // dropdown (20) registrations; their testers stay exported for compatibility.
   {
-    tester: inlineSemanticFormsRendererTester,
-    renderer: InlineCondensedSemanticFormsRenderer,
-  },
-  {
-    tester: inlineDropdownRendererTester,
-    renderer: InlineDropdownSemanticFormsRenderer,
+    tester: relationalFieldRendererTester,
+    renderer: RelationalFieldRenderer,
   },
   {
     tester: materialLinkedObjectControlTester,
