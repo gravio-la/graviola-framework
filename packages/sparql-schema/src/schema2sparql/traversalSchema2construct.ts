@@ -20,6 +20,12 @@ import { JSONSchema7 } from "json-schema";
 import { isJSONSchema } from "@graviola/json-schema-utils";
 import type { TraversalSchema } from "@graviola/edb-graph-traversal";
 import {
+  effectiveInverseMap,
+  resolveInverseForProperty,
+  type InverseMap,
+} from "@graviola/json-schema-utils";
+import type { IRIToStringFn } from "@graviola/edb-core-types";
+import {
   extractNestedFilterOptions,
   normalizeOrderBy,
 } from "@graviola/edb-graph-traversal";
@@ -70,6 +76,13 @@ export type QueryConstructionContext = {
   excludedProperties: string[];
   /** Max depth at which inverse (x-inverseOf) properties are resolved. Default 0 = root only. */
   resolveInverseMaxDepth: number;
+  /** Full schema document for inverse resolution (defaults to traversal root). */
+  rootSchema: JSONSchema7;
+  /** Merged legacy + side-schema inverse map. */
+  inverseMap: InverseMap;
+  /** Definition name of the schema node currently being walked. */
+  typeName?: string;
+  typeIRItoTypeName?: IRIToStringFn;
   /**
    * Shared mutable counter for generating globally unique SPARQL variable names.
    * Wrapped in an object so the reference is preserved across recursive calls.
@@ -516,6 +529,20 @@ function createNestedContext(
       ? Math.min(ctx.maxRecursion, ctx.depth + Math.max(branchMaxRecursion, 1))
       : ctx.maxRecursion;
 
+  let childTypeName = ctx.typeName;
+  const typeConst = nestedSchema?.properties?.["@type"] as
+    | JSONSchema7
+    | undefined;
+  if (
+    typeConst &&
+    typeof typeConst === "object" &&
+    "const" in typeConst &&
+    typeof typeConst.const === "string" &&
+    ctx.typeIRItoTypeName
+  ) {
+    childTypeName = ctx.typeIRItoTypeName(typeConst.const) ?? ctx.typeName;
+  }
+
   return {
     ...ctx,
     schema: nestedSchema || ctx.schema,
@@ -528,6 +555,7 @@ function createNestedContext(
     },
     depth: ctx.depth + 1,
     maxRecursion,
+    typeName: childTypeName,
   };
 }
 
@@ -629,11 +657,16 @@ export function traversalSchema2construct(
     filterOptions?: GraphTraversalFilterOptions; // Filter options for nested queries
     flavour?: SPARQLFlavour; // Engine profile — resolved to features unless sparqlFeatures given
     sparqlFeatures?: Partial<SparqlFeatureFlags>;
+    typeName?: string;
+    inverseMap?: InverseMap;
+    rootSchema?: JSONSchema7;
+    typeIRItoTypeName?: IRIToStringFn;
   },
 ): ConstructResult {
   // Create query construction context
   const flavour = options?.flavour || "default";
   const features = resolveSparqlFeatures(flavour, options?.sparqlFeatures);
+  const rootSchema = options?.rootSchema ?? traversalSchema;
   const ctx: QueryConstructionContext = {
     schema: traversalSchema,
     filterOptions: options?.filterOptions || {},
@@ -645,6 +678,10 @@ export function traversalSchema2construct(
     excludedProperties: options?.excludedProperties || [],
     resolveInverseMaxDepth: options?.resolveInverseMaxDepth ?? 0,
     varCounter: { value: 0 },
+    rootSchema,
+    inverseMap: effectiveInverseMap(rootSchema, options?.inverseMap),
+    typeName: options?.typeName,
+    typeIRItoTypeName: options?.typeIRItoTypeName,
   };
 
   const constructPatterns: SparqlTemplateResult[] = [];
@@ -826,27 +863,19 @@ export function traversalSchema2construct(
   };
 }
 
-/**
- * Parse x-inverseOf inverseOf string to get the inverse property path (e.g. ["groups"] from "#/definitions/Person/properties/groups").
- * Used so WHERE matches triples stored on the other side (e.g. ?person :groups ?group) while CONSTRUCT still outputs subject :members object.
- */
-function getInversePathFromAnnotation(
+function getInversePathFromContext(
+  ctx: QueryConstructionContext,
+  propertyName: string,
   propertySchema: JSONSchema7,
 ): string[] | null {
-  const inverseOf = (
-    propertySchema as { "x-inverseOf"?: { inverseOf: string[] } }
-  )["x-inverseOf"]?.inverseOf;
-  if (!inverseOf?.[0]) return null;
-  const parts = inverseOf[0].split("/");
-  const idx =
-    parts.indexOf("definitions") !== -1
-      ? parts.indexOf("definitions") + 1
-      : parts.indexOf("$defs") + 1;
-  if (idx === 0) return null;
-  const path = parts.slice(idx).filter((p) => p !== "properties");
-  const typeName = path.shift();
-  if (!typeName || path.length === 0) return null;
-  return path;
+  const resolved = resolveInverseForProperty(
+    ctx.typeName,
+    propertyName,
+    propertySchema,
+    ctx.rootSchema,
+    ctx.inverseMap,
+  );
+  return resolved?.[0]?.path ?? null;
 }
 
 /**
@@ -875,7 +904,11 @@ function createPropertyPatterns(
   const objectVar = createUniqueVar(propertyName, ctx);
 
   // When property has x-inverseOf, triples are stored as (object inversePredicate subject). WHERE must use that pattern; CONSTRUCT still outputs (subject predicate object).
-  const inversePath = getInversePathFromAnnotation(propertySchema);
+  const inversePath = getInversePathFromContext(
+    ctx,
+    propertyName,
+    propertySchema,
+  );
   const useInverseWhere = inversePath != null && inversePath.length > 0;
   const inversePredicate =
     useInverseWhere && inversePath

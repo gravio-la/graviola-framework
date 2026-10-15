@@ -17,14 +17,24 @@ export * from "./getSubschemaByPath";
 export {
   getInversePropertyAnnotation,
   resolveInverseProperties,
+  resolveInverseForProperty,
   getInverseProperties,
+  inverseMapFromSchema,
+  mergeInverseMaps,
+  effectiveInverseMap,
+  parseInverseTarget,
+  inverseTargetFromLegacyPointer,
 } from "./inversePropertyAnnotations";
 export type {
+  InverseMap,
   InversePropertyAnnotation,
   JSONSchemaWithInverseProperties,
   InversePropertyResolution,
   InversePropertyData,
+  GetInversePropertiesOptions,
 } from "./inversePropertyAnnotations";
+export { assetKindForRef } from "./assetKindForRef";
+export type { AssetKind, AssetKindContext } from "./assetKindForRef";
 export * from "./extractTranslationKeysFromSchema";
 export * from "./walkJSONSchema";
 export * from "./schemaRegistry";

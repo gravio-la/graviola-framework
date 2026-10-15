@@ -1,6 +1,10 @@
 import type { NamedEntityData, WalkerOptions } from "@graviola/edb-core-types";
 import { filterUndefOrNull } from "@graviola/edb-core-utils";
 import { traverseGraphExtractBySchema } from "@graviola/edb-graph-traversal";
+import {
+  effectiveInverseMap,
+  type InverseMap,
+} from "@graviola/json-schema-utils";
 import datasetFactory from "@rdfjs/dataset";
 import type { Dataset } from "@rdfjs/types";
 import type { JSONSchema7 } from "json-schema";
@@ -31,6 +35,10 @@ type CleanJSONLDOptions = {
    * are left intact. IRIs are compared by strict string equality.
    */
   pruneLinkedDocuments?: boolean;
+  /** Definition name for inverse-map property stripping. */
+  typeName?: string;
+  /** Side-schema inverses merged with legacy `x-inverseOf` on the schema. */
+  inverseMap?: InverseMap;
 };
 
 export const defaultWalkerOptions: Partial<WalkerOptions> = {
@@ -118,21 +126,54 @@ export const recursiveFilter = (
   return data;
 };
 
+export type RemoveInversePropertiesOptions = {
+  typeName?: string;
+  inverseMap?: InverseMap;
+};
+
+function isInversePropertySchema(
+  propertyName: string,
+  propertySchema: JSONSchema7,
+  typeName: string | undefined,
+  mergedInverseMap: InverseMap,
+): boolean {
+  if (
+    propertySchema != null &&
+    typeof propertySchema === "object" &&
+    propertySchema["x-inverseOf"]
+  ) {
+    return true;
+  }
+  return Boolean(typeName && mergedInverseMap[typeName]?.[propertyName]);
+}
+
 /**
- * removes all properties with an x-inverseOf annotation from a schema
- * @param schema - the schema to remove inverse properties from
- * @returns
+ * Removes inverse-side properties (legacy `x-inverseOf` or side-schema map).
  */
-export const removeInversePropertiesFromSchema = (schema: JSONSchema7) => {
+export const removeInversePropertiesFromSchema = (
+  schema: JSONSchema7,
+  options?: RemoveInversePropertiesOptions,
+) => {
+  const mergedInverseMap = effectiveInverseMap(schema, options?.inverseMap);
+  const typeName = options?.typeName;
+
   if (schema.type === "object" && schema.properties) {
     return {
       ...schema,
       properties: Object.fromEntries(
         Object.entries(schema.properties)
-          .filter(([, value]) => !value["x-inverseOf"])
+          .filter(
+            ([key, value]) =>
+              !isInversePropertySchema(
+                key,
+                value as JSONSchema7,
+                typeName,
+                mergedInverseMap,
+              ),
+          )
           .map(([key, value]) => [
             key,
-            removeInversePropertiesFromSchema(value as JSONSchema7),
+            removeInversePropertiesFromSchema(value as JSONSchema7, options),
           ]),
       ),
     };
@@ -140,7 +181,10 @@ export const removeInversePropertiesFromSchema = (schema: JSONSchema7) => {
   if (schema.type === "array" && typeof schema.items === "object") {
     return {
       ...schema,
-      items: removeInversePropertiesFromSchema(schema.items as JSONSchema7),
+      items: removeInversePropertiesFromSchema(
+        schema.items as JSONSchema7,
+        options,
+      ),
     };
   }
   return schema;
@@ -149,9 +193,10 @@ export const removeInversePropertiesFromSchema = (schema: JSONSchema7) => {
 const prepareSchema = (
   schema: JSONSchema7,
   removeInverseProperties?: boolean,
+  inverseOptions?: RemoveInversePropertiesOptions,
 ) => {
   if (removeInverseProperties) {
-    return removeInversePropertiesFromSchema(schema);
+    return removeInversePropertiesFromSchema(schema, inverseOptions);
   }
   return schema;
 };
@@ -213,6 +258,8 @@ export const cleanJSONLD = async (
     keepContext,
     removeInverseProperties,
     pruneLinkedDocuments,
+    typeName,
+    inverseMap,
   }: CleanJSONLDOptions,
 ) => {
   const entityIRI = data["@id"];
@@ -251,7 +298,10 @@ export const cleanJSONLD = async (
       defaultPrefix,
       entityIRI,
       ds as Dataset,
-      prepareSchema(schema, removeInverseProperties),
+      prepareSchema(schema, removeInverseProperties, {
+        typeName,
+        inverseMap,
+      }),
       walkerOptions,
     );
     return keepContext && finalJsonldContext

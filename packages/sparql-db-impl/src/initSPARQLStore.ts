@@ -247,6 +247,7 @@ export function initSPARQLDatastorePair(
     const res = await load(entityIRI, typeIRI, schema, constructFetch, {
       defaultPrefix,
       queryBuildOptions,
+      typeName,
       walkerOptions,
       maxRecursion:
         defaultLoadOptions?.maxRecursion ?? walkerOptions?.maxRecursion,
@@ -320,6 +321,8 @@ export function initSPARQLDatastorePair(
         removeInverseProperties: true,
         pruneLinkedDocuments: true,
         walkerOptions: writeWalkerOptions,
+        typeName,
+        inverseMap: queryBuildOptions.inverses,
       },
     );
     if (statementMeta && statementEncoding === "statement-node") {
@@ -330,6 +333,7 @@ export function initSPARQLDatastorePair(
       queryBuildOptions,
       defaultUpdateGraph,
       maxRecursion: deleteDepth,
+      typeName,
     });
 
     if (enableInversePropertiesFeature) {
@@ -338,6 +342,10 @@ export function initSPARQLDatastorePair(
         rootSchema,
         schemaForInverse as JSONSchema7,
         doc as Parameters<typeof getInverseProperties>[2],
+        {
+          typeName,
+          inverseMap: queryBuildOptions.inverses,
+        },
       );
       const inversePropertiesWithTypeIRI = inverseProperties.map(
         (inverseProperty) => ({

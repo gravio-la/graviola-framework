@@ -72,6 +72,7 @@ export const SemanticJsonFormNoOps: FunctionComponent<
     typeIRIToTypeName,
     queryBuildOptions: { typeIRItoTypeName, primaryFields },
     derivedDefaults,
+    assetClasses,
   } = useAdbContext();
   const typeName = useMemo(
     () => typeIRItoTypeName(typeIRI) ?? "",
@@ -219,6 +220,7 @@ export const SemanticJsonFormNoOps: FunctionComponent<
         uischemaScopeOverrides,
         typeIRIToTypeName: typeIRIToTypeName ?? typeIRItoTypeName,
         primaryFields: config?.primaryFields ?? primaryFields,
+        assetClasses,
       },
     };
   }, [
@@ -236,6 +238,7 @@ export const SemanticJsonFormNoOps: FunctionComponent<
     typeIRIToTypeName,
     typeIRItoTypeName,
     primaryFields,
+    assetClasses,
   ]);
   const allRenderer = useMemo(
     () => [...(rendererRegistry || []), ...(jfpRenderers || [])],

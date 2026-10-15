@@ -1,6 +1,7 @@
 import { SPARQLCRUDOptions } from "@graviola/edb-core-types";
 import { buildTraversalSchema } from "@graviola/edb-graph-traversal";
 import { JSONSchemaWithInverseProperties } from "@graviola/json-schema-utils";
+import type { JSONSchema7 } from "json-schema";
 
 import { traversalSchema2construct } from "@/schema2sparql/traversalSchema2construct";
 import { buildSPARQLConstructQuery } from "@/schema2sparql/buildSPARQLConstructQuery";
@@ -36,6 +37,10 @@ export const makeSPARQLConstructQuery = (
       prefixMap,
       resolveInverseMaxDepth: options.resolveInverseMaxDepth,
       maxRecursion: options.maxRecursion,
+      typeName: options.typeName,
+      inverseMap: options.queryBuildOptions?.inverses,
+      rootSchema: schema as JSONSchema7,
+      typeIRItoTypeName: options.queryBuildOptions?.typeIRItoTypeName,
     },
   );
 

@@ -95,6 +95,21 @@ export const graviolaSideSchemaDefinition: JSONSchema7 = {
         additionalProperties: derivedDefaultSpecSchema,
       },
     },
+    assetClasses: {
+      type: "object",
+      additionalProperties: { enum: ["image", "file"] },
+    },
+    inverses: {
+      type: "object",
+      additionalProperties: {
+        type: "object",
+        additionalProperties: {
+          type: "string",
+          minLength: 1,
+          pattern: "^[^.]+\\.[^.]+$",
+        },
+      },
+    },
     viewConfig: {
       type: "object",
       additionalProperties: false,

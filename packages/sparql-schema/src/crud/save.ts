@@ -108,7 +108,10 @@ export const save = async (
       );
     }
   }
-  const cleanSchema = removeInversePropertiesFromSchema(schema);
+  const cleanSchema = removeInversePropertiesFromSchema(schema, {
+    typeName: options.typeName,
+    inverseMap: queryBuildOptions?.inverses,
+  });
 
   // The data is serialized as N-Triples, every IRI written out in full. Handing
   // the dataset to the builder as RDF terms is not an option: it abbreviates
@@ -134,6 +137,10 @@ export const save = async (
     ["@id"],
     ["@id", "@type"],
     options.maxRecursion,
+    {
+      typeName: options.typeName,
+      inverseMap: queryBuildOptions?.inverses,
+    },
   );
 
   // Two operations in one update request (one transaction): remove the old

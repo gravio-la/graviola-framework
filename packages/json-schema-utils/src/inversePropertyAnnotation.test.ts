@@ -1,7 +1,9 @@
 import { JSONSchema7 } from "json-schema";
 import {
   getInverseProperties,
+  inverseMapFromSchema,
   JSONSchemaWithInverseProperties,
+  resolveInverseForProperty,
   resolveInverseProperties,
 } from "./inversePropertyAnnotations";
 import { resolveSchema } from "./resolver";
@@ -81,6 +83,36 @@ describe("Inverse Property Annotation", () => {
   });
 });
 
+describe("inverseMapFromSchema and resolveInverseForProperty", () => {
+  it("builds map from legacy x-inverseOf and resolves without keyword", () => {
+    const map = inverseMapFromSchema(workingCircleRootSchema);
+    expect(map.WorkingCircle?.members).toBe("Person.workingCircles");
+
+    const wcDef = workingCircleRootSchema.definitions!
+      .WorkingCircle as JSONSchema7;
+    const membersSchema = wcDef.properties!.members as JSONSchema7;
+    const withoutKeyword = { ...membersSchema };
+    delete (withoutKeyword as { "x-inverseOf"?: unknown })["x-inverseOf"];
+
+    expect(
+      resolveInverseForProperty(
+        "WorkingCircle",
+        "members",
+        withoutKeyword,
+        workingCircleRootSchema,
+        map,
+      ),
+    ).toEqual([
+      {
+        path: ["workingCircles"],
+        typeName: "Person",
+        schema: (workingCircleRootSchema.definitions!.Person as JSONSchema7)
+          .properties!.workingCircles,
+      },
+    ]);
+  });
+});
+
 describe("getInverseProperties", () => {
   it("should extract inverse data and entityIRIs from an array property (e.g. WorkingCircle.members)", () => {
     const workingCircleSchema = workingCircleRootSchema.definitions!
@@ -99,6 +131,7 @@ describe("getInverseProperties", () => {
       workingCircleRootSchema,
       workingCircleSchema,
       doc,
+      { typeName: "WorkingCircle" },
     );
 
     expect(result).toHaveLength(1);
@@ -125,6 +158,10 @@ describe("getInverseProperties", () => {
       workingCircleRootSchema,
       workingCircleSchema,
       doc,
+      {
+        typeName: "WorkingCircle",
+        inverseMap: inverseMapFromSchema(workingCircleRootSchema),
+      },
     );
 
     expect(result).toHaveLength(1);

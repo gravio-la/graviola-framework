@@ -68,6 +68,8 @@ export interface SparqlBuildOptions {
   typeIRItoTypeName: IRIToStringFn;
   primaryFields: PrimaryFieldDeclaration;
   primaryFieldExtracts: PrimaryFieldExtractDeclaration;
+  /** Side-schema inverses: typeName → slot → `OtherType.inverseSlot`. */
+  inverses?: Record<string, Record<string, string>>;
   /** Engine/vendor profile id — resolved to {@link SparqlFeatureFlags} via resolveSparqlFeatures */
   sparqlFlavour?: SPARQLFlavour;
   /** Partial overrides merged on top of the flavour's default feature bag */
@@ -80,6 +82,8 @@ export interface SelectFetchOptions {
 export type SPARQLCRUDOptions = {
   queryBuildOptions?: SparqlBuildOptions;
   defaultPrefix: string;
+  /** Entity definition name for inverse-map lookups on this schema. */
+  typeName?: string;
   maxRecursion?: number;
   /** When false, CONSTRUCT/load only expands explicitly included relations (Prisma-like). */
   includeRelationsByDefault?: boolean;

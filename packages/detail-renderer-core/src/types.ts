@@ -82,6 +82,8 @@ export interface DetailTesterContext {
   detailUiSchemata?: Record<string, UISchemaElement>;
   /** Side-schema `orderBy`: type name → slot → sort spec (nested arrays on inline items). */
   orderBy?: OrderByConfig;
+  /** Side-schema asset class kinds by definition name. */
+  assetClasses?: Record<string, "image" | "file">;
 }
 
 export interface DetailRendererRegistryEntry {

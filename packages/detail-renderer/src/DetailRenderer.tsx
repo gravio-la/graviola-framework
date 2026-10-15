@@ -325,6 +325,7 @@ export const DetailRenderer = React.memo(function DetailRenderer({
       valueRenderers,
       detailUiSchemata: resolvedConfig.uiSchemata,
       orderBy: adb.orderBy,
+      assetClasses: adb.assetClasses,
     }),
     [
       schema,
@@ -349,6 +350,7 @@ export const DetailRenderer = React.memo(function DetailRenderer({
       valueRenderers,
       resolvedConfig.uiSchemata,
       adb.orderBy,
+      adb.assetClasses,
     ],
   );
 
@@ -367,6 +369,7 @@ export const DetailRenderer = React.memo(function DetailRenderer({
       config: resolvedConfig,
       detailUiSchemata: resolvedConfig.uiSchemata,
       orderBy: adb.orderBy,
+      assetClasses: adb.assetClasses,
       typeIRIToTypeName,
     }),
     [
@@ -376,6 +379,7 @@ export const DetailRenderer = React.memo(function DetailRenderer({
       effectiveUISchema,
       resolvedConfig,
       adb.orderBy,
+      adb.assetClasses,
       typeIRIToTypeName,
     ],
   );

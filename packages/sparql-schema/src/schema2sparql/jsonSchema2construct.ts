@@ -1,9 +1,12 @@
 import {
+  definitionNameFromRef,
+  effectiveInverseMap,
   isJSONSchema,
   isJSONSchemaDefinition,
   JSONSchemaWithInverseProperties,
-  resolveInverseProperties,
+  resolveInverseForProperty,
   resolveSchema,
+  type InverseMap,
 } from "@graviola/json-schema-utils";
 import { Variable } from "@rdfjs/types";
 import { JSONSchema7, JSONSchema7Definition } from "json-schema";
@@ -121,19 +124,30 @@ const resolveNestedObjectSchema = (
  * A DELETE template skips triples with unbound variables, so each solution
  * removes exactly the triples of its branch.
  */
+export type JsonSchema2ConstructOptions = {
+  typeName?: string;
+  inverseMap?: InverseMap;
+};
+
 export const jsonSchema2construct: (
   subjectURI: string | Variable,
   rootSchema: JSONSchemaWithInverseProperties,
   stopSymbols?: string[],
   excludedProperties?: string[],
   maxRecursion?: number,
+  inverseOptions?: JsonSchema2ConstructOptions,
 ) => { whereRequired: string; whereOptionals: string; construct: string } = (
   subjectURI,
   rootSchema,
   stopSymbols = [],
   excludedProperties = [],
   maxRecursion = MAX_RECURSION,
+  inverseOptions = {},
 ) => {
+  const mergedInverseMap = effectiveInverseMap(
+    rootSchema as JSONSchema7,
+    inverseOptions.inverseMap,
+  );
   let construct = "",
     varIndex = 0;
   const whereRequired = "";
@@ -147,6 +161,7 @@ export const jsonSchema2construct: (
     sP: string,
     subSchema: JSONSchemaWithInverseProperties,
     level: number,
+    currentTypeName: string | undefined = inverseOptions.typeName,
   ): string[] => {
     if (level > maxRecursion) {
       return [];
@@ -170,9 +185,15 @@ export const jsonSchema2construct: (
 
       // 1. link pattern(s) between subject and object
       let linkPatterns: string[];
-      if (schema["x-inverseOf"]) {
-        const resolvedInverse = resolveInverseProperties(schema, rootSchema);
-        linkPatterns = (resolvedInverse ?? []).map(
+      const resolvedInverse = resolveInverseForProperty(
+        currentTypeName,
+        property,
+        schema,
+        rootSchema as JSONSchema7,
+        mergedInverseMap,
+      );
+      if (resolvedInverse) {
+        linkPatterns = resolvedInverse.map(
           (inverse) => `${o} ${makePrefixedProperyPath(inverse.path)} ${sP} .`,
         );
       } else {
@@ -196,7 +217,19 @@ export const jsonSchema2construct: (
       ) {
         return;
       }
-      const nestedBranches = propertiesToSPARQLPatterns(o, nested, level + 1);
+      let nestedTypeName = currentTypeName;
+      if (schema.type === "array" && typeof schema.items === "object") {
+        const items = schema.items as JSONSchema7;
+        nestedTypeName = definitionNameFromRef(items.$ref) ?? currentTypeName;
+      } else if (schema.$ref) {
+        nestedTypeName = definitionNameFromRef(schema.$ref) ?? currentTypeName;
+      }
+      const nestedBranches = propertiesToSPARQLPatterns(
+        o,
+        nested,
+        level + 1,
+        nestedTypeName,
+      );
       if (nestedBranches.length === 0) {
         return;
       }

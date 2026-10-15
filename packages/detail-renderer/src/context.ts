@@ -25,6 +25,8 @@ export interface DetailRendererContextValue {
   detailUiSchemata?: Record<string, UISchemaElement>;
   /** Side-schema orderBy from Adb context. */
   orderBy?: OrderByConfig;
+  /** Side-schema asset class kinds from Adb context. */
+  assetClasses?: Record<string, "image" | "file">;
   /** Maps entity `@type` IRIs to config type names (inline array item class lookup). */
   typeIRIToTypeName?: (typeIRI: string) => string | undefined;
   rootSchema: JSONSchema7;

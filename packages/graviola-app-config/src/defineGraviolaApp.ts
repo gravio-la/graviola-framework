@@ -228,6 +228,8 @@ export function schemaConfigFromSidecars(
     viewConfig: sideSchema.viewConfig,
     orderBy: sideSchema.orderBy,
     defaults: sideSchema.defaults,
+    assetClasses: sideSchema.assetClasses,
+    inverses: sideSchema.inverses,
   };
 
   let resolved = defineGraviolaApp(overridable);

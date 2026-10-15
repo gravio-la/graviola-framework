@@ -21,6 +21,7 @@ import type {
   JsonFormsUISchemaRegistryEntry,
 } from "@jsonforms/core";
 import type { TableColumnRegistry } from "@graviola/edb-table-types";
+import type { InverseMap } from "@graviola/json-schema-utils";
 import type { CompiledProfile } from "@graviola/formula-dependency";
 
 export type ChangeCause = "user" | "mapping" | "reload";
@@ -168,6 +169,10 @@ export type GlobalAppConfig<DeclarativeMappingType> = GlobalSemanticConfig & {
   orderBy?: OrderByConfig;
   /** Side-schema `defaults`: type name → target slot → `{ path }`. */
   derivedDefaults?: DerivedDefaultsConfig;
+  /** Side-schema asset class kinds (`image` | `file`) by definition name. */
+  assetClasses?: Record<string, "image" | "file">;
+  /** Side-schema inverse slot map by definition name. */
+  inverses?: InverseMap;
   viewConfig?: import("./viewConfig").ViewConfigSet;
   typePresentation?: TypePresentationRegistry;
   /**

@@ -10,6 +10,7 @@ import type {
   SidebarConfig,
 } from "@graviola/edb-advanced-components";
 import type { TableUiSchema } from "@graviola/edb-table-types";
+import type { InverseMap } from "@graviola/json-schema-utils";
 import type { CompiledProfile } from "@graviola/formula-dependency";
 import type { SearchFacetSchema } from "@graviola/search-facet-schema";
 import type { UISchemaElement } from "@jsonforms/core";
@@ -133,6 +134,10 @@ export type SchemaConfig = {
   orderBy?: OrderByConfig;
   /** Per-type derived default specs from `gra:default` (side schema). */
   defaults?: DerivedDefaultsConfig;
+  /** Per-class asset kind from LinkML side-schema (`image` | `file`). */
+  assetClasses?: Record<string, "image" | "file">;
+  /** Per-class inverse slot map (`RangeClass.inverseSlot`). */
+  inverses?: InverseMap;
 };
 
 /**
@@ -184,4 +189,6 @@ export type GraviolaSideSchema = {
   orderBy?: OrderByConfig;
   /** Per-type derived default specs from `gra:default`. */
   defaults?: DerivedDefaultsConfig;
+  assetClasses?: Record<string, "image" | "file">;
+  inverses?: InverseMap;
 };

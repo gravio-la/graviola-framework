@@ -6,11 +6,13 @@ import {
 } from "@graviola/edb-core-types";
 import { resolveSparqlFeatures } from "@graviola/edb-core-utils";
 import {
+  effectiveInverseMap,
   isJSONSchema,
   isJSONSchemaDefinition,
   isPrimitive,
-  resolveInverseProperties,
+  resolveInverseForProperty,
   resolveSchema,
+  type InverseMap,
 } from "@graviola/json-schema-utils";
 import { JSONSchema7, JSONSchema7Definition } from "json-schema";
 
@@ -54,6 +56,10 @@ const propertiesToSPARQLSelectPatterns = (
   phase: SelectPatternPhase = "full",
   orderByProperties: ReadonlySet<string> = new Set(),
   rootOptionalBranches?: string[],
+  selectInverse?: {
+    typeName?: string;
+    inverseMap: InverseMap;
+  },
 ) => {
   let where = "";
   let select = "";
@@ -145,21 +151,22 @@ const propertiesToSPARQLSelectPatterns = (
             select += ` (COUNT(DISTINCT ${variable}) AS ${variable}_count) `;
           }
         }
-        if (subSchema["x-inverseOf"]) {
-          const resolvedInverse = resolveInverseProperties(
-            subSchema,
-            rootSchema,
-          );
-          if (resolvedInverse) {
-            resolvedInverse.forEach((inverse) => {
-              emitWhere(
-                ` ${variable} ${makePrefixedPropertyPath(inverse.path)} ${currentVariable} . 
+        const resolvedInverse = resolveInverseForProperty(
+          selectInverse?.typeName,
+          property,
+          subSchema,
+          rootSchema,
+          selectInverse?.inverseMap,
+        );
+        if (resolvedInverse) {
+          resolvedInverse.forEach((inverse) => {
+            emitWhere(
+              ` ${variable} ${makePrefixedPropertyPath(inverse.path)} ${currentVariable} . 
                 ${innerWherePart}
                 `,
-                isRequired,
-              );
-            });
-          }
+              isRequired,
+            );
+          });
         } else {
           emitWhere(
             ` ${currentVariable} ${prefixedProperty} ${variable} .
@@ -195,6 +202,7 @@ const propertiesToSPARQLSelectPatterns = (
             phase === "page-subquery" ? "full" : phase,
             orderByProperties,
             undefined,
+            selectInverse,
           );
         emitWhere(
           ` ${currentVariable} ${prefixedProperty} ${variable} . \n ${subWhere} `,
@@ -223,6 +231,7 @@ const propertiesToSPARQLSelectPatterns = (
               phase === "page-subquery" ? "full" : phase,
               orderByProperties,
               undefined,
+              selectInverse,
             );
           const typeVariable = makeVariable([...subPath, "type"]);
           const typeSampleAlias = makeVariable([...subPath, "rdf_type"]);
@@ -249,19 +258,20 @@ const propertiesToSPARQLSelectPatterns = (
               select += ` (SAMPLE(${primaryMultiVariable}) AS ${primaryAggAlias}) `;
             });
           }
-          if (subSchema["x-inverseOf"]) {
-            const resolvedInverse = resolveInverseProperties(
-              subSchema,
-              rootSchema,
-            );
-            if (resolvedInverse) {
-              resolvedInverse.forEach((inverse) => {
-                emitWhere(
-                  ` ${variable} ${makePrefixedPropertyPath(inverse.path)} ${currentVariable} . \n ${subWhere} \n ${primaryInfoWhere} `,
-                  isRequired,
-                );
-              });
-            }
+          const resolvedInverseRef = resolveInverseForProperty(
+            selectInverse?.typeName,
+            property,
+            subSchema,
+            rootSchema,
+            selectInverse?.inverseMap,
+          );
+          if (resolvedInverseRef) {
+            resolvedInverseRef.forEach((inverse) => {
+              emitWhere(
+                ` ${variable} ${makePrefixedPropertyPath(inverse.path)} ${currentVariable} . \n ${subWhere} \n ${primaryInfoWhere} `,
+                isRequired,
+              );
+            });
           } else {
             emitWhere(
               ` ${currentVariable} ${prefixedProperty} ${variable} . \n ${variable} a ${typeVariable} . \n ${subWhere} \n ${primaryInfoWhere} `,
@@ -298,6 +308,8 @@ type SPARQLSelectOptions = {
   limit?: number;
   offset?: number;
   primaryFields?: PrimaryFieldDeclaration;
+  typeName?: string;
+  inverses?: InverseMap;
 };
 
 export const orderByPropertyNames = (
@@ -394,6 +406,11 @@ export const jsonSchema2Select = (
   let where = "";
   let select = "";
 
+  const selectInverse = {
+    typeName: sparqlSelectOptions?.typeName,
+    inverseMap: effectiveInverseMap(rootSchema, sparqlSelectOptions?.inverses),
+  };
+
   if (usePagedSubquery) {
     const sub = propertiesToSPARQLSelectPatterns(
       rootSchema,
@@ -408,6 +425,8 @@ export const jsonSchema2Select = (
       minimal,
       "page-subquery",
       orderByProps,
+      undefined,
+      selectInverse,
     );
     const outerBranches: string[] = [];
     const outer = propertiesToSPARQLSelectPatterns(
@@ -424,6 +443,7 @@ export const jsonSchema2Select = (
       "page-outer",
       orderByProps,
       outerBranches,
+      selectInverse,
     );
     select = outer.select;
     const subqueryPagination = sparqlPartFromOptions(sparqlSelectOptions, true);
@@ -458,6 +478,7 @@ ${sparqlFinish}`;
     "full",
     orderByProps,
     [],
+    selectInverse,
   );
   where = full.where;
   select = full.select;

@@ -181,6 +181,8 @@ export const GraviolaAppProvider: FC<GraviolaAppProviderProps> = ({
     viewConfig: sideViewConfig,
     orderBy,
     defaults: derivedDefaults,
+    assetClasses,
+    inverses,
   } = schemaConfig;
 
   const schemaAsJson = schema as JSONSchema7;
@@ -254,12 +256,14 @@ export const GraviolaAppProvider: FC<GraviolaAppProviderProps> = ({
         ...(sparqlFlavour ? { sparqlFlavour } : {}),
         primaryFields,
         typeIRItoTypeName: resolveTypeName,
+        inverses,
       },
     };
   }, [
     baseIRI,
     defaultPrefix,
     primaryFields,
+    inverses,
     definitionToTypeIRI,
     typeIRIToTypeName,
     sparqlFlavour,
@@ -316,6 +320,8 @@ export const GraviolaAppProvider: FC<GraviolaAppProviderProps> = ({
         uischemata={uischemata}
         orderBy={orderBy}
         derivedDefaults={derivedDefaults}
+        assetClasses={assetClasses}
+        inverses={inverses}
         viewConfig={viewConfig}
         tableActionRegistry={tableActions}
         entityActionRegistry={entityActions}
