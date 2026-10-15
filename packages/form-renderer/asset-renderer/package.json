@@ -1,0 +1,71 @@
+{
+  "name": "@graviola/asset-renderer",
+  "version": "0.1.0",
+  "description": "JSON Forms renderers for Graviola asset-class fields",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "CHANGELOG.md",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "depcheck": "depcheck",
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint src/**/*.{ts,tsx}",
+    "lint-fix": "eslint --fix src/**/*.{ts,tsx}",
+    "test": "bun test",
+    "release": "bun publish --access public",
+    "pack-tarball": "bun pm pack"
+  },
+  "peerDependencies": {
+    "@graviola/edb-state-hooks": "workspace:^",
+    "@mui/material": "catalog:mui",
+    "@mui/icons-material": "catalog:mui",
+    "@jsonforms/material-renderers": "catalog:jsonforms",
+    "@jsonforms/core": "catalog:jsonforms",
+    "@jsonforms/react": "catalog:jsonforms",
+    "react": "catalog:"
+  },
+  "dependencies": {
+    "@graviola/asset-client": "workspace:*",
+    "@graviola/edb-core-types": "workspace:*",
+    "@graviola/json-schema-utils": "workspace:*",
+    "lodash-es": "catalog:",
+    "next-i18next": "^15.3.0"
+  },
+  "devDependencies": {
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*",
+    "@jsonforms/core": "catalog:jsonforms",
+    "@jsonforms/react": "catalog:jsonforms",
+    "@mui/icons-material": "catalog:mui",
+    "@mui/material": "catalog:mui",
+    "@testing-library/react": "^16.3.3",
+    "@types/json-schema": "catalog:",
+    "@types/react": "catalog:",
+    "eslint-config-edb": "workspace:*",
+    "happy-dom": "^20.0.0",
+    "react-dom": "catalog:",
+    "tsup": "^8.0.0",
+    "typescript": "^5.8.2"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "eslint-config-edb"
+    ]
+  }
+}

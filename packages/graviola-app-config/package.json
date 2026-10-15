@@ -40,7 +40,9 @@
     "react-router-dom": "catalog:"
   },
   "dependencies": {
+    "@graviola/asset-renderer": "workspace:*",
     "@graviola/edb-advanced-components": "workspace:*",
+    "@graviola/edb-basic-renderer": "workspace:*",
     "@graviola/edb-core-types": "workspace:*",
     "@graviola/edb-core-utils": "workspace:*",
     "@graviola/edb-debug-utils": "workspace:*",

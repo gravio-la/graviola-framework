@@ -35,7 +35,7 @@ const ImageRendererComponent = (props: ControlProps) => {
   const [editMode, setEditMode] = useState(false);
   const imageSrc = useThumbnailUrl(
     typeof data === "string" ? data : undefined,
-    { sizeCategory: "detail" },
+    { sizeCategory: "card" },
   );
 
   const handleChange_ = useCallback(

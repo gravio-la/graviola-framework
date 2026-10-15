@@ -1,4 +1,5 @@
 export * from "./ImageRenderer";
+export * from "./imageUrlTester";
 export * from "./EnumRenderer";
 export * from "./TypeOfRenderer";
 export * from "./special-date";

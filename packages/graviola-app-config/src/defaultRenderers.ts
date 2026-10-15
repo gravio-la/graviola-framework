@@ -7,6 +7,8 @@ import {
   MarkdownTextFieldRenderer,
   markdownTester,
 } from "@graviola/edb-markdown-renderer";
+import { assetRenderers } from "@graviola/asset-renderer";
+import { ImageRenderer, imageUrlTester } from "@graviola/edb-basic-renderer";
 import {
   LinkedMarkdownRenderer,
   linkedMarkdownTester,
@@ -29,6 +31,10 @@ const markdownRenderers: JsonFormsRendererRegistryEntry[] = [
   { tester: linkedMarkdownTester, renderer: LinkedMarkdownRenderer },
 ];
 
+const imageUrlRenderers: JsonFormsRendererRegistryEntry[] = [
+  { tester: imageUrlTester, renderer: ImageRenderer },
+];
+
 /**
  * Sensible default renderer registry: JSON Forms material renderers plus
  * Graviola's linked-data and markdown renderers. Override / extend by passing
@@ -37,7 +43,9 @@ const markdownRenderers: JsonFormsRendererRegistryEntry[] = [
 export const defaultRenderers: JsonFormsRendererRegistryEntry[] = [
   ...materialRenderers,
   ...graviolaRenderers,
+  ...assetRenderers,
   ...markdownRenderers,
+  ...imageUrlRenderers,
 ];
 
 /**
