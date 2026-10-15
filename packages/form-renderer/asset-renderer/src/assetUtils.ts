@@ -36,6 +36,23 @@ export function assetIriFromValue(value: unknown): string | undefined {
   return undefined;
 }
 
+/** Linked-entity field value shape (matches linked-data renderers). */
+export function assetLinkedFieldValue(
+  iri: string,
+  typeIRI: string,
+  entity?: Record<string, unknown>,
+): Record<string, unknown> {
+  const label =
+    (typeof entity?.caption === "string" && entity.caption) ||
+    (typeof entity?.fileName === "string" && entity.fileName) ||
+    undefined;
+  return {
+    "@id": iri,
+    "@type": typeIRI,
+    ...(label ? { __label: label } : {}),
+  };
+}
+
 export function assetErrorMessage(error: unknown): string {
   if (error instanceof AssetHttpError) return error.message;
   if (error instanceof Error) return error.message;

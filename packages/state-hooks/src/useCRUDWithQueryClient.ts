@@ -195,7 +195,6 @@ export const useCRUDWithQueryClient: UseCRUDHook<
         if (!typeIRI || !ready) throw new Error("typeIRI not defined");
       }
       const typeName = dataStore.typeIRItoTypeName(typeIRI);
-      const _entityIRI = entityIRI || createEntityIRI(typeName);
       const persistData = prepareEntityForPersist(
         data as Record<string, unknown>,
         {
@@ -203,6 +202,12 @@ export const useCRUDWithQueryClient: UseCRUDHook<
           typeName,
         },
       );
+      const idFromDocument =
+        typeof persistData["@id"] === "string" && persistData["@id"].length > 0
+          ? persistData["@id"]
+          : undefined;
+      const _entityIRI =
+        idFromDocument || entityIRI || createEntityIRI(typeName);
       const draftDocumentsStored = await storeDraftDocuments(
         persistData,
         dataStore,

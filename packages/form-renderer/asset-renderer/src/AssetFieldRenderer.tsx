@@ -15,11 +15,11 @@ import {
   Button,
   FormControl,
   FormHelperText,
+  FormLabel,
   IconButton,
   LinearProgress,
   Stack,
   TextField,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import { useTranslation } from "next-i18next";
@@ -37,6 +37,7 @@ import {
   acceptAttribute,
   assetErrorMessage,
   assetIriFromValue,
+  assetLinkedFieldValue,
   classHasCaption,
   isTouchDevice,
   resolveAssetControlMeta,
@@ -56,6 +57,7 @@ const AssetFieldRendererComponent = (props: ControlProps) => {
     path,
     rootSchema,
     uischema,
+    label,
   } = props;
   const { t } = useTranslation();
   const ctx = useJsonForms();
@@ -118,10 +120,11 @@ const AssetFieldRendererComponent = (props: ControlProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const linkAsset = useCallback(
-    (iri: string) => {
-      handleChange(path, iri);
+    (iri: string, entity?: Record<string, unknown>) => {
+      if (!meta.typeIRI) return;
+      handleChange(path, assetLinkedFieldValue(iri, meta.typeIRI, entity));
     },
-    [handleChange, path],
+    [handleChange, path, meta.typeIRI],
   );
 
   const uploadFile = useCallback(
@@ -134,7 +137,11 @@ const AssetFieldRendererComponent = (props: ControlProps) => {
           onProgress: (f) => setUploadProgress(f),
         });
         const iri = await persistUploaded(asset);
-        linkAsset(iri);
+        linkAsset(iri, {
+          fileName: asset.fileName,
+          encodingFormat: asset.encodingFormat,
+          contentSize: asset.contentSize,
+        });
       } catch (e) {
         setInlineError(assetErrorMessage(e));
       } finally {
@@ -173,7 +180,11 @@ const AssetFieldRendererComponent = (props: ControlProps) => {
   const persistFromSource = useCallback(
     async (asset: UploadedAsset) => {
       const iri = await persistUploaded(asset);
-      linkAsset(iri);
+      linkAsset(iri, {
+        fileName: asset.fileName,
+        encodingFormat: asset.encodingFormat,
+        contentSize: asset.contentSize,
+      });
     },
     [persistUploaded, linkAsset],
   );
@@ -200,12 +211,21 @@ const AssetFieldRendererComponent = (props: ControlProps) => {
 
   if (!visible) return null;
 
+  const fieldLabel =
+    label ??
+    (typeof schema.title === "string" && schema.title.length > 0
+      ? schema.title
+      : undefined);
+
   const helperText =
     inlineError ??
     (typeof errors === "string" && errors.length > 0 ? errors : undefined);
 
   return (
     <FormControl fullWidth id={id} sx={{ mb: 2 }}>
+      {fieldLabel ? (
+        <FormLabel sx={{ mb: 1, display: "block" }}>{fieldLabel}</FormLabel>
+      ) : null}
       {linkedIri ? (
         <Stack spacing={1}>
           <AssetPreview

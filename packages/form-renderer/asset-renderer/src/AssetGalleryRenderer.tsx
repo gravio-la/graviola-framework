@@ -10,6 +10,7 @@ import {
   Box,
   Button,
   FormHelperText,
+  FormLabel,
   IconButton,
   LinearProgress,
   Stack,
@@ -30,6 +31,7 @@ import {
   acceptAttribute,
   assetErrorMessage,
   assetIriFromValue,
+  assetLinkedFieldValue,
   isTouchDevice,
   resolveAssetControlMeta,
 } from "./assetUtils";
@@ -55,6 +57,7 @@ const AssetGalleryRendererComponent = (props: ArrayLayoutProps) => {
     addItem,
     removeItems,
     uischema,
+    label,
   } = props;
   const { t } = useTranslation();
   const ctx = useJsonForms();
@@ -101,11 +104,12 @@ const AssetGalleryRendererComponent = (props: ArrayLayoutProps) => {
   );
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const appendIri = useCallback(
-    (iri: string) => {
-      addItem(path, iri)();
+  const appendLinked = useCallback(
+    (iri: string, entity?: Record<string, unknown>) => {
+      if (!meta.typeIRI) return;
+      addItem(path, assetLinkedFieldValue(iri, meta.typeIRI, entity))();
     },
-    [addItem, path],
+    [addItem, path, meta.typeIRI],
   );
 
   const uploadFiles = useCallback(
@@ -113,15 +117,19 @@ const AssetGalleryRendererComponent = (props: ArrayLayoutProps) => {
       if (!assetService?.enabled) return;
       setInlineError(null);
       const list = Array.from(files);
-      for (const file of list) {
-        const key = file.name;
+      for (const [index, file] of list.entries()) {
+        const key = `${index}:${file.name}`;
         setProgressByName((p) => ({ ...p, [key]: 0 }));
         try {
           const asset = await assetService.upload(file, {
             onProgress: (f) => setProgressByName((p) => ({ ...p, [key]: f })),
           });
           const iri = await persistUploaded(asset);
-          appendIri(iri);
+          appendLinked(iri, {
+            fileName: asset.fileName,
+            encodingFormat: asset.encodingFormat,
+            contentSize: asset.contentSize,
+          });
         } catch (e) {
           setInlineError(assetErrorMessage(e));
         } finally {
@@ -133,7 +141,7 @@ const AssetGalleryRendererComponent = (props: ArrayLayoutProps) => {
         }
       }
     },
-    [assetService, persistUploaded, appendIri],
+    [assetService, persistUploaded, appendLinked],
   );
 
   const onFileInput = useCallback(
@@ -165,9 +173,13 @@ const AssetGalleryRendererComponent = (props: ArrayLayoutProps) => {
   const persistFromSource = useCallback(
     async (asset: UploadedAsset) => {
       const iri = await persistUploaded(asset);
-      appendIri(iri);
+      appendLinked(iri, {
+        fileName: asset.fileName,
+        encodingFormat: asset.encodingFormat,
+        contentSize: asset.contentSize,
+      });
     },
-    [persistUploaded, appendIri],
+    [persistUploaded, appendLinked],
   );
 
   const move = useCallback(
@@ -190,9 +202,17 @@ const AssetGalleryRendererComponent = (props: ArrayLayoutProps) => {
   if (!visible) return null;
 
   const progressEntries = Object.entries(progressByName);
+  const fieldLabel =
+    label ??
+    (typeof schema.title === "string" && schema.title.length > 0
+      ? schema.title
+      : undefined);
 
   return (
     <Box id={id} sx={{ mb: 2 }}>
+      {fieldLabel ? (
+        <FormLabel sx={{ mb: 1, display: "block" }}>{fieldLabel}</FormLabel>
+      ) : null}
       <Stack direction="row" flexWrap="wrap" gap={1} sx={{ mb: 1 }}>
         {items.map((item, index) => {
           const iri = assetIriFromValue(item);

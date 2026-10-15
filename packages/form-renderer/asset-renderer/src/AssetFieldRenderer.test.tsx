@@ -124,6 +124,7 @@ describe("AssetFieldRenderer", () => {
           rootSchema={rootSchema}
           config={{ registry, assetClasses: { Photo: "image" } }}
           uischema={{ type: "Control", scope: "#/properties/cover" }}
+          label="Cover image"
           visible
           enabled
           errors=""
@@ -152,9 +153,14 @@ describe("AssetFieldRenderer", () => {
     });
     await waitFor(() =>
       expect(
-        handleChangeCalls.some((c: any) => c.value === lastSaved?.["@id"]),
+        handleChangeCalls.some(
+          (c: any) =>
+            c.value?.["@id"] === lastSaved?.["@id"] &&
+            c.value?.["@type"] === "http://example.org/Photo",
+        ),
       ).toBe(true),
     );
+    expect(container.textContent).toContain("Cover image");
   });
 
   test("disabled asset service hides upload input", () => {

@@ -6,7 +6,11 @@ export {
 } from "./assetTesters";
 export { AssetFieldRenderer } from "./AssetFieldRenderer";
 export { AssetGalleryRenderer } from "./AssetGalleryRenderer";
-export { assetIriFromValue, assetErrorMessage } from "./assetUtils";
+export {
+  assetIriFromValue,
+  assetLinkedFieldValue,
+  assetErrorMessage,
+} from "./assetUtils";
 
 import type { JsonFormsRendererRegistryEntry } from "@jsonforms/core";
 import { assetFieldTester, assetGalleryTester } from "./assetTesters";
