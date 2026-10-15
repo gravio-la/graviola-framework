@@ -1,5 +1,6 @@
 import { beforeAll, beforeEach, describe, expect, mock, test } from "bun:test";
 import { Window } from "happy-dom";
+import { JsonFormsContext } from "@jsonforms/react";
 import React from "react";
 import { cleanup, fireEvent, render, waitFor } from "@testing-library/react";
 import type { UploadedAsset } from "@graviola/edb-core-types";
@@ -75,13 +76,18 @@ mock.module("next-i18next", () => ({
   }),
 }));
 
-mock.module("@jsonforms/react", () => ({
-  useJsonForms: () => ({
-    core: { data: { "@id": "http://example.org/item/1" } },
-    config: { registry, assetClasses: { Photo: "image" } },
-  }),
-  withJsonFormsControlProps: (C: React.ComponentType) => C,
-}));
+const jsonFormsCtx = {
+  core: { data: { "@id": "http://example.org/item/1" } },
+  config: { registry, assetClasses: { Photo: "image" } },
+};
+
+function withJsonFormsContext(ui: React.ReactElement) {
+  return (
+    <JsonFormsContext.Provider value={jsonFormsCtx}>
+      {ui}
+    </JsonFormsContext.Provider>
+  );
+}
 
 const { AssetFieldRendererComponent } = await import("./AssetFieldRenderer");
 
@@ -110,19 +116,21 @@ describe("AssetFieldRenderer", () => {
       handleChangeCalls.push({ path, value });
     });
     const { container } = render(
-      <AssetFieldRendererComponent
-        id="f"
-        path="cover"
-        schema={{ $ref: "#/definitions/Photo" }}
-        rootSchema={rootSchema}
-        config={{ registry, assetClasses: { Photo: "image" } }}
-        uischema={{ type: "Control", scope: "#/properties/cover" }}
-        visible
-        enabled
-        errors=""
-        data={undefined}
-        handleChange={handleChange}
-      />,
+      withJsonFormsContext(
+        <AssetFieldRendererComponent
+          id="f"
+          path="cover"
+          schema={{ $ref: "#/definitions/Photo" }}
+          rootSchema={rootSchema}
+          config={{ registry, assetClasses: { Photo: "image" } }}
+          uischema={{ type: "Control", scope: "#/properties/cover" }}
+          visible
+          enabled
+          errors=""
+          data={undefined}
+          handleChange={handleChange}
+        />,
+      ),
     );
 
     const input = container.querySelector(
@@ -152,19 +160,21 @@ describe("AssetFieldRenderer", () => {
   test("disabled asset service hides upload input", () => {
     mockAssetService = { ...mockAssetService, enabled: false };
     const { container } = render(
-      <AssetFieldRendererComponent
-        id="f"
-        path="cover"
-        schema={{ $ref: "#/definitions/Photo" }}
-        rootSchema={rootSchema}
-        config={{ registry, assetClasses: { Photo: "image" } }}
-        uischema={{ type: "Control", scope: "#/properties/cover" }}
-        visible
-        enabled
-        errors=""
-        data={undefined}
-        handleChange={() => undefined}
-      />,
+      withJsonFormsContext(
+        <AssetFieldRendererComponent
+          id="f"
+          path="cover"
+          schema={{ $ref: "#/definitions/Photo" }}
+          rootSchema={rootSchema}
+          config={{ registry, assetClasses: { Photo: "image" } }}
+          uischema={{ type: "Control", scope: "#/properties/cover" }}
+          visible
+          enabled
+          errors=""
+          data={undefined}
+          handleChange={() => undefined}
+        />,
+      ),
     );
     expect(container.querySelector('input[type="file"]')).toBeNull();
   });

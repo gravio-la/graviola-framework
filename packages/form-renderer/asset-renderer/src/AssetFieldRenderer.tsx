@@ -66,14 +66,23 @@ const AssetFieldRendererComponent = (props: ControlProps) => {
       ? ((rootData as Record<string, unknown>)["@id"] as string | undefined)
       : undefined;
 
+  const ctxConfig = ctx?.config as Record<string, unknown> | undefined;
   const meta = useMemo(
     () =>
       resolveAssetControlMeta(
         { schema, rootSchema, config, uischema },
-        ctx?.config as Record<string, unknown> | undefined,
+        ctxConfig,
         typeIRIToTypeName,
       ),
-    [schema, rootSchema, config, uischema, ctx?.config, typeIRIToTypeName],
+    [
+      schema,
+      rootSchema,
+      config,
+      uischema,
+      ctxConfig?.registry,
+      ctxConfig?.assetClasses,
+      typeIRIToTypeName,
+    ],
   );
 
   const linkedIri = assetIriFromValue(data);
@@ -158,6 +167,16 @@ const AssetFieldRendererComponent = (props: ControlProps) => {
   const handleRemove = useCallback(() => {
     handleChange(path, undefined);
   }, [handleChange, path]);
+
+  const closeSourceDialog = useCallback(() => setSourceOpen(false), []);
+  const onSourceDone = useCallback(() => undefined, []);
+  const persistFromSource = useCallback(
+    async (asset: UploadedAsset) => {
+      const iri = await persistUploaded(asset);
+      linkAsset(iri);
+    },
+    [persistUploaded, linkAsset],
+  );
 
   const handleOpenOriginal = useCallback(() => {
     if (!linkedIri || !assetService) return;
@@ -361,19 +380,16 @@ const AssetFieldRendererComponent = (props: ControlProps) => {
         </FormHelperText>
       ) : null}
 
-      {assetService && uploadsEnabled ? (
+      {assetService && uploadsEnabled && sourceOpen ? (
         <AssetSourceDialog
-          open={sourceOpen}
-          onClose={() => setSourceOpen(false)}
+          open
+          onClose={closeSourceDialog}
           assetService={assetService}
           entityIRI={parentEntityIRI}
           typeName={meta.typeName}
           rootData={rootData}
-          onDone={() => undefined}
-          persistUploaded={async (asset: UploadedAsset) => {
-            const iri = await persistUploaded(asset);
-            linkAsset(iri);
-          }}
+          onDone={onSourceDone}
+          persistUploaded={persistFromSource}
         />
       ) : null}
     </FormControl>

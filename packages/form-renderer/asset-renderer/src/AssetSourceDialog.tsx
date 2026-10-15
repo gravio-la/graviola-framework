@@ -16,7 +16,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { assetErrorMessage } from "./assetUtils";
 
 type AssetSourceDialogProps = {
@@ -48,18 +48,23 @@ export function AssetSourceDialog({
   const [candidatesBusy, setCandidatesBusy] = useState(false);
   const [candidateError, setCandidateError] = useState<string | null>(null);
   const [importingId, setImportingId] = useState<string | null>(null);
+  const prevOpenRef = useRef(open);
 
   useEffect(() => {
-    if (!open) {
+    const wasOpen = prevOpenRef.current;
+    prevOpenRef.current = open;
+    if (wasOpen && !open) {
       setUrl("");
       setUrlError(null);
       setCandidateError(null);
+      setCandidates((prev) => (prev.length === 0 ? prev : []));
+      setCandidatesBusy(false);
+      setImportingId(null);
     }
   }, [open]);
 
   useEffect(() => {
     if (!open || !assetService.candidates) {
-      setCandidates([]);
       return;
     }
     let cancelled = false;
@@ -68,7 +73,14 @@ export function AssetSourceDialog({
     assetService
       .candidates({ entityIRI, typeName, data: rootData })
       .then((list) => {
-        if (!cancelled) setCandidates(list);
+        if (!cancelled) {
+          setCandidates((prev) =>
+            prev.length === list.length &&
+            prev.every((c, i) => c.id === list[i]?.id)
+              ? prev
+              : list,
+          );
+        }
       })
       .catch((e) => {
         if (!cancelled) setCandidateError(assetErrorMessage(e));
@@ -79,7 +91,7 @@ export function AssetSourceDialog({
     return () => {
       cancelled = true;
     };
-  }, [open, assetService, entityIRI, typeName, rootData]);
+  }, [open, assetService.candidates, entityIRI, typeName, rootData]);
 
   const finishImport = useCallback(
     async (run: () => Promise<UploadedAsset>) => {

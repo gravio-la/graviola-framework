@@ -66,14 +66,23 @@ const AssetGalleryRendererComponent = (props: ArrayLayoutProps) => {
       ? ((rootData as Record<string, unknown>)["@id"] as string | undefined)
       : undefined;
 
+  const ctxConfig = ctx?.config as Record<string, unknown> | undefined;
   const meta = useMemo(
     () =>
       resolveAssetControlMeta(
         { schema, rootSchema, config, uischema },
-        ctx?.config as Record<string, unknown> | undefined,
+        ctxConfig,
         typeIRIToTypeName,
       ),
-    [schema, rootSchema, config, uischema, ctx?.config, typeIRIToTypeName],
+    [
+      schema,
+      rootSchema,
+      config,
+      uischema,
+      ctxConfig?.registry,
+      ctxConfig?.assetClasses,
+      typeIRIToTypeName,
+    ],
   );
 
   const items = normalizeArray(data);
@@ -149,6 +158,16 @@ const AssetGalleryRendererComponent = (props: ArrayLayoutProps) => {
       removeItems(path, [index])();
     },
     [removeItems, path],
+  );
+
+  const closeSourceDialog = useCallback(() => setSourceOpen(false), []);
+  const onSourceDone = useCallback(() => undefined, []);
+  const persistFromSource = useCallback(
+    async (asset: UploadedAsset) => {
+      const iri = await persistUploaded(asset);
+      appendIri(iri);
+    },
+    [persistUploaded, appendIri],
   );
 
   const move = useCallback(
@@ -288,19 +307,16 @@ const AssetGalleryRendererComponent = (props: ArrayLayoutProps) => {
         </FormHelperText>
       ) : null}
 
-      {assetService && uploadsEnabled ? (
+      {assetService && uploadsEnabled && sourceOpen ? (
         <AssetSourceDialog
-          open={sourceOpen}
-          onClose={() => setSourceOpen(false)}
+          open
+          onClose={closeSourceDialog}
           assetService={assetService}
           entityIRI={parentEntityIRI}
           typeName={meta.typeName}
           rootData={rootData}
-          onDone={() => undefined}
-          persistUploaded={async (asset: UploadedAsset) => {
-            const iri = await persistUploaded(asset);
-            appendIri(iri);
-          }}
+          onDone={onSourceDone}
+          persistUploaded={persistFromSource}
         />
       ) : null}
     </Box>
@@ -310,3 +326,5 @@ const AssetGalleryRendererComponent = (props: ArrayLayoutProps) => {
 export const AssetGalleryRenderer = withJsonFormsArrayLayoutProps(
   AssetGalleryRendererComponent,
 );
+
+export { AssetGalleryRendererComponent };
