@@ -11,6 +11,7 @@ export * from "./makeColumnDesc";
 export * from "./formatJSONResult";
 export * from "./flatResultExtractor";
 export * from "./extractEntityPreview";
+export * from "./primaryFieldImageValue";
 export * from "./linkedReferenceLabel";
 export * from "./resolvePreviewDisplay";
 export * from "./resolveThumbnailUrl";

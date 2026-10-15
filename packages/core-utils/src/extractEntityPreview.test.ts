@@ -63,4 +63,42 @@ describe("extractEntityPreview", () => {
   it("returns empty when typeName is missing", () => {
     expect(extractEntityPreview({ data: {}, typeName: undefined })).toEqual({});
   });
+
+  it("reads image from embedded asset object @id and from arrays", () => {
+    const iri =
+      "https://example.org/projects/p1/asset/01ARZ3NDEKTSV4RRFFQ69G5FAV";
+    const fromObject = extractEntityPreview({
+      data: {
+        name: "X",
+        thumb: { "@id": iri, storageKey: "p1/x.png" },
+      },
+      typeName: "Item",
+      primaryFields: { Item: { label: "name", image: "thumb" } },
+    });
+    expect(fromObject.image).toBe(iri);
+
+    const fromArray = extractEntityPreview({
+      data: {
+        name: "Y",
+        thumb: [{ "@id": iri }],
+      },
+      typeName: "Item",
+      primaryFields: { Item: { label: "name", image: "thumb" } },
+    });
+    expect(fromArray.image).toBe(iri);
+  });
+
+  it("keeps storageKey-only asset object for asset service refs", () => {
+    const preview = extractEntityPreview({
+      data: {
+        name: "Z",
+        thumb: { storageKey: "p1/01ARZ3NDEKTSV4RRFFQ69G5FAV.png" },
+      },
+      typeName: "Item",
+      primaryFields: { Item: { label: "name", image: "thumb" } },
+    });
+    expect(preview.image).toEqual({
+      storageKey: "p1/01ARZ3NDEKTSV4RRFFQ69G5FAV.png",
+    });
+  });
 });

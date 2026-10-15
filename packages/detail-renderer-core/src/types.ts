@@ -2,6 +2,7 @@ import type {
   EntityActionDef,
   EntityPreview,
   OrderByConfig,
+  PreviewImageRef,
   ViewDensity,
 } from "@graviola/edb-core-types";
 import type { UISchemaElement } from "@jsonforms/core";
@@ -45,7 +46,7 @@ export interface DetailTesterContext {
   headerPreview?: {
     label: string | null;
     description: string | null;
-    image: string | null;
+    image: PreviewImageRef | null;
   } | null;
   preview?: EntityPreview | null;
   entityIRI?: string;

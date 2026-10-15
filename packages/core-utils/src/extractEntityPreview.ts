@@ -9,6 +9,7 @@ import get from "lodash-es/get";
 
 import { resolvePreviewDisplay } from "./resolvePreviewDisplay";
 import { resolveLinkedReferenceLabel } from "./linkedReferenceLabel";
+import { primaryFieldImageValue } from "./primaryFieldImageValue";
 
 function readPrimaryString(
   data: unknown,
@@ -61,7 +62,9 @@ export function extractEntityPreview(input: {
         includeLegacyLabelFields: true,
       }),
     description: readPrimaryString(data, pf?.description),
-    image: readPrimaryString(data, pf?.image),
+    image: pf?.image
+      ? primaryFieldImageValue(get(data as Record<string, unknown>, pf.image))
+      : undefined,
     icon: tp?.icon,
     color: tp?.color,
     backgroundPattern: tp?.backgroundPattern,

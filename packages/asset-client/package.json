@@ -1,0 +1,48 @@
+{
+  "name": "@graviola/asset-client",
+  "version": "0.1.0",
+  "description": "Browser HTTP client for Graviola asset-server routes",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "depcheck": "depcheck",
+    "build": "tsup",
+    "test": "bun test",
+    "test:watch": "bun test --watch",
+    "lint": "eslint src/**/*.ts",
+    "lint-fix": "eslint --fix src/**/*.ts"
+  },
+  "dependencies": {
+    "@graviola/edb-core-types": "workspace:*",
+    "lodash-es": "catalog:"
+  },
+  "devDependencies": {
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*",
+    "@types/bun": "latest",
+    "@types/json-schema": "catalog:",
+    "eslint-config-edb": "workspace:*",
+    "tsup": "^8.0.0",
+    "typescript": "^5.8.2"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "eslint-config-edb"
+    ]
+  }
+}

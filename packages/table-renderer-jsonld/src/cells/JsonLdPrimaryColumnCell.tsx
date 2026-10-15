@@ -1,5 +1,6 @@
 import React from "react";
 import { Avatar, Box, Link } from "@mui/material";
+import { primaryFieldImageValue } from "@graviola/edb-core-utils";
 import { useThumbnailUrl } from "@graviola/edb-state-hooks";
 import type {
   MRT_Cell,
@@ -41,9 +42,7 @@ export function JsonLdPrimaryColumnCell({ cell, row }: CellProps) {
   const typeIRI =
     typeof original["@type"] === "string" ? original["@type"] : undefined;
   const image =
-    imageKey && typeof original[imageKey] === "string"
-      ? (original[imageKey] as string)
-      : undefined;
+    imageKey != null ? primaryFieldImageValue(original[imageKey]) : undefined;
   const imageSrc = useThumbnailUrl(
     image,
     { sizeCategory: "listItem" },

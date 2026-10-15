@@ -93,7 +93,12 @@ export type PreviewMediaContext = {
 };
 
 /** Aligns with ViewSize. Call sites almost always pass only `sizeCategory`. */
-export type ThumbnailSizeCategory = "chip" | "listItem" | "card" | "detail";
+export type ThumbnailSizeCategory =
+  | "chip"
+  | "listItem"
+  | "card"
+  | "detail"
+  | "full";
 
 /** Named 2D size; either side optional (e.g. width-only thumbs). */
 export type Size2D = Partial<{ width: number; height: number }>;
@@ -163,12 +168,15 @@ export type TypePresentationRegistry = Record<string, TypePresentation>;
 
 export type PreviewDisplayMedia = "image" | "icon" | "initial" | "none";
 
+/** HTTP(S) URL, asset IRI, or embedded asset-shaped object from primary fields. */
+export type PreviewImageRef = string | Record<string, unknown>;
+
 /** Combined label/description/image (instance) + icon/color (type-level). */
 export interface EntityPreview {
   label?: string;
   description?: string;
   /** Raw instance image from `primaryFields` or override (may not be shown if icon wins). */
-  image?: string;
+  image?: PreviewImageRef;
   /** Type-level icon ref before display precedence is applied. */
   icon?: IconRef;
   color?: string;
@@ -180,6 +188,6 @@ export interface EntityPreview {
    * MIME icon → type icon → explicit image → initial letter → none.
    */
   displayMedia?: PreviewDisplayMedia;
-  displayImage?: string;
+  displayImage?: PreviewImageRef;
   displayIcon?: IconRef;
 }

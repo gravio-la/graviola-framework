@@ -1,5 +1,6 @@
 import { applyResolveThumbnailUrl } from "@graviola/edb-core-utils";
 import type {
+  PreviewImageRef,
   ResolveThumbnailUrl,
   ThumbnailResolveContext,
   ThumbnailSizeOptions,
@@ -22,19 +23,21 @@ export function getResolveThumbnailUrl(
  * Empty/omitted size defaults to `{ sizeCategory: "detail" }`.
  */
 export function useThumbnailUrl(
-  imageUrl: string | undefined,
+  imageRef: PreviewImageRef | undefined,
   size?: ThumbnailSizeOptions,
   context?: ThumbnailResolveContext,
 ): string | undefined {
-  const { resolveThumbnailUrl } = useAdbContext();
+  const { resolveThumbnailUrl, assetService } = useAdbContext();
 
   return useMemo(() => {
-    if (imageUrl == null || imageUrl === "") return undefined;
-    return applyResolveThumbnailUrl(
+    if (imageRef == null || imageRef === "") return undefined;
+    const resolved = applyResolveThumbnailUrl(
       resolveThumbnailUrl,
-      imageUrl,
+      imageRef,
       size,
       context,
+      assetService,
     );
-  }, [imageUrl, resolveThumbnailUrl, size, context]);
+    return resolved.length > 0 ? resolved : undefined;
+  }, [imageRef, resolveThumbnailUrl, assetService, size, context]);
 }

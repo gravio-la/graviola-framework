@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { Card, CardContent, Skeleton, Typography } from "@mui/material";
+import type { PreviewImageRef } from "@graviola/edb-core-types";
 import type { DetailTesterContext } from "@graviola/edb-detail-renderer-core";
 import { useThumbnailUrl } from "@graviola/edb-state-hooks";
 
@@ -10,7 +11,7 @@ import { schemaForPrimaryDescription } from "../../utils/primaryDescriptionSchem
 import type { DetailLayoutUiOptions } from "../../utils/detailLayoutOptions";
 
 function useDetailHeroImage(
-  image: string | null | undefined,
+  image: PreviewImageRef | null | undefined,
   ctx: DetailTesterContext,
 ) {
   return useThumbnailUrl(
@@ -150,12 +151,8 @@ export function DetailHero({
           bgcolor: "background.paper",
         }}
       >
-        {preview?.image || img ? (
-          <DetailHeroImage
-            src={img ?? preview?.image ?? undefined}
-            alt={titleText ?? ""}
-            sx={heroImageSx}
-          />
+        {img ? (
+          <DetailHeroImage src={img} alt={titleText ?? ""} sx={heroImageSx} />
         ) : null}
         <CardContent>{titleBlock}</CardContent>
       </Card>
@@ -164,12 +161,8 @@ export function DetailHero({
 
   return (
     <Card sx={{ mb: 2 }}>
-      {preview?.image || img ? (
-        <DetailHeroImage
-          src={img ?? preview?.image ?? undefined}
-          alt={titleText ?? ""}
-          sx={heroImageSx}
-        />
+      {img ? (
+        <DetailHeroImage src={img} alt={titleText ?? ""} sx={heroImageSx} />
       ) : null}
       <CardContent>{titleBlock}</CardContent>
     </Card>

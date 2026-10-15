@@ -1,6 +1,7 @@
 import type { Bindings, DatasetCore, Quad, ResultStream } from "@rdfjs/types";
 import type { TypedGraphTraversalFilterOptions } from "./typed-filters";
 export type * from "./entityActions";
+export type * from "./assets";
 export type * from "./presentation";
 export type * from "./typed-filters";
 

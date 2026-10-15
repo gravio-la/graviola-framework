@@ -9,6 +9,7 @@ import type {
   DerivedDefaultsConfig,
   OrderByConfig,
   ResolveThumbnailUrl,
+  AssetService,
   SparqlBuildOptions,
   StringToIRIFn,
   CardPresentationRegistry,
@@ -181,6 +182,8 @@ export type GlobalAppConfig<DeclarativeMappingType> = GlobalSemanticConfig & {
    * `undefined` to keep the original URL. Distinct from {@link TypePresentation.image}.
    */
   resolveThumbnailUrl?: ResolveThumbnailUrl;
+  /** Optional project asset uploads / thumb URLs (see `@graviola/asset-client`). */
+  assetService?: AssetService;
   /** Per-type-name card layout defaults (hero is still {@link PrimaryField}). */
   cardPresentation?: CardPresentationRegistry;
   /** @deprecated Use `viewConfig.detail.options` */

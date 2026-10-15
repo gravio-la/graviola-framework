@@ -9,7 +9,10 @@ import {
   createStubSchema,
   createUISchemata,
 } from "@graviola/semantic-json-form";
-import type { ResolveThumbnailUrl } from "@graviola/edb-core-types";
+import type {
+  AssetService,
+  ResolveThumbnailUrl,
+} from "@graviola/edb-core-types";
 import { defs, extractTypeIRI } from "@graviola/json-schema-utils";
 import type { GlobalSemanticConfig } from "@graviola/semantic-jsonform-types";
 import type {
@@ -131,6 +134,8 @@ export type GraviolaAppProviderProps = {
    * Optional display-time image URL rewrite forwarded to `AdbProvider`.
    */
   resolveThumbnailUrl?: ResolveThumbnailUrl;
+  /** Project asset service forwarded to `AdbProvider`. */
+  assetService?: AssetService;
   /**
    * SPARQL engine profile forwarded to `queryBuildOptions.sparqlFlavour`
    * (and from there to `initSPARQLStore`). Unset keeps the "default" flavour.
@@ -160,6 +165,7 @@ export const GraviolaAppProvider: FC<GraviolaAppProviderProps> = ({
   intentHandlers,
   modalOverrides,
   resolveThumbnailUrl,
+  assetService,
   hostCapabilities,
   defaultViewDensity,
   relationalInputDefault,
@@ -328,6 +334,7 @@ export const GraviolaAppProvider: FC<GraviolaAppProviderProps> = ({
         defaultViewDensity={defaultViewDensity}
         relationalInputDefault={relationalInputDefault}
         resolveThumbnailUrl={resolveThumbnailUrl}
+        assetService={assetService}
       >
         <GraviolaLoungeProviders
           intentHandlers={intentHandlers}

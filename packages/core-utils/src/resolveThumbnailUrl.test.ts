@@ -1,4 +1,5 @@
 import { describe, expect, it } from "bun:test";
+import type { AssetService } from "@graviola/edb-core-types";
 
 import {
   applyResolveThumbnailUrl,
@@ -87,5 +88,36 @@ describe("applyResolveThumbnailUrl", () => {
     );
     expect(gotSize).toEqual({ sizeCategory: "chip" });
     expect(gotCtx).toEqual({ typeName: "City", viewSize: "chip" });
+  });
+
+  it("prefers assetService thumb URL over app resolver", () => {
+    const ref = "https://example.org/p/asset/01ARZ3NDEKTSV4RRFFQ69G5FAV";
+    const assetService = {
+      enabled: true,
+      isAssetRef: (v: unknown) => v === ref,
+      assetIdOf: () => "01ARZ3NDEKTSV4RRFFQ69G5FAV",
+      thumbnailUrl: () => "https://cdn.example/thumb.jpg",
+      originalUrl: () => undefined,
+      upload: async () => {
+        throw new Error("not in test");
+      },
+      importFromUrl: async () => {
+        throw new Error("not in test");
+      },
+      iriFor: () => ref,
+    } satisfies AssetService;
+
+    const result = applyResolveThumbnailUrl(
+      () => "https://cdn.example/other.jpg",
+      ref,
+      { sizeCategory: "card" },
+      undefined,
+      assetService,
+    );
+    expect(result).toBe("https://cdn.example/thumb.jpg");
+  });
+
+  it("includes full in default width map", () => {
+    expect(DEFAULT_THUMBNAIL_WIDTHS.full).toBe(1920);
   });
 });

@@ -3,6 +3,7 @@ import type {
   IconRef,
   MimeIconMatchers,
   PreviewDisplayMedia,
+  PreviewImageRef,
   PreviewMediaContext,
   PreviewImageResolver,
   TypePresentation,
@@ -51,11 +52,17 @@ function isIconRef(value: unknown): value is IconRef {
   return isReactComponentType(value);
 }
 
+function hasImageRef(value: PreviewImageRef | undefined): boolean {
+  if (value == null) return false;
+  if (typeof value === "string") return value.length > 0;
+  return typeof value === "object";
+}
+
 function resolveImageUrl(
   tp: TypePresentation | undefined,
   ctx: PreviewMediaContext,
-  instanceImage: string | undefined,
-): string | undefined {
+  instanceImage: PreviewImageRef | undefined,
+): PreviewImageRef | undefined {
   const fromResolver = tp?.image?.(ctx);
   if (typeof fromResolver === "string" && fromResolver.length > 0) {
     return fromResolver;
@@ -92,7 +99,7 @@ export function resolvePreviewDisplay(
   let displayMedia: PreviewDisplayMedia = "none";
   if (displayIcon) {
     displayMedia = "icon";
-  } else if (imageUrl) {
+  } else if (hasImageRef(imageUrl)) {
     displayMedia = "image";
   } else if (preview.label && preview.label.length > 0) {
     displayMedia = "initial";
