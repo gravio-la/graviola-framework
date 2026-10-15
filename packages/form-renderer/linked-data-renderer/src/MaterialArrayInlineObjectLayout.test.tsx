@@ -12,8 +12,27 @@ import type {
   JsonSchema,
   Layout,
 } from "@jsonforms/core";
-import { rankWith, scopeEndsWith } from "@jsonforms/core";
+import {
+  rankWith,
+  scopeEndsWith,
+  type JsonFormsUISchemaRegistryEntry,
+} from "@jsonforms/core";
 import { withJsonFormsControlProps } from "@jsonforms/react";
+import {
+  compileSchema,
+  prepareStubbedSchema,
+} from "@graviola/json-schema-utils";
+import { createUISchemata } from "../../../semantic-json-form/src/helper/createUISchemata";
+import type { JSONSchema7 } from "json-schema";
+
+import { inlineDropdownRendererTester } from "./inlineDropdownTester";
+import { inlineSemanticFormsRendererTester } from "./inlineCondensedSemanticFormsTester";
+import {
+  materialArrayChipsLayoutTester,
+  materialArrayOfLinkedItemTester,
+  MaterialArrayOfLinkedItemChipsRenderer,
+  MaterialArrayOfLinkedItemRenderer,
+} from "./index";
 import { Window } from "happy-dom";
 import { fireEvent, render, waitFor } from "@testing-library/react";
 import React, { act } from "react";
@@ -126,10 +145,12 @@ function zutatenControlFromGenerator(): ControlElement {
   };
 }
 
-function rezeptFormUISchemaFromBundle(): Layout {
+function rezeptFormUISchemaFromBundle(
+  schema: JsonSchema = bundleFixture.schema,
+): Layout {
   const rezeptOverrides =
     bundleFixture.sideSchema.uischemaScopeOverrides?.Rezept;
-  const ui = generateDefaultUISchema(bundleFixture.schema, {
+  const ui = generateDefaultUISchema(schema, {
     rootSchema: bundleFixture.rootSchema,
     scopeOverride: rezeptOverrides?.scopeOverride,
     mode: rezeptOverrides?.mode ?? "override",
@@ -207,6 +228,53 @@ const MengeFieldForJsonFormsE2E = withJsonFormsControlProps(
   },
 );
 
+const RelationalInlineFieldStub = withJsonFormsControlProps(
+  ({ path, label }: ControlProps) => (
+    <div
+      data-testid={`graviola-relational-inline-${path}`}
+      data-label={label ?? ""}
+    >
+      {label}
+    </div>
+  ),
+);
+
+const appLikeLinkedDataRenderers = [
+  {
+    tester: materialArrayChipsLayoutTester,
+    renderer: MaterialArrayOfLinkedItemChipsRenderer,
+  },
+  {
+    tester: inlineSemanticFormsRendererTester,
+    renderer: RelationalInlineFieldStub,
+  },
+  {
+    tester: inlineDropdownRendererTester,
+    renderer: RelationalInlineFieldStub,
+  },
+  {
+    tester: materialLinkedObjectControlTester,
+    renderer: MaterialLinkedObjectRenderer,
+  },
+  {
+    tester: materialArrayOfLinkedItemTester,
+    renderer: MaterialArrayOfLinkedItemRenderer,
+  },
+  {
+    tester: materialArrayInlineObjectWithNestingTester,
+    renderer: MaterialArrayInlineObjectRenderer,
+  },
+  {
+    tester: rankWith(10, scopeEndsWith("@id")),
+    renderer: () => null,
+  },
+  {
+    tester: rankWith(10, scopeEndsWith("@type")),
+    renderer: () => null,
+  },
+  ...materialRenderers,
+];
+
 const e2eRenderers = [
   {
     tester: rankWith(100, scopeEndsWith("/properties/menge")),
@@ -214,6 +282,66 @@ const e2eRenderers = [
   },
   ...baseRenderers,
 ];
+
+const appLikeE2eRenderers = [
+  {
+    tester: rankWith(100, scopeEndsWith("/properties/menge")),
+    renderer: MengeFieldForJsonFormsE2E,
+  },
+  ...appLikeLinkedDataRenderers,
+];
+
+function definitionToTypeIRI(definitionName: string): string {
+  return `${bundleFixture.sideSchema.entityBaseIRI}${definitionName}`;
+}
+
+function stubbedKochbuchSchema(): JSONSchema7 {
+  return prepareStubbedSchema(
+    bundleFixture.schema as JSONSchema7,
+    (modelName) => ({
+      "@type": {
+        const: definitionToTypeIRI(modelName.replace(/Stub$/, "")),
+        type: "string",
+      },
+      "@id": { type: "string" },
+    }),
+  );
+}
+
+function appLikeKochbuchContext(): {
+  schema: JsonSchema;
+  rootSchema: JsonSchema;
+  uischemas: JsonFormsUISchemaRegistryEntry[];
+  schemaRegistry: ReturnType<typeof compileSchema>;
+  formUi: Layout;
+} {
+  const schema = stubbedKochbuchSchema();
+  const rootSchema = bundleFixture.rootSchema;
+  const { registry: uischemas } = createUISchemata(schema, {
+    typeNameLabelMap: bundleFixture.sideSchema.typeNameLabelMap,
+    definitionToTypeIRI,
+  });
+  const schemaRegistry = compileSchema(schema);
+  const formUi = rezeptFormUISchemaFromBundle(schema);
+  const zutatenIndex = formUi.elements.findIndex(
+    (el) => (el as ControlElement).scope === "#/properties/zutaten",
+  );
+  if (zutatenIndex >= 0) {
+    const zutatenControl = formUi.elements[zutatenIndex] as ControlElement;
+    const itemOverride =
+      bundleFixture.sideSchema.detailUiSchemaScopeOverrides.ZutatInRezept
+        ?.scopeOverride;
+    formUi.elements[zutatenIndex] = {
+      ...zutatenControl,
+      options: {
+        ...zutatenControl.options,
+        showSortButtons: true,
+        itemScopeOverride: itemOverride,
+      },
+    };
+  }
+  return { schema, rootSchema, uischemas, schemaRegistry, formUi };
+}
 
 function makeFormData() {
   return {
@@ -287,6 +415,8 @@ async function renderForm(
     sideSchema?: typeof trimmedFixture.sideSchema;
     onChange?: (data: Record<string, unknown>) => void;
     renderers?: typeof baseRenderers;
+    uischemas?: JsonFormsUISchemaRegistryEntry[];
+    schemaRegistry?: ReturnType<typeof compileSchema>;
   },
 ) {
   const schema = options?.schema ?? trimmedRootSchema;
@@ -303,11 +433,14 @@ async function renderForm(
         <JsonForms
           data={formData}
           schema={schema}
+          rootSchema={options?.rootSchema ?? schema}
           uischema={layout}
+          uischemas={options?.uischemas}
           renderers={options?.renderers ?? baseRenderers}
           config={{
             primaryFields: sideSchema.primaryFields,
             entityBaseIRI: sideSchema.entityBaseIRI,
+            registry: options?.schemaRegistry,
           }}
           onChange={({ data: next }) => {
             if (next) {
@@ -454,5 +587,141 @@ describe("MaterialArrayInlineObjectRenderer (kochbuch zutaten)", () => {
     expect(labels[1]).toContain("2");
     expect(labels[2]).toContain("3");
     view.unmount();
+  });
+});
+
+describe("MaterialArrayInlineObjectRenderer (app-like registry)", () => {
+  function expandFirstZutatenRow() {
+    const summaries = document.querySelectorAll(".MuiAccordionSummary-root");
+    const firstSummary = summaries[0] as HTMLElement;
+    act(() => {
+      firstSummary.click();
+    });
+    return firstSummary;
+  }
+
+  function relationalFieldOrder(panel: ParentNode): string[] {
+    return [
+      ...panel.querySelectorAll("[data-testid^='graviola-relational-inline-']"),
+    ]
+      .map((el) => el.getAttribute("data-label") ?? el.textContent ?? "")
+      .filter(Boolean);
+  }
+
+  test("expanded row shows relational fields with parent titles and rank order", async () => {
+    const ctx = appLikeKochbuchContext();
+    const { view } = await renderForm(makeFormData(), ctx.formUi, {
+      schema: ctx.schema,
+      rootSchema: ctx.rootSchema,
+      sideSchema: bundleFixture.sideSchema,
+      uischemas: ctx.uischemas,
+      schemaRegistry: ctx.schemaRegistry,
+      renderers: appLikeE2eRenderers,
+    });
+
+    expandFirstZutatenRow();
+
+    expect(
+      document.querySelector(
+        '[data-testid="graviola-relational-inline-zutaten.0.einheit.@id"]',
+      ),
+    ).toBeTruthy();
+    expect(
+      document.querySelector(
+        '[data-testid="graviola-relational-inline-zutaten.0.zutatRef.@id"]',
+      ),
+    ).toBeTruthy();
+
+    const zutatenAccordion = [
+      ...document.querySelectorAll(".MuiAccordion-root.Mui-expanded"),
+    ][0];
+    expect(zutatenAccordion).toBeTruthy();
+    const panelText = zutatenAccordion!.textContent ?? "";
+    expect(panelText).toContain("Menge");
+    expect(panelText).toContain("Zutat (Freitext)");
+
+    const zutatRefStub = document.querySelector(
+      '[data-testid="graviola-relational-inline-zutaten.0.zutatRef.@id"]',
+    );
+    expect(zutatRefStub?.getAttribute("data-label")).toBe("Zutat (Inventar)");
+
+    const labels = relationalFieldOrder(zutatenAccordion!);
+    expect(labels).toEqual(["Einheit", "Zutat (Inventar)"]);
+
+    const mengeLabel = zutatenAccordion!.querySelector(
+      "label[for^='graviola-e2e-menge-']",
+    );
+    expect(mengeLabel?.textContent).toBe("Menge");
+
+    view.unmount();
+  });
+
+  test("new row shows relational fields after expand", async () => {
+    const ctx = appLikeKochbuchContext();
+    const emptyZutatenData = {
+      ...makeFormData(),
+      zutaten: [] as unknown[],
+    };
+    let latestData: Record<string, unknown> = emptyZutatenData;
+    const { view } = await renderForm(emptyZutatenData, ctx.formUi, {
+      schema: ctx.schema,
+      rootSchema: ctx.rootSchema,
+      sideSchema: bundleFixture.sideSchema,
+      uischemas: ctx.uischemas,
+      schemaRegistry: ctx.schemaRegistry,
+      renderers: appLikeE2eRenderers,
+      onChange: (data) => {
+        latestData = data;
+      },
+    });
+
+    const addButton = document.querySelector(
+      ".MuiToolbar-root button",
+    ) as HTMLElement | null;
+    expect(addButton).toBeTruthy();
+    await act(async () => {
+      addButton!.click();
+    });
+
+    await waitFor(
+      () => {
+        const zutaten = latestData.zutaten as unknown[] | undefined;
+        expect(zutaten?.length).toBe(1);
+      },
+      { timeout: 500 },
+    );
+
+    const summaries = document.querySelectorAll(".MuiAccordionSummary-root");
+    expect(summaries.length).toBe(1);
+    await act(async () => {
+      (summaries[0] as HTMLElement).click();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+
+    expect(
+      document.querySelector(
+        '[data-testid="graviola-relational-inline-zutaten.0.einheit.@id"]',
+      ),
+    ).toBeTruthy();
+    expect(
+      document.querySelector(
+        '[data-testid="graviola-relational-inline-zutaten.0.zutatRef.@id"]',
+      ),
+    ).toBeTruthy();
+
+    view.unmount();
+  });
+
+  test("entity Zutat stub registry still matches for relational pickers", () => {
+    const ctx = appLikeKochbuchContext();
+    const zutatDef = ctx.schema.definitions!.Zutat as JsonSchema;
+    const match = ctx.uischemas.find(
+      (entry) => entry.tester(zutatDef, undefined, undefined) > -1,
+    );
+    expect(match).toBeDefined();
+    expect((match!.uischema as Layout).elements?.[0]).toMatchObject({
+      scope: "#/properties/@id",
+      options: expect.objectContaining({ inline: true }),
+    });
   });
 });

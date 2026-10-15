@@ -1,7 +1,10 @@
 import {
+  ControlElement,
   findUISchema,
   Generate,
+  JsonSchema,
   Layout,
+  Resolve,
   Scopable,
   StatePropsOfControlWithDetail,
   UISchemaElement,
@@ -10,6 +13,49 @@ import { JsonFormsDispatch, withJsonFormsDetailProps } from "@jsonforms/react";
 
 import isEmpty from "lodash-es/isEmpty";
 import React, { useMemo } from "react";
+
+/** Title on a `$ref` wrapper property (sibling of `$ref`), not on the resolved target. */
+function propertyTitleAtInstancePath(
+  rootSchema: JsonSchema,
+  instancePath: string,
+): string | undefined {
+  if (!instancePath) return undefined;
+  const segments = instancePath.split(".");
+  const propertyName = segments.pop();
+  if (!propertyName) return undefined;
+
+  let current: JsonSchema | undefined = rootSchema;
+  for (const segment of segments) {
+    if (!current || typeof current === "boolean") return undefined;
+    if (/^\d+$/.test(segment)) {
+      const itemsSchema = current.items;
+      const itemNode = Array.isArray(itemsSchema)
+        ? itemsSchema[0]
+        : itemsSchema;
+      if (!itemNode || typeof itemNode === "boolean") return undefined;
+      if (itemNode.$ref) {
+        const resolved = Resolve.schema(current, "items", rootSchema);
+        current = typeof resolved === "boolean" ? undefined : resolved;
+      } else {
+        current = itemNode;
+      }
+      continue;
+    }
+    const propertyNode = current.properties?.[segment];
+    if (!propertyNode || typeof propertyNode === "boolean") return undefined;
+    if (propertyNode.$ref && !propertyNode.properties) {
+      const resolved = Resolve.schema(current, segment, rootSchema);
+      current = typeof resolved === "boolean" ? undefined : resolved;
+    } else {
+      current = propertyNode;
+    }
+  }
+
+  if (!current || typeof current === "boolean") return undefined;
+  const wrapper = current.properties?.[propertyName];
+  if (!wrapper || typeof wrapper === "boolean") return undefined;
+  return typeof wrapper.title === "string" ? wrapper.title : undefined;
+}
 
 const MaterialLinkedObjectRendererComponent = ({
   renderers,
@@ -25,6 +71,14 @@ const MaterialLinkedObjectRendererComponent = ({
   config,
 }: StatePropsOfControlWithDetail) => {
   const detailUiSchema = useMemo(() => {
+    const controlElement = uischema as ControlElement;
+    const explicitUiLabel =
+      typeof controlElement.label === "string"
+        ? controlElement.label
+        : undefined;
+    const wrapperTitle = propertyTitleAtInstancePath(rootSchema, path);
+    const effectiveLabel = explicitUiLabel ?? wrapperTitle ?? label;
+
     const uiSchemaElement: Layout | undefined =
       uischemas &&
       (findUISchema(
@@ -35,7 +89,7 @@ const MaterialLinkedObjectRendererComponent = ({
         () =>
           isEmpty(path)
             ? Generate.uiSchema(schema, "VerticalLayout")
-            : { ...Generate.uiSchema(schema, "Group"), label },
+            : { ...Generate.uiSchema(schema, "Group"), label: effectiveLabel },
         uischema,
         rootSchema,
       ) as Layout | undefined);
@@ -47,14 +101,14 @@ const MaterialLinkedObjectRendererComponent = ({
             elements: [
               {
                 ...elements[0],
-                label,
+                label: effectiveLabel,
               },
               ...elements.slice(1),
             ],
           }
         : uiSchemaElement
     ) as UISchemaElement;
-  }, [uischemas, schema, uischema.scope, path, label, uischema, rootSchema]);
+  }, [uischemas, schema, uischema, path, label, rootSchema]);
 
   if (!visible) {
     return null;

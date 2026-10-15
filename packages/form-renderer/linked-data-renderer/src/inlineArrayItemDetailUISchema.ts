@@ -80,37 +80,40 @@ export function resolveInlineArrayItemDetailUISchema(
     ...((appliedOptions.itemSkipScope as string[] | undefined) ?? []),
   ];
 
-  const fromRegistry = findUISchema(
-    uischemas,
-    itemSchema,
-    arrayControl.scope,
-    path,
-    () =>
-      generateDefaultUISchema(itemSchema, {
-        rootSchema,
-        skipScope,
-        scopeOverride,
-      }),
-    arrayControl,
-    rootSchema,
-  ) as Layout | undefined;
+  const generateItemLayout = () =>
+    generateDefaultUISchema(itemSchema, {
+      rootSchema,
+      skipScope,
+      scopeOverride,
+    });
 
-  if (fromRegistry && layoutHasControls(fromRegistry)) {
-    return stripLeadingAtIdControl(fromRegistry);
+  const itemIsEntityLike =
+    typeof itemSchema.properties?.["@id"] !== "undefined";
+
+  if (itemIsEntityLike && uischemas?.length) {
+    const fromRegistry = findUISchema(
+      uischemas,
+      itemSchema,
+      arrayControl.scope,
+      path,
+      generateItemLayout,
+      arrayControl,
+      rootSchema,
+    ) as Layout | undefined;
+
+    if (fromRegistry && layoutHasControls(fromRegistry)) {
+      return stripLeadingAtIdControl(fromRegistry);
+    }
   }
 
-  const generated = generateDefaultUISchema(itemSchema, {
-    rootSchema,
-    skipScope,
-    scopeOverride,
-  });
+  const generated = generateItemLayout();
   if (layoutHasControls(generated)) {
-    return stripLeadingAtIdControl(generated as Layout);
+    return generated as UISchemaElement;
   }
 
   const fallback = Generate.uiSchema(itemSchema, "VerticalLayout") as Layout;
   if (layoutHasControls(fallback)) {
-    return stripLeadingAtIdControl(fallback);
+    return fallback;
   }
 
   if (layoutHasControls(explicitDetail)) {

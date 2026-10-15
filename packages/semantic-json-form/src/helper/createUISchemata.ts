@@ -125,6 +125,13 @@ export const createUISchemata = (
   const uiSchemata: Record<string, UISchemaElement> = {};
   Object.keys(definitions)
     .filter((definitionName) => !excludeDefinitions.includes(definitionName))
+    .filter((definitionName) => {
+      const definitionSchema = definitions[definitionName];
+      if (!definitionSchema || typeof definitionSchema === "boolean") {
+        return false;
+      }
+      return typeof definitionSchema.properties?.["@id"] !== "undefined";
+    })
     .map((definitionName) => {
       const typeIRI = resolveDefinitionTypeIRI(
         definitions[definitionName],
