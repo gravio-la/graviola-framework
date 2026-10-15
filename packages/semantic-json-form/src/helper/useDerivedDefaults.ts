@@ -41,7 +41,8 @@ export function useDerivedDefaults(options: {
   latestDataRef: MutableRefObject<Record<string, unknown>>;
 }) {
   const { schema, config, onChange, latestDataRef } = options;
-  const { typeIRIToTypeName } = useAdbContext();
+  const { typeIRIToTypeName, queryBuildOptions } = useAdbContext();
+  const primaryFields = queryBuildOptions?.primaryFields;
   const { dataStore } = useDataStore();
 
   const autoFilledRef = useRef(new Map<string, unknown>());
@@ -97,6 +98,7 @@ export function useDerivedDefaults(options: {
             firstValue: job.firstValue,
             restPath: job.restPath,
             typeIRIToTypeName,
+            primaryFields,
             cache: loadCacheRef.current,
             loadDocument: async (typeName, iri) => {
               if (!dataStore?.loadOne) {
@@ -155,6 +157,7 @@ export function useDerivedDefaults(options: {
       config,
       classOf,
       typeIRIToTypeName,
+      primaryFields,
       dataStore,
       latestDataRef,
       onChange,

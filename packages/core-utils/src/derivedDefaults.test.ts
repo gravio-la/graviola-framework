@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, mock, test } from "bun:test";
 import type { JSONSchema7 } from "json-schema";
 
 import {
@@ -148,16 +148,20 @@ describe("resolveDerivedPathValue", () => {
       },
       e1: {
         "@id": "e1",
+        "@type": "https://example.org/Einheit",
         name: "g",
       },
     };
+    const loadDocument = mock(async (_type: string, iri: string) => {
+      return docs[iri] ?? null;
+    });
     const value = await resolveDerivedPathValue({
       rootSchema: schema,
       ownerSchema: schema.definitions!.ZutatInRezept as JSONSchema7,
       sourceSegment: "zutatRef",
       firstValue: { "@id": "z1" },
       restPath: ["standardEinheit"],
-      loadDocument: async (_type, iri) => docs[iri] ?? null,
+      loadDocument,
       typeIRIToTypeName: (iri) => {
         if (iri.includes("Zutat")) return "Zutat";
         if (iri.includes("Einheit")) return "Einheit";
@@ -165,7 +169,86 @@ describe("resolveDerivedPathValue", () => {
       },
       cache: new Map(),
     });
-    expect(value).toEqual({ "@id": "e1" });
+    expect(loadDocument).toHaveBeenCalledTimes(2);
+    expect(value).toEqual({
+      "@id": "e1",
+      "@type": "https://example.org/Einheit",
+      name: "g",
+    });
+  });
+
+  test("loads when picker wrote label fields but not the traversed segment", async () => {
+    const zutatType = "https://example.org/Zutat";
+    const zutatRef = {
+      "@id": "urn:z1",
+      "@type": zutatType,
+      name: "Testzutat8",
+    };
+    const loadDocument = mock(async (typeName: string, iri: string) => {
+      if (typeName === "Zutat" && iri === "urn:z1") {
+        return {
+          "@id": "urn:z1",
+          standardEinheit: { "@id": "urn:tasse" },
+        };
+      }
+      return null;
+    });
+    const value = await resolveDerivedPathValue({
+      rootSchema: schema,
+      ownerSchema: schema.definitions!.ZutatInRezept as JSONSchema7,
+      sourceSegment: "zutatRef",
+      firstValue: zutatRef,
+      restPath: ["standardEinheit"],
+      loadDocument,
+      typeIRIToTypeName: (iri) => {
+        if (iri === zutatType) return "Zutat";
+        if (iri.includes("Einheit")) return "Einheit";
+        return undefined;
+      },
+      cache: new Map(),
+    });
+    expect(loadDocument).toHaveBeenCalledWith("Zutat", "urn:z1");
+    expect(value).toEqual({
+      "@id": "urn:tasse",
+      "@type": "https://example.org/Einheit",
+    });
+  });
+
+  test("does not load when traversed segment is already on the reference", async () => {
+    const zutatType = "https://example.org/Zutat";
+    const firstValue = {
+      "@id": "urn:z1",
+      "@type": zutatType,
+      name: "Inline",
+      standardEinheit: {
+        "@id": "urn:tasse",
+        "@type": "https://example.org/Einheit",
+        name: "Tasse",
+      },
+    };
+    const loadDocument = mock(async () => {
+      throw new Error("loadDocument should not be called");
+    });
+    const value = await resolveDerivedPathValue({
+      rootSchema: schema,
+      ownerSchema: schema.definitions!.ZutatInRezept as JSONSchema7,
+      sourceSegment: "zutatRef",
+      firstValue,
+      restPath: ["standardEinheit"],
+      loadDocument,
+      typeIRIToTypeName: (iri) => {
+        if (iri === zutatType) return "Zutat";
+        if (iri.includes("Einheit")) return "Einheit";
+        return undefined;
+      },
+      cache: new Map(),
+    });
+    expect(loadDocument).not.toHaveBeenCalled();
+    expect(value).toEqual({
+      "@id": "urn:tasse",
+      "@type": "https://example.org/Einheit",
+      name: "Tasse",
+    });
   });
 
   test("returns undefined when path cannot be resolved", async () => {

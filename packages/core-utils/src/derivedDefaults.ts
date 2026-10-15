@@ -1,6 +1,7 @@
 import type {
   DerivedDefaultSpec,
   DerivedDefaultsConfig,
+  PrimaryFieldDeclaration,
 } from "@graviola/edb-core-types";
 import get from "lodash-es/get";
 import isEqual from "lodash-es/isEqual";
@@ -293,11 +294,75 @@ export function planDerivedDefaultJobs(
   return jobs;
 }
 
-export function normalizeDerivedDefaultWriteValue(value: unknown): unknown {
-  if (isReferenceValue(value)) {
-    return { "@id": value["@id"] };
+const FALLBACK_LABEL_KEYS = ["name", "title", "label", "prefLabel"] as const;
+
+function labelKeyForTypeName(
+  typeName: string | undefined,
+  primaryFields: PrimaryFieldDeclaration | undefined,
+): string | undefined {
+  if (!typeName || !primaryFields) {
+    return undefined;
   }
-  return value;
+  const decl = primaryFields[typeName]?.label;
+  return typeof decl === "string" && decl.length > 0 ? decl : undefined;
+}
+
+function pickLabelFromRecord(
+  record: Record<string, unknown>,
+  preferredKey: string | undefined,
+): { key: string; value: string } | undefined {
+  if (preferredKey) {
+    const preferred = record[preferredKey];
+    if (typeof preferred === "string" && preferred.length > 0) {
+      return { key: preferredKey, value: preferred };
+    }
+  }
+  for (const key of FALLBACK_LABEL_KEYS) {
+    const fieldValue = record[key];
+    if (typeof fieldValue === "string" && fieldValue.length > 0) {
+      return { key, value: fieldValue };
+    }
+  }
+  return undefined;
+}
+
+export function normalizeDerivedDefaultWriteValue(
+  value: unknown,
+  options?: {
+    rootSchema?: JSONSchema7;
+    valueSchema?: JSONSchema7 | undefined;
+    typeName?: string | undefined;
+    primaryFields?: PrimaryFieldDeclaration;
+  },
+): unknown {
+  if (!isReferenceValue(value)) {
+    return value;
+  }
+  const record = value as Record<string, unknown>;
+  const result: Record<string, unknown> = { "@id": value["@id"] };
+
+  const schemaType =
+    options?.rootSchema && options?.valueSchema
+      ? typeConstFromObjectSchema(
+          resolveSchemaRef(options.rootSchema, options.valueSchema),
+        )
+      : undefined;
+  if (typeof record["@type"] === "string") {
+    result["@type"] = record["@type"];
+  } else if (schemaType) {
+    result["@type"] = schemaType;
+  }
+
+  const preferredLabelKey = labelKeyForTypeName(
+    options?.typeName,
+    options?.primaryFields,
+  );
+  const picked = pickLabelFromRecord(record, preferredLabelKey);
+  if (picked) {
+    result[picked.key] = picked.value;
+  }
+
+  return result;
 }
 
 export function isBareEntityReference(
@@ -330,6 +395,7 @@ export async function resolveDerivedPathValue(options: {
   ) => Promise<Record<string, unknown> | null | undefined>;
   typeIRIToTypeName: (typeIRI: string) => string | undefined;
   cache: Map<string, Record<string, unknown>>;
+  primaryFields?: PrimaryFieldDeclaration;
 }): Promise<unknown | undefined> {
   const {
     rootSchema,
@@ -340,19 +406,17 @@ export async function resolveDerivedPathValue(options: {
     loadDocument,
     typeIRIToTypeName,
     cache,
+    primaryFields,
   } = options;
 
   const ownerResolved = resolveSchemaRef(rootSchema, ownerSchema);
   let currentSchema = propertySchema(rootSchema, ownerResolved, sourceSegment);
   let current: unknown = firstValue;
 
-  const maybeLoad = async (
-    value: unknown,
+  const loadReferenceDocument = async (
+    value: { "@id": string },
     valueSchema: JSONSchema7 | undefined,
-  ): Promise<unknown> => {
-    if (!isBareEntityReference(value)) {
-      return value;
-    }
+  ): Promise<Record<string, unknown> | undefined> => {
     const resolvedSch = resolveSchemaRef(rootSchema, valueSchema);
     const typeName = classNameFromObjectSchema(
       rootSchema,
@@ -376,18 +440,53 @@ export async function resolveDerivedPathValue(options: {
     return doc;
   };
 
-  current = await maybeLoad(current, currentSchema);
+  const maybeLoad = async (
+    value: unknown,
+    valueSchema: JSONSchema7 | undefined,
+    upcomingSegment: string | undefined,
+    skipLoadWhenReferenceTarget: boolean,
+  ): Promise<unknown> => {
+    if (!isReferenceValue(value)) {
+      return value;
+    }
+    if (skipLoadWhenReferenceTarget) {
+      return value;
+    }
+    if (
+      upcomingSegment !== undefined &&
+      readChild(value, upcomingSegment) !== undefined
+    ) {
+      return value;
+    }
+    if (upcomingSegment === undefined) {
+      return value;
+    }
+    const doc = await loadReferenceDocument(value, valueSchema);
+    return doc ?? undefined;
+  };
+
+  current = await maybeLoad(
+    current,
+    currentSchema,
+    restPath[0],
+    restPath.length === 0,
+  );
   if (current === undefined) {
     return undefined;
   }
 
-  for (const seg of restPath) {
+  for (let index = 0; index < restPath.length; index++) {
+    const seg = restPath[index]!;
     if (current === null || typeof current !== "object") {
       return undefined;
     }
     current = readChild(current, seg);
+    if (current === undefined) {
+      return undefined;
+    }
     currentSchema = propertySchema(rootSchema, currentSchema, seg);
-    current = await maybeLoad(current, currentSchema);
+    const upcoming = restPath[index + 1];
+    current = await maybeLoad(current, currentSchema, upcoming, false);
     if (current === undefined) {
       return undefined;
     }
@@ -396,7 +495,42 @@ export async function resolveDerivedPathValue(options: {
   if (current === undefined) {
     return undefined;
   }
-  return normalizeDerivedDefaultWriteValue(current);
+
+  if (isReferenceValue(current)) {
+    const writeTypeNameForLabel = classNameFromObjectSchema(
+      rootSchema,
+      resolveSchemaRef(rootSchema, currentSchema),
+      typeIRIToTypeName,
+    );
+    const preferredLabelKey = labelKeyForTypeName(
+      writeTypeNameForLabel,
+      primaryFields,
+    );
+    if (
+      !pickLabelFromRecord(
+        current as Record<string, unknown>,
+        preferredLabelKey,
+      )
+    ) {
+      const loaded = await loadReferenceDocument(current, currentSchema);
+      if (loaded) {
+        current = { ...loaded, "@id": current["@id"] };
+      }
+    }
+  }
+
+  const writeTypeName = classNameFromObjectSchema(
+    rootSchema,
+    resolveSchemaRef(rootSchema, currentSchema),
+    typeIRIToTypeName,
+  );
+
+  return normalizeDerivedDefaultWriteValue(current, {
+    rootSchema,
+    valueSchema: currentSchema,
+    typeName: writeTypeName,
+    primaryFields,
+  });
 }
 
 /** Drop auto-fill tracking when the user edits a target path away from the auto value. */
