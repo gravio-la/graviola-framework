@@ -16,6 +16,15 @@ import { isCompactLeafObjectSchema } from "../utils/detailSchemaPresentation";
 import { isTopLevelSection } from "../utils/isTopLevelSection";
 import { NestedSection } from "./NestedSection";
 
+function withStableKey(node: React.ReactNode, key: string): React.ReactNode {
+  if (node == null) return null;
+  if (Array.isArray(node)) {
+    return node.map((child, index) => withStableKey(child, `${key}-${index}`));
+  }
+  if (React.isValidElement(node) && node.key != null) return node;
+  return <React.Fragment key={key}>{node}</React.Fragment>;
+}
+
 export function ObjectRenderer({
   label,
   schema,
@@ -50,7 +59,7 @@ export function ObjectRenderer({
       };
       const node = dispatch({ uiSchema: childUi, ctx: childDispatchCtx });
       if (node == null) return null;
-      return <React.Fragment key={childScope}>{node}</React.Fragment>;
+      return withStableKey(node, childScope);
     })
     .filter(Boolean);
 

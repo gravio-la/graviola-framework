@@ -42,8 +42,16 @@ import merge from "lodash-es/merge";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useFormHelper } from "./formHelper";
 import cloneDeep from "lodash-es/cloneDeep";
+import {
+  clearLinkedEntityAtPath,
+  resolveLabelKey,
+  writeLinkedEntityFromModalData,
+  writeLinkedEntitySelection,
+} from "./relationalControlPathWrite";
 
-const InlineDropdownSemanticFormsRendererComponent = (props: ControlProps) => {
+export const InlineDropdownSemanticFormsRendererComponent = (
+  props: ControlProps,
+) => {
   const {
     id,
     errors,
@@ -139,37 +147,37 @@ const InlineDropdownSemanticFormsRendererComponent = (props: ControlProps) => {
     if (!data) setRealLabel("");
   }, [data, setRealLabel]);
 
+  const labelKey = useMemo(
+    () => resolveLabelKey(primaryFields, typeName),
+    [typeName, primaryFields],
+  );
+
   const handleSelectedChange = useCallback(
-    (v: AutocompleteSuggestion) => {
+    (v: AutocompleteSuggestion | null) => {
       if (!v) {
-        handleChange(path, undefined);
+        clearLinkedEntityAtPath(handleChange, path);
         hideFinder();
         return;
       }
-      if (v.value !== data)
-        if (path.endsWith("@id")) {
-          handleChange(path, v.value);
-        } else {
-          handleChange(path, {
-            "@id": v.value,
-            "@type": typeIRI,
-            __label: v.label,
-          });
-        }
+      const nextId = path.endsWith("@id") ? data : data?.["@id"];
+      if (v.value !== nextId) {
+        writeLinkedEntitySelection(handleChange, path, typeIRI, labelKey, v);
+      }
       setRealLabel(v.label);
     },
-    [path, handleChange, data, setRealLabel, hideFinder, typeIRI],
+    [path, handleChange, data, setRealLabel, hideFinder, typeIRI, labelKey],
   );
   const handleAcceptNewEntity = useCallback(
-    (data: any) => {
-      if (path.endsWith("@id") && data["@id"]) {
-        handleChange(path, data["@id"]);
-      } else {
-        handleChange(path, data);
-      }
-      setRealLabel(data.label || data["@id"]);
+    (accepted: Record<string, unknown>) => {
+      writeLinkedEntityFromModalData(handleChange, path, labelKey, accepted);
+      const label =
+        (typeof accepted.label === "string" && accepted.label) ||
+        (typeof accepted[labelKey] === "string" && accepted[labelKey]) ||
+        (typeof accepted["@id"] === "string" && accepted["@id"]) ||
+        "";
+      setRealLabel(label as string);
     },
-    [path, handleChange, setRealLabel],
+    [path, handleChange, setRealLabel, labelKey],
   );
 
   useEffect(() => {
@@ -188,12 +196,7 @@ const InlineDropdownSemanticFormsRendererComponent = (props: ControlProps) => {
       }
       return label;
     });
-  }, [data, ctx?.core?.data, path, setRealLabel, primaryFields]);
-
-  const labelKey = useMemo(() => {
-    const fieldDecl = primaryFields[typeName] as PrimaryField | undefined;
-    return fieldDecl?.label || "title";
-  }, [typeName]);
+  }, [data, ctx?.core?.data, path, setRealLabel, primaryFields, typeName]);
 
   const mappedDataAcceptedRef = useRef<(newData: any) => void>(() => {});
 
@@ -316,7 +319,8 @@ const InlineDropdownSemanticFormsRendererComponent = (props: ControlProps) => {
       )
       .then((result: unknown) => {
         const r = result as { data?: unknown } | undefined;
-        if (r?.data != null) handleAcceptNewEntity(r.data);
+        if (r?.data != null && typeof r.data === "object")
+          handleAcceptNewEntity(r.data as Record<string, unknown>);
       })
       .finally(() => {
         setDisabled(false);

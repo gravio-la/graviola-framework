@@ -43,16 +43,28 @@ mock.module("next-i18next", () => ({
 }));
 
 let lastDropdownOptions: any;
+let lastChildPath: string | undefined;
 mock.module("./InlineDropdownSemanticFormsRenderer", () => ({
   InlineDropdownSemanticFormsRenderer: (p: any) => {
     lastDropdownOptions = p.uischema.options;
+    lastChildPath = p.path;
+    return <div data-testid="child-dropdown" />;
+  },
+  InlineDropdownSemanticFormsRendererComponent: (p: any) => {
+    lastDropdownOptions = p.uischema.options;
+    lastChildPath = p.path;
     return <div data-testid="child-dropdown" />;
   },
 }));
 mock.module("./InlineCondensedSemanticFormsRenderer", () => ({
-  InlineCondensedSemanticFormsRenderer: () => (
-    <div data-testid="child-finder" />
-  ),
+  InlineCondensedSemanticFormsRenderer: (p: any) => {
+    lastChildPath = p.path;
+    return <div data-testid="child-finder" />;
+  },
+  InlineCondensedSemanticFormsRendererComponent: (p: any) => {
+    lastChildPath = p.path;
+    return <div data-testid="child-finder" />;
+  },
 }));
 
 const { RelationalFieldRendererComponent, relationalFieldRendererTester } =
@@ -79,16 +91,19 @@ beforeAll(() => {
 beforeEach(() => {
   cleanup();
   pref = undefined;
+  lastChildPath = undefined;
 });
 
 describe("RelationalFieldRenderer dispatcher", () => {
   test("defaults to the dropdown child with a finder button option", () => {
+    const p = props({ inline: true });
     const { getByTestId, queryByTestId } = render(
-      <RelationalFieldRendererComponent {...props({ inline: true })} />,
+      <RelationalFieldRendererComponent {...p} />,
     );
     expect(getByTestId("child-dropdown")).toBeTruthy();
     expect(queryByTestId("child-finder")).toBeNull();
     expect(lastDropdownOptions.finderButton).toBe(true);
+    expect(lastChildPath).toBe(p.path);
   });
 
   test("user preference finder renders the finder child", () => {

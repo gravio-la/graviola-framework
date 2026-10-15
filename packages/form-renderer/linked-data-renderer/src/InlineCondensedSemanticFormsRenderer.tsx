@@ -32,8 +32,15 @@ import merge from "lodash-es/merge";
 import isEqual from "lodash-es/isEqual";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useFormHelper } from "./formHelper";
+import {
+  clearLinkedEntityAtPath,
+  resolveLabelKey,
+  writeLinkedEntitySelection,
+} from "./relationalControlPathWrite";
 
-const InlineCondensedSemanticFormsRendererComponent = (props: ControlProps) => {
+export const InlineCondensedSemanticFormsRendererComponent = (
+  props: ControlProps,
+) => {
   const {
     id,
     errors,
@@ -110,19 +117,40 @@ const InlineCondensedSemanticFormsRendererComponent = (props: ControlProps) => {
     if (!entityIRI) setRealLabel("");
   }, [entityIRI, setRealLabel]);
 
+  const labelKey = useMemo(
+    () => resolveLabelKey(primaryFields, typeName),
+    [typeName, primaryFields],
+  );
+
   const { hideFinder, showFinder } = useSimilarityFinderModal();
   const handleSelectedChange = useCallback(
-    (v: AutocompleteSuggestion) => {
+    (v: AutocompleteSuggestion | null) => {
       if (!v) {
-        handleChange(path, undefined);
+        clearLinkedEntityAtPath(handleChange, path);
         hideFinder();
         return;
       }
-      const _data = mapData ? mapData(v.value) : v.value;
-      if (!isEqual(_data, data)) handleChange(path, _data);
+      if (path.endsWith("@id")) {
+        const nextId = typeof data === "string" ? data : data?.["@id"];
+        if (v.value !== nextId) {
+          writeLinkedEntitySelection(handleChange, path, typeIRI, labelKey, v);
+        }
+      } else {
+        const _data = mapData ? mapData(v.value) : v.value;
+        if (!isEqual(_data, data)) handleChange(path, _data);
+      }
       setRealLabel(v.label);
     },
-    [path, handleChange, data, setRealLabel, hideFinder, mapData],
+    [
+      path,
+      handleChange,
+      data,
+      setRealLabel,
+      hideFinder,
+      mapData,
+      typeIRI,
+      labelKey,
+    ],
   );
 
   useEffect(() => {
@@ -141,12 +169,7 @@ const InlineCondensedSemanticFormsRendererComponent = (props: ControlProps) => {
       }
       return label;
     });
-  }, [entityIRI, ctx?.core?.data, path, setRealLabel]);
-
-  const labelKey = useMemo(() => {
-    const fieldDecl = primaryFields[typeName] as PrimaryField | undefined;
-    return fieldDecl?.label || "title";
-  }, [typeName]);
+  }, [entityIRI, ctx?.core?.data, path, setRealLabel, primaryFields, typeName]);
 
   const mappedDataAcceptedRef = useRef<(newData: any) => void>(() => {});
 

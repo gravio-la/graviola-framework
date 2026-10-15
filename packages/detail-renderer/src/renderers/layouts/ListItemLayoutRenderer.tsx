@@ -82,6 +82,8 @@ export function ListItemLayoutRenderer({
           </ListItemAvatar>
         ) : null}
         <ListItemText
+          primaryTypographyProps={{ component: "div" }}
+          secondaryTypographyProps={{ component: "div" }}
           primary={
             <Slot id="label" motionId={`${scope}:label`}>
               {preview.label ?? ctx.humanLabel ?? extra}
