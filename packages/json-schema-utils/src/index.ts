@@ -45,3 +45,5 @@ export * from "./entityIdentity";
 export * from "./cbdBoundary";
 export { contentHash8, skolemListMemberIri, assignSkolemIris } from "./skolem";
 export * from "./stripXCalcProperties";
+export { resolveLinkFilterWhere, mergeLinkFilters } from "./linkFilter";
+export type { LinkFilter, LinkFiltersConfig } from "./linkFilter";

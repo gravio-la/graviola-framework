@@ -86,6 +86,8 @@ export function defineGraviolaApp(input: DefineGraviolaAppInput): SchemaConfig {
   let detailUiSchemata: SchemaConfig["detailUiSchemata"];
 
   const orderByForType = (typeName: string) => config.orderBy?.[typeName];
+  const linkFiltersForType = (typeName: string) =>
+    config.linkFilters?.[typeName];
 
   if (
     detailUiSchemaScopeOverrides &&
@@ -117,6 +119,7 @@ export function defineGraviolaApp(input: DefineGraviolaAppInput): SchemaConfig {
       generated[typeName] = uiSchemaForDefinition(config.schema, typeName, {
         ...opts,
         orderBy: orderByForType(typeName),
+        linkFilters: linkFiltersForType(typeName),
       });
     }
     uischemata = { ...generated, ...explicitUischemata };
@@ -132,6 +135,21 @@ export function defineGraviolaApp(input: DefineGraviolaAppInput): SchemaConfig {
       if (next[typeName]) continue;
       next[typeName] = uiSchemaForDefinition(config.schema, typeName, {
         orderBy: config.orderBy[typeName],
+        linkFilters: linkFiltersForType(typeName),
+      });
+    }
+    uischemata = next;
+  }
+
+  if (config.linkFilters && Object.keys(config.linkFilters).length > 0) {
+    const next: NonNullable<SchemaConfig["uischemata"]> = {
+      ...(uischemata ?? {}),
+    };
+    for (const typeName of Object.keys(config.linkFilters)) {
+      if (next[typeName]) continue;
+      next[typeName] = uiSchemaForDefinition(config.schema, typeName, {
+        orderBy: orderByForType(typeName),
+        linkFilters: linkFiltersForType(typeName),
       });
     }
     uischemata = next;
@@ -151,6 +169,7 @@ export function defineGraviolaApp(input: DefineGraviolaAppInput): SchemaConfig {
       next[typeName] = uiSchemaForDefinition(config.schema, typeName, {
         ...opts,
         orderBy: orderByForType(typeName),
+        linkFilters: linkFiltersForType(typeName),
       } as Parameters<typeof uiSchemaForDefinition>[2]);
     }
     uischemata = next;
@@ -230,6 +249,7 @@ export function schemaConfigFromSidecars(
     defaults: sideSchema.defaults,
     assetClasses: sideSchema.assetClasses,
     inverses: sideSchema.inverses,
+    linkFilters: sideSchema.linkFilters,
   };
 
   let resolved = defineGraviolaApp(overridable);

@@ -10,7 +10,10 @@ import type {
   SidebarConfig,
 } from "@graviola/edb-advanced-components";
 import type { TableUiSchema } from "@graviola/edb-table-types";
-import type { InverseMap } from "@graviola/json-schema-utils";
+import type {
+  InverseMap,
+  LinkFiltersConfig,
+} from "@graviola/json-schema-utils";
 import type { CompiledProfile } from "@graviola/formula-dependency";
 import type { SearchFacetSchema } from "@graviola/search-facet-schema";
 import type { UISchemaElement } from "@jsonforms/core";
@@ -138,6 +141,8 @@ export type SchemaConfig = {
   assetClasses?: Record<string, "image" | "file">;
   /** Per-class inverse slot map (`RangeClass.inverseSlot`). */
   inverses?: InverseMap;
+  /** Per-type relation-slot candidate filters for entity pickers. */
+  linkFilters?: LinkFiltersConfig;
 };
 
 /**
@@ -191,4 +196,5 @@ export type GraviolaSideSchema = {
   defaults?: DerivedDefaultsConfig;
   assetClasses?: Record<string, "image" | "file">;
   inverses?: InverseMap;
+  linkFilters?: LinkFiltersConfig;
 };

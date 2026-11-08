@@ -17,12 +17,15 @@ import {
   resolveSchema,
 } from "@jsonforms/core";
 import type { OrderBySpec } from "@graviola/edb-core-types";
+import { mergeLinkFilters, type LinkFilter } from "@graviola/json-schema-utils";
 
 export type OverrideOptions = {
   scopeOverride?: Record<string, ControlElement>;
   skipScope?: string[];
   /** Root-definition slot name → sort spec (from side schema / Adb context). */
   orderBy?: Record<string, OrderBySpec>;
+  /** Root-definition slot name → relation picker filter (from side schema). */
+  linkFilters?: Record<string, LinkFilter>;
 };
 
 export type GenerateUISchemaOptions = OverrideOptions & {
@@ -71,16 +74,24 @@ export const createControlElement = (
     slot && overrideOptions?.orderBy
       ? overrideOptions.orderBy[slot]
       : undefined;
+  const linkFilterFromSide =
+    slot && overrideOptions?.linkFilters
+      ? overrideOptions.linkFilters[slot]
+      : undefined;
+  const linkFilter = mergeLinkFilters(
+    linkFilterFromSide,
+    override.options?.linkFilter as LinkFilter | undefined,
+  );
   const control: ControlElement = {
     type: "Control",
     scope: ref,
     ...override,
   };
-  if (orderSpec) {
+  if (orderSpec || linkFilter) {
     control.options = {
       ...(override.options ?? {}),
-      orderBy: orderSpec,
-      showSortButtons: true,
+      ...(orderSpec ? { orderBy: orderSpec, showSortButtons: true } : {}),
+      ...(linkFilter ? { linkFilter } : {}),
     };
   }
   return control;
@@ -468,6 +479,7 @@ export const generateDefaultUISchema = (
           scopeOverride,
           skipScope,
           orderBy: options.orderBy,
+          linkFilters: options.linkFilters,
         }),
       );
     }
@@ -480,6 +492,7 @@ export const generateDefaultUISchema = (
       scopeOverride,
       skipScope,
       orderBy: options.orderBy,
+      linkFilters: options.linkFilters,
     }),
     layoutType,
   );

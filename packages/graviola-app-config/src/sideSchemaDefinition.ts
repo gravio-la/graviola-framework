@@ -10,6 +10,18 @@ const orderBySpecSchema: JSONSchema7 = {
   additionalProperties: false,
 };
 
+const linkFilterSchema: JSONSchema7 = {
+  type: "object",
+  required: ["where"],
+  properties: {
+    where: { type: "object" },
+    onUnresolved: { enum: ["ignore", "empty"] },
+    description: { type: "string" },
+    mode: { enum: ["override", "and"] },
+  },
+  additionalProperties: false,
+};
+
 const derivedDefaultSpecSchema: JSONSchema7 = {
   type: "object",
   properties: {
@@ -108,6 +120,13 @@ export const graviolaSideSchemaDefinition: JSONSchema7 = {
           minLength: 1,
           pattern: "^[^.]+\\.[^.]+$",
         },
+      },
+    },
+    linkFilters: {
+      type: "object",
+      additionalProperties: {
+        type: "object",
+        additionalProperties: linkFilterSchema,
       },
     },
     viewConfig: {

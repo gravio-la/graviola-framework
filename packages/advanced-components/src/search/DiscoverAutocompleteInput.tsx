@@ -44,6 +44,10 @@ interface OwnProps {
   autocompleteDisabled?: boolean;
   disabled?: boolean;
   allowHtmlLabel?: boolean;
+  /** Typed filter passed to `filterMany` when the store supports it. */
+  where?: Record<string, unknown>;
+  /** When true, candidate loading returns an empty list (unresolved link filter). */
+  filterExhausted?: boolean;
 }
 
 export type DiscoverAutocompleteInputProps = OwnProps;
@@ -88,6 +92,8 @@ export const DiscoverAutocompleteInput: FunctionComponent<
   autocompleteDisabled,
   disabled,
   allowHtmlLabel = false,
+  where,
+  filterExhausted,
 }) => {
   const {
     queryBuildOptions: {
@@ -140,10 +146,15 @@ export const DiscoverAutocompleteInput: FunctionComponent<
 
   const load = useCallback(
     async (searchString?: string) => {
-      if (!typeIRI) {
+      if (!typeIRI || filterExhausted) {
         return [];
       }
-      if (typeof dataStore.findEntityByTypeName === "function") {
+      const filterOpts = {
+        searchString: searchString || undefined,
+        limit,
+        ...(where ? { where } : {}),
+      };
+      if (!where && typeof dataStore.findEntityByTypeName === "function") {
         const items = await dataStore.findEntityByTypeName(
           typeName,
           searchString,
@@ -158,12 +169,7 @@ export const DiscoverAutocompleteInput: FunctionComponent<
           } as AutocompleteSuggestion;
         });
       }
-      return (
-        await dataStore.filterMany(typeName, {
-          searchString: searchString || undefined,
-          limit,
-        })
-      ).map((doc) => {
+      return (await dataStore.filterMany(typeName, filterOpts)).map((doc) => {
         const { label, image, description } = applyToEachField(
           doc,
           primaryFieldExtracts[typeName] ||
@@ -179,8 +185,21 @@ export const DiscoverAutocompleteInput: FunctionComponent<
         return suggestion;
       });
     },
-    [typeIRI, limit, typeName, dataStore, primaryFields, primaryFieldExtracts],
+    [
+      typeIRI,
+      limit,
+      typeName,
+      dataStore,
+      primaryFields,
+      primaryFieldExtracts,
+      where,
+      filterExhausted,
+    ],
   );
+
+  const suggestionQueryKey = where
+    ? `${typeIRI}::${JSON.stringify(where)}`
+    : typeIRI;
 
   const { data: basicFields } = useQuery({
     queryKey: ["entity", typeIRI, selected?.value, "data", "load"],
@@ -227,7 +246,7 @@ export const DiscoverAutocompleteInput: FunctionComponent<
       ready={Boolean(typeIRI)}
       // @ts-ignore
       load={load}
-      initialQueryKey={typeIRI}
+      initialQueryKey={suggestionQueryKey}
       value={selectedValue || { label: searchString, value: null }}
       getOptionLabel={handleGetOptionLabel}
       placeholder={t("search for", { typeName })}

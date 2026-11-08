@@ -228,6 +228,108 @@ describe("schemaConfigFromSidecars", () => {
     ).toEqual(["#/properties/menge", "#/properties/einheit"]);
   });
 
+  test("defineGraviolaApp generates form uischema with options.linkFilter from side schema", () => {
+    const bookingSchema = {
+      type: "object",
+      definitions: {
+        Booking: {
+          type: "object",
+          properties: {
+            "@id": { type: "string" },
+            host: { $ref: "#/definitions/Host" },
+            guest: { $ref: "#/definitions/Guest" },
+          },
+        },
+        Host: {
+          type: "object",
+          properties: {
+            "@id": { type: "string" },
+            tier: { type: "string" },
+          },
+        },
+        Guest: {
+          type: "object",
+          properties: {
+            "@id": { type: "string" },
+            name: { type: "string" },
+            tier: { type: "string" },
+          },
+        },
+      },
+    } as JSONSchema7;
+
+    const filter = {
+      where: { tier: { equals: { $data: "host.tier" } } },
+    };
+
+    const config = defineGraviolaApp({
+      schemaName: "booking",
+      label: "Booking",
+      description: "",
+      version: "0.1.0",
+      storageKey: "booking",
+      baseIRI: "http://example.org/",
+      entityBaseIRI: "http://example.org/",
+      schema: bookingSchema,
+      primaryFields: {},
+      typeNameLabelMap: {},
+      typeNameUiSchemaOptionsMap: {},
+      linkFilters: {
+        Booking: { guest: filter },
+      },
+    });
+
+    const bookingUi = config.uischemata?.Booking as Layout;
+    const guestControl = bookingUi.elements.find(
+      (e) => (e as ControlElement).scope === "#/properties/guest",
+    ) as ControlElement;
+    expect(guestControl?.options?.linkFilter).toEqual(filter);
+  });
+
+  test("schemaConfigFromSidecars threads linkFilters into control options", () => {
+    const bookingSchema = {
+      type: "object",
+      definitions: {
+        Booking: {
+          type: "object",
+          properties: {
+            "@id": { type: "string" },
+            guest: { $ref: "#/definitions/Guest" },
+          },
+        },
+        Guest: {
+          type: "object",
+          properties: {
+            "@id": { type: "string" },
+            tier: { type: "string" },
+          },
+        },
+      },
+    } as JSONSchema7;
+
+    const config = schemaConfigFromSidecars({
+      schema: bookingSchema,
+      sideSchema: {
+        schemaName: "booking",
+        linkFilters: {
+          Booking: {
+            guest: { where: { tier: { equals: "gold" } } },
+          },
+        },
+      },
+    });
+
+    expect(config.linkFilters?.Booking?.guest?.where).toEqual({
+      tier: { equals: "gold" },
+    });
+    const guestControl = (config.uischemata?.Booking as Layout).elements.find(
+      (e) => (e as ControlElement).scope === "#/properties/guest",
+    ) as ControlElement;
+    expect(guestControl?.options?.linkFilter).toEqual({
+      where: { tier: { equals: "gold" } },
+    });
+  });
+
   test("defineGraviolaApp generates form uischema with options.orderBy for orderBy-only classes", () => {
     const orderedSchema = {
       type: "object",

@@ -82,6 +82,35 @@ describe("loadGraviolaSideSchema", () => {
     ).toThrow(/Invalid Graviola side-schema/);
   });
 
+  test("accepts valid linkFilters", () => {
+    const loaded = loadGraviolaSideSchema({
+      schemaName: "demo",
+      linkFilters: {
+        Booking: {
+          guest: {
+            where: { tier: { equals: { $data: "host.tier" } } },
+          },
+        },
+      },
+    });
+    expect(loaded.linkFilters?.Booking?.guest?.where).toEqual({
+      tier: { equals: { $data: "host.tier" } },
+    });
+  });
+
+  test("rejects linkFilters without where", () => {
+    expect(() =>
+      loadGraviolaSideSchema({
+        schemaName: "demo",
+        linkFilters: {
+          Booking: {
+            guest: { description: "only desc" },
+          },
+        },
+      }),
+    ).toThrow(/Invalid Graviola side-schema/);
+  });
+
   test("rejects orderBy spec with unknown inner keys", () => {
     expect(() =>
       loadGraviolaSideSchema({

@@ -22,7 +22,11 @@ import {
 } from "@graviola/edb-state-hooks";
 import { hidden } from "@graviola/edb-ui-utils";
 import { ControlProps, JsonSchema, resolveSchema } from "@jsonforms/core";
-import type { SchemaRegistry } from "@graviola/json-schema-utils";
+import {
+  resolveLinkFilterWhere,
+  type LinkFilter,
+  type SchemaRegistry,
+} from "@graviola/json-schema-utils";
 import { useJsonForms, withJsonFormsControlProps } from "@jsonforms/react";
 import ManageSearchIcon from "@mui/icons-material/ManageSearch";
 import {
@@ -116,6 +120,11 @@ export const InlineDropdownSemanticFormsRendererComponent = (
     () => typeIRI && typeIRIToTypeName(typeIRI),
     [typeIRI, typeIRIToTypeName],
   );
+
+  const resolvedLinkFilter = useMemo(() => {
+    const spec = appliedUiSchemaOptions.linkFilter as LinkFilter | undefined;
+    return resolveLinkFilterWhere(spec, ctx?.core?.data);
+  }, [appliedUiSchemaOptions.linkFilter, ctx?.core?.data]);
   const [realLabel, setRealLabel] = useState("");
   const formsPath = useMemo(
     () => makeFormsPath(config?.formsPath, path),
@@ -552,6 +561,8 @@ export const InlineDropdownSemanticFormsRendererComponent = (
             onSelectionChange={handleSelectedChange}
             onSearchValueChange={handleFieldSearchChange}
             searchString={searchString || ""}
+            where={resolvedLinkFilter.where}
+            filterExhausted={resolvedLinkFilter.unresolved}
             inputProps={{
               autoComplete: "off",
               onFocus: handleFocus,
