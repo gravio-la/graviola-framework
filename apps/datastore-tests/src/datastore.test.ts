@@ -173,6 +173,7 @@ for (const adapter of adapters) {
       runDataVolumeSuite({
         getStore: () => store,
         countTriples: setupResult.countTriples,
+        countBlankGraphStats: setupResult.countBlankGraphStats,
         getRichShapeStore: setupResult.richShapeStore
           ? () => setupResult.richShapeStore!
           : undefined,

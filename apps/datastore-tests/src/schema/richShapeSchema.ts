@@ -34,6 +34,30 @@ export const richShapeSchema = {
         unit: { type: "string" },
       },
     },
+    /** Anonymous slot in gardeningInfo (companions / antagonists lists). */
+    PlantSlot: {
+      type: "object",
+      properties: {
+        label: { type: "string" },
+      },
+    },
+    /**
+     * Anonymous parent with two arrays of blank nodes — the shape that used to
+     * multiply nested objects when INSERT shared the DELETE WHERE clause.
+     */
+    GardeningInfo: {
+      type: "object",
+      properties: {
+        companions: {
+          type: "array",
+          items: { $ref: "#/definitions/PlantSlot" },
+        },
+        antagonists: {
+          type: "array",
+          items: { $ref: "#/definitions/PlantSlot" },
+        },
+      },
+    },
     Device: {
       type: "object",
       properties: {
@@ -57,6 +81,15 @@ export const richShapeSchema = {
       },
       required: ["name"],
     },
+    PlantSpecies: {
+      type: "object",
+      properties: {
+        "@id": { type: "string" },
+        name: { type: "string" },
+        gardeningInfo: { $ref: "#/definitions/GardeningInfo" },
+      },
+      required: ["name"],
+    },
   },
 } satisfies JSONSchema7;
 
@@ -66,6 +99,7 @@ export const richShapeQueryBuildOptions = {
   primaryFields: {
     Maker: { label: "name" },
     Device: { label: "name" },
+    PlantSpecies: { label: "name" },
   },
   primaryFieldExtracts: {},
 } as const;

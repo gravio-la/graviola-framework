@@ -31,6 +31,10 @@ type DataVolumeSuiteOptions = {
   getCalcWarmStore?: () => DatastoreContractStoreWithCalcWarm;
   /** Store bound to `richShapeSchema`: lists, nested objects, relations. */
   getRichShapeStore?: () => DatastoreContractStore;
+  countBlankGraphStats?: () => Promise<{
+    blankNodes: number;
+    orphans: number;
+  }>;
 };
 
 function sampleWrite(
@@ -89,6 +93,7 @@ export function runDataVolumeSuite(options: DataVolumeSuiteOptions): void {
     getStatementStore,
     getCalcWarmStore,
     getRichShapeStore,
+    countBlankGraphStats,
   } = options;
 
   describe("data volume", () => {
@@ -430,6 +435,53 @@ export function runDataVolumeSuite(options: DataVolumeSuiteOptions): void {
           ).toEqual(sorted(resellerIds));
           expect(loaded.weight).toMatchObject({ value: 164, unit: "g" });
           expect(measureLabels(loaded)).toEqual(["height", "width"]);
+        });
+
+        test("gardeningInfo with companion and antagonist arrays: repeat save does not multiply blank nodes or leave orphans", async () => {
+          const store = getRichShapeStore();
+          const id = entityIRI("PlantSpecies", "ps-garden-cross");
+          const companions = Array.from({ length: 5 }, (_, i) => ({
+            label: `companion ${i + 1}`,
+          }));
+          const antagonists = Array.from({ length: 3 }, (_, i) => ({
+            label: `antagonist ${i + 1}`,
+          }));
+          const species: Record<string, unknown> = {
+            "@id": id,
+            name: "Tomato",
+            gardeningInfo: { companions, antagonists },
+          };
+
+          await store.upsert("PlantSpecies", id, species as never);
+          const afterFirst = await countTriples();
+          const statsAfterFirst = countBlankGraphStats
+            ? await countBlankGraphStats()
+            : undefined;
+
+          for (let round = 1; round <= 5; round++) {
+            await store.upsert("PlantSpecies", id, species as never);
+            expect((await countTriples()) - afterFirst).toBe(0);
+          }
+          for (let round = 1; round <= 3; round++) {
+            const loaded = await store.loadOne("PlantSpecies", id);
+            await store.upsert("PlantSpecies", id, loaded as never);
+            expect((await countTriples()) - afterFirst).toBe(0);
+          }
+
+          if (countBlankGraphStats && statsAfterFirst) {
+            const stats = await countBlankGraphStats();
+            expect(stats.orphans).toBe(0);
+            expect(stats.blankNodes).toBe(statsAfterFirst.blankNodes);
+          }
+
+          const loaded = (await store.loadOne("PlantSpecies", id)) as {
+            gardeningInfo: {
+              companions: unknown[];
+              antagonists: unknown[];
+            };
+          };
+          expect(loaded.gardeningInfo.companions).toHaveLength(5);
+          expect(loaded.gardeningInfo.antagonists).toHaveLength(3);
         });
 
         test("saving the same document again and again adds 0 triples (Δ=0): nested objects and relations do not multiply", async () => {

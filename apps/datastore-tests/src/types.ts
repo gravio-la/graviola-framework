@@ -133,6 +133,11 @@ export type DatastoreAdapter = {
     richShapeStore?: DatastoreContractStore;
     /** SPARQL backends only — total triple count for data-volume contract tests. */
     countTriples?: () => Promise<number>;
+    /** SPARQL backends only — blank-node and orphan counts for save invariants. */
+    countBlankGraphStats?: () => Promise<{
+      blankNodes: number;
+      orphans: number;
+    }>;
   }>;
   /** Wipe backing data — invoked in beforeEach. */
   clearAll: () => Promise<void>;

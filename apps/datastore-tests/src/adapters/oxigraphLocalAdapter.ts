@@ -55,12 +55,43 @@ import type {
 
 const TRIPLE_COUNT_QUERY = "SELECT (COUNT(*) AS ?n) WHERE { ?s ?p ?o }";
 
-function countTriplesFromOxigraphStore(store: Store): number {
-  const raw = store.query(TRIPLE_COUNT_QUERY, {
+function sparqlCountFromOxigraphStore(store: Store, query: string): number {
+  const raw = store.query(query, {
     results_format: "application/sparql-results+json",
   }) as string;
   const parsed = JSON.parse(raw || "{}");
-  return Number(parsed.results?.bindings?.[0]?.n?.value ?? 0);
+  const binding = parsed.results?.bindings?.[0] as
+    | Record<string, { value: string }>
+    | undefined;
+  const first = binding && Object.values(binding)[0];
+  return Number(first?.value ?? 0);
+}
+
+function countTriplesFromOxigraphStore(store: Store): number {
+  return sparqlCountFromOxigraphStore(store, TRIPLE_COUNT_QUERY);
+}
+
+function countBlankGraphStatsFromOxigraphStore(store: Store): {
+  blankNodes: number;
+  orphans: number;
+} {
+  return {
+    blankNodes: sparqlCountFromOxigraphStore(
+      store,
+      `SELECT (COUNT(DISTINCT ?b) AS ?c) WHERE {
+        { ?b ?p ?o } UNION { ?s ?p ?b }
+        FILTER(isBlank(?b))
+      }`,
+    ),
+    orphans: sparqlCountFromOxigraphStore(
+      store,
+      `SELECT (COUNT(DISTINCT ?b) AS ?c) WHERE {
+        ?b ?p ?o .
+        FILTER(isBlank(?b))
+        FILTER NOT EXISTS { ?e ?sp ?b }
+      }`,
+    ),
+  };
 }
 
 /** Build CRUDFunctions that delegate to a synchronous Oxigraph Store. */
@@ -236,6 +267,8 @@ export function createOxigraphLocalAdapter(): DatastoreAdapter {
         calcWarmStore:
           calcWarmStore as unknown as DatastoreContractStoreWithCalcWarm,
         countTriples: async () => countTriplesFromOxigraphStore(store),
+        countBlankGraphStats: async () =>
+          countBlankGraphStatsFromOxigraphStore(store),
       };
     },
 
