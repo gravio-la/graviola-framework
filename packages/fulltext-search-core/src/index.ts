@@ -11,7 +11,13 @@ export type {
   FullTextSearchAdapter,
 } from "./engine";
 
-export { isFacetFilterRange, isFacetFilterIn } from "./engine";
+export {
+  isFacetFilterRange,
+  isFacetFilterIn,
+  FullTextEngineError,
+  IndexSchemaMismatchError,
+  FULLTEXT_SCHEMA_MISMATCH_CODES,
+} from "./engine";
 export type {
   FacetFilterIn,
   FacetStats,
@@ -34,7 +40,6 @@ export {
   decodeDocIdToIri,
   defaultIndexUid,
   defaultIndexIdCodec,
-  createManifestationHexIdCodec,
   createPathSuffixIdCodec,
   pathSuffixFromIri,
   type IndexIdCodec,
@@ -122,3 +127,11 @@ export {
 } from "./initFulltextSearchStore";
 
 export { createInMemoryTextIndexAdapter } from "./testing/in-memory-adapter";
+export type { InMemoryTextIndexAdapterOptions } from "./testing/in-memory-adapter";
+export {
+  createLiveSettingsCache,
+  liveSettingsFromIndexSettings,
+  type LiveSettings,
+  type LiveSettingsCache,
+  type AttributeSet,
+} from "./live-settings";

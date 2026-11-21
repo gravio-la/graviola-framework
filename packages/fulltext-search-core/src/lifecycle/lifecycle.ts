@@ -129,8 +129,9 @@ export async function diffFulltextIndexes(
       sortableAttributes: summary.sortableAttributes,
     };
 
-    const live =
+    const liveRaw =
       (await options.adapter.getIndexSettings?.(summary.indexUid)) ?? null;
+    const live = liveRaw === "unknown" ? null : liveRaw;
     const stats =
       (await options.adapter.getIndexStats?.(summary.indexUid)) ?? null;
     const exists = live != null;

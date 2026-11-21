@@ -1,0 +1,23 @@
+---
+description: Incubating fulltext packages — no legacy API or domain leakage
+globs: packages/fulltext-search-core/**,packages/meilisearch-sparql-store/**
+alwaysApply: false
+---
+
+# Full-text packages (incubator)
+
+`@graviola/fulltext-search-core` and `@graviola/meilisearch-sparql-store` are **domain-agnostic**: any JSON Schema + `@graviola/search-facet-schema` sidecar.
+
+## Do not
+
+- Add `legacy*` options, deprecated aliases, or compatibility shims in library **src**.
+- Hardcode Semantic Desktop / graviola-indexer type names, field names, migration hints, or deployment assumptions in library **src** or comments.
+- Encode old-index behavior in the framework layer.
+
+Tests may use domain fixtures (e.g. Manifestation) to simulate a consumer app.
+
+## Do
+
+- Keep generic hooks: `adaptFiltersForLiveIndex`, `indexSchemaMismatchHint`, `idCodec` / `idCodecForType`, `indexNameForType`, live-settings probe.
+- Put deployment- or product-specific filter/id/index adaptations in **apps** (e.g. `apps/fulltext-sd/server/`).
+- Prefer **breaking API changes** on 0.x over carrying legacy surface in libraries — almost no external consumers yet.

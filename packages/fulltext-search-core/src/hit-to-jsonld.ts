@@ -8,9 +8,15 @@ export type JsonLdEntity = Record<string, unknown> & {
 };
 
 /** Minimal hit shape — avoid coupling DTS to `./engine` re-exports. */
-type SearchIndexHit = {
+export type SearchIndexHit = {
   id: string;
   document: Record<string, unknown>;
+};
+
+export type HitToJsonLdOptions = {
+  typeIri: string;
+  decodeId?: (id: string) => string;
+  resolveEntityIriFromHit?: (hit: SearchIndexHit) => string | undefined;
 };
 
 /** Reverse-map index field names → schema property names. */
@@ -37,17 +43,29 @@ function isHyperFormulaNameError(value: unknown): boolean {
 /**
  * Turn a text-index hit into a JSON-LD stub document with `@id` and `@type`.
  */
+function resolveEntityIri(
+  hit: SearchIndexHit,
+  decode: (id: string) => string,
+  resolveFromHit?: (hit: SearchIndexHit) => string | undefined,
+): string {
+  const doc = hit.document;
+  const fromHook = resolveFromHit?.(hit)?.trim();
+  if (fromHook) return fromHook;
+  const fromDoc =
+    typeof doc[INDEX_DOC_IRI] === "string" ? doc[INDEX_DOC_IRI].trim() : "";
+  if (fromDoc) return fromDoc;
+  return decode(hit.id);
+}
+
 export function hitToJsonLd(
   hit: SearchIndexHit,
   routing: TypeRouting,
-  options: { typeIri: string; decodeId?: (id: string) => string },
+  options: HitToJsonLdOptions,
 ): JsonLdEntity {
   const doc = hit.document;
   const decode = options.decodeId ?? decodeDocIdToIri;
 
-  const iri =
-    (typeof doc[INDEX_DOC_IRI] === "string" ? doc[INDEX_DOC_IRI] : null) ??
-    decode(hit.id);
+  const iri = resolveEntityIri(hit, decode, options.resolveEntityIriFromHit);
   const typeIri =
     (typeof doc[INDEX_DOC_TYPE] === "string" ? doc[INDEX_DOC_TYPE] : null) ??
     options.typeIri;

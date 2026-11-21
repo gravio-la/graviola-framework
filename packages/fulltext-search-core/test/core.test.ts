@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { loadSearchFacetSchema } from "@graviola/search-facet-schema";
 import {
   buildRoutingPolicy,
-  createManifestationHexIdCodec,
+  createPathSuffixIdCodec,
   decodeDocIdToIri,
   encodeIriToDocId,
   getTypeRouting,
@@ -13,7 +13,7 @@ import {
   createInMemoryTextIndexAdapter,
 } from "../src/index";
 
-const ENTITY_NS = "http://semanticdesk.top/entity#";
+const ENTITY_NS = "http://example.org/entity#";
 
 const sidecar = loadSearchFacetSchema({
   fulltextIndex: {
@@ -44,11 +44,14 @@ describe("id-mapping", () => {
     expect(decodeDocIdToIri(encodeIriToDocId(iri))).toBe(iri);
   });
 
-  test("manifestation hex codec maps legacy indexer ids", () => {
-    const codec = createManifestationHexIdCodec(ENTITY_NS);
+  test("path suffix codec maps pre-existing index ids", () => {
+    const codec = createPathSuffixIdCodec({
+      entityNs: ENTITY_NS,
+      pathSegment: "item",
+    });
     const hex =
       "abc123def4567890abcdef1234567890abcdef1234567890abcdef1234567890";
-    const iri = `${ENTITY_NS}manifestation/${hex}`;
+    const iri = `${ENTITY_NS}item/${hex}`;
     expect(codec.decodeDocIdToIri(hex)).toBe(iri);
     expect(codec.encodeIriToDocId(iri)).toBe(hex);
   });
@@ -93,6 +96,32 @@ describe("hitToJsonLd", () => {
     expect(jsonld["@id"]).toBe("http://ex.org/e/1");
     expect(jsonld["@type"]).toBe("http://ex.org/Exhibition");
     expect(jsonld.title).toBe("Modern Art");
+  });
+
+  test("resolveEntityIriFromHit runs before __iri and decodeId", () => {
+    const policy = buildRoutingPolicy({ sidecar, primaryFields });
+    const routing = getTypeRouting(policy, "Exhibition")!;
+    const hex =
+      "abc123def4567890abcdef1234567890abcdef1234567890abcdef1234567890";
+    const resolved = `http://example.org/entity#item/${hex}`;
+    const jsonld = hitToJsonLd(
+      {
+        id: hex,
+        document: {
+          id: hex,
+          isFolder: true,
+        },
+      },
+      routing,
+      {
+        typeIri: "http://ex.org/Exhibition",
+        resolveEntityIriFromHit: (hit) =>
+          hit.document.isFolder
+            ? `http://example.org/entity#item/${hit.id}`
+            : undefined,
+      },
+    );
+    expect(jsonld["@id"]).toBe(resolved);
   });
 });
 
@@ -146,7 +175,7 @@ describe("initFulltextSearchStore with in-memory adapter", () => {
     expect(result.documents[0]?.title).toBe("Summer Show");
   });
 
-  test("legacy hex document ids decode to manifestation IRIs", async () => {
+  test("path suffix document ids decode to entity IRIs", async () => {
     const adapter = createInMemoryTextIndexAdapter();
     const manifestSidecar = loadSearchFacetSchema({
       fulltextIndex: {
@@ -195,7 +224,10 @@ describe("initFulltextSearchStore with in-memory adapter", () => {
       schema: {},
       primaryFields: { Manifestation: { label: "fileName" } },
       indexNameForType: (t) => (t === "Manifestation" ? legacyIndex : t),
-      idCodec: createManifestationHexIdCodec(ENTITY_NS),
+      idCodec: createPathSuffixIdCodec({
+        entityNs: ENTITY_NS,
+        pathSegment: "manifestation",
+      }),
       existingIndexTypes: ["Manifestation"],
     });
 

@@ -53,16 +53,7 @@ export function pathSuffixFromIri(
   return suffix || null;
 }
 
-/**
- * Legacy semanticdesk / graviola-indexer convention:
- * document id = lowercase hex digest; IRI = `{entityNs}manifestation/{hex}`.
- */
-export function createManifestationHexIdCodec(entityNs: string): IndexIdCodec {
-  const segment = "manifestation";
-  return createPathSuffixIdCodec({ entityNs, pathSegment: segment });
-}
-
-/** Generic `{entityNs}{pathSegment}/{id}` ↔ id codec for pre-existing indexes. */
+/** `{entityNs}{pathSegment}/{id}` ↔ id codec for pre-existing indexes. */
 export function createPathSuffixIdCodec(options: {
   entityNs: string;
   pathSegment: string;

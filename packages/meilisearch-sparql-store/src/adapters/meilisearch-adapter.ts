@@ -8,9 +8,29 @@ import type {
   TextIndexResult,
 } from "@graviola/fulltext-search-core";
 import {
+  FullTextEngineError,
   isFacetFilterIn,
   isFacetFilterRange,
 } from "@graviola/fulltext-search-core";
+
+function throwMeiliEngineError(
+  uid: string,
+  operation: string,
+  status: number,
+  bodyText: string,
+): never {
+  let code: string | undefined;
+  try {
+    const parsed = JSON.parse(bodyText) as { code?: string; message?: string };
+    code = parsed.code;
+  } catch {
+    // keep raw body in message
+  }
+  throw new FullTextEngineError(
+    `Meilisearch ${operation} ${uid}: ${status} ${bodyText}`,
+    { status, code, indexUid: uid },
+  );
+}
 
 export type MeilisearchConfig = {
   baseUrl: string;
@@ -250,6 +270,7 @@ export function createMeilisearchAdapter(
         body.attributesToSearchOn = q.attributesToSearchOn;
       }
       if (q.facets?.length) body.facets = q.facets;
+      if (q.sort?.length) body.sort = q.sort;
 
       const res = await meiliFetch(
         config,
@@ -261,7 +282,7 @@ export function createMeilisearchAdapter(
       );
       if (!res.ok) {
         const text = await res.text();
-        throw new Error(`Meilisearch search ${uid}: ${res.status} ${text}`);
+        throwMeiliEngineError(uid, "search", res.status, text);
       }
       const json = (await res.json()) as Record<string, unknown>;
       return normalizeSearchResponse(json, q.q);
@@ -285,9 +306,7 @@ export function createMeilisearchAdapter(
       );
       if (!res.ok) {
         const text = await res.text();
-        throw new Error(
-          `Meilisearch facet-search ${uid}: ${res.status} ${text}`,
-        );
+        throwMeiliEngineError(uid, "facet-search", res.status, text);
       }
       const json = (await res.json()) as {
         facetHits?: { value: string; count: number }[];
@@ -347,11 +366,10 @@ export function createMeilisearchAdapter(
         `/indexes/${encodeURIComponent(uid)}/settings`,
       );
       if (res.status === 404) return null;
+      if (res.status === 401 || res.status === 403) return "unknown";
       if (!res.ok) {
         const text = await res.text();
-        throw new Error(
-          `Meilisearch getIndexSettings ${uid}: ${res.status} ${text}`,
-        );
+        throwMeiliEngineError(uid, "getIndexSettings", res.status, text);
       }
       const body = (await res.json()) as {
         searchableAttributes?: string[] | null;

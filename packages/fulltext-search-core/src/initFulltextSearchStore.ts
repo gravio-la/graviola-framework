@@ -26,6 +26,18 @@ import type { JSONSchema7 } from "json-schema";
 
 import type { FullTextSearchAdapter, TextIndexQuery } from "./engine";
 import {
+  FULLTEXT_SCHEMA_MISMATCH_CODES,
+  FullTextEngineError,
+  IndexSchemaMismatchError,
+} from "./engine";
+import { createLiveSettingsCache, type LiveSettings } from "./live-settings";
+import {
+  assertFiltersFilterable,
+  probeFacetFields,
+  probeSearchFields,
+  probeSortFields,
+} from "./probe-query";
+import {
   hitToJsonLd,
   mergeHydratedStub,
   type JsonLdEntity,
@@ -77,7 +89,7 @@ export type FulltextSearchStoreConfig<
   indexNameForType?: (typeName: string) => string;
   /** Global document id codec (default: base64url full IRI). */
   idCodec?: IndexIdCodec;
-  /** Per-type codec override (e.g. legacy hex ids for one index). */
+  /** Per-type codec override (e.g. path-suffix ids for one index). */
   idCodecForType?: (typeName: string) => IndexIdCodec | undefined;
   /** Type names whose indexes already exist — skip ensureIndex in prepareFulltextIndexes. */
   existingIndexTypes?: string[];
@@ -99,6 +111,19 @@ export type FulltextSearchStoreConfig<
     typeName: string,
     entities: Record<string, unknown>[],
   ) => Promise<Record<string, unknown>[]>;
+  /** Optional rewrite of filters to match live index capabilities (app-supplied). */
+  adaptFiltersForLiveIndex?: (
+    filters: FacetFilter[] | undefined,
+    live: LiveSettings,
+    ctx: { indexUid: string; warn: (message: string) => void },
+  ) => FacetFilter[] | undefined;
+  /** Override default {@link IndexSchemaMismatchError} hint text. */
+  indexSchemaMismatchHint?: string;
+  /** Optional IRI resolution before {@link INDEX_DOC_IRI} / id codec (app-supplied). */
+  resolveEntityIriFromHit?: (
+    hit: { id: string; document: Record<string, unknown> },
+    ctx: { typeName: string; indexUid: string },
+  ) => string | undefined;
 };
 
 export type FulltextSearchStore<R extends SchemaRegistry = SchemaRegistry> =
@@ -207,6 +232,87 @@ export function initFulltextSearchStore<R extends SchemaRegistry>(
     return config.enrichEntityForIndex(typeName, entity);
   }
 
+  const liveSettingsCache = createLiveSettingsCache(config.adapter);
+  const droppedFieldWarnings = new Set<string>();
+  const filterAdaptWarnings = new Set<string>();
+
+  function warnDroppedField(indexUid: string, field: string) {
+    const key = `${indexUid}\0${field}`;
+    if (droppedFieldWarnings.has(key)) return;
+    droppedFieldWarnings.add(key);
+    console.warn(
+      `fulltext: index "${indexUid}" does not search "${field}"; omitted from attributesToSearchOn`,
+    );
+  }
+
+  function warnDroppedSortField(indexUid: string, field: string) {
+    const key = `${indexUid}\0sort\0${field}`;
+    if (droppedFieldWarnings.has(key)) return;
+    droppedFieldWarnings.add(key);
+    console.warn(
+      `fulltext: index "${indexUid}" does not sort on "${field}"; omitted from sort`,
+    );
+  }
+
+  function adaptFiltersForLive(
+    filters: FacetFilter[] | undefined,
+    live: LiveSettings,
+    indexUid: string,
+  ): FacetFilter[] | undefined {
+    const warn = (message: string) => {
+      const key = `${indexUid}\0${message}`;
+      if (filterAdaptWarnings.has(key)) return;
+      filterAdaptWarnings.add(key);
+      console.warn(message);
+    };
+    const adapted = config.adaptFiltersForLiveIndex
+      ? config.adaptFiltersForLiveIndex(filters, live, { indexUid, warn })
+      : filters;
+    assertFiltersFilterable(adapted, live, indexUid, {
+      hint: config.indexSchemaMismatchHint,
+    });
+    return adapted?.length ? adapted : undefined;
+  }
+
+  async function adapterSearchWithRetry(
+    indexUid: string,
+    buildQuery: (live: LiveSettings) => TextIndexQuery,
+  ): Promise<Awaited<ReturnType<FullTextSearchAdapter["search"]>>> {
+    const runOnce = async () => {
+      const live = await liveSettingsCache.get(indexUid);
+      const query = buildQuery(live);
+      return config.adapter.search(indexUid, query);
+    };
+
+    try {
+      return await runOnce();
+    } catch (err) {
+      if (
+        err instanceof FullTextEngineError &&
+        err.code &&
+        FULLTEXT_SCHEMA_MISMATCH_CODES.has(err.code)
+      ) {
+        liveSettingsCache.invalidate(indexUid);
+        try {
+          return await runOnce();
+        } catch (retryErr) {
+          if (
+            retryErr instanceof FullTextEngineError &&
+            retryErr.code &&
+            FULLTEXT_SCHEMA_MISMATCH_CODES.has(retryErr.code)
+          ) {
+            throw new IndexSchemaMismatchError({
+              indexUid,
+              message: retryErr.message,
+            });
+          }
+          throw retryErr;
+        }
+      }
+      throw err;
+    }
+  }
+
   async function runIndexSearch(
     typeName: string,
     query: TextIndexQuery,
@@ -215,7 +321,7 @@ export function initFulltextSearchStore<R extends SchemaRegistry>(
     if (!typeRouting?.searchable) {
       throw new Error(`Type "${typeName}" is not full-text searchable`);
     }
-    return config.adapter.search(typeRouting.indexUid, query);
+    return adapterSearchWithRetry(typeRouting.indexUid, () => query);
   }
 
   async function hydrateDocuments<T extends JsonLdEntity>(
@@ -285,18 +391,19 @@ export function initFulltextSearchStore<R extends SchemaRegistry>(
       const limit = options.limit ?? 20;
       const offset = Math.max(0, options.offset ?? 0);
 
-      let attributesToSearchOn: string[] | undefined;
+      let desiredSearchFields: string[] | undefined;
+      const callerRequestedFields = Boolean(options.fields?.length);
       if (options.fields?.length) {
-        attributesToSearchOn = options.fields
+        desiredSearchFields = options.fields
           .map((f) => resolveIndexField(routing, typeName, f))
           .filter((f): f is string => Boolean(f));
-        if (attributesToSearchOn.length === 0) {
+        if (desiredSearchFields.length === 0) {
           throw new Error(
             `None of the requested search fields are declared in the search facet sidecar: ${options.fields.join(", ")}`,
           );
         }
       } else if (typeRouting.fulltextIndexFields.length > 0) {
-        attributesToSearchOn = typeRouting.fulltextIndexFields;
+        desiredSearchFields = typeRouting.fulltextIndexFields;
       }
 
       const { facetIndexFields, propertyFields } = resolveFacetIndexFields(
@@ -305,19 +412,73 @@ export function initFulltextSearchStore<R extends SchemaRegistry>(
         options.facets,
       );
 
-      const response = await runIndexSearch(typeName, {
-        q: text,
-        limit,
-        offset,
-        attributesToSearchOn,
-        filters: rewriteFiltersForIndex(typeRouting, options.filters),
-        facets: facetIndexFields.length > 0 ? facetIndexFields : undefined,
+      const indexUid = typeRouting.indexUid;
+      const rewrittenFilters = rewriteFiltersForIndex(
+        typeRouting,
+        options.filters,
+      );
+
+      let droppedSearchFields: string[] = [];
+      let unavailableFacets: string[] = [];
+
+      const desiredSort = options.sort?.length
+        ? options.sort.map((entry) => ({
+            field:
+              resolveIndexField(routing, typeName, entry.field) ?? entry.field,
+            desc: entry.desc,
+          }))
+        : undefined;
+
+      const response = await adapterSearchWithRetry(indexUid, (live) => {
+        const probed = probeSearchFields(desiredSearchFields, live, {
+          indexUid,
+          warnDropped: (field) => warnDroppedField(indexUid, field),
+          callerRequestedFields,
+        });
+        droppedSearchFields = probed.droppedSearchFields;
+
+        const probedFilters = adaptFiltersForLive(
+          rewrittenFilters,
+          live,
+          indexUid,
+        );
+
+        const probedFacets = probeFacetFields(
+          facetIndexFields,
+          propertyFields,
+          live,
+        );
+        unavailableFacets = probedFacets.unavailableFacets;
+
+        const probedSort = probeSortFields(desiredSort, live, {
+          warnDropped: (field) => warnDroppedSortField(indexUid, field),
+        });
+
+        return {
+          q: text,
+          limit,
+          offset,
+          attributesToSearchOn: probed.attributesToSearchOn,
+          filters: probedFilters,
+          facets:
+            probedFacets.facetIndexFields.length > 0
+              ? probedFacets.facetIndexFields
+              : undefined,
+          sort: probedSort.sort,
+        };
       });
 
       let documents = response.hits.map((hit) =>
         hitToJsonLd(hit, typeRouting, {
           typeIri: typeIri(typeName),
           decodeId: resolveIdCodec(typeName).decodeDocIdToIri,
+          resolveEntityIriFromHit: config.resolveEntityIriFromHit
+            ? (h) =>
+                config.resolveEntityIriFromHit!(h, {
+                  typeName,
+                  indexUid: typeRouting.indexUid,
+                })
+            : undefined,
         }),
       ) as T[];
 
@@ -335,6 +496,10 @@ export function initFulltextSearchStore<R extends SchemaRegistry>(
           response.facetDistribution,
         ),
         facetStats: remapFacetStats(typeRouting, response.facetStats),
+        droppedSearchFields:
+          droppedSearchFields.length > 0 ? droppedSearchFields : undefined,
+        unavailableFacets:
+          unavailableFacets.length > 0 ? unavailableFacets : undefined,
       };
     },
 
@@ -553,14 +718,67 @@ export function initFulltextSearchStore<R extends SchemaRegistry>(
         return primary.facet(typeName, options);
       }
 
-      const response = await runIndexSearch(typeName, {
-        q: "",
-        limit: 0,
-        facets: facetIndexFields,
-        filters: rewriteFiltersForIndex(typeRouting, options.filters),
+      const indexUid = typeRouting.indexUid;
+      const rewrittenFilters = rewriteFiltersForIndex(
+        typeRouting,
+        options.filters,
+      );
+
+      let unavailableFacets: string[] = [];
+      let probedPropertyFields = propertyFields;
+
+      const response = await adapterSearchWithRetry(indexUid, (live) => {
+        const probedFilters = adaptFiltersForLive(
+          rewrittenFilters,
+          live,
+          indexUid,
+        );
+        const probed = probeFacetFields(facetIndexFields, propertyFields, live);
+        unavailableFacets = probed.unavailableFacets;
+        probedPropertyFields = probed.propertyFields;
+
+        if (probed.facetIndexFields.length === 0) {
+          return {
+            q: "",
+            limit: 0,
+            filters: probedFilters,
+          };
+        }
+
+        return {
+          q: "",
+          limit: 0,
+          facets: probed.facetIndexFields,
+          filters: probedFilters,
+        };
       });
 
-      return facetResultFromSearch(typeRouting, response, propertyFields);
+      if (
+        facetIndexFields.length > 0 &&
+        unavailableFacets.length === facetIndexFields.length
+      ) {
+        if (typeof primary.facet === "function") {
+          const primaryResult = await primary.facet(typeName, options);
+          return {
+            ...primaryResult,
+            unavailableFacets,
+          };
+        }
+        return {
+          matched: 0,
+          facets: {},
+          unavailableFacets,
+        };
+      }
+
+      const result = facetResultFromSearch(
+        typeRouting,
+        response,
+        probedPropertyFields,
+      );
+      return unavailableFacets.length > 0
+        ? { ...result, unavailableFacets }
+        : result;
     },
 
     async importOne<T extends keyof R & string>(

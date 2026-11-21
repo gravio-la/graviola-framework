@@ -434,6 +434,7 @@ export const createRESTClientStoreClient = <
         facets: options?.facets,
         hydrate: options?.hydrate,
         fields: options?.fields,
+        sort: options?.sort,
       });
       const json: unknown = await res.json();
       if (json && typeof json === "object" && "documents" in json) {

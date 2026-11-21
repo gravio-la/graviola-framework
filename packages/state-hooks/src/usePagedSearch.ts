@@ -6,6 +6,7 @@ import type {
   DocumentSearches,
   FacetFilter,
   SchemaRegistry,
+  SearchDocumentsSort,
 } from "@graviola/store-core";
 import {
   buildResultListController,
@@ -23,6 +24,7 @@ export type UsePagedSearchParams<
   limit: number;
   filters?: FacetFilter[];
   facets?: string[];
+  sort?: SearchDocumentsSort[];
   hydrate?: boolean;
   enabled?: boolean;
   queryKeyPrefix?: string;
@@ -41,6 +43,7 @@ export function usePagedSearch<
     limit,
     filters,
     facets,
+    sort,
     hydrate = false,
     enabled = true,
     queryKeyPrefix = "fulltext-search-paged",
@@ -56,9 +59,10 @@ export function usePagedSearch<
       offset,
       filters,
       facets,
+      sort,
       hydrate,
     }),
-    [searchQuery, limit, offset, filters, facets, hydrate],
+    [searchQuery, limit, offset, filters, facets, sort, hydrate],
   );
 
   const query = useQuery({
@@ -70,6 +74,7 @@ export function usePagedSearch<
         hydrate: searchParams.hydrate,
         filters: searchParams.filters,
         facets: searchParams.facets,
+        sort: searchParams.sort,
       }),
     enabled: enabled && Boolean(store),
     placeholderData: (prev) => prev,

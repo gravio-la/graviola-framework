@@ -16,6 +16,8 @@ export type FacetResult = {
   facetStats?: Record<string, FacetStats>;
   /** True when counts are merged / capped and may double-count */
   approximate?: boolean;
+  /** Facet property names the live index cannot filter on. */
+  unavailableFacets?: string[];
 };
 
 export interface Aggregates<R extends SchemaRegistry> {

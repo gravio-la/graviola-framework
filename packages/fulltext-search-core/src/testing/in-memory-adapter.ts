@@ -5,7 +5,11 @@ import type {
   TextIndexQuery,
   TextIndexResult,
 } from "../engine";
-import { isFacetFilterIn, isFacetFilterRange } from "../engine";
+import {
+  FullTextEngineError,
+  isFacetFilterIn,
+  isFacetFilterRange,
+} from "../engine";
 
 type StoredDoc = IndexDocument;
 
@@ -64,14 +68,116 @@ function computeFacets(
   return distribution;
 }
 
+export type InMemoryTextIndexAdapterOptions = {
+  /** Reject unknown searchable/filter/facet attributes like Meilisearch. */
+  strictSchema?: boolean;
+};
+
+function isWildcard(attrs: string[]): boolean {
+  return attrs.length === 0 || (attrs.length === 1 && attrs[0] === "*");
+}
+
+function assertQueryAgainstSettings(
+  uid: string,
+  q: TextIndexQuery,
+  settings: IndexSettings,
+): void {
+  const searchable = settings.searchableAttributes;
+  if (q.attributesToSearchOn?.length && !isWildcard(searchable)) {
+    for (const f of q.attributesToSearchOn) {
+      if (!searchable.includes(f)) {
+        throw new FullTextEngineError(
+          `invalid_search_attributes_to_search_on: ${f}`,
+          {
+            status: 400,
+            code: "invalid_search_attributes_to_search_on",
+            indexUid: uid,
+          },
+        );
+      }
+    }
+  }
+
+  const filterable = settings.filterableAttributes;
+  if (q.filters?.length && !isWildcard(filterable)) {
+    for (const f of q.filters) {
+      if (!filterable.includes(f.field)) {
+        throw new FullTextEngineError(`invalid_search_filter: ${f.field}`, {
+          status: 400,
+          code: "invalid_search_filter",
+          indexUid: uid,
+        });
+      }
+    }
+  }
+
+  if (q.facets?.length && !isWildcard(filterable)) {
+    for (const f of q.facets) {
+      if (!filterable.includes(f)) {
+        throw new FullTextEngineError(`invalid_search_facets: ${f}`, {
+          status: 400,
+          code: "invalid_search_facets",
+          indexUid: uid,
+        });
+      }
+    }
+  }
+
+  // Empty sortableAttributes means nothing is sortable (unlike searchable/filterable).
+  const sortable = settings.sortableAttributes ?? [];
+  if (q.sort?.length) {
+    const allowAll = sortable.length === 1 && sortable[0] === "*";
+    if (!allowAll) {
+      for (const clause of q.sort) {
+        const field = clause.split(":")[0] ?? clause;
+        if (!sortable.includes(field)) {
+          throw new FullTextEngineError(`invalid_search_sort: ${field}`, {
+            status: 400,
+            code: "invalid_search_sort",
+            indexUid: uid,
+          });
+        }
+      }
+    }
+  }
+}
+
+function compareSortValue(a: unknown, b: unknown): number {
+  if (a == null && b == null) return 0;
+  if (a == null) return 1;
+  if (b == null) return -1;
+  if (typeof a === "number" && typeof b === "number") return a - b;
+  return String(a).localeCompare(String(b));
+}
+
+function applySort(docs: StoredDoc[], sort: string[] | undefined): StoredDoc[] {
+  if (!sort?.length) return docs;
+  const clauses = sort.map((clause) => {
+    const [field, dir] = clause.split(":");
+    return { field: field ?? clause, desc: dir === "desc" };
+  });
+  return [...docs].sort((left, right) => {
+    for (const { field, desc } of clauses) {
+      const cmp = compareSortValue(left[field], right[field]);
+      if (cmp !== 0) return desc ? -cmp : cmp;
+    }
+    return 0;
+  });
+}
+
 /**
  * Minimal in-memory {@link FullTextSearchAdapter} for unit tests and as a reference
  * for future client-only engines (Lunr / MiniSearch).
  */
-export function createInMemoryTextIndexAdapter(): FullTextSearchAdapter & {
+export function createInMemoryTextIndexAdapter(
+  options: InMemoryTextIndexAdapterOptions = {},
+): FullTextSearchAdapter & {
   /** Test helper: read all docs in an index. */
   getIndex(uid: string): StoredDoc[];
+  /** Test helper: replace live settings for an index. */
+  setIndexSettings(uid: string, settings: IndexSettings): void;
 } {
+  const strictSchema = options.strictSchema ?? false;
   const indexes = new Map<
     string,
     { settings: IndexSettings; docs: StoredDoc[] }
@@ -115,8 +221,15 @@ export function createInMemoryTextIndexAdapter(): FullTextSearchAdapter & {
         return { hits: [], estimatedTotalHits: 0, query: q.q };
       }
 
-      const matched = entry.docs.filter(
-        (doc) => docMatchesQuery(doc, q) && docMatchesFilters(doc, q.filters),
+      if (strictSchema) {
+        assertQueryAgainstSettings(uid, q, entry.settings);
+      }
+
+      const matched = applySort(
+        entry.docs.filter(
+          (doc) => docMatchesQuery(doc, q) && docMatchesFilters(doc, q.filters),
+        ),
+        q.sort,
       );
 
       const offset = Math.max(0, q.offset ?? 0);
@@ -164,6 +277,14 @@ export function createInMemoryTextIndexAdapter(): FullTextSearchAdapter & {
 
     getIndex(uid) {
       return [...(indexes.get(uid)?.docs ?? [])];
+    },
+
+    setIndexSettings(uid, settings) {
+      const entry = indexes.get(uid);
+      if (!entry) {
+        throw new Error(`Index "${uid}" does not exist`);
+      }
+      entry.settings = settings;
     },
   };
 }

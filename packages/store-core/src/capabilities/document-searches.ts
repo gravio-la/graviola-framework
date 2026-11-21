@@ -35,6 +35,13 @@ export type FacetStats = {
   max: number;
 };
 
+/** Sort clause for `searchDocuments` — engines map `field` to index attribute names. */
+export type SearchDocumentsSort = {
+  field: string;
+  /** Default ascending when omitted / false. */
+  desc?: boolean;
+};
+
 export type SearchDocumentsOptions = {
   limit?: number;
   offset?: number;
@@ -47,6 +54,8 @@ export type SearchDocumentsOptions = {
    */
   hydrate?: boolean;
   fields?: string[];
+  /** Optional multi-field sort (engine form after mapping, e.g. Meili `field:asc|desc`). */
+  sort?: SearchDocumentsSort[];
 };
 
 /** JSON-LD document returned from filtered full-text search. */
@@ -62,6 +71,10 @@ export type SearchDocumentsResult<T extends SearchDocument = SearchDocument> = {
   query: string;
   facetDistribution?: Record<string, Record<string, number>>;
   facetStats?: Record<string, FacetStats>;
+  /** Schema property names omitted from attributesToSearchOn (live index lacks them). */
+  droppedSearchFields?: string[];
+  /** Facet panels the live index cannot filter on. */
+  unavailableFacets?: string[];
 };
 
 export interface DocumentSearches<R extends SchemaRegistry> {

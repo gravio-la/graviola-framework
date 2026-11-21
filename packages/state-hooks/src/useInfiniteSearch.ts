@@ -7,6 +7,7 @@ import type {
   FacetFilter,
   SchemaRegistry,
   SearchDocumentsResult,
+  SearchDocumentsSort,
 } from "@graviola/store-core";
 import type { InfiniteResultListController } from "./resultListController";
 
@@ -20,6 +21,7 @@ export type UseInfiniteSearchParams<
   limit: number;
   filters?: FacetFilter[];
   facets?: string[];
+  sort?: SearchDocumentsSort[];
   hydrate?: boolean;
   enabled?: boolean;
   queryKeyPrefix?: string;
@@ -36,6 +38,7 @@ export function useInfiniteSearch<
     limit,
     filters,
     facets,
+    sort,
     hydrate = false,
     enabled = true,
     queryKeyPrefix = "fulltext-search-infinite",
@@ -44,7 +47,7 @@ export function useInfiniteSearch<
   const query = useInfiniteQuery({
     queryKey: [
       queryKeyPrefix,
-      { query: searchQuery, limit, filters, facets, hydrate },
+      { query: searchQuery, limit, filters, facets, sort, hydrate },
       typeName,
     ],
     queryFn: ({ pageParam }) =>
@@ -54,6 +57,7 @@ export function useInfiniteSearch<
         hydrate,
         filters,
         facets,
+        sort,
       }),
     initialPageParam: 0,
     getNextPageParam: (

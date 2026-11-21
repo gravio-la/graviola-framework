@@ -11,6 +11,8 @@ export type ImportStartMessage = {
   databaseId: string;
   mode: ImportMode;
   mappingId?: string;
+  /** When set, load app-config for this schema version (e.g. a project pin). */
+  modelVersion?: string;
 };
 
 export type ImportReviewMessage = {

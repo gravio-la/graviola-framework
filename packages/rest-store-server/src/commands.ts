@@ -64,6 +64,7 @@ export type StoreCommand<R extends SchemaRegistry = SchemaRegistry> =
       facets?: string[];
       hydrate?: boolean;
       fields?: string[];
+      sort?: { field: string; desc?: boolean }[];
     }
   | {
       kind: "facet";
@@ -451,6 +452,22 @@ export const enrichCommandFromBody = async (
       const facets = Array.isArray(o.facets)
         ? o.facets.filter((f): f is string => typeof f === "string")
         : undefined;
+      const sort = Array.isArray(o.sort)
+        ? o.sort
+            .filter(
+              (s): s is { field: string; desc?: boolean } =>
+                s != null &&
+                typeof s === "object" &&
+                typeof (s as { field?: unknown }).field === "string",
+            )
+            .map((s) => ({
+              field: (s as { field: string }).field,
+              desc:
+                typeof (s as { desc?: unknown }).desc === "boolean"
+                  ? (s as { desc: boolean }).desc
+                  : undefined,
+            }))
+        : undefined;
       return {
         ...cmd,
         text: typeof o.text === "string" ? o.text : "",
@@ -460,6 +477,7 @@ export const enrichCommandFromBody = async (
         facets,
         hydrate: typeof o.hydrate === "boolean" ? o.hydrate : undefined,
         fields,
+        sort,
       };
     }
     if (cmd.kind === "facet") {

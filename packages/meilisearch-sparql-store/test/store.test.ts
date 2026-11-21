@@ -60,9 +60,11 @@ describe("initMeilisearchSparqlStore", () => {
       primaryStore: primary,
       meilisearch: {
         baseUrl: "http://localhost:7700",
-        index: "Manifestation",
+        index: "file-metadata",
       },
-      legacySingleIndex: "file-metadata",
+      indexNameForType: (typeName) =>
+        typeName === "Manifestation" ? "file-metadata" : typeName,
+      existingIndexTypes: ["Manifestation"],
       schema: {},
       primaryFields: { Manifestation: { label: "fileName" } },
       searchFacetSchema: sidecar,

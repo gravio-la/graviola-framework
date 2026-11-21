@@ -35,6 +35,7 @@ export type {
   SearchDocument,
   SearchDocumentsOptions,
   SearchDocumentsResult,
+  SearchDocumentsSort,
 } from "./capabilities/document-searches";
 export {
   isFacetFilterRange,

@@ -12,6 +12,7 @@ import {
   enrichCommandFromBody,
   encodeCommandResult,
   problemResponse,
+  jsonResponse,
   type CommandContext,
   type CommandInterceptor,
   type ExtensionRoute,
@@ -196,6 +197,7 @@ const executeOnStore = async <R extends SchemaRegistry>(
         facets: cmd.facets,
         hydrate: cmd.hydrate,
         fields: cmd.fields,
+        sort: cmd.sort,
       });
     case "facet":
       return (store.facet as Function)(cmd.typeName, {
@@ -467,6 +469,35 @@ export const createStoreRestHandler = <R extends SchemaRegistry>(
           400,
           e.code ?? "invalid_request",
           e.message ?? "Invalid request",
+        );
+      }
+      if (
+        err &&
+        typeof err === "object" &&
+        (err as { name?: string }).name === "IndexSchemaMismatchError"
+      ) {
+        const mismatch = err as {
+          indexUid: string;
+          missingFilterable: string[];
+          missingSearchable: string[];
+          hint: string;
+          message: string;
+        };
+        return jsonResponse(
+          {
+            type: "https://graviola.dev/errors/index_schema_mismatch",
+            title: "Search index schema mismatch",
+            status: 409,
+            code: "index_schema_mismatch",
+            error: "index_schema_mismatch",
+            indexUid: mismatch.indexUid,
+            missingFilterable: mismatch.missingFilterable,
+            missingSearchable: mismatch.missingSearchable,
+            hint: mismatch.hint,
+            detail: mismatch.message,
+          },
+          409,
+          { "Content-Type": "application/problem+json" },
         );
       }
       throw err;

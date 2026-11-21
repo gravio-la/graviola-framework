@@ -1,6 +1,6 @@
 # @graviola/fulltext-search-core
 
-Engine-agnostic full-text search composite for Graviola stores.
+Engine-agnostic full-text search composite for Graviola stores. Routing, facets, and search fields come from any JSON Schema plus a search-facet sidecar (`@graviola/search-facet-schema`). Deployment-specific quirks (old index settings, id encoding, filter remaps) belong in the **app** via `adaptFiltersForLiveIndex`, `indexSchemaMismatchHint`, and `idCodec` / `idCodecForType` — not in this package.
 
 ## `FullTextSearchAdapter`
 
@@ -8,7 +8,7 @@ Single seam implemented by Meilisearch today; Elasticsearch, Solr, and client-on
 
 ## Key exports
 
-- `initFulltextSearchStore({ adapter, primaryStore, searchFacetSchema, schema, primaryFields, enrichEntityForIndex? })`
+- `initFulltextSearchStore({ adapter, primaryStore, searchFacetSchema, schema, primaryFields, adaptFiltersForLiveIndex?, indexSchemaMismatchHint?, enrichEntityForIndex? })`
 - `prepareFulltextIndexes` / `pushFulltextIndexes` — bootstrap / augment indexes from sidecar
 - `diffFulltextIndexes` / `describeFulltextIndexes` — desired vs live settings + doc counts
 - `clearFulltextIndexes` / `resetFulltextIndexes` — empty docs or delete indexes
