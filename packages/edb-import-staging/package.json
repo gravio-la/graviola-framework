@@ -22,6 +22,7 @@
     "dev": "tsup --watch",
     "lint": "tsc --noEmit",
     "test": "bun test src",
+    "release": "bun publish --access public",
     "demo:staging": "bun run src/demo/runStagingDemo.ts"
   },
   "dependencies": {

@@ -28,7 +28,8 @@
     "build": "tsup",
     "dev": "tsup --watch --no-dts",
     "lint": "tsc --noEmit",
-    "test": "bun test src"
+    "test": "bun test src",
+    "release": "bun publish --access public"
   },
   "dependencies": {
     "@graviola/data-acquisition": "workspace:*",

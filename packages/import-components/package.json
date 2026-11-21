@@ -20,7 +20,8 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "release": "bun publish --access public"
   },
   "peerDependencies": {
     "@graviola/edb-import-staging": "workspace:^",

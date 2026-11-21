@@ -25,6 +25,7 @@
     "dev": "tsup --watch",
     "lint": "tsc --noEmit",
     "test": "bun test src",
+    "release": "bun publish --access public",
     "db:dump": "bun run src/cli.ts dump",
     "db:load": "bun run src/cli.ts load",
     "db:clear": "bun run src/cli.ts clear"

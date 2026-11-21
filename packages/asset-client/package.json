@@ -24,6 +24,7 @@
     "test": "bun test",
     "test:watch": "bun test --watch",
     "lint": "eslint src/**/*.ts",
+    "release": "bun publish --access public",
     "lint-fix": "eslint --fix src/**/*.ts"
   },
   "dependencies": {

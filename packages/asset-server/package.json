@@ -22,7 +22,8 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "lint": "tsc --noEmit",
-    "test": "bun test src"
+    "test": "bun test src",
+    "release": "bun publish --access public"
   },
   "dependencies": {
     "hono": "^4.7.0",

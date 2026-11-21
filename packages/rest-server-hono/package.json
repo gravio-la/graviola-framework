@@ -25,6 +25,7 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "lint": "tsc --noEmit",
+    "release": "bun publish --access public",
     "test": "bun test src"
   },
   "dependencies": {
