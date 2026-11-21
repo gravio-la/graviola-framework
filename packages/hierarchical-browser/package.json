@@ -1,0 +1,63 @@
+{
+  "name": "@graviola/hierarchical-browser",
+  "version": "0.1.0",
+  "description": "Domain-agnostic hierarchical browse primitives (lazy tree, layout, children listing source)",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint src/**/*.{ts,tsx}",
+    "lint-fix": "eslint --fix src/**/*.{ts,tsx}",
+    "test": "bun test",
+    "depcheck": "depcheck",
+    "release": "bun publish --access public"
+  },
+  "dependencies": {
+    "lodash-es": "catalog:"
+  },
+  "peerDependencies": {
+    "@mui/material": "catalog:mui",
+    "@mui/x-tree-view": "catalog:mui",
+    "@tanstack/react-query": "^5",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-router-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@graviola/edb-tsconfig": "workspace:*",
+    "@graviola/edb-tsup-config": "workspace:*",
+    "@mui/material": "catalog:mui",
+    "@mui/x-tree-view": "catalog:mui",
+    "@tanstack/react-query": "^5",
+    "@types/bun": "latest",
+    "@types/react": "catalog:",
+    "eslint-config-edb": "workspace:*",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-router-dom": "catalog:",
+    "tsup": "^8.0.0",
+    "typescript": "^5.8.2"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "eslint-config-edb"
+    ]
+  }
+}
