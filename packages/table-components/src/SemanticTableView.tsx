@@ -118,6 +118,7 @@ export function SemanticTableView({
   enableRowSelection = true,
   density = "comfortable",
   width = "full-width",
+  onRowClick,
 }: SemanticTableViewProps) {
   const {
     onShowEntry,
@@ -557,6 +558,12 @@ export function SemanticTableView({
     enableColumnResizing: true,
     enableColumnDragging: false,
     onColumnFiltersChange: handleColumnFilterChange,
+    muiTableBodyRowProps: onRowClick
+      ? ({ row }) => ({
+          onClick: () => onRowClick(row.original),
+          sx: { cursor: "pointer" },
+        })
+      : undefined,
     state: {
       pagination,
       columnOrder,

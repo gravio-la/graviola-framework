@@ -133,6 +133,8 @@ export type SemanticTableViewProps = {
   density?: SemanticTableDensity;
   /** Horizontal sizing. Default `full-width`. */
   width?: SemanticTableWidth;
+  /** Optional row click handler; receives the row original (document) data. */
+  onRowClick?: (row: any) => void;
 };
 
 export type SemanticTableDataMode = "sparql-select" | "jsonld";
