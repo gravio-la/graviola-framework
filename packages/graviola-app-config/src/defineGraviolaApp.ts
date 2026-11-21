@@ -108,6 +108,19 @@ export function defineGraviolaApp(input: DefineGraviolaAppInput): SchemaConfig {
     detailUiSchemata = explicitDetailUiSchemata;
   }
 
+  if (config.orderBy && Object.keys(config.orderBy).length > 0) {
+    const next: NonNullable<SchemaConfig["detailUiSchemata"]> = {
+      ...(detailUiSchemata ?? {}),
+    };
+    for (const typeName of Object.keys(config.orderBy)) {
+      if (next[typeName]) continue;
+      next[typeName] = detailUiSchemaForDefinition(config.schema, typeName, {
+        orderBy: orderByForType(typeName),
+      });
+    }
+    detailUiSchemata = next;
+  }
+
   let uischemata: SchemaConfig["uischemata"];
 
   if (

@@ -393,6 +393,58 @@ describe("schemaConfigFromSidecars", () => {
     expect(schritteControl?.options?.showSortButtons).toBe(true);
   });
 
+  test("defineGraviolaApp generates detail uischema with options.orderBy for orderBy-only classes", () => {
+    const orderedSchema = {
+      type: "object",
+      definitions: {
+        Zubereitungsgruppe: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+            schritte: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  reihenfolge: { type: "integer" },
+                  text: { type: "string" },
+                },
+              },
+            },
+          },
+        },
+      },
+    } as JSONSchema7;
+
+    const config = defineGraviolaApp({
+      schemaName: "kochbuch",
+      label: "Kochbuch",
+      description: "",
+      version: "0.5.0",
+      storageKey: "kochbuch",
+      baseIRI: "http://example.org/",
+      entityBaseIRI: "http://example.org/",
+      schema: orderedSchema,
+      primaryFields: {},
+      typeNameLabelMap: {},
+      typeNameUiSchemaOptionsMap: {},
+      orderBy: {
+        Zubereitungsgruppe: {
+          schritte: { field: "reihenfolge", direction: "asc" },
+        },
+      },
+    });
+
+    const groupUi = config.detailUiSchemata?.Zubereitungsgruppe as Layout;
+    const schritteControl = groupUi.elements.find(
+      (e) => (e as ControlElement).scope === "#/properties/schritte",
+    ) as ControlElement;
+    expect(schritteControl?.options?.orderBy).toEqual({
+      field: "reihenfolge",
+      direction: "asc",
+    });
+  });
+
   test("attaches validated searchFacetSchema from sidecar", () => {
     const config = schemaConfigFromSidecars({
       schema,
