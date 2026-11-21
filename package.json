@@ -63,6 +63,7 @@
       "apps/json-schema-cli",
       "apps/storybook",
       "apps/testapp",
+      "apps/microvm-configurator",
       "platform/*"
     ],
     "catalog": {
@@ -103,24 +104,24 @@
     }
   },
   "devDependencies": {
+    "@changesets/cli": "^2.27.12",
     "@graviola/edb-secondary-sources": "workspace:*",
     "@graviola/rest-store-client": "workspace:*",
-    "yaml": "^2.7.0",
-    "@changesets/cli": "^2.27.12",
     "@turbo/gen": "^2.4.0",
     "depcheck": "^1.4.7",
     "dependency-cruiser": "^18.4.0",
-    "jscpd": "^4.0.5",
-    "knip": "^5.62.0",
     "eslint": "^8.57.1",
     "husky": "^8.0.0",
     "hygen": "^6.2.11",
+    "jscpd": "^4.0.5",
+    "knip": "^5.62.0",
     "lint-staged": "^15.4.3",
     "prettier": "^3.4.2",
     "syncpack": "^13.0.2",
     "tsup": "^8.3.6",
     "turbo": "^2.4.0",
-    "typescript": "5.8.2"
+    "typescript": "5.8.2",
+    "yaml": "^2.7.0"
   },
   "overrides": {
     "i18next": ">=25.4.0"

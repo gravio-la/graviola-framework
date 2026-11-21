@@ -75,7 +75,7 @@ graviola-framework/
 
 > **Note:** `apps/edb-cli/` is inactive (no source). Satellite sample apps and domain schemas live in separate GitLab repositories (nested checkouts under `apps/*`, gitignored). The canonical example in this repo is `apps/testapp`.
 >
-> **Note:** `packages/indexeddb-store-provider/` and `packages/indexeddb-dataset/` are inactive (no source); do not add them as dependencies.
+> **Note:** `packages/indexeddb-store-provider/` (`@graviola/indexeddb-store-provider`) and `packages/indexeddb-dataset/` are **active but experimental**: IndexedDB hexastore + Comunica SPARQL, plus memory-only `InMemoryStoreProvider` / `InMemoryTraverseStoreProvider` (N3 store). Used by `apps/microvm-configurator`.
 
 ---
 
@@ -611,7 +611,7 @@ The shell also exposes a `pages-preview` alias (calls `./preview-pages.sh`) for 
 
 - **Domain-specific SLUB applications and schemas.** Maintained in a separate repository; not part of this core monorepo.
 - **`packages/ideas/`.** Experimental / incubating; APIs are unstable.
-- **`packages/indexeddb-store-provider/`, `packages/indexeddb-dataset/`, `apps/edb-cli/`.** Empty / inactive directories at present. Extracted sample apps under `apps/*` are gitignored nested checkouts.
+- **`apps/edb-cli/`.** Empty / inactive directory at present. Extracted sample apps under `apps/*` are gitignored nested checkouts.
 - **Trajectory features still incomplete (lenses, signed states, query-scoped aggregates).** See [conceptual docs trajectory chapter](https://gravio-la.github.io/graviola-concept-documentation/trajectory.html). Calculated fields have a working Layer 2 stack (`formula-dependency`, `formula-runtime`, `calc-engine`, `calc-fixtures`) — do not reintroduce domain demos into those packages.
 
 The **canonical reference implementation** is `apps/testapp` — a small Vite + React app with three example schemas (`item-schema`, `metal-schema`, `course-schema`) demonstrating `GenericForm`, `SemanticTable`, `DetailRenderer`, and `LocalOxigraphStoreProvider`.
