@@ -14,7 +14,7 @@ import {
   type GenerateDefaultDetailUISchemaOptions,
 } from "@graviola/edb-detail-renderer-core";
 import { orderValue, sortIndexedByOrderField } from "@graviola/edb-core-utils";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import type { JSONSchema7 } from "json-schema";
 
 import { useDetailRendererContext } from "../context";
@@ -116,14 +116,31 @@ function computeItemGenerateOptions(
   return Object.keys(out).length === 0 ? undefined : out;
 }
 
+function readInlineItemDisplayName(
+  item: Record<string, unknown>,
+): string | undefined {
+  for (const key of ["name", "title", "label"] as const) {
+    const value = item[key];
+    if (typeof value === "string" && value.trim().length > 0) {
+      return value.trim();
+    }
+  }
+  return undefined;
+}
+
+/** When the row heading shows `name`, omit redundant identity fields from the body. */
+const NAMED_INLINE_ROW_OMIT = ["name", "slug"] as const;
+
 function itemLabel(
   item: Record<string, unknown>,
   index: number,
   itemSchema: JSONSchema7,
 ): string {
-  const schemaTitle =
-    typeof itemSchema.title === "string" ? itemSchema.title : undefined;
-  return schemaTitle ?? `Item ${index + 1}`;
+  return (
+    readInlineItemDisplayName(item) ??
+    (typeof itemSchema.title === "string" ? itemSchema.title : undefined) ??
+    `Item ${index + 1}`
+  );
 }
 
 function OrderBadge({ value }: { value: unknown }) {
@@ -187,9 +204,13 @@ export function ArrayInlineObjectRenderer({
   const resolvedItemSchema = resolvePropertySchema(itemSchema, rootSchema);
 
   const isAnonymousItem = !isEntityLikeObjectSchema(resolvedItemSchema);
+  const virtualRootForCompact = itemVirtualRoot(resolvedItemSchema, rootSchema);
+  const compactLeafRow =
+    isAnonymousItem &&
+    isCompactLeafOnlyItemSchema(resolvedItemSchema, virtualRootForCompact);
   const presentOpts: DetailArrayInlineControlOptions | undefined =
     explicitInlineOpts ??
-    (isAnonymousItem
+    (compactLeafRow
       ? { compactItems: true, hidePropertyLabels: true }
       : undefined);
 
@@ -204,11 +225,13 @@ export function ArrayInlineObjectRenderer({
     isAnonymousItem &&
     isCompactLeafOnlyItemSchema(resolvedItemSchema, virtualRoot);
 
-  const itemGenOptsBase = computeItemGenerateOptions(
-    resolvedItemSchema,
-    presentOpts,
-    omitFromBody,
-  );
+  const itemGenOptsBaseForRow = (
+    rowOmit: string[],
+  ):
+    | Pick<GenerateDefaultDetailUISchemaOptions, "skipScope" | "scopeOverride">
+    | undefined =>
+    computeItemGenerateOptions(resolvedItemSchema, presentOpts, rowOmit);
+
   const classLevelOpts = classLevelInlineGenerateOptions(
     itemSchema,
     detailUiSchemata ?? config.uiSchemata,
@@ -219,18 +242,30 @@ export function ArrayInlineObjectRenderer({
       typeIRIToTypeName: ctx.typeIRIToTypeName ?? typeIRIToTypeNameFromCtx,
     },
   );
-  const presentationOpts =
-    leafOnlyInlineRow && itemGenOptsBase
-      ? { ...itemGenOptsBase, layoutType: "HorizontalLayout" as const }
-      : leafOnlyInlineRow
-        ? { layoutType: "HorizontalLayout" as const }
-        : itemGenOptsBase;
-  const mergedItemGen = mergeInlineItemGenerateOptions(
-    classLevelOpts,
-    presentationOpts,
-  );
-  const itemGenOpts =
-    Object.keys(mergedItemGen).length > 0 ? mergedItemGen : undefined;
+
+  const buildItemGenOpts = (
+    rowOmit: string[],
+  ):
+    | Partial<
+        Pick<
+          GenerateDefaultDetailUISchemaOptions,
+          "skipScope" | "scopeOverride" | "layoutType" | "orderBy"
+        >
+      >
+    | undefined => {
+    const itemGenOptsBase = itemGenOptsBaseForRow(rowOmit);
+    const presentationOpts =
+      leafOnlyInlineRow && itemGenOptsBase
+        ? { ...itemGenOptsBase, layoutType: "HorizontalLayout" as const }
+        : leafOnlyInlineRow
+          ? { layoutType: "HorizontalLayout" as const }
+          : itemGenOptsBase;
+    const mergedItemGen = mergeInlineItemGenerateOptions(
+      classLevelOpts,
+      presentationOpts,
+    );
+    return Object.keys(mergedItemGen).length > 0 ? mergedItemGen : undefined;
+  };
 
   const compact = Boolean(presentOpts?.compactItems);
   const rowLike = presentOpts?.itemLayout === "row";
@@ -240,6 +275,21 @@ export function ArrayInlineObjectRenderer({
 
   const rows = indexedItems.map(({ item, index }) => {
     if (item == null || typeof item !== "object") return null;
+
+    const itemData = item as Record<string, unknown>;
+    const displayName =
+      !compact && !leafOnlyInlineRow
+        ? readInlineItemDisplayName(itemData)
+        : undefined;
+    const rowOmitFromBody =
+      displayName != null
+        ? [
+            ...NAMED_INLINE_ROW_OMIT,
+            ...(showOrderBadge && orderSpec ? [orderSpec.field] : []),
+          ]
+        : omitFromBody;
+
+    const rowItemGenOpts = buildItemGenOpts(rowOmitFromBody);
 
     let body: React.ReactNode;
     if (optionsDetail && arrayScope && ctx.frame) {
@@ -259,7 +309,7 @@ export function ArrayInlineObjectRenderer({
         virtualRootSchema: virtualRoot,
         itemData: item as Record<string, unknown>,
         ctx: childCtx,
-        extraGenerateDetailOptions: itemGenOpts,
+        extraGenerateDetailOptions: rowItemGenOpts,
       });
       body = leafOnlyInlineRow ? (
         <DetailPresentationProvider
@@ -277,14 +327,30 @@ export function ArrayInlineObjectRenderer({
       );
     }
 
-    const itemData = item as Record<string, unknown>;
     const rowLabel = itemLabel(itemData, index, resolvedItemSchema);
     const badgeValue =
       showOrderBadge && orderSpec
         ? orderValue(itemData, orderSpec.field)
         : undefined;
 
-    const itemChrome = (
+    const itemChrome = displayName ? (
+      <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            mb: 1,
+          }}
+        >
+          {badgeValue != null ? <OrderBadge value={badgeValue} /> : null}
+          <Typography component="h3" variant="subtitle2" fontWeight={600}>
+            {displayName}
+          </Typography>
+        </Box>
+        {body}
+      </Box>
+    ) : (
       <>
         {badgeValue != null ? <OrderBadge value={badgeValue} /> : null}
         <Box sx={{ flex: 1, minWidth: 0 }}>{body}</Box>

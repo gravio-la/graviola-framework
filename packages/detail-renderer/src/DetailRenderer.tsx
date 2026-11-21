@@ -306,7 +306,7 @@ export const DetailRenderer = React.memo(function DetailRenderer({
     () => ({
       rootSchema: schema,
       depth: 0,
-      maxDepth: resolvedConfig.maxDepth ?? 3,
+      maxDepth: resolvedConfig.maxDepth ?? 6,
       typeIRI,
       typeName,
       typeIRIToTypeName,

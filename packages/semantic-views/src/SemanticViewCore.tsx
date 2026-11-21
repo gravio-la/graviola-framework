@@ -298,7 +298,7 @@ export function SemanticViewCore({
     () => ({
       rootSchema: schema as JSONSchema7,
       depth: 0,
-      maxDepth: resolvedConfig.maxDepth ?? 3,
+      maxDepth: resolvedConfig.maxDepth ?? 6,
       viewSize,
       density: resolvedConfig.density ?? viewDensity,
       frame: schema ? rootFrame(schema) : undefined,
