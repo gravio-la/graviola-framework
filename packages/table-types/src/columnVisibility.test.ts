@@ -7,6 +7,7 @@ import {
   resolveActiveMetaAnnotationScopes,
   normalizeTableUiSchemaForRowShape,
   resolveColumnIdForScope,
+  resolveColumnIdsForScope,
   resolveDefaultSortingFromTableUiSchema,
 } from "./columnVisibility";
 
@@ -18,6 +19,15 @@ describe("table column visibility helpers", () => {
         "sparql-select",
       ),
     ).toBe("entityMeta_modified_single");
+  });
+
+  test("resolveColumnIdsForScope lists SPARQL column id variants", () => {
+    expect(
+      resolveColumnIdsForScope("#/properties/maker", "sparql-select"),
+    ).toEqual(["maker_single", "maker_entity", "maker_label_group"]);
+    expect(
+      resolveColumnIdsForScope("#/properties/@id", "sparql-select"),
+    ).toEqual(["IRI", "@id_single"]);
   });
 
   test("buildColumnVisibilityFromTableUiSchema hides hiddenByDefault columns", () => {
@@ -42,6 +52,29 @@ describe("table column visibility helpers", () => {
     );
 
     expect(visibility.entityMeta_modified_single).toBe(false);
+  });
+
+  test("buildColumnVisibilityFromTableUiSchema hides object ref _entity column", () => {
+    const columns: ColumnLike[] = [
+      { id: "maker_entity", header: "Maker" },
+      { id: "maker_single", header: "Maker raw" },
+    ];
+    const visibility = buildColumnVisibilityFromTableUiSchema(
+      {
+        type: "Table",
+        mode: "blacklist",
+        columns: [
+          {
+            scope: "#/properties/maker",
+            visibility: "hiddenByDefault",
+          },
+        ],
+      },
+      columns,
+      "sparql-select",
+    );
+    expect(visibility.maker_entity).toBe(false);
+    expect(visibility.maker_single).toBe(false);
   });
 
   test("applyTableUiSchemaToColumns wires sortable to enableSorting", () => {

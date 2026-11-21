@@ -57,6 +57,8 @@ import {
 } from "@graviola/edb-table-types";
 
 import { entityActionsToTableActions } from "./entityActionsAdapter";
+import { resolveTableRowEntityActions } from "./resolveTableRowEntityActions";
+import { resolveInitialColumnVisibility } from "./semanticTableColumnVisibility";
 import { SemanticTableView } from "./SemanticTableView";
 import type {
   SemanticTableCallbacks,
@@ -208,12 +210,9 @@ export const SemanticTable = ({
   );
 
   const initialColumnVisibility = useMemo(
-    () => ({
-      "@id_single": false,
-      "@type_single": false,
-      ...tableColumnVisibility,
-    }),
-    [tableColumnVisibility],
+    () =>
+      resolveInitialColumnVisibility(conf, tableConfig, tableColumnVisibility),
+    [conf, tableConfig, tableColumnVisibility],
   );
 
   const [columnVisibility, setColumnVisibility] = useState<MRT_VisibilityState>(
@@ -509,31 +508,50 @@ export const SemanticTable = ({
     ],
   );
 
-  const rowActions = useMemo<TableAction[]>(() => {
-    const placeholderTarget = [{ entityIRI: "", typeIRI, data: undefined }];
-    const resolved = selectEntityActions(
-      runtimeRegistry,
-      loadedSchema as JSONSchema7,
-      buildEntityActionContext("tableRow", placeholderTarget),
-    );
-    return entityActionsToTableActions(resolved, {
+  const rowActionHandlers = useMemo(
+    () => ({
       dispatchIntent,
       showEntry: mergedCallbacks.onShowEntry
-        ? (id, iri) => mergedCallbacks.onShowEntry?.(id, iri ?? typeIRI)
+        ? (id: string, iri?: string) =>
+            mergedCallbacks.onShowEntry?.(id, iri ?? typeIRI)
         : undefined,
       editEntry: mergedCallbacks.onEditEntry
-        ? (id, iri) => mergedCallbacks.onEditEntry?.(id, iri ?? typeIRI)
+        ? (id: string, iri?: string) =>
+            mergedCallbacks.onEditEntry?.(id, iri ?? typeIRI)
         : undefined,
-    });
-  }, [
-    runtimeRegistry,
-    loadedSchema,
-    buildEntityActionContext,
-    dispatchIntent,
-    mergedCallbacks.onShowEntry,
-    mergedCallbacks.onEditEntry,
-    typeIRI,
-  ]);
+    }),
+    [
+      dispatchIntent,
+      mergedCallbacks.onShowEntry,
+      mergedCallbacks.onEditEntry,
+      typeIRI,
+    ],
+  );
+
+  const resolveRowActions = useCallback(
+    (row: { id: string; original: unknown }) =>
+      resolveTableRowEntityActions({
+        registry: runtimeRegistry,
+        schema: loadedSchema as JSONSchema7,
+        buildContext: (targets) =>
+          buildEntityActionContext("tableRow", targets),
+        row: {
+          entityIRI: row.id,
+          typeName,
+          typeIRI,
+          data: row.original,
+        },
+        handlers: rowActionHandlers,
+      }),
+    [
+      runtimeRegistry,
+      loadedSchema,
+      buildEntityActionContext,
+      typeName,
+      typeIRI,
+      rowActionHandlers,
+    ],
+  );
 
   const bulkActions = useMemo<TableAction[]>(() => {
     const resolved = selectEntityActions(
@@ -586,7 +604,7 @@ export const SemanticTable = ({
       csvOptions={csvOptions}
       tableConfigRegistry={tableConfig}
       callbacks={mergedCallbacks}
-      rowActions={rowActions}
+      resolveRowActions={resolveRowActions}
       bulkActions={bulkActions}
       locale={locale}
       resetKey={typeName}

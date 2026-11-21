@@ -132,6 +132,7 @@ export {
   normalizeTableUiSchemaForRowShape,
   resolveActiveMetaAnnotationScopes,
   resolveColumnIdForScope,
+  resolveColumnIdsForScope,
   resolveDefaultSortingFromTableUiSchema,
   scopeToJsonLdColumnId,
 } from "./columnVisibility";

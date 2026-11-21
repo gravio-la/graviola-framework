@@ -115,6 +115,8 @@ export type SemanticTableViewProps = {
    */
   resetKey?: string;
   rowActions?: TableAction[];
+  /** When set, row menu actions are resolved per row (show/edit need a concrete entity IRI). */
+  resolveRowActions?: (row: { id: string; original: unknown }) => TableAction[];
   bulkActions?: TableAction[];
   /** Optional visibility map from TableUiSchema (hiddenByDefault columns). */
   tableColumnVisibility?: MRT_VisibilityState;

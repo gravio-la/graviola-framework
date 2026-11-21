@@ -21,18 +21,26 @@ export function resolveColumnIdForScope(
   scope: string,
   rowShape: "sparql-select" | "jsonld" | string,
 ): string {
+  return resolveColumnIdsForScope(scope, rowShape)[0] ?? scope;
+}
+
+/** All SPARQL SELECT column ids a ui-schema scope may refer to. */
+export function resolveColumnIdsForScope(
+  scope: string,
+  rowShape: "sparql-select" | "jsonld" | string,
+): string[] {
   if (rowShape === "jsonld") {
-    return scopeToJsonLdColumnId(scope);
+    return [scopeToJsonLdColumnId(scope)];
   }
   const metaId = metaScopeToSparqlColumnId(scope);
-  if (metaId) return metaId;
-  const [rootKey] = parsePropertyScopeSegments(scope);
-  if (!rootKey) return scope;
-  if (scope.includes("/properties/")) {
-    const segments = parsePropertyScopeSegments(scope);
-    return `${segments.join("_")}_single`;
+  if (metaId) return [metaId];
+  const segments = parsePropertyScopeSegments(scope);
+  const joined = segments.join("_");
+  if (!joined) return [scope];
+  if (segments.at(-1) === "@id") {
+    return joined === "@id" ? ["IRI", "@id_single"] : [`${joined}_single`];
   }
-  return `${rootKey}_single`;
+  return [`${joined}_single`, `${joined}_entity`, `${joined}_label_group`];
 }
 
 export function buildColumnVisibilityFromTableUiSchema(
@@ -46,10 +54,13 @@ export function buildColumnVisibilityFromTableUiSchema(
   const columnIds = new Set(columns.map((col) => col.id).filter(Boolean));
 
   for (const uiColumn of tableUiSchema.columns) {
-    const columnId = resolveColumnIdForScope(uiColumn.scope, rowShape);
-    if (!columnIds.has(columnId)) continue;
+    const candidateIds = resolveColumnIdsForScope(uiColumn.scope, rowShape);
+    const matched = candidateIds.filter((id) => columnIds.has(id));
+    if (matched.length === 0) continue;
     if (uiColumn.visibility === "hiddenByDefault") {
-      visibility[columnId] = false;
+      for (const columnId of matched) {
+        visibility[columnId] = false;
+      }
     }
   }
 
@@ -66,7 +77,7 @@ export function filterForbiddenColumns<T extends ColumnLike>(
   const forbiddenIds = new Set(
     tableUiSchema.columns
       .filter((col) => col.visibility === "forbidden")
-      .map((col) => resolveColumnIdForScope(col.scope, rowShape)),
+      .flatMap((col) => resolveColumnIdsForScope(col.scope, rowShape)),
   );
 
   if (forbiddenIds.size === 0) return columns;

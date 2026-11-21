@@ -44,11 +44,8 @@ import {
 import { v4 as uuidv4 } from "uuid";
 
 import { ExportMenuButton } from "./ExportMenuButton";
-import type {
-  ListConfigType,
-  SemanticTableViewProps,
-  TableConfigRegistry,
-} from "./types";
+import { resolveInitialColumnVisibility } from "./semanticTableColumnVisibility";
+import type { SemanticTableViewProps } from "./types";
 
 const defaultLimit = 25;
 const defaultLoadAllUpperLimit = 10000;
@@ -58,25 +55,6 @@ const defaultCsvOptions: ConfigOptions = {
   decimalSeparator: ".",
   useKeysAsHeaders: true,
 };
-
-/** Hidden by default; callers can override via `tableConfigRegistry` to show again. */
-const DEFAULT_SEMANTIC_TABLE_COLUMN_VISIBILITY: MRT_VisibilityState = {
-  "@id_single": false,
-  "@type_single": false,
-};
-
-function resolveInitialColumnVisibility(
-  conf: Partial<ListConfigType> | undefined,
-  tableConfig: TableConfigRegistry | undefined,
-  tableColumnVisibility?: MRT_VisibilityState,
-): MRT_VisibilityState {
-  return {
-    ...DEFAULT_SEMANTIC_TABLE_COLUMN_VISIBILITY,
-    ...tableConfig?.default?.columnVisibility,
-    ...conf?.columnVisibility,
-    ...tableColumnVisibility,
-  };
-}
 
 function extractEntityId(rowOriginal: any): string | undefined {
   return (
@@ -108,6 +86,7 @@ export function SemanticTableView({
   tableConfigRegistry: tableConfig,
   callbacks = {},
   rowActions = [],
+  resolveRowActions,
   bulkActions = [],
   locale = "en",
   resetKey,
@@ -249,7 +228,11 @@ export function SemanticTableView({
   );
 
   const hasRowActions = Boolean(
-    onShowEntry || onEditEntry || onRemoveEntry || rowActions.length > 0,
+    onShowEntry ||
+    onEditEntry ||
+    onRemoveEntry ||
+    rowActions.length > 0 ||
+    resolveRowActions,
   );
   const hasBulkActions = Boolean(onRemoveSelected || bulkActions.length > 0);
 
@@ -489,11 +472,15 @@ export function SemanticTableView({
           const items: ReactNode[] = [];
           const entityTarget = {
             entityIRI: row.id,
+            typeName,
             typeIRI,
             data: row.original,
           };
-          if (rowActions.length > 0) {
-            rowActions.forEach((action) => {
+          const actionsForRow = resolveRowActions
+            ? resolveRowActions(row)
+            : rowActions;
+          if (actionsForRow.length > 0) {
+            actionsForRow.forEach((action) => {
               items.push(
                 <MenuItem
                   key={action.id}
