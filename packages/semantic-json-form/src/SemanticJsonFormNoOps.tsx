@@ -26,6 +26,7 @@ import { DerivedDefaultHintProvider } from "@graviola/edb-linked-data-renderer";
 import { OptionsModal } from "./OptionsModal";
 import { useOrderedArrayData } from "./helper/useOrderedArrayData";
 import { useDerivedDefaults } from "./helper/useDerivedDefaults";
+import { showsSimilarityFinderToggle } from "./helper/similarityFinderVisibility";
 
 const WithCard = ({
   children,
@@ -326,7 +327,7 @@ export const SemanticJsonFormNoOps: FunctionComponent<
           )}
         </Grid>
       </Grid>
-      {formsPath === globalPath && (
+      {showsSimilarityFinderToggle({ formsPath, globalPath }) && (
         <Grid>
           <SearchbarWithFloatingButton finderProps={similarityFinderProps} />
         </Grid>

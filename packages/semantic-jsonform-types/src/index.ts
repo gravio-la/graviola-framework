@@ -77,9 +77,15 @@ export type SemanticJsonFormNoOpsProps = {
   forceEditMode?: boolean;
   defaultEditMode?: boolean;
   searchText?: string;
+  /** Disables the inline side-by-side similarity finder panel (not the drawer toggle, see `formsPath`). */
   disableSimilarityFinder?: boolean;
   enableSidebar?: boolean;
   wrapWithinCard?: boolean;
+  /**
+   * Identifies this form for the global search. The floating similarity-finder
+   * toggle is shown while this form owns the global search path; forms without
+   * a `formsPath` never show it.
+   */
   formsPath?: string;
   disabled?: boolean;
   /** Passed through to the similarity finder modal; when false, hides result-row detail Popper. */
