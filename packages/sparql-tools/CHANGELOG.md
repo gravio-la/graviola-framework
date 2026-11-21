@@ -1,5 +1,12 @@
 # @graviola/sparql-tools
 
+## 0.2.3
+
+### Patch Changes
+
+- Updated dependencies [11d2f90]
+  - @graviola/edb-core-utils@1.7.1
+
 ## 0.2.2
 
 ### Patch Changes

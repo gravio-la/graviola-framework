@@ -1,5 +1,18 @@
 # calc-worker
 
+## 0.1.3
+
+### Patch Changes
+
+- Updated dependencies [285bb34]
+- Updated dependencies [3c213ca]
+  - @graviola/sparql-db-impl@1.9.2
+  - @graviola/rest-store-server@0.3.1
+  - @graviola/store-factory@1.0.1
+  - @graviola/calc-worker@0.1.2
+  - @graviola/calc-fixtures@0.1.2
+  - @graviola/formula-dependency@0.1.2
+
 ## 0.1.2
 
 ### Patch Changes

@@ -1,5 +1,23 @@
 # @graviola/edb-table-renderer-sparql-select
 
+## 0.1.9
+
+### Patch Changes
+
+- Updated dependencies [285bb34]
+- Updated dependencies [3c213ca]
+- Updated dependencies [c1f33f8]
+- Updated dependencies [12c1ee4]
+- Updated dependencies [11d2f90]
+  - @graviola/edb-state-hooks@1.8.3
+  - @graviola/json-schema-utils@1.9.0
+  - @graviola/edb-table-types@0.2.2
+  - @graviola/edb-core-utils@1.7.1
+  - @graviola/edb-basic-components@1.6.1
+  - @graviola/meta-schema@0.2.1
+  - @graviola/edb-table-mrt-adapter@0.1.4
+  - @graviola/edb-data-mapping@0.5.1
+
 ## 0.1.8
 
 ### Patch Changes

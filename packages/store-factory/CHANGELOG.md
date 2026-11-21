@@ -1,5 +1,19 @@
 # @graviola/store-factory
 
+## 1.0.1
+
+### Patch Changes
+
+- Updated dependencies [285bb34]
+- Updated dependencies [3c213ca]
+  - @graviola/sparql-db-impl@1.9.2
+  - @graviola/store-core@0.4.1
+  - @graviola/calc-engine@0.2.1
+  - @graviola/prisma-db-impl@1.7.7
+  - @graviola/meta-schema@0.2.1
+  - @graviola/remote-query-implementations@1.5.1
+  - @graviola/sparql-tools@0.2.3
+
 ## 1.0.0
 
 ### Minor Changes

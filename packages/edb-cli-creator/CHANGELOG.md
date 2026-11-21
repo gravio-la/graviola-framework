@@ -1,5 +1,12 @@
 # @graviola/edb-cli-creator
 
+## 1.3.12
+
+### Patch Changes
+
+- Updated dependencies [11d2f90]
+  - @graviola/edb-core-utils@1.7.1
+
 ## 1.3.11
 
 ### Patch Changes

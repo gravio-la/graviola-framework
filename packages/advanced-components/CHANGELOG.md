@@ -1,5 +1,30 @@
 # @graviola/edb-advanced-components
 
+## 1.7.8
+
+### Patch Changes
+
+- c1f33f8: Relation pickers can restrict candidate entities via `linkFilters` on the Graviola side-schema (or per-control `options.linkFilter`). Filters use Prisma-style `where` clauses with `{ "$data": "binding.path" }` resolved from the root form at runtime.
+- Updated dependencies [6514d54]
+- Updated dependencies [285bb34]
+- Updated dependencies [3c213ca]
+- Updated dependencies [c1f33f8]
+- Updated dependencies [929d3f8]
+- Updated dependencies [11d2f90]
+  - @graviola/semantic-views@0.2.3
+  - @graviola/edb-state-hooks@1.8.3
+  - @graviola/store-core@0.4.1
+  - @graviola/edb-ui-utils@0.4.6
+  - @graviola/semantic-jsonform-types@1.5.2
+  - @graviola/edb-core-utils@1.7.1
+  - @graviola/edb-import-staging@0.3.2
+  - @graviola/jsonld-utils@1.6.7
+  - @graviola/edb-wikidata-utils@1.2.13
+  - @graviola/edb-basic-components@1.6.1
+  - @graviola/data-mapping-hooks@1.3.8
+  - @graviola/edb-detail-renderer-core@0.6.1
+  - @graviola/edb-data-mapping@0.5.1
+
 ## 1.7.7
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @slub/remote-query-implementations
 
+## 1.5.1
+
+### Patch Changes
+
+- Updated dependencies [11d2f90]
+  - @graviola/edb-core-utils@1.7.1
+
 ## 1.5.0
 
 ### Minor Changes

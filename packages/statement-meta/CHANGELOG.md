@@ -1,5 +1,12 @@
 # @graviola/statement-meta
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [c1f33f8]
+  - @graviola/json-schema-utils@1.9.0
+
 ## 0.2.0
 
 ### Minor Changes

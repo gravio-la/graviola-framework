@@ -1,5 +1,11 @@
 # @slub/edb-core-utils
 
+## 1.7.1
+
+### Patch Changes
+
+- 11d2f90: Add `shortLabelForIri` for stable human-readable labels from IRIs (shared by entity-embed and linked-markdown-renderer).
+
 ## 1.7.0
 
 ### Minor Changes

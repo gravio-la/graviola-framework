@@ -1,6 +1,6 @@
 {
   "name": "@graviola/calc-engine",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Batched calc evaluation driver: plan → precise read → evaluate → optional materialize (Layer 2)",
   "type": "module",
   "main": "./dist/index.cjs",

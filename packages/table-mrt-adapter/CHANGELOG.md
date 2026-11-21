@@ -1,5 +1,12 @@
 # @graviola/edb-table-mrt-adapter
 
+## 0.1.4
+
+### Patch Changes
+
+- Updated dependencies [12c1ee4]
+  - @graviola/edb-table-types@0.2.2
+
 ## 0.1.3
 
 ### Patch Changes

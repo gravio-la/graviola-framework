@@ -1,5 +1,11 @@
 # @graviola/json-schema-utils
 
+## 1.9.0
+
+### Minor Changes
+
+- c1f33f8: Relation pickers can restrict candidate entities via `linkFilters` on the Graviola side-schema (or per-control `options.linkFilter`). Filters use Prisma-style `where` clauses with `{ "$data": "binding.path" }` resolved from the root form at runtime.
+
 ## 1.8.0
 
 ### Minor Changes

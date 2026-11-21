@@ -1,5 +1,24 @@
 # @graviola/semantic-views
 
+## 0.2.3
+
+### Patch Changes
+
+- 6514d54: Inline array items show display names from common identity fields; default detail `maxDepth` is 6. Detail and semantic-views align on nesting depth.
+- Updated dependencies [6514d54]
+- Updated dependencies [285bb34]
+- Updated dependencies [3c213ca]
+- Updated dependencies [c1f33f8]
+- Updated dependencies [929d3f8]
+- Updated dependencies [11d2f90]
+  - @graviola/edb-detail-renderer@0.8.1
+  - @graviola/edb-state-hooks@1.8.3
+  - @graviola/json-schema-utils@1.9.0
+  - @graviola/semantic-jsonform-types@1.5.2
+  - @graviola/edb-core-utils@1.7.1
+  - @graviola/edb-detail-renderer-core@0.6.1
+  - @graviola/meta-schema@0.2.1
+
 ## 0.2.2
 
 ### Patch Changes

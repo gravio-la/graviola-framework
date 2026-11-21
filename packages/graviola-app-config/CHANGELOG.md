@@ -1,5 +1,39 @@
 # @graviola/graviola-app-config
 
+## 0.2.0
+
+### Minor Changes
+
+- c1f33f8: Relation pickers can restrict candidate entities via `linkFilters` on the Graviola side-schema (or per-control `options.linkFilter`). Filters use Prisma-style `where` clauses with `{ "$data": "binding.path" }` resolved from the root form at runtime.
+
+### Patch Changes
+
+- Updated dependencies [6514d54]
+- Updated dependencies [285bb34]
+- Updated dependencies [3c213ca]
+- Updated dependencies [c1f33f8]
+- Updated dependencies [929d3f8]
+- Updated dependencies [12c1ee4]
+- Updated dependencies [11d2f90]
+  - @graviola/edb-detail-renderer@0.8.1
+  - @graviola/edb-state-hooks@1.8.3
+  - @graviola/json-schema-utils@1.9.0
+  - @graviola/edb-ui-utils@0.4.6
+  - @graviola/edb-advanced-components@1.7.8
+  - @graviola/semantic-json-form@1.6.8
+  - @graviola/semantic-jsonform-types@1.5.2
+  - @graviola/edb-table-types@0.2.2
+  - @graviola/edb-core-utils@1.7.1
+  - @graviola/edb-debug-utils@1.4.8
+  - @graviola/entity-finder@1.5.8
+  - @graviola/edb-basic-renderer@4.2.7
+  - @graviola/edb-detail-renderer-core@0.6.1
+  - @graviola/asset-renderer@0.1.1
+  - @graviola/linked-markdown-renderer@0.2.2
+  - @graviola/formula-dependency@0.1.2
+  - @graviola/search-facet-schema@0.1.4
+  - @graviola/sidecar-core@0.1.2
+
 ## 0.1.8
 
 ### Patch Changes

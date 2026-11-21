@@ -1,5 +1,13 @@
 # @graviola/facet-core
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [3c213ca]
+  - @graviola/store-core@0.4.1
+  - @graviola/search-facet-schema@0.1.4
+
 ## 0.1.1
 
 ### Patch Changes

@@ -1,5 +1,25 @@
 # @slub/sparql-db-impl
 
+## 1.9.2
+
+### Patch Changes
+
+- 285bb34: **Migration:** `filterOne` / `loadDocumentAsync` no longer include named-entity relations unless you pass `include` (Prisma-like default). Apps that load and write back whole entities must pass explicit `include` for each relation, or set `defaultFilterOptions.includeRelationsByDefault: true` on the SPARQL store provider. Legacy `loadOne` still defaults to including relations.
+- Updated dependencies [285bb34]
+- Updated dependencies [3c213ca]
+- Updated dependencies [c1f33f8]
+- Updated dependencies [11d2f90]
+- Updated dependencies [3db7bcb]
+  - @graviola/sparql-schema@1.8.1
+  - @graviola/store-core@0.4.1
+  - @graviola/json-schema-utils@1.9.0
+  - @graviola/edb-core-utils@1.7.1
+  - @graviola/jsonld-utils@1.6.7
+  - @graviola/meta-schema@0.2.1
+  - @graviola/statement-meta@0.2.1
+  - @graviola/remote-query-implementations@1.5.1
+  - @graviola/sparql-tools@0.2.3
+
 ## 1.9.1
 
 ### Patch Changes

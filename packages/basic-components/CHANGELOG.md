@@ -1,5 +1,13 @@
 # @graviola/edb-basic-components
 
+## 1.6.1
+
+### Patch Changes
+
+- Updated dependencies [285bb34]
+- Updated dependencies [3c213ca]
+  - @graviola/edb-state-hooks@1.8.3
+
 ## 1.6.0
 
 ### Minor Changes

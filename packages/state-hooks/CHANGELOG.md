@@ -1,5 +1,25 @@
 # @graviola/edb-state-hooks
 
+## 1.8.3
+
+### Patch Changes
+
+- 285bb34: **Migration:** `filterOne` / `loadDocumentAsync` no longer include named-entity relations unless you pass `include` (Prisma-like default). Apps that load and write back whole entities must pass explicit `include` for each relation, or set `defaultFilterOptions.includeRelationsByDefault: true` on the SPARQL store provider. Legacy `loadOne` still defaults to including relations.
+- 3c213ca: Thread optional `sort` on `searchDocuments` through live sortable probing, Meilisearch, REST wire, and search hooks.
+- Updated dependencies [3c213ca]
+- Updated dependencies [c1f33f8]
+- Updated dependencies [929d3f8]
+- Updated dependencies [11d2f90]
+  - @graviola/store-core@0.4.1
+  - @graviola/fulltext-search-core@0.4.0
+  - @graviola/json-schema-utils@1.9.0
+  - @graviola/edb-ui-utils@0.4.6
+  - @graviola/semantic-jsonform-types@1.5.2
+  - @graviola/edb-core-utils@1.7.1
+  - @graviola/jsonld-utils@1.6.7
+  - @graviola/meta-schema@0.2.1
+  - @graviola/edb-data-mapping@0.5.1
+
 ## 1.8.2
 
 ### Patch Changes

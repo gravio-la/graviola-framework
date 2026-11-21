@@ -1,5 +1,17 @@
 # @graviola/calc-engine
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [3c213ca]
+- Updated dependencies [c1f33f8]
+  - @graviola/store-core@0.4.1
+  - @graviola/json-schema-utils@1.9.0
+  - @graviola/formula-materialization@0.1.2
+  - @graviola/formula-dependency@0.1.2
+  - @graviola/formula-runtime@0.1.2
+
 ## 0.2.0
 
 ### Minor Changes

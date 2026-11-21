@@ -1,5 +1,13 @@
 # @graviola/json-schema-cli
 
+## 1.1.7
+
+### Patch Changes
+
+- Updated dependencies [c1f33f8]
+  - @graviola/json-schema-utils@1.9.0
+  - @graviola/formula-dependency@0.1.2
+
 ## 1.1.6
 
 ### Patch Changes

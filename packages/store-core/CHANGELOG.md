@@ -1,5 +1,11 @@
 # @graviola/store-core
 
+## 0.4.1
+
+### Patch Changes
+
+- 3c213ca: Thread optional `sort` on `searchDocuments` through live sortable probing, Meilisearch, REST wire, and search hooks.
+
 ## 0.4.0
 
 ### Minor Changes

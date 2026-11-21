@@ -1,5 +1,12 @@
 # @slub/sparql-db-impl
 
+## 1.6.5
+
+### Patch Changes
+
+- Updated dependencies [3c213ca]
+  - @graviola/rest-store-client@0.4.1
+
 ## 1.6.4
 
 ### Patch Changes

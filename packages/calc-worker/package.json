@@ -1,6 +1,6 @@
 {
   "name": "@graviola/calc-worker",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Calc materialization host: cold-start warm sweep + live invalidation subscription (Layer 2)",
   "type": "module",
   "main": "./dist/index.cjs",

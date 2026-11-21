@@ -1,5 +1,14 @@
 # @graviola/rest-server-hono
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [3c213ca]
+  - @graviola/store-core@0.4.1
+  - @graviola/rest-store-server@0.3.1
+  - @graviola/store-factory@1.0.1
+
 ## 0.1.1
 
 ### Patch Changes

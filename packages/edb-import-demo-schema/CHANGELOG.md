@@ -1,5 +1,18 @@
 # @graviola/edb-import-demo-schema
 
+## 0.2.3
+
+### Patch Changes
+
+- Updated dependencies [285bb34]
+- Updated dependencies [3c213ca]
+- Updated dependencies [c1f33f8]
+  - @graviola/edb-state-hooks@1.8.3
+  - @graviola/json-schema-utils@1.9.0
+  - @graviola/edb-wikidata-utils@1.2.13
+  - @graviola/data-mapping-hooks@1.3.8
+  - @graviola/edb-data-mapping@0.5.1
+
 ## 0.2.2
 
 ### Patch Changes

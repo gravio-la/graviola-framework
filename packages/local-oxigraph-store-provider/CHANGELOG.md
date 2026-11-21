@@ -1,5 +1,19 @@
 # @graviola/local-oxigraph-store-provider
 
+## 7.0.3
+
+### Patch Changes
+
+- Updated dependencies [285bb34]
+- Updated dependencies [3c213ca]
+- Updated dependencies [11d2f90]
+  - @graviola/sparql-db-impl@1.9.2
+  - @graviola/edb-state-hooks@1.8.3
+  - @graviola/store-core@0.4.1
+  - @graviola/edb-core-utils@1.7.1
+  - @graviola/meta-schema@0.2.1
+  - @graviola/remote-query-implementations@1.5.1
+
 ## 7.0.2
 
 ### Patch Changes

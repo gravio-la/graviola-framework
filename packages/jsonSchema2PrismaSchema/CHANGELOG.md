@@ -1,5 +1,13 @@
 # @graviola/json-schema2prisma-schema
 
+## 0.3.6
+
+### Patch Changes
+
+- Updated dependencies [c1f33f8]
+  - @graviola/json-schema-utils@1.9.0
+  - @graviola/json-schema-prisma-utils@1.4.6
+
 ## 0.3.5
 
 ### Patch Changes

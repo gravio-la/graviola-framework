@@ -1,6 +1,6 @@
 {
   "name": "@graviola/formula-materialization",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Optional materialization of computed values with provenance (Layer 2)",
   "type": "module",
   "main": "./dist/index.cjs",

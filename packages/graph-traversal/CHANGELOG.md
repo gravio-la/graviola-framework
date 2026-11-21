@@ -1,5 +1,15 @@
 # @slub/edb-graph-traversal
 
+## 1.8.1
+
+### Patch Changes
+
+- 285bb34: **Migration:** `filterOne` / `loadDocumentAsync` no longer include named-entity relations unless you pass `include` (Prisma-like default). Apps that load and write back whole entities must pass explicit `include` for each relation, or set `defaultFilterOptions.includeRelationsByDefault: true` on the SPARQL store provider. Legacy `loadOne` still defaults to including relations.
+- Updated dependencies [c1f33f8]
+- Updated dependencies [11d2f90]
+  - @graviola/json-schema-utils@1.9.0
+  - @graviola/edb-core-utils@1.7.1
+
 ## 1.8.0
 
 ### Minor Changes

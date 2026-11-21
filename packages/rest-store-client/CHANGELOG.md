@@ -1,5 +1,14 @@
 # @graviola/rest-store-client
 
+## 0.4.1
+
+### Patch Changes
+
+- 3c213ca: Thread optional `sort` on `searchDocuments` through live sortable probing, Meilisearch, REST wire, and search hooks.
+- Updated dependencies [3c213ca]
+  - @graviola/store-core@0.4.1
+  - @graviola/edb-data-mapping@0.5.1
+
 ## 0.4.0
 
 ### Minor Changes

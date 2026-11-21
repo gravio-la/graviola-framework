@@ -1,5 +1,15 @@
 # @graviola/meilisearch-sparql-store
 
+## 0.2.4
+
+### Patch Changes
+
+- 3c213ca: Thread optional `sort` on `searchDocuments` through live sortable probing, Meilisearch, REST wire, and search hooks.
+- Updated dependencies [3c213ca]
+  - @graviola/store-core@0.4.1
+  - @graviola/fulltext-search-core@0.4.0
+  - @graviola/search-facet-schema@0.1.4
+
 ## 0.2.3
 
 ### Patch Changes

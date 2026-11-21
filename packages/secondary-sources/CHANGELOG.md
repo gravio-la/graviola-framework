@@ -1,5 +1,12 @@
 # @graviola/edb-secondary-sources
 
+## 0.1.2
+
+### Patch Changes
+
+- @graviola/edb-data-mapping@0.5.1
+- @graviola/data-acquisition@0.2.1
+
 ## 0.1.1
 
 ### Patch Changes

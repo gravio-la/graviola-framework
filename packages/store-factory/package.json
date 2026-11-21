@@ -1,6 +1,6 @@
 {
   "name": "@graviola/store-factory",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Declarative Store factory — oxigraph / SPARQL / Prisma backends via lazy imports",
   "type": "module",
   "main": "./dist/index.cjs",

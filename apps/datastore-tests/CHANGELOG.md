@@ -1,5 +1,29 @@
 # @graviola/datastore-tests
 
+## 0.1.8
+
+### Patch Changes
+
+- Updated dependencies [285bb34]
+- Updated dependencies [3c213ca]
+- Updated dependencies [c1f33f8]
+  - @graviola/sparql-db-impl@1.9.2
+  - @graviola/store-core@0.4.1
+  - @graviola/rest-store-client@0.4.1
+  - @graviola/rest-store-server@0.3.1
+  - @graviola/json-schema-utils@1.9.0
+  - @graviola/calc-engine@0.2.1
+  - @graviola/formula-materialization@0.1.2
+  - @graviola/prisma-db-impl@1.7.7
+  - @graviola/rest-server-hono@0.1.2
+  - @graviola/calc-fixtures@0.1.2
+  - @graviola/formula-dependency@0.1.2
+  - @graviola/formula-runtime@0.1.2
+  - @graviola/json-schema-prisma-utils@1.4.6
+  - @graviola/meta-schema@0.2.1
+  - @graviola/statement-meta@0.2.1
+  - @graviola/remote-query-implementations@1.5.1
+
 ## 0.1.7
 
 ### Patch Changes

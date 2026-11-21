@@ -1,5 +1,11 @@
 # @graviola/data-acquisition
 
+## 0.2.1
+
+### Patch Changes
+
+- @graviola/edb-data-mapping@0.5.1
+
 ## 0.2.0
 
 ### Minor Changes

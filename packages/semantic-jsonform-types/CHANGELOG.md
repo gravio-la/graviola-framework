@@ -1,5 +1,17 @@
 # @graviola/semantic-jsonform-types
 
+## 1.5.2
+
+### Patch Changes
+
+- 929d3f8: `SemanticJsonFormNoOps` no longer shows the floating similarity-finder toggle on forms without a `formsPath`. The global search path starts out `undefined`, so `formsPath === globalPath` matched every such form and the toggle appeared permanently. Forms that own the search path (`EditEntityModal`, nested linked-entity forms) behave as before. The `formsPath` and `disableSimilarityFinder` props are now documented.
+- Updated dependencies [c1f33f8]
+- Updated dependencies [12c1ee4]
+  - @graviola/json-schema-utils@1.9.0
+  - @graviola/edb-table-types@0.2.2
+  - @graviola/edb-detail-renderer-core@0.6.1
+  - @graviola/formula-dependency@0.1.2
+
 ## 1.5.1
 
 ### Patch Changes

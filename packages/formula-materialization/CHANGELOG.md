@@ -1,5 +1,14 @@
 # @graviola/formula-materialization
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [3c213ca]
+  - @graviola/store-core@0.4.1
+  - @graviola/formula-dependency@0.1.2
+  - @graviola/formula-runtime@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes

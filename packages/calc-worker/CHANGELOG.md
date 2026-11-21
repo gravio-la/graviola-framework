@@ -1,5 +1,13 @@
 # @graviola/calc-worker
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [3c213ca]
+  - @graviola/store-core@0.4.1
+  - @graviola/calc-engine@0.2.1
+
 ## 0.1.1
 
 ### Patch Changes

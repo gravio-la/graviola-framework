@@ -1,5 +1,17 @@
 # @graviola/fulltext-search-core
 
+## 0.4.0
+
+### Minor Changes
+
+- 3c213ca: Thread optional `sort` on `searchDocuments` through live sortable probing, Meilisearch, REST wire, and search hooks.
+
+### Patch Changes
+
+- Updated dependencies [3c213ca]
+  - @graviola/store-core@0.4.1
+  - @graviola/search-facet-schema@0.1.4
+
 ## 0.3.0
 
 ### Minor Changes
