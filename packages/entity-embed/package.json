@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@graviola/edb-advanced-components": "workspace:*",
+    "@graviola/edb-core-utils": "workspace:*",
     "@graviola/edb-state-hooks": "workspace:*",
     "@graviola/edb-table-components": "workspace:*",
     "@graviola/entity-ref-core": "workspace:*",

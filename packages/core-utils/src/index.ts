@@ -13,6 +13,7 @@ export * from "./flatResultExtractor";
 export * from "./extractEntityPreview";
 export * from "./primaryFieldImageValue";
 export * from "./linkedReferenceLabel";
+export * from "./shortLabelForIri";
 export * from "./resolvePreviewDisplay";
 export * from "./resolveThumbnailUrl";
 export * from "./logger";

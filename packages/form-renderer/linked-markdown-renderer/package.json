@@ -40,6 +40,7 @@
     "react": "catalog:"
   },
   "dependencies": {
+    "@graviola/edb-core-utils": "workspace:*",
     "@graviola/edb-markdown-renderer": "workspace:*",
     "@graviola/entity-embed": "workspace:*",
     "@graviola/entity-ref-core": "workspace:*",

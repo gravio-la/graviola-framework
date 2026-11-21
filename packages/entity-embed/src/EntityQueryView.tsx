@@ -1,3 +1,4 @@
+import { shortLabelForIri } from "@graviola/edb-core-utils";
 import { SemanticTable } from "@graviola/edb-table-components";
 import {
   MODAL_ENTITY_DETAIL,
@@ -68,7 +69,7 @@ export function EntityQueryView({ spec }: EntityQueryViewProps) {
         <ListItem key={entityIRI} disablePadding sx={{ py: 0.25 }}>
           <EntityRefView
             ref={{
-              entityId: entityIRI.split("/").pop() ?? entityIRI,
+              entityId: shortLabelForIri(entityIRI),
               typeName: spec.typeName,
               view: "chip",
             }}

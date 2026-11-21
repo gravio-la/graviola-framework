@@ -2,6 +2,7 @@ import {
   type EntityEmbedView,
   type EntityRef,
 } from "@graviola/entity-ref-core";
+import { shortLabelForIri } from "@graviola/edb-core-utils";
 import {
   useAdbContext,
   useOptionalFinderSlot,
@@ -62,7 +63,7 @@ function labelFromEntityData(
   if (typeof data.__label === "string" && data.__label.trim()) {
     return data.__label;
   }
-  return entityIRI.split("/").pop() ?? entityIRI;
+  return shortLabelForIri(entityIRI);
 }
 
 export function EntityLinkFinderDrawer({
@@ -118,7 +119,7 @@ export function EntityLinkFinderDrawer({
       onAccept({
         typeName,
         entityIRI,
-        entityId: entityIRI.split("/").pop() ?? entityIRI,
+        entityId: shortLabelForIri(entityIRI),
         label,
         view: defaultView,
       });
