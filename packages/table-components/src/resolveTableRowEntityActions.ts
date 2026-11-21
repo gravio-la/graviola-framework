@@ -1,10 +1,10 @@
-import type { JSONSchema7 } from "json-schema";
 import {
-  selectEntityActions,
   type EntityActionContext,
   type EntityActionEntry,
+  selectEntityActions,
 } from "@graviola/edb-detail-renderer-core";
 import type { GraviolaIntent } from "@graviola/edb-state-hooks";
+import type { JSONSchema7 } from "json-schema";
 
 import { entityActionsToTableActions } from "./entityActionsAdapter";
 import type { TableAction } from "./types";

@@ -1,3 +1,10 @@
+import type { ValueRendererEntry } from "@graviola/edb-detail-renderer-core";
+import type { JsonLdChipComponentProps } from "@graviola/edb-table-renderer-jsonld";
+import type { ColumnDefMatcher } from "@graviola/edb-table-renderer-sparql-select";
+import type {
+  TableColumnRegistry,
+  TableUiSchema,
+} from "@graviola/edb-table-types";
 import type { PaginationState, VisibilityState } from "@tanstack/table-core";
 import type { ConfigOptions } from "export-to-csv";
 import type {
@@ -6,14 +13,7 @@ import type {
   MRT_VisibilityState,
 } from "material-react-table";
 import type { ReactNode } from "react";
-import type { ValueRendererEntry } from "@graviola/edb-detail-renderer-core";
-import type {
-  TableColumnRegistry,
-  TableUiSchema,
-} from "@graviola/edb-table-types";
 import type { ComponentType } from "react";
-import type { JsonLdChipComponentProps } from "@graviola/edb-table-renderer-jsonld";
-import type { ColumnDefMatcher } from "@graviola/edb-table-renderer-sparql-select";
 
 export type ListConfigType = {
   columnVisibility: VisibilityState;

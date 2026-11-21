@@ -1,6 +1,17 @@
 import NiceModal from "@ebay/nice-modal-react";
 import { GenericModal } from "@graviola/edb-basic-components";
 import {
+  createDeleteBulkEntry,
+  createDeleteRowEntry,
+  defaultEntityActionRegistry,
+  defaultValueRenderers,
+} from "@graviola/edb-detail-renderer";
+import {
+  type EntityActionContext,
+  type EntityActionEntry,
+  selectEntityActions,
+} from "@graviola/edb-detail-renderer-core";
+import {
   MODAL_ENTITY_DETAIL,
   useAdbContext,
   useDataStore,
@@ -10,15 +21,31 @@ import {
   useQuery,
   useQueryClient,
 } from "@graviola/edb-state-hooks";
+import { useHostCapabilities, useViewDensity } from "@graviola/edb-state-hooks";
+import {
+  composeJsonLdColumns,
+  JsonLdTableProvider,
+} from "@graviola/edb-table-renderer-jsonld";
+import {
+  type ColumnDefMatcher,
+  composeSparqlSelectColumns,
+  resolveSparqlSortColumnId,
+} from "@graviola/edb-table-renderer-sparql-select";
+import {
+  buildColumnVisibilityFromTableUiSchema,
+  normalizeTableUiSchemaForRowShape,
+  resolveActiveMetaAnnotationScopes,
+  resolveDefaultSortingFromTableUiSchema,
+} from "@graviola/edb-table-types";
 import { bringDefinitionToTop } from "@graviola/json-schema-utils";
 import { hasCapability } from "@graviola/store-core";
+import { PaginationState } from "@tanstack/table-core";
+import type { JSONSchema7 } from "json-schema";
 import type {
   MRT_ColumnDef,
   MRT_SortingState,
   MRT_VisibilityState,
 } from "material-react-table";
-import { PaginationState } from "@tanstack/table-core";
-import type { JSONSchema7 } from "json-schema";
 import { useTranslation } from "next-i18next";
 import {
   useCallback,
@@ -28,33 +55,6 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
-import {
-  createDeleteBulkEntry,
-  createDeleteRowEntry,
-  defaultEntityActionRegistry,
-  defaultValueRenderers,
-} from "@graviola/edb-detail-renderer";
-import {
-  selectEntityActions,
-  type EntityActionContext,
-  type EntityActionEntry,
-} from "@graviola/edb-detail-renderer-core";
-import { useHostCapabilities, useViewDensity } from "@graviola/edb-state-hooks";
-import {
-  composeJsonLdColumns,
-  JsonLdTableProvider,
-} from "@graviola/edb-table-renderer-jsonld";
-import {
-  composeSparqlSelectColumns,
-  resolveSparqlSortColumnId,
-  type ColumnDefMatcher,
-} from "@graviola/edb-table-renderer-sparql-select";
-import {
-  buildColumnVisibilityFromTableUiSchema,
-  normalizeTableUiSchemaForRowShape,
-  resolveActiveMetaAnnotationScopes,
-  resolveDefaultSortingFromTableUiSchema,
-} from "@graviola/edb-table-types";
 
 import { entityActionsToTableActions } from "./entityActionsAdapter";
 import { resolveTableRowEntityActions } from "./resolveTableRowEntityActions";

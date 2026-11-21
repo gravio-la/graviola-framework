@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { adaptColumnFragmentToMrt } from "@graviola/edb-table-mrt-adapter";
 import type {
   TableColumnDefFragment,
   TableColumnRegistry,
@@ -6,7 +6,8 @@ import type {
 } from "@graviola/edb-table-types";
 import type { JSONSchema7 } from "json-schema";
 import type { MRT_ColumnDef } from "material-react-table";
-import { adaptColumnFragmentToMrt } from "@graviola/edb-table-mrt-adapter";
+import { useMemo, useState } from "react";
+
 import type { TableActionContext, TableActionRegistry } from "./types";
 
 export const useResolvedTableColumns = ({

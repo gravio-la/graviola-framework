@@ -1,11 +1,11 @@
-import { describe, expect, test } from "bun:test";
-import type { JSONSchema7 } from "json-schema";
 import {
   createDeleteRowEntry,
   defaultEntityActionRegistry,
 } from "@graviola/edb-detail-renderer";
 import type { EntityActionContext } from "@graviola/edb-detail-renderer-core";
 import { createHostCapabilities } from "@graviola/edb-state-hooks";
+import { describe, expect, test } from "bun:test";
+import type { JSONSchema7 } from "json-schema";
 
 import { resolveTableRowEntityActions } from "./resolveTableRowEntityActions";
 

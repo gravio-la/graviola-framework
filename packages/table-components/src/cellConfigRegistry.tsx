@@ -4,6 +4,10 @@ import {
 } from "@graviola/edb-basic-components";
 import { parseMarkdownLinks } from "@graviola/edb-core-utils";
 import {
+  formatDateTimeValue,
+  formatDateValue,
+} from "@graviola/edb-detail-renderer";
+import {
   and,
   formatIs,
   isArrayObjectControl,
@@ -22,11 +26,6 @@ import {
   MuiTableColumnDefinitionRegistryEntry,
   PrimaryColumnContent,
 } from "./listHelper";
-import {
-  formatDateTimeValue,
-  formatDateValue,
-} from "@graviola/edb-detail-renderer";
-
 import {
   isObjectWithRefControl,
   isPrimitiveControl,

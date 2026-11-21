@@ -34,12 +34,12 @@ import { MRT_Localization_DE } from "material-react-table/locales/de";
 import { MRT_Localization_EN } from "material-react-table/locales/en";
 import { useTranslation } from "next-i18next";
 import {
+  type ReactNode,
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
-  type ReactNode,
 } from "react";
 import { v4 as uuidv4 } from "uuid";
 

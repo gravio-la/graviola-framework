@@ -1,5 +1,5 @@
-import type { JSONSchema7 } from "json-schema";
 import type { TableUiSchema } from "@graviola/edb-table-types";
+import type { JSONSchema7 } from "json-schema";
 
 export const generateDefaultTableUiSchema = (
   schema: JSONSchema7,
